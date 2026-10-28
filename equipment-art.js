@@ -231,7 +231,8 @@ const collection={
 };
 function visualEsc(x){return String(x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
 function illustratedSvg(inner,label,view="0 0 320 210"){
- return '<svg viewBox="'+view+'" role="img" aria-label="'+visualEsc(label)+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>';
+ return '<svg viewBox="'+view+'" role="img" aria-label="'+visualEsc(label)+'" xmlns="http://www.w3.org/2000/svg">'+
+ '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+inner+'</svg>';
 }
 function mediaSvg(kind){
  const caps={green:"#37966e",lavender:"#9568b3",red:"#c65b5d",blue:"#548eb6"};
