@@ -584,16 +584,17 @@ el('openSidebar').addEventListener('click',()=>{el('sidebar').classList.add('ope
 el('closeSidebar').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 el('sidebarScrim').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 let guidePrintRestore=null;
-el('printBtn').addEventListener('click',()=>{
+function prepareGuidePrint(){
  const route=sectionFromHash();
  const sec=all.find(x=>x.id===route.id);
- if(sec&&buildGroups(sec).some(x=>x.id===route.tab)){
+ if(sec&&buildGroups(sec).some(x=>x.id===route.tab)&&state.guideMode!=='all'){
   guidePrintRestore=state.guideMode;
   state.guideMode='all';
   render();
  }
- window.print();
-});
+}
+window.addEventListener('beforeprint',prepareGuidePrint);
+el('printBtn').addEventListener('click',()=>{prepareGuidePrint();window.print();});
 window.addEventListener('afterprint',()=>{
  if(guidePrintRestore!==null){
   state.guideMode=guidePrintRestore;
