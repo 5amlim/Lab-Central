@@ -129,3 +129,13 @@
  .pcr-provider-action>strong{font-size:14px}
  .pcr-provider-action li{font-size:12px}
 }
+
+
+/* Text-first time entry: preserves the original field appearance without native time segment selection. */
+.pcr-time-input-shell{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #86bcb6;border-radius:9px;min-width:175px;padding:0 12px;min-height:46px}
+.pcr-time-input-shell:focus-within{outline:3px solid #92cfc6;outline-offset:2px}
+.pcr-time-input-label .pcr-time-input-shell input{border:0!important;outline:0!important;background:transparent!important;padding:7px 0;min-width:0;width:150px;max-width:100%;min-height:42px;font-weight:850;color:#246c69;box-shadow:none;letter-spacing:.015em}
+.pcr-time-input-label .pcr-time-input-shell input:focus-visible{outline:0!important}
+.pcr-time-input-shell svg{flex:none;width:20px;height:20px;fill:none;stroke:#253b43;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.pcr-time-help{font-size:10px;line-height:1.4;color:#628b90;max-width:220px}
+@media(max-width:600px){.pcr-time-input-shell{width:100%}.pcr-time-input-label .pcr-time-input-shell input{flex:1}}
