@@ -72,3 +72,30 @@
 .pfs-screen-toggle>summary{cursor:pointer;color:#2b6c8c;font-weight:850;font-size:12px;padding:13px 5px}
 .pfs-screen-toggle .pfs-reference{margin:0 auto 12px}
 @media(max-width:700px){.pfs-login{padding:13px}.pfs-form-row{grid-template-columns:70px minmax(0,1fr)}.pfs-status-pills{padding:9px}.pfs-real-pill{font-size:10px;padding:8px 9px}.pfs-assay-option{font-size:11px;padding:12px}.pfs-rebuilt .pfs-heading{flex-wrap:wrap}}
+
+
+/* PATHFAST training controls: green = tap on the actual analyzer, not a website action. */
+.pfs-rebuilt .pfs-click-target{position:relative;isolation:isolate;border:3px solid #19b96c!important;background-color:#eafff2;box-shadow:0 0 0 3px #15b76a1c,0 3px 10px #168f5c18!important;border-radius:7px;color:#175d60;font-weight:900}
+.pfs-rebuilt .pfs-target-cue{display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:8px;padding:3px 6px;background:#087b50;color:#fff!important;font-size:8px!important;font-weight:900;line-height:1.3;letter-spacing:.02em;white-space:nowrap;border-radius:5px}
+.pfs-target-legend{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 3px;font-size:10.5px;line-height:1.5;font-weight:750;color:#276c54}
+.pfs-target-legend i{display:inline-block;flex:none;width:16px;height:16px;border:3px solid #19b96c;border-radius:4px;background:#eafff2}
+.pfs-rebuilt .pfs-form-box.pfs-click-target{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;min-height:46px;background:#eafff2}
+.pfs-rebuilt .pfs-login-actions span.pfs-click-target,.pfs-rebuilt .pfs-item-actions span.pfs-click-target,.pfs-sid-actions span.pfs-click-target{display:inline-flex;align-items:center;gap:4px;background:#eafff2;color:#176652}
+.pfs-rebuilt .pfs-home-footer .pfs-click-target{display:inline-flex;align-items:center;gap:4px;padding:8px 12px;background:#eafff2}
+.pfs-rebuilt .pfs-assay-option.target.pfs-click-target,.pfs-rebuilt .pfs-item-option.target.pfs-click-target{background:#eafff2}
+.pfs-rebuilt .pfs-tabs .pfs-click-target{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px;background:#eafff2}
+.pfs-rebuilt .pfs-lane-number.pfs-click-target{display:flex;align-items:center;justify-content:center;flex-direction:column;background:#eafff2;color:#175e53;padding:5px 1px}
+.pfs-lane-number .pfs-target-cue{max-width:100%;white-space:normal;font-size:7px!important;padding:2px 3px;margin:4px 0 0;text-align:center}
+.pfs-rebuilt .pfs-toolbar .pfs-click-target{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;background:#eafff2;color:#125a69}
+.pfs-rebuilt .pfs-toolbar .pfs-click-target .pfs-target-cue{margin-left:0}
+.pfs-sid-selection{display:flex;gap:12px;justify-content:space-between;padding:10px 14px;background:#e7edf3;color:#426a86;font-size:10px}
+.pfs-sid-panel{padding:15px;background:#f7f9fb}
+.pfs-sid-panel>strong{font-size:11px;color:#2b7297;display:block;margin-bottom:13px}
+.pfs-sid-entry{display:grid;grid-template-columns:42px minmax(0,1fr);gap:9px;align-items:center;font-size:11px;font-weight:850}
+.pfs-sid-entry>div{padding:12px;background:#eafff2;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-weight:650}
+.pfs-sid-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.pfs-sid-actions>span{display:inline-flex;align-items:center;font-size:11px;padding:10px 14px;background:#e3ebf1;border:1px solid #9cb6c7;border-radius:5px;color:#286483;font-weight:900}
+.pfs-start-check{display:flex;flex-direction:column;gap:7px;padding:20px 15px;background:#f6fafc;font-size:11px;color:#53798e;line-height:1.6}
+.pfs-start-check strong{font-size:12px;color:#245a79}
+@media(max-width:650px){.pfs-rebuilt .pfs-target-cue{padding:2px 4px;font-size:7px!important}.pfs-sid-panel{padding:12px}.pfs-rebuilt .pfs-status-callout{flex-wrap:wrap;justify-content:flex-start}.pfs-rebuilt .pfs-login-actions span.pfs-click-target{padding:8px 10px}}
+@media print{.pfs-rebuilt .pfs-click-target{box-shadow:none!important;border-color:#148d53!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
