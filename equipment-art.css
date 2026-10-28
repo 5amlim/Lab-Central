@@ -21,3 +21,8 @@
 .nav-section .nav-link:focus-visible,.calculator-go:focus-visible,.calculator-extra:focus-visible{outline:3px solid #8cd0cb;outline-offset:2px}
 @media(max-width:740px){.equipment-overview{grid-template-columns:1fr;padding:14px}.equipment-art{min-height:145px}.equipment-svg{max-height:195px}.equipment-information{padding:0 3px}.equipment-information dl>div{grid-template-columns:70px 1fr}.equipment-art-note{margin:10px 0 3px}}
 @media print{.equipment-overview{break-inside:avoid;grid-template-columns:1fr 1fr;padding:10px;box-shadow:none}.equipment-svg{max-height:160px}.equipment-art{min-height:120px}}
+
+/* FilmArray TORCH modular enclosure: keep integrated sloped screen readable. */
+.equipment-overview.torch-overview .equipment-art{min-height:245px;background:radial-gradient(ellipse at center,#f1f7f8 0%,#fff 77%)}
+.equipment-overview.torch-overview .equipment-svg{width:100%;max-width:550px;max-height:280px}
+@media(max-width:760px){.equipment-overview.torch-overview .equipment-art{min-height:175px}.equipment-overview.torch-overview .equipment-svg{max-height:230px}}
