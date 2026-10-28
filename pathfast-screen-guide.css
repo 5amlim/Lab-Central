@@ -99,3 +99,16 @@
 .pfs-start-check strong{font-size:12px;color:#245a79}
 @media(max-width:650px){.pfs-rebuilt .pfs-target-cue{padding:2px 4px;font-size:7px!important}.pfs-sid-panel{padding:12px}.pfs-rebuilt .pfs-status-callout{flex-wrap:wrap;justify-content:flex-start}.pfs-rebuilt .pfs-login-actions span.pfs-click-target{padding:8px 10px}}
 @media print{.pfs-rebuilt .pfs-click-target{box-shadow:none!important;border-color:#148d53!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* PATHFAST patient prep illustrations precede the analyzer screen sequence. */
+.pfs-prep-reference{max-width:880px;width:100%;margin:9px auto 13px}
+.pfs-prep-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.pfs-prep-stage{display:flex;flex-direction:column;gap:9px;min-width:0;padding:14px;border:1px solid #d5e3e9;border-radius:11px;background:white}
+.pfs-prep-number{display:grid;place-items:center;width:29px;height:29px;flex:none;border-radius:8px;background:#e8f1f6;color:#4f8199;font-size:10px;font-weight:900}
+.pfs-prep-stage strong{color:#42647b;font-size:11px;font-weight:850;line-height:1.45;letter-spacing:.035em}
+.pfs-prep-stage p{color:#758b9a;font-size:10.5px;line-height:1.55;margin:0}
+.pfs-prep-stage.active{border:2px solid #18978e;background:#ecf9f5;padding:13px;box-shadow:0 3px 12px #168a7d13}
+.pfs-prep-stage.active .pfs-prep-number{background:#177f77;color:white}
+.pfs-prep-stage.active strong{color:#176d65}
+@media(max-width:600px){.pfs-prep-stages{grid-template-columns:1fr}.pfs-prep-stage{padding:11px}.pfs-prep-stage.active{padding:10px}}
+@media print{.pfs-prep-stage{break-inside:avoid}.pfs-prep-stage.active{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
