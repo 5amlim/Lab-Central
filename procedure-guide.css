@@ -10,6 +10,9 @@
 .guide-toolbar{scroll-margin-top:85px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:14px 16px;background:#fff;border:1px solid #d9e5ed;border-radius:14px;margin-bottom:13px;box-shadow:0 2px 9px #24435f08}
 .guide-toolbar-info{display:flex;align-items:center;gap:10px;color:#27475e;font-weight:800;font-size:12px}
 .guide-toolbar-info .guide-toolbar-dot{width:9px;height:9px;background:#148e81;border-radius:50%;box-shadow:0 0 0 4px #e0f5f0}
+.guide-toolbar-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.guide-detail-control{background:#f1f8fa;color:#28637f;border:1px solid #d4e5ed;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;min-height:38px;white-space:nowrap}
+.guide-detail-control:hover{background:#e4f3f6;border-color:#a9d1da}
 .guide-mode-switch{display:flex;gap:5px;padding:4px;border:1px solid #dce8ee;background:#f2f6f9;border-radius:11px}
 .guide-mode-switch button{min-height:33px;padding:7px 12px;border:0;border-radius:8px;color:#5a7388;background:transparent;font-size:11px;font-weight:750}
 .guide-mode-switch button[aria-pressed="true"]{background:#205f81;color:#fff;box-shadow:0 2px 7px #1b53602a}
@@ -68,7 +71,7 @@
  .procedure-flow .guide-specimen{flex-direction:column;gap:3px}
  .guide-toolbar{padding:12px}
  .guide-toolbar-info{font-size:11px}
- .guide-mode-switch{width:100%}
+ .guide-toolbar-actions{width:100%;align-items:stretch;flex-direction:column}.guide-detail-control{width:100%}.guide-mode-switch{width:100%}
  .guide-mode-switch button{flex:1}
  .guide-stepper{margin-right:-2px}
  .guide-step-pill{min-width:144px;flex-basis:144px}
