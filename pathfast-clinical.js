@@ -42,7 +42,7 @@ card(6,"RN","Collect and document the repeat","Use the same specimen type and in
 window.LAB_PATHFAST_EXTRAS.baselinePicker()+
 window.LAB_PATHFAST_EXTRAS.timing()+
 
-'<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span>⌄</span></summary><div>'+
+'<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span></span></summary><div>'+
 '<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
 '<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
 '<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Inspect the sample appearance for visible clots or fibrin and follow the specimen-acceptability SOP. Verify patient ID, lane, QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
@@ -64,7 +64,7 @@ function pathway(){
  '<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
  '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
  window.LAB_PATHFAST_EXTRAS.flow()+
- '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>1-hour interpretation and initial-result routing</small></span><span class="pcr-reference-chevron" aria-hidden="true">⌄</span></summary>'+
+ '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>1-hour interpretation and initial-result routing</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
  '<div class="pcr-reference-content pcr-compact-reference">'+
  '<header class="pcr-reference-subheading"><div><span class="pcr-eyebrow">RESULT INTERPRETATION</span><h3>1-hour result criteria</h3></div><span class="pcr-reference-static">Reference only</span></header>'+
  '<div class="pcr-criteria-table" aria-label="One-hour troponin reference criteria">'+
