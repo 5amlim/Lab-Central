@@ -104,8 +104,24 @@ const questions=[
  {id:"confirmation",title:"Provider verification of approved rule-out criteria",opts:[["yes","All protocol criteria confirmed"],["no","One or more criteria not met"],["pending","Review still in progress"]]}
 ];
 let selected={};
+function ruleoutCriteria(){
+ const items=[
+  ["ECG","No new ischemic changes; review the full clinical presentation."],
+  ["Clinical risk","HEART score and other risk findings satisfy the locally approved pathway."],
+  ["Baseline value","Initial PATHFAST hs-cTnI meets the approved assay-specific threshold."],
+  ["Repeat result","Actual repeat hs-cTnI concentration and its delta meet the applicable cutoff."],
+  ["Timing","Confirm draw times; check symptom onset (≥3 h for single-draw rule-out, if authorized)."],
+  ["Exclusions / plan","No overriding concerning features; provider confirms next steps and follow-up."]
+ ];
+ return '<div class="pcr-ruleout-review" role="note" aria-label="Provider rule-out verification criteria">'+
+ '<div class="pcr-ruleout-review-head"><strong>Criteria to verify before confirming</strong><span>Provider review · Refer to approved protocol</span></div>'+
+ '<div class="pcr-ruleout-review-grid">'+items.map(([name,detail])=>'<div class="pcr-ruleout-review-item"><span class="pcr-review-open-dot" aria-hidden="true"></span><div><b>'+esc(name)+'</b><p>'+esc(detail)+'</p></div></div>').join('')+'</div>'+
+ '<p class="pcr-ruleout-review-note"><strong>Threshold approval:</strong> The existing PATHFAST references do not agree on every absolute cutoff or delta boundary. Do not use draft values or a small delta alone for rule-out. Apply the medical-director-approved, assay-specific pathway.</p>'+
+ '</div>';
+}
 function question(q,index){
  return '<div class="pcr-flow-question"><div class="pcr-flow-question-header"><span class="pcr-flow-number">'+index+'</span><strong>'+esc(q.title)+'</strong></div>'+
+ (q.id==="confirmation"?ruleoutCriteria():"")+
  '<div class="pcr-flow-options" role="group" aria-label="'+esc(q.title)+'">'+q.opts.map(([value,label])=>
  '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+esc(label)+(selected[q.id]===value?' ✓':'')+'</button>').join('')+'</div></div>';
 }
