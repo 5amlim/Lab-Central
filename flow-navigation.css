@@ -41,7 +41,8 @@
 .filter-chip[data-filter="Analyzers"].active{background:#e4f1fb;color:#1f5b89;border-color:#b7d6eb}
 .filter-chip[data-filter="Point of care"].active{background:#e5f5f2;color:#11796f;border-color:#b5e0d7}
 .filter-chip[data-filter="Send-outs"].active{background:#fff2df;color:#91601a;border-color:#efd2a1}
-.filter-chip[data-filter="Quality & operations"].active{background:#f0eafa;color:#6b4d92;border-color:#d7c6ec}
+.filter-chip[data-filter="Quality & compliance"].active{background:#f0eafa;color:#6b4d92;border-color:#d7c6ec}
+.filter-chip[data-filter="Operations"].active{background:#eaf5f6;color:#206c78;border-color:#c0dfe4}
 .filter-chip[data-filter="Archived"].active{background:#eef1f4;color:#626b79;border-color:#d5dce4}
 .grid-cards .item-card{position:relative;border-top:3px solid #3a87b7;box-shadow:0 2px 9px #213d6509}
 .grid-cards .item-card .card-icon{background:#eaf4fb;color:#286d9d}
