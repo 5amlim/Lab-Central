@@ -66,12 +66,12 @@ function screenPanel(item,brand,number){
  '<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>'+
  '<div class="qc-device-face"><div class="qc-device-screen"><div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>'+
  '<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options">'+item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
- '<div class="qc-device-screen-bottom"><span>Back</span><span>Screen illustration</span></div></div></div>'+
+ '<div class="qc-device-screen-bottom"><span>Back</span><span >Review selected action</span></div></div></div>'+
  '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
 }
 function screenGallery(list,brand){
  return '<div class="qc-screen-gallery">'+list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
- '<p class="qc-illustration-disclaimer">Illustrative screen layouts, not live controls or exact screenshots. Verify the actual model/software menu and the current approved SOP.</p>';
+ '<p class="qc-illustration-disclaimer">Confirm the correct menu, assay, lot and QC level on the analyzer before printing.</p>';
 }
 function sysmexStep(sec,group,title){
  if(sec.id!=="sysmex"||group!=="daily-qc")return "";
