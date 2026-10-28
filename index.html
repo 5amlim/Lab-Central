@@ -55,7 +55,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261028-6" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261028-7" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
@@ -447,7 +447,8 @@ function athenaMock(type,label,file){
  if(type==='file')return '<div class="ad-mock">'+top+'<div class="ad-mock-upload"><header>Add Document</header><strong>Upload files from computer or network</strong><p>Step 1: Select Document Class</p><div class="ad-field">Select document class <span>⌄</span></div><p>Step 2: Select a file</p><div class="ad-file"><span class="ad-target">Select File</span><small>'+safeHtml(file)+'</small></div><div class="ad-target ad-add">Add Document <em>SELECT</em></div></div></div>';
  if(type==='existing')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Incoming fax · Patient chart</header><div class="ad-preview">Existing faxed requisition</div><p>Verify the document is matched to the correct patient chart.</p></div></div>';
  if(type==='classify')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Document in DATAENTRY</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-target ad-row">◉ Reclassify document <em>SELECT</em></div><div class="ad-target ad-row">Clinical Document <em>CHOOSE</em></div><div class="ad-save">Save</div></div></div>';
- if(type==='label')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document</header><p>Document Label</p><div class="ad-label-search">Search all document labels</div><div class="ad-target ad-row">'+safeHtml(label)+' <em>SELECT</em></div><div class="ad-save">Save</div></div></div>';
+ if(type==='label')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document</header><p>Document Label</p><div class="ad-label-search">Search all document labels</div><div class="ad-target ad-row">'+safeHtml(label)+' <em>SELECT</em></div></div></div>';
+ if(type==='save')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document · '+safeHtml(label)+'</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-row">◯ Data Entry Completed</div><div class="ad-target ad-row">✓ Save <em>FINAL STEP</em></div><p>Confirm the document label is saved in the correct patient chart.</p></div></div>';
  return '';
 }
 function athenaUploadGuide(kind,faxOnly=false){
@@ -456,12 +457,14 @@ function athenaUploadGuide(kind,faxOnly=false){
  const steps=faxOnly?[
   ['Open and verify the fax','Confirm the automatically matched requisition is in the correct chart.','existing'],
   ['Reclassify to Clinical Document','Open document actions, choose Reclassify document, then Clinical Document. Save.','classify'],
-  ['Apply the document label','Select the highlighted document label and save.','label']
+  ['Apply the document label','Select the highlighted document label.','label'],
+  ['Save and verify','Click Save to commit the document label, then confirm it appears correctly in the patient chart.','save']
  ]:[
   ['Open Add document','From the patient chart, select ☰ and Add document.','menu'],
   ['Choose the file and upload','Select the correct PDF file, then Add Document.','file'],
   ['Reclassify to Clinical Document','Open the uploaded file in DATAENTRY. Choose Reclassify document, select Clinical Document, and save.','classify'],
-  ['Apply the document label','Select the highlighted document label, save and verify the file is in the chart.','label']
+  ['Apply the document label','Select the highlighted document label.','label'],
+  ['Save and verify','Click Save to commit the document label, then confirm it appears correctly in the patient chart.','save']
  ];
  return '<details class="ad-guide" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true">⌄</span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
