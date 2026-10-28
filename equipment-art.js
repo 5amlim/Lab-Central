@@ -467,7 +467,7 @@ function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
 /* Large illustrated equipment used by patient and calibration guides.
    The six aluminum channels and long black-foil cartridges are drawn after
    manufacturer rack photos, not as a dimensionally exact machine diagram. */
-function pathfastRackSvg(mode="patient"){
+function pathfastRackSvg(mode="patient",sampleLoaded=true){
  const isCal=mode==="cal";
  const items=isCal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["SAMPLE 1","SAMPLE 2","","","",""];
  const fills=["#7caed6","#7caed6","#ad99d4","#ad99d4","#d4aa66","#7cbda7"];
@@ -488,7 +488,7 @@ function pathfastRackSvg(mode="patient"){
         '<circle cx="'+(x+36)+'" cy="245" r="17" fill="#050b12" stroke="#a7b8c0" stroke-width="4"/>'+
         '<circle cx="'+(x+36)+'" cy="245" r="6" fill="#34454d"/>'+
         '<path d="M'+(x-9)+' 296 L'+(x+58)+' 296 L'+(x+54)+' 326 L'+(x-13)+' 326Z" fill="url(#pfRackWell)" stroke="#70a5b6" stroke-width="2.5"/>'+
-        '<path d="M'+(x-5)+' 311 L'+(x+54)+' 311 L'+(x+52)+' 325 L'+(x-8)+' 325Z" fill="'+(isCal?ink:"#a8404e")+'" opacity=".82"/>'+
+        '<path d="M'+(x-5)+' 311 L'+(x+54)+' 311 L'+(x+52)+' 325 L'+(x-8)+' 325Z" fill="'+(sampleLoaded?(isCal?ink:"#a8404e"):"#d9edf4")+'" opacity=".82"/>'+
         '<path d="M'+(x-4)+' 307 L'+(x+55)+' 307" stroke="#6a9daf" stroke-dasharray="4 3" stroke-width="2"/>' :
         '<path d="M'+(x+2)+' 143 L'+(x+80)+' 143 M'+(x-12)+' 326 L'+(x+70)+' 326" stroke="#bbcbd3" stroke-width="4"/>' )+
       '<rect x="'+(lx-45)+'" y="53" width="90" height="48" rx="9" fill="'+(active?"#f3f9fc":"#f5f7f9")+'" stroke="'+(active?"#aec9d5":"#d3dde2")+'"/>'+
@@ -578,17 +578,20 @@ function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
  const pic=stage==="base"?pathfastRackBaseSvg():
  stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
+ stage==="rack-empty"?pathfastRackSvg(mode,false):
  stage==="rack"?pathfastRackSvg(mode):
  stage==="tips"?pathfastTipRackSvg(mode):
  stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
  const tag=stage==="base"?"REMOVE METAL RACK · PLACE IN CLEAR BASE":
  stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
+ stage==="rack-empty"?"CARTRIDGES SEATED · SAMPLE WELLS STILL EMPTY":
  stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
  stage==="tips"?"SIX LANE TIP POSITIONS":
  stage==="results"?"RESULT AND STATUS VERIFICATION":"CHECK THE UNUSED REAGENT CARTRIDGE";
  const note=stage==="base"?"With the instrument accessible and idle, carefully remove the metal six-slot cartridge rack and seat it in its clear loading base before inserting cartridges.":
  stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
+ stage==="rack-empty"?"Seat the assay cartridges fully into the metal rack while it rests in the clear base. Leave the clear front sample wells empty until the next step.":
  stage==="rack"?"Six-slot aluminum rack; actual occupied lanes and assay assignments must match the instrument display.":
  stage==="tips"?"Use approved new tips in each active position. Follow the operator manual and the instrument display.":
  stage==="results"?"Review actual instrument output, flags and calibration/QC acceptability. Follow reporting and disposal procedures; this is a schematic reference, not a result.":
