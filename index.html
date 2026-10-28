@@ -357,19 +357,25 @@ function renderGuidedProcedure(group,sec){
  const current=Math.max(0,Math.min(state.guideStep,total-1));
  state.guideStep=current;
  const title=guideTitleParts(group.title);
- let h='<section class="procedure-flow" aria-label="'+safeHtml(group.title)+' procedure">';
+ const isPathfastPatient=sec.id==='pathfast'&&group.id==='patient';
+ let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
  h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>Follow the steps in order. Open or close detail groups as needed.</p></div></div>';
  if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
- h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' main '+(total===1?'step':'steps')+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
- h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-label="Collapse all instruction details">Collapse details ▴</button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
+ if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
+ else h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' main '+(total===1?'step':'steps')+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
+ if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-label="Collapse all instruction details">Collapse details ▴</button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
+  if(isPathfastPatient){
+   h+='<details class="pfux-jump"><summary>Jump to another step <span aria-hidden="true">⌄</span></summary><div class="pfux-jump-options">'+steps.map(function(entry,i){return '<button type="button" data-guide-step="'+i+'" class="'+(i===current?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+safeHtml(entry.root.text)+'</button>';}).join('')+'</div></details>';
+  }else{
   h+='<div class="guide-stepper" role="group" aria-label="Jump to a procedure step">';
   h+=steps.map(function(entry,i){
     const name=entry.root.text;
     return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+safeHtml(name)+'</span></button>';
   }).join('');
   h+='</div>';
+  }
   if(state.guideMode==='guided')h+='<div class="guide-progress" role="progressbar" aria-label="Procedure steps viewed" aria-valuenow="'+(current+1)+'" aria-valuemin="0" aria-valuemax="'+total+'"><span style="width:'+((current+1)/total*100)+'%"></span></div>';
  }
  if(state.guideMode==='all'){
