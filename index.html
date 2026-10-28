@@ -96,6 +96,8 @@
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-clinitek-split" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-chevrons" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261028-qc-print-binder" media="all">
+  <link rel="stylesheet" href="biofire-visual.css?v=20261028-blue-right" media="all">
+  <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-action-visuals" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-large-cal-screens" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
@@ -230,8 +232,9 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261028-four-prep-steps"></script>
 <script src="pathfast-interactive.js?v=20261028-provider-criteria"></script>
 <script src="pathfast-clinical.js?v=20261028-tube-inversion"></script>
-<script src="equipment-art.js?v=20261028-rack-base"></script>
+<script src="equipment-art.js?v=20261028-torch-finger-cary-blair"></script>
 <script src="qc-guide.js?v=20261028-qc-screen-actions"></script>
+<script src="biofire-visual.js?v=20261028-vials-and-screens"></script>
 <script>
 (()=>{
 'use strict';
@@ -337,6 +340,32 @@ function renderHome(mode='home'){
  el('mainContent').innerHTML=h;
 }
 function buildGroups(section){
+ if(section.id==='torch'||section.id==='spotfire'){
+  const torch=section.id==='torch';
+  const step=(text,desc)=>[{type:'list',level:1,text},{type:'list',level:2,text:desc}];
+  const blocks=[
+   ...step('Gather test kit and specimen',torch?'Confirm GI panel pouch, loading station, hydration vial (blue), sample injection vial (red), sample buffer, transfer pipette and stool specimen in Cary Blair.':'Confirm correct SPOTFIRE respiratory or sore-throat pouch, SPRK, vial set, sample buffer, transfer pipette, specimen transport medium, expiry and IDs.'),
+   ...step('Prepare pouch loading station', 'Clean the work area per SOP, put on fresh gloves, insert the pouch in the loading station, place the red sample vial in the LEFT well and the blue hydration vial in the RIGHT well. Match the pouch to the kit.'),
+   ...step('Hydrate pouch using blue vial', 'Remove the blue hydration vial from its cover, insert the blunt cannula into the blue hydration port and puncture the seal as described in the IFU. Verify fluid enters reagent wells.'),
+   ...step('Prepare sample buffer and specimen in red vial',torch?'Add GI sample material from the Cary Blair specimen and the approved buffer to the red sample vial in the sequence and volume stated in the GI panel IFU. Mix and handle as directed.':'Transfer the approved specimen volume and sample buffer into the red sample injection vial using the correct panel procedure. Mix as directed and prevent cross-contamination.'),
+   ...step('Inject sample mix into red port', 'Unscrew the red vial and insert its blunt cannula into the red sample port. Puncture the seal and verify the specimen mixture is drawn into the pouch. Do not interchange the red and blue ports.'),
+   ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. The displayed view below is an original reference illustration, not an exact software screenshot.'),
+   ...step('Scan pouch barcode', 'Scan the pouch QR/barcode using the connected scanner when prompted. Confirm the scanned panel and pouch identity.'),
+   ...step('Confirm panel and sample ID', torch?'Verify GI panel and enter/scan the correct specimen ID, matching the labeled pouch.':'Choose the ordered Respiratory or Sore Throat panel and verify the specimen ID and pouch barcode.'),
+   ...step('Load pouch and start run', 'Insert the prepared pouch in the indicated module as shown on the instrument. Verify identifiers and choose Start Run only after the system is ready.'),
+   ...step('Review and document results', 'Review the completed assay status and results, verify identifiers, follow Relaymed/charting guidance and discard the pouch under the applicable biohazard procedure.')
+  ];
+  const patient={id:'patient-testing',title:'Patient testing',blocks};
+  const groups=[patient];
+  let active=null;
+  for(const b of section.blocks||[]){
+   if(b.type==='list'&&b.level===0){
+    if(/\bQC\b/i.test(b.text)){active={id:'qc-new-shipment-lot',title:'QC (new shipment/lot)',blocks:[]};groups.push(active);}
+    else active=null;
+   }else if(active)active.blocks.push(b);
+  }
+  return groups;
+ }
  if(section.id==='api'){
   const from=section.blocks;
   const start=from.findIndex(b=>/^Running API samples$/i.test(b.text));
@@ -488,7 +517,8 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
  const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
  const qcScreenVisual=sec&&window.LAB_QC_GUIDE?.qcClickStep?window.LAB_QC_GUIDE.qcClickStep(sec,groupId,root.text):'';
- const stepBody=(visualizer?visualizer(index):'')+qcScreenVisual+qcPrintVisual+workflowVisual+piccoloVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
+ const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
+ const stepBody=(visualizer?visualizer(index):'')+qcScreenVisual+qcPrintVisual+biofireStep+workflowVisual+piccoloVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  if(isPathfast)return '<details class="guide-card pf-step-collapse" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true"></span></summary><div class="pf-step-collapse-body">'+stepBody+'</div></details>';
  return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+stepBody+'</article>';
