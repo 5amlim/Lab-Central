@@ -509,8 +509,9 @@ function videoLibrary(){
 }
 function sectionOverview(sec,groups){
  if(sec.id==='pathfast')return `<section class="pfux-overview">
- <div class="pfux-overview-title"><h2>Select a workflow above</h2><p>Patient samples and Calibration + QC include screen-by-screen instructions. RN collection covers specimen timing; Chest pain pathway opens the provider decision reference.</p></div>
- <p class="pfux-overview-hint"><strong>Status reminder:</strong> Pink assay pill = CAL/QC required. Gray pill = ready. Confirm status and follow the approved assay IFU.</p>
+ <div class="pfux-overview-title"><h2>Choose what you need to do</h2><p>Select a workflow above. Each opens the relevant instructions without unrelated references.</p></div>
+ <div class="pfux-start-actions"><button type="button" class="pfux-start-pathway" data-gotab="chest-pain"><span class="pfux-start-icon">${svg('activity')}</span><span><strong>Chest pain pathway</strong><small>Open interactive hs-Troponin I provider reference</small></span><span aria-hidden="true">›</span></button><button type="button" class="pfux-start-collection" data-gotab="rn-collection"><span class="pfux-start-icon">${svg('test-tube')}</span><span><strong>Serial collection timing</strong><small>1-hour and 2-hour windows, handling, and interference checks</small></span><span aria-hidden="true">›</span></button></div>
+ <p class="pfux-overview-hint"><strong>Analyzer status:</strong> Pink assay indicator means CAL/QC is due. Gray means ready after acceptable QC. Follow the instrument display and approved IFU.</p>
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
@@ -539,10 +540,10 @@ function sectionRender(sec,tab){
    {id:'patient',title:'Patient testing',subtitle:'Screen-by-screen guide',index:'01'},
    {id:'rn-collection',title:'RN collection',subtitle:'Draw time and handling',index:'02'},
    {id:'cal-qc',title:'Calibration + QC',subtitle:'Eight guided steps',index:'03'},
-   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Interactive provider flow',index:'04'}
+   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider decision guide',index:'04'}
   ];
   h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST primary workflows">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${x.id}" ${tab===x.id?'aria-current="page"':''}><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
-  const supporting=tabs.filter(x=>!workflows.some(y=>y.id===x.id));
+  const supporting=tabs.filter(x=>x.id!=='overview'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
