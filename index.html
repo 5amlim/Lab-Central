@@ -60,10 +60,10 @@
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-4" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261028-3" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261028-rn-first" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-2" media="all">
-  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028" media="all">
+  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-three-zones" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 </head>
 <body>
@@ -142,7 +142,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028-7"></script>
 <script src="pathfast-screen-guide.js?v=20261028-4"></script>
-<script src="pathfast-interactive.js?v=20261028-post-target-window"></script>
+<script src="pathfast-interactive.js?v=20261028-outcome-zones"></script>
 <script src="pathfast-clinical.js?v=20261028-post-target-window"></script>
 <script src="equipment-art.js?v=20261028-pathfast-true-cartridge"></script>
 <script>
@@ -602,7 +602,7 @@ function videoLibrary(){
 function sectionOverview(sec,groups){
  if(sec.id==='pathfast')return window.LAB_EQUIPMENT_ART.render(sec)+window.LAB_EQUIPMENT_ART.specimenGuide(sec)+`<section class="pfux-overview">
  <div class="pfux-overview-title"><h2>Choose what you need to do</h2><p>Select a workflow above. Each opens the relevant instructions without unrelated references.</p></div>
- <div class="pfux-start-actions"><button type="button" class="pfux-start-pathway" data-gotab="chest-pain"><span class="pfux-start-icon">${svg('activity')}</span><span><strong>Chest pain pathway</strong><small>Open interactive hs-Troponin I provider reference</small></span><span aria-hidden="true">›</span></button><button type="button" class="pfux-start-collection" data-gotab="rn-collection"><span class="pfux-start-icon">${svg('test-tube')}</span><span><strong>Serial collection timing</strong><small>1-hour and 2-hour windows, handling, and interference checks</small></span><span aria-hidden="true">›</span></button></div>
+ <p class="pfux-overview-flow-note">Use the workflow above: <strong>RN collection</strong>, <strong>Patient testing</strong>, then <strong>Chest pain pathway</strong>. Calibration + QC is a separate scheduled maintenance task.</p>
  <p class="pfux-overview-hint"><strong>Analyzer status:</strong> Pink assay indicator means CAL/QC is due. Gray means ready after acceptable QC. Follow the instrument display and approved IFU.</p>
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
@@ -683,13 +683,13 @@ function sectionRender(sec,tab){
  if(sec.id==='sendout')h+=`<div class="ops-link-card"><div><strong>Lab Sendout Log: step-by-step handoff</strong><p>Color printing, RN .rn documentation, processing, Microsoft Forms and specimen bin.</p></div><button type="button" data-go="sendout-log">Open Sendout Log →</button></div>`;
  if(sec.id==='pathfast'){
   const workflows=[
-   {id:'patient',title:'Patient testing',subtitle:'Screen-by-screen guide',index:'01'},
-   {id:'rn-collection',title:'RN collection',subtitle:'Draw time and handling',index:'02'},
-   {id:'cal-qc',title:'Calibration + QC',subtitle:'Eight guided steps',index:'03'},
-   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider decision guide',index:'04'}
+   {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'01'},
+   {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'02'},
+   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider review & result zones',index:'03'}
   ];
-  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST primary workflows">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${x.id}" ${tab===x.id?'aria-current="page"':''}><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
-  const supporting=tabs.filter(x=>x.id!=='overview'&&!workflows.some(y=>y.id===x.id));
+  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${x.id}" ${tab===x.id?'aria-current="page"':''}><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
+  h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="cal-qc" ${tab==='cal-qc'?'aria-current="page"':''}><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">28-DAY MAINTENANCE</span></button></div>`;
+  const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
