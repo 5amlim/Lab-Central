@@ -291,6 +291,74 @@ function specimenGuide(sec){
 }
 
 
+
+/* Separate CLINITEK Status+ consumables. A strip and an hCG cassette must
+   never be represented as one combined test device. */
+function clinitekKit(kind,filled){
+ const name=kind==="hcg"?"CLINITEST hCG cassette":"Siemens urinalysis dipstick";
+ if(kind==="hcg"){
+  const cassette='<ellipse cx="154" cy="173" rx="121" ry="11" fill="#e9eff2"/>'+
+   '<rect x="39" y="67" width="236" height="92" rx="17" fill="#f7fafb" stroke="#94abb9" stroke-width="3.5"/>'+
+   '<path d="M50 78 H262" stroke="#e4ebef" stroke-width="3"/>'+
+   '<rect x="70" y="97" width="101" height="35" rx="6" fill="#e1ebee" stroke="#b2c7d1" stroke-width="2"/>'+
+   '<rect x="85" y="104" width="73" height="21" rx="4" fill="#f5f8f9" stroke="#c5d4dc"/>'+
+   '<text x="91" y="102" font-size="9" fill="#6b8799" font-family="Arial">C</text>'+
+   '<text x="126" y="102" font-size="9" fill="#6b8799" font-family="Arial">T</text>'+
+   (filled?'<rect x="102" y="107" width="4" height="15" rx="2" fill="#ad567d"/><rect x="135" y="107" width="4" height="15" rx="2" fill="#a96685"/>':'')+
+   '<circle cx="224" cy="115" r="16" fill="'+(filled?"#ecd3dd":"#f9fdff")+'" stroke="#9aaeba" stroke-width="3"/>'+
+   '<circle cx="224" cy="115" r="8" fill="'+(filled?"#b77b91":"#edf4f7")+'" opacity=".9"/>'+
+   '<text x="224" y="144" font-family="Arial" font-size="10" fill="#4b7185" font-weight="850" text-anchor="middle">S</text>'+
+   '<text x="117" y="146" font-family="Arial" font-size="10" fill="#506d80" font-weight="850" text-anchor="middle">CLINITEST hCG</text>'+
+   '<path d="M224 94 L250 34 L304 34" fill="none" stroke="#258b9b" stroke-width="2.3"/>'+
+   '<text x="265" y="26" font-size="11" fill="#27687a" font-family="Arial" font-weight="850" text-anchor="middle">SAMPLE WELL</text>'+
+   (filled?'<path d="M215 80 Q206 95 214 97 Q223 98 215 80Z" fill="#c46c7d" opacity=".8"/>':'');
+  return illustratedSvg(cassette,name+(filled?" with urine applied to its sample well":" unused; sample well empty"));
+ }
+ const colors=filled?["#cac868","#aa7595","#78a7bf","#d8b678","#a57db1","#b5cd8f","#de9a7a","#a7bcda","#c3a768","#9ab891"]:["#f4df94","#d0c0dc","#e5d5a3","#c9e3a1","#e9d8b3","#cfc4b3","#f0d3ae","#d3d4e9","#cfd8aa","#dfd8b2"];
+ const strip='<ellipse cx="153" cy="158" rx="146" ry="9" fill="#e8eff2"/>'+
+  '<rect x="16" y="91" width="280" height="35" rx="6" fill="#f5f8fa" stroke="#98b3c1" stroke-width="2.6"/>'+
+  '<rect x="17" y="98" width="61" height="21" rx="3" fill="#e8f0f4"/>'+
+  '<text x="45" y="111" font-size="11" font-family="Arial" font-weight="800" fill="#4f839b" text-anchor="middle">UA</text>'+
+  colors.map((color,i)=>'<rect x="'+(81+i*20)+'" y="97" width="16" height="23" rx="3" fill="'+color+'" stroke="#b8c6cd" stroke-width="1"/>').join('')+
+  '<path d="M80 121 L280 121" stroke="#b6c3cc" stroke-width="2"/>'+
+  '<path d="M95 90 L95 69 L136 69" stroke="#328ba0" stroke-width="2" fill="none"/>'+
+  '<text x="137" y="65" font-family="Arial" font-size="10" fill="#2c7088" font-weight="850">REAGENT PADS</text>'+
+  (filled?'<path d="M180 34 Q159 66 180 69 Q201 66 180 34Z" fill="#dfb664" opacity=".65"/>':'');
+ return illustratedSvg(strip,name+(filled?" after dipping urine onto reagent pads":" before dipping"));
+}
+function clinitekVisualGuide(sec){
+ const build=(type,label,color,steps,desc,open)=>{
+  const cards=steps.map((st,i)=>{
+   let visual;
+   if(i===0)visual=mediaSvg("urine");
+   else if(i===steps.length-1)visual=illustratedSvg(body("urine",specs.clinitek.accent),"CLINITEK Status+ device","0 0 740 310");
+   else visual=clinitekKit(type,i>=2);
+   return '<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(st[0])+'</strong></div>'+
+   '<div class="device-gallery-image">'+visual+'</div><p>'+visualEsc(st[1])+'</p></article>';
+  }).join('');
+  return '<details class="clinitek-visual-track" '+(open?'open':'')+'><summary><span class="clinitek-track-icon '+color+'">'+(type==="hcg"?"hCG":"UA")+'</span>'+
+   '<span><strong>'+label+'</strong><small>'+desc+'</small></span><span class="clinitek-track-chevron" aria-hidden="true">⌄</span></summary>'+
+   '<div class="clinitek-track-content"><div class="device-gallery-grid">'+cards+'</div></div></details>';
+ };
+ const ua=[
+ ["Collect a fresh urine specimen","Use a clean dry container and check patient identification."],
+ ["Identify the UA dipstick","Remove a reagent strip from the bottle and recap it immediately. Use the strip test table insert."],
+ ["Press START, dip, blot, and position strip","Press START first. Within 8 seconds, wet the reagent pads, blot the edge, and place the pads-up strip in its channel."],
+ ["Read the strip on CLINITEK Status+","Let the analyzer pull in the test table automatically, review results, and discard the used strip."]
+ ];
+ const hcg=[
+ ["Collect a fresh urine specimen","Use a clean dry container and verify the requisition and patient."],
+ ["Identify the hCG cassette and pipette","Use an unopened CLINITEST hCG cassette and the single-use pipette provided in its pack."],
+ ["Place cassette, then press START","Select Cassette Test, position the cassette on the correct test table insert, and select START. Do not prefill."],
+ ["Dispense urine into the hCG cassette","Within the 8-second window, use the included pipette to transfer one 200 µL stem of urine to the sample well. Do not dispense the overflow reservoir."],
+ ["Read the hCG cassette on CLINITEK Status+","Let the test table pull in, review the interpreted result, then discard the used cassette."]
+ ];
+ return '<section class="device-gallery clinitek-gallery" aria-label="Separate Clinitek urinalysis and hCG illustrated workflows">'+
+ '<div class="device-gallery-heading"><div><span>CHOOSE TEST TYPE</span><h2>Two separate testing workflows</h2><p>Open only the test being performed. The UA strip and hCG cassette are not interchangeable.</p></div></div>'+
+ build("ua","Urinalysis dipstick","strip",ua.length?ua:[],"Dipstick with reagent pads · Strip Test",true)+
+ build("hcg","hCG pregnancy cassette","cassette",hcg,"White cassette and single-use pipette · Cassette Test",false)+
+ '<p class="device-gallery-note">Follow the current Siemens CLINITEK Status+ Operator Guide and your approved site SOP. Illustrations are simplified training references.</p></section>';
+}
 function kitShape(id,filled,context){
  const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
  const specimen=filled?sampleColor:"#e5f1f5";
@@ -338,17 +406,8 @@ function kitShape(id,filled,context){
    '<text x="241" y="50" font-size="10.5" fill="#a74556" font-weight="830">SAMPLE</text>';
   return illustratedSvg(h,"BioFire sealed pouch with blue hydration port and red sample port "+(filled?"after transfer":"before transfer"));
  }
- if(id==="clinitek"){
-  const cassette='<rect x="20" y="88" width="158" height="58" rx="13" fill="#f6f8fa" stroke="'+outline+'" stroke-width="3"/>'+
-    '<rect x="54" y="108" width="49" height="18" rx="4" fill="#e1edf2"/>'+
-    '<circle cx="135" cy="117" r="11" fill="'+(filled?"#ecd3d5":"#eef6f9")+'" stroke="#9bb6c4" stroke-width="3"/>'+
-    '<text x="76" y="138" font-size="10" fill="#5b7c8e" text-anchor="middle">hCG</text>';
-  const strip='<rect x="199" y="102" width="96" height="22" rx="6" fill="#e9edf0" stroke="#aabdc8" stroke-width="2"/>'+
-    Array.from({length:9},(_,i)=>'<rect x="'+(207+i*9)+'" y="106" width="7" height="14" rx="2" fill="'+(filled?["#cbd870","#e8a875","#b7a8ca","#7fbfb7","#d8c56f"][i%5]:"#fafbfb")+'" stroke="#b2bdc6" stroke-width=".6"/>').join("")+
-    '<text x="246" y="140" font-size="9" fill="#56798d" text-anchor="middle">URINALYSIS STRIP</text>';
-  return illustratedSvg(cassette+strip,"Clinitek hCG cassette and urinalysis reagent strip, "+(filled?"sample applied":"unused"));
- }
- if(id==="febridx"){
+ if(id==="clinitek")return clinitekKit(context==="hcg"?"hcg":"ua",filled);
+  if(id==="febridx"){
   h='<rect x="59" y="67" width="213" height="83" rx="16" fill="#f7fbfc" stroke="'+outline+'" stroke-width="3"/>'+
     '<rect x="90" y="85" width="89" height="26" rx="7" fill="#edf4f6" stroke="#9dbbca" stroke-width="2"/>'+
     '<circle cx="223" cy="109" r="16" fill="'+specimen+'" stroke="#bc5264" stroke-width="3"/>'+
@@ -417,8 +476,15 @@ function kitScene(id,stage,context){
  const note=opaque?"Closed pouches and cartridges conceal the sample after transfer.":"Sample position is schematic; follow the assay IFU for actual fill and handling.";
  return '<div class="dev-kit-view"><div class="dev-kit-state">'+title+'</div><div class="dev-kit-drawing">'+kitShape(id,loaded,context)+'</div><p>'+note+'</p></div>';
 }
-function workflowVisual(sec,title){
+function workflowVisual(sec,title,groupTitle=""){
  if(!sec||!collection[sec.id]||sec.archived)return "";
+ if(sec.id==="clinitek"&&/^(ua-strip|hcg-cassette|ua-qc|hcg-qc)$/.test(groupTitle)){
+  const hcg=/hcg/.test(groupTitle),qc=/qc/.test(groupTitle),kind=hcg?"hcg":"ua";
+  return '<div class="dev-workflow-visual clinitek-single-visual"><div class="dev-visual-header"><strong>'+(hcg?'hCG CASSETTE':'URINALYSIS DIPSTICK')+'</strong><span>'+(qc?'Control testing':'Patient testing')+'</span></div><div class="dev-kit-scenes">'+
+    '<div class="dev-kit-view"><div class="dev-kit-state">UNUSED '+(hcg?'CASSETTE':'STRIP')+'</div><div class="dev-kit-drawing">'+clinitekKit(kind,false)+'</div></div>'+
+    '<div class="dev-kit-view"><div class="dev-kit-state">'+(qc?'CONTROL APPLIED':'AFTER URINE')+'</div><div class="dev-kit-drawing">'+clinitekKit(kind,true)+'</div></div></div></div>';
+ }
+
  const id=sec.id,t=String(title).toLowerCase();
  const qc=/\bqc\b|control|calibration/i.test(title);
  const patient=/running|patient|samples|test|fingerstick|blood|collection/i.test(title);
@@ -439,6 +505,12 @@ function workflowVisual(sec,title){
 }
 function inlineKitVisual(sec,title,depth,rootTitle){
  if(!sec||!collection[sec.id]||sec.archived||sec.id==="piccolo")return "";
+ if(sec.id==="clinitek"&&/^(ua-strip|hcg-cassette|ua-qc|hcg-qc)$/.test(rootTitle)){
+  if(!/cassette|dipstick|strip|test table|sample|start|pipette/i.test(title))return "";
+  const kind=/hcg/.test(rootTitle)?"hcg":"ua",filled=/dispense|dip|blot|apply|urine|control/i.test(title);
+  return '<div class="dev-inline-illustration clinitek-inline-kit"><div class="dev-inline-drawing">'+clinitekKit(kind,filled)+'</div><span class="dev-inline-caption">'+(kind==="hcg"?"CLINITEST hCG cassette":"UA reagent dipstick")+'</span></div>';
+ }
+
  const t=String(title).toLowerCase(),root=String(rootTitle||"").toLowerCase();
  if(depth>1)return "";
  const relevant=/cartridge|cassette|test kit|pouch|vial|test strip|pipett|microcuvette|disc|reagent|sample port|loading station|sample well|rack|device|insert|dispense|apply sample|transfer pipette|load sample|load the sample|load the rack/i.test(title);
@@ -458,7 +530,7 @@ const visualStepsText={
  piccolo:[["Confirm green-top collection","Use the approved lithium-heparin whole blood or allowed plasma specimen."],["Inspect the reagent disc","Identify the clear single-use chemistry disc and locate its near-center sample port."],["Transfer sample to disc","Use the supplied pipette and a fresh tip. Check the molded sample chamber fill marks."],["Insert the disc","Place the filled disc in the front drawer and complete patient ID and analyzer prompts."]],
  pathfast:[["Confirm green-top collection","Use the approved lithium-heparin specimen and verify mixing/clots."],["Retrieve reagent cartridges","Match each assay cartridge to the ordered test and occupied rack lane."],["Dispense into sample wells","Keep patient specimen and cartridge lane matched; follow the IFU for required volume."],["Load rack and operate","Use the instrument's SAMPLE and SID screens and verify the correct lane before START."]],
  triage:[["Identify specimen for panel","EDTA blood is used for cardiac markers; urine is used for applicable urine assays."],["Identify test device","Each assay kit includes its test device and an assay-specific transfer pipette."],["Add sample","Transfer sample to the designated device port using the assay kit instructions."],["Read on MeterPro","Insert the prepared device and follow the meter's patient-test prompts."]],
- clinitek:[["Collect fresh urine","Use a clean urine collection container; confirm assay-specific handling."],["Identify strip or cassette","Urinalysis uses reagent strips and CLINITEST hCG uses a cassette."],["Apply sample","Dip the reagent strip or dispense urine into the hCG cassette as instructed."],["Run Status+ analyzer","Place the correct strip or cassette on the test table and follow its test mode."]],
+ clinitek:[["Select the applicable workflow","Urinalysis dipstick and CLINITEST hCG cassette are separate consumables with different sampling methods."],["Use the correct consumable","See the two dedicated workflows below."],["Load only after START","Siemens requires pressing START before sample application for both test types."],["Review analyzer output","Verify the intended test mode and patient before recording results."]],
  torch:[["Collect stool in Cary Blair","GI panel specimens require an approved stool transport medium."],["Prepare pouch and loading station","Identify the pouch, blue hydration port, red sample port and corresponding vials."],["Hydrate and transfer sample","Follow the panel IFU. Fluids enter the sealed pouch and are not directly visible afterward."],["Insert prepared pouch","Load the pouch into the correct TORCH module and run the assigned panel."]],
  spotfire:[["Select correct transport media","Choose UTM/VTM for respiratory or eSwab for throat per the selected assay."],["Prepare kit and pouch","Identify the blue hydration vial and red sample injection vial."],["Hydrate and transfer sample","Use the pouch loading station and assay-specific transfer steps."],["Run on SPOTFIRE","Insert the prepared pouch and confirm panel selection on the analyzer."]],
  febridx:[["Collect fingerstick blood","FebriDx uses a direct fingerstick sample. No purple or green-top tube is used."],["Check the unused FebriDx device","Identify the integrated single-use blood collection and test device."],["Load sample into device","Use the integrated collection tube and actuation method described by the current kit IFU."],["Develop and read","Follow the manufacturer timing and interpretation instructions; the device is not an analyzer cartridge."]],
@@ -472,6 +544,7 @@ const visualStepsText={
 };
 function visualGuide(sec){
  if(!sec||!specs[sec.id]||!visualStepsText[sec.id])return "";
+ if(sec.id==="clinitek")return clinitekVisualGuide(sec);
  const id=sec.id,arr=visualStepsText[id],med=collection[id]||[],archive=!!sec.archived;
  const title=archive?"Historical consumable reference":"Specimen to instrument · visual steps";
  let steps=arr.map((step,i)=>{
@@ -492,5 +565,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Illustrative components are simplified, not photographic replicas or accurate fill-scale diagrams. Use the actual kit insert and local approved SOP for volumes, position, timing, specimen handling and QC. Opaque kits may not visibly show their internal sample.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
