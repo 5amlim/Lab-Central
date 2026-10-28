@@ -56,6 +56,7 @@
   
   
   <link rel="stylesheet" href="flow-navigation.css?v=20261028" media="all">
+  <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -146,7 +147,7 @@ const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);
 let favs=[];let localVideos={};
 try{favs=JSON.parse(localStorage.getItem('labGuideFavorites')||'[]')||[];localVideos=JSON.parse(localStorage.getItem('labGuideVideoOverrides')||'{}')||{}}catch(_){favs=[];localVideos={}}
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqBranch:'complete',reqResolution:'provided'};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -286,6 +287,85 @@ function drawNodes(nodes,depth=0){
  }
  return h+'</ol>';
 }
+
+function guideTabTitle(title){
+ const t=String(title||'');
+ if(t.length<=31)return t;
+ const shorter=t.split(/\s+-\s+(?=\()/)[0].split(/\s+\(/)[0];
+ return shorter.length<=31?shorter:shorter.slice(0,28).trimEnd()+'…';
+}
+function guideTitleParts(title){
+ const t=String(title||'');
+ const short=guideTabTitle(t);
+ const remaining=t===short?'':t.slice(short.length).replace(/^\s*[-–:()\s]+/,'').replace(/[()\s]+$/,'');
+ return {short:short,detail:remaining||''};
+}
+function guideStepData(nodes){
+ const steps=[],pending=[];
+ for(const node of nodes){
+  if(node.kind==='note'){
+   if(steps.length)steps[steps.length-1].notes.push(node);
+   else pending.push(node);
+  }else{
+   steps.push({root:node,leading:steps.length?[]:pending.splice(0),notes:[]});
+  }
+ }
+ if(!steps.length)steps.push({root:{kind:'step',text:'Reference notes',children:nodes},leading:[],notes:[]});
+ return steps;
+}
+function guideDetailNodes(nodes,depth){
+ depth=depth||0;
+ return nodes.map(function(n){
+  if(n.kind==='note'){
+   const urgent=/^(IMPORTANT|WARNING|DO NOT|A\) DO NOT|B\) DO NOT)/i.test(n.text);
+   return '<aside class="guide-note'+(urgent?' urgent':'')+'">'+markText(n.text)+'</aside>';
+  }
+  if(n.children&&n.children.length){
+   return '<details class="guide-group" open><summary><span class="guide-group-tag" aria-hidden="true">'+(depth===0?'›':'+')+'</span><span class="guide-group-title">'+markText(n.text)+'</span><span class="guide-group-chevron" aria-hidden="true">⌄</span></summary><div class="guide-group-body">'+guideDetailNodes(n.children,depth+1)+'</div></details>';
+  }
+  return '<div class="guide-line"><span class="guide-line-dot" aria-hidden="true"></span><div>'+markText(n.text)+'</div></div>';
+ }).join('');
+}
+function guideStepCard(entry,index,total){
+ const root=entry.root;
+ const content=guideDetailNodes(entry.leading,0)+guideDetailNodes(root.children||[],0)+guideDetailNodes(entry.notes,0);
+ return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">Step '+(index+1)+' of '+total+'</span><h3>'+markText(root.text)+'</h3></div></header>'+(content?'<div class="guide-card-body">'+content+'</div>':'')+'</article>';
+}
+function renderGuidedProcedure(group,sec){
+ const key=sec.id+'/'+group.id;
+ if(state.guideRoute!==key){state.guideRoute=key;state.guideStep=0;state.guideMode='guided';}
+ const steps=guideStepData(makeTree(group.blocks));
+ const total=steps.length;
+ const current=Math.max(0,Math.min(state.guideStep,total-1));
+ state.guideStep=current;
+ const title=guideTitleParts(group.title);
+ let h='<section class="procedure-flow" aria-label="'+safeHtml(group.title)+' procedure">';
+ h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>Follow the steps in order. Open or close detail groups as needed.</p></div></div>';
+ if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
+ h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' main '+(total===1?'step':'steps')+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
+ h+='<div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div>';
+ if(total>1){
+  h+='<div class="guide-stepper" role="group" aria-label="Jump to a procedure step">';
+  h+=steps.map(function(entry,i){
+    const name=entry.root.text;
+    return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+safeHtml(name)+'</span></button>';
+  }).join('');
+  h+='</div>';
+  if(state.guideMode==='guided')h+='<div class="guide-progress" role="progressbar" aria-label="Procedure steps viewed" aria-valuenow="'+(current+1)+'" aria-valuemin="0" aria-valuemax="'+total+'"><span style="width:'+((current+1)/total*100)+'%"></span></div>';
+ }
+ if(state.guideMode==='all'){
+  h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all">'+steps.map(function(entry,i){return guideStepCard(entry,i,total)}).join('')+'</div>';
+ }else{
+  h+='<div class="guide-stage">'+guideStepCard(steps[current],current,total)+'</div>';
+  h+='<div class="guide-bottom"><span class="guide-step-count">'+(current+1)+' / '+total+' main steps</span><div class="guide-transport">';
+  h+='<button type="button" class="guide-button" data-guide-step="'+(current-1)+'" '+(current===0?'disabled':'')+' aria-label="Previous procedure step">← Previous</button>';
+  if(current<total-1)h+='<button type="button" class="guide-button primary" data-guide-step="'+(current+1)+'" aria-label="Next procedure step">Next step →</button>';
+  else h+='<button type="button" class="guide-button primary" data-guide-mode="all">View all steps ↗</button>';
+  h+='</div></div>';
+ }
+ return h+'</section>';
+}
+
 const sources={
  pathfast:[{name:'PATHFAST customer resources',desc:'Polymedco customer resource portal',url:'https://info.polymedco.com/customer-portal'}],
  sendout:[{name:'Quest Test Directory',desc:'Verify test codes, tubes and handling before collection',url:'https://testdirectory.questdiagnostics.com/test/home'},
@@ -421,7 +501,7 @@ function sectionRender(sec,tab){
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='sendout'||sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
  else if(sec.id==='pathfast')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Check training and assay-specific requirements.</strong> Verify lot details, QC acceptance, clinical pathways and specimen handling against the latest PATHFAST IFU and approved protocol before patient testing.</div></div>`;
- h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div><div class="tab-content" id="activeTabContent">`;
+ h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div><div class="tab-content" id="activeTabContent">`;
  if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(tab==='videos')h+=videoLibrary();
@@ -429,9 +509,7 @@ function sectionRender(sec,tab){
  else if(tab==='resources')h+=resources(sec);
  else{
   const group=groups.find(g=>g.id===tab);
-  if(group){
-   h+=`<div class="tab-header"><div><h2 class="tab-heading">${safeHtml(group.title)}</h2><p class="tab-description">Step-by-step notes from the uploaded lab cheat sheet.</p></div><button type="button" class="subtle-button" data-expand="all">Collapse all</button></div><div class="reading-panel"><div class="reading-body">${drawNodes(makeTree(group.blocks))}</div></div>`;
-  }
+  if(group)h+=renderGuidedProcedure(group,sec);
  }
  h+=`<p class="source-footnote">Based on “Lab Cheat Sheet” supplied for this build. Information may be superseded by current SOPs, package inserts, clinical policies or vendor instructions. Do not enter patient details on this site.</p></div>`;
  el('mainContent').innerHTML=h;
@@ -463,6 +541,20 @@ function saveEditor(clear=false){
  closeEditor();render();
 }
 document.addEventListener('click',e=>{
+ const stepButton=e.target.closest('[data-guide-step]');
+ if(stepButton&&state.section){
+  const next=Number(stepButton.dataset.guideStep);
+  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
+  return;
+ }
+ const modeButton=e.target.closest('[data-guide-mode]');
+ if(modeButton&&state.section){
+  if(modeButton.dataset.guideMode==='guided'||modeButton.dataset.guideMode==='all'){
+   state.guideMode=modeButton.dataset.guideMode;render();
+   const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  return;
+ }
  const nav=e.target.closest('[data-go]');if(nav){navigate(nav.dataset.go);return}
  const workflowTab=e.target.closest('[data-workflowtab]');if(workflowTab){navigate('orders',workflowTab.dataset.workflowtab);return}
  const branch=e.target.closest('[data-reqbranch]');if(branch){state.reqBranch=branch.dataset.reqbranch;state.reqResolution='provided';render();return}
@@ -482,7 +574,24 @@ el('homeCrumb').addEventListener('click',()=>navigate('home'));
 el('openSidebar').addEventListener('click',()=>{el('sidebar').classList.add('open');el('sidebarScrim').classList.add('show')});
 el('closeSidebar').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 el('sidebarScrim').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
-el('printBtn').addEventListener('click',()=>window.print());
+let guidePrintRestore=null;
+el('printBtn').addEventListener('click',()=>{
+ const route=sectionFromHash();
+ const sec=all.find(x=>x.id===route.id);
+ if(sec&&buildGroups(sec).some(x=>x.id===route.tab)){
+  guidePrintRestore=state.guideMode;
+  state.guideMode='all';
+  render();
+ }
+ window.print();
+});
+window.addEventListener('afterprint',()=>{
+ if(guidePrintRestore!==null){
+  state.guideMode=guidePrintRestore;
+  guidePrintRestore=null;
+  render();
+ }
+});
 el('closeVideoDialog').addEventListener('click',closeEditor);
 el('saveVideo').addEventListener('click',()=>saveEditor());
 el('clearVideo').addEventListener('click',()=>saveEditor(true));
