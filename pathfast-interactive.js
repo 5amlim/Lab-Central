@@ -15,7 +15,7 @@ function timing(){
 function plasmaTube(){
  return '<svg class="pcr-plasma-svg" viewBox="0 0 355 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Green-top lithium heparin tube after centrifugation, with pale yellow plasma above buffy coat and red blood cell layer">'+
  '<defs><linearGradient id="pcrLayerGlass" x1="0" x2="1"><stop stop-color="#c9dde6"/><stop offset=".42" stop-color="#fff" stop-opacity=".86"/><stop offset="1" stop-color="#bad1dc"/></linearGradient></defs>'+
- '<ellipse cx="107" cy="257" rx="65" ry="8" fill="#e2e9ec"/>'+
+ '<g transform="translate(22 0) scale(.79 1)"><ellipse cx="107" cy="257" rx="65" ry="8" fill="#e2e9ec"/>'+ 
  '<rect x="68" y="12" width="77" height="35" rx="10" fill="#168d60" stroke="#0b7048" stroke-width="3"/>'+
  '<path d="M74 46 L139 46 L136 224 Q107 250 80 224Z" fill="url(#pcrLayerGlass)" stroke="#8caeba" stroke-width="3"/>'+
  '<path d="M80 65 L133 65 L131 146 L82 146Z" fill="#f3d98d"/>'+
@@ -23,13 +23,13 @@ function plasmaTube(){
  '<path d="M82 153 L131 153 L129 220 Q106 236 85 220Z" fill="#b9434a"/>'+
  '<rect x="85" y="91" width="43" height="33" rx="3" fill="#fff" opacity=".91"/>'+
  '<text x="106" y="106" text-anchor="middle" font-size="9" font-weight="900" fill="#207d61">Li-HEP</text>'+
- '<text x="106" y="118" text-anchor="middle" font-size="8" fill="#537b70">PLASMA</text>'+
- '<path d="M141 104 H194" stroke="#b6933a" stroke-width="3"/><circle cx="141" cy="104" r="3" fill="#b6933a"/>'+
+ '<text x="106" y="118" text-anchor="middle" font-size="8" fill="#537b70">PLASMA</text></g>'+ 
+ '<path d="M137 104 H194" stroke="#b6933a" stroke-width="3"/><circle cx="137" cy="104" r="3" fill="#b6933a"/>'+
  '<text x="203" y="100" font-size="15" font-weight="900" fill="#806527">PLASMA</text>'+
  '<text x="203" y="115" font-size="11" fill="#907b4b">Retest this layer</text>'+
- '<path d="M141 149 H194" stroke="#899b91" stroke-width="2"/><circle cx="141" cy="149" r="3" fill="#899b91"/>'+
+ '<path d="M137 149 H194" stroke="#899b91" stroke-width="2"/><circle cx="137" cy="149" r="3" fill="#899b91"/>'+
  '<text x="203" y="152" font-size="11" font-weight="750" fill="#6d7b76">Buffy coat</text>'+
- '<path d="M141 192 H194" stroke="#b9434a" stroke-width="3"/><circle cx="141" cy="192" r="3" fill="#b9434a"/>'+
+ '<path d="M137 192 H194" stroke="#b9434a" stroke-width="3"/><circle cx="137" cy="192" r="3" fill="#b9434a"/>'+
  '<text x="203" y="188" font-size="14" font-weight="900" fill="#a83e45">RED CELLS</text>'+
  '<text x="203" y="203" font-size="11" fill="#987175">Do not aspirate</text>'+
  '<text x="107" y="269" text-anchor="middle" font-size="10.5" font-weight="800" fill="#58816d">Original specimen</text></svg>';
