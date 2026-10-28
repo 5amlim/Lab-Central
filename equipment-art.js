@@ -310,8 +310,9 @@ function mediaSvg(kind){
   const stool=kind==="stool";
   return illustratedSvg('<ellipse cx="159" cy="182" rx="66" ry="8" fill="#e7eef2"/>'+
    '<rect x="96" y="63" width="128" height="112" rx="15" fill="#edf6f8" stroke="#93acba" stroke-width="3"/>'+
-   '<path d="M104 115 H216 V152 Q216 169 203 169 H118 Q104 167 104 151Z" fill="'+(stool?"#9c815f":"#e0b861")+'" opacity=".54"/>'+
+   '<path d="M104 115 H216 V152 Q216 169 203 169 H118 Q104 167 104 151Z" fill="'+(stool?"#b94b58":"#e0b861")+'" opacity=".54"/>'+
    '<rect x="91" y="47" width="138" height="30" rx="9" fill="'+(stool?"#c9474a":"#fafbfc")+'" stroke="#9bb2bd" stroke-width="3"/>'+
+   (stool?'<path d="M116 145 q12 -15 24 -6 t26 1 t24 4 t20 -4" fill="none" stroke="#654534" stroke-width="9" stroke-linecap="round" opacity=".92"/><ellipse cx="126" cy="158" rx="8" ry="5" fill="#74503a"/><ellipse cx="187" cy="162" rx="7" ry="4" fill="#76513c"/><ellipse cx="169" cy="137" rx="9" ry="4" fill="#74503a"/>':'')+
    '<rect x="117" y="94" width="86" height="28" rx="4" fill="white"/>'+
    '<text x="160" y="111" font-size="12" fill="#486a7c" text-anchor="middle" font-weight="800">'+(stool?"CARY BLAIR":"URINE")+'</text>',
    stool?"Stool Cary Blair transport container":"Urine collection cup");
