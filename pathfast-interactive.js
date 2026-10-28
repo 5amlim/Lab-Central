@@ -75,12 +75,12 @@ function interference(){
  '<div class="pcr-interference-caution"><strong>Separate from serial sampling</strong><p>This is an <b>analytical interference check</b> on the original specimen, not a new 1-hour or 2-hour draw. The provider may still request additional timed or clinically indicated specimens. Do not automatically invalidate or delete the original elevated result.</p></div></section>';
 }
 const questions=[
- {id:"baseline",title:"What is the initial PATHFAST hs-Troponin I result?",opts:[["low","Below 4 ng/L"],["middle","4 to below 90 ng/L"],["high","90 ng/L or above"]]},
- {id:"timing",title:"Was the repeat sample collected in the locally approved 1-hour window?",opts:[["yes","Yes, at least 60 minutes after baseline, within the approved window"],["no","No, collected outside the authorized window"],["pending","No repeat specimen collected yet"]]},
- {id:"delta",title:"What is the change between the 0-hour and 1-hour hs-Troponin I values?",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Not calculated / not available"]]},
- {id:"risk",title:"Which clinical assessment is documented?",opts:[["low","HEART score ≤3, reassuring ECG and no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Not yet fully assessed"]]},
- {id:"onset",title:"For a low initial value, when did symptoms begin?",opts:[["late","More than 3 hours before baseline sampling"],["early","3 hours or less before baseline sampling"],["unknown","Onset is uncertain"]]},
- {id:"confirmation",title:"Has the treating provider confirmed all criteria in the currently approved assay-specific PATHFAST rule-out protocol?",opts:[["yes","Yes, full criteria verified by the provider"],["no","No, at least one criterion is not met"],["pending","Still verifying / not yet documented"]]}
+ {id:"baseline",title:"Initial PATHFAST hs-Troponin I result",opts:[["low","Below 4 ng/L"],["middle","4 to below 90 ng/L"],["high","90 ng/L or above"]]},
+ {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window"],["no","Missed the 1-hour window"],["pending","Repeat sample not collected yet"]]},
+ {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Delta unavailable"]]},
+ {id:"risk",title:"Clinical assessment · ECG and HEART score",opts:[["low","HEART score ≤3, reassuring ECG, no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Clinical assessment incomplete"]]},
+ {id:"onset",title:"Time since symptom onset at the initial blood draw",opts:[["late","More than 3 hours"],["early","3 hours or less"],["unknown","Uncertain or unknown"]]},
+ {id:"confirmation",title:"Provider verification of approved rule-out criteria",opts:[["yes","All protocol criteria confirmed"],["no","One or more criteria not met"],["pending","Review still in progress"]]}
 ];
 let selected={};
 function question(q,index){
@@ -88,23 +88,24 @@ function question(q,index){
  '<div class="pcr-flow-options" role="group" aria-label="'+esc(q.title)+'">'+q.opts.map(([value,label])=>
  '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+esc(label)+(selected[q.id]===value?' ✓':'')+'</button>').join('')+'</div></div>';
 }
-function zoneOutcome(zone,title,explanation){
+function zoneOutcome(zone,title,explanation,nextAction){
  const zones=[
   {id:"ruleout",label:"RULE-OUT",detail:"Low-risk pathway"},
   {id:"observe",label:"YELLOW ZONE",detail:"Observe / review"},
   {id:"rulein",label:"RULE-IN",detail:"Urgent evaluation"}
  ];
+ const actionBlock=nextAction?'<div class="pcr-provider-action" role="note"><strong>'+esc(nextAction.title)+'</strong><ol>'+nextAction.steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol></div>':'';
  return '<section class="pcr-zone-outcome '+zone+'" role="status" aria-label="Pathway reference endpoint: '+esc(title)+'">'+
   '<span class="pcr-zone-eyebrow">PATHWAY ENDPOINT · PROVIDER REFERENCE</span>'+
   '<div class="pcr-zone-options">'+zones.map(x=>'<div class="pcr-zone-choice '+x.id+(x.id===zone?' active':' inactive')+'" '+(x.id===zone?'aria-current="step"':'')+'><strong>'+x.label+'</strong><small>'+x.detail+'</small></div>').join('')+'</div>'+
-  '<h4>'+esc(title)+'</h4><p>'+esc(explanation)+'</p>'+
-  '<div class="pcr-zone-caution">Provisional pathway reference, not an MI diagnosis or discharge/transfer order. Follow the current approved PATHFAST assay-specific algorithm, ECG and clinical assessment. The source cutoffs and requested +15-minute collection window still require local medical approval.</div>'+
+  '<h4>'+esc(title)+'</h4><p>'+esc(explanation)+'</p>'+actionBlock+
+  '<div class="pcr-zone-caution">Provisional pathway reference, not an MI diagnosis or discharge/transfer order. Follow the current approved PATHFAST assay-specific algorithm, ECG and clinical assessment. Verify site-approved assay cutoffs, clinical criteria and allowed collection timing before using this pathway.</div>'+
   '</section>';
 }
 function flow(){
  const q=id=>questions.find(x=>x.id===id);
  let h='<section class="pcr-flow-explorer" aria-label="Interactive provider pathway reference">'+
- '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PROVIDER-LED INTERACTIVE REFERENCE</span><h3>Explore the 0/1-hour pathway</h3><p>Follow the clinical inputs to see one of three final reference zones: Rule-out, Yellow zone or Rule-in. No patient data is stored. This is not a validated decision engine or disposition order.</p></div>'+
+ '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PROVIDER CHEST PAIN REFERENCE</span><h3>PATHFAST hs-Troponin I · clinical pathway</h3><p>Review the initial result, repeat collection timing, delta and clinical assessment. Coordinate timed draws with the RN. The final zone is a provider-review reference, not an automatic diagnosis or disposition.</p></div>'+
  '<button type="button" data-pcr-reset class="pcr-flow-reset">Reset flow ↻</button></div>'+
  '<div class="pcr-flow-spine">'+question(q("baseline"),1);
  if(selected.baseline==="high"){
@@ -112,9 +113,12 @@ function flow(){
  }else if(selected.baseline){
   h+=question(q("timing"),2);
   if(selected.timing==="no"){
-   h+=zoneOutcome("observe","Yellow zone: sampling outside approved window","Do not interpret the specimen as a valid 1-hour delta. Record the actual draw time and notify the provider to select an authorized alternative pathway. This is a sampling-status category, not a diagnosis.");
+   h+=zoneOutcome("observe","Yellow zone: 1-hour sample missed","The 1-hour delta cannot be interpreted using the missed collection window. The provider should coordinate the next timed draw with the RN, using the approved 0/2-hour pathway.",{
+    title:"Provider + RN · coordinate the 2-hour draw",
+    steps:["Confirm the actual initial (0-hour) draw time with the RN.","Plan and collect the repeat at 120 minutes from that initial draw, not 120 minutes from when the missed window was noticed.","RN documents the actual collection time; provider reviews the 2-hour result using the approved pathway. If the 2-hour target has also passed, agree on an alternative plan."]
+   });
   }else if(selected.timing==="pending"){
-   h+=zoneOutcome("observe","Yellow zone: repeat sample pending","The repeat value and clinical interpretation are still outstanding. Reassess with the approved timing protocol and the patient's clinical status.");
+   h+=zoneOutcome("observe","Yellow zone: repeat sample pending","Coordinate with the RN to confirm the original draw time and the next collection target. If the approved 1-hour window can no longer be met, arrange the 2-hour draw from the original baseline when authorized by the protocol.");
   }else if(selected.timing==="yes"){
    h+=question(q("delta"),3);
    if(selected.delta==="large"){
