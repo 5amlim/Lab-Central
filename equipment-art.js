@@ -85,17 +85,44 @@ function body(shape,a){
  '<circle cx="477" cy="223" r="10" fill="#57a9e7" stroke="#d2eaf7" stroke-width="2.5"/>'+
  '<path d="M265 40 L256 237" stroke="#3f82bd" stroke-width="6" opacity=".5"/>';
  }else if(shape==="pathfast"){
- v=rect(227,51,283,216,27,"#e8f1f5","#91aab8",3)
- +'<path d="M370 55 Q407 11 478 50 L505 81 L475 106 L368 91Z" fill="#87c5d7" stroke="#6daabd" stroke-width="3"/>'
- +rect(255,118,96,103,9,"#2d5063","#829eae",2)
- +rect(266,128,73,82,4,"#b6d4e2")
- +rect(271,140,63,15,3,"#3386ab")
- +rect(271,165,63,5,2,"#a0becb")
- +rect(271,180,48,5,2,"#a0becb")
- +rect(380,101,104,133,9,"#b7dce5","#81aabc",2)
- +rect(394,116,76,102,5,"#3a515e")
- +Array.from({length:6},(_,i)=>rect(399+i*12,128,9,80,2,"#d9e5eb","#7e9baa",1)).join("")
- +txt(302,240,"PATHFAST",14,"#2f7998",850);
+ // Curved white PATHFAST compact analyzer, left touchscreen/printer, large
+ // teal-blue transparent right chamber and central blue handle.
+ v='<defs>'+
+ '<linearGradient id="pf-case-p" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#fcfefd"/><stop offset=".65" stop-color="#e5edef"/><stop offset="1" stop-color="#cddde2"/></linearGradient>'+
+ '<linearGradient id="pf-cover-p" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#123a54"/><stop offset=".45" stop-color="#176d88"/><stop offset="1" stop-color="#0c3d56"/></linearGradient>'+
+ '<linearGradient id="pf-glass-p" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#b6e7ee" stop-opacity=".62"/><stop offset=".5" stop-color="#a3d4e1" stop-opacity=".12"/><stop offset="1" stop-color="#7fc8da" stop-opacity=".38"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="368" cy="291" rx="166" ry="12" fill="#dce6ea" opacity=".6"/>'+
+ '<path d="M243 265 L237 153 Q238 74 265 64 Q310 50 331 38 Q353 17 389 18 L460 21 Q496 26 514 63 Q535 106 529 251 Q528 276 507 281 H264 Q245 280 243 265Z" fill="url(#pf-case-p)" stroke="#9eb4be" stroke-width="3"/>'+
+ '<path d="M250 145 Q246 76 276 70 Q328 63 348 42 Q376 22 422 30" fill="none" stroke="#fff" stroke-width="6" opacity=".8"/>'+
+ '<rect x="254" y="154" width="86" height="98" rx="8" fill="#d7e4e8" stroke="#91a7b4" stroke-width="2.4"/>'+
+ '<rect x="260" y="161" width="73" height="79" rx="3" fill="#b5d7e1" stroke="#799eb2" stroke-width="2"/>'+
+ '<rect x="263" y="164" width="67" height="13" fill="#4f9eb8"/>'+
+ '<text x="298" y="173" font-family="Arial" font-size="7" font-weight="850" text-anchor="middle" fill="#fff">ASSAY HOME</text>'+
+ '<rect x="267" y="182" width="59" height="13" rx="2" fill="#def2f5"/>'+
+ '<rect x="267" y="198" width="28" height="15" rx="3" fill="#e9f7f7" stroke="#80b5c1"/>'+
+ '<rect x="299" y="198" width="27" height="15" rx="3" fill="#e9f7f7" stroke="#80b5c1"/>'+
+ '<path d="M267 223h51 M267 231h42" stroke="#8bb8c8" stroke-width="3"/>'+
+ '<text x="297" y="252" text-anchor="middle" fill="#365d70" font-weight="850" font-size="8">TOUCHSCREEN</text>'+
+ '<rect x="258" y="254" width="78" height="24" rx="4" fill="#f8faf9" stroke="#c0cdd1" stroke-width="2"/>'+
+ '<rect x="268" y="258" width="54" height="12" rx="2" fill="#8b9da7"/>'+
+ '<rect x="274" y="264" width="41" height="4" fill="#eef6f6"/>'+
+ '<path d="M262 276v-12 M333 276v-12" stroke="#d0dcdf" stroke-width="2"/>'+
+ '<text x="287" y="143" font-family="Arial" font-size="12" font-weight="900" fill="#50626a">COMPACT</text>'+
+ '<circle cx="331" cy="145" r="4" fill="#318b76"/>'+
+ '<path d="M375 76 Q379 54 405 53 L466 54 Q498 59 502 94 L502 239 Q498 261 475 265 L391 266 Q364 260 364 234 L363 108 Q363 85 375 76Z" fill="#4bacc3" stroke="#67b7cc" stroke-width="4"/>'+
+ '<path d="M378 87 Q386 64 407 65 L466 66 Q485 70 490 95 L491 228 Q489 247 472 252 H389 Q377 250 375 227 L374 109Z" fill="url(#pf-cover-p)" stroke="#2e91ad" stroke-width="3"/>'+
+ Array.from({length:6},(_,i)=>'<path d="M'+(394+i*14)+' 119 v116" stroke="#8cbfd1" stroke-width="5" opacity=".3"/>').join("")+
+ '<path d="M391 228 L473 228 L478 243 L384 243Z" fill="#9cbbc5" opacity=".65"/>'+
+ '<path d="M388 77 Q390 65 400 65 L448 66" stroke="#f5ffff" stroke-opacity=".46" stroke-width="7" stroke-linecap="round" fill="none"/>'+
+ '<path d="M464 85 Q485 94 482 135 L482 224" stroke="#8dd3e4" stroke-width="5" opacity=".24" fill="none"/>'+
+ '<path d="M375 107 L377 222 Q378 248 398 254 H455" stroke="#167ba1" stroke-width="4" opacity=".6" fill="none"/>'+
+ '<path d="M386 111 Q421 98 454 105 L472 120 L466 195 Q459 207 399 205 L386 189Z" fill="url(#pf-glass-p)"/>'+
+ '<text x="433" y="176" text-anchor="middle" font-family="Arial" fill="#f4ffff" font-size="17" letter-spacing="2" font-weight="900">PATHFAST</text>'+
+ '<path d="M396 252 Q420 243 469 251 L467 268 Q431 280 400 267Z" fill="#51b3cb" stroke="#368eac" stroke-width="3"/>'+
+ '<path d="M399 264 Q435 277 467 264" stroke="#b7e8f1" stroke-width="3" fill="none"/>'+
+ '<path d="M240 240 H223 Q217 240 217 250 V278" fill="none" stroke="#abbcc4" stroke-width="3"/>'+
+ '<path d="M200 276 Q219 269 230 277" stroke="#c8d6dd" stroke-width="4" fill="none"/>';
 }else if(shape==="reader"){
  v=rect(192,68,350,197,14,"#edf2f5","#a6b7bf",3)+rect(206,82,329,107,5,"#b4c0c7")+rect(215,96,200,80,3,"#d7e2e8","#7f99a5",2)+rect(427,98,101,73,8,"#d8e4e9")+Array.from({length:5},(_,i)=>circle(451+(i%3)*24,111+Math.floor(i/3)*25,8,"#eaf1f4","#92a8b5")).join("")+rect(217,194,230,59,7,"#f5f8fa","#c3d0d7")+Array.from({length:12},(_,i)=>txt(237+(i%4)*53,209+Math.floor(i/4)*17,i===9?"0":String(i+1),10,"#4c6472",750)).join("")+rect(454,224,66,25,6,"#2d3d46")+txt(300,88,"Triage MeterPro",11,"#fff",790)+txt(476,215,"Quidel",12,"#92a9b6",810);
  }else if(shape==="urine"){
