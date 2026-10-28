@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261028-7" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261028-gray-rail" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-clinitek-split" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-chevrons" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-action-visuals" media="all">
@@ -229,7 +229,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261028-nine-steps"></script>
 <script src="pathfast-interactive.js?v=20261028-easy-time-input"></script>
 <script src="pathfast-clinical.js?v=20261028-tube-inversion"></script>
-<script src="equipment-art.js?v=20261028-sample-to-use"></script>
+<script src="equipment-art.js?v=20261028-eightcheck-instrument-redraw"></script>
 <script>
 (()=>{
 'use strict';
@@ -346,6 +346,16 @@ function buildGroups(section){
   }
  }
  if(!groups.length)groups.push({id:'general',title:'Overview & reference notes',blocks:section.blocks});
+ // These two source headings are pocH QC handling notes, not separate workflows.
+ if(section.id==='sysmex'){
+  const daily=groups.find(g=>g.title==='Daily QC');
+  if(daily){
+   for(const extra of groups.filter(g=>/^Each new vial is to|^If we run out of a certain lot/i.test(g.title))){
+    daily.blocks.push({type:'list',level:1,text:extra.title},...extra.blocks);
+   }
+   for(let i=groups.length-1;i>=0;i--)if(/^Each new vial is to|^If we run out of a certain lot/i.test(groups[i].title))groups.splice(i,1);
+  }
+ }
  const used=new Set();for(let i=0;i<groups.length;i++){
   let id=groups[i].id||'group';if(used.has(id))id+='-'+i;used.add(id);groups[i].id=id;
  }
@@ -393,6 +403,13 @@ function drawNodes(nodes,depth=0){
  return h+'</ol>';
 }
 
+function instrumentTabTitle(title){
+ const t=String(title||'');
+ if(/^running (?:patient )?samples?\b|^running tests\b/i.test(t))return 'Patient testing';
+ if(/^ordering tests\b/i.test(t))return 'Provider ordering';
+ if(/^QC Test\b/i.test(t))return 'QC testing';
+ return guideTabTitle(t);
+}
 function guideTabTitle(title){
  const t=String(title||'');
  if(t.length<=31)return t;
@@ -795,7 +812,7 @@ function sectionRender(sec,tab){
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=[{id:'overview',title:'Overview'},...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=[{id:'overview',title:'Overview'},...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
