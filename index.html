@@ -80,12 +80,12 @@
 @media(max-width:650px){.pf-video-player{width:calc(100vw - 18px)}.pf-video-player-head{padding:10px 12px}.pf-video-player-stage iframe,.pf-video-player-stage video{max-height:70vh}}
 
 /* Show the calculator favicon at legible size, without an extra green icon tile. */
-.nav-link .nav-icon.calc-nav-icon{width:43px;height:43px;min-width:43px;background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 1px 0 -7px;color:inherit}
-.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{display:block;width:40px!important;height:40px!important;max-width:none;max-height:none;stroke:unset}
+.nav-link .nav-icon.calc-nav-icon{width:18px;height:18px;min-width:18px;background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;margin:0;color:inherit}
+.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{display:block;width:18px!important;height:18px!important;max-width:none;max-height:none;stroke:unset}
 .home-tool-icon.calc-logo-holder{background:transparent!important;border:0!important;border-radius:0!important;width:46px;height:46px;min-width:46px}
 .home-tool-card .home-tool-icon .calculator-logo-svg,.workflow-resource .home-tool-icon .calculator-logo-svg{width:44px!important;height:44px!important}
 .calculator-brand-title .calculator-logo-svg{width:52px!important;height:52px!important}
-@media(max-width:650px){.nav-link .nav-icon.calc-nav-icon{width:38px;height:38px;min-width:38px;margin-left:-4px}.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{width:36px!important;height:36px!important}}
+@media(max-width:650px){.nav-link .nav-icon.calc-nav-icon{width:18px;height:18px;min-width:18px;margin-left:0}.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{width:18px!important;height:18px!important}}
 
 </style>
   
@@ -130,6 +130,16 @@
 .guide-detail-control .lab-shared-chevron{margin-left:2px}
 .guide-detail-control[aria-expanded="true"] .lab-shared-chevron{transform:rotate(180deg)!important}
 .ad-field .lab-shared-chevron{margin-left:auto}
+
+
+/* Same RN-style section header for each active analyzer / point-of-care procedure. */
+.instrument-procedure-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:22px 24px;margin:1px 0 20px;max-width:100%;background:linear-gradient(125deg,#edf8f5,#f8fcfd);border:1px solid #dcebe9;border-left:4px solid #259486;border-radius:14px}
+.instrument-procedure-heading h2{margin:6px 0 7px;color:#253f53;font-size:clamp(20px,3vw,27px);letter-spacing:-.025em}
+.instrument-procedure-heading p{margin:0;font-size:12px;line-height:1.6;color:#688394}
+.instrument-procedure-heading .pcr-role-label{flex:none}
+@media(max-width:700px){.instrument-procedure-heading{padding:15px}.instrument-procedure-heading h2{font-size:20px}}
+.calculator-card.cedars .calculator-brand-title h2{font-size:18px}
+.calculator-card .calculator-top{justify-content:flex-end}
 
 </style>
 </head>
@@ -452,11 +462,19 @@ function renderGuidedProcedure(group,sec){
  const topicMode=sec.category==='Quality & compliance'||sec.id==='tubes';
  const unit=topicMode?'Topic':'Step';
  const isPathfastPatient=sec.id==='pathfast'&&group.id==='patient';
+ const isInstrumentProcedure=instrumentCategories.includes(sec.category)&&!sec.archived;
  let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
  if(isPathfastPatient)h+='<div class="pcr-heading pf-patient-heading"><div><span class="pcr-eyebrow">PATHFAST / PATIENT TESTING</span><h2>Patient sample testing</h2><p>Prepare the cartridges and sample rack, then verify the patient SID on the analyzer and start the run.</p></div><span class="pcr-role-label">Lab tech</span></div>';
+ else if(isInstrumentProcedure){
+  const qc=/\bqc\b|\bcontrols?\b|calibrat/i.test(group.title);
+  const cleaning=/clean|maintenan|service|troubleshoot/i.test(group.title);
+  const role=qc?'QC':cleaning?'Maintenance':'Patient test';
+  const short=/running (patient )?samples?|running tests/i.test(group.title)?'Patient testing':title.short;
+  h+='<div class="pcr-heading instrument-procedure-heading"><div><span class="pcr-eyebrow">'+safeHtml(sec.title).toUpperCase()+' / '+(qc?'QUALITY CONTROL':cleaning?'MAINTENANCE':'TESTING WORKFLOW')+'</span><h2>'+safeHtml(short)+'</h2><p>'+(qc?'Follow the selected QC procedure and approved manufacturer instructions.':cleaning?'Complete the maintenance or cleaning steps in sequence.':'Follow the testing sequence and specimen requirements for this instrument.')+'</p></div><span class="pcr-role-label">'+role+'</span></div>';
+ }
  else h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.')+'</p></div></div>';
  if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
- if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button type="button" class="device-inline-visual-link" data-gotab="visuals">'+svg('file-text')+' See illustrated collection and test-device steps <span aria-hidden="true">›</span></button>';
+ 
  if(window.LAB_EQUIPMENT_ART?.specimenGuide&&['Analyzers','Point of care'].includes(sec.category)&&!/QC|calibration|maintenance|cleaning/i.test(group.title))h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
  if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
@@ -519,7 +537,7 @@ function calculatorLogo(){
  '</g></svg>';
 }
 function calculatorCards(){
- return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-count">0${i+1}</span><span class="calculator-tag">${safeHtml(c.tag)}</span></div><div class="calculator-brand-title">${calculatorLogo()}<h2>${safeHtml(c.name)} calculator</h2></div><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} calculator <span>↗</span></a></article>`).join('')}</div>`;
+ return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-tag">${safeHtml(c.tag)}</span></div><div class="calculator-brand-title">${calculatorLogo()}<h2>${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'}</h2></div><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'} <span>↗</span></a></article>`).join('')}</div>`;
 }
 function renderCalculators(){
  el('currentCrumb').textContent='Lab calculators';
@@ -715,7 +733,7 @@ function sectionOverview(sec,groups){
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  if(window.LAB_EQUIPMENT_ART?.specimenGuide)h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
- if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button class="mini-feature device-visual-link" type="button" data-gotab="visuals"><span class="feature-small-icon">'+svg('file-text')+'</span><span><strong>Illustrated sample and kit walkthrough</strong><small>'+(sec.id==='clinitek'?'Separate urinalysis strip and hCG cassette workflows':'Specimen, unused kit, loaded kit and analyzer')+'</small></span><span class="arrow">›</span></button>';
+ 
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
@@ -777,8 +795,9 @@ function sectionRender(sec,tab){
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=[{id:'overview',title:'Overview'},...(hasVisualGuide?[{id:'visuals',title:'Visual steps'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=[{id:'overview',title:'Overview'},...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
+ if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='ua-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
