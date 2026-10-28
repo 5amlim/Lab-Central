@@ -15,8 +15,8 @@ return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org
 '<path d="M345 75 L368 95 L380 69" fill="none" stroke="#259b80" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'+
 '<g transform="translate(298,120) rotate(150,26,48) scale(.75,1)"><rect x="0" y="0" width="55" height="27" rx="8" fill="#168b5f"/>'+
 '<path d="M5 27 H50 L47 103 Q28 117 8 103Z" fill="url(#pcrglass)" stroke="#8ab6c2" stroke-width="2"/>'+
-'<path d="M8 72 H47 L45 101 Q27 108 10 101Z" fill="#cc6670"/></g>'+
-'<text x="329" y="241" font-size="12" font-weight="850" text-anchor="middle" fill="#237f6c">Invert 8–10×</text>'+
+'<path d="M6 31 H49 L47 59 H8Z" fill="#cc6670" opacity=".91"/></g>'+
+'<text x="329" y="241" font-size="11" font-weight="850" text-anchor="middle" fill="#237f6c">Gently invert 8–10×</text>'+
 '</svg>';
 }
 function card(n,role,title,body){
