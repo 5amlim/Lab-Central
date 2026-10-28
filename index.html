@@ -565,7 +565,8 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
  }
- h+=`<p class="source-footnote">For staff reference. Verify instrument instructions against the current SOP and manufacturer IFU. Do not enter patient information.</p></div>`;
+ if(sec.id!=='pathfast')h+=`<p class="source-footnote">For staff reference. Verify instrument instructions against the current SOP and manufacturer IFU. Do not enter patient information.</p>`;
+ h+='</div>';
  el('mainContent').innerHTML=h;
 }
 function render(){
