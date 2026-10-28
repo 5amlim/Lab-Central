@@ -187,12 +187,12 @@ function render(){
   h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon">▤</span><strong>Select the assay to start</strong><p>Follow the screen sequence from operator login to CAL/QC lane setup. The matched Bio-Rad control materials appear in step 7.</p></div>';
  }else{
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · 6 LANES</span></div>'+
-  '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of 9</strong><span>One screen or task at a time</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+ (showAllSteps?'Focused view':'View all steps') +'</button></div></div>'+
+  '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of 10</strong><span>One screen or task at a time</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+ (showAllSteps?'Focused view':'View all steps') +'</button></div></div>'+
   (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
    'Log in','Check status pills','Tap BACK','Choose CAL/QC/SAMPLE','Select assay','Verify 6 lanes',
-   'Prepare and load','Start the run','Review results'
+   'Prepare and load','Start the run','Review results','Print and file QC'
   ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="'+(currentStep===i+1?'active':'')+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+label+'</button>').join('')+'</div>':'')+
-  '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="9" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/9*100)+'%"></span></div>';
+  '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/10*100)+'%"></span></div>';
   h+=step(1,'Log in','Select User ID and enter the assigned password',
       window.LAB_PATHFAST_SCREEN.login()+
       '<p class="pf-workflow-note">Choose the authorized user and sign in. If accessibility is disabled, the instrument may open directly to ASSAY/HOME.</p>');
@@ -226,7 +226,9 @@ function render(){
       (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('results','cal'):'')+
       status(group)+
       '<p class="pf-workflow-note">Review calibration and both Bio-Rad QC results against lot-specific criteria. Confirm the assay pill has returned to gray before patient testing. Do not use patient assays if CAL/QC remains locked or controls fail.</p>');
-  if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 9</span><button type="button" class="primary" data-pf-next '+(currentStep===9?'disabled':'')+'>Next step →</button></div>';
+  h+=step(10,'Print and file CAL + QC records','Collect the analyzer reports and place them in the QC binder',
+      (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Retain accepted calibration and both QC level printouts in the approved PATHFAST binder.</p>'));
+  if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 9</span><button type="button" class="primary" data-pf-next '+(currentStep===10?'disabled':'')+'>Next step →</button></div>';
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
@@ -241,9 +243,9 @@ if(typeof document!=='undefined' && typeof document.addEventListener==='function
   const browse=e.target.closest('[data-pf-browse]');
   const toggleAll=e.target.closest('[data-pf-toggle-all]');
   if(next||prev||jump||browse||toggleAll){
-   if(next)currentStep=Math.min(9,currentStep+1);
+   if(next)currentStep=Math.min(10,currentStep+1);
    if(prev)currentStep=Math.max(1,currentStep-1);
-   if(jump){const n=Number(jump.getAttribute('data-pf-jump'));if(n>=1&&n<=9)currentStep=n;showAllSteps=false;stepMenuOpen=false;}
+   if(jump){const n=Number(jump.getAttribute('data-pf-jump'));if(n>=1&&n<=10)currentStep=n;showAllSteps=false;stepMenuOpen=false;}
    if(browse)stepMenuOpen=!stepMenuOpen;
    if(toggleAll){showAllSteps=!showAllSteps;stepMenuOpen=false;}
    repaintPanel();
