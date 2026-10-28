@@ -166,29 +166,53 @@ function repaintPanel(){
 }
 function render(){
  const group=selectedGroup();
- const w=group?workflow.map(function(item,i){
-  let description=item[1];
-  if(i===0)description='Check the calibration status for '+group.analytes.join(' and ')+'. After 28 days, the analyte pill turns pink and patient testing is locked.';
-  if(i===2)description='Use CAL 1 and the two reconstituted CAL 2 preparations supplied with the reagent box. For QC, use '+group.qc+'. Follow the current assay and control lot instructions.';
-  if(i===5)description='Confirm successful calibration and acceptable '+group.qc+' results against the current assigned limits. The analyte pill turns gray after QC acceptance.';
-  return '<article class="pf-action"><span class="pf-action-no">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+esc(item[0])+'</h3><p>'+esc(description)+'</p></div></article>';
- }).join(''):'';
+ const x=group?esc(group.label):"";
+ function step(n,title,desc,inner){
+  return '<details class="pf-workflow-step" '+(n===1?'open':'')+'>'+
+    '<summary><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
+    '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
+    '<span class="pf-workflow-chev">⌄</span></summary>'+
+    '<div class="pf-workflow-detail">'+(inner||"")+'</div></details>';
+ }
  let h='<section class="pf-calibration-guide">'+
- '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span><h2>28-day calibration + QC</h2><p>Calibration and QC are performed together using <strong>all six lanes</strong>.</p></div><span class="pf-interval">↻ 28 DAYS</span></div>'+
+ '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
+ '<h2>28-day calibration + QC</h2><p>Use one combined six-lane run for the selected assay.</p></div>'+
+ '<span class="pf-interval">↻ 28 DAYS</span></div>'+
  panelPicker();
  if(!group){
-  h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon" aria-hidden="true">▤</span><strong>Select an assay panel to begin</strong><p>The appropriate calibrator materials, Bio-Rad controls, rack layout and instructions will appear here.</p></div>';
+  h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon">▤</span><strong>Select the assay to start</strong><p>Follow the screen sequence from operator login to CAL/QC lane setup. The matched Bio-Rad control materials appear in step 6.</p></div>';
  }else{
-  h+='<div class="pf-selected-panel" aria-live="polite"><span class="pf-selected-dot"></span><strong>'+esc(group.label)+'</strong><span>CAL + QC · 6 LANES</span></div>'+
-  window.LAB_PATHFAST_SCREEN.cal(group.label)+
-  panelContent(group)+
-  '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Illustrated from above</span></div>'+
-  '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>1–4</b> Calibration in duplicate</span><span><b>5–6</b> '+esc(group.qc)+' QC 1 and QC 2</span></div></div>'+
-  '<div class="pf-steps-header"><h3>'+esc(group.label)+' · CAL/QC procedure</h3><span>6 steps</span></div>'+
-  '<div class="pf-actions">'+w+'</div>'+
-  '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Reconstitution and QC:</strong> Use the current assay- and lot-specific manufacturer IFU for diluent volume, mixing, stability, calibration acceptance and QC target ranges. The diagrams are visual references, not validated preparation instructions.</div></div>'+
-  '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Calibration + QC video</button><button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>'+
-  '<p class="source-footnote">Instrument material and rack illustrations are simplified and not to scale. Verify all operational steps against the approved PATHFAST instructions.</p>';
+  h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · 6 LANES</span></div>'+
+  '<div class="pf-workflow-intro"><strong>Screen-by-screen workflow</strong><p>Open each numbered step. The actual display can differ by instrument software version and QC-lockout configuration.</p></div>';
+  h+=step(1,'Log in','Select User ID and enter the assigned password',
+      window.LAB_PATHFAST_SCREEN.login()+
+      '<p class="pf-workflow-note">Choose the authorized user and sign in. If accessibility is disabled, the instrument may open directly to ASSAY/HOME.</p>');
+  h+=step(2,'Check the analyte pills','Selected assay is pink; other valid assays are gray',
+      window.LAB_PATHFAST_SCREEN.home(group.label,"cal")+
+      '<p class="pf-workflow-note">The pink pill identifies an expired or locked calibration/QC status for <strong>'+x+'</strong>. Other assay pills may remain gray if ready. Gray means calibration and QC remain within the effective period.</p>');
+  h+=step(3,'Tap BACK','Return from ASSAY/HOME to the ASSAY menu',
+      window.LAB_PATHFAST_SCREEN.home(group.label,"cal")+
+      '<p class="pf-workflow-note">Select <strong>BACK</strong> on the instrument to reach the ASSAY operation menu.</p>');
+  h+=step(4,'Choose CAL/QC/SAMPLE and the assay','Open the calibration workflow for '+x,
+      window.LAB_PATHFAST_SCREEN.menu("cal")+
+      window.LAB_PATHFAST_SCREEN.item(group.label)+
+      '<p class="pf-workflow-note">Choose <strong>CAL/QC/SAMPLE</strong> in the local workflow. Some QC-lockout configurations label this <strong>CAL/QC</strong>. Select <strong>'+x+'</strong> from CAL ITEM SELECTION and confirm OK. If the reagent lot is absent, register the MC ENTRY card first.</p>');
+  h+=step(5,'Verify the CAL/QC INFORMATION screen','All six lane assignments before sample loading',
+      window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+
+      '<div class="pf-workflow-lane-note"><strong>Required lane order:</strong> CAL 1 · CAL 1 · CAL 2 · CAL 2 · QC 1 · QC 2. Check the displayed assignments on the instrument. Lane assignments can differ with QC lockout or calibration-replicate setup.</div>');
+  h+=step(6,'Prepare materials and load the rack','Reagent-box calibrators + matching frozen Bio-Rad QC bottles',
+      panelContent(group)+
+      '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Top-down illustrated rack</span></div>'+
+      '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>Lanes 1–4</b> CAL 1 and CAL 2 in duplicate</span><span><b>Lanes 5–6</b> '+esc(group.qc)+' control levels</span></div></div>'+
+      '<p class="pf-workflow-note">Follow assay-specific calibrator reconstitution quantities and handling. Load each cartridge into its assigned rack position until it clicks; pipette into the marked sample well using the current assay IFU.</p>');
+  h+=step(7,'Insert the rack and start','Load corresponding tips, then press START',
+      '<p class="pf-workflow-note">Seat the rack fully in PATHFAST, install one new tip for each used lane, close the cover, review on-screen lane assignments, then select START and confirm. Follow displayed run instructions. Typical run time is approximately 17 minutes.</p>');
+  h+=step(8,'Review calibration and QC','Confirm acceptable results and gray/ready status',
+      status(group)+
+      '<p class="pf-workflow-note">Review calibration and both Bio-Rad QC results against lot-specific criteria. Confirm the assay pill has returned to gray before patient testing. Do not use patient assays if CAL/QC remains locked or controls fail.</p>');
+  h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
+      '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Combined CAL + QC training video</button>'+
+      '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
  }
  return h+'</section>';
 }
