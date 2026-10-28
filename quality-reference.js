@@ -9,7 +9,7 @@ const map=[
   ["Cardiac markers pilot · PSC","Triage MeterPro","Assigned pilot troponin I and D-dimer materials"]
  ]},
  {id:"chemistry-miscellaneous",title:"Chemistry Miscellaneous",badge:"UDS",machine:"Assigned drug-screen platform",items:[
-  ["Urine drug screen · UDS","Triage MeterPro (legacy program)","Use only if this panel remains enrolled and the approved method applies; confirm current local testing platform"]
+  ["Urine drug screen · UDS","Only a currently validated and enrolled drug-screen platform","Triage MeterPro is no longer used for toxicology. Check current enrollment and approved testing method before processing any PT sample."]
  ]},
  {id:"hematology-coagulation",title:"Hematology / Coagulation",badge:"HSY",machine:"Sysmex pocH-100i",items:[
   ["Hematology · CBC (HSY)","Sysmex pocH-100i","CBC proficiency specimen; run under the correct PT identifier per analyzer SOP"],
