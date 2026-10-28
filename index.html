@@ -50,6 +50,17 @@
 
 .order-image-placeholder{border:1px dashed #d6e2eb;border-radius:8px;padding:11px 16px;display:flex;gap:8px;align-items:center;justify-content:center;font-size:10px;color:#93a2b0;background:#fff;margin:0 0 13px}.order-image-placeholder svg{width:15px;height:15px}.order-set-screenshot{display:block;max-width:min(100%,560px);width:auto;height:auto;object-fit:contain;margin-top:13px;border-radius:9px;border:1px solid #e0e7ec}.order-entry>div{min-width:0}
 
+
+/* The calculator icon matches the favicon in Quest, Cedars and Labcorp calculators. */
+.calculator-brand-title{display:flex;gap:12px;align-items:center;margin:13px 0 10px;min-width:0}
+.calculator-brand-title .calculator-logo-svg{display:block;width:42px;height:42px;flex:none}
+.calculator-brand-title h2{margin:0!important;min-width:0}
+.calculator-logo-svg{display:block;width:25px;height:25px;flex:none}
+.nav-icon .calculator-logo-svg{width:24px;height:24px}
+.home-tool-icon.calc-logo-holder{background:transparent;padding:0}
+.home-tool-card .home-tool-icon .calculator-logo-svg,.workflow-resource .home-tool-icon .calculator-logo-svg{height:38px;width:38px;max-width:none;max-height:none}
+@media(max-width:650px){.calculator-brand-title .calculator-logo-svg{width:35px;height:35px}}
+
 </style>
   
   
@@ -63,7 +74,7 @@
   <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-2" media="all">
-  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-twohour-fallback" media="all">
+  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-time-picker" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 </head>
 <body>
@@ -142,8 +153,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028-action-visuals"></script>
 <script src="pathfast-screen-guide.js?v=20261028-action-visuals"></script>
-<script src="pathfast-interactive.js?v=20261028-twohour-fallback"></script>
-<script src="pathfast-clinical.js?v=20261028-post-target-window"></script>
+<script src="pathfast-interactive.js?v=20261028-timing-editable"></script>
+<script src="pathfast-clinical.js?v=20261028-clot-inspection"></script>
 <script src="equipment-art.js?v=20261028-action-visuals-v2"></script>
 <script>
 (()=>{
@@ -208,7 +219,7 @@ function showNav(){
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${svg('book')}</span>Overview</button>`;
  if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">☆</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon">${svg('test-tubes')}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Lab order workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Instrument order sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Lab order workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Instrument order sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   if(!list.length)continue;
@@ -234,7 +245,7 @@ function renderHome(mode='home'){
  if(!search&&!isFav){
  h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Lab operations reference</h1><p class="lede">Instrument procedures, collection and send-out workflows, training, and order references.</p>`;
  h+=noticeText();
- h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal">${svg('test-tubes')}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Order workflows</strong><small>External requisitions &amp; in-house</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
+ h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Order workflows</strong><small>External requisitions &amp; in-house</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${svg('droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="featured"><button type="button" class="feature-primary" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span></button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${svg('truck')}</span><span><strong>Lab send-outs</strong><small>Packaging & pickup</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${svg('heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
  }
@@ -431,8 +442,19 @@ function resources(sec){const items=sources[sec.id]||[];return `<div class="tab-
 function toolHeader(eyebrow,title,description){
  return `<div class="eyebrow">${safeHtml(eyebrow)}</div><h1 class="page-h1">${safeHtml(title)}</h1><p class="lede">${safeHtml(description)}</p>`;
 }
+function calculatorLogo(){
+ // Exact Lab Calculator favicon artwork, embedded so tiles and browser tab match.
+ return '<svg class="calculator-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">'+
+ '<rect width="64" height="64" rx="14" fill="#1d3748"/>'+
+ '<g transform="rotate(-32 32 32)">'+
+ '<path d="M25 17V43C25 51.3 29 55 34 55S43 51.3 43 43V17" fill="#eff8fa" stroke="#f6fbfc" stroke-width="3.2" stroke-linejoin="round"/>'+
+ '<path d="M28 36H40V43C40 49 37.7 52 34 52S28 49 28 43Z" fill="#ba495b"/>'+
+ '<rect x="22" y="10" width="24" height="10" rx="3" fill="#3da78b" stroke="#f3fbfc" stroke-width="2"/>'+
+ '<path d="M29 23V35" stroke="#fff" stroke-width="2.3" stroke-linecap="round" opacity=".92"/>'+
+ '</g></svg>';
+}
 function calculatorCards(){
- return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-count">0${i+1}</span><span class="calculator-tag">${safeHtml(c.tag)}</span></div><h2>${safeHtml(c.name)} calculator</h2><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} calculator <span>↗</span></a></article>`).join('')}</div>`;
+ return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-count">0${i+1}</span><span class="calculator-tag">${safeHtml(c.tag)}</span></div><div class="calculator-brand-title">${calculatorLogo()}<h2>${safeHtml(c.name)} calculator</h2></div><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} calculator <span>↗</span></a></article>`).join('')}</div>`;
 }
 function renderCalculators(){
  el('currentCrumb').textContent='Lab calculators';
@@ -555,7 +577,7 @@ function inhouseFlow(){
  ['Prepare the collection instructions','Use Quest, Cedars or Labcorp calculator as applicable. Verify test codes, draw requirements, handling, temperature and priority against the official directory.'],
  ['Document and complete the handoff','Upload the calculator instructions when sending specimens out. Coordinate scheduling with front desk if the collection requires an appointment. For instrument testing, follow the appropriate instrument procedure and documentation workflow.']
  ]);
- h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal">${svg('test-tubes')}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
+ h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
  h+=`<p class="source-footnote">The in-house sequence is a proposed quick-reference workflow for review. The external requisition escalation and Navigator-task process are shown separately.</p>`;
  return h;
 }
