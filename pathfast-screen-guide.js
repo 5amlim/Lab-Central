@@ -113,6 +113,7 @@ function patientStep(i){
  if(i===7)return lanes("patient");
  if(i===8)return sid();
  if(i===9)return start("patient");
+ if(i===10)return window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual("results","patient"):"";
  return "";
 }
 
