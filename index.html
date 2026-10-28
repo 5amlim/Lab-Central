@@ -343,7 +343,7 @@ function renderGuidedProcedure(group,sec){
  h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>Follow the steps in order. Open or close detail groups as needed.</p></div></div>';
  if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
  h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' main '+(total===1?'step':'steps')+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
- h+='<div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div>';
+ h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-label="Collapse all instruction details">Collapse details ▴</button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
   h+='<div class="guide-stepper" role="group" aria-label="Jump to a procedure step">';
   h+=steps.map(function(entry,i){
@@ -544,7 +544,16 @@ document.addEventListener('click',e=>{
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
-  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
+  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
+  return;
+ }
+ const detailsButton=e.target.closest('[data-guide-details]');
+ if(detailsButton){
+  const groups=[...el('mainContent').querySelectorAll('.guide-group')];
+  const shouldClose=groups.some(group=>group.open);
+  groups.forEach(group=>{group.open=!shouldClose;});
+  detailsButton.textContent=shouldClose?'Expand details ▾':'Collapse details ▴';
+  detailsButton.setAttribute('aria-label',shouldClose?'Expand all instruction details':'Collapse all instruction details');
   return;
  }
  const modeButton=e.target.closest('[data-guide-mode]');
