@@ -5,6 +5,7 @@ Interactive reference website for clinical lab workflows, instrument instruction
 ## What's included
 
 - Searchable instrument and point-of-care testing guides
+- Custom SVG equipment illustrations for each instrument, plus the detailed PATHFAST six-lane rack diagram
 - PATHFAST workflows, including one combined 28-day Calibration + QC guide with a six-lane rack schematic and a single Calibration + QC video placeholder
 - Lab Calculator links for Quest, Cedars and Labcorp
 - External requisition workflow (Navigator task, clinical review, missing information, provider escalation and front-desk scheduling)
@@ -16,6 +17,10 @@ Interactive reference website for clinical lab workflows, instrument instruction
 - Lab Sendout Log: color printing from Athena original image, nurse .rn charting, tech processing, Microsoft Forms logging, and bin handoff
 
 ## Website
+
+Equipment illustrations are stored in `equipment-art.js` and styled in `equipment-art.css`. They appear on the instrument Overview tabs and are simplified visual references, not manufacturer operating diagrams. Both files must be deployed with `index.html`.
+
+
 
 The main site content, scripts and existing illustrations are in `index.html`. Layout enhancements for connected workflow steps, category-colored menus and active navigation are in `flow-navigation.css`. Keep both files at the repository root when publishing. Open `index.html` in a browser with `flow-navigation.css` alongside it to preview locally.
 
