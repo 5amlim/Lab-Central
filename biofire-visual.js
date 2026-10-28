@@ -122,10 +122,14 @@ function stageVisual(id,title){
  else if(/hydrate/.test(t))figs=[figure("Hydrate through blue port","Remove the blue vial from its cover and puncture the designated blue hydration port. Confirm the pouch hydrates.",station("hydrate"))];
  else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Prepare specimen in red vial","Transfer sample and buffer into the red sample injection vial in the order and amounts specified for this particular panel.",pipette())];
  else if(/inject sample|load sample mix/.test(t))figs=[figure("Load red sample mixture","Puncture the red sample port with the prepared sample injection vial. Verify sample is drawn into the pouch.",station("sample"))];
- else if(/analyzer|start run|insert.*module|run pouch/.test(t))figs=[
-   figure("Actual analyzer shape reference","TORCH has a modular front rack and angled screen; SPOTFIRE has a vertical display next to its modules.",analyzer(id)),
-   ...[0,1,2,3].map((n)=>figure(["Available module","Scan pouch code","Confirm panel / ID","Start assay"][n],"Illustrative display. Follow the actual configured software for exact labels.",ui(id,n)))
+ else if(/available module/.test(t))figs=[
+   figure("Instrument and available modules","Identify an available module on the actual analyzer before loading the prepared pouch.",analyzer(id)),
+   figure("Open available module","Select an available module from the analyzer interface.",ui(id,0))
  ];
+ else if(/scan pouch barcode/.test(t))figs=[figure("Scan pouch barcode","Scan the barcoded pouch and match the panel/lot information displayed.",ui(id,1))];
+ else if(/confirm panel|verify sample id/.test(t))figs=[figure("Verify panel and identifiers","Confirm the intended panel, pouch and specimen or QC identifiers before running.",ui(id,2))];
+ else if(/start assay|start run|load.*module/.test(t))figs=[figure("Insert pouch and start the run","Follow the on-screen loading prompt for the correct module, then verify information and choose START.",ui(id,3))];
+
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
