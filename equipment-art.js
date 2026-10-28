@@ -363,9 +363,10 @@ function clinitekVisualGuide(sec){
    Long black-foil strip, clear sample trough at the front red tab,
    multiple transparent reagent wells, and a separate black detection well.
    Drawn as an original schematic, not a manufacturer image or fill-scale guide. */
-function pathfastCartridgeSvg(filled){
- const red=filled?"#bc4654":"#e8f6fa";
- const liquid=filled?"#a82d45":"#d9edf4";
+function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
+ const isQC=material==="calqc";
+ const red=filled?(isQC?"#a9c5eb":"#bc4654"):"#e8f6fa";
+ const liquid=filled?(isQC?"#7196c8":"#a82d45"):"#d9edf4";
  const chambers=Array.from({length:7},(_,i)=>{
   const x=196+i*46;
   return '<path d="M'+x+' 161 L'+(x+4)+' 215 Q'+(x+13)+' 234 '+(x+26)+' 216 L'+(x+31)+' 154Z" fill="'+(i%2?'#dcebf1':'#c2dce7')+'" fill-opacity=".72" stroke="#9dbdcd" stroke-width="2"/>'+
@@ -411,10 +412,88 @@ function pathfastCartridgeSvg(filled){
  '<rect x="624" y="151" width="56" height="37" rx="3" fill="'+red+'" fill-opacity="'+(filled?".9":".28")+'"/>'+
  '<path d="M622 151 H683" stroke="#6596a7" stroke-width="2.4" stroke-dasharray="5 3"/>'+
  '<text x="651" y="223" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="800" fill="'+(filled?"#9a4051":"#326e82")+'">'+(filled?"SAMPLE LOADED":"WELL EMPTY")+'</text>';
+ const transfer=showPipette?
+ '<g aria-label="Transfer pipette containing sample, delivering into the clear sample well">'+
+ '<path d="M201 1 L164 68 L137 129 L128 150" fill="none" stroke="#8da6b6" stroke-width="26" stroke-linecap="round"/>'+
+ '<path d="M201 1 L164 68 L137 129 L128 150" fill="none" stroke="#eaf6fa" stroke-width="21" stroke-linecap="round"/>'+
+ '<path d="M171 49 L137 120" fill="none" stroke="'+(isQC?'#7497c5':'#b44953')+'" stroke-width="9" stroke-linecap="round"/>'+
+ '<path d="M126 129 L124 146 L132 144 L138 127Z" fill="#d2e9f1" stroke="#7b9fb0" stroke-width="2"/>'+
+ '<path d="M128 147 C123 158 123 162 129 164 C135 162 135 156 128 147Z" fill="'+(isQC?'#7599c7':'#b53a4a')+'" stroke="#8b7a8d" stroke-width="1"/>'+
+ '<text x="233" y="30" font-family="Arial,sans-serif" font-size="13" font-weight="850" fill="#376c82">TRANSFER PIPETTE</text>'+
+ '<path d="M213 37 L182 58" stroke="#328e9b" stroke-width="2.6" fill="none"/>'+
+ '</g>':'';
  const info='<text x="311" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#698395">Long cartridge • clear sample tip • black foil and reagent wells</text>';
- return illustratedSvg(top+callouts+detail+info,
-  "PATHFAST reagent cartridge, "+(filled?"blood in the clear rectangular sample well":"empty clear rectangular sample well")+" at the red-marked front end; separate black detection well must not receive blood",
+ return illustratedSvg(top+callouts+detail+info+transfer,
+  "PATHFAST reagent cartridge, "+(filled?(isQC?"control material":"whole blood")+" in the clear rectangular sample well":"empty clear rectangular sample well")+" at the red-marked front end; separate black detection well must not receive blood",
   "0 0 740 310");
+}
+
+
+/* Large illustrated equipment used by patient and calibration guides.
+   The six aluminum channels and long black-foil cartridges are drawn after
+   manufacturer rack photos, not as a dimensionally exact machine diagram. */
+function pathfastRackSvg(mode="patient"){
+ const isCal=mode==="cal";
+ const items=isCal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["SAMPLE 1","SAMPLE 2","","","",""];
+ const fills=["#7caed6","#7caed6","#ad99d4","#ad99d4","#d4aa66","#7cbda7"];
+ let h='<defs><linearGradient id="pfRackMetal" x1="0" y1="0" x2=".75" y2="1"><stop stop-color="#f9fdff"/><stop offset=".5" stop-color="#bccbd2"/><stop offset="1" stop-color="#eef4f6"/></linearGradient><linearGradient id="pfRackWell" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#edfaff" stop-opacity=".95"/><stop offset="1" stop-color="#b0d7e3" stop-opacity=".85"/></linearGradient></defs>'+
+ '<ellipse cx="490" cy="370" rx="395" ry="25" fill="#b6c9d2" opacity=".3"/>'+
+ '<path d="M88 325 L235 102 L851 105 L930 327 L829 357 L158 357Z" fill="url(#pfRackMetal)" stroke="#8ca5b4" stroke-width="5"/>'+
+ '<path d="M203 112 L860 116" stroke="#f6fcff" stroke-width="12" stroke-linecap="round"/>';
+ for(let i=0;i<6;i++){
+   const x=160+i*126,active=!!items[i],label=items[i],ink=fills[i],lx=x+42;
+   h+='<g aria-label="Lane '+(i+1)+(active?" with "+label+" cartridge":" empty")+'">'+
+      '<path d="M'+(x-8)+' 123 L'+(x-28)+' 343" stroke="#94aab4" stroke-width="9" stroke-linecap="round"/>'+
+      '<path d="M'+(x+95)+' 123 L'+(x+77)+' 343" stroke="#f5faff" stroke-width="10" stroke-linecap="round"/>'+
+      '<path d="M'+(x-4)+' 131 L'+(x+89)+' 131 L'+(x+71)+' 335 L'+(x-22)+' 335Z" fill="'+(active?"#d8e3e8":"#ecf2f5")+'" stroke="#9cb0bb" stroke-width="2"/>'+
+      (active?'<path d="M'+(x+7)+' 147 L'+(x+74)+' 147 L'+(x+56)+' 309 L'+(x-10)+' 309Z" fill="#1c282e" stroke="#506876" stroke-width="2"/>'+
+        '<path d="M'+(x+7)+' 147 L'+(x+74)+' 147 L'+(x+73)+' 166 L'+(x+5)+' 166Z" fill="#d65850"/>'+
+        '<path d="M'+(x+8)+' 183 L'+(x+70)+' 183" stroke="#dce5e9" stroke-width="6"/>'+
+        Array.from({length:11},(_,j)=>'<path d="M'+(x+14+j*4.8)+' 189 v29" stroke="'+(j%3===0?"#f7fcfd":"#98aab4")+'" stroke-width="'+(j%3===0?2:1)+'"/>').join("")+
+        '<circle cx="'+(x+36)+'" cy="245" r="17" fill="#050b12" stroke="#a7b8c0" stroke-width="4"/>'+
+        '<circle cx="'+(x+36)+'" cy="245" r="6" fill="#34454d"/>'+
+        '<path d="M'+(x-9)+' 296 L'+(x+58)+' 296 L'+(x+54)+' 326 L'+(x-13)+' 326Z" fill="url(#pfRackWell)" stroke="#70a5b6" stroke-width="2.5"/>'+
+        '<path d="M'+(x-5)+' 311 L'+(x+54)+' 311 L'+(x+52)+' 325 L'+(x-8)+' 325Z" fill="'+(isCal?ink:"#a8404e")+'" opacity=".82"/>'+
+        '<path d="M'+(x-4)+' 307 L'+(x+55)+' 307" stroke="#6a9daf" stroke-dasharray="4 3" stroke-width="2"/>' :
+        '<path d="M'+(x+2)+' 143 L'+(x+80)+' 143 M'+(x-12)+' 326 L'+(x+70)+' 326" stroke="#bbcbd3" stroke-width="4"/>' )+
+      '<rect x="'+(lx-45)+'" y="53" width="90" height="48" rx="9" fill="'+(active?"#f3f9fc":"#f5f7f9")+'" stroke="'+(active?"#aec9d5":"#d3dde2")+'"/>'+
+      '<text x="'+lx+'" y="72" font-size="12" text-anchor="middle" font-weight="850" fill="#557b91">LANE '+(i+1)+'</text>'+
+      '<text x="'+lx+'" y="89" font-size="12.5" text-anchor="middle" font-weight="900" fill="'+(active?"#295c73":"#a7b5bf")+'">'+(label||"EMPTY")+'</text>'+
+      '</g>';
+ }
+ h+='<path d="M106 335 L899 335 L840 361 L149 360Z" fill="#c5d3dc" stroke="#95a7b2" stroke-width="4"/>'+
+ '<path d="M142 350 L847 350" stroke="#f7fcff" stroke-width="5" opacity=".9"/>'+
+ '<text x="489" y="402" text-anchor="middle" font-size="16" font-weight="850" fill="#607c8e">'+(isCal?"SIX LOADED CARTRIDGES · CAL 1 / CAL 2 / QC":"ILLUSTRATED SAMPLE RACK · TWO OCCUPIED POSITIONS")+'</text>';
+ return illustratedSvg(h,"PATHFAST six-slot metal reagent cartridge rack with "+(isCal?"all six long reagent cartridges loaded, CAL 1 twice, CAL 2 twice, QC 1 and QC 2":"two long sample cartridges inserted and four empty aluminum channels"),"0 0 980 420");
+}
+function pathfastTipRackSvg(){
+ let h='<rect x="110" y="215" width="750" height="80" rx="19" fill="#d8e6ec" stroke="#96aebb" stroke-width="5"/>'+
+ '<rect x="129" y="232" width="712" height="43" rx="12" fill="#f7fbfd" stroke="#b5cdd7" stroke-width="3"/>';
+ for(let i=0;i<6;i++){
+ const x=195+i*112;
+ h+='<g><ellipse cx="'+x+'" cy="225" rx="22" ry="10" fill="#8aa6b3"/>'+
+ '<rect x="'+(x-11)+'" y="85" width="23" height="130" rx="8" fill="#f1fafb" stroke="#93b8c8" stroke-width="2.5"/>'+
+ '<path d="M'+(x-6)+' 212 L'+x+' 244 L'+(x+7)+' 212Z" fill="#bfd8e3" stroke="#91abb9" stroke-width="2"/>'+
+ '<rect x="'+(x-22)+'" y="75" width="44" height="18" rx="6" fill="#deeaf0" stroke="#88a7b8" stroke-width="2"/>'+
+ '<text x="'+x+'" y="67" text-anchor="middle" fill="#3e6b80" font-weight="850" font-size="14">'+(i+1)+'</text></g>';
+ }
+ h+='<text x="490" y="351" text-anchor="middle" font-size="17" font-weight="850" fill="#4d7488">ONE NEW PATHFAST TIP FOR EACH OCCUPIED LANE</text>';
+ return illustratedSvg(h,"Six new disposable PATHFAST pipette tips shown in lane-numbered positions, schematic training view","0 0 980 400");
+}
+function pathfastActionVisual(stage,mode="patient"){
+ const qc=mode==="cal";
+ const pic=stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
+ stage==="rack"?pathfastRackSvg(mode):
+ stage==="tips"?pathfastTipRackSvg():
+ pathfastCartridgeSvg(false);
+ const tag=stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
+ stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
+ stage==="tips"?"SIX LANE TIP POSITIONS":"CHECK THE UNUSED REAGENT CARTRIDGE";
+ const note=stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
+ stage==="rack"?"Six-slot aluminum rack; actual occupied lanes and assay assignments must match the instrument display.":
+ stage==="tips"?"Use approved new tips in each active position. Follow the operator manual and the instrument display.":
+ "Confirm the cartridge type and front sample well; inspect packaging, seal, and expiration.";
+ return '<figure class="pf-action-figure"><div class="pf-action-heading">'+tag+'</div><div class="pf-action-image">'+pic+'</div><figcaption>'+note+'</figcaption></figure>';
 }
 
 function kitShape(id,filled,context){
@@ -672,5 +751,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Illustrative components are simplified, not photographic replicas or accurate fill-scale diagrams. Use the actual kit insert and local approved SOP for volumes, position, timing, specimen handling and QC. Opaque kits may not visibly show their internal sample.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
