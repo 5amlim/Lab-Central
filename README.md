@@ -14,7 +14,7 @@ Interactive reference website for clinical lab workflows, instrument instruction
 
 ## Website
 
-The site is self-contained in `index.html`, including its styling, scripts and existing illustrations. Open that file in a browser to preview locally.
+The main site content, scripts and existing illustrations are in `index.html`. Layout enhancements for connected workflow steps, category-colored menus and active navigation are in `flow-navigation.css`. Keep both files at the repository root when publishing. Open `index.html` in a browser with `flow-navigation.css` alongside it to preview locally.
 
 To publish it with GitHub Pages, use **Settings → Pages → Deploy from a branch → main / (root)**. GitHub Pages deployment is separate from uploading the repository files.
 
