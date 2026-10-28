@@ -215,7 +215,8 @@ function triageScene(title,group){
  if(/machine is ready|review|result/.test(t))return scene('Verify the meter status',triageMeter('pass'),'Continue only after acceptable QC and no active lockout.');
  if(/insert the cassette|insert.*port/.test(t))return scene(daily?'Insert reusable QC Device':'Insert prepared test cassette',daily?triageQCDevice():triageCassette(true),daily?'Do not add liquid to daily QC Device.':'Prepare the cassette using the kit-specific transfer pipette.');
  if(/run test|click|patient sample|enter mrn|lot/.test(t))return scene('Follow the MeterPro menu',triageMeter(daily?'daily':'home'),'Select the intended QC Device, QC Sample, or Patient Sample mode on the instrument.');
- if(/grab the test kit|pipette|blood samples|dispens/.test(t))return scene('Choose the assay cassette',triageCassette(/dispens|apply/.test(t)),'The liquid sample well exists on disposable assay cassettes, never on the reusable daily QC Device.');
+ if(/blood samples/.test(t))return scene('Collect EDTA whole blood',tube('lavender','edta'),'Lavender-top tube for the approved cardiac marker panel. Verify assay-specific stability before testing.');
+ if(/grab the test kit|pipette|dispens/.test(t))return scene('Choose the assay cassette',triageCassette(/dispens|apply/.test(t)),'The liquid sample well exists on disposable assay cassettes, never on the reusable daily QC Device.');
  if(daily||/turn on/.test(t))return scene('Power on Triage MeterPro',triageMeter('home'),'Confirm the correct test mode before continuing.');
  if(newbox)return scene('New reagent box: match the chip',triageMeter('chip'),'Match the chip to the new reagent lot before new-box QC.');
  return scene('Triage specimen handling',triageCassette(true),'Follow the selected assay and approved sample handling instructions.');
