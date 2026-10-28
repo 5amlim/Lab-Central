@@ -382,7 +382,7 @@ function kitShape(id,filled,context){
    '<rect x="124" y="104" width="72" height="32" rx="3" fill="#fcfeff"/>'+
    '<text x="160" y="119" font-size="10" fill="#385d75" font-weight="850" text-anchor="middle">EDTA</text>'+
    '<text x="160" y="131" font-size="8.5" fill="#688297" text-anchor="middle">CBC TUBE</text>';
-  return illustratedSvg(h+(filled?'<path d="M206 171 L250 142 L276 142" fill="none" stroke="#2c96a1" stroke-width="2.7"/><text x="257" y="135" font-size="10" fill="'+dark+'" font-weight="850">CLOSED-TUBE</text>':''),'Sysmex pocH-100i lavender-top blood tube; no reagent cartridge');
+  return illustratedSvg(h,'Sysmex pocH-100i lavender-top blood tube; no reagent cartridge');
  }
  if(id==="triage"){
   h='<rect x="53" y="80" width="214" height="73" rx="12" fill="#f3f6f8" stroke="'+outline+'" stroke-width="3"/>'+
@@ -543,9 +543,64 @@ const visualStepsText={
  visby:[["Historical specimen reference","Archived device. Confirm the historical assay specimen."],["Identify unused Visby device","Self-contained molecular test device; schematic only."],["Historical sample path","Not an active testing procedure. Follow historical IFU only for record review."],["Archived instrument reference","This platform is inactive. Do not use it for patient testing."]],
  idnow:[["Historical swab reference","Archived platform. Test-specific swab requirements varied."],["Identify receiver and test base","ID NOW used distinct sample receiver, test base and transfer cartridge."],["Historical transfer pathway","Sample was processed through the receiver and base; this is not current site guidance."],["Archived analyzer reference","This platform is inactive. Do not use it for patient testing."]]
 };
+/* pocH-100i has a tube aspiration workflow, not a disposable reagent cartridge.
+   Give each step a different useful visual instead of repeating capped EDTA tubes. */
+function sysmexVisualGuide(sec){
+ const screen=illustratedSvg(
+  '<rect x="156" y="22" width="428" height="264" rx="23" fill="#edf3f6" stroke="#8eabb9" stroke-width="5"/>'+
+  '<rect x="175" y="40" width="390" height="224" rx="12" fill="#f9fcfd" stroke="#c5dbe5" stroke-width="2"/>'+
+  '<rect x="175" y="40" width="390" height="48" rx="10" fill="#cfdfeb"/>'+
+  '<text x="202" y="70" font-family="Arial,sans-serif" font-size="20" font-weight="800" fill="#315d77">MAIN · WB</text>'+
+  '<rect x="202" y="111" width="168" height="62" rx="9" fill="#eaf0f9" stroke="#7b9fb6" stroke-width="3"/>'+
+  '<text x="286" y="138" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="800" fill="#245779">SAMPLE ID</text>'+
+  '<text x="286" y="158" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#5d7b8d">Verify patient</text>'+
+  '<rect x="387" y="111" width="151" height="62" rx="9" fill="#e7f5f1" stroke="#53a28e" stroke-width="3"/>'+
+  '<text x="462" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" font-weight="800" fill="#206c66">WB MODE</text>'+
+  '<text x="462" y="157" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#4f867c">Whole blood</text>'+
+  '<path d="M207 202 H534" stroke="#c7d7e0" stroke-width="3"/>'+
+  '<text x="370" y="233" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#526f83">Confirm ID before loading</text>',
+  'Schematic pocH-100i touchscreen showing Sample ID and whole blood mode','0 0 740 310');
+ const sampleBay=illustratedSvg(
+  body(specs.sysmex.shape,specs.sysmex.accent)+
+  '<ellipse cx="355" cy="218" rx="38" ry="70" fill="none" stroke="#138c99" stroke-width="4" stroke-dasharray="7 6"/>'+
+  '<path d="M382 220 L456 218 L525 198" fill="none" stroke="#168995" stroke-width="4" stroke-linecap="round"/>'+
+  '<rect x="525" y="166" width="182" height="39" rx="11" fill="#e8f5f5" stroke="#a4d3d6" stroke-width="2"/>'+
+  '<text x="616" y="191" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="800" fill="#236e79">SAMPLE DOOR</text>'+
+  '<text x="86" y="143" font-family="Arial,sans-serif" font-size="16" font-weight="800" fill="#3a657b">ADAPTER</text>'+
+  '<path d="M125 153 V176 H167" stroke="#168995" stroke-width="3" fill="none"/>'+
+  '<rect x="137" y="183" width="56" height="79" rx="10" fill="#f4e9ca" stroke="#ae9970" stroke-width="3"/>'+
+  '<rect x="147" y="198" width="36" height="59" rx="7" fill="#edf5f6" stroke="#9ab9c5" stroke-width="2"/>'+
+  '<text x="165" y="236" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#576f7c">TUBE</text>'+
+  '<path d="M193 220 H312" stroke="#168995" stroke-width="3" stroke-dasharray="7 5" fill="none"/>'+
+  '<path d="M308 213 L319 220 L308 227" stroke="#168995" stroke-width="3" fill="none"/>',
+  'pocH-100i sample compartment highlighted with schematic sample adapter and tube','0 0 740 310');
+ const analyzer=illustratedSvg(body(specs.sysmex.shape,specs.sysmex.accent),
+  'Sysmex pocH-100i analyzer with screen and purple sample compartment','0 0 740 310');
+ const cards=[
+  ['Collect and gently mix EDTA whole blood',
+   '<div class="device-gallery-specimens"><div class="device-gallery-media">'+mediaSvg('lavender')+'<small>Lavender-top EDTA whole blood</small></div></div>',
+   'Verify the tube and patient identifiers. Gently invert the tube according to the approved collection SOP. Check for clots.'],
+  ['Enter the sample ID and confirm WB mode',
+   '<div class="device-gallery-image">'+screen+'</div>',
+   'On the pocH-100i, select Sample ID and enter or scan the correct ID. Confirm whole-blood (WB) mode. Screen shown is a simplified reference.'],
+  ['Open the sample door and insert the tube',
+   '<div class="device-gallery-image device-gallery-analyzer">'+sampleBay+'</div>',
+   'Open the sample compartment, place the correct adapter, gently re-mix the specimen, and load the tube. Closed-tube mode requires an approved pierceable cap; open-tube mode requires cap removal.'],
+  ['Close the door, run, and verify results',
+   '<div class="device-gallery-image device-gallery-analyzer">'+analyzer+'</div>',
+   'Close the sample compartment, press RUN, and review results and instrument flags. Never open the sample compartment during aspiration.']
+ ];
+ return '<section class="device-gallery sysmex-gallery" aria-label="Sysmex pocH-100i specimen to analyzer training steps">'+
+  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>Sysmex pocH-100i · sample testing</h2><p>EDTA whole blood → Patient ID → Sample compartment → Analysis</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
+  '<div class="device-gallery-grid">'+cards.map((step,i)=>'<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,'0')+'</span><strong>'+visualEsc(step[0])+'</strong></div>'+step[1]+'<p>'+visualEsc(step[2])+'</p></article>').join('')+'</div>'+
+  '<p class="device-gallery-note"><strong>Tube cap safety:</strong> Closed-tube aspiration is permitted only with a compatible pierceable rubber cap. Do not use non-pierceable caps with the piercer. For open-tube mode, remove the cap before loading. Diagrams are schematic, not exact instrument screen or adapter replicas. Follow the manufacturer IFU and approved site SOP.</p>'+
+  '</section>';
+}
+
 function visualGuide(sec){
  if(!sec||!specs[sec.id]||!visualStepsText[sec.id])return "";
  if(sec.id==="clinitek")return clinitekVisualGuide(sec);
+ if(sec.id==="sysmex")return sysmexVisualGuide(sec);
  const id=sec.id,arr=visualStepsText[id],med=collection[id]||[],archive=!!sec.archived;
  const title=archive?"Historical consumable reference":"Specimen to instrument · visual steps";
  let steps=arr.map((step,i)=>{
