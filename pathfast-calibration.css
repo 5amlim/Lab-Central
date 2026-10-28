@@ -190,3 +190,31 @@
 .pf-panel-control{break-inside:avoid}
 .pf-panel-empty{min-height:50px}
 }
+
+/* Collapsible screen-by-screen CAL/QC workflow */
+.pf-workflow-intro{padding:12px 4px 11px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.pf-workflow-intro strong{font-size:13px;color:#2e5770}
+.pf-workflow-intro p{margin:0;color:#7890a0;font-size:11px;line-height:1.5}
+.pf-workflow-step{border:1px solid #dae7ed;background:#fff;border-radius:13px;margin:0 0 12px;overflow:hidden;box-shadow:0 3px 8px #264b6608}
+.pf-workflow-step>summary{display:flex;align-items:center;gap:14px;padding:14px 17px;background:#f8fbfd;cursor:pointer;list-style:none;min-height:70px}
+.pf-workflow-step>summary::-webkit-details-marker{display:none}
+.pf-workflow-step[open]>summary{background:#eaf7f7;border-bottom:1px solid #d9ebec}
+.pf-workflow-step>summary:hover{background:#edf7f9}
+.pf-workflow-no{display:grid;place-items:center;flex:none;background:#277d9c;color:#fff;font-weight:900;width:37px;height:37px;border-radius:10px;font-size:12px}
+.pf-workflow-step:nth-of-type(3n+2) .pf-workflow-no{background:#208779}
+.pf-workflow-label{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.pf-workflow-label strong{font-size:13px;color:#2d5065;line-height:1.4}
+.pf-workflow-label small{font-size:11px;line-height:1.5;color:#788fa1}
+.pf-workflow-chev{flex:none;width:26px;height:26px;display:grid;place-items:center;border:1px solid #d2e3e9;background:#fff;color:#45859e;border-radius:8px;font-size:16px;transition:transform .15s}
+.pf-workflow-step[open] .pf-workflow-chev{transform:rotate(180deg)}
+.pf-workflow-detail{padding:14px 19px 19px}
+.pf-workflow-detail .pfs-reference{margin:0 auto 11px}
+.pf-workflow-note{background:#f4f9fa;border-left:3px solid #56a1b2;border-radius:5px;padding:10px 13px;margin:13px 0 0;color:#526e80;font-size:11.5px;line-height:1.7}
+.pf-workflow-lane-note{background:#edf8f4;border:1px solid #c4e2d7;padding:13px;border-radius:9px;color:#336d5a;font-size:11.5px;line-height:1.6;margin:13px 0}
+.pf-workflow-detail .pf-assay-content{padding-top:0}
+.pf-workflow-detail .pf-rack-box{margin-top:0}
+.pf-workflow-detail .pf-rack-svg{max-width:920px}
+.pf-workflow-step:focus-within{border-color:#8abdc8}
+.pf-workflow-step summary:focus-visible{outline:3px solid #8ad0cd;outline-offset:-3px}
+@media(max-width:650px){.pf-workflow-step>summary{padding:11px 12px;gap:9px}.pf-workflow-detail{padding:11px}.pf-workflow-label strong{font-size:12px}.pf-workflow-no{width:32px;height:32px}}
+@media print{.pf-workflow-step{break-inside:auto}.pf-workflow-step .pf-workflow-detail{display:block!important}.pf-workflow-step>summary{break-after:avoid}}
