@@ -145,6 +145,9 @@ const workflow=[
 ];
 let selectedPanel=null;
 let panelDropdownOpen=false;
+let currentStep=1;
+let showAllSteps=false;
+let stepMenuOpen=false;
 function selectedGroup(){return groups.find(g=>g.id===selectedPanel)||null;}
 function panelPicker(){
  const group=selectedGroup();
@@ -168,7 +171,8 @@ function render(){
  const group=selectedGroup();
  const x=group?esc(group.label):"";
  function step(n,title,desc,inner){
-  return '<details class="pf-workflow-step" '+(n===1?'open':'')+'>'+
+  if(!showAllSteps&&n!==currentStep)return '';
+  return '<details class="pf-workflow-step" '+(!showAllSteps||n===currentStep?'open':'')+'>'+
     '<summary><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
     '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
     '<span class="pf-workflow-chev">⌄</span></summary>'+
@@ -183,7 +187,12 @@ function render(){
   h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon">▤</span><strong>Select the assay to start</strong><p>Follow the screen sequence from operator login to CAL/QC lane setup. The matched Bio-Rad control materials appear in step 6.</p></div>';
  }else{
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · 6 LANES</span></div>'+
-  '<div class="pf-workflow-intro"><strong>Screen-by-screen workflow</strong><p>Open each numbered step. The actual display can differ by instrument software version and QC-lockout configuration.</p></div>';
+  '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of 8</strong><span>One screen or task at a time</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span>⌄</span></button><button type="button" data-pf-toggle-all>'+ (showAllSteps?'Focused view':'View all steps') +'</button></div></div>'+
+  (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
+   'Log in','Check status pills','Tap BACK','Select CAL/QC and assay','Verify 6 lanes',
+   'Prepare and load','Start the run','Review results'
+  ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="'+(currentStep===i+1?'active':'')+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+label+'</button>').join('')+'</div>':'')+
+  '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="8" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/8*100)+'%"></span></div>';
   h+=step(1,'Log in','Select User ID and enter the assigned password',
       window.LAB_PATHFAST_SCREEN.login()+
       '<p class="pf-workflow-note">Choose the authorized user and sign in. If accessibility is disabled, the instrument may open directly to ASSAY/HOME.</p>');
@@ -210,6 +219,7 @@ function render(){
   h+=step(8,'Review calibration and QC','Confirm acceptable results and gray/ready status',
       status(group)+
       '<p class="pf-workflow-note">Review calibration and both Bio-Rad QC results against lot-specific criteria. Confirm the assay pill has returned to gray before patient testing. Do not use patient assays if CAL/QC remains locked or controls fail.</p>');
+  if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 8</span><button type="button" class="primary" data-pf-next '+(currentStep===8?'disabled':'')+'>Next step →</button></div>';
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
@@ -218,13 +228,28 @@ function render(){
 }
 if(typeof document!=='undefined' && typeof document.addEventListener==='function'){
  document.addEventListener('click',function(e){
+  const next=e.target.closest('[data-pf-next]');
+  const prev=e.target.closest('[data-pf-prev]');
+  const jump=e.target.closest('[data-pf-jump]');
+  const browse=e.target.closest('[data-pf-browse]');
+  const toggleAll=e.target.closest('[data-pf-toggle-all]');
+  if(next||prev||jump||browse||toggleAll){
+   if(next)currentStep=Math.min(8,currentStep+1);
+   if(prev)currentStep=Math.max(1,currentStep-1);
+   if(jump){const n=Number(jump.getAttribute('data-pf-jump'));if(n>=1&&n<=8)currentStep=n;showAllSteps=false;stepMenuOpen=false;}
+   if(browse)stepMenuOpen=!stepMenuOpen;
+   if(toggleAll){showAllSteps=!showAllSteps;stepMenuOpen=false;}
+   repaintPanel();
+   if(next||prev||jump){const head=document.querySelector('.pfux-cal-toolbar');if(head&&head.scrollIntoView)head.scrollIntoView({block:'start',behavior:'instant'});}
+   return;
+  }
   const trigger=e.target.closest('[data-pf-panel-trigger]');
   if(trigger){panelDropdownOpen=!panelDropdownOpen;repaintPanel();const newTrigger=document.querySelector('[data-pf-panel-trigger]');if(newTrigger)newTrigger.focus();return;}
   const option=e.target.closest('[data-pf-panel-option]');
   if(option){
    const id=option.getAttribute('data-pf-panel-option');
    if(groups.some(g=>g.id===id)){
-    selectedPanel=id;panelDropdownOpen=false;repaintPanel();
+    selectedPanel=id;panelDropdownOpen=false;currentStep=1;showAllSteps=false;stepMenuOpen=false;repaintPanel();
     const newTrigger=document.querySelector('[data-pf-panel-trigger]');if(newTrigger)newTrigger.focus();
    }
    return;
