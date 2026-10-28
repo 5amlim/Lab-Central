@@ -480,18 +480,50 @@ function pathfastTipRackSvg(){
  h+='<text x="490" y="351" text-anchor="middle" font-size="17" font-weight="850" fill="#4d7488">ONE NEW PATHFAST TIP FOR EACH OCCUPIED LANE</text>';
  return illustratedSvg(h,"Six new disposable PATHFAST pipette tips shown in lane-numbered positions, schematic training view","0 0 980 400");
 }
+function pathfastResultsSvg(mode="patient"){
+ const qc=mode==="cal";
+ const paperTitle=qc?"CAL / QC REVIEW":"RESULT REVIEW";
+ let h='<ellipse cx="489" cy="330" rx="350" ry="14" fill="#cad9e1" opacity=".4"/>'+
+ '<rect x="112" y="42" width="338" height="266" rx="13" fill="#fcfefe" stroke="#a7c0ca" stroke-width="4"/>'+
+ '<rect x="137" y="66" width="288" height="43" rx="6" fill="#dfecf3"/>'+
+ '<text x="282" y="94" text-anchor="middle" fill="#315e79" font-family="Arial,sans-serif" font-size="20" font-weight="850">'+paperTitle+'</text>'+
+ '<text x="146" y="139" fill="#567488" font-family="Arial,sans-serif" font-size="14">Assay / specimen ID</text>'+
+ '<rect x="307" y="122" width="109" height="23" rx="6" fill="#ecf2f5"/>'+
+ '<path d="M147 166 H412 M147 200 H412 M147 236 H412 M147 273 H412" stroke="#dce7ed" stroke-width="3"/>'+
+ '<text x="148" y="189" fill="#51758b" font-family="Arial,sans-serif" font-size="14">'+(qc?"CAL 1 / CAL 2":"Reported value")+'</text>'+
+ '<text x="147" y="225" fill="#51758b" font-family="Arial,sans-serif" font-size="14">'+(qc?"QC 1 / QC 2":"Instrument flags")+'</text>'+
+ '<text x="148" y="259" fill="#51758b" font-family="Arial,sans-serif" font-size="14">Verify status</text>'+
+ '<rect x="334" y="174" width="75" height="21" rx="5" fill="#e1f2ed"/>'+
+ '<rect x="334" y="210" width="75" height="21" rx="5" fill="#e1f2ed"/>'+
+ '<rect x="334" y="244" width="75" height="21" rx="5" fill="#e9f0f4"/>'+
+ '<path d="M346 184 l5 5 10 -12 M346 219 l5 5 10 -12" fill="none" stroke="#268373" stroke-width="3" stroke-linecap="round"/>'+
+ '<rect x="531" y="78" width="313" height="205" rx="19" fill="#edf4f6" stroke="#a5bbc8" stroke-width="4"/>'+
+ '<rect x="557" y="98" width="261" height="36" rx="6" fill="#d9e9f0"/>'+
+ '<text x="688" y="121" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="850" fill="#3d6b82">AFTER THE RUN</text>'+
+ '<path d="M582 160 H790" stroke="#b2c9d6" stroke-width="4"/>'+
+ '<path d="M591 178 l23 24 40-50" fill="none" stroke="#328b75" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<text x="685" y="184" font-size="15" font-family="Arial,sans-serif" font-weight="800" fill="#426d81">Verify before</text>'+
+ '<text x="685" y="203" font-size="15" font-family="Arial,sans-serif" font-weight="800" fill="#426d81">'+(qc?"patient testing":"reporting")+'</text>'+
+ '<path d="M580 236 H796" stroke="#c6d9df" stroke-width="3"/>'+
+ '<text x="687" y="265" text-anchor="middle" font-size="14" font-family="Arial,sans-serif" fill="#567b8d">Use approved SOP</text>';
+ return illustratedSvg(h,"PATHFAST post-run review showing illustrative result report and verification checklist with no real patient data","0 0 980 370");
+}
+
 function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
  const pic=stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
  stage==="rack"?pathfastRackSvg(mode):
  stage==="tips"?pathfastTipRackSvg():
+ stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
  const tag=stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
  stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
- stage==="tips"?"SIX LANE TIP POSITIONS":"CHECK THE UNUSED REAGENT CARTRIDGE";
+ stage==="tips"?"SIX LANE TIP POSITIONS":
+ stage==="results"?"RESULT AND STATUS VERIFICATION":"CHECK THE UNUSED REAGENT CARTRIDGE";
  const note=stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
  stage==="rack"?"Six-slot aluminum rack; actual occupied lanes and assay assignments must match the instrument display.":
  stage==="tips"?"Use approved new tips in each active position. Follow the operator manual and the instrument display.":
+ stage==="results"?"Review actual instrument output, flags and calibration/QC acceptability. Follow reporting and disposal procedures; this is a schematic reference, not a result.":
  "Confirm the cartridge type and front sample well; inspect packaging, seal, and expiration.";
  return '<figure class="pf-action-figure"><div class="pf-action-heading">'+tag+'</div><div class="pf-action-image">'+pic+'</div><figcaption>'+note+'</figcaption></figure>';
 }
