@@ -55,9 +55,9 @@ return '<article class="pcr-decision '+kind+'"><div class="pcr-decision-head"><s
 function pathway(){
 return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I 0/1-hour pathway</h2>'+
 '<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
-'<div class="pcr-protocol-warning"><strong>Confirm approved clinical pathway before use</strong><p>The clinical pathway references contain inconsistent threshold wording, including 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and rule-out conditions for low initial values. The clinic one-page guide also gives a 99th-percentile reference of 29 ng/L, while this pathway uses 21.4 ng/L (F) and 29.8 ng/L (M). Confirm the medically approved assay-specific thresholds and pathway before clinical use.</p></div>'+
+'<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
 window.LAB_PATHFAST_EXTRAS.flow()+
-'<h3 class="pcr-section-title">Reference A: Interpreting the 1-hour result</h3><div class="pcr-decisions">'+
+'<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>View the 1-hour interpretation table and flowchart</small></span><span class="pcr-reference-chevron" aria-hidden="true">⌄</span></summary><div class="pcr-reference-content"><h3 class="pcr-section-title">Reference A: Interpreting the 1-hour result</h3><div class="pcr-decisions">'+
 col("Rule-out","Low risk",["Initial hs-TnI <b>&lt;4 ng/L</b>","1-hour delta <b>&lt;3 ng/L</b>","HEART ≤3 and reassuring ECG"],"ruleout")+
 col("Consider discharge","Follow-up review",["Initial hs-TnI <b>≥4 ng/L</b> with 1-hour delta <b>&lt;3 ng/L</b>","Total below <b>21.4 ng/L (F)</b> or <b>29.8 ng/L (M)</b>","HEART ≤3 and cardiology follow-up within 48–72 hours; may repeat 2-hour troponin"],"consider")+
 col("Observe / consult","Further assessment",["1-hour delta <b>&gt;3 and &lt;20 ng/L</b> with total &lt;90 ng/L","Or total above the sex-specific threshold but &lt;90 ng/L, or HEART &gt;3","Real-time cardiology consult, risk stratification or transfer"],"observe")+
@@ -72,7 +72,12 @@ col("Rule-in / transfer","Urgent escalation",["Initial hs-TnI <b>≥90 ng/L</b>"
 '</div><div class="pcr-map-down">↓</div>'+
 '<div class="pcr-map-results"><span class="ruleout">Rule-out / discharge criteria</span><span class="consider">Consider 2-hour repeat / close follow-up</span><span class="observe">Observe / consult</span><span class="transfer">Rule-in / transfer</span></div></div>'+
 '<div class="pcr-tech-note"><strong>Provider-only clinical interpretation</strong><p>Evaluate symptom onset, ECG, HEART score, serial troponin values, units and clinical presentation together. Elevated troponin may indicate myocardial injury but does not alone establish MI. PATHFAST high-sensitivity results should not be trended directly with conventional Triage troponin values.</p></div>'+
-'<p class="pcr-foot">Clinical reference: “Primary Option: hs-TnI 0/1-Hour Chest Pain Pathway” and PATHFAST Clinic One-Page Guide. Provider use only.</p></section>';
+'<p class="pcr-foot">Clinical reference: “Primary Option: hs-TnI 0/1-Hour Chest Pain Pathway” and PATHFAST Clinic One-Page Guide. Provider use only.</p></div></details></section>';
+}
+if(typeof window!=='undefined'&&typeof window.addEventListener==='function'&&typeof document!=='undefined'){
+ let printState=[];
+ window.addEventListener('beforeprint',function(){printState=Array.from(document.querySelectorAll('.pcr-reference-accordion, .pcr-review-detail')).map(function(node){return {node:node,open:node.open};});printState.forEach(function(item){item.node.open=true;});});
+ window.addEventListener('afterprint',function(){printState.forEach(function(item){item.node.open=item.open;});printState=[];});
 }
 window.LAB_PATHFAST_CLINICAL={collection:collection,pathway:pathway};
 })();
