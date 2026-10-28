@@ -96,7 +96,7 @@ function flow(){
    }
   }
  }
- h+='</div><div class="pcr-flow-foot"><b>Clinical review required:</b> The clinical source slides contain unresolved threshold differences, including >3 versus ≥3 ng/L. Use the approved medical protocol. Do not enter identifiers in this guide.</div></section>';
+ h+='</div><div class="pcr-flow-foot">Reference explorer only. Follow the current approved protocol for interpretation and disposition. Do not enter patient identifiers.</div></section>';
  return h;
 }
 function refresh(){
