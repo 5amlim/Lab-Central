@@ -112,7 +112,9 @@ function ui(id,index){
  "Illustrative "+(torch?"TORCH":"SPOTFIRE")+" navigation view "+(index+1));
 }
 function figure(title,desc,picture){
- return '<figure class="biofire-training-figure"><div class="biofire-training-title"><strong>'+esc(title)+'</strong><span>ORIGINAL SCHEMATIC</span></div><div class="biofire-training-image">'+picture+'</div><figcaption>'+esc(desc)+'</figcaption></figure>';
+ const type=/blue|hydrat/i.test(title)?'blue':/red|sample|specimen/i.test(title)?'red':/scan|panel|start|module/i.test(title)?'screen':'ready';
+ const symbol=type==='blue'?'●':type==='red'?'●':type==='screen'?'›':'✓';
+ return '<figure class="biofire-training-figure biofire-training-'+type+'"><div class="biofire-training-title"><strong><span class="biofire-training-symbol" aria-hidden="true">'+symbol+'</span>'+esc(title)+'</strong><span class="biofire-action-type">'+(type==='blue'?'HYDRATION':type==='red'?'SAMPLE':type==='screen'?'SCREEN':'PREPARATION')+'</span></div><div class="biofire-training-image">'+picture+'</div><figcaption><span class="biofire-action-arrow" aria-hidden="true">↳</span>'+esc(desc)+'</figcaption></figure>';
 }
 function stageVisual(id,title){
  if(id!=="torch"&&id!=="spotfire")return "";
