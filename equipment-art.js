@@ -466,18 +466,20 @@ function pathfastRackSvg(mode="patient"){
  '<text x="489" y="402" text-anchor="middle" font-size="16" font-weight="850" fill="#607c8e">'+(isCal?"SIX LOADED CARTRIDGES · CAL 1 / CAL 2 / QC":"ILLUSTRATED SAMPLE RACK · TWO OCCUPIED POSITIONS")+'</text>';
  return illustratedSvg(h,"PATHFAST six-slot metal reagent cartridge rack with "+(isCal?"all six long reagent cartridges loaded, CAL 1 twice, CAL 2 twice, QC 1 and QC 2":"two long sample cartridges inserted and four empty aluminum channels"),"0 0 980 420");
 }
-function pathfastTipRackSvg(){
+function pathfastTipRackSvg(mode="patient"){
+ const activeCount=mode==="cal"?6:2;
  let h='<rect x="110" y="215" width="750" height="80" rx="19" fill="#d8e6ec" stroke="#96aebb" stroke-width="5"/>'+
  '<rect x="129" y="232" width="712" height="43" rx="12" fill="#f7fbfd" stroke="#b5cdd7" stroke-width="3"/>';
  for(let i=0;i<6;i++){
  const x=195+i*112;
+ if(i>=activeCount){h+='<ellipse cx="'+x+'" cy="225" rx="22" ry="10" fill="#8aa6b3" opacity=".65"/><text x="'+x+'" y="182" text-anchor="middle" fill="#9babba" font-size="11" font-weight="800">EMPTY</text>';continue;}
  h+='<g><ellipse cx="'+x+'" cy="225" rx="22" ry="10" fill="#8aa6b3"/>'+
  '<rect x="'+(x-11)+'" y="85" width="23" height="130" rx="8" fill="#f1fafb" stroke="#93b8c8" stroke-width="2.5"/>'+
  '<path d="M'+(x-6)+' 212 L'+x+' 244 L'+(x+7)+' 212Z" fill="#bfd8e3" stroke="#91abb9" stroke-width="2"/>'+
  '<rect x="'+(x-22)+'" y="75" width="44" height="18" rx="6" fill="#deeaf0" stroke="#88a7b8" stroke-width="2"/>'+
  '<text x="'+x+'" y="67" text-anchor="middle" fill="#3e6b80" font-weight="850" font-size="14">'+(i+1)+'</text></g>';
  }
- h+='<text x="490" y="351" text-anchor="middle" font-size="17" font-weight="850" fill="#4d7488">ONE NEW PATHFAST TIP FOR EACH OCCUPIED LANE</text>';
+ h+='<text x="490" y="351" text-anchor="middle" font-size="17" font-weight="850" fill="#4d7488">'+(mode==="cal"?"SIX ACTIVE LANES · SIX NEW TIPS":"TWO ACTIVE EXAMPLE LANES · TWO NEW TIPS")+'</text>';
  return illustratedSvg(h,"Six new disposable PATHFAST pipette tips shown in lane-numbered positions, schematic training view","0 0 980 400");
 }
 function pathfastResultsSvg(mode="patient"){
@@ -513,7 +515,7 @@ function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
  const pic=stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
  stage==="rack"?pathfastRackSvg(mode):
- stage==="tips"?pathfastTipRackSvg():
+ stage==="tips"?pathfastTipRackSvg(mode):
  stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
  const tag=stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
