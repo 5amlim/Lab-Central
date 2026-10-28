@@ -7,69 +7,113 @@
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function svg(body,label){return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(label)+'" viewBox="0 0 920 400">'+body+'</svg>';}
 function text(x,y,s,size=15,color="#326780",anchor="middle",weight="800"){return '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+esc(s)+'</text>';}
-function vial(x,color,material,mode){
- const blue=color==="blue",ink=blue?"#188ac5":"#c44f59",fill=blue?"#81c5e8":"#cc6d76";
- const needle=mode==="needle"||mode==="port";
- return '<g transform="translate('+x+' 0)">'+
- '<ellipse cx="60" cy="323" rx="55" ry="8" fill="#dfe9ee"/>'+
- '<rect x="35" y="121" width="50" height="173" rx="12" fill="#edf7fb" fill-opacity=".8" stroke="#8baebf" stroke-width="3"/>'+
- '<path d="M39 203 H81 V277 Q59 291 39 277Z" fill="'+fill+'" opacity=".45"/>'+
- '<rect x="30" y="105" width="60" height="30" rx="9" fill="'+ink+'" stroke="#6e91a3" stroke-width="2"/>'+
- '<path d="M35 110h50" stroke="#fff" opacity=".6" stroke-width="2"/>'+
- '<rect x="42" y="174" width="37" height="40" rx="4" fill="#fff" opacity=".95"/>'+
- text(60,190,blue?"HYDR.":"SAMPLE",9,"#41687a")+
- text(60,203,"INJECTION",7.5,"#41687a")+
- (needle?'<path d="M60 105 V71" stroke="#8da5b1" stroke-width="8" stroke-linecap="round"/><path d="M60 72v-24" stroke="#91a1ac" stroke-width="3"/>':'')+
- text(60,345,material,13,blue?"#237d9f":"#ac4a58")+'</g>';
+
+/* Injection vials are drawn apart from the station during mixing.
+   The red and blue caps remain in the matching loading-station wells
+   when the vial is removed for pouch puncture. */
+function vial(x,color,material,mode,y=62){
+ const blue=color==="blue",cap=blue?"#168cb7":"#c54f5c",fluid=blue?"#a8dcf1":"#d9a5ae";
+ const needle=mode==="needle";
+ return '<g transform="translate('+x+' '+y+')">'+
+ '<ellipse cx="40" cy="195" rx="38" ry="6" fill="#deebf1"/>'+
+ '<rect x="16" y="34" width="48" height="154" rx="12" fill="#f5fbfd" stroke="#8eafbe" stroke-width="3"/>'+
+ '<path d="M21 110H59V167Q52 182 40 182Q26 181 21 167Z" fill="'+fluid+'" opacity=".83"/>'+
+ '<rect x="9" y="12" width="62" height="35" rx="11" fill="'+cap+'" stroke="#6b91a3" stroke-width="3"/>'+
+ '<path d="M15 20H65" stroke="#fff" stroke-width="3" opacity=".68"/>'+
+ '<rect x="23" y="75" width="34" height="44" rx="4" fill="#fff" stroke="#d6e4e9"/>'+
+ text(40,94,blue?"HYDR.":"SAMPLE",8.2,"#375d71")+text(40,108,"INJECTION",7.1,"#57798a")+
+ (needle?'<path d="M40 12V-7" stroke="#899ba4" stroke-width="8"/><path d="M40 -7V-33" stroke="#a4beca" stroke-width="3"/>':'')+
+ text(40,212,material,12,blue?"#277c9d":"#ae4c5b")+'</g>';
 }
 function stationBase(){
- return '<ellipse cx="492" cy="333" rx="275" ry="18" fill="#e1eaee"/>'+
- '<path d="M232 182 L350 114 L685 119 L789 181 L695 291 L349 291Z" fill="#27313a" stroke="#6b7e8e" stroke-width="5"/>'+
- '<path d="M233 182 L349 291 L349 317 L232 207Z" fill="#18232c" stroke="#526877" stroke-width="3"/>'+
- '<path d="M349 291 L695 291 L695 316 L349 317Z" fill="#232c35" stroke="#526877" stroke-width="3"/>'+
- '<path d="M350 125 L685 129 L747 175 L317 176Z" fill="#1b2730"/>'+
- '<path d="M358 187 H681 L690 258 H350Z" fill="#3e4b56" stroke="#91a8b5" stroke-width="2"/>'+
- '<rect x="385" y="195" width="263" height="55" rx="4" fill="#edf3f5" stroke="#adbec7" stroke-width="3"/>'+
- Array.from({length:12},(_,i)=>'<rect x="'+(393+i*20)+'" y="203" width="12" height="39" rx="3" fill="#c6dfe9" stroke="#aac4cf"/>').join("")+
- '<path d="M490 258 H572" stroke="#71a6bf" stroke-width="4"/>'+
- '<circle cx="370" cy="162" r="21" fill="#b64f5b" stroke="#efacb3" stroke-width="5"/>'+
- '<circle cx="655" cy="162" r="21" fill="#2b93c1" stroke="#a7d9ea" stroke-width="5"/>'+
- text(370,94,"SAMPLE",15,"#ad4954")+text(370,111,"RED • LEFT",11,"#ad4954")+
- text(655,94,"HYDRATION",15,"#2585ac")+text(655,111,"BLUE • RIGHT",11,"#2585ac");
+ const red=385,blue=590;
+ return '<ellipse cx="492" cy="339" rx="258" ry="13" fill="#dfe9ed"/>'+
+ '<path d="M282 137L347 107H648L724 145L695 276H320Z" fill="#23303a" stroke="#738b99" stroke-width="4"/>'+
+ '<path d="M320 276H695V294H320Z" fill="#172832" stroke="#7b93a1" stroke-width="3"/>'+
+ '<path d="M283 139L320 275V294L281 174Z" fill="#1a2a34" stroke="#7b93a1" stroke-width="3"/>'+
+ '<path d="M341 137H658L688 253H330Z" fill="#3b4e5a" stroke="#7893a2" stroke-width="2.5"/>'+
+ '<path d="M386 194L628 194L642 263H373Z" fill="#e2edf1" fill-opacity=".75" stroke="#93abb8" stroke-width="3"/>'+
+ Array.from({length:11},(_,i)=>'<rect x="'+(397+i*20)+'" y="206" width="12" height="46" rx="4" fill="#b6d0da" stroke="#91b4c1" stroke-width="1.4"/>').join("")+
+ '<path d="M368 259H650" stroke="#b7cdd7" stroke-width="4"/>'+
+ '<rect x="346" y="145" width="77" height="26" rx="9" fill="#8e3c49" stroke="#cf6e7a" stroke-width="3"/>'+
+ '<ellipse cx="'+red+'" cy="144" rx="27" ry="16" fill="#a34652" stroke="#f2b0b7" stroke-width="4"/>'+
+ '<ellipse cx="'+red+'" cy="143" rx="16" ry="8" fill="#762b39"/>'+
+ '<rect x="554" y="145" width="73" height="26" rx="9" fill="#18779b" stroke="#80c9df" stroke-width="3"/>'+
+ '<ellipse cx="'+blue+'" cy="144" rx="27" ry="16" fill="#218bac" stroke="#a7dfea" stroke-width="4"/>'+
+ '<ellipse cx="'+blue+'" cy="143" rx="16" ry="8" fill="#195a7a"/>'+
+ text(385,78,"RED · SAMPLE",15,"#b84b5a")+text(590,78,"BLUE · HYDRATION",15,"#2b83a3")+
+ '<path d="M385 88V119M590 88V119" stroke="#8daab9" stroke-width="2.4" stroke-dasharray="5 4"/>'+
+ '<path d="M413 292H576" stroke="#bed2da" stroke-width="3"/>';
 }
 function station(mode){
- let vials="";
- if(mode==="ready"){vials=vial(308,"red","Sample vial","normal").replace('translate(308 0)','translate(310 -90)')+vial(598,"blue","Hydration vial","normal").replace('translate(598 0)','translate(597 -90)');}
- if(mode==="hydrate"){vials=vial(598,"blue","Hydration vial","needle").replace('translate(598 0)','translate(594 -110)')+'<path d="M665 201 l-12 28 l12 -6 l12 6Z" fill="#2585ac"/>';}
- if(mode==="sample"){vials=vial(308,"red","Sample vial","needle").replace('translate(308 0)','translate(309 -100)');}
- return svg(stationBase()+vials+
- (mode==="ready"?'<rect x="43" y="245" width="183" height="50" rx="10" fill="#f2f8fa" stroke="#c5dde5"/>'+text(134,265,"SET VIALS IN",13)+text(134,283,"THE MATCHING WELLS",12):'')+
- (mode==="hydrate"?'<path d="M728 160 L795 134 H882" stroke="#268bac" stroke-width="3" fill="none"/>'+text(822,125,"PUNCTURE BLUE PORT",12):'')+
- (mode==="sample"?'<path d="M303 154 L241 127 H129" stroke="#bd5e69" stroke-width="3" fill="none"/>'+text(133,118,"SAMPLE INTO RED PORT",12):''),
- "BioFire pouch loading station with red sample well on left and blue hydration well on right");
+ let extra="";
+ if(mode==="ready"){
+   extra=vial(345,"red","Sample vial","normal",73)+vial(550,"blue","Hydration vial","normal",73);
+ }else if(mode==="hydrate"){
+   extra=vial(548,"blue","Hydration vial","needle",39)+
+   '<path d="M590 158v20" stroke="#3ba9c7" stroke-width="5" stroke-dasharray="5 3"/>'+
+   text(807,241,"HYDRATE BLUE",15,"#267fa3");
+ }else if(mode==="sample"){
+   extra=vial(343,"red","Sample vial","needle",39)+
+   '<path d="M384 158v20" stroke="#c55363" stroke-width="5" stroke-dasharray="5 3"/>'+
+   text(130,241,"LOAD SAMPLE",15,"#b64a59");
+ }
+ return svg(stationBase()+extra,
+  "FilmArray pouch loading station with red sample vial on left and blue hydration vial on right; sample and hydration vial ports remain separate");
+}
+function pipetteShape(x,y){
+ return '<g transform="translate('+x+' '+y+') rotate(28 10 94)">'+
+ '<path d="M7 4L10 104" stroke="#a2b4be" stroke-width="15" stroke-linecap="round"/>'+
+ '<path d="M7 4L10 104" stroke="#f5fbfc" stroke-width="9" stroke-linecap="round"/>'+
+ '<path d="M10 103L10 139" stroke="#a6b8c1" stroke-width="5"/>'+
+ '<path d="M10 120L10 141" stroke="#c04757" stroke-width="3"/>'+
+ '<path d="M2 42H19M2 63H19M2 82H19" stroke="#799dab" stroke-width="2.5"/>'+
+ '</g>';
 }
 function kit(){
- const h=stationBase()+
- vial(8,"red","Red sample vial","normal")+vial(786,"blue","Blue hydration vial","normal")+
- '<path d="M115 55 V169" stroke="#a2b6bf" stroke-width="5" fill="none"/>'+
- '<path d="M137 68 V152" stroke="#93aab6" stroke-width="5"/>'+
- '<path d="M132 147 L140 165 L145 147" fill="#c9dce3"/>'+
- text(70,54,"SAMPLE VIAL",12,"#b3535e")+text(845,54,"HYDRATION VIAL",12,"#2684aa")+
- '<rect x="404" y="38" width="188" height="45" rx="8" fill="#eaf4f7" stroke="#c6dde6"/>'+text(498,57,"POUCH + LOADING",13)+text(498,73,"STATION",12);
- return svg(h,"BioFire reagent kit and separate sample and hydration injection vials");
+ let h='<rect x="28" y="25" width="864" height="344" rx="18" fill="#fbfdfe" stroke="#dce9ef" stroke-width="2"/>'+
+ '<rect x="236" y="49" width="468" height="272" rx="14" fill="#f4f9fb" stroke="#e3edf2" stroke-width="2"/>'+
+ stationBase()+
+ vial(53,"red","Red sample vial","normal",74)+vial(772,"blue","Blue hydration vial","normal",74)+
+ text(114,53,"SAMPLE INJECTION",13,"#b45160")+text(831,53,"HYDRATION INJECTION",13,"#237b9c")+
+ '<rect x="326" y="315" width="346" height="33" rx="8" fill="#e5f1f5" stroke="#c5dde8"/>'+
+ text(500,336,"POUCH IN LOADING STATION",14,"#356c83");
+ return svg(h,"BioFire test kit: two separate injection vials and a single pouch held in the dark loading station. Red vial is left, blue vial is right");
 }
 function pipette(){
- const h=stationBase()+
- vial(307,"red","Sample vial","normal").replace('translate(307 0)','translate(307 -94)')+
- '<path d="M170 40 L302 196" stroke="#a3bbc7" stroke-width="14" stroke-linecap="round"/>'+
- '<path d="M174 48 L282 177" stroke="#fff" stroke-width="6"/>'+
- '<path d="M282 177L299 200" stroke="#9babb9" stroke-width="4"/>'+
- '<path d="M282 183L301 204" stroke="#c34d62" stroke-width="4"/>'+
- '<rect x="12" y="96" width="165" height="106" rx="13" fill="#f6fbfd" stroke="#d2e3ea"/>'+
- '<path d="M58 130 h34 v46 h-34Z" fill="#eaf4f8" stroke="#9bb7c4" stroke-width="3"/>'+
- '<path d="M61 156 h28 v17h-28Z" fill="#c7a873" opacity=".65"/>'+
- text(95,116,"SAMPLE BUFFER",12)+text(95,189,"+ SPECIMEN",12);
- return svg(h,"BioFire specimen transfer pipette and sample buffer into red injection vial");
+ let h='<rect x="22" y="34" width="412" height="323" rx="18" fill="#f7fbfd" stroke="#dce9f0" stroke-width="2"/>'+
+ '<rect x="461" y="34" width="436" height="323" rx="18" fill="#f7fbfd" stroke="#dce9f0" stroke-width="2"/>'+
+ text(221,66,"TRANSFER SPECIMEN",18,"#2e6e86")+
+ text(679,66,"ADD SAMPLE BUFFER",18,"#2e6e86")+
+ vial(174,"red","Red vial","normal",104)+
+ pipetteShape(260,82)+
+ '<path d="M279 231L240 252" stroke="#b84859" stroke-width="3" stroke-dasharray="6 4"/>'+
+ vial(635,"red","Red vial","normal",104)+
+ '<g transform="translate(548 94)"><rect x="0" y="0" width="55" height="132" rx="14" fill="#f0f9fb" stroke="#9eb8c4" stroke-width="3"/>'+
+ '<path d="M6 80H49V120Q28 129 6 120Z" fill="#debfa5"/>'+
+ '<path d="M27 -8V0M27 132V157" stroke="#91a5ad" stroke-width="5"/>'+
+ '<path d="M27 158L27 178" stroke="#dcbba0" stroke-width="5"/></g>'+
+ '<path d="M609 257L662 268" stroke="#b94e61" stroke-width="3" stroke-dasharray="6 4"/>'+
+ text(221,339,"Assay-specific transport specimen",13,"#648297")+
+ text(679,339,"Squeeze ampoule · avoid foam",13,"#648297");
+ return svg(h,"Separate illustration of BioFire specimen transfer pipette and sample buffer ampoule dispensing into red injection vial");
+}
+function invert(){
+ const left=vial(146,"red","Capped vial","normal",75);
+ const right='<g transform="rotate(180 630 175)">'+
+ '<rect x="606" y="75" width="48" height="156" rx="12" fill="#f6fbfc" stroke="#8daebb" stroke-width="3"/>'+
+ '<path d="M610 173H650V215Q646 227 630 228Q612 227 610 215Z" fill="#d4a0ab"/>'+
+ '<rect x="598" y="219" width="64" height="35" rx="10" fill="#c84f5e" stroke="#8299a8" stroke-width="3"/>'+
+ '<rect x="613" y="124" width="34" height="42" rx="4" fill="#fff"/>'+
+ text(630,144,"MIX",10,"#396b83")+
+ '</g>';
+ return svg('<rect x="58" y="20" width="804" height="354" rx="18" fill="#f8fcfd" stroke="#d7e8ef"/>'+
+ left+right+
+ '<path d="M374 158C414 57 523 60 553 146" fill="none" stroke="#238d92" stroke-width="9" stroke-linecap="round"/>'+
+ '<path d="M535 128L554 157L563 128" fill="none" stroke="#238d92" stroke-width="7" stroke-linecap="round"/>'+
+ text(461,58,"GENTLY INVERT 3 TIMES",22,"#247d83")+
+ text(461,334,"Close red vial tightly first · do not shake",15,"#577f90"),
+ "BioFire red sample injection vial capped and gently inverted three times to mix specimen with buffer");
 }
 function analyzer(id){
  const torch=id==="torch";
@@ -149,10 +193,12 @@ function figure(title,desc,picture){
 function stageVisual(id,title){
  if(id!=="torch"&&id!=="spotfire")return "";
  const t=String(title).toLowerCase(),torch=id==="torch";let figs=[];
- if(/gather|retrieve|materials/.test(t))figs=[figure("Test kit and both injection vials","Hydration is blue, sample is red. Follow the assay-specific reagent kit.",kit())];
+ if(/load the controls into the red vial|prepare qc sample/i.test(t))figs=[figure("Add approved QC material to red vial","Follow the QC kit instructions for the appropriate material and buffer.",pipette()),figure("Mix the capped red QC vial","Gently invert the securely capped red vial 3 times before loading the pouch.",invert())];
+ else if(/gather|retrieve|materials/.test(t))figs=[figure("Test kit and both injection vials","Hydration is blue, sample is red. Follow the assay-specific reagent kit.",kit())];
  else if(/loading station|prepare pouch/.test(t))figs=[figure("Prepare pouch loading station","Set the red sample vial in the left well and blue hydration vial in the right well, as viewed from the illustrated operator position.",station("ready"))];
  else if(/hydrate/.test(t))figs=[figure("Hydrate through blue port","Remove the blue vial from its cover and puncture the designated blue hydration port. Confirm the pouch hydrates.",station("hydrate"))];
- else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Prepare specimen in red vial","Transfer sample and buffer into the red sample injection vial in the order and amounts specified for this particular panel.",pipette())];
+ else if(/invert.*red|mix red vial|mix the capped/i.test(t))figs=[figure("Important · mix the red vial","Cap the sample injection vial securely and gently invert it 3 times. Return it to the red well before loading the pouch.",invert())];
+ else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Add specimen and buffer to red vial","Add the assay-specific specimen and sample buffer, then close the vial tightly. The next step is 3 gentle inversions.",pipette())];
  else if(/inject sample|load sample mix/.test(t))figs=[figure("Load red sample mixture","Puncture the red sample port with the prepared sample injection vial. Verify sample is drawn into the pouch.",station("sample"))];
  else if(/available module/.test(t))figs=[
    figure("Instrument and available modules","Identify an available module on the actual analyzer before loading the prepared pouch.",analyzer(id)),
