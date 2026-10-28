@@ -189,3 +189,29 @@
 .device-inline-visual-link svg{width:16px;height:16px;flex:none}.device-inline-visual-link span{font-size:17px;margin-left:auto}
 .device-inline-visual-link:hover{background:#e8f7f6;border-color:#8ac3c5}.device-inline-visual-link:focus-visible{outline:3px solid #83c8d2;outline-offset:2px}
 @media print{.device-inline-visual-link{display:none}}
+
+
+/* Clinitek: two independent test methods; never treat the UA dipstick and hCG
+   cassette as a combined consumable or one sequential test. */
+.clinitek-gallery .device-gallery-heading{margin-bottom:18px}
+.clinitek-visual-track{margin:0 0 16px;border:1px solid #d4e4eb;border-radius:15px;overflow:hidden;background:#fff}
+.clinitek-visual-track>summary{list-style:none;display:flex;align-items:center;gap:14px;cursor:pointer;padding:18px 20px}
+.clinitek-visual-track>summary::-webkit-details-marker{display:none}
+.clinitek-visual-track>summary:hover{background:#f4f9fb}
+.clinitek-visual-track>summary:focus-visible{outline:3px solid #84c4ce;outline-offset:-3px}
+.clinitek-track-icon{display:grid;place-items:center;flex:none;width:54px;height:48px;border-radius:12px;font-size:14px;font-weight:900;letter-spacing:.02em}
+.clinitek-track-icon.strip{background:#dff4ed;color:#1c7a65;border:1px solid #a7dcc9}
+.clinitek-track-icon.cassette{background:#e8eefb;color:#3d6796;border:1px solid #bbcdeb}
+.clinitek-visual-track>summary>span:nth-child(2){flex:1;min-width:0}
+.clinitek-visual-track>summary strong{display:block;color:#294961;font-size:16px}
+.clinitek-visual-track>summary small{display:block;margin-top:4px;color:#6f8798;font-size:12px;font-weight:500;line-height:1.5}
+.clinitek-track-chevron{font-size:22px;color:#5f8497;transition:transform .16s}
+.clinitek-visual-track[open] .clinitek-track-chevron{transform:rotate(180deg)}
+.clinitek-track-content{border-top:1px solid #dfebef;padding:18px;background:#f8fbfc}
+.clinitek-track-content .device-gallery-grid{gap:13px}
+.clinitek-single-visual .dev-kit-state{font-size:10px}
+.clinitek-inline-kit{max-width:440px}
+.clinitek-inline-kit .dev-inline-drawing{width:135px;height:85px}
+.clinitek-inline-kit .dev-inline-drawing svg{max-height:85px}
+@media(max-width:700px){.clinitek-visual-track>summary{padding:14px}.clinitek-track-content{padding:12px}.clinitek-track-icon{width:45px;height:43px}.clinitek-visual-track>summary strong{font-size:14px}}
+@media print{.clinitek-visual-track,.clinitek-track-content .device-gallery-step{break-inside:avoid}}
