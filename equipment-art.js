@@ -209,5 +209,84 @@ function piccoloAnalyzerSvg(){
  '<text x="213" y="309" font-size="10.5" fill="#69889a" text-anchor="middle">Front drawer with reagent disc · simplified view</text></svg>';
 }
 
-window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg};
+
+/* Procedure-linked consumable and collection media references.
+   All graphics are schematic, not device screens or direct photographs. */
+const collection={
+ sysmex:[["lavender","EDTA whole blood","Lavender-top tube"]],
+ piccolo:[["green","Lithium-heparin whole blood","Green-top tube; approved plasma option"]],
+ pathfast:[["green","Lithium-heparin whole blood","Green-top tube or prepared plasma"]],
+ triage:[["lavender","EDTA blood","For cardiac panels"],["urine","Urine specimen","For urine/toxicology assays"]],
+ clinitek:[["urine","Fresh urine","Clean collection cup"]],
+ torch:[["stool","Stool in Cary Blair","GI panel transport medium"]],
+ spotfire:[["utm","Respiratory swab","UTM/VTM per assay"],["eswab","Throat swab","eSwab per assay"]],
+ febridx:[["finger","Fingerstick capillary blood","Direct application; no collection tube"]],
+ "drug-screen":[["urine","Urine specimen","Screening collection cup"]],
+ coagsense:[["finger","Fingerstick capillary blood","Transfer tube; no EDTA tube"]],
+ poc:[["varies","Specimen varies","Confirm the specific assay IFU"]],
+ sofia:[["swab","Respiratory or throat swab","Assay-specific extraction kit"]],
+ hemocue:[["finger","Capillary whole blood","Direct-fill microcuvette; no tube"]],
+ visby:[["swab","Assay-specific swab","Archived platform"]],
+ idnow:[["swab","Direct swab","Archived; use assay-specific IFU"]]
+};
+function visualEsc(x){return String(x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+function illustratedSvg(inner,label,view="0 0 320 210"){
+ return '<svg viewBox="'+view+'" role="img" aria-label="'+visualEsc(label)+'" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>';
+}
+function mediaSvg(kind){
+ const caps={green:"#37966e",lavender:"#9568b3",red:"#c65b5d",blue:"#548eb6"};
+ if(caps[kind]){
+  return illustratedSvg('<ellipse cx="160" cy="174" rx="60" ry="8" fill="#e7eef2"/>'+
+   '<rect x="124" y="41" width="72" height="133" rx="14" fill="#f0f8fa" fill-opacity=".78" stroke="#96b8c7" stroke-width="3"/>'+
+   '<path d="M128 99 H192 V157 Q191 170 176 170 H144 Q128 170 128 155Z" fill="#ac3548" opacity=".67"/>'+
+   '<rect x="117" y="27" width="86" height="30" rx="8" fill="'+caps[kind]+'" stroke="#718f9f" stroke-width="3"/>'+
+   '<rect x="127" y="110" width="66" height="29" rx="3" fill="#fff" opacity=".96"/>'+
+   '<text x="160" y="122" text-anchor="middle" font-size="10" fill="#405e72" font-weight="800">'+(kind==="green"?"LI HEPARIN":"EDTA")+'</text>'+
+   '<text x="160" y="134" text-anchor="middle" font-size="9" fill="#6a8393">WHOLE BLOOD</text>',
+   kind+"-top whole blood collection tube");
+ }
+ if(kind==="finger")return illustratedSvg(
+  '<path d="M103 169 L103 106 Q103 64 122 61 Q143 59 147 79 L149 111 Q150 126 158 128 Q168 126 167 106 L169 84 Q169 70 181 70 Q195 70 195 86 L199 133 Q206 151 225 160 L232 177 L103 177Z" fill="#e6bbae" stroke="#c78e7e" stroke-width="3"/>'+
+  '<path d="M125 61 Q139 63 142 74" stroke="#ba8173" stroke-width="3" fill="none"/>'+
+  '<path d="M130 40 C116 56 117 67 130 70 C143 69 145 56 130 40Z" fill="#be3543"/>'+
+  '<path d="M140 49 L178 27 H222" stroke="#c44352" stroke-width="2" fill="none"/>'+
+  '<text x="225" y="24" font-size="12" fill="#8b3949" font-weight="850">BLOOD DROP</text>',
+  "Fingerstick capillary blood droplet, direct collection");
+ if(["urine","stool"].includes(kind)){
+  const stool=kind==="stool";
+  return illustratedSvg('<ellipse cx="159" cy="182" rx="66" ry="8" fill="#e7eef2"/>'+
+   '<rect x="96" y="63" width="128" height="112" rx="15" fill="#edf6f8" stroke="#93acba" stroke-width="3"/>'+
+   '<path d="M104 115 H216 V152 Q216 169 203 169 H118 Q104 167 104 151Z" fill="'+(stool?"#9c815f":"#e0b861")+'" opacity=".54"/>'+
+   '<rect x="91" y="47" width="138" height="30" rx="9" fill="'+(stool?"#c9474a":"#fafbfc")+'" stroke="#9bb2bd" stroke-width="3"/>'+
+   '<rect x="117" y="94" width="86" height="28" rx="4" fill="white"/>'+
+   '<text x="160" y="111" font-size="12" fill="#486a7c" text-anchor="middle" font-weight="800">'+(stool?"CARY BLAIR":"URINE")+'</text>',
+   stool?"Stool Cary Blair transport container":"Urine collection cup");
+ }
+ if(["utm","eswab","swab"].includes(kind)){
+  return illustratedSvg('<ellipse cx="157" cy="179" rx="66" ry="8" fill="#e7eef2"/>'+
+   '<rect x="139" y="62" width="41" height="112" rx="13" fill="#eef7fa" stroke="#9ab8c7" stroke-width="3"/>'+
+   '<path d="M144 132 H175 V158 Q175 170 166 171 H151 Q144 169 144 158Z" fill="#a9d7e2" opacity=".65"/>'+
+   '<rect x="134" y="49" width="52" height="22" rx="7" fill="'+(kind==="eswab"?"#dde8ef":"#c57a8b")+'" stroke="#89a6b6" stroke-width="3"/>'+
+   '<path d="M215 32 L213 140" stroke="#ae9d89" stroke-width="5" stroke-linecap="round"/>'+
+   '<ellipse cx="213" cy="146" rx="9" ry="16" fill="#f8fcfd" stroke="#b8cad3"/>'+
+   '<text x="118" y="34" font-size="11" text-anchor="middle" fill="#486f83" font-weight="800">'+(kind==="utm"?"UTM / VTM":kind==="eswab"?"ESWAB":"SWAB")+'</text>',
+   "Swab with sample transport tube or extraction vial");
+ }
+ return illustratedSvg('<rect x="94" y="65" width="135" height="95" rx="13" fill="#f3f7f9" stroke="#abc1cd" stroke-width="3"/>'+
+ '<path d="M109 90 H215 M109 112 H202 M109 134 H188" stroke="#a4c3d0" stroke-width="5" stroke-linecap="round"/>'+
+ '<text x="160" y="178" font-size="11" fill="#537a90" text-anchor="middle">VERIFY ASSAY</text>',
+ "Assay-specific specimen collection reference");
+}
+function specimenGuide(sec){
+ if(!sec||!collection[sec.id])return "";
+ const items=collection[sec.id],arch=!!sec.archived;
+ return '<section class="device-collection-guide" aria-label="Collection container reference">'+
+ '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>Choose the container for the specific assay. Illustrations are not specimen volume or fill guides.</p></div>'+
+ (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
+ '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
+ (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
+ '</section>';
+}
+
+window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg};
 })();
