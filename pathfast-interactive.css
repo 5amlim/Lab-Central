@@ -75,3 +75,11 @@
 .pcr-zone-caution{font-size:10.6px;color:#6b8191;line-height:1.65;border-top:1px solid #e0e9ed;padding-top:10px}
 @media(max-width:700px){.pcr-zone-outcome{padding:13px}.pcr-zone-options{gap:5px}.pcr-zone-choice{padding:10px 4px}.pcr-zone-choice strong{font-size:10px}.pcr-zone-choice small{font-size:9px}}
 @media print{.pcr-zone-outcome{break-inside:avoid}}
+
+
+/* Compact 0/2-hour fallback notice: visible inside the timing card, not a new section. */
+.pcr-twohour-gate{display:grid;gap:3px;margin:5px 0 1px;padding:10px 12px;background:#fff3dd;border:1px solid #ecc98e;border-left:4px solid #bd792a;border-radius:9px;color:#805521}
+.pcr-time-branches .pcr-twohour-gate strong{font-size:11px;line-height:1.35;letter-spacing:.025em;color:#905b15;font-weight:900}
+.pcr-twohour-gate span{font-size:11px;line-height:1.55;color:#785c37}
+.pcr-twohour-gate b{color:#88510e;font-weight:850}
+@media(max-width:700px){.pcr-twohour-gate{padding:9px 10px}}
