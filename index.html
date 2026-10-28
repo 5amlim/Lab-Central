@@ -103,7 +103,7 @@
   <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-2" media="all">
-  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-provider-criteria" media="all">
+  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-two-hour-flow" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 <style id="lab-central-shared-chevron-style">
 
@@ -230,8 +230,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028-unified-chevron"></script>
 <script src="pathfast-screen-guide.js?v=20261028-four-prep-steps"></script>
-<script src="pathfast-interactive.js?v=20261028-provider-criteria"></script>
-<script src="pathfast-clinical.js?v=20261028-tube-inversion"></script>
+<script src="pathfast-interactive.js?v=20261028-two-hour-decision"></script>
+<script src="pathfast-clinical.js?v=20261028-two-hour-reference"></script>
 <script src="equipment-art.js?v=20261028-torch-finger-cary-blair"></script>
 <script src="qc-guide.js?v=20261028-qc-screen-actions"></script>
 <script src="biofire-visual.js?v=20261028-vials-and-screens"></script>
@@ -349,7 +349,7 @@ function buildGroups(section){
    ...step('Hydrate pouch using blue vial', 'Remove the blue hydration vial from its cover, insert the blunt cannula into the blue hydration port and puncture the seal as described in the IFU. Verify fluid enters reagent wells.'),
    ...step('Prepare sample buffer and specimen in red vial',torch?'Add GI sample material from the Cary Blair specimen and the approved buffer to the red sample vial in the sequence and volume stated in the GI panel IFU. Mix and handle as directed.':'Transfer the approved specimen volume and sample buffer into the red sample injection vial using the correct panel procedure. Mix as directed and prevent cross-contamination.'),
    ...step('Inject sample mix into red port', 'Unscrew the red vial and insert its blunt cannula into the red sample port. Puncture the seal and verify the specimen mixture is drawn into the pouch. Do not interchange the red and blue ports.'),
-   ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. The displayed view below is an original reference illustration, not an exact software screenshot.'),
+   ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. Follow the analyzer prompts to confirm the correct module and run.'),
    ...step('Scan pouch barcode', 'Scan the pouch QR/barcode using the connected scanner when prompted. Confirm the scanned panel and pouch identity.'),
    ...step('Confirm panel and sample ID', torch?'Verify GI panel and enter/scan the correct specimen ID, matching the labeled pouch.':'Choose the ordered Respiratory or Sore Throat panel and verify the specimen ID and pouch barcode.'),
    ...step('Load pouch and start run', 'Insert the prepared pouch in the indicated module as shown on the instrument. Verify identifiers and choose Start Run only after the system is ready.'),
@@ -907,7 +907,7 @@ function sectionRender(sec,tab){
   const workflows=[
    {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'01'},
    {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'02'},
-   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider review & result zones',index:'03'}
+   {id:'chest-pain',title:'Chest pain pathway',subtitle:'hs-Troponin I · approved pathways',index:'03'}
   ];
   h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
   h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="${tab==='cal-qc'?'overview':'cal-qc'}" aria-expanded="${tab==='cal-qc'}" ${tab==='cal-qc'?'aria-current="page"':''} aria-label="${tab==='cal-qc'?'Collapse':'Open'} Calibration and QC"><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">${tab==='cal-qc'?'CLOSE DETAILS':'28-DAY MAINTENANCE'}</span></button></div>`;
