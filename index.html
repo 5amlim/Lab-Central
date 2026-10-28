@@ -124,6 +124,13 @@
 @media(max-width:640px){.pfux-patient .pcr-heading.pf-patient-heading{padding:16px;align-items:flex-start}.pfux-patient .pcr-heading.pf-patient-heading h2{font-size:23px}}
 @media(prefers-reduced-motion:reduce){.pfux-route-arrow,.pf-step-chevron,.guide-group-chevron,.chevron,.pf-panel-chevron,.pf-workflow-chev,.pcr-reference-chevron,.clinitek-track-chevron,.lab-shared-chevron{transition:none}}
 
+
+/* Explicit expand/collapse detail controls use the same vector chevron. */
+.guide-detail-control{display:inline-flex;align-items:center;gap:7px}
+.guide-detail-control .lab-shared-chevron{margin-left:2px}
+.guide-detail-control[aria-expanded="true"] .lab-shared-chevron{transform:rotate(180deg)!important}
+.ad-field .lab-shared-chevron{margin-left:auto}
+
 </style>
 </head>
 <body>
@@ -454,7 +461,7 @@ function renderGuidedProcedure(group,sec){
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
  if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
  else h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' '+(topicMode?(total===1?'topic':'topics'):(total===1?'step':'steps'))+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
- if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-label="Collapse all instruction details">Collapse details ▴</button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
+ if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-expanded="true" aria-label="Collapse all instruction details">Collapse details <span class="lab-shared-chevron" aria-hidden="true"></span></button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
   if(isPathfastPatient){
    h+='<details class="pfux-jump"><summary>Jump to another step <span class="lab-shared-chevron" aria-hidden="true"></span></summary><div class="pfux-jump-options">'+steps.map(function(entry,i){return '<button type="button" data-guide-step="'+i+'" class="'+(i===current?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+safeHtml(entry.root.text)+'</button>';}).join('')+'</div></details>';
@@ -532,7 +539,7 @@ function renderCalculators(){
 function athenaMock(type,label,file){
  const top='<div class="ad-mock-top"><strong>athenaOne</strong><small>TRAINING EXAMPLE · NO PATIENT DATA</small></div>';
  if(type==='menu')return '<div class="ad-mock">'+top+'<div class="ad-mock-chart"><span>Patient chart</span><b>☰</b></div><div class="ad-mock-menu"><span>Quickview</span><span>Create order group</span><strong class="ad-target">Add document <em>SELECT</em></strong><span>Chart export</span></div></div>';
- if(type==='file')return '<div class="ad-mock">'+top+'<div class="ad-mock-upload"><header>Add Document</header><strong>Upload files from computer or network</strong><p>Step 1: Select Document Class</p><div class="ad-field">Select document class <span>⌄</span></div><p>Step 2: Select a file</p><div class="ad-file"><span class="ad-target">Select File</span><small>'+safeHtml(file)+'</small></div><div class="ad-target ad-add">Add Document <em>SELECT</em></div></div></div>';
+ if(type==='file')return '<div class="ad-mock">'+top+'<div class="ad-mock-upload"><header>Add Document</header><strong>Upload files from computer or network</strong><p>Step 1: Select Document Class</p><div class="ad-field">Select document class <span class="lab-shared-chevron" aria-hidden="true"></span></div><p>Step 2: Select a file</p><div class="ad-file"><span class="ad-target">Select File</span><small>'+safeHtml(file)+'</small></div><div class="ad-target ad-add">Add Document <em>SELECT</em></div></div></div>';
  if(type==='existing')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Incoming fax · Patient chart</header><div class="ad-preview">Existing faxed requisition</div><p>Verify the document is matched to the correct patient chart.</p></div></div>';
  if(type==='classify')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Document in DATAENTRY</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-target ad-row">◉ Reclassify document <em>SELECT</em></div><div class="ad-target ad-row">Clinical Document <em>CHOOSE</em></div><div class="ad-save">Save</div></div></div>';
  if(type==='label')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document</header><p>Document Label</p><div class="ad-label-search">Search all document labels</div><div class="ad-target ad-row">'+safeHtml(label)+' <em>SELECT</em></div></div></div>';
@@ -858,7 +865,8 @@ document.addEventListener('click',e=>{
   const groups=[...el('mainContent').querySelectorAll('.guide-group')];
   const shouldClose=groups.some(group=>group.open);
   groups.forEach(group=>{group.open=!shouldClose;});
-  detailsButton.textContent=shouldClose?'Expand details ▾':'Collapse details ▴';
+  detailsButton.innerHTML=(shouldClose?'Expand details':'Collapse details')+' <span class="lab-shared-chevron" aria-hidden="true"></span>';
+  detailsButton.setAttribute('aria-expanded',String(!shouldClose));
   detailsButton.setAttribute('aria-label',shouldClose?'Expand all instruction details':'Collapse all instruction details');
   return;
  }
