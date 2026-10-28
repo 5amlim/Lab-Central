@@ -292,12 +292,20 @@ function mediaSvg(kind){
    kind+"-top whole blood collection tube");
  }
  if(kind==="finger")return illustratedSvg(
-  '<path d="M103 169 L103 106 Q103 64 122 61 Q143 59 147 79 L149 111 Q150 126 158 128 Q168 126 167 106 L169 84 Q169 70 181 70 Q195 70 195 86 L199 133 Q206 151 225 160 L232 177 L103 177Z" fill="#e6bbae" stroke="#c78e7e" stroke-width="3"/>'+
-  '<path d="M125 61 Q139 63 142 74" stroke="#ba8173" stroke-width="3" fill="none"/>'+
-  '<path d="M130 40 C116 56 117 67 130 70 C143 69 145 56 130 40Z" fill="#be3543"/>'+
-  '<path d="M140 49 L178 27 H222" stroke="#c44352" stroke-width="2" fill="none"/>'+
-  '<text x="225" y="24" font-size="12" fill="#8b3949" font-weight="850">BLOOD DROP</text>',
-  "Fingerstick capillary blood droplet, direct collection");
+ '<ellipse cx="162" cy="189" rx="100" ry="8" fill="#e4edf1"/>'+
+ '<path d="M64 184 L60 138 Q58 120 74 113 L109 96 Q119 91 123 79 L126 49 Q128 33 141 31 Q158 29 161 46 L162 90 Q166 96 171 91 L178 70 Q183 56 196 61 Q210 66 206 82 L198 112 Q195 123 205 125 Q211 122 222 113 L239 101 Q252 92 261 103 Q270 114 256 127 L228 150 Q210 166 214 184Z" fill="#edc1b0" stroke="#bd8c7d" stroke-width="3.4" stroke-linejoin="round"/>'+
+ '<path d="M128 55 Q141 52 158 59 M180 81 Q190 74 203 80" fill="none" stroke="#d49c8c" stroke-width="2.4"/>'+
+ '<rect x="124" y="34" width="39" height="25" rx="11" fill="#f6d8cc" stroke="#d49a8a" stroke-width="2"/>'+
+ '<path d="M151 35 Q163 43 158 56" fill="none" stroke="#fce1d8" stroke-width="3"/>'+
+ '<path d="M166 60 L177 40 L190 23" fill="none" stroke="#7c96a2" stroke-width="5" stroke-linecap="round"/>'+
+ '<path d="M177 40 L195 26 L209 33 L190 54Z" fill="#cad9df" stroke="#7696a4" stroke-width="2.5"/>'+
+ '<path d="M195 31 L211 39" stroke="#6d8c9b" stroke-width="3"/>'+
+ '<path d="M125 78 C116 91 119 102 128 105 C140 105 143 94 130 77Z" fill="#bf3f50"/>'+
+ '<path d="M119 103 L92 79 H57" stroke="#bf5061" stroke-width="2.5" fill="none"/>'+
+ '<text x="53" y="72" font-size="12" font-family="Arial" font-weight="900" fill="#a43e50">CAPILLARY DROP</text>'+
+ '<path d="M226 79 L250 57 H302" stroke="#528da0" stroke-width="2.5" fill="none"/>'+
+ '<text x="302" y="50" font-size="11" text-anchor="end" font-family="Arial" font-weight="850" fill="#44859a">LANCET</text>',
+ "Fingerstick with lancet touching lateral fingertip and capillary blood droplet");
  if(["urine","stool"].includes(kind)){
   const stool=kind==="stool";
   return illustratedSvg('<ellipse cx="159" cy="182" rx="66" ry="8" fill="#e7eef2"/>'+
