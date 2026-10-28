@@ -98,6 +98,36 @@ function sysmexStep(sec,group,title){
  ],"Sysmex pocH-100i")+'</div>';
  return "";
 }
+function qcClickStep(sec,groupId,title){
+ const base=sysmexStep(sec,groupId,title);
+ if(base)return base;
+ if(!sec||!title)return "";
+ const t=String(title).toLowerCase();
+ let scenes=null;
+ if(sec.id==="piccolo"&&/click analyze/.test(t))scenes=[
+  {heading:"Open analysis",screen:"HOME",items:["Analyze","Recall","Settings"],focus:"Analyze",tip:"Select Analyze, then close the drawer when prompted."},
+  {heading:"Choose control mode",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control rather than Patient."},
+  {heading:"Identify the level",screen:"CONTROL",items:["Level 1 · Low","Level 2 · High","Enter"],focus:"Enter",tip:"Enter the required control level and confirm before starting."}];
+ else if(sec.id==="triage"&&/select run test|click run test/.test(t))scenes=[
+  {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
+  {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
+  {heading:"Confirm and run",screen:"QC",items:["Lot / ID","Enter","Run"],focus:"Run",tip:"Verify prompted identifiers or lot codes, insert the correct test device, and proceed as directed."}];
+ else if(sec.id==="clinitek"&&/open the (ua|hcg)|qc test|place cassette and select start/.test(t))scenes=[
+  {heading:"Enter the QC workflow",screen:"SELECT READY",items:["QC Test","Strip Test","Cassette Test"],focus:"QC Test",tip:"Select QC Test if shown, or the authorized QC workflow on your analyzer."},
+  {heading:"Choose assay format",screen:"QC TEST",items:["UA strip","hCG cassette","Back"],focus:groupId==="hcg-qc"?"hCG cassette":"UA strip",tip:"Match the QC material to the correct strip or cassette format."},
+  {heading:"Start the QC run",screen:"QC READY",items:["Lot / Level","Start","Back"],focus:"Start",tip:"Confirm identifiers and select START before applying material within the allowed timing window."}];
+ else if(sec.id==="sofia"&&/run the controls|run qc|log the qc/.test(t))scenes=[
+  {heading:"Start external controls",screen:"MAIN MENU",items:["Run Test","Run QC","Review Data"],focus:"Run QC",tip:"Select Run QC and scan the assay-specific QC barcode."},
+  {heading:"Follow QC prompts",screen:"RUN QC",items:["Positive control","Next","Negative control"],focus:"Positive control",tip:"Run the positive control, then follow the on-screen Next control to complete the negative control; do not skip it."}];
+ else if(sec.id==="spotfire"&&/grab the controls|select the qc tab/.test(t))scenes=[
+  {heading:"Open the QC section",screen:"HOME",items:["Patient Test Results","Quality Control","Settings"],focus:"Quality Control",tip:"Select Quality Control at the top or side of the workstation screen."},
+  {heading:"Choose the required control",screen:"QUALITY CONTROL",items:["Positive","Negative","View Results"],focus:"Positive",tip:"Complete the correct positive and negative control runs using the displayed instructions."}];
+ else if(sec.id==="torch"&&/load the controls/.test(t))scenes=[
+  {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
+  {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
+ if(!scenes)return "";
+ return '<div class="qc-instrument-walkthrough">'+screenGallery(scenes,getConfig(sec.id).brand)+'</div>';
+}
 function binderSvg(){
  return '<svg class="qc-binder-art" viewBox="0 0 490 280" role="img" aria-label="Illustration of printed QC report being placed into a labeled ring binder">'+
  '<ellipse cx="244" cy="259" rx="215" ry="13" fill="#dce8eb"/>'+
@@ -138,5 +168,5 @@ function printStep(id){
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
  '<p>'+esc(cfg.note)+'</p></div></div></div>';
 }
-window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,controlNotes:controlNotes,printStep:printStep};
+window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep};
 })();
