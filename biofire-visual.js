@@ -55,7 +55,7 @@ function kit(){
  '<path d="M137 68 V152" stroke="#93aab6" stroke-width="5"/>'+
  '<path d="M132 147 L140 165 L145 147" fill="#c9dce3"/>'+
  text(70,54,"SAMPLE VIAL",12,"#b3535e")+text(845,54,"HYDRATION VIAL",12,"#2684aa")+
- '<rect x="404" y="38" width="188" height="45" rx="8" fill="#eaf4f7" stroke="#c6dde6"/>'+text(498,57,"PUCH + LOADING",13)+text(498,73,"STATION",12);
+ '<rect x="404" y="38" width="188" height="45" rx="8" fill="#eaf4f7" stroke="#c6dde6"/>'+text(498,57,"POUCH + LOADING",13)+text(498,73,"STATION",12);
  return svg(h,"BioFire reagent kit and separate sample and hydration injection vials");
 }
 function pipette(){
