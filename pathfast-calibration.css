@@ -127,3 +127,11 @@
 .pf-material-grid.pf-qc-grid{grid-template-columns:1fr 1fr}
 .pf-rack-scroll{overflow:visible}
 }
+
+
+.pf-mix-flow{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;margin:13px 0 2px;padding:12px 13px;border:1px dashed #cbdde7;background:#f7fafc;border-radius:11px;font-size:10.5px;font-weight:760;color:#496980}
+.pf-mix-flow>span{padding:8px 10px;border:1px solid #dae6ec;background:#fff;border-radius:8px;text-align:center}
+.pf-mix-flow>strong{font-size:17px;color:#5393ac}
+.pf-mix-flow .pf-mix-result{background:#e9f6f2;border-color:#add9ca;color:#247b65}
+.pf-mix-flow b{font-weight:900}
+@media(max-width:630px){.pf-mix-flow{gap:6px;padding:10px 6px}.pf-mix-flow>span{font-size:9.5px;padding:7px 6px}.pf-mix-flow>strong{font-size:14px}}
