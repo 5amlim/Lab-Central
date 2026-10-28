@@ -218,3 +218,20 @@
 .pf-workflow-step summary:focus-visible{outline:3px solid #8ad0cd;outline-offset:-3px}
 @media(max-width:650px){.pf-workflow-step>summary{padding:11px 12px;gap:9px}.pf-workflow-detail{padding:11px}.pf-workflow-label strong{font-size:12px}.pf-workflow-no{width:32px;height:32px}}
 @media print{.pf-workflow-step{break-inside:auto}.pf-workflow-step .pf-workflow-detail{display:block!important}.pf-workflow-step>summary{break-after:avoid}}
+
+
+/* Action-first calibration teaching: large well, loaded rack and tip diagrams. */
+.pf-cal-action-grid{display:grid;grid-template-columns:1fr;gap:17px;margin:12px 0 18px}
+.pf-cal-action-grid .pf-action-image{min-height:250px}
+.pf-cal-material-details{border:1px solid #d9e6eb;background:#fff;border-radius:13px;overflow:hidden;margin:16px 0}
+.pf-cal-material-details>summary{list-style:none;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:14px 16px;background:#f3f8fa;color:#2f6f86;cursor:pointer;font-size:12px;font-weight:850;line-height:1.5}
+.pf-cal-material-details>summary::-webkit-details-marker{display:none}
+.pf-cal-material-details>summary:hover{background:#eaf5f7}
+.pf-cal-material-details>summary span{margin-left:auto;transition:transform .2s}
+.pf-cal-material-details[open]>summary span{transform:rotate(180deg)}
+.pf-cal-material-details:focus-within{border-color:#8cbdc8}
+.pf-cal-material-inside{padding:14px 17px 20px}
+.pf-workflow-detail>.pf-action-figure{margin-bottom:18px}
+.pf-workflow-detail .pfs-reference{max-width:1060px;width:100%}
+@media(max-width:720px){.pf-cal-material-details>summary{padding:11px}.pf-cal-material-inside{padding:9px}.pf-cal-action-grid .pf-action-image{min-height:170px}}
+@media print{.pf-cal-material-details{break-inside:auto}.pf-cal-material-inside{display:block}}
