@@ -156,7 +156,7 @@ function panelPicker(){
  '<div class="pf-panel-picker">'+
  '<button type="button" class="pf-panel-trigger'+(group?' has-selection':'')+'" data-pf-panel-trigger aria-haspopup="true" aria-expanded="'+panelDropdownOpen+'" aria-controls="pfPanelOptions">'+
  '<span class="pf-panel-trigger-main"><span class="pf-panel-trigger-kicker">'+(group?'SELECTED PANEL':'SELECT PANEL')+'</span><span class="pf-panel-trigger-value">'+(group?esc(group.label):'Choose an assay panel')+'</span></span>'+
- '<span class="pf-panel-chevron'+(panelDropdownOpen?' open':'')+'" aria-hidden="true">⌄</span></button>'+
+ '<span class="pf-panel-chevron'+(panelDropdownOpen?' open':'')+'" aria-hidden="true"></span></button>'+
  (panelDropdownOpen?'<div class="pf-panel-options" id="pfPanelOptions" role="group" aria-label="Assay panel options">'+
  groups.map(g=>'<button type="button" class="pf-panel-option'+(selectedPanel===g.id?' selected':'')+'" data-pf-panel-option="'+g.id+'" aria-pressed="'+(selectedPanel===g.id)+'">'+
  '<span class="pf-panel-option-mark '+g.id+'" aria-hidden="true">'+(g.id==='ddimer'?'◆':'♥')+'</span><span class="pf-panel-option-text"><strong>'+esc(g.label)+'</strong><small>Calibration + '+esc(g.qc)+'</small></span>'+
@@ -175,7 +175,7 @@ function render(){
   return '<details class="pf-workflow-step" '+(!showAllSteps||n===currentStep?'open':'')+'>'+
     '<summary><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
     '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
-    '<span class="pf-workflow-chev">⌄</span></summary>'+
+    '<span class="pf-workflow-chev"></span></summary>'+
     '<div class="pf-workflow-detail">'+(inner||"")+'</div></details>';
  }
  let h='<section class="pf-calibration-guide">'+
@@ -187,7 +187,7 @@ function render(){
   h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon">▤</span><strong>Select the assay to start</strong><p>Follow the screen sequence from operator login to CAL/QC lane setup. The matched Bio-Rad control materials appear in step 7.</p></div>';
  }else{
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · 6 LANES</span></div>'+
-  '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of 9</strong><span>One screen or task at a time</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span>⌄</span></button><button type="button" data-pf-toggle-all>'+ (showAllSteps?'Focused view':'View all steps') +'</button></div></div>'+
+  '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of 9</strong><span>One screen or task at a time</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+ (showAllSteps?'Focused view':'View all steps') +'</button></div></div>'+
   (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
    'Log in','Check status pills','Tap BACK','Choose CAL/QC/SAMPLE','Select assay','Verify 6 lanes',
    'Prepare and load','Start the run','Review results'
@@ -213,7 +213,7 @@ function render(){
       '<div class="pf-workflow-lane-note"><strong>Required lane order:</strong> CAL 1 · CAL 1 · CAL 2 · CAL 2 · QC 1 · QC 2. Check the displayed assignments on the instrument. Lane assignments can differ with QC lockout or calibration-replicate setup.</div>');
   h+=step(7,'Prepare materials and load the rack','Reagent-box calibrators + matching frozen Bio-Rad QC bottles',
       (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?'<div class="pf-cal-action-grid">'+window.LAB_EQUIPMENT_ART.pathfastActionVisual('dispense','cal')+window.LAB_EQUIPMENT_ART.pathfastActionVisual('rack','cal')+'</div>':'')+
-      '<details class="pf-cal-material-details"><summary>Calibrator and QC vial references · expand for materials and lane chart <span aria-hidden="true">⌄</span></summary><div class="pf-cal-material-inside">'+
+      '<details class="pf-cal-material-details"><summary>Calibrator and QC vial references · expand for materials and lane chart <span aria-hidden="true"></span></summary><div class="pf-cal-material-inside">'+
       panelContent(group)+
       '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Top-down illustrated rack</span></div>'+
       '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>Lanes 1–4</b> CAL 1 and CAL 2 in duplicate</span><span><b>Lanes 5–6</b> '+esc(group.qc)+' control levels</span></div></div>'+
