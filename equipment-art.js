@@ -359,6 +359,64 @@ function clinitekVisualGuide(sec){
  build("hcg","hCG pregnancy cassette","cassette",hcg,"White cassette and single-use pipette · Cassette Test",false)+
  '<p class="device-gallery-note">Follow the current Siemens CLINITEK Status+ Operator Guide and your approved site SOP. Illustrations are simplified training references.</p></section>';
 }
+/* PATHFAST reagent cartridge based on the PHC/LSI Medience cartridge reference:
+   Long black-foil strip, clear sample trough at the front red tab,
+   multiple transparent reagent wells, and a separate black detection well.
+   Drawn as an original schematic, not a manufacturer image or fill-scale guide. */
+function pathfastCartridgeSvg(filled){
+ const red=filled?"#bc4654":"#e8f6fa";
+ const liquid=filled?"#a82d45":"#d9edf4";
+ const chambers=Array.from({length:7},(_,i)=>{
+  const x=196+i*46;
+  return '<path d="M'+x+' 161 L'+(x+4)+' 215 Q'+(x+13)+' 234 '+(x+26)+' 216 L'+(x+31)+' 154Z" fill="'+(i%2?'#dcebf1':'#c2dce7')+'" fill-opacity=".72" stroke="#9dbdcd" stroke-width="2"/>'+
+   '<path d="M'+(x+8)+' 168 L'+(x+11)+' 211" stroke="#fff" stroke-opacity=".82" stroke-width="3"/>';
+ }).join("");
+ const strips=Array.from({length:20},(_,i)=>{
+  const x=468+i*4;
+  return '<path d="M'+x+' 122 l0 20" stroke="'+(i%3?"#1c2930":"#f7fcfd")+'" stroke-width="'+(i%4===0?2.6:1.2)+'"/>';
+ }).join("");
+ const top=
+ '<ellipse cx="338" cy="259" rx="253" ry="11" fill="#c6d8e1" opacity=".48"/>'+
+ chambers+
+ '<path d="M157 139 L548 118 L562 157 L165 184Z" fill="#e7f1f6" fill-opacity=".75" stroke="#a0b9c7" stroke-width="2.5"/>'+
+ '<path d="M163 115 L544 99 L562 153 L175 169Z" fill="#1d262e" stroke="#7d939f" stroke-width="2.5"/>'+
+ '<path d="M177 165 L564 149" fill="none" stroke="#eef8fb" stroke-width="3"/>'+
+ '<path d="M215 116 L226 164 M248 113 L260 163 M284 111 L295 162 M319 110 L330 161" stroke="#62737d" stroke-width="1.5" opacity=".72"/>'+
+ '<path d="M154 116 L191 114 L202 166 L173 168Z" fill="#e54d43" stroke="#b43f3c" stroke-width="1.8"/>'+
+ '<path d="M176 121 L191 120" stroke="#fff0e8" stroke-width="1.8" opacity=".85"/>'+
+ '<path d="M447 112 L545 107 L552 143 L454 146Z" fill="#e5edf0" stroke="#8f9fa7" stroke-width="1.8"/>'+
+ strips+
+ '<rect x="501" y="113" width="41" height="3.5" rx="1" fill="#869ca8"/>'+
+ '<path d="M541 99 L559 98 L574 151 L562 153Z" fill="#df5b4e" stroke="#a73d34" stroke-width="1.4"/>'+
+ '<ellipse cx="372" cy="134" rx="18" ry="13" fill="#050b0e" stroke="#7d8e9a" stroke-width="3"/>'+
+ '<ellipse cx="372" cy="134" rx="8" ry="6" fill="#1c353d" stroke="#495e67" stroke-width="1.5"/>'+
+ '<path d="M87 136 L156 125 L176 169 L99 187Z" fill="#eef9fd" fill-opacity=".72" stroke="#8faebe" stroke-width="3"/>'+
+ '<path d="M102 145 L145 138 L154 168 L105 178Z" fill="#c3e2ec" fill-opacity=".7" stroke="#84aaba" stroke-width="2"/>'+
+ '<path d="M105 157 L149 150 L154 167 L108 174Z" fill="'+liquid+'" fill-opacity="'+(filled?".96":".58")+'"/>'+
+ '<path d="M105 156 L148 149" stroke="#86a6b3" stroke-width="1.8" stroke-dasharray="4 3"/>'+
+ '<path d="M92 143 L98 169 M100 140 L107 171" stroke="#fff" stroke-opacity=".76" stroke-width="2"/>'+
+ '<path d="M89 187 L176 169" stroke="#91b6c6" stroke-width="2"/>';
+ const callouts=
+ '<path d="M124 145 L110 93 L58 93" fill="none" stroke="#198a99" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<circle cx="124" cy="145" r="4.4" fill="#168c9a"/>'+
+ '<text x="57" y="83" font-family="Arial,sans-serif" fill="#246b7d" font-size="13" font-weight="850">SAMPLE WELL</text>'+
+ '<path d="M372 116 L378 80 L453 80" fill="none" stroke="#647f8c" stroke-width="2" stroke-linecap="round"/>'+
+ '<text x="379" y="68" font-family="Arial,sans-serif" fill="#547080" font-size="11" font-weight="750">DETECTION WELL</text>';
+ const detail=
+ '<rect x="574" y="62" width="153" height="180" rx="12" fill="#fff" stroke="#c9dfe8" stroke-width="2"/>'+
+ '<text x="651" y="85" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="850" fill="#315e76">SAMPLE WELL</text>'+
+ '<text x="651" y="99" text-anchor="middle" font-family="Arial,sans-serif" font-size="9.5" fill="#658294">ENLARGED TOP VIEW</text>'+
+ '<rect x="605" y="109" width="94" height="98" rx="9" fill="#e9f5f9" fill-opacity=".95" stroke="#8dadbc" stroke-width="3"/>'+
+ '<rect x="620" y="119" width="64" height="74" rx="6" fill="#f7fcfd" stroke="#88adbf" stroke-width="2.6"/>'+
+ '<rect x="624" y="151" width="56" height="37" rx="3" fill="'+red+'" fill-opacity="'+(filled?".9":".28")+'"/>'+
+ '<path d="M622 151 H683" stroke="#6596a7" stroke-width="2.4" stroke-dasharray="5 3"/>'+
+ '<text x="651" y="223" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" font-weight="800" fill="'+(filled?"#9a4051":"#326e82")+'">'+(filled?"SAMPLE LOADED":"WELL EMPTY")+'</text>';
+ const info='<text x="311" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#698395">Long cartridge • clear sample tip • black foil and reagent wells</text>';
+ return illustratedSvg(top+callouts+detail+info,
+  "PATHFAST reagent cartridge, "+(filled?"blood in the clear rectangular sample well":"empty clear rectangular sample well")+" at the red-marked front end; separate black detection well must not receive blood",
+  "0 0 740 310");
+}
+
 function kitShape(id,filled,context){
  const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
  const specimen=filled?sampleColor:"#e5f1f5";
@@ -367,14 +425,7 @@ function kitShape(id,filled,context){
  if(id==="piccolo"){
   return piccoloDiscSvg(filled);
  }
- if(id==="pathfast"){
-  h='<path d="M127 37 H193 L206 65 L206 177 Q197 187 189 187 H128 Q115 184 115 170 L115 56 Q114 39 127 37Z" fill="#ecf3f6" stroke="'+outline+'" stroke-width="4"/>'+
-    '<rect x="128" y="65" width="65" height="38" rx="6" fill="#a8cad8"/>'+
-    '<rect x="127" y="109" width="66" height="37" rx="7" fill="#d6e7ed" stroke="#89acbc"/>'+
-    '<circle cx="159" cy="124" r="14" fill="'+specimen+'" stroke="#688f9f" stroke-width="3"/>'+
-    '<rect x="143" y="161" width="32" height="10" rx="4" fill="#d7e6ed"/>';
-  return illustratedSvg(h+'<path d="M172 121 L231 88 L267 88" fill="none" stroke="#2f91a1" stroke-width="3"/><text x="231" y="80" fill="'+dark+'" font-size="11" font-weight="850">SAMPLE WELL</text>','PATHFAST reagent cartridge '+(filled?"with sample in well":"before sample application"));
- }
+ if(id==="pathfast")return pathfastCartridgeSvg(filled);
  if(id==="sysmex"){
   h='<rect x="114" y="38" width="91" height="146" rx="15" fill="#edf7fa" stroke="'+outline+'" stroke-width="3"/>'+
    '<rect x="105" y="26" width="109" height="30" rx="7" fill="#9c69b3" stroke="#7c92a1" stroke-width="3"/>'+
@@ -529,7 +580,7 @@ function inlineKitVisual(sec,title,depth,rootTitle){
 const visualStepsText={
  sysmex:[["Identify the EDTA tube","Lavender-top EDTA whole blood is the collection specimen for CBC testing."],["Identify the closed tube","This analyzer aspirates from a collection tube; there is no disposable sample cartridge."],["Present the specimen for aspiration","Mix and identify the sample as required by the approved procedure. Do not add blood to a reagent cartridge."],["Run the analyzer","Match the tube to the patient ID, then use the actual instrument controls and approved SOP."]],
  piccolo:[["Confirm green-top collection","Use the approved lithium-heparin whole blood or allowed plasma specimen."],["Inspect the reagent disc","Identify the clear single-use chemistry disc and locate its near-center sample port."],["Transfer sample to disc","Use the supplied pipette and a fresh tip. Check the molded sample chamber fill marks."],["Insert the disc","Place the filled disc in the front drawer and complete patient ID and analyzer prompts."]],
- pathfast:[["Confirm green-top collection","Use the approved lithium-heparin specimen and verify mixing/clots."],["Retrieve reagent cartridges","Match each assay cartridge to the ordered test and occupied rack lane."],["Dispense into sample wells","Keep patient specimen and cartridge lane matched; follow the IFU for required volume."],["Load rack and operate","Use the instrument's SAMPLE and SID screens and verify the correct lane before START."]],
+ pathfast:[["Confirm green-top collection","Use the approved lithium-heparin specimen and verify mixing/clots."],["Retrieve reagent cartridges","Use the long, narrow black-foil cartridge. Identify the clear sample well at the red-marked end, not the separate round detection well. Match the assay and lane."],["Dispense into sample wells","Pipette the assay-specified sample volume into the clear rectangular well at the red-marked end. Fill to the well line, remove bubbles, and start the run promptly; do not dispense into the black round detection well."],["Load rack and operate","Use the instrument's SAMPLE and SID screens and verify the correct lane before START."]],
  triage:[["Identify specimen for panel","EDTA blood is used for cardiac markers; urine is used for applicable urine assays."],["Identify test device","Each assay kit includes its test device and an assay-specific transfer pipette."],["Add sample","Transfer sample to the designated device port using the assay kit instructions."],["Read on MeterPro","Insert the prepared device and follow the meter's patient-test prompts."]],
  clinitek:[["Select the applicable workflow","Urinalysis dipstick and CLINITEST hCG cassette are separate consumables with different sampling methods."],["Use the correct consumable","See the two dedicated workflows below."],["Load only after START","Siemens requires pressing START before sample application for both test types."],["Review analyzer output","Verify the intended test mode and patient before recording results."]],
  torch:[["Collect stool in Cary Blair","GI panel specimens require an approved stool transport medium."],["Prepare pouch and loading station","Identify the pouch, blue hydration port, red sample port and corresponding vials."],["Hydrate and transfer sample","Follow the panel IFU. Fluids enter the sealed pouch and are not directly visible afterward."],["Insert prepared pouch","Load the pouch into the correct TORCH module and run the assigned panel."]],
