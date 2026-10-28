@@ -610,7 +610,7 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
  }
- if(sec.id!=='pathfast')h+=`<p class="source-footnote">${'${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}'} Do not enter patient information.</p>`;
+ if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'} Do not enter patient information.</p>`;
  h+='</div>';
  el('mainContent').innerHTML=h;
 }
