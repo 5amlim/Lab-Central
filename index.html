@@ -434,9 +434,9 @@ function renderCalculators(){
  ['01','Choose the receiving lab','Open Quest, Cedars or Labcorp for the requisition. Select the applicable region or STAT menu where needed.'],
  ['02','Enter the ordered tests','Search by exact test code when available. Verify that the selected test matches the requisition and receiving lab.'],
  ['03','Review the output','Confirm specimen types, minimum volumes, processing, temperatures, tube counts and bag separation against the current official laboratory directory.'],
- ['04','Attach and hand off','Generate or print the calculator instructions and upload them to the appropriate chart or Navigator task. Hand the reviewed request back to the front desk for scheduling when applicable.']
+ ['04','Finish the lab request','Save the Lab Calculator printout as a PDF. Follow the full Lab Order Workflows for uploading it to the chart, scheduling, and appointment-day printing.']
  ].map(x=>`<article class="flow-step"><span class="flow-number">${x[0]}</span><strong>${safeHtml(x[1])}</strong><p>${safeHtml(x[2])}</p></article>`).join('')}</div>`;
- h+=`<div class="tool-bottom-link"><span>Processing an outside requisition?</span><button type="button" data-go="orders">Open external requisition workflow <span>→</span></button></div>`;
+ h+=`<div class="tool-bottom-link"><span>Need the full intake, upload and scheduling instructions?</span><button type="button" data-go="orders">Open full lab order workflows <span>→</span></button></div>`;
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
