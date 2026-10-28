@@ -120,6 +120,7 @@ function assay(group,index){
  material('CAL 2','2 GLASS VIALS','Both vials contain lyophilized powder. Reconstitute with matching diluent before loading lanes 3 and 4.',svgCal2(),'cal2')+
  material('Blue liquid diluent','2 BUFFER VIALS','Combine the supplied blue liquid diluent with each CAL 2 powder vial using the assay-specific mixing directions and volume.',svgDiluent(),'diluent')+
  '</div>'+
+ '<div class="pf-mix-flow" aria-label="Reconstitution: two separate CAL 2 powder vials, each mixed with its corresponding blue diluent vial"><span>CAL 2 powder <b>× 2</b></span><strong>+</strong><span>Blue diluent <b>× 2</b></span><strong>→</strong><span class="pf-mix-result">Reconstituted CAL 2 <b>× 2</b></span></div>'+
  '<h3 class="pf-material-heading">Quality control <small>Bio-Rad</small></h3>'+
  '<div class="pf-material-grid pf-qc-grid">'+
  material(group.qc,'QC 1 + QC 2',group.detail,svgQC(group.id),group.id)+
@@ -146,6 +147,18 @@ function render(){
  '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Reconstitution and QC:</strong> Use the current analyte and lot-specific IFU for diluent volume, mixing, stability, calibration acceptance and QC target ranges. The diagrams are visual references, not validated preparation instructions.</div></div>'+
  '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Calibration + QC video</button><button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>'+
  '<p class="source-footnote">Instrument material and rack illustrations are simplified and not to scale. Verify all operational steps against the approved PATHFAST instructions.</p></section>';
+}
+/* Keep both assay panels included when printing the guide. */
+if(typeof window.addEventListener==='function'){
+ let pfPrintPanels=[];
+ window.addEventListener('beforeprint',function(){
+  pfPrintPanels=Array.from(document.querySelectorAll('.pf-assay-dropdown')).map(function(node){return {node:node,open:node.open};});
+  pfPrintPanels.forEach(function(entry){entry.node.open=true;});
+ });
+ window.addEventListener('afterprint',function(){
+  pfPrintPanels.forEach(function(entry){entry.node.open=entry.open;});
+  pfPrintPanels=[];
+ });
 }
 window.LAB_PATHFAST_UI={render:render,lanes:lanes,assays:groups.map(x=>x.id)};
 })();
