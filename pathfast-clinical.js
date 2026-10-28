@@ -4,7 +4,7 @@
 function tube(){
 return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Green-top lithium-heparin collection tube and immediate gentle inversion">'+
 '<defs><linearGradient id="pcrglass" x1="0" x2="1"><stop stop-color="#c3e0e6"/><stop offset=".5" stop-color="#faffff"/><stop offset="1" stop-color="#b7d7df"/></linearGradient></defs>'+
-'<g transform="translate(80,10)"><rect x="44" y="2" width="72" height="35" rx="10" fill="#16885b" stroke="#0c6a4a" stroke-width="3"/>'+
+'<g transform="translate(80,10) translate(80,0) scale(.73,1) translate(-80,0)"><rect x="44" y="2" width="72" height="35" rx="10" fill="#16885b" stroke="#0c6a4a" stroke-width="3"/>'+
 '<path d="M48 35 H112 L108 195 Q82 225 53 195Z" fill="url(#pcrglass)" stroke="#8badba" stroke-width="3"/>'+
 '<path d="M56 116 H105 L103 193 Q82 210 58 193Z" fill="#b74b5a" opacity=".84"/>'+
 '<rect x="56" y="69" width="48" height="52" rx="4" fill="#fff" stroke="#a4bfcb"/>'+
@@ -13,7 +13,7 @@ return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org
 '<text x="80" y="114" font-size="8" text-anchor="middle" fill="#537c76">GREEN TOP</text></g>'+
 '<path d="M283 61 Q339 22 366 84" fill="none" stroke="#259b80" stroke-width="7" stroke-linecap="round"/>'+
 '<path d="M345 75 L368 95 L380 69" fill="none" stroke="#259b80" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'+
-'<g transform="translate(298,120) rotate(150,26,48)"><rect x="0" y="0" width="55" height="27" rx="8" fill="#168b5f"/>'+
+'<g transform="translate(298,120) rotate(150,26,48) scale(.75,1)"><rect x="0" y="0" width="55" height="27" rx="8" fill="#168b5f"/>'+
 '<path d="M5 27 H50 L47 103 Q28 117 8 103Z" fill="url(#pcrglass)" stroke="#8ab6c2" stroke-width="2"/>'+
 '<path d="M8 72 H47 L45 101 Q27 108 10 101Z" fill="#cc6670"/></g>'+
 '<text x="329" y="241" font-size="12" font-weight="850" text-anchor="middle" fill="#237f6c">Invert 8–10×</text>'+
@@ -36,12 +36,12 @@ card(1,"RN","Confirm the order and provider-selected pathway","Check the PATHFAS
 card(2,"RN","Collect and label the baseline sample","Use a lithium-heparin green-top tube and document the exact 0-hour collection date and time.")+
 card(3,"RN","Invert immediately","Gently invert 8–10 times. Do not shake or let the tube stand unmixed.")+
 card(4,"RN → Lab tech","Deliver the sample promptly","Hand the properly labeled specimen to the tech; avoid unnecessary delay or heat.")+
-card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. A ±10-minute collection window applies at each target. Do not time from result availability.")+
-card(6,"RN","Collect and document the repeat","Use the same specimen type and invert immediately. Record actual draw time. Samples outside the ±10-minute window cannot be used for the 1-hour or 2-hour timed delta; notify the provider.")+
+card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. The requested operational window is target time through 15 minutes later, never early. Medical leadership must approve 0/+15-minute timing for the local assay-specific algorithm before clinical use. Do not time from result availability.")+
+card(6,"RN","Collect and document the repeat","Use the same specimen type and invert immediately. Record actual draw time. A repeat collected earlier than 60 or 120 minutes must not be counted as the corresponding timed delta sample. For samples outside the authorized site window, notify the provider and document the true collection time.")+
 '</div><h3 class="pcr-section-title">Serial collection clock</h3>'+
-'<div class="pcr-timing-start"><span class="pcr-clock">0 h</span><div><strong>Baseline draw</strong><p>Example: 11:05 AM. Start the timer at this actual collection time.</p></div></div>'+
+'<div class="pcr-timing-start"><span class="pcr-clock">0 h</span><div><strong>Baseline draw</strong><p>Example: 12:00 PM. Start the timer at this actual collection time.</p></div></div>'+
 window.LAB_PATHFAST_EXTRAS.timing()+
-'<div class="pcr-missed"><strong>Missed the 1-hour window?</strong><p>Notify the provider. Example: If the baseline is 11:05 AM and the missed window is identified at 12:21 PM, notify the provider and use the approved 2-hour pathway, targeting <b>1:05 PM</b>. Record the actual draw time, notify the provider, and do not use the out-of-window sample for any protocol-timed 1-hour or 2-hour delta. It may be assessed separately with its actual timing.</p></div>'+
+'<div class="pcr-missed"><strong>Missed the 1-hour window?</strong><p>Notify the provider. Example: If the baseline is 12:00 PM and the 1-hour window has passed at 1:21 PM, notify the provider. If the provider selects the approved 0/2-hour pathway, target <b>2:00 PM</b>, never earlier. Document the actual draw time and do not apply a protocol-specific delta threshold to a sample outside its authorized window.</p></div>'+
 '<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span>⌄</span></summary><div>'+
 '<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
 '<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
