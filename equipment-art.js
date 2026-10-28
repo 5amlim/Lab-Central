@@ -304,7 +304,7 @@ function clinitekKit(kind,filled){
    '<rect x="85" y="104" width="73" height="21" rx="4" fill="#f5f8f9" stroke="#c5d4dc"/>'+
    '<text x="91" y="102" font-size="9" fill="#6b8799" font-family="Arial">C</text>'+
    '<text x="126" y="102" font-size="9" fill="#6b8799" font-family="Arial">T</text>'+
-   (filled?'<rect x="102" y="107" width="4" height="15" rx="2" fill="#ad567d"/><rect x="135" y="107" width="4" height="15" rx="2" fill="#a96685"/>':'')+
+   
    '<circle cx="224" cy="115" r="16" fill="'+(filled?"#ecd3dd":"#f9fdff")+'" stroke="#9aaeba" stroke-width="3"/>'+
    '<circle cx="224" cy="115" r="8" fill="'+(filled?"#b77b91":"#edf4f7")+'" opacity=".9"/>'+
    '<text x="224" y="144" font-family="Arial" font-size="10" fill="#4b7185" font-weight="850" text-anchor="middle">S</text>'+
@@ -480,9 +480,14 @@ function workflowVisual(sec,title,groupTitle=""){
  if(!sec||!collection[sec.id]||sec.archived)return "";
  if(sec.id==="clinitek"&&/^(ua-strip|hcg-cassette|ua-qc|hcg-qc)$/.test(groupTitle)){
   const hcg=/hcg/.test(groupTitle),qc=/qc/.test(groupTitle),kind=hcg?"hcg":"ua";
-  return '<div class="dev-workflow-visual clinitek-single-visual"><div class="dev-visual-header"><strong>'+(hcg?'hCG CASSETTE':'URINALYSIS DIPSTICK')+'</strong><span>'+(qc?'Control testing':'Patient testing')+'</span></div><div class="dev-kit-scenes">'+
-    '<div class="dev-kit-view"><div class="dev-kit-state">UNUSED '+(hcg?'CASSETTE':'STRIP')+'</div><div class="dev-kit-drawing">'+clinitekKit(kind,false)+'</div></div>'+
-    '<div class="dev-kit-view"><div class="dev-kit-state">'+(qc?'CONTROL APPLIED':'AFTER URINE')+'</div><div class="dev-kit-drawing">'+clinitekKit(kind,true)+'</div></div></div></div>';
+  const t=String(title).toLowerCase();
+  const before=hcg?/prepare and place|place cassette|prepare hcg|confirm urine specimen and hcg/i.test(t):/prepare the ua dipstick|prepare urinalysis controls/i.test(t);
+  const after=hcg?/dispense urine|dispense qc material/i.test(t):/press start, then dip|run each control using the strip/i.test(t);
+  if(!before&&!after)return "";
+  return '<div class="dev-workflow-visual clinitek-single-visual"><div class="dev-visual-header"><strong>'+(hcg?'hCG CASSETTE':'URINALYSIS DIPSTICK')+'</strong><span>'+(qc?'Control testing':'Patient testing')+'</span></div>'+
+   '<div class="dev-kit-scenes" style="grid-template-columns:minmax(0,440px);justify-content:center">'+
+   '<div class="dev-kit-view"><div class="dev-kit-state">'+(before?'UNUSED '+(hcg?'CASSETTE':'STRIP'):(qc?'CONTROL APPLIED':'AFTER URINE'))+'</div>'+
+   '<div class="dev-kit-drawing">'+clinitekKit(kind,after)+'</div></div></div></div>';
  }
 
  const id=sec.id,t=String(title).toLowerCase();
@@ -505,11 +510,7 @@ function workflowVisual(sec,title,groupTitle=""){
 }
 function inlineKitVisual(sec,title,depth,rootTitle){
  if(!sec||!collection[sec.id]||sec.archived||sec.id==="piccolo")return "";
- if(sec.id==="clinitek"&&/^(ua-strip|hcg-cassette|ua-qc|hcg-qc)$/.test(rootTitle)){
-  if(!/cassette|dipstick|strip|test table|sample|start|pipette/i.test(title))return "";
-  const kind=/hcg/.test(rootTitle)?"hcg":"ua",filled=/dispense|dip|blot|apply|urine|control/i.test(title);
-  return '<div class="dev-inline-illustration clinitek-inline-kit"><div class="dev-inline-drawing">'+clinitekKit(kind,filled)+'</div><span class="dev-inline-caption">'+(kind==="hcg"?"CLINITEST hCG cassette":"UA reagent dipstick")+'</span></div>';
- }
+ if(sec.id==="clinitek")return "";
 
  const t=String(title).toLowerCase(),root=String(rootTitle||"").toLowerCase();
  if(depth>1)return "";
