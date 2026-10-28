@@ -1,11 +1,9 @@
 (function(){
 "use strict";
-const forms=[
- ["Southern California","https://forms.cloud.microsoft/r/c4RvraNnGE"],
- ["Northern California","https://forms.cloud.microsoft/r/GgtCPLVSHw"],
- ["New York","https://forms.cloud.microsoft/r/rrQv53xVzd"],
- ["Florida","https://forms.cloud.microsoft/r/ZrU11LNKNB"]
-];
+const keys=["socal","norcal","ny","fl"];
+const forms=keys.map(k=>window.LAB_SENDOUT_FORMS&&window.LAB_SENDOUT_FORMS[k])
+ .filter(x=>x&&/^https:\/\/forms\.cloud\.microsoft\/r\/[A-Za-z0-9]+$/.test(x.url))
+ .map(x=>[x.label,x.url]);
 function formLinks(){
  return '<section class="ops-region-forms"><div class="ops-region-forms-heading"><span>REGIONAL SENDOUT LOG</span><strong>Open the appropriate Microsoft Form</strong></div><div class="ops-region-forms-grid">'+
  forms.map(([label,url])=>'<a class="ops-region-form-link" href="'+url+'" target="_blank" rel="noopener noreferrer"><span class="ops-region-form-mark" aria-hidden="true">↗</span><strong>'+label+'</strong><small>Open secure form</small></a>').join('')+
