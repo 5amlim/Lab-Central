@@ -30,24 +30,24 @@ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pc
 '<div><span>02</span><strong>Immediately invert gently 8–10 times</strong><p>Do not shake or delay mixing. Improper mixing can form microclots and fibrin.</p></div>'+
 '<div><span>03</span><strong>Label the actual collection time</strong><p>Document identifiers, date and draw time. The clock starts at the first draw, not when the test starts or finishes.</p></div>'+
 '</div></div>'+
-'<div class="pcr-warning"><strong>Microclots can cause inaccurate results</strong><p>Send promptly, avoid heat, and gently remix before testing. Do not test a specimen with confirmed microclots or fibrin; inform the clinical team and recollect. The PATHFAST Quick Guide specifies testing within 4 hours of collection.</p></div>'+
+'<div class="pcr-warning"><strong>Microclots can cause inaccurate results</strong><p>Send promptly, avoid heat, and gently remix before testing. Unexpected elevations possibly affected by microclots or fibrin must be reviewed with the provider. Use the same-tube plasma interference check below before assuming the result is false. The PATHFAST Quick Guide specifies testing within 4 hours of collection.</p></div>'+
 '<h3 class="pcr-section-title">RN collection workflow</h3><div class="pcr-steps">'+
 card(1,"RN","Confirm the order and provider-selected pathway","Check the PATHFAST hs-Troponin I order. Confirm whether the provider chose the 0/1-hour or 0/2-hour protocol.")+
 card(2,"RN","Collect and label the baseline sample","Use a lithium-heparin green-top tube and document the exact 0-hour collection date and time.")+
 card(3,"RN","Invert immediately","Gently invert 8–10 times. Do not shake or let the tube stand unmixed.")+
 card(4,"RN → Lab tech","Deliver the sample promptly","Hand the properly labeled specimen to the tech; avoid unnecessary delay or heat.")+
-card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. Do not time from result availability.")+
-card(6,"RN","Collect and document the repeat","Use the same specimen type. Invert immediately, record actual collection time, hand off promptly, and inform the provider of any missed window.")+
+card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. A ±10-minute collection window applies at each target. Do not time from result availability.")+
+card(6,"RN","Collect and document the repeat","Use the same specimen type and invert immediately. Record actual draw time. Samples outside the ±10-minute window cannot be used for the 1-hour or 2-hour timed delta; notify the provider.")+
 '</div><h3 class="pcr-section-title">Serial collection clock</h3>'+
 '<div class="pcr-timing-start"><span class="pcr-clock">0 h</span><div><strong>Baseline draw</strong><p>Example: 11:05 AM. Start the timer at this actual collection time.</p></div></div>'+
-'<div class="pcr-time-branches"><article><span class="pcr-time-badge">0/1 HOUR</span><strong>+60 minutes</strong><p>Target repeat: <b>12:05 PM</b></p></article>'+
-'<article><span class="pcr-time-badge alt">0/2 HOUR</span><strong>+120 minutes</strong><p>Target repeat: <b>1:05 PM</b></p></article></div>'+
-'<div class="pcr-missed"><strong>Missed the 1-hour window?</strong><p>Notify the provider. Example: If the baseline is 11:05 AM and the missed window is identified at 12:21 PM, notify the provider and use the approved 2-hour pathway, targeting <b>1:05 PM</b>. Record the actual collection time and document that the provider was notified. Do not record a late draw as a 1-hour collection.</p></div>'+
+window.LAB_PATHFAST_EXTRAS.timing()+
+'<div class="pcr-missed"><strong>Missed the 1-hour window?</strong><p>Notify the provider. Example: If the baseline is 11:05 AM and the missed window is identified at 12:21 PM, notify the provider and use the approved 2-hour pathway, targeting <b>1:05 PM</b>. Record the actual draw time, notify the provider, and do not use the out-of-window sample for any protocol-timed 1-hour or 2-hour delta. It may be assessed separately with its actual timing.</p></div>'+
 '<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span>⌄</span></summary><div>'+
 '<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
-'<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. If confirmed, obtain a fresh specimen.</p></div></details>'+
+'<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
 '<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Confirm the matching patient ID and lane, acceptable QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
-'<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; PATHFAST Quick Guide; PATHFAST Competency Quiz. The provider chooses the serial-testing pathway.</p></section>';
+window.LAB_PATHFAST_EXTRAS.interference()+
+'<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The provider chooses the serial-testing pathway.</p></section>';
 }
 function col(title,tag,statements,kind){
 return '<article class="pcr-decision '+kind+'"><div class="pcr-decision-head"><strong>'+title+'</strong><small>'+tag+'</small></div><div class="pcr-decision-body">'+statements.map(x=>'<p>'+x+'</p>').join("")+'</div></article>';
@@ -56,6 +56,7 @@ function pathway(){
 return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I 0/1-hour pathway</h2>'+
 '<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
 '<div class="pcr-protocol-warning"><strong>Confirm approved clinical pathway before use</strong><p>The clinical pathway references contain inconsistent threshold wording, including 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and rule-out conditions for low initial values. The clinic one-page guide also gives a 99th-percentile reference of 29 ng/L, while this pathway uses 21.4 ng/L (F) and 29.8 ng/L (M). Confirm the medically approved assay-specific thresholds and pathway before clinical use.</p></div>'+
+window.LAB_PATHFAST_EXTRAS.flow()+
 '<h3 class="pcr-section-title">Reference A: Interpreting the 1-hour result</h3><div class="pcr-decisions">'+
 col("Rule-out","Low risk",["Initial hs-TnI <b>&lt;4 ng/L</b>","1-hour delta <b>&lt;3 ng/L</b>","HEART ≤3 and reassuring ECG"],"ruleout")+
 col("Consider discharge","Follow-up review",["Initial hs-TnI <b>≥4 ng/L</b> with 1-hour delta <b>&lt;3 ng/L</b>","Total below <b>21.4 ng/L (F)</b> or <b>29.8 ng/L (M)</b>","HEART ≤3 and cardiology follow-up within 48–72 hours; may repeat 2-hour troponin"],"consider")+
