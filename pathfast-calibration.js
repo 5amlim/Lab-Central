@@ -1,65 +1,151 @@
-/* PATHFAST six-lane calibration and quality control illustration and staff guide.
-   Illustration is schematic, not an actual analyzer status feed. */
-(function () {
+/* PATHFAST CAL/QC: 28-day reference, reagent material guide, and six-lane rack.
+   Drawings are simplified and intentionally not to scale. */
+(function(){
 "use strict";
-var lanes=[
- ["CAL 1","#e8f2fa","#276d97"],["CAL 1","#e8f2fa","#276d97"],
- ["CAL 2","#f1eafa","#75599b"],["CAL 2","#f1eafa","#75599b"],
- ["QC 1","#fff3df","#a67628"],["QC 2","#e5f5ef","#267f6c"]
+const lanes=[
+ {name:"CAL 1",tone:"#e2f1fb",ink:"#226c97",well:"#a9d8fa"},
+ {name:"CAL 1",tone:"#e2f1fb",ink:"#226c97",well:"#a9d8fa"},
+ {name:"CAL 2",tone:"#eee9fa",ink:"#76569e",well:"#d1c3f3"},
+ {name:"CAL 2",tone:"#eee9fa",ink:"#76569e",well:"#d1c3f3"},
+ {name:"QC 1",tone:"#fff0d6",ink:"#a67324",well:"#f4d082"},
+ {name:"QC 2",tone:"#e3f5ec",ink:"#19755e",well:"#a8e1c5"}
+];
+const groups=[
+ {id:"cardiac",label:"hs-Troponin I + NT-proBNP",analytes:["hs-Troponin I","NT-proBNP"],qc:"Bio-Rad Cardiac Markers",detail:"Use Bio-Rad Cardiac controls for hs-Troponin I and NT-proBNP. Confirm both control levels and the current assay-specific assigned ranges."},
+ {id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad D-dimer",detail:"Use Bio-Rad D-dimer controls for the D-dimer assay. Verify QC levels, lot and assigned ranges against the current control insert."}
 ];
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
-function laneSVG(item,i){
- var x=38+i*145, code="";
- for(var j=0;j<11;j++){code+='<rect x="'+(x+37+j*4)+'" y="175" width="'+(j%3===0?2:1)+'" height="'+(j%3===0?22:17)+'" fill="#dfe7ea"/>';}
- return '<g aria-label="Lane '+(i+1)+': '+esc(item[0])+'">'+
- '<rect x="'+x+'" y="10" width="124" height="58" rx="11" fill="'+item[1]+'" stroke="'+item[2]+'" stroke-opacity=".3"/>'+
- '<text x="'+(x+62)+'" y="33" font-size="12" font-weight="800" fill="'+item[2]+'" text-anchor="middle">LANE '+(i+1)+'</text>'+
- '<text x="'+(x+62)+'" y="54" font-size="18" font-weight="900" fill="'+item[2]+'" text-anchor="middle">'+item[0]+'</text>'+
- '<rect x="'+(x-1)+'" y="94" width="126" height="228" rx="9" fill="#ced9df" stroke="#9caeb8"/>'+
- '<rect x="'+(x+9)+'" y="105" width="106" height="198" rx="6" fill="url(#pf-metal)" stroke="#f8fafb"/>'+
- '<rect x="'+(x+20)+'" y="114" width="84" height="160" rx="6" fill="#1c2732" stroke="#18232a"/>'+
- '<rect x="'+(x+20)+'" y="114" width="84" height="15" rx="3" fill="#d34546"/>'+
- '<rect x="'+(x+26)+'" y="135" width="73" height="25" rx="2" fill="#343f48"/>'+
- '<text x="'+(x+62)+'" y="152" text-anchor="middle" font-size="10" font-weight="800" fill="#e8edf0" letter-spacing="1.2">PATHFAST</text>'+
- code+
- '<circle cx="'+(x+62)+'" cy="229" r="17" fill="#111a20" stroke="#8b9ba4" stroke-width="3"/>'+
- '<circle cx="'+(x+62)+'" cy="229" r="7" fill="#465964" stroke="#111820"/>'+
- '<rect x="'+(x+27)+'" y="277" width="69" height="39" rx="6" fill="url(#pf-well)" stroke="#9bb2be"/>'+
- '<rect x="'+(x+36)+'" y="284" width="52" height="13" rx="4" fill="#f6fafb" stroke="#b5c6ce"/>'+
- '<circle cx="'+(x+62)+'" cy="306" r="5" fill="#b7d6e5" stroke="#8caab8"/></g>';
+function defs(){return '<defs>'+
+ '<linearGradient id="pfxmetal" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#f6fafc"/><stop offset=".5" stop-color="#bfcdd6"/><stop offset="1" stop-color="#eaf1f6"/></linearGradient>'+
+ '<linearGradient id="pfxglass" x1="0" x2=".8" y1="0" y2="1"><stop stop-color="#e9f2f7" stop-opacity=".65"/><stop offset=".55" stop-color="#b9d1db" stop-opacity=".23"/><stop offset="1" stop-color="#a9c8d9" stop-opacity=".6"/></linearGradient>'+
+ '<linearGradient id="pfxamber" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d8a16c"/><stop offset=".5" stop-color="#81502c"/><stop offset="1" stop-color="#b97e49"/></linearGradient>'+
+ '</defs>';}
+function laneSvg(item,i){
+ const x=31+i*145, cx=x+62;
+ let codes='';
+ for(let j=0;j<9;j++)codes+='<rect x="'+(x+36+j*5)+'" y="171" width="'+(j%3===0?3:1.5)+'" height="'+(j%2?19:24)+'" fill="#d0dbe2"/>';
+ return '<g role="group" aria-label="Lane '+(i+1)+' '+item.name+'">'+
+ '<rect x="'+x+'" y="8" width="123" height="59" rx="10" fill="'+item.tone+'" stroke="'+item.ink+'" stroke-opacity=".35"/>'+
+ '<text x="'+cx+'" y="31" text-anchor="middle" font-size="12" font-weight="850" fill="'+item.ink+'">LANE '+(i+1)+'</text>'+
+ '<text x="'+cx+'" y="54" text-anchor="middle" font-size="18" font-weight="900" fill="'+item.ink+'">'+item.name+'</text>'+
+ '<rect x="'+(x-2)+'" y="90" width="127" height="239" rx="10" fill="#c8d5dc" stroke="#9db2bf" stroke-width="2"/>'+
+ '<rect x="'+(x+7)+'" y="100" width="110" height="220" rx="6" fill="url(#pfxmetal)" stroke="#fff"/>'+
+ '<rect x="'+(x+21)+'" y="110" width="82" height="161" rx="6" fill="#1e2b36" stroke="#13212d"/>'+
+ '<rect x="'+(x+21)+'" y="111" width="82" height="15" rx="3" fill="#d34b4a"/>'+
+ '<rect x="'+(x+27)+'" y="132" width="70" height="25" rx="3" fill="#394853"/>'+
+ '<text x="'+cx+'" y="149" text-anchor="middle" font-size="9.8" fill="#e5ebed" font-weight="800">PATHFAST</text>'+
+ codes+
+ '<circle cx="'+cx+'" cy="227" r="17" fill="#141e26" stroke="#899faa" stroke-width="3"/>'+
+ '<circle cx="'+cx+'" cy="227" r="7" fill="#455765"/>'+
+ '<rect x="'+(x+24)+'" y="276" width="76" height="45" rx="7" fill="'+item.well+'" stroke="'+item.ink+'" stroke-width="2"/>'+
+ '<rect x="'+(x+30)+'" y="281" width="64" height="32" rx="5" fill="'+item.tone+'" opacity=".9"/>'+
+ '<text x="'+cx+'" y="302" text-anchor="middle" font-weight="900" font-size="14" fill="'+item.ink+'">'+item.name+'</text>'+
+ '</g>';
 }
 function rack(){
- return '<div class="pf-rack-scroll" role="region" aria-label="Six-lane PATHFAST rack schematic, horizontally scrollable on mobile" tabindex="0">'+
- '<svg class="pf-rack-svg" viewBox="0 0 940 355" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six reagent cartridges loaded in parallel in a metal rack, lanes 1 and 2 CAL 1, lanes 3 and 4 CAL 2, lane 5 QC 1, lane 6 QC 2">'+
- '<defs><linearGradient id="pf-metal" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fafbfd"/><stop offset=".5" stop-color="#becbd4"/><stop offset="1" stop-color="#f3f8fb"/></linearGradient>'+
- '<linearGradient id="pf-well" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#d4e1e8"/></linearGradient></defs>'+
- '<rect x="22" y="84" width="890" height="249" rx="15" fill="#e6edf1" stroke="#9badb8" stroke-width="4"/>'+
- '<rect x="30" y="92" width="874" height="231" rx="12" fill="#d4dfe5" stroke="#f8fafb" stroke-width="2"/>'+
- lanes.map(laneSVG).join("")+
- '<text x="470" y="350" text-anchor="middle" fill="#687c8b" font-size="11" letter-spacing="1.4" font-weight="800">FRONT / SAMPLE WELLS</text></svg></div>';
+ return '<div class="pf-rack-scroll" role="region" tabindex="0" aria-label="Six cartridge loading positions, horizontally scrollable">'+
+ '<svg class="pf-rack-svg" viewBox="0 0 940 359" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PATHFAST six-lane rack with color coded sample wells: Cal 1 in lanes 1 and 2, Cal 2 in lanes 3 and 4, QC 1 in lane 5, QC 2 in lane 6">'+
+ defs()+
+ '<rect x="17" y="83" width="892" height="255" rx="17" fill="#dbe7ec" stroke="#9cabb6" stroke-width="4"/>'+
+ '<rect x="25" y="92" width="876" height="235" rx="13" fill="#cfdae2" stroke="#f9fcfd" stroke-width="2"/>'+
+ lanes.map(laneSvg).join("")+
+ '<text x="469" y="354" text-anchor="middle" fill="#698091" font-size="11" letter-spacing="1.5" font-weight="850">FRONT · COLOR-CODED SAMPLE WELLS</text></svg></div>';
 }
-var instructions=[
- ["Check the status","The CAL/QC pill turns pink when the 28-day calibration interval expires and the analyzer locks patient testing."],
- ["Select CAL/QC and verify the reagent lot","From the home screen select BACK. For a new reagent lot, scan the supplied MC ENTRY card with the handheld reader as directed. For the same lot, verify the reagent lot, select CAL/QC, select the test and confirm."],
- ["Prepare six reagent cartridges","Remove cartridges from the refrigerator when ready to run. Gently tap on the counter two or three times, and slide each cartridge into the rack until it clicks."],
- ["Load all six lanes","Lanes 1 and 2: CAL 1. Lanes 3 and 4: CAL 2. Lane 5: QC 1. Lane 6: QC 2. The existing cheat sheet specifies 100 µL into each sample well; follow the current assay-specific IFU."],
- ["Place rack and tips, then start","Insert the loaded rack into the analyzer holder, load tips, close the cover, press Start and confirm Start again. The original cheat sheet lists about 17 minutes."],
- ["Review calibration and QC","Confirm acceptable calibration and both QC results under the approved procedure. Following successful QC, the menu pill turns gray, indicating ready to use. If results fail or the pill remains pink, do not release patient testing."]
+function svgCal1(){
+ return '<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="CAL 1 liquid bottle with dispensing spout" xmlns="http://www.w3.org/2000/svg">'+defs()+
+ '<ellipse cx="107" cy="133" rx="49" ry="7" fill="#d9e2e7"/>'+
+ '<rect x="84" y="12" width="43" height="32" rx="6" fill="#f1f5f7" stroke="#9daeb7" stroke-width="2"/>'+
+ '<path d="M95 12 L104 2 L117 2 L125 13" fill="#dae8ee" stroke="#9daeb7" stroke-width="2"/>'+
+ '<path d="M118 5 L135 2" stroke="#698ba1" stroke-width="4" stroke-linecap="round"/>'+
+ '<rect x="73" y="41" width="65" height="90" rx="13" fill="url(#pfxglass)" stroke="#91a7b4" stroke-width="2"/>'+
+ '<rect x="77" y="65" width="57" height="49" rx="5" fill="#e3f0f7" stroke="#bfd0d9"/>'+
+ '<text x="105" y="84" text-anchor="middle" fill="#1f698a" font-size="12" font-weight="900">CAL 1</text>'+
+ '<text x="105" y="99" text-anchor="middle" fill="#688a9f" font-size="9">LIQUID</text></svg>';
+}
+function svgCal2(){
+ let body='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two glass CAL 2 vials containing lyophilized powder" xmlns="http://www.w3.org/2000/svg">'+defs();
+ for(let i=0;i<2;i++){const x=38+i*92;body+='<g><ellipse cx="'+(x+30)+'" cy="134" rx="29" ry="5" fill="#dce4e8"/>'+
+ '<rect x="'+(x+6)+'" y="13" width="47" height="23" rx="5" fill="#d6e3ec" stroke="#8ba4b4" stroke-width="2"/>'+
+ '<rect x="'+(x+10)+'" y="36" width="39" height="92" rx="8" fill="url(#pfxglass)" stroke="#8da4b1" stroke-width="2"/>'+
+ '<rect x="'+(x+13)+'" y="58" width="33" height="41" rx="3" fill="#f5f7f9" stroke="#b8cad4"/>'+
+ '<text x="'+(x+30)+'" y="74" text-anchor="middle" font-size="10" fill="#745ba3" font-weight="900">CAL 2</text>'+
+ '<path d="M'+(x+15)+' 113 Q'+(x+30)+' 104 '+(x+46)+' 113 L'+(x+46)+' 121 L'+(x+15)+' 121Z" fill="#e8dcf2" stroke="#b8aad1"/></g>'}
+ return body+'</svg>';
+}
+function svgDiluent(){
+ let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two blue liquid buffer diluent vials for CAL 2 reconstitution" xmlns="http://www.w3.org/2000/svg">'+defs();
+ for(let i=0;i<2;i++){const x=40+i*90;out+='<ellipse cx="'+(x+28)+'" cy="134" rx="27" ry="6" fill="#dce5eb"/>'+
+ '<rect x="'+(x+6)+'" y="18" width="44" height="26" rx="5" fill="#438cc8" stroke="#286fa7" stroke-width="2"/>'+
+ '<rect x="'+(x+10)+'" y="44" width="36" height="82" rx="7" fill="url(#pfxglass)" stroke="#90b3c8" stroke-width="2"/>'+
+ '<rect x="'+(x+12)+'" y="76" width="32" height="45" rx="4" fill="#86c7ef" opacity=".78"/>'+
+ '<rect x="'+(x+12)+'" y="55" width="32" height="28" rx="3" fill="#ecf8fc" stroke="#b5d8e9"/>'+
+ '<text x="'+(x+28)+'" y="73" text-anchor="middle" font-size="8" font-weight="900" fill="#2877a9">DILUENT</text>';}
+ return out+'</svg>';
+}
+function svgQC(kind){
+ const tint=kind==="cardiac"?"#ae3d49":"#855a9b",label=kind==="cardiac"?"CARDIAC":"D-DIMER";
+ let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two Bio-Rad '+label+' control vials, quality control levels 1 and 2" xmlns="http://www.w3.org/2000/svg">'+defs();
+ for(let i=0;i<2;i++){let x=36+i*91;out+='<ellipse cx="'+(x+30)+'" cy="134" rx="28" ry="5" fill="#d6dfe7"/>'+
+ '<rect x="'+(x+7)+'" y="11" width="46" height="31" rx="7" fill="'+(i?"#eef1f4":"#dce4e8")+'" stroke="#8d9fa9" stroke-width="2"/>'+
+ '<rect x="'+(x+10)+'" y="41" width="40" height="85" rx="7" fill="url(#pfxamber)" stroke="#805d45" stroke-width="2"/>'+
+ '<rect x="'+(x+13)+'" y="67" width="34" height="41" rx="3" fill="#f9f6f3"/>'+
+ '<rect x="'+(x+13)+'" y="67" width="34" height="9" rx="2" fill="'+tint+'"/>'+
+ '<text x="'+(x+30)+'" y="85" font-size="7" font-weight="900" text-anchor="middle" fill="#83565c">Bio-Rad</text>'+
+ '<text x="'+(x+30)+'" y="95" font-size="8.5" font-weight="900" text-anchor="middle" fill="#594f58">QC '+(i+1)+'</text>';}
+ return out+'</svg>';
+}
+function material(label,tag,description,svg,color){
+ return '<article class="pf-material-card '+(color||"")+'"><div class="pf-material-figure">'+svg+'</div>'+
+ '<div class="pf-material-detail"><span class="pf-material-tag">'+esc(tag)+'</span><h4>'+esc(label)+'</h4><p>'+esc(description)+'</p></div></article>';
+}
+function status(group){
+ return '<div class="pf-subtitle">CAL/QC menu status</div>'+
+ '<div class="pf-analyte-states">'+group.analytes.map(function(a){
+   return '<div class="pf-analyte-row"><strong>'+esc(a)+'</strong>'+
+   '<div class="pf-state-strip"><div class="pf-state-box"><span class="pf-state-pill overdue">'+esc(a)+'</span><div><b>Pink · locked</b><small>28 days reached</small></div></div>'+
+   '<span class="pf-state-arrow" aria-hidden="true">→</span>'+
+   '<div class="pf-state-box"><span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Gray · ready</b><small>Calibration and QC accepted</small></div></div></div></div>';
+ }).join("")+'</div>';
+}
+function assay(group,index){
+ const open=index===0?' open':'';
+ return '<details class="pf-assay-dropdown" data-pf-assay="'+group.id+'"'+open+'>'+
+ '<summary><span class="pf-assay-icon">'+(group.id==="cardiac"?"♥":"◈")+'</span>'+
+ '<span class="pf-assay-summary"><strong>'+esc(group.label)+'</strong><small>Calibration materials and Bio-Rad QC · expand for instructions</small></span>'+
+ '<span class="pf-assay-arrow">⌄</span></summary>'+
+ '<div class="pf-assay-content">'+status(group)+
+ '<h3 class="pf-material-heading">Calibration materials <small>Included in the reagent box</small></h3>'+
+ '<div class="pf-material-grid">'+
+ material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1')+
+ material('CAL 2','2 GLASS VIALS','Both vials contain lyophilized powder. Reconstitute with matching diluent before loading lanes 3 and 4.',svgCal2(),'cal2')+
+ material('Blue liquid diluent','2 BUFFER VIALS','Combine the supplied blue liquid diluent with each CAL 2 powder vial using the assay-specific mixing directions and volume.',svgDiluent(),'diluent')+
+ '</div>'+
+ '<h3 class="pf-material-heading">Quality control <small>Bio-Rad</small></h3>'+
+ '<div class="pf-material-grid pf-qc-grid">'+
+ material(group.qc,'QC 1 + QC 2',group.detail,svgQC(group.id),group.id)+
+ '<div class="pf-qc-note"><strong>QC loading</strong><p>Use '+esc(group.qc)+' for this assay group. Load QC 1 in lane 5 and QC 2 in lane 6. Confirm assigned ranges and acceptable results before patient testing.</p></div>'+
+ '</div></div></details>';
+}
+const workflow=[
+ ['Check the analyte status','Select the assay to calibrate. After 28 days, its menu pill turns pink and patient testing is locked.'],
+ ['Confirm reagent lot and enter CAL/QC','If new lot, scan the kit MC ENTRY card as instructed. For existing lot, confirm reagent lot and select CAL/QC for the applicable assay.'],
+ ['Prepare calibrators and controls','Use CAL 1 from the reagent box, reconstitute the two CAL 2 powder vials with their matching blue diluents, and select the correct Bio-Rad cardiac or D-dimer QC materials.'],
+ ['Load the six-lane rack','CAL 1, CAL 1, CAL 2, CAL 2, QC 1, QC 2. Use sample preparation and volumes from the approved assay insert.'],
+ ['Run the six cartridges','Slide cartridges into the rack until they click, insert rack and tips, close the cover and follow the analyzer START prompts.'],
+ ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. The analyte pill turns gray after acceptable QC; if still pink, do not test patients.']
 ];
 function render(){
- var pills='<div class="pf-state-strip"><div class="pf-state-box"><span class="pf-state-pill overdue">CAL/QC</span><div><strong>Pink · due</strong><small>28 days elapsed. Locked.</small></div></div><span class="pf-state-arrow" aria-hidden="true">→</span><div class="pf-state-box"><span class="pf-state-pill ready">CAL/QC</span><div><strong>Gray · ready</strong><small>Calibration and QC accepted.</small></div></div></div>';
- var details=lanes.map(function(item,i){return '<span class="pf-lane-chip" style="--lane-tone:'+item[1]+';--lane-ink:'+item[2]+'"><b>'+(i+1)+'</b>'+item[0]+'</span>';}).join("");
- var workflow=instructions.map(function(item,i){return '<article class="pf-action"><span class="pf-action-no">'+String(i+1).padStart(2,"0")+'</span><div><h3>'+esc(item[0])+'</h3><p>'+esc(item[1])+'</p></div></article>';}).join("");
+ const w=workflow.map(function(item,i){return '<article class="pf-action"><span class="pf-action-no">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+esc(item[0])+'</h3><p>'+esc(item[1])+'</p></div></article>';}).join("");
  return '<section class="pf-calibration-guide">'+
- '<div class="pf-calibration-heading"><div><div class="pf-eyebrow">PATHFAST / COMBINED WORKFLOW</div><h2>Calibration + QC</h2><p>Run together <strong>every 28 days</strong> using <strong>all six lanes</strong>.</p></div><span class="pf-interval">↻ 28 days</span></div>'+
- '<div class="pf-subtitle">Menu indicator after the 28-day calibration interval</div>'+pills+
- '<p class="pf-state-caption">Illustrative status pills, not live instrument status. Additional QC may be necessary under current assay-specific SOPs.</p>'+
- '<div class="pf-rack-header"><div><div class="pf-eyebrow">SIX-CARTRIDGE RACK</div><h3>Load lanes in this order</h3></div><span class="pf-rack-hint">Top-down schematic · not to scale</span></div>'+
- '<div class="pf-rack-box">'+rack()+'<div class="pf-lane-summary">'+details+'</div><div class="pf-rack-foot"><span><b>1–4:</b> Calibration in duplicate</span><span><b>5–6:</b> Quality controls</span></div></div>'+
- '<div class="pf-steps-header"><h3>Combined CAL/QC workflow</h3><span>6 steps</span></div><div class="pf-actions">'+workflow+'</div>'+
- '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Before patient testing:</strong> Confirm both QC levels and calibration meet the assay acceptance criteria. The 28-day run does not replace extra QC required by a new shipment, lot or current SOP. Never bypass a lockout.</div></div>'+
+ '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span><h2>28-day calibration + QC</h2><p>Calibration and QC are performed together using <strong>all six lanes</strong>. Select the assay group below to review its materials and analyzer status.</p></div><span class="pf-interval">↻ 28 DAYS</span></div>'+
+ '<div class="pf-assay-list">'+groups.map(assay).join("")+'</div>'+
+ '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Illustrated from above</span></div>'+
+ '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>1–4</b> Calibration in duplicate</span><span><b>5–6</b> Bio-Rad QC 1 and QC 2</span></div></div>'+
+ '<div class="pf-steps-header"><h3>Combined CAL/QC procedure</h3><span>6 steps</span></div>'+
+ '<div class="pf-actions">'+w+'</div>'+
+ '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Reconstitution and QC:</strong> Use the current analyte and lot-specific IFU for diluent volume, mixing, stability, calibration acceptance and QC target ranges. The diagrams are visual references, not validated preparation instructions.</div></div>'+
  '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Calibration + QC video</button><button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>'+
- '<p class="source-footnote">PATHFAST rack and cartridge drawing is schematic. Confirm all procedures using the current manufacturer IFU and approved site protocol.</p></section>';
+ '<p class="source-footnote">Instrument material and rack illustrations are simplified and not to scale. Verify all operational steps against the approved PATHFAST instructions.</p></section>';
 }
-window.LAB_PATHFAST_UI={render:render,lanes:lanes};
+window.LAB_PATHFAST_UI={render:render,lanes:lanes,assays:groups.map(x=>x.id)};
 })();
