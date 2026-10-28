@@ -103,6 +103,7 @@ return h+'</section>';
 function sendout(){
 var h=heading('SEND-OUTS / TECH DOCUMENTATION','Lab Sendout Log','Seven steps from the printed Lab Calculator to correct specimen bin placement. RNs chart collection in Athena; only techs complete the electronic Sendout Log.');
 h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
+h+=window.LAB_SENDOUT_VISUAL.formLinks();
 h+=steps([
 ['Tech / RN','Print the Lab Calculator in color','In Athena, select <strong>View Original Image</strong>, then print the original image so the color-coded collection and bag instructions are preserved. Do not print the black-and-white chart preview.'],
 ['RN / Collector','Draw or collect specimens','Collect the ordered specimens according to the verified Lab Calculator and current test directory.'],
@@ -112,13 +113,7 @@ h+=steps([
 ['Lab tech','Complete the Microsoft Forms Sendout Log','Use the Microsoft Form to document the sendout. Enter the required location, receiving laboratory, patient reference, bag/specimen details, temperature groups and photos. Include STAT pickup notes if applicable.'],
 ['Lab tech','Place specimens into the correct bin','After logging, place processed and appropriately packaged specimens in the designated lab and temperature bin/pickup location.']
 ]);
-h+='<h2 class="ops-section-heading">Microsoft Forms: Lab Sendout Log</h2>';
-if(formReady){
-var safe=formURL.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-h+='<div class="ops-action-row"><a class="ops-action primary" href="'+safe+'" target="_blank" rel="noopener noreferrer">Open Lab Sendout Log form ↗</a></div>';
-}else{
-h+='<div class="ops-form-pending"><strong>Lab Sendout Log</strong>Scan the Microsoft Forms QR code posted in the lab to record the sendout.</div>';
-}
+h+=window.LAB_SENDOUT_VISUAL.examples();
 h+=accordion('What goes into the Sendout Log?', 'Use the live form fields for site, date, receiving lab, patient reference, specimen quantities/temperature, and photographs of the bag, requisition, and Lab Calculator. Document STAT pickup notes/confirmation where relevant. <strong>Patient information belongs only in the approved clinical systems and secure Microsoft Form.</strong>',true);
 h+=accordion('Which bin should hold the specimens?', 'Use the dedicated receiving-laboratory and appropriate temperature storage/bin area. Keep routine and STAT bags separate where required and follow the clinic pickup schedule.');
 h+=notice('<strong>Documentation:</strong> Complete the Athena collection note and Microsoft Forms Sendout Log in the approved systems.','amber');
