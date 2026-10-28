@@ -670,18 +670,17 @@ function kitShape(id,filled,context){
   return illustratedSvg(h+'<path d="M97 102 L115 50 H189" fill="none" stroke="#2f91a1" stroke-width="3"/><text x="142" y="43" font-size="11" fill="'+dark+'" font-weight="850">SAMPLE PORT</text>',"Triage lateral flow test device "+(filled?"after liquid sample applied":"before sample transfer"));
  }
  if(id==="torch"||id==="spotfire"){
-  h='<rect x="64" y="26" width="167" height="158" rx="12" fill="#eef5f8" stroke="'+outline+'" stroke-width="3"/>'+
-   '<rect x="82" y="38" width="131" height="35" rx="6" fill="#d6e7ee" stroke="#a9c2cf"/>'+
-   '<path d="M77 84 H216 V160 H77Z" fill="#fcfefe" stroke="#b7cbd4" stroke-width="2"/>'+
-   Array.from({length:13},(_,i)=>'<rect x="'+(84+i*10)+'" y="128" width="7" height="27" rx="2" fill="'+(filled?"#c5e0e6":"#e7f0f4")+'" stroke="#bfced7" stroke-width="1"/>').join("")+
-   '<circle cx="108" cy="90" r="11" fill="'+(filled?"#8fbfd6":"#f4fafc")+'" stroke="#2788b9" stroke-width="3"/>'+
-   '<circle cx="183" cy="90" r="11" fill="'+(filled?specimen:"#f6fafb")+'" stroke="#bf4d59" stroke-width="3"/>'+
-   '<rect x="94" y="165" width="115" height="12" rx="5" fill="#dae9ef"/>'+
-   '<path d="M108 90 L64 60 L20 60" fill="none" stroke="#2b8db7" stroke-width="2"/>'+
-   '<path d="M183 90 L241 57 L297 57" fill="none" stroke="#be5365" stroke-width="2"/>'+
-   '<text x="20" y="52" font-size="10.5" fill="#327a9b" font-weight="830">HYDRATION</text>'+
-   '<text x="241" y="50" font-size="10.5" fill="#a74556" font-weight="830">SAMPLE</text>';
-  return illustratedSvg(h,"BioFire sealed pouch with blue hydration port and red sample port "+(filled?"after transfer":"before transfer"));
+  h='<path d="M60 143 L105 58 L232 58 L264 142 L231 182 L68 182Z" fill="#202b34" stroke="#829aa8" stroke-width="3"/>'+
+   '<path d="M77 142 L112 77 H225 L239 140 H77Z" fill="#111b23" stroke="#3c4e59" stroke-width="2"/>'+
+   '<circle cx="116" cy="95" r="13" fill="'+(filled?specimen:"#f6fafb")+'" stroke="#c9535d" stroke-width="4"/>'+
+   '<circle cx="204" cy="95" r="13" fill="'+(filled?"#8fcbe4":"#f5fafc")+'" stroke="#288fb9" stroke-width="4"/>'+
+   '<path d="M83 139 L231 139" stroke="#4b636f" stroke-width="3"/>'+
+   Array.from({length:12},(_,i)=>'<rect x="'+(94+i*10)+'" y="143" width="7" height="25" rx="2" fill="#b9d6df" stroke="#8faab6"/>').join("")+
+   '<path d="M116 95 L78 34 H25" stroke="#bd5263" stroke-width="2.5" fill="none"/>'+
+   '<path d="M204 95 L243 34 H306" stroke="#278db4" stroke-width="2.5" fill="none"/>'+
+   '<text x="25" y="25" font-family="Arial" font-size="11" fill="#b3485a" font-weight="850">RED · SAMPLE</text>'+
+   '<text x="306" y="25" text-anchor="end" font-family="Arial" font-size="11" fill="#287d9e" font-weight="850">BLUE · HYDRATION</text>';
+  return illustratedSvg(h,"Black BioFire pouch with red sample port left and blue hydration port right, "+(filled?"fluids loaded":"wells empty"));
  }
  if(id==="clinitek")return clinitekKit(context==="hcg"?"hcg":"ua",filled);
   if(id==="febridx"){
@@ -776,6 +775,7 @@ function workflowVisual(sec,title,groupTitle=""){
    '<div class="dev-kit-scenes" style="grid-template-columns:minmax(0,600px);justify-content:center">'+kitScene(id,"before","qc")+'</div>'+
    '<p class="dev-visual-footnote">Remove and prepare all three control levels as directed by the approved pocH-100i SOP. These are control vials, not patient EDTA tubes.</p></div>';
  }
+ if(id==="torch"||id==="spotfire")return "";
  if(id==="piccolo")return "";
  if(id==="pathfast"&&!/(retrieve cartridges|load cartridges|insert the rack)/i.test(title))return "";
  if(!(qc||patient))return "";
@@ -793,6 +793,7 @@ function workflowVisual(sec,title,groupTitle=""){
 }
 function inlineKitVisual(sec,title,depth,rootTitle){
  if(!sec||!collection[sec.id]||sec.archived||sec.id==="piccolo")return "";
+ if(sec.id==="torch"||sec.id==="spotfire")return "";
  if(sec.id==="clinitek")return "";
  if(sec.id==="sysmex"&&/\bqc\b|controls?/i.test(String(rootTitle||"")))return "";
 
