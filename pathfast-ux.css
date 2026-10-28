@@ -120,3 +120,24 @@
 .pcr-guide .pcr-reference-accordion>summary{cursor:pointer}
 .pcr-guide .pcr-flow-option,.pcr-guide .pcr-flow-reset{cursor:pointer}
 @media(max-width:720px){.pfux-start-actions{grid-template-columns:1fr}.pfux-start-actions button{padding:13px}}
+
+
+/* Clinical flow: collection -> patient testing -> provider pathway.
+   Scheduled Calibration + QC is deliberately separate, without a connector/arrow. */
+.pfux-primary-nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pfux-maintenance-section{margin:11px 0 11px;border-top:1px solid #e0e9ef;padding-top:11px}
+.pfux-maintenance-link{width:100%;display:flex;align-items:center;gap:12px;padding:12px 15px;text-align:left;background:#f7fafb;border:1px solid #dce6ec;border-radius:11px;cursor:pointer;box-shadow:none;color:#45677c}
+.pfux-maintenance-link:hover{background:#f0f6f8;border-color:#aacbd8}
+.pfux-maintenance-link.active{background:#ebf3f8;border-color:#80afc2;box-shadow:inset 0 0 0 1px #80afc2}
+.pfux-maintenance-link:focus-visible{outline:3px solid #8bcfcb;outline-offset:2px}
+.pfux-maintenance-icon{width:36px;height:36px;display:grid;place-items:center;flex:none;color:#578194;background:#e8f1f5;border-radius:10px}
+.pfux-maintenance-icon svg{width:19px;height:19px}
+.pfux-maintenance-copy{display:grid;gap:3px;min-width:0;flex:1}
+.pfux-maintenance-copy strong{font-size:11.7px;color:#395c73}
+.pfux-maintenance-copy small{font-size:10.3px;line-height:1.5;color:#7a8e9e}
+.pfux-maintenance-frequency{flex:none;font-size:9px;letter-spacing:.045em;font-weight:850;color:#647f92;background:#e7f0f4;border-radius:6px;padding:6px 8px}
+.pfux-overview-flow-note{font-size:12px;color:#617b8e;line-height:1.8;margin:17px 0}
+.pfux-overview-flow-note strong{color:#2c6377}
+@media(max-width:1050px){.pfux-primary-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.pfux-primary-nav{grid-template-columns:1fr}.pfux-maintenance-link{align-items:flex-start}.pfux-maintenance-frequency{display:none}}
+@media print{.pfux-maintenance-section{display:none!important}}
