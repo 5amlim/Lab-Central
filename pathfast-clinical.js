@@ -49,30 +49,58 @@ window.LAB_PATHFAST_EXTRAS.timing()+
 window.LAB_PATHFAST_EXTRAS.interference()+
 '<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The provider chooses the serial-testing pathway.</p></section>';
 }
-function col(title,tag,statements,kind){
-return '<article class="pcr-decision '+kind+'"><div class="pcr-decision-head"><strong>'+title+'</strong><small>'+tag+'</small></div><div class="pcr-decision-body">'+statements.map(x=>'<p>'+x+'</p>').join("")+'</div></article>';
+function referenceRow(title,subtitle,criteria,kind){
+ return '<article class="pcr-criteria-row '+kind+'">'+
+ '<div class="pcr-criteria-label"><span class="pcr-criteria-marker" aria-hidden="true"></span>'+
+ '<div><strong>'+title+'</strong><small>'+subtitle+'</small></div></div>'+
+ '<ul class="pcr-criteria-list">'+criteria.map(function(item){return '<li>'+item+'</li>';}).join('')+'</ul></article>';
+}
+function routeBranch(value,note,kind){
+ return '<article class="pcr-route-branch '+kind+'"><span class="pcr-route-caption">INITIAL hs-TnI</span>'+
+ '<strong>'+value+'</strong><p>'+note+'</p></article>';
 }
 function pathway(){
-return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I 0/1-hour pathway</h2>'+
-'<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
-'<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
-window.LAB_PATHFAST_EXTRAS.flow()+
-'<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>View the 1-hour interpretation table and flowchart</small></span><span class="pcr-reference-chevron" aria-hidden="true">⌄</span></summary><div class="pcr-reference-content"><h3 class="pcr-section-title">Reference A: Interpreting the 1-hour result</h3><div class="pcr-decisions">'+
-col("Rule-out","Low risk",["Initial hs-TnI <b>&lt;4 ng/L</b>","1-hour delta <b>&lt;3 ng/L</b>","HEART ≤3 and reassuring ECG"],"ruleout")+
-col("Consider discharge","Follow-up review",["Initial hs-TnI <b>≥4 ng/L</b> with 1-hour delta <b>&lt;3 ng/L</b>","Total below <b>21.4 ng/L (F)</b> or <b>29.8 ng/L (M)</b>","HEART ≤3 and cardiology follow-up within 48–72 hours; may repeat 2-hour troponin"],"consider")+
-col("Observe / consult","Further assessment",["1-hour delta <b>&gt;3 and &lt;20 ng/L</b> with total &lt;90 ng/L","Or total above the sex-specific threshold but &lt;90 ng/L, or HEART &gt;3","Real-time cardiology consult, risk stratification or transfer"],"observe")+
-col("Rule-in / transfer","Urgent escalation",["Initial hs-TnI <b>≥90 ng/L</b>","Or 1-hour delta <b>≥20 ng/L</b>","Or 1-hour total <b>≥90 ng/L</b>: transfer"],"transfer")+
-'</div><p class="pcr-foot">Clinical reference: “Step 4: interpret the 1-hour result”. Verify against the current approved protocol.</p>'+
-'<h3 class="pcr-section-title">Reference B: 0/1-hour pathway overview</h3><div class="pcr-map">'+
-'<div class="pcr-map-start"><strong>Chest pain presentation</strong><span>Initial hs-TnI (0 hour) + ECG</span></div>'+
-'<div class="pcr-map-down">↓</div><div class="pcr-map-three">'+
-'<div class="pcr-map-branch ruleout"><h4>Initial &lt;4 ng/L</h4><p>Evaluate symptom onset &gt;3 hours and HEART ≤3 for possible discharge; for symptoms ≤3 hours, follow the 1-hour repeat pathway.</p></div>'+
-'<div class="pcr-map-branch observe"><h4>Initial 4 to &lt;90 ng/L</h4><p>Repeat hs-TnI at 1 hour; assess delta, total, ECG and HEART score.</p></div>'+
-'<div class="pcr-map-branch transfer"><h4>Initial ≥90 ng/L</h4><p>Rule-in / ED transfer for ACS or NSTEMI evaluation.</p></div>'+
-'</div><div class="pcr-map-down">↓</div>'+
-'<div class="pcr-map-results"><span class="ruleout">Rule-out / discharge criteria</span><span class="consider">Consider 2-hour repeat / close follow-up</span><span class="observe">Observe / consult</span><span class="transfer">Rule-in / transfer</span></div></div>'+
-'<div class="pcr-tech-note"><strong>Provider-only clinical interpretation</strong><p>Evaluate symptom onset, ECG, HEART score, serial troponin values, units and clinical presentation together. Elevated troponin may indicate myocardial injury but does not alone establish MI. PATHFAST high-sensitivity results should not be trended directly with conventional Triage troponin values.</p></div>'+
-'<p class="pcr-foot">Clinical reference: “Primary Option: hs-TnI 0/1-Hour Chest Pain Pathway” and PATHFAST Clinic One-Page Guide. Provider use only.</p></div></details></section>';
+ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I 0/1-hour pathway</h2>'+
+ '<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
+ '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
+ window.LAB_PATHFAST_EXTRAS.flow()+
+ '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>1-hour interpretation and initial-result routing</small></span><span class="pcr-reference-chevron" aria-hidden="true">⌄</span></summary>'+
+ '<div class="pcr-reference-content pcr-compact-reference">'+
+ '<header class="pcr-reference-subheading"><div><span class="pcr-eyebrow">RESULT INTERPRETATION</span><h3>1-hour result criteria</h3></div><span class="pcr-reference-static">Reference only</span></header>'+
+ '<div class="pcr-criteria-table" aria-label="One-hour troponin reference criteria">'+
+ referenceRow("Rule-out","Low-risk review",[
+  "Initial hs-TnI <b>&lt;4 ng/L</b>",
+  "1-hour delta <b>&lt;3 ng/L</b>",
+  "HEART ≤3 and reassuring ECG"
+ ],"ruleout")+
+ referenceRow("Consider discharge","Follow-up review",[
+  "Initial hs-TnI <b>≥4 ng/L</b> with 1-hour delta <b>&lt;3 ng/L</b>",
+  "Total below <b>21.4 ng/L (F)</b> or <b>29.8 ng/L (M)</b>",
+  "HEART ≤3 and cardiology follow-up within 48–72 hours; may repeat 2-hour troponin"
+ ],"consider")+
+ referenceRow("Observe / consult","Further assessment",[
+  "1-hour delta <b>&gt;3 and &lt;20 ng/L</b> with total &lt;90 ng/L",
+  "Or total above the sex-specific threshold but &lt;90 ng/L, or HEART &gt;3",
+  "Real-time cardiology consult, risk stratification or transfer"
+ ],"observe")+
+ referenceRow("Rule-in / transfer","Urgent escalation",[
+  "Initial hs-TnI <b>≥90 ng/L</b>",
+  "Or 1-hour delta <b>≥20 ng/L</b>",
+  "Or 1-hour total <b>≥90 ng/L</b>: transfer"
+ ],"transfer")+
+ '</div>'+
+ '<header class="pcr-reference-subheading pcr-route-heading"><div><span class="pcr-eyebrow">INITIAL RESULT</span><h3>Where the 0-hour result leads</h3></div><span class="pcr-reference-static">Provider assessment</span></header>'+
+ '<div class="pcr-simple-map" aria-label="Initial troponin routing overview">'+
+ '<div class="pcr-route-start"><span class="pcr-route-start-icon" aria-hidden="true">●</span><div><strong>Chest pain presentation</strong><small>Initial hs-TnI (0 hour) + ECG</small></div></div>'+
+ '<div class="pcr-route-connector" aria-hidden="true"><span>↓</span></div>'+
+ '<div class="pcr-route-branches">'+
+ routeBranch("&lt;4 ng/L","Assess symptom onset and HEART score. Onset &gt;3 hours with HEART ≤3 may support provider-directed discharge; for onset ≤3 hours, use 1-hour repeat pathway.","ruleout")+
+ routeBranch("4 to &lt;90 ng/L","Obtain the 1-hour repeat and review delta, total, ECG and HEART score.","observe")+
+ routeBranch("≥90 ng/L","Source pathway identifies rule-in / ED transfer for ACS or NSTEMI assessment.","transfer")+
+ '</div></div>'+
+ '<div class="pcr-reference-endnote"><strong>For clinical interpretation:</strong> Assess the ECG, symptoms, HEART score, actual serial sampling times, assay units, and results together. Elevated troponin can indicate myocardial injury without establishing MI. PATHFAST high-sensitivity troponin and conventional Triage values should not be directly trended.</div>'+
+ '<p class="pcr-foot">References: “Step 4: interpret the 1-hour result”, “Primary Option: hs-TnI 0/1-Hour Chest Pain Pathway”, and PATHFAST Clinic One-Page Guide. Provider use only; verify the approved protocol.</p>'+
+ '</div></details></section>';
 }
 if(typeof window!=='undefined'&&typeof window.addEventListener==='function'&&typeof document!=='undefined'){
  let printState=[];
