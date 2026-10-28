@@ -530,6 +530,31 @@ function pathfastActionVisual(stage,mode="patient"){
  return '<figure class="pf-action-figure"><div class="pf-action-heading">'+tag+'</div><div class="pf-action-image">'+pic+'</div><figcaption>'+note+'</figcaption></figure>';
 }
 
+/* Three distinct Sysmex EIGHTCHECK 3WP QC vials.
+   Low (red cap), Normal (white cap), High (black cap). */
+function eightcheckControlSvg(){
+ const vials=[
+  {x:56,level:"LOW",code:"3WP-L",cap:"#d84646",stripe:"#d84847"},
+  {x:161,level:"NORMAL",code:"3WP-N",cap:"#f7f8f9",stripe:"#2d9f90"},
+  {x:266,level:"HIGH",code:"3WP-H",cap:"#20242a",stripe:"#b34e42"}
+ ];
+ const art=vials.map(v=>{
+  const x=v.x;
+  return '<g><ellipse cx="'+(x+37)+'" cy="187" rx="33" ry="5" fill="#d9e3e8"/>'+
+    '<rect x="'+(x+6)+'" y="53" width="63" height="133" rx="15" fill="#6e2630" stroke="#794853" stroke-width="2.5"/>'+
+    '<rect x="'+(x+5)+'" y="30" width="65" height="38" rx="10" fill="'+v.cap+'" stroke="#7c8a90" stroke-width="2.5"/>'+
+    Array.from({length:8},(_,i)=>'<path d="M'+(x+11+i*7)+' 35v25" stroke="'+(v.level==="HIGH"?"#59606b":v.level==="LOW"?"#bc393c":"#c1ced3")+'" stroke-width="1.5"/>').join("")+
+    '<rect x="'+(x+7)+'" y="90" width="61" height="72" rx="4" fill="#f6fafb"/>'+
+    '<rect x="'+(x+7)+'" y="91" width="61" height="20" fill="'+v.stripe+'"/>'+
+    '<text x="'+(x+37)+'" y="105" text-anchor="middle" font-size="9.3" font-weight="850" fill="#fff">EIGHTCHECK</text>'+
+    '<text x="'+(x+37)+'" y="126" text-anchor="middle" font-size="11" font-weight="900" fill="#394c59">'+v.code+'</text>'+
+    '<text x="'+(x+37)+'" y="145" text-anchor="middle" font-size="11" fill="#526b76">1.5 mL</text>'+
+    '<text x="'+(x+37)+'" y="207" text-anchor="middle" font-size="12" font-weight="900" fill="#286276">'+v.level+'</text>'+
+    '</g>';
+ }).join("");
+ return illustratedSvg(art,'Three distinct Sysmex EIGHTCHECK-3WP blood control vials: low with red cap, normal with white cap, high with black cap','0 0 390 220');
+}
+
 function kitShape(id,filled,context){
  const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
  const specimen=filled?sampleColor:"#e5f1f5";
@@ -540,6 +565,7 @@ function kitShape(id,filled,context){
  }
  if(id==="pathfast")return pathfastCartridgeSvg(filled);
  if(id==="sysmex"){
+  if(context==="qc")return eightcheckControlSvg();
   h='<rect x="114" y="38" width="91" height="146" rx="15" fill="#edf7fa" stroke="'+outline+'" stroke-width="3"/>'+
    '<rect x="105" y="26" width="109" height="30" rx="7" fill="#9c69b3" stroke="#7c92a1" stroke-width="3"/>'+
    '<path d="M119 109 H200 V164 Q200 179 185 180 H135 Q119 178 119 162Z" fill="'+sampleColor+'" opacity="'+(filled?'.78':'.46')+'"/>'+
@@ -636,8 +662,8 @@ function kitScene(id,stage,context){
  const opaque=["torch","spotfire","idnow","visby"].includes(id);
  const noCartridge=id==="sysmex";
  const qc=context==="qc";
- const title=noCartridge?(loaded?"TUBE AT ANALYZER":"COLLECTION TUBE"):opaque?(loaded?"AFTER TRANSFER":"UNPREPARED KIT"):qc?(loaded?"QC MATERIAL APPLIED":"BEFORE QC"):what;
- const note=opaque?"Closed pouches and cartridges conceal the sample after transfer.":"Sample position is schematic; follow the assay IFU for actual fill and handling.";
+ const title=id==="sysmex"&&qc?"EIGHTCHECK 3WP · 3 CONTROL LEVELS":noCartridge?(loaded?"TUBE AT ANALYZER":"COLLECTION TUBE"):opaque?(loaded?"AFTER TRANSFER":"UNPREPARED KIT"):qc?(loaded?"QC MATERIAL APPLIED":"BEFORE QC"):what;
+ const note=id==="sysmex"&&qc?"Use EIGHTCHECK-3WP Low, Normal and High controls. Follow the manufacturer mixing, warm-up and QC procedure.":opaque?"Closed pouches and cartridges conceal the sample after transfer.":"Sample position is schematic; follow the assay IFU for actual fill and handling.";
  return '<div class="dev-kit-view"><div class="dev-kit-state">'+title+'</div><div class="dev-kit-drawing">'+kitShape(id,loaded,context)+'</div><p>'+note+'</p></div>';
 }
 function workflowVisual(sec,title,groupTitle=""){
