@@ -130,3 +130,25 @@
 .pf-action-figure figcaption{color:#657f90;font-size:11.5px;line-height:1.7;padding:12px 16px 14px;border-top:1px solid #e4edf2}
 @media(max-width:700px){.pf-prep-focused{padding:12px}.pf-prep-focus-head{gap:9px}.pf-action-image{min-height:170px;padding:7px}.pf-action-heading{padding:10px 12px}.pf-action-figure figcaption{padding:9px 11px;font-size:10.5px}}
 @media print{.pf-action-figure{break-inside:avoid}.pf-action-image{min-height:0}.pf-action-image svg{max-height:300px}}
+
+
+/* Calibration + QC: full-width readable screen references, especially operation and assay selection. */
+.pf-calibration-guide .pf-workflow-detail .pfs-reference.pfs-rebuilt{width:100%;max-width:1100px;margin:10px auto 16px;padding:16px 18px}
+.pf-calibration-guide .pf-workflow-detail .pfs-rebuilt .pfs-shell{width:100%;max-width:980px}
+.pf-calibration-guide .pfs-rebuilt .pfs-blue-bar{font-size:18px;padding:11px 13px}
+.pf-calibration-guide .pfs-rebuilt .pfs-status{font-size:11px;padding:11px 15px}
+.pf-calibration-guide .pfs-rebuilt .pfs-assay-option,
+.pf-calibration-guide .pfs-rebuilt .pfs-item-option{font-size:16px;padding:19px 20px;min-height:60px}
+.pf-calibration-guide .pfs-rebuilt .pfs-menu-caption,
+.pf-calibration-guide .pfs-rebuilt .pfs-item-caption{font-size:13px;padding:14px 18px}
+.pf-calibration-guide .pfs-rebuilt .pfs-target-cue{font-size:10px!important;padding:4px 7px}
+.pf-calibration-guide .pfs-rebuilt .pfs-item-actions span{font-size:14px;padding:12px 27px}
+.pf-calibration-guide .pfs-rebuilt .pfs-heading{font-size:12px}
+.pf-calibration-guide .pfs-rebuilt .pfs-heading span{font-size:11.5px;font-weight:850}
+@media(max-width:720px){
+ .pf-calibration-guide .pf-workflow-detail .pfs-reference.pfs-rebuilt{padding:9px;max-width:100%}
+ .pf-calibration-guide .pfs-rebuilt .pfs-assay-option,
+ .pf-calibration-guide .pfs-rebuilt .pfs-item-option{font-size:12.5px;padding:12px;min-height:46px}
+ .pf-calibration-guide .pfs-rebuilt .pfs-target-cue{font-size:8px!important}
+ .pf-calibration-guide .pfs-rebuilt .pfs-blue-bar{font-size:14px}
+}
