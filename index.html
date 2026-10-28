@@ -631,6 +631,7 @@ function renderCalculators(){
  ['04','Finish the lab request','Save the Lab Calculator printout as a PDF. Follow the full Lab Order Workflows for uploading it to the chart, scheduling, and appointment-day printing.']
  ].map(x=>`<article class="flow-step"><span class="flow-number">${x[0]}</span><strong>${safeHtml(x[1])}</strong><p>${safeHtml(x[2])}</p></article>`).join('')}</div>`;
  h+=`<div class="tool-bottom-link"><span>Need the full intake, upload and scheduling instructions?</span><button type="button" data-go="orders">Open full lab order workflows <span>→</span></button></div>`;
+ h+=`<div class="calculator-sendout-guide"><span class="calculator-sendout-icon">${svg('package')}</span><div><strong>Ready to send specimens?</strong><p>RN collects using the calculator. Lab tech processes, packages and submits the electronic log.</p></div><button type="button" data-go="sendout-log">Sendout Log instructions →</button></div>`;
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
@@ -731,7 +732,21 @@ function externalFlow(){
  ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, the tech or RN returns the completed request to front desk. Front desk schedules the patient.'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
+ h+=collectionProcessingHandoff();
  return h;
+}
+function collectionProcessingHandoff(){
+ const items=[
+ ['RN / COLLECTOR','test-tubes','Collect using the Lab Calculator','Use the color Lab Calculator to select tubes, draw volumes, order of draw and labels.'],
+ ['RN','clipboard-check','Document the draw and hand off samples','Record collection in Athena using the approved .rn workflow and give the labeled specimens, requisition and calculator to the lab tech.'],
+ ['LAB TECH','settings','Process specimens','Verify labels, centrifuge, aliquot and prepare specimens using the test directory and calculator temperature/processing instructions.'],
+ ['LAB TECH','package','Package the correct transport bags','Keep receiving labs and room-temperature, refrigerated or frozen groups in their proper bags. Separate STAT from routine where required. Place matching paperwork in the outside sleeve.'],
+ ['LAB TECH','file-text','Complete the Sendout Log','Photograph specimen containers, sealed bags and requisition. Submit the correct regional secure Microsoft Form, verify submission and put bags in the appropriate pickup or storage bin.']
+ ];
+ return '<section class="collection-handoff" aria-label="RN collection and lab tech specimen handoff">'+
+ '<div class="collection-handoff-heading"><span>APPOINTMENT DAY · SENDOUT HANDOFF</span><h2>RN collection → Tech processing → Electronic log</h2><p>Follow the correct roles for send-out specimens after the chart and collection plan are ready.</p></div>'+
+ '<div class="collection-handoff-grid">'+items.map((x,i)=>'<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+x[0]+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><p>'+safeHtml(x[3])+'</p></div></article>').join('')+'</div>'+
+ '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 function inhouseFlow(){
  let h=`<div class="workflow-head"><div><span class="eyebrow">IN-HOUSE ORDERS</span><h2>Orders placed by the clinical team</h2><p>Orders placed in Athena by the clinical team. Follow current ordering and collection procedures.</p></div><span class="workflow-role-pill">Provider · Tech / RN</span></div>`;
@@ -742,7 +757,8 @@ function inhouseFlow(){
  ['Document and complete the handoff','Upload the calculator instructions when sending specimens out. Coordinate scheduling with front desk if the collection requires an appointment. For instrument testing, follow the appropriate instrument procedure and documentation workflow.']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
- h+=`<p class="source-footnote">The in-house sequence is a proposed quick-reference workflow for review. The external requisition escalation and Navigator-task process are shown separately.</p>`;
+ h+=collectionProcessingHandoff();
+ h+=`<p class="source-footnote">Follow the approved collection and send-out procedure. External requisition escalation and Navigator tasks are documented separately.</p>`;
  return h;
 }
 function renderOrders(tab='external'){
