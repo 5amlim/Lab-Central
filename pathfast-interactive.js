@@ -8,7 +8,7 @@ let baselineMinutes=720;
 function displayTime(total){
  const m=((total%1440)+1440)%1440;
  const h=Math.floor(m/60),minute=m%60;
- return String(h%12||12)+":"+String(minute).padStart(2,"0")+" "+(h>=12?"PM":"AM");
+ return String(h%12||12)+":"+String(minute).padStart(2,"0")+" "+(h>=12?"PM":"AM")+(total>=1440?" (next day)":"");
 }
 function inputTime(total){
  const m=((total%1440)+1440)%1440;
