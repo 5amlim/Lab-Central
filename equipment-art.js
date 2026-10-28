@@ -546,18 +546,49 @@ function pathfastResultsSvg(mode="patient"){
  return illustratedSvg(h,"PATHFAST post-run review showing illustrative result report and verification checklist with no real patient data","0 0 980 370");
 }
 
+/* PATHFAST preparation: removable six-slot metal rack rests in a clear
+   loading base before patient cartridges are inserted. Original schematic. */
+function pathfastRackBaseSvg(){
+ const slots=Array.from({length:6},(_,i)=>{
+  const x=266+i*103;
+  return '<g><rect x="'+x+'" y="125" width="84" height="108" rx="8" fill="#d5e1e7" stroke="#8fa9b6" stroke-width="2.4"/>'+
+   '<rect x="'+(x+9)+'" y="135" width="66" height="89" rx="5" fill="#edf4f7" stroke="#a4b9c3" stroke-width="2"/>'+
+   '<path d="M'+(x+14)+' 143 v73 M'+(x+70)+' 143 v73" stroke="#fff" stroke-width="3" opacity=".85"/>'+
+   '<text x="'+(x+42)+'" y="250" text-anchor="middle" font-size="13" font-weight="800" fill="#55778a">'+(i+1)+'</text></g>';
+ }).join('');
+ const h='<defs><linearGradient id="pf-metal-empty" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f7fbfe"/><stop offset=".5" stop-color="#b6c9d2"/><stop offset="1" stop-color="#edf5f8"/></linearGradient></defs>'+
+ '<ellipse cx="520" cy="370" rx="420" ry="22" fill="#cddde4" opacity=".38"/>'+
+ '<path d="M174 311 L275 264 L828 264 L916 311 L835 370 L260 370Z" fill="#d6f1f9" fill-opacity=".42" stroke="#83b7cc" stroke-width="4"/>'+
+ '<path d="M174 311 L260 370 L835 370 L916 311 L916 337 L835 395 L260 395 L174 337Z" fill="#bde1ee" fill-opacity=".30" stroke="#96c3d4" stroke-width="3"/>'+
+ '<path d="M212 309 L287 277 L812 277 L880 309 L817 354 L279 354Z" fill="#f3fcff" fill-opacity=".38" stroke="#b0d6e4" stroke-width="2"/>'+
+ '<path d="M237 116 L853 116 L853 246 L237 246Z" fill="url(#pf-metal-empty)" stroke="#7d9bab" stroke-width="5" rx="7"/>'+
+ slots+
+ '<path d="M235 120 L852 120 M235 245 L852 245" stroke="#edf6fa" stroke-width="8" stroke-linecap="round"/>'+
+ '<path d="M879 178 L879 263 M865 245 L879 266 L893 245" fill="none" stroke="#198b95" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<rect x="35" y="66" width="230" height="39" rx="10" fill="#e7f3f7" stroke="#c5dce6"/>'+
+ '<text x="150" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="850" fill="#2a6981">METAL RACK · 6 LANES</text>'+
+ '<path d="M265 87 H297 L310 116" fill="none" stroke="#4d8094" stroke-width="3"/>'+
+ '<rect x="35" y="311" width="154" height="40" rx="10" fill="#e3f6f8" stroke="#c0e1e7"/>'+
+ '<text x="112" y="337" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="850" fill="#20798b">CLEAR BASE</text>'+
+ '<path d="M188 332 L213 326" stroke="#4b95a6" stroke-width="3"/>';
+ return illustratedSvg(h,"Removable PATHFAST six-lane aluminum rack above its clear loading base, with arrow showing placement into the base","0 0 1000 420");
+}
+
 function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
- const pic=stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
+ const pic=stage==="base"?pathfastRackBaseSvg():
+ stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
  stage==="rack"?pathfastRackSvg(mode):
  stage==="tips"?pathfastTipRackSvg(mode):
  stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
- const tag=stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
+ const tag=stage==="base"?"REMOVE METAL RACK · PLACE IN CLEAR BASE":
+ stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
  stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
  stage==="tips"?"SIX LANE TIP POSITIONS":
  stage==="results"?"RESULT AND STATUS VERIFICATION":"CHECK THE UNUSED REAGENT CARTRIDGE";
- const note=stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
+ const note=stage==="base"?"With the instrument accessible and idle, carefully remove the metal six-slot cartridge rack and seat it in its clear loading base before inserting cartridges.":
+ stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
  stage==="rack"?"Six-slot aluminum rack; actual occupied lanes and assay assignments must match the instrument display.":
  stage==="tips"?"Use approved new tips in each active position. Follow the operator manual and the instrument display.":
  stage==="results"?"Review actual instrument output, flags and calibration/QC acceptability. Follow reporting and disposal procedures; this is a schematic reference, not a result.":
