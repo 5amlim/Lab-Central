@@ -139,3 +139,18 @@
 .pcr-time-input-shell svg{flex:none;width:20px;height:20px;fill:none;stroke:#253b43;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .pcr-time-help{font-size:10px;line-height:1.4;color:#628b90;max-width:220px}
 @media(max-width:600px){.pcr-time-input-shell{width:100%}.pcr-time-input-label .pcr-time-input-shell input{flex:1}}
+
+/* Compact, visible criteria beneath the provider verification question. */
+.pcr-ruleout-review{margin:13px 15px 0;border:1px solid #d6e8e7;border-radius:11px;background:#f8fcfb;overflow:hidden}
+.pcr-ruleout-review-head{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:11px 13px;background:#edf7f4;border-bottom:1px solid #dbeae7}
+.pcr-ruleout-review-head strong{font-size:11.5px;color:#276d66}
+.pcr-ruleout-review-head span{font-size:10px;font-weight:720;color:#6c8b89}
+.pcr-ruleout-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.pcr-ruleout-review-item{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-bottom:1px solid #e4eeec;min-width:0}
+.pcr-ruleout-review-item:nth-child(odd){border-right:1px solid #e4eeec}
+.pcr-review-open-dot{width:9px;height:9px;border:1.5px solid #7eaca7;border-radius:3px;flex:none;margin-top:3px}
+.pcr-ruleout-review-item b{display:block;font-size:10.8px;color:#345f6a;line-height:1.3}
+.pcr-ruleout-review-item p{font-size:10px;color:#607e88;line-height:1.5;margin:3px 0 0}
+.pcr-ruleout-review-note{margin:0;padding:10px 13px;font-size:10px;line-height:1.6;color:#876c40;background:#fbf8ef}
+.pcr-ruleout-review-note strong{color:#73572e}
+@media(max-width:700px){.pcr-ruleout-review-grid{grid-template-columns:1fr}.pcr-ruleout-review-item:nth-child(odd){border-right:0}.pcr-ruleout-review-head{align-items:flex-start;flex-direction:column;gap:3px}}
