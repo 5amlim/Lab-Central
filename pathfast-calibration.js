@@ -221,6 +221,7 @@ function render(){
       window.LAB_PATHFAST_SCREEN.start("cal")+
       '<p class="pf-workflow-note">Seat the rack fully in PATHFAST, install one new tip for each used lane, close the cover, review on-screen lane assignments, then select START and confirm. Follow displayed run instructions. Typical run time is approximately 17 minutes.</p>');
   h+=step(8,'Review calibration and QC','Confirm acceptable results and gray/ready status',
+      (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('results','cal'):'')+
       status(group)+
       '<p class="pf-workflow-note">Review calibration and both Bio-Rad QC results against lot-specific criteria. Confirm the assay pill has returned to gray before patient testing. Do not use patient assays if CAL/QC remains locked or controls fail.</p>');
   if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 8</span><button type="button" class="primary" data-pf-next '+(currentStep===8?'disabled':'')+'>Next step →</button></div>';
