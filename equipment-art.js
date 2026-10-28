@@ -145,7 +145,7 @@ function render(sec){
  return '<section class="equipment-overview" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
  '<div class="equipment-information"><div class="equipment-overline">EQUIPMENT REFERENCE</div><h2>'+sec.title+'</h2><p>'+label+'</p>'+
  '<dl><div><dt>Specimen</dt><dd>'+item.tip+'</dd></div><div><dt>Instructions</dt><dd>Use the procedure tabs for operation, QC and handling.</dd></div></dl>'+
- '<span class="equipment-art-note">Simplified instrument illustration · not to scale</span></div></section>';
+ '</div></section>';
 }
 
 /* Piccolo-specific teaching images. User-supplied disc and gray transfer-tool photos are embedded at reduced resolution. */
@@ -176,7 +176,7 @@ function piccoloDiscSvg(filled=false,port=true){
  '<path d="M201 169 L264 208 L307 208" fill="none" stroke="#c14c59" stroke-width="2.5"/>'+
  '<text x="308" y="204" font-size="12" fill="#ab4756" font-weight="850">FILL CHAMBER</text>'+
  '<text x="308" y="220" font-size="10.5" fill="#68889a">Follow molded fill marks</text>'+
- '<text x="170" y="304" font-size="11" fill="#708d9e" text-anchor="middle">Diagram schematic · align with actual disc</text></svg>';
+ '<text x="170" y="304" font-size="11" fill="#708d9e" text-anchor="middle">Keep sample within the molded fill marks</text></svg>';
 }
 function piccoloPipetteSvg(){
  return '<svg class="pic-pipette-svg" viewBox="0 0 440 180" role="img" aria-label="Gray Piccolo transfer pipette, separate disposable sample tip, and a 100 microliter sample">'+
@@ -187,7 +187,7 @@ function piccoloPipetteSvg(){
  '<path d="M319 82 L410 85 L410 87 L319 88Z" fill="#d6e3e9" stroke="#809baa" stroke-width="2"/>'+
  '<rect x="315" y="79" width="12" height="11" rx="4" fill="#c5d0d5"/>'+
  '<path d="M341 84 L410 85 L410 87 L341 87Z" fill="#c03a43" opacity=".7"/>'+
- '<text x="123" y="45" font-size="13" fill="#385b6d" font-weight="850">GRAY PIPETTE / TRANSFER DEVICE</text>'+
+ '<text x="220" y="45" text-anchor="middle" font-size="12" fill="#385b6d" font-weight="850">GRAY PIPETTE + TRANSFER TIP</text>'+
  '<path d="M160 48 L160 63" stroke="#7894a3" stroke-width="2"/>'+
  '<text x="308" y="136" font-size="12" fill="#276c7e" font-weight="850">DISPOSABLE TIP</text>'+
  '<path d="M344 122 L357 90" stroke="#238a9a" stroke-width="2"/>'+
@@ -211,7 +211,7 @@ function piccoloLoadingSvg(){
  '<text x="421" y="168" fill="#6c8b9b" font-size="10.5" text-anchor="middle">near disc center</text>'+
  '<text x="38" y="35" fill="#446e86" font-size="13" font-weight="850">TILT DISC ~45°</text>'+
  '<text x="38" y="52" fill="#6c8c9d" font-size="10.5">Port above fill line</text>'+
- '<text x="252" y="292" font-size="11" fill="#718a9b" text-anchor="middle">Illustrative side/top view, not to scale</text></svg>';
+ '<text x="252" y="292" font-size="11" fill="#718a9b" text-anchor="middle">Fill the marked chamber · avoid bubbles</text></svg>';
 }
 function piccoloVisual(text){
  const t=String(text).toLowerCase();
@@ -232,7 +232,7 @@ function piccoloVisual(text){
  }else{
   pieces='<article class="pic-vis-card"><strong>Place disc in analyzer drawer</strong>'+piccoloAnalyzerSvg()+'<span>Position the filled disc in the front drawer, then close the drawer and follow the analyzer prompts.</span></article>';
  }
- return '<section class="pic-step-visual" aria-label="Piccolo sample preparation images"><div class="pic-step-head"><strong>PICCOLO · VISUAL REFERENCE</strong><span>Sample handling illustration</span></div><div class="pic-vis-grid">'+pieces+'</div><p class="pic-vis-footnote">Images are training references based on the supplied photos. Follow the approved Piccolo Xpress IFU for the actual disc, pipette and sample port.</p></section>';
+ return '<section class="pic-step-visual" aria-label="Piccolo sample preparation images"><div class="pic-step-head"><strong>PICCOLO · VISUAL REFERENCE</strong><span>Follow each pictured action</span></div><div class="pic-vis-grid">'+pieces+'</div></section>';
 }
 function piccoloAnalyzerSvg(){
  return '<svg viewBox="0 0 430 315" role="img" aria-label="Piccolo Xpress tall blue analyzer with black touchscreen, open front drawer and inserted reagent disc">'+
@@ -250,8 +250,8 @@ function piccoloAnalyzerSvg(){
  '<ellipse cx="205" cy="274" rx="19" ry="7" fill="#e1edf2" stroke="#a7c2d1" stroke-width="2"/>'+
  '<circle cx="216" cy="272" r="4" fill="#b53a43"/>'+
  '<path d="M245 272 L345 263" fill="none" stroke="#2b93a1" stroke-width="2.5"/>'+
- '<text x="351" y="257" font-size="11" font-weight="850" fill="#29677d">DISC DRAWER</text>'+
- '<text x="213" y="309" font-size="10.5" fill="#69889a" text-anchor="middle">Front drawer with reagent disc · simplified view</text></svg>';
+ '<text x="365" y="251" text-anchor="middle" font-size="10" font-weight="850" fill="#29677d">DISC DRAWER</text>'+
+ '<text x="213" y="309" font-size="10.5" fill="#69889a" text-anchor="middle">Close the disc drawer before starting</text></svg>';
 }
 
 
