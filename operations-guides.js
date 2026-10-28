@@ -101,24 +101,24 @@ h+=notice('Follow current Athena documentation requirements and approved procedu
 return h+'</section>';
 }
 function sendout(){
-var h=heading('SEND-OUTS / TECH DOCUMENTATION','Lab Sendout Log','Seven steps from the printed Lab Calculator to correct specimen bin placement. RNs chart collection in Athena; only techs complete the electronic Sendout Log.');
-h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
-h+=window.LAB_SENDOUT_VISUAL.formLinks();
-h+=steps([
-['Tech / RN','Print the Lab Calculator in color','In Athena, select <strong>View Original Image</strong>, then print the original image so the color-coded collection and bag instructions are preserved. Do not print the black-and-white chart preview.'],
-['RN / Collector','Draw or collect specimens','Collect the ordered specimens according to the verified Lab Calculator and current test directory.'],
-['RN','Document in Athena using .rn','RNs chart the collection using the approved <strong>.rn</strong> phrase. RNs do not submit the tech Sendout Log.'],
-['RN → Tech','Bring specimens to the laboratory','Hand the samples to the laboratory technologist for processing, together with the required requisition and calculator reference.'],
-['Lab tech','Process using the Lab Calculator','Verify labeling, draw volumes, centrifugation/aliquoting, temperature, routine vs STAT bag assignments, and required paperwork.'],
-['Lab tech','Complete the Microsoft Forms Sendout Log','Use the Microsoft Form to document the sendout. Enter the required location, receiving laboratory, patient reference, bag/specimen details, temperature groups and photos. Include STAT pickup notes if applicable.'],
-['Lab tech','Place specimens into the correct bin','After logging, place processed and appropriately packaged specimens in the designated lab and temperature bin/pickup location.']
-]);
-h+=window.LAB_SENDOUT_VISUAL.examples();
-h+=accordion('What goes into the Sendout Log?', 'Use the live form fields for site, date, receiving lab, patient reference, specimen quantities/temperature, and photographs of the bag, requisition, and Lab Calculator. Document STAT pickup notes/confirmation where relevant. <strong>Patient information belongs only in the approved clinical systems and secure Microsoft Form.</strong>',true);
-h+=accordion('Which bin should hold the specimens?', 'Use the dedicated receiving-laboratory and appropriate temperature storage/bin area. Keep routine and STAT bags separate where required and follow the clinic pickup schedule.');
-h+=notice('<strong>Documentation:</strong> Complete the Athena collection note and Microsoft Forms Sendout Log in the approved systems.','amber');
-h+='<div class="ops-link-card"><div><strong>Need receiving lab, courier or packaging instructions?</strong><p>Open the Lab send-outs reference for Quest, Cedars, HTRX and Labcorp.</p></div><button type="button" data-go="sendout">Lab send-outs →</button></div>';
-return h+'</section>';
+ var h=heading('SEND-OUTS / LAB TECH DOCUMENTATION','Lab Sendout Log','After specimens reach the laboratory, process and package each send-out using the Lab Calculator, capture the required photos, and submit the regional electronic log.');
+ h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
+ h+=window.LAB_SENDOUT_VISUAL.formLinks();
+ h+='<h2 class="ops-section-heading">Lab tech workflow</h2>';
+ h+=steps([
+ ['Lab tech','Process specimens according to the Lab Calculator','Confirm the ordered tests and receiving laboratory. Verify specimen labels, required tubes, processing, centrifugation/aliquots, stability, and collection/transport volumes against the approved directory.'],
+ ['Lab tech','Prepare the correct bags and containers','Separate specimens by receiving lab, routine versus STAT priority, and room-temperature, refrigerated or frozen requirements. Use the correct transport container and place the matching requisition in the document sleeve. Seal every bag.'],
+ ['Lab tech','Photograph each packaged send-out','Capture the labeled specimen tubes or containers, each sealed transport bag, the matching requisition, and the Lab Calculator reference where requested. Photograph additional bags separately when temperatures or priorities differ.'],
+ ['Lab tech','Open and complete the regional Sendout Log','Choose SoCal, NorCal, New York or Florida above. Enter the site, receiving laboratory, patient reference, specimen quantities, bag contents, temperature, and any applicable STAT pickup details in the secure Microsoft Form. Attach the required photos.'],
+ ['Lab tech','Submit the form and verify the entry','Review the form for the correct patient/order and receiving lab before submission. Confirm the electronic submission succeeded. Correct missing or mismatched information before proceeding.'],
+ ['Lab tech','Place the bags in the designated bin','Place each packaged specimen into the designated receiving-lab/temperature bin, refrigerator, freezer, lockbox or pickup location according to the approved site procedure. Verify the next scheduled courier handoff.']
+ ]);
+ h+=window.LAB_SENDOUT_VISUAL.examples();
+ h+=accordion('What needs to be photographed?', 'Photograph the labeled specimen(s), every sealed transport bag, and the matching requisition. Include Lab Calculator output when the form requests it. The bag image must make temperature and STAT/routine grouping clear. Use only the approved secure form for patient documentation.',true);
+ h+=accordion('How do I group and store multiple bags?', 'Group specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT status. Keep distinct groups in separate correctly labeled transport bags and store in the designated bin or temperature-controlled pickup area. Follow each receiving lab\'s specimen directory.');
+ h+=notice('<strong>Before submitting:</strong> Check that the requisition, specimens, bag contents and electronic log all match. Lab technicians own the sendout log entry.','amber');
+ h+='<div class="ops-link-card"><div><strong>Need specific receiving-lab or courier instructions?</strong><p>Open Lab send-outs for Quest, Cedars, HealthTrackRx and Labcorp.</p></div><button type="button" data-go="sendout">Receiving lab guidance →</button></div>';
+ return h+'</section>';
 }
 window.LAB_OPS={render:function(page,tab){if(page==='outside')return home(tab);if(page==='specimen-dropoff')return dropoff();if(page==='sendout-log')return sendout();return '';},titles:{outside:'Home stool & urine collection','specimen-dropoff':'Specimen drop-off','sendout-log':'Lab Sendout Log'}};
 })();
