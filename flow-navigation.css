@@ -164,3 +164,37 @@
 
 /* Distinguish vendor ordering from quality and compliance references. */
 .sidebar-nav .nav-section:has([data-go="supplies"]){--nav-accent:#2b857e;--nav-tint:#e8f6f3;--nav-deep:#236861}
+
+
+/* Lab requisition intake: source choice is a true navigation decision. */
+.requisition-intake{position:relative;margin:0 0 21px 47px;border:1px solid #d4e5ed;border-left:4px solid #2b8392;background:#fff;border-radius:15px;padding:19px 20px 17px;box-shadow:0 3px 13px #234d6809}
+.requisition-intake-header{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.req-intake-number{position:absolute;left:-55px;top:18px;display:grid;place-items:center;width:38px;height:38px;border:2px solid #b7dddf;border-radius:11px;background:#e2f4f2;color:#166d73;box-shadow:0 0 0 4px var(--bg);font-size:12px;font-weight:850}
+.requisition-intake-header h3{font-size:15px;line-height:1.3;color:#23475e;margin:0 0 5px;font-weight:800}
+.requisition-intake-header p{font-size:12px;line-height:1.5;color:#668095;margin:0}
+.requisition-source-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.requisition-source-option{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:12px;border:1.5px solid #d8e6ec;background:#f9fbfd;cursor:pointer;color:#385974;min-width:0;transition:border-color .15s,background .15s,box-shadow .15s}
+.requisition-source-option:hover{border-color:#7cbac4;background:#f0fafb}
+.requisition-source-option.selected{background:#eaf7f6;border-color:#278b89;box-shadow:inset 0 0 0 1px #278b89}
+.requisition-source-option:focus-visible{outline:3px solid #69b4cc;outline-offset:2px}
+.requisition-source-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#e9f0f5;color:#44718b;flex:none}
+.requisition-source-option.selected .requisition-source-icon{background:#d0ede9;color:#19786f}
+.requisition-source-copy{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.requisition-source-copy strong{font-size:13px;color:#28485e}
+.requisition-source-copy small{font-size:11px;line-height:1.45;color:#758b9c;font-weight:500}
+.requisition-source-indicator{width:20px;height:20px;display:grid;place-items:center;flex:none;border:1px solid #c3d2dc;border-radius:50%;color:white;font-size:12px;font-weight:850}
+.requisition-source-option.selected .requisition-source-indicator{background:#168679;border-color:#168679}
+.requisition-source-instructions{margin-top:13px;background:#f5fafb;border:1px solid #dae9eb;border-radius:11px;padding:15px 17px}
+.req-route-kicker{color:#317b8d;font-size:10px;font-weight:850;letter-spacing:.11em;margin-bottom:6px}
+.requisition-source-instructions h4{font-size:14px;color:#274861;margin:0 0 10px}
+.requisition-source-instructions ol{margin:0;padding-left:19px;display:grid;gap:8px}
+.requisition-source-instructions li{font-size:12px;line-height:1.65;color:#536f81;padding-left:3px}
+.requisition-source-instructions li::marker{font-weight:800;color:#278785}
+.requisition-intake-note{font-size:11px;line-height:1.5;color:#6a8092;margin:12px 0 0}
+@media(max-width:650px){.requisition-intake{margin-left:39px;padding:16px 13px}.req-intake-number{left:-46px;width:35px;height:35px}.requisition-source-options{grid-template-columns:1fr}}
+@media print{.requisition-intake{break-inside:avoid}.requisition-source-option:not(.selected){display:none}.requisition-source-option.selected{box-shadow:none}.requisition-source-instructions{break-inside:avoid}}
+
+/* Clinitek sample timing is a passive categorical badge, never a button. */
+.guide-topic-badge{display:inline-flex;align-items:center;vertical-align:middle;font-size:10px;line-height:1.2;font-weight:850;letter-spacing:.065em;text-transform:uppercase;border:1px solid #b9e2dd;color:#16746e;background:#e4f5f1;padding:4px 8px;border-radius:7px;margin-right:9px;white-space:nowrap}
+.guide-step-pill .guide-topic-badge{font-size:9px;padding:3px 6px;margin-right:6px}
+.guide-card-head h3 .guide-topic-badge{vertical-align:3px}
