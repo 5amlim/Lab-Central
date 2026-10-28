@@ -80,11 +80,11 @@ function sysmexStep(sec,group,title){
  screenGallery([
   {heading:"Select shutdown",screen:"MAIN",items:["QC","Result","Shutdown"],focus:"Shutdown",tip:"On the main analyzer screen, select Shutdown."},
   {heading:"Confirm the sequence",screen:"SHUTDOWN",items:["Execute","Cancel"],focus:"Execute",tip:"Select Execute. Wait through the approximate two-minute cycle."},
-  {heading:"Shutdown complete",screen:"SHUTDOWN COMPLETE",items:["Turn power OFF","Restart"],focus:"Turn power OFF",tip:"When instructed, switch the analyzer off using its main switch. Power it back on for daily QC."}
+  {heading:"Shutdown complete",screen:"SHUTDOWN COMPLETE",items:["Remove tube from sample position","Switch OFF main power","Restart (if selected)"],focus:"",tip:"Follow the completion message and use the physical main power switch, not a touchscreen button. Restart for daily QC."}
  ],"Sysmex pocH-100i")+'</div>';
  if(/turn on the sysmex|start.*analyzer|startup blank check/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {heading:"Power on the analyzer",screen:"INITIALIZING",items:["Power ON","System startup","Please wait"],focus:"System startup",tip:"Switch ON after shutdown and allow the analyzer to initialize."},
-  {heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",items:["Blank check running","Wait","Ready"],focus:"Wait",tip:"Do not begin control testing until the automated blank check completes and readiness is confirmed."}
+  {heading:"Power on the analyzer",screen:"INITIALIZING",items:["Main power switch ON","System startup","Please wait"],focus:"",tip:"Turn on the physical power switch after the completed shutdown and allow initialization."},
+  {heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",items:["Automated blank check","Processing","Ready when complete"],focus:"",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
  ],"Sysmex pocH-100i")+'</div>';
  if(/go to menu|blank check.*today/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"Select Menu, then Str. Data."},
