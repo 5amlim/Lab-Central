@@ -99,6 +99,30 @@ function qcFreezer(){
  h+=words(357,278,'BRT OR NOD · APPROVED CONTROL LOT',14,'#467589');
  return svg(h,'Frozen Piccolo QC materials: BRT and NOD control bottles stored in freezer, use the approved lot','0 0 560 300');
 }
+
+function triageQcControls(){
+ return svg('<rect x="33" y="48" width="170" height="198" rx="15" fill="#e4f4fa" stroke="#7dabbd" stroke-width="4"/>'+
+ '<rect x="47" y="63" width="142" height="171" rx="9" fill="#fbfeff" stroke="#bed9e3"/>'+
+ '<path d="M86 100h66M119 66v64M95 77l47 45M141 77l-47 45" stroke="#4d9fbb" stroke-width="5" stroke-linecap="round"/>'+
+ words(117,200,'FREEZER',16,'#267e9a')+
+ [0,1].map(function(i){const x=264+i*131;return '<ellipse cx="'+(x+40)+'" cy="252" rx="43" ry="8" fill="#e2ebef"/>'+
+ '<rect x="'+x+'" y="102" width="80" height="149" rx="16" fill="#f5fafc" stroke="#94afbf" stroke-width="3"/>'+
+ '<path d="M'+(x+5)+' 182h70v44q-4 17-22 17h-28q-20-3-20-20z" fill="#b36a83" opacity=".55"/>'+
+ '<rect x="'+(x-4)+'" y="83" width="88" height="31" rx="9" fill="'+(i?'#537ea1':'#a65e75')+'" stroke="#8d9ba5" stroke-width="3"/>'+
+ '<rect x="'+(x+9)+'" y="128" width="62" height="60" rx="4" fill="#fff"/>'+
+ words(x+40,144,'TRIAGE',13,'#3e6379')+words(x+40,160,'TOTAL 5',12,'#4c758c')+
+ words(x+40,176,'QC '+(i+1),12,'#41687a')+
+ words(x+40,278,'CONTROL '+(i+1),12,'#4a748a');}).join(''),
+ 'Triage Total 5 liquid QC control vials 1 and 2 stored in a freezer, separate from reusable electronic QC Device','0 0 600 310');
+}
+function generalControls(){
+ return svg([0,1,2].map(function(i){const x=90+i*135;return '<rect x="'+x+'" y="88" width="73" height="153" rx="14" fill="#f7fafb" stroke="#9eb6c2" stroke-width="3"/>'+
+ '<rect x="'+(x-4)+'" y="67" width="81" height="34" rx="9" fill="'+(['#b2646d','#6794a9','#428b82'][i])+'"/>'+
+ '<rect x="'+(x+8)+'" y="127" width="58" height="65" rx="5" fill="#fff"/>'+
+ words(x+37,151,'QC',16,'#4b748b')+words(x+37,171,'LEVEL '+(i+1),11,'#617d91');}).join('')+
+ words(300,281,'CHECK THE SPECIFIC ASSAY QC MATERIALS',14,'#45758b'),
+ 'Illustrative reagent controls, actual brand and storage depend on each analyzer','0 0 600 310');
+}
 function triageQCDevice(){
  return svg('<ellipse cx="296" cy="232" rx="223" ry="12" fill="#d9e7ec"/>'+
  '<rect x="61" y="91" width="466" height="116" rx="15" fill="#f8fafb" stroke="#899eaa" stroke-width="5"/>'+
@@ -185,7 +209,7 @@ function triageScene(title,group){
  const daily=/daily-qc|daily qc/.test(grp),newbox=/new.box|new box/.test(grp);
  const isQC=/qc|control/.test(t)||/qc/.test(grp);
  if(/chip|install|new box/.test(t))return scene('Install the matching CODE CHIP',triageMeter('chip'),'From the main menu select INSTALL NEW CODE CHIP, insert the matching lot chip into the left lower port when prompted, confirm and remove it for storage.');
- if(/freezer|grab the qc sample|qc sample/.test(t)&&!/select|enter|click/.test(t))return scene('Thaw and prepare liquid QC',qcFreezer(),'Illustrative freezer and control bottles. Use the Triage Total 5 controls specified in the local SOP.');
+ if(/freezer|grab the qc sample|qc sample/.test(t)&&!/select|enter|click/.test(t))return scene('Thaw and prepare liquid QC',triageQcControls(),'Illustrative freezer and control bottles. Use the Triage Total 5 controls specified in the local SOP.');
  if(daily&&(/qc device|insert the qc device|cassette/.test(t)))return scene('Reusable electronic QC Device',triageQCDevice(),'Daily device check: no sample port and no pipette. Keep this device in its opaque case.');
  if(/print|record|initial|log/.test(t))return scene('Document the QC result',printout(),'Verify pass/fail, date, user initials and correct log.');
  if(/machine is ready|review|result/.test(t))return scene('Verify the meter status',triageMeter('pass'),'Continue only after acceptable QC and no active lockout.');
@@ -203,7 +227,7 @@ function genericScene(sec,title,group){
   const kind=id==='sysmex'||id==='triage'?'lavender':'green';
   return scene('Collect the correct specimen',tube(kind,kind==='green'?'lithium':'edta'),'Confirm assay-specific specimen, volume, identification and preparation.');
  }
- if(/freezer|fridge|thaw|controls/.test(t)&&qc)return scene('QC material preparation',qcFreezer(),'Use the exact manufacturer-approved controls and storage requirements for this device.');
+ if(/freezer|fridge|thaw|controls/.test(t)&&qc)return scene('QC material preparation',generalControls(),'Use the exact manufacturer-approved controls and storage requirements for this device.');
  if(/insert|load|cassette|cartridge|sample|disc|strip|swab|pipett/.test(t)){
   const kit=art.kitShape?art.kitShape(id,/insert|load|apply|pipett/.test(t),qc?'qc':'patient'):'';
   return scene('Prepare the correct testing material',kit,'Use the actual device, assay and manufacturer-defined collection position.');
@@ -260,7 +284,6 @@ if(triage&&Array.isArray(triage.blocks)){
   }
   const idx=blocks.findIndex(function(b,i){return i>head&&b.type==='list'&&b.level===1&&/Grab the QC sample/i.test(b.text);});
   if(idx>head)blocks.splice(idx,0,{type:'list',level:1,text:'Install the new reagent box CODE CHIP'});
- }
  }
  const daily=blocks.find(function(b){return /Insert the QC Device cassette and press enter to run the daily QC/i.test(b.text);});
  if(daily)daily.text='Insert the reusable QC Device (no sample port) and press Enter to run daily QC. Do not add blood or liquid.';
