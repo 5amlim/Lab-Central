@@ -4,12 +4,13 @@
 "use strict";
 const esc=v=>String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 function timing(){
- return '<div class="pcr-window-rule"><strong>Timing requirement: ±10 minutes</strong>'+
- '<p>Timing begins with the actual 0-hour blood draw, not the result time. Only a sample collected within the corresponding window can be used as that protocol’s timed 1-hour or 2-hour delta specimen. Do not relabel an out-of-window draw or apply a time-specific delta threshold to it.</p></div>'+
+ return '<div class="pcr-window-rule"><strong>Repeat collection: target time through +15 minutes (never early)</strong>'+
+ '<p>Start timing at the actual baseline blood collection, not when the result is reported. A 12:00 PM baseline gives a 1:00 PM target for 0/1-hour testing and a 2:00 PM target for 0/2-hour testing. Do not collect before the target.</p>'+
+ '<p><strong>Clinical review required:</strong> The 0 to +15 minute allowance is a requested site workflow setting. Confirm it is authorized for the local assay-specific delta algorithm before treating any repeat as protocol-valid. ESC 0/1-hour guidance specifies a different window (±10 minutes).</p></div>'+
  '<div class="pcr-time-branches">'+
- '<article class="pcr-valid-time"><span class="pcr-time-badge">0/1 HOUR</span><strong>60 min ± 10 min</strong><p>Target: <b>12:05 PM</b></p><div class="pcr-window-value"><span>ACCEPTABLE COLLECTION</span><b>11:55 AM–12:15 PM</b><small>50–70 min from baseline</small></div></article>'+
- '<article class="pcr-valid-time"><span class="pcr-time-badge alt">0/2 HOUR</span><strong>120 min ± 10 min</strong><p>Target: <b>1:05 PM</b></p><div class="pcr-window-value"><span>ACCEPTABLE COLLECTION</span><b>12:55 PM–1:15 PM</b><small>110–130 min from baseline</small></div></article></div>'+
- '<div class="pcr-invalid-time"><strong>Outside either collection window?</strong><p>Do <b>not</b> use the sample as a 1-hour or 2-hour timed delta point. Record the true collection time, notify the provider, and follow the approved alternative testing plan. A separately reported result may still be clinically assessed using its actual time; it must not be represented as a protocol-timed delta.</p></div>';
+ '<article class="pcr-valid-time"><span class="pcr-time-badge">0/1 HOUR</span><strong>60 min + 0–15 min</strong><p>Target: <b>1:00 PM</b></p><div class="pcr-window-value"><span>REQUESTED COLLECTION WINDOW</span><b>1:00–1:15 PM</b><small>60–75 minutes after 12:00 PM baseline · Never earlier</small></div></article>'+
+ '<article class="pcr-valid-time"><span class="pcr-time-badge alt">0/2 HOUR</span><strong>120 min + 0–15 min</strong><p>Target: <b>2:00 PM</b></p><div class="pcr-window-value"><span>REQUESTED COLLECTION WINDOW</span><b>2:00–2:15 PM</b><small>120–135 minutes after 12:00 PM baseline · Never earlier</small></div></article></div>'+
+ '<div class="pcr-invalid-time"><strong>Outside the authorized collection window?</strong><p>Do <b>not</b> label the sample as a protocol-timed 1-hour or 2-hour delta point. Record the actual collection time, notify the provider and follow the approved alternative testing plan. A separately reported result may still be assessed clinically using its actual timing.</p></div>';
 }
 function plasmaTube(){
  return '<svg class="pcr-plasma-svg" viewBox="0 0 355 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Green-top lithium heparin tube after centrifugation, with pale yellow plasma above buffy coat and red blood cell layer">'+
@@ -47,7 +48,7 @@ function interference(){
  '<div class="pcr-interference-caution"><strong>Separate from serial sampling</strong><p>This is an <b>analytical interference check</b> on the original specimen, not a new 1-hour or 2-hour draw. The provider may still request additional timed or clinically indicated specimens. Do not automatically invalidate or delete the original elevated result.</p></div></section>';
 }
 const questions=[
- {id:"timing",title:"Is the 1-hour sample collected within 50–70 minutes of baseline?",opts:[["yes","Yes, within the ±10-minute window"],["no","No, outside the window"],["pending","No repeat sample collected yet"]]},
+ {id:"timing",title:"Was the 1-hour specimen collected at or after 60 minutes and no later than 75 minutes after baseline, if this interval is approved locally?",opts:[["yes","Yes, 60–75 min, under an approved site protocol"],["no","No, outside the window"],["pending","No repeat sample collected yet"]]},
  {id:"baseline",title:"Which initial hs-TnI reference band applies?",opts:[["low","Below 4 ng/L"],["middle","4 to below 90 ng/L"],["high","90 ng/L or above"]]},
  {id:"onset",title:"For a low initial value, when did symptoms begin?",opts:[["late","More than 3 hours before initial sampling"],["early","3 hours or less"],["unknown","Unclear or unknown"]]},
  {id:"delta",title:"Which 1-hour change band applies?",opts:[["small","Below 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Not available / unclear"]]},
@@ -75,7 +76,7 @@ function flow(){
   if(selected.timing==="no"){
    h+=result("Outside the 1-hour collection window","The draw cannot be designated as the 1-hour delta specimen. Record its true time, notify the provider and follow the alternate testing plan. Do not use a timed 1-hour delta threshold.","warn");
   }else if(selected.timing==="pending"){
-   h+=result("Repeat sampling not yet documented","The timed 1-hour delta cannot be assessed until a sample has been collected within the approved 50–70-minute window. Immediate clinical assessment remains essential.","info");
+   h+=result("Repeat sampling not yet documented","The timed 1-hour delta cannot be assessed until a sample has been collected within the requested 60–75-minute window, once authorized by the site protocol. Immediate clinical assessment remains essential.","info");
   }else if(selected.timing==="yes"){
    if(selected.baseline==="low"){
     h+=question(q("onset"),3);
