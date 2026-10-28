@@ -55,7 +55,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261028-4" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261028-5" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
@@ -440,7 +440,43 @@ function renderCalculators(){
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
-function workflowSteps(steps,start=1){return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><h3>${safeHtml(step[0])}</h3><p>${safeHtml(step[1])}</p>${step[2]==='calculators'?'<button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>':''}</div></article>`).join('')}</div>`;}
+function workflowStepExtras(kind){
+ if(kind==='calculator-upload'){
+  return `<div class="workflow-step-extra">
+  <button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>
+  <section class="chart-upload-guide" aria-label="Upload Lab Calculator to chart">
+    <header class="chart-upload-guide-head"><span class="chart-upload-icon" aria-hidden="true">${svg('file-text')}</span><div><strong>After obtaining the Lab Calculator printout</strong><small>Save the printout and attach it to the patient's chart.</small></div></header>
+    <ol><li>Generate the Lab Calculator printout and <strong>save it as a PDF</strong>.</li>
+    <li>Open the correct patient <strong>chart</strong> in Athena.</li>
+    <li>Click the <strong>hamburger menu (☰)</strong>, then select <strong>Add document</strong>.</li>
+    <li>Upload the saved calculator PDF as a <strong>Clinical document</strong>.</li>
+    <li>Reclassify the uploaded document as <strong>Lab requisition</strong> for this lab request. Confirm it is attached to the correct chart.</li></ol>
+  </section></div>`;
+ }
+ if(kind==='appointment-print'){
+  return `<details class="color-print-guide">
+    <summary><span class="color-print-summary-icon" aria-hidden="true">${svg('file-text')}</span><span class="color-print-summary-label"><strong>How to print the Lab Calculator in color</strong><small>Open illustrated Athena printing instructions</small></span><span class="color-print-chevron" aria-hidden="true">⌄</span></summary>
+    <div class="color-print-guide-body">
+      <p>Open the saved Lab Calculator in Athena. Select <strong>View Original Image</strong>, then print from that view. Do not use the Print link in the chart's embedded document viewer.</p>
+      <div class="color-print-illustration" role="img" aria-label="Illustrated Athena viewer toolbar highlighting View Original Image as correct and crossing out the embedded Print link.">
+        <div class="color-print-mock-head"><span>ATHENA DOCUMENT VIEWER</span><span>ILLUSTRATION</span></div>
+        <div class="color-print-mock-toolbar"><span class="color-print-mock-link">small</span><span class="color-print-mock-sep">|</span><span class="color-print-mock-link">large</span><span class="color-print-mock-link">view in new window</span><span class="color-print-mock-correct"><span aria-hidden="true">✓</span> view original image</span><span class="color-print-mock-link">rotate</span><span class="color-print-mock-wrong">print</span></div>
+        <div class="color-print-legend"><span><b class="correct">✓</b> Use this for the color version</span><span><b class="wrong">×</b> Do not use the chart preview Print link</span></div>
+      </div>
+      <ol><li>Open the saved <strong>Lab Calculator</strong> in the patient's chart.</li>
+      <li>Select <strong>View Original Image</strong> (shown in green above).</li>
+      <li>Use the browser's Print command from the original-image view and confirm the print preview displays the calculator's colors.</li>
+      <li>Also print the patient's <strong>original lab requisition</strong>. Have both documents ready for specimen collection.</li></ol>
+      <p class="color-print-note">The toolbar above is an illustration. If the printout loses colors, check print settings, including background graphics.</p>
+    </div>
+  </details>`;
+ }
+ if(kind==='calculators')return '<button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>';
+ return '';
+}
+function workflowSteps(steps,start=1){
+ return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><h3>${safeHtml(step[0])}</h3><p>${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
+}
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const unresolved=state.reqResolution==='unresolved';
@@ -468,8 +504,9 @@ function externalFlow(){
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the lab calculator','Open the appropriate calculator, verify the tests and specimen requirements, then upload the calculator instructions to the chart or Navigator task.','calculators'],
- ['Return to front desk for scheduling','The tech or RN passes the reviewed request back to front desk and asks front desk to schedule the patient. Scheduling occurs after the missing-information issue has been resolved.']
+ ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save it as a PDF and upload it to the patient chart.','calculator-upload'],
+ ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, the tech or RN returns the completed request to front desk. Front desk schedules the patient.'],
+ ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
  return h;
 }
