@@ -28,27 +28,62 @@ function screen(x,y,w,h,accent){return rect(x,y,w,h,9,"#243a49","#7c939f",2)+rec
 function body(shape,a){
  let v="";
  if(shape==="tower"){
- /* Model-specific front/side vector referenced to Sysmex pocH-100i. */
- v="\n<g aria-label=\"pocH-100i three-quarter front view\">\n<!-- off-white deep analyzer side enclosure -->\n<ellipse cx=\"381\" cy=\"285\" rx=\"169\" ry=\"11\" fill=\"#b4c8d1\" opacity=\".25\"/>\n<path d=\"M342 37 Q363 29 382 34 L503 60 Q531 65 537 97 L542 238 Q537 258 513 268 L370 280 L342 250Z\" fill=\"#e7eef0\" stroke=\"#afbec5\" stroke-width=\"3\"/>\n<path d=\"M372 44 L498 70 Q519 75 522 101 L529 241 Q524 255 509 257 L379 270Z\" fill=\"#fafbfa\" stroke=\"#ccd8dc\" stroke-width=\"2\"/>\n<path d=\"M497 69 Q523 81 524 99 L529 238 Q527 253 511 258 L501 256 Q508 234 504 215 L502 105Z\" fill=\"#e5ebed\"/>\n<path d=\"M420 60 L424 258 M491 78 L504 248\" fill=\"none\" stroke=\"#e1e8e9\" stroke-width=\"2\"/>\n<circle cx=\"432\" cy=\"110\" r=\"3.2\" fill=\"#b9c9ce\"/><circle cx=\"498\" cy=\"217\" r=\"3.2\" fill=\"#b9c9ce\"/>\n<text x=\"459\" y=\"177\" fill=\"#d9e3e5\" stroke=\"#edf1f1\" stroke-width=\".5\" font-family=\"Arial,sans-serif\" font-size=\"23\" font-weight=\"800\" text-anchor=\"middle\">Sysmex</text>\n<rect x=\"520\" y=\"157\" width=\"6\" height=\"48\" rx=\"2\" fill=\"#7d959e\"/>\n\n<!-- curved front shell -->\n<path d=\"M231 48 Q254 30 298 32 L363 38 Q384 44 388 69 L382 244 Q379 266 354 279 L249 270 Q224 262 218 239 Q211 207 214 117 L215 90 Q215 60 231 48Z\" fill=\"url(#equip-white)\" stroke=\"#a4b5be\" stroke-width=\"3\"/>\n<path d=\"M237 54 Q258 39 298 38 L348 44 Q367 47 368 66 L363 153 L350 255 Q342 271 329 271 L255 262 Q228 249 230 223 L228 90 Q226 64 237 54Z\" fill=\"#fbfcfb\" opacity=\".7\"/>\n<path d=\"M235 59 Q259 42 297 42 L348 48\" fill=\"none\" stroke=\"white\" stroke-width=\"4\" opacity=\".8\"/>\n\n<!-- angled color LCD at upper left -->\n<path d=\"M237 71 L344 63 Q357 63 360 76 L356 150 Q355 161 344 164 L231 174 Q222 173 223 157 L225 85 Q225 73 237 71Z\" fill=\"#8a9fab\" stroke=\"#718a96\" stroke-width=\"2.5\"/>\n<path d=\"M236 79 L344 72 Q350 72 351 80 L348 149 L232 164 L233 87Z\" fill=\"#e6f0f3\"/>\n<path d=\"M233 95 L349 87 L348 107 L232 115Z\" fill=\"#c3daec\"/>\n<path d=\"M233 99 L349 91 L348 100 L233 108Z\" fill=\"#b49dc9\"/>\n<path d=\"M237 120 L345 113 L344 131 L236 140Z\" fill=\"#f5f8f9\"/>\n<path d=\"M236 143 L270 141 L269 153 L235 156Z\" fill=\"#995a9c\"/>\n<path d=\"M275 140 L306 138 L306 150 L274 152Z\" fill=\"#6bc4d1\"/>\n<path d=\"M310 138 L342 136 L341 148 L309 150Z\" fill=\"#2ca0cb\"/>\n<text x=\"285\" y=\"106\" font-family=\"Arial,sans-serif\" font-size=\"7.5\" font-weight=\"800\" text-anchor=\"middle\" fill=\"#3f6e90\">READY  •  WHOLE BLOOD</text>\n<text x=\"252\" y=\"151\" font-family=\"Arial,sans-serif\" font-size=\"7\" fill=\"white\" text-anchor=\"middle\">WB</text>\n<text x=\"290\" y=\"149\" font-family=\"Arial,sans-serif\" font-size=\"7\" fill=\"#2c6f81\" text-anchor=\"middle\">QC</text>\n<text x=\"324\" y=\"146\" font-family=\"Arial,sans-serif\" font-size=\"7\" fill=\"white\" text-anchor=\"middle\">RUN</text>\n\n<!-- lettering below LCD -->\n<text x=\"244\" y=\"202\" font-family=\"Arial,sans-serif\" font-size=\"13\" font-weight=\"800\" fill=\"#617580\">pocH-100i</text>\n<path d=\"M251 213 L274 219 L263 223 L250 219Z M256 228 L275 232 L265 237 L253 233Z\" fill=\"#a8b1b3\"/>\n\n<!-- translucent purple access cover with dark sample adapter -->\n<path d=\"M337 161 Q352 153 365 162 Q373 170 375 189 L378 250 Q377 273 364 280 L335 269 Q323 251 324 232 L327 184 Q327 169 337 161Z\" fill=\"#79448d\" stroke=\"#6b417f\" stroke-width=\"2.5\"/>\n<path d=\"M338 168 Q353 160 365 171 L370 241 Q374 256 362 270 L339 263 Q329 248 330 231 L332 185 Q330 175 338 168Z\" fill=\"#aa76b9\" opacity=\".94\"/>\n<path d=\"M340 174 Q347 170 354 175 L358 246 Q359 259 353 268 L342 262Z\" fill=\"#dec1e1\" opacity=\".42\"/>\n<rect x=\"337\" y=\"184\" width=\"27\" height=\"14\" rx=\"6\" fill=\"#8e6fa3\"/>\n<text x=\"350\" y=\"194\" font-family=\"Arial,sans-serif\" font-size=\"6.5\" fill=\"#f7f1f8\" font-weight=\"800\" text-anchor=\"middle\">OPEN</text>\n<path d=\"M339 208 Q347 199 355 208 L358 236 Q357 250 347 253 Q337 251 337 234Z\" fill=\"#3c2a4d\" opacity=\".9\"/>\n<ellipse cx=\"347\" cy=\"216\" rx=\"9\" ry=\"5\" fill=\"#291f35\"/>\n<rect x=\"343\" y=\"217\" width=\"8\" height=\"28\" rx=\"2\" fill=\"#c5cad2\" stroke=\"#888596\" stroke-width=\"1\"/>\n<rect x=\"342\" y=\"214\" width=\"10\" height=\"6\" rx=\"2\" fill=\"#aaa7ba\"/>\n</g>";
+ /* Sysmex pocH-100i: off-white compact tall benchtop case, upper-left LCD,
+    purple translucent closed-tube door on right, reagent system adjacent. */
+ v='<ellipse cx="380" cy="287" rx="177" ry="10" fill="#ccdae2" opacity=".4"/>'+
+ '<path d="M297 41 Q302 29 323 27 H482 Q510 29 522 55 L542 258 Q540 276 522 280 H310 Q293 278 288 257Z" fill="#edf1f2" stroke="#9caebb" stroke-width="3"/>'+
+ '<path d="M491 32 Q523 39 537 72 L544 252 Q542 270 524 278 L501 268 L499 51Z" fill="#d9e3e7" stroke="#a0b3bc" stroke-width="2.5"/>'+
+ '<path d="M313 35 Q329 29 483 35 L484 276 H308 Q294 270 293 252 L294 66 Q295 46 313 35Z" fill="#fafbfa" stroke="#9eafb9" stroke-width="3"/>'+
+ '<path d="M309 52 H469" stroke="#fff" stroke-width="5" stroke-linecap="round"/>'+
+ '<path d="M319 73 H420 Q435 73 435 87 V150 Q435 164 423 164 H315 Q308 164 308 153 V86 Q308 75 319 73Z" fill="#8399a4" stroke="#758f9a" stroke-width="2.5"/>'+
+ '<rect x="318" y="84" width="108" height="71" rx="6" fill="#d6e7ee"/>'+
+ '<rect x="323" y="90" width="98" height="17" rx="2" fill="#cae2eb"/>'+
+ '<text x="368" y="102" font-size="8.5" font-weight="800" fill="#416f84" text-anchor="middle">READY · MAIN</text>'+
+ '<rect x="325" y="115" width="28" height="21" rx="3" fill="#a46fb3"/><rect x="357" y="115" width="28" height="21" rx="3" fill="#80c4c4"/><rect x="389" y="115" width="28" height="21" rx="3" fill="#39a3d2"/>'+
+ '<text x="339" y="129" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">WB</text>'+
+ '<text x="371" y="129" text-anchor="middle" fill="#276777" font-size="8" font-weight="800">QC</text>'+
+ '<text x="403" y="129" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">RUN</text>'+
+ '<text x="319" y="188" font-size="16" font-weight="800" fill="#667982">pocH-100i</text>'+
+ '<path d="M326 198l23 5-17 5z" fill="#a7b1b4"/>'+
+ '<path d="M429 179 Q435 169 448 169 H477 Q491 169 495 185 L497 263 Q494 273 477 279 H443 Q431 272 427 255Z" fill="#78488e" stroke="#69427f" stroke-width="3"/>'+
+ '<path d="M439 182 Q447 178 476 182 L481 265 Q459 272 441 263Z" fill="#ac79bf" opacity=".92"/>'+
+ '<rect x="443" y="196" width="37" height="11" rx="4" fill="#74518c"/>'+
+ '<path d="M447 219 Q456 209 468 215 L471 256 Q461 270 448 258Z" fill="#3c294a"/>'+
+ '<rect x="452" y="221" width="13" height="33" rx="4" fill="#c4bdd2" stroke="#7c7891" stroke-width="2"/>'+
+ '<path d="M317 233 H415" stroke="#edf2f4" stroke-width="3"/>'+
+ '<rect x="531" y="96" width="64" height="147" rx="13" fill="#eef6f8" stroke="#a0b9c5" stroke-width="3"/>'+
+ '<rect x="544" y="81" width="37" height="30" rx="6" fill="#f7f9fa" stroke="#a2bbc8" stroke-width="3"/>'+
+ '<path d="M539 148 H588" stroke="#c7d9e1" stroke-width="3"/>'+
+ '<rect x="538" y="176" width="51" height="41" rx="6" fill="#b8a1c9" opacity=".65"/>'+
+ '<path d="M551 80 Q544 62 527 65 L514 66" stroke="#cfdee5" stroke-width="5" fill="none"/>';
  }else if(shape==="rotor"){
- /* Piccolo Xpress is a tall blue front-touchscreen analyzer with a disc-loading drawer. */
- v='<path d="M270 36 L467 33 Q492 38 498 56 L498 253 Q491 267 464 269 L272 265 Q251 259 250 240 L249 65 Q250 44 270 36Z" fill="#286f9d" stroke="#215477" stroke-width="3"/>'+
- '<path d="M464 34 L498 55 L498 246 L470 259Z" fill="#15547e" opacity=".64"/>'+
- '<rect x="272" y="42" width="193" height="188" rx="15" fill="#142635" stroke="#2a4051" stroke-width="3"/>'+
- '<rect x="288" y="58" width="161" height="151" rx="6" fill="#dcecf3" stroke="#33596c" stroke-width="2"/>'+
- '<rect x="301" y="73" width="134" height="27" rx="4" fill="#c8dce7"/>'+
- txt(366,90,"piccolo xpress",11,"#287b9a",850)+
- '<rect x="307" y="111" width="121" height="17" rx="3" fill="#edc85e"/>'+
- '<rect x="307" y="140" width="121" height="17" rx="3" fill="#c1d5de"/>'+
- '<rect x="307" y="167" width="121" height="17" rx="3" fill="#c1d5de"/>'+
- '<rect x="298" y="234" width="157" height="20" rx="4" fill="#102534"/>'+
- '<path d="M314 253 L443 253 L471 281 L291 281Z" fill="#182e3b" stroke="#506877" stroke-width="2"/>'+
- '<rect x="311" y="267" width="142" height="12" rx="3" fill="#536d7c"/>'+
- '<circle cx="380" cy="264" r="26" fill="#eff6f7" stroke="#9fb8c4" stroke-width="3"/>'+
- Array.from({length:20},(_,i)=>{const th=i*Math.PI/10;return '<rect x="'+(377+23*Math.cos(th)).toFixed(1)+'" y="'+(261+23*Math.sin(th)).toFixed(1)+'" width="6" height="4" rx="1" fill="#d6e4ec"/>';}).join("")+
- '<circle cx="380" cy="264" r="9" fill="#d4e5ec" stroke="#a7c5d2"/>'+
- txt(367,218,"PICCOLO XPRESS",9,"#cadfea",780)+
- '<ellipse cx="378" cy="293" rx="117" ry="5" fill="#c9d8de" opacity=".4"/>';
+ /* Piccolo Xpress: royal-blue tall housing, large front touch display,
+    top brand plate, blue latch button and bottom pull-out chemistry disc drawer. */
+ v='<ellipse cx="377" cy="295" rx="139" ry="9" fill="#c9d9df" opacity=".34"/>'+
+ '<path d="M277 18 Q272 18 261 29 L247 260 Q249 282 269 285 H492 Q504 282 506 265 L501 31 Q495 18 480 18Z" fill="#174f82" stroke="#133d69" stroke-width="3"/>'+
+ '<path d="M276 21 H483 Q491 22 493 34 L493 250 Q492 263 477 264 H273 Q258 256 258 238 L264 33 Q267 22 276 21Z" fill="#2764a0" stroke="#1a518a" stroke-width="3"/>'+
+ '<rect x="291" y="29" width="163" height="38" rx="5" fill="#e1e5e7" stroke="#5f829c" stroke-width="3"/>'+
+ '<text x="372" y="48" text-anchor="middle" font-size="16" font-weight="850" fill="#293d7c">piccolo</text>'+
+ '<text x="413" y="59" text-anchor="middle" font-size="10" font-weight="800" fill="#c95156">xpress</text>'+
+ '<path d="M287 70 H457 V217 H287Z" fill="#253a50" stroke="#1a3c5c" stroke-width="3"/>'+
+ '<rect x="297" y="80" width="150" height="129" rx="3" fill="#cfe8f4"/>'+
+ '<rect x="300" y="82" width="144" height="18" fill="#326ba5"/>'+
+ '<text x="373" y="95" font-size="10" font-weight="850" text-anchor="middle" fill="#fff">Load Disc</text>'+
+ '<text x="373" y="129" font-size="10.5" text-anchor="middle" fill="#4a728a">Close drawer to</text>'+
+ '<text x="373" y="143" font-size="10.5" text-anchor="middle" fill="#4a728a">analyze a sample</text>'+
+ '<circle cx="374" cy="164" r="12" fill="#f4ca67"/><text x="374" y="169" font-size="13" font-weight="900" text-anchor="middle" fill="#fff">i</text>'+
+ '<rect x="306" y="189" width="136" height="15" rx="3" fill="#2575a8"/>'+
+ '<text x="374" y="200" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="900">CLOSE</text>'+
+ '<path d="M284 221 H465 V245 H284Z" fill="#b3c3cc" stroke="#64839b" stroke-width="2.5"/>'+
+ '<rect x="295" y="241" width="160" height="17" rx="2" fill="#263949"/>'+
+ '<path d="M297 259 L453 259 L474 290 H275Z" fill="#142f47" stroke="#345b7a" stroke-width="2.5"/>'+
+ '<path d="M303 266 H449 L459 286 H291Z" fill="#263f50"/>'+
+ '<ellipse cx="375" cy="273" rx="43" ry="15" fill="#253d4e"/>'+
+ '<ellipse cx="375" cy="272" rx="31" ry="11" fill="#e4eef1" stroke="#9fb8c4" stroke-width="2"/>'+
+ Array.from({length:14},(_,i)=>{const theta=i*Math.PI/7;return '<circle cx="'+(375+24*Math.cos(theta)).toFixed(1)+'" cy="'+(272+7*Math.sin(theta)).toFixed(1)+'" r="2" fill="#8ab0bf"/>';}).join('')+
+ '<circle cx="375" cy="272" r="6.5" fill="#c3d7df" stroke="#8baab9"/>'+
+ '<circle cx="477" cy="223" r="10" fill="#57a9e7" stroke="#d2eaf7" stroke-width="2.5"/>'+
+ '<path d="M265 40 L256 237" stroke="#3f82bd" stroke-width="6" opacity=".5"/>';
  }else if(shape==="pathfast"){
  v=rect(227,51,283,216,27,"#e8f1f5","#91aab8",3)
  +'<path d="M370 55 Q407 11 478 50 L505 81 L475 106 L368 91Z" fill="#87c5d7" stroke="#6daabd" stroke-width="3"/>'
