@@ -11,8 +11,9 @@ const lanes=[
  {name:"QC 2",tone:"#e3f5ec",ink:"#19755e",well:"#a8e1c5"}
 ];
 const groups=[
- {id:"cardiac",label:"hs-Troponin I + NT-proBNP",analytes:["hs-Troponin I","NT-proBNP"],qc:"Bio-Rad Cardiac Markers",detail:"Use Bio-Rad Cardiac controls for hs-Troponin I and NT-proBNP. Confirm both control levels and the current assay-specific assigned ranges."},
- {id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad D-dimer",detail:"Use Bio-Rad D-dimer controls for the D-dimer assay. Verify QC levels, lot and assigned ranges against the current control insert."}
+{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Cardiac Markers Plus LT",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Cardiac Markers Plus LT",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad Liquichek D-dimer",catalog:"PF1051-KUS",vials:[["QC 1 · LANE 5","LEVEL LOW","27100","LOW"],["QC 2 · LANE 6","LEVEL 1","27101","LEVEL 1"]]}
 ];
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
 function defs(){return '<defs>'+
@@ -107,6 +108,21 @@ function status(group){
    '<div class="pf-state-box"><span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Gray · ready</b><small>Calibration and QC accepted</small></div></div></div></div>';
  }).join("")+'</div>';
 }
+function qcGallery(group){
+ const color=group.id==='ddimer'?'#785e9d':'#ac4756';
+ const images=group.vials.map(function(v){
+ const picture='<svg viewBox="0 0 160 161" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bio-Rad '+esc(v[1])+' catalog '+v[2]+'">'+
+ '<ellipse cx="80" cy="145" rx="43" ry="6" fill="#d3dde4"/><rect x="53" y="10" width="54" height="34" rx="7" fill="#e0e7ec" stroke="#8aa1ad" stroke-width="2"/>'+
+ '<rect x="56" y="40" width="48" height="97" rx="8" fill="#9d6d50" stroke="#825940" stroke-width="2"/><rect x="60" y="66" width="40" height="56" rx="3" fill="#fffaf7"/>'+
+ '<rect x="60" y="66" width="40" height="11" rx="2" fill="'+color+'"/><text x="80" y="87" text-anchor="middle" font-weight="850" font-size="10" fill="#8a555a">Bio-Rad</text>'+
+ '<text x="80" y="99" text-anchor="middle" font-weight="900" font-size="8" fill="#253a4d">'+esc(v[3])+'</text>'+
+ '<text x="80" y="113" text-anchor="middle" font-weight="800" font-size="8" fill="#4f697b">#'+v[2]+'</text></svg>';
+ return '<article class="pf-qc-vial"><span class="pf-qc-slot">'+esc(v[0])+'</span>'+picture+'<strong>'+esc(v[1])+'</strong><small>'+esc(group.qc)+' · Catalog #'+v[2]+'</small></article>';
+ }).join('');
+ return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad QC materials are stored in the freezer. Thaw and handle per the current lot-specific insert.</span></div>'+
+ '<div class="pf-qc-vials">'+images+'</div>'+
+ '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+'). QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Use the corresponding lot-specific QC ranges.</p></div>';
+}
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+status(group)+
  '<h3 class="pf-material-heading">Calibration materials <small>Included in the reagent box</small></h3>'+
@@ -116,11 +132,7 @@ function panelContent(group){
  material('Blue liquid diluent','2 BUFFER VIALS','Combine the supplied blue liquid diluent with each CAL 2 powder vial using the assay-specific mixing directions and volume.',svgDiluent(),'diluent')+
  '</div>'+
  '<div class="pf-mix-flow" aria-label="Reconstitution: two separate CAL 2 powder vials, each mixed with its corresponding blue diluent vial"><span>CAL 2 powder <b>× 2</b></span><strong>+</strong><span>Blue diluent <b>× 2</b></span><strong>→</strong><span class="pf-mix-result">Reconstituted CAL 2 <b>× 2</b></span></div>'+
- '<h3 class="pf-material-heading">Quality control <small>Bio-Rad</small></h3>'+
- '<div class="pf-material-grid pf-qc-grid">'+
- material(group.qc,'QC 1 + QC 2',group.detail,svgQC(group.id),group.id)+
- '<div class="pf-qc-note"><strong>QC loading</strong><p>Use '+esc(group.qc)+' for this assay group. Load QC 1 in lane 5 and QC 2 in lane 6. Confirm assigned ranges and acceptable results before patient testing.</p></div>'+
- '</div></div>';
+ '<h3 class="pf-material-heading">Bio-Rad quality controls <small>QC 1 and QC 2</small></h3>'+qcGallery(group)+'</div>';
 }
 const workflow=[
  ['Check the analyte status','Select the assay to calibrate. After 28 days, its menu pill turns pink and patient testing is locked.'],
@@ -143,7 +155,7 @@ function panelPicker(){
  '<span class="pf-panel-chevron'+(panelDropdownOpen?' open':'')+'" aria-hidden="true">⌄</span></button>'+
  (panelDropdownOpen?'<div class="pf-panel-options" id="pfPanelOptions" role="group" aria-label="Assay panel options">'+
  groups.map(g=>'<button type="button" class="pf-panel-option'+(selectedPanel===g.id?' selected':'')+'" data-pf-panel-option="'+g.id+'" aria-pressed="'+(selectedPanel===g.id)+'">'+
- '<span class="pf-panel-option-mark '+g.id+'" aria-hidden="true">'+(g.id==='cardiac'?'♥':'◆')+'</span><span class="pf-panel-option-text"><strong>'+esc(g.label)+'</strong><small>Calibration + '+esc(g.qc)+'</small></span>'+
+ '<span class="pf-panel-option-mark '+g.id+'" aria-hidden="true">'+(g.id==='ddimer'?'◆':'♥')+'</span><span class="pf-panel-option-text"><strong>'+esc(g.label)+'</strong><small>Calibration + '+esc(g.qc)+'</small></span>'+
  '<span class="pf-panel-option-check" aria-hidden="true">'+(selectedPanel===g.id?'✓':'›')+'</span></button>').join('')+'</div>':'')+
  '</div></div>';
 }
@@ -167,6 +179,7 @@ function render(){
   h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon" aria-hidden="true">▤</span><strong>Select an assay panel to begin</strong><p>The appropriate calibrator materials, Bio-Rad controls, rack layout and instructions will appear here.</p></div>';
  }else{
   h+='<div class="pf-selected-panel" aria-live="polite"><span class="pf-selected-dot"></span><strong>'+esc(group.label)+'</strong><span>CAL + QC · 6 LANES</span></div>'+
+  window.LAB_PATHFAST_SCREEN.cal(group.label)+
   panelContent(group)+
   '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Illustrated from above</span></div>'+
   '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>1–4</b> Calibration in duplicate</span><span><b>5–6</b> '+esc(group.qc)+' QC 1 and QC 2</span></div></div>'+
