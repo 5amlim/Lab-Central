@@ -97,7 +97,7 @@ function physicalStep(i){
  ];
  const stage=stages[i]||stages[0];
  const art=window.LAB_EQUIPMENT_ART?.pathfastActionVisual;
- const images=stage[3]==="setup"?(art?art("base","patient")+art("rack","patient"):""):
+ const images=stage[3]==="setup"?(art?art("base","patient")+art("rack-empty","patient"):""):
   stage[3]==="tips"?(art?art("rack","patient")+art("tips","patient"):""):(art?art(stage[3],"patient"):"");
  return '<section class="pfs-reference pfs-prep-reference pf-prep-focused" aria-label="PATHFAST physical preparation step '+(i+1)+'">'+
  '<div class="pfs-heading"><strong>PATHFAST · PHYSICAL PREPARATION</strong><span>Preparation '+(i+1)+' of 4 · Before screen navigation</span></div>'+
