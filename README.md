@@ -36,6 +36,21 @@ To publish the verified link, edit `sendout-form-config.js` and set `window.LAB_
 
 The home-collection instructions were transcribed from *Home Urine and Stool Collection Instructions for Staff and Patients* (5-page source), with clinical verification cautions for specimen stability. Its source PDF illustrations are not hosted in this repository. Confirm container selection and storage directions against current test-specific guidance. The new Athena drop-off appointment and new order workflow are staff-provided instructions separate from the source document.
 
+## Serial hs-Troponin collection windows and interference investigation
+
+The RN collection guide displays the clinic-requested **±10-minute** timed-draw window:
+- 0/1-hour: 50–70 minutes after the timestamp of the initial blood draw.
+- 0/2-hour: 110–130 minutes after the initial blood draw.
+
+**Never designate or apply the 1-hour or 2-hour delta decision threshold to a specimen collected outside the applicable timing window.** Record the real time, notify the provider, and use the approved alternative plan. The 2020 ESC guidelines explicitly describe ±10 minutes for the 0/1-hour draw; the same tolerance for the 0/2-hour pathway is a requested **local workflow rule** that requires approval in the applicable clinical protocol.
+
+The guide also illustrates a centrifuged lithium-heparin tube, with plasma above buffy coat and packed red cells. When a falsely elevated PATHFAST troponin is suspected from fibrin/microclots, the same original tube can be centrifuged and plasma retested as an **interference investigation**, following the approved lab SOP and assay IFU. This does not dismiss the original elevated result, replace the timed clinical redraw, or preclude a separately requested new specimen.
+
+The provider tab has an interactive multiple-choice chest-pain pathway reference with source-appropriate safety warnings. It does not store patient information, issue a diagnosis, calculate deltas, or make discharge/transfer decisions. Clinical thresholds in the supplied source slides must be reconciled with the current approved pathway before patient use.
+
+Files: `pathfast-interactive.js` and `pathfast-interactive.css`; both required with `index.html`.
+Evidence: 2020 ESC 0/1-hour sampling guidance, PATHFAST hs-cTnI-II package insert (fibrin/clots and plasma), and laboratory medicine publications on same-specimen re-centrifugation in suspected hs-troponin interference.
+
 ## PATHFAST RN collection and clinical pathway references
 
 The PATHFAST instrument page has two additional tabs:
