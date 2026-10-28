@@ -75,14 +75,43 @@ function analyzer(id){
  const torch=id==="torch";
  let body='<ellipse cx="490" cy="350" rx="300" ry="20" fill="#e1e9ed"/>';
  if(torch){
- body+='<path d="M240 124 L280 95 L672 95 L724 130 L724 303 Q699 332 656 334 H279 Q240 319 240 291Z" fill="#e4e9ec" stroke="#95a9b7" stroke-width="5"/>'+
- '<path d="M240 124 L280 95 L328 95 L328 332 L276 328 Q243 322 240 290Z" fill="#555b65"/>'+
- '<path d="M324 112 H675 L688 267 H324Z" fill="#f3f5f5" stroke="#9aadb5" stroke-width="3"/>'+
- Array.from({length:4},(_,i)=>{const x=335+(i%2)*168,y=116+Math.floor(i/2)*71;return '<g><rect x="'+x+'" y="'+y+'" width="151" height="63" rx="8" fill="#f8fbfb" stroke="#b0c3cc" stroke-width="2"/><path d="M'+(x+15)+' '+(y+22)+' H'+(x+38)+'" stroke="#d05256" stroke-width="5"/><rect x="'+(x+17)+'" y="'+(y+13)+'" width="25" height="31" rx="3" fill="#222f39"/></g>';}).join("")+
- '<path d="M528 258 L690 250 L715 311 L558 330Z" fill="#dee9ec" stroke="#94aab5" stroke-width="3"/>'+
- '<path d="M559 261 L679 255 L695 298 L574 303Z" fill="#202f3b" stroke="#4e6779" stroke-width="3"/>'+
- '<path d="M574 271 L672 267 L682 290 L584 292Z" fill="#d1eaf0"/>'+
- text(386,314,"BIOFIRE",17,"#e4eeee");
+ const moduleRows=Array.from({length:4},(_,r)=>Array.from({length:2},(_,c)=>{
+  const x=331+c*127,y=37+r*47;
+  return '<g>'+
+   '<rect x="'+(x-3)+'" y="'+(y-3)+'" width="127" height="47" rx="4" fill="#c83e4c"/>'+
+   '<rect x="'+x+'" y="'+y+'" width="119" height="40" rx="4" fill="#f8fafa" stroke="#b6c6cc" stroke-width="1.4"/>'+
+   '<path d="M'+(x+3)+' '+(y+5)+'H'+(x+116)+'" stroke="#fff" stroke-width="2.5" opacity=".9"/>'+
+   '<path d="M'+(x+17)+' '+(y+12)+'h20v7h-8v12" fill="none" stroke="#212a32" stroke-width="8" stroke-linejoin="round" stroke-linecap="square"/>'+
+   '<rect x="'+(x+77)+'" y="'+(y+12)+'" width="4" height="20" rx="2" fill="#8dbc86"/>'+
+   '<rect x="'+(x+83)+'" y="'+(y+12)+'" width="2" height="20" fill="#dae8e8"/>'+
+   '</g>';
+ }).join('')).join('');
+ body+='<defs>'+
+ '<linearGradient id="torch-case" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eef2f2"/><stop offset=".55" stop-color="#c5cdd1"/><stop offset="1" stop-color="#858e95"/></linearGradient>'+
+ '<linearGradient id="torch-front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f9fbfb"/><stop offset="1" stop-color="#dfe5e6"/></linearGradient>'+
+ '<linearGradient id="torch-screen" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#dff2f4"/><stop offset="1" stop-color="#adceda"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="474" cy="348" rx="264" ry="19" fill="#cddce4" opacity=".55"/>'+
+ '<path d="M282 43 L324 17 H585 L610 36 L611 269 L583 298 L286 289Z" fill="url(#torch-case)" stroke="#909fa8" stroke-width="4"/>'+
+ '<path d="M282 43 L324 17 L324 245 L285 278Z" fill="#7b858d" stroke="#59656f" stroke-width="2"/>'+
+ '<path d="M323 19 L581 19 L611 37 L606 247 L326 241Z" fill="#dfe4e5" stroke="#9daeb8" stroke-width="2"/>'+
+ '<path d="M327 32 H582 V232 H327Z" fill="#d23a48"/>'+
+ moduleRows+
+ '<path d="M273 236 H610 L664 310 Q668 323 648 331 L316 335 Q289 332 274 318 L245 278Z" fill="#e7ebec" stroke="#8d9ca4" stroke-width="4"/>'+
+ '<path d="M275 242 H608 L654 309 L314 317 L254 277Z" fill="#f8f9f8" stroke="#b7c4cb" stroke-width="2"/>'+
+ '<path d="M314 317 H655 L646 330 H317Z" fill="#a3aeb4"/>'+
+ '<path d="M282 278 L602 278" stroke="#ce4650" stroke-width="4" opacity=".8"/>'+
+ '<path d="M415 258 L598 256 L637 302 L441 305Z" fill="#44525d" stroke="#c75c60" stroke-width="4"/>'+
+ '<path d="M425 265 L593 263 L624 294 L448 298Z" fill="url(#torch-screen)" stroke="#8ca7b8" stroke-width="2"/>'+
+ '<text x="514" y="277" text-anchor="middle" font-size="12" font-family="Arial" fill="#40657b" font-weight="800">BIOFIRE TORCH</text>'+
+ '<rect x="462" y="282" width="48" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
+ '<rect x="516" y="282" width="47" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
+ '<rect x="569" y="282" width="44" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
+ '<path d="M306 270 h64" stroke="#dce5e7" stroke-width="13" stroke-linecap="round"/>'+
+ '<path d="M303 296h62" stroke="#d9dfe2" stroke-width="14" stroke-linecap="round"/>'+
+ '<rect x="380" y="306" width="28" height="12" rx="3" fill="#53656f"/>'+
+ '<rect x="386" y="308" width="16" height="8" rx="2" fill="#2b3640"/>'+
+ '<text x="328" y="250" font-size="11" font-family="Arial" fill="#8b9ca6" font-weight="850">FilmArray</text>';
  }else{
  body+='<rect x="270" y="105" width="296" height="224" rx="15" fill="#eff4f6" stroke="#8da5b4" stroke-width="5"/>'+
  Array.from({length:4},(_,i)=>'<rect x="287" y="'+(124+i*43)+'" width="170" height="34" rx="5" fill="#fbfcfc" stroke="#a8bec9" stroke-width="2"/><path d="M304 '+(141+i*43)+' h26" stroke="#3f424d" stroke-width="6"/>').join("")+
