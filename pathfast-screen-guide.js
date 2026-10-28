@@ -90,14 +90,19 @@ function start(mode){
 
 function physicalStep(i){
  const stages=[
-  ["01","RETRIEVE CARTRIDGES","Match the cartridge assay to the requested test; keep refrigerated until ready."],
-  ["02","DISPENSE SPECIMEN","Load each cartridge into its rack lane and add the prepared specimen."],
-  ["03","LOAD RACK AND TIPS","Insert the loaded rack and disposable tips; close the analyzer cover."]
+  ["01","RETRIEVE CARTRIDGE","Identify the unused PATHFAST reagent cartridge and its clear front sample well.","retrieve"],
+  ["02","DISPENSE PATIENT SAMPLE","Use a transfer pipette to dispense whole blood or plasma into the clear sample well to the manufacturer's fill line.","dispense"],
+  ["03","LOAD CARTRIDGES AND TIPS","Seat the filled cartridges in the metal six-slot rack and place new disposable tips for the corresponding active lanes.","rack"]
  ];
- return '<section class="pfs-reference pfs-prep-reference" aria-label="PATHFAST physical preparation step '+(i+1)+'">'+
- '<div class="pfs-heading"><strong>PATHFAST · PHYSICAL PREPARATION</strong><span>Step '+(i+1)+' · Before screen navigation</span></div>'+
- '<div class="pfs-prep-stages">'+stages.map(function(stage,n){return '<div class="pfs-prep-stage'+(i===n?' active':'')+'"><span class="pfs-prep-number">'+stage[0]+'</span><strong>'+stage[1]+'</strong><p>'+stage[2]+'</p></div>';}).join('')+'</div>'+
- '<p class="pfs-note">Simplified preparation overview; follow the instructions beneath each step and approved assay-specific IFU. Maintain specimen-to-lane identification for later SID confirmation.</p></section>';
+ const stage=stages[i]||stages[0];
+ const art=window.LAB_EQUIPMENT_ART?.pathfastActionVisual;
+ const image=art?art(stage[3],"patient"):"";
+ const tips=art&&i===2?art("tips","patient"):"";
+ return '<section class="pfs-reference pfs-prep-reference pf-prep-focused" aria-label="PATHFAST physical preparation step '+(i+1)+'">'+
+ '<div class="pfs-heading"><strong>PATHFAST · PHYSICAL PREPARATION</strong><span>Preparation '+(i+1)+' of 3 · Before screen navigation</span></div>'+
+ '<div class="pf-prep-focus-head"><span class="pfs-prep-number">'+stage[0]+'</span><div><strong>'+stage[1]+'</strong><p>'+stage[2]+'</p></div></div>'+
+ '<div class="pf-prep-illustrations'+(tips?' two':'')+'">'+image+tips+'</div>'+
+ '<p class="pfs-note">Original, large schematic of the physical action. Verify the correct cartridge, rack, tips, specimen handling, and assay-specific IFU before testing.</p></section>';
 }
 function patientStep(i){
  if(i>=0&&i<=2)return physicalStep(i);
