@@ -59,6 +59,7 @@
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028" media="all">
+  <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -89,7 +90,7 @@
       <p class="dialog-help">Paste a YouTube link, a SharePoint/Stream URL, or a direct MP4 link. You can also use a relative path such as <code>assets/videos/pathfast-qc.mp4</code>.</p>
       <label class="field-label" for="videoUrl">Video URL or file path</label><input id="videoUrl" type="text" autocomplete="off" placeholder="https://... or assets/videos/my-video.mp4">
       <div id="videoError" class="field-error" role="alert" hidden></div>
-      <div class="dialog-hint">Changes are saved only in this browser. To share across staff, update <code>videos.js</code> in the published website.</div>
+      <div class="dialog-hint">Video links entered here are saved on this device only.</div>
       <div class="dialog-actions"><button type="button" id="clearVideo" class="soft-button">Clear</button><button type="button" id="saveVideo" class="primary-button">Save on this device</button></div>
     </form>
   </dialog>
@@ -135,6 +136,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-form-config.js?v=1"></script>
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028"></script>
+<script src="equipment-art.js?v=20261028"></script>
 <script>
 (()=>{
 'use strict';
@@ -212,7 +214,7 @@ function showNav(){
 }
 function isMatch(s,q){return [s.title,s.subtitle,s.sourceTitle,s.category,s.sample,s.qc,...s.blocks.map(b=>b.text)].join(' ').toLowerCase().includes(q)}
 function card(s){return `<button type="button" class="item-card" data-go="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="card-category">${safeHtml(s.category)}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">Open guide &nbsp;›</span></button>`}
-function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Content was adapted from the uploaded cheat sheet. Confirm current SOPs, manufacturer IFUs, specimen stability and site-specific schedules before testing or sending samples. Some older instructions may require review.</div></div>`}
+function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Confirm the current approved SOP, manufacturer IFU, specimen requirements and site-specific procedures before testing or sending specimens.</div></div>`}
 function renderHome(mode='home'){
  const search=state.search.trim();
  const isFav=mode==='favorites';
@@ -222,13 +224,13 @@ function renderHome(mode='home'){
  el('currentCrumb').textContent=search?'Search':isFav?'Favorites':'Overview';
  let h='';
  if(!search&&!isFav){
- h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Everything lab, in one place.</h1><p class="lede">Quickly find instrument instructions, order sets, lab calculators and collection workflows. Built for clinical staff on desktop or mobile.</p>`;
+ h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Lab operations reference</h1><p class="lede">Instrument procedures, collection and send-out workflows, training, and order references.</p>`;
  h+=noticeText();
- h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal">${svg('test-tubes')}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Order workflows</strong><small>External requisitions &amp; in-house</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Reserved for approved Athena names</small></span><span class="home-tool-arrow">→</span></button></div>`;
+ h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal">${svg('test-tubes')}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Order workflows</strong><small>External requisitions &amp; in-house</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${svg('droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="featured"><button type="button" class="feature-primary" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span></button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${svg('truck')}</span><span><strong>Lab send-outs</strong><small>Packaging & pickup</small></span><span class="arrow">↗</span></button><button class="mini-feature" type="button" data-go="tubes"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>Tube reference</strong><small>Collection & handling</small></span><span class="arrow">↗</span></button></div></div>`;
  }
- if(isFav)h=`<div class="eyebrow">SAVED REFERENCES</div><h1 class="page-h1">Your favorites</h1><p class="lede">Bookmarks are saved in this browser only.</p>`;
+ if(isFav)h=`<div class="eyebrow">SAVED REFERENCES</div><h1 class="page-h1">Saved guides</h1><p class="lede">Bookmarks are saved in this browser only.</p>`;
  if(search)h=`<div class="eyebrow">FIND A PROCEDURE</div><h1 class="page-h1">Search the lab guide</h1><p class="lede">Results for “${safeHtml(search)}” across instruments, procedures and reference notes.</p>`;
  h+=`<div class="section-head"><h2 class="section-title">${search?'Matching references':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${filtered.length} guides</span></div>`;
  const cats=['All',...categories.filter(c=>c!=='Archived'),...(search?['Archived']:[])];
@@ -389,13 +391,13 @@ const sources={
  supplies:[{name:'LabcorpLink',desc:'Supply order portal',url:'https://link.labcorp.com/landing'}]
 };
 function tubeGallery(){return `<div class="tab-header"><div><h2 class="tab-heading">Collection and transport containers</h2><p class="tab-description">Tube images from the original cheat sheet. Confirm current test-specific requirements in the receiving lab's directory.</p></div></div><div class="tube-grid">${DATA.tubes.map(t=>`<article class="tube-card"><div class="tube-photo">${t.photos.map(p=>`<img src="${safeHtml(window.LAB_TUBE_IMAGES?.[p]||'assets/'+p)}" alt="${safeHtml(t.name)}" loading="lazy">`).join('')}</div><div class="tube-content"><strong>${safeHtml(t.name)}</strong><p>${safeHtml(t.description).slice(0,150)}</p><details><summary>Handling notes</summary><p>${safeHtml(t.instructions)}</p></details></div></article>`).join('')}</div>`}
-function resources(sec){const items=sources[sec.id]||[];return `<div class="tab-header"><div><h2 class="tab-heading">Reference resources</h2><p class="tab-description">Links included for convenience. The approved internal SOP and most manufacturer IFUs are not bundled in this website.</p></div></div>${items.length?`<div class="resources">${items.map(x=>`<a class="resource-link" href="${safeHtml(x.url)}" target="_blank" rel="noopener noreferrer"><div><strong>${safeHtml(x.name)}</strong><p>${safeHtml(x.desc)}</p></div><span class="resource-arrow">↗</span></a>`).join('')}</div>`:'<p class="empty-placeholder">No public resource link supplied. Use the current approved SOP and manufacturer IFU.</p>'}`}
+function resources(sec){const items=sources[sec.id]||[];return `<div class="tab-header"><div><h2 class="tab-heading">Reference resources</h2><p class="tab-description">Manufacturer references and laboratory resources. Use the current approved SOP for testing.</p></div></div>${items.length?`<div class="resources">${items.map(x=>`<a class="resource-link" href="${safeHtml(x.url)}" target="_blank" rel="noopener noreferrer"><div><strong>${safeHtml(x.name)}</strong><p>${safeHtml(x.desc)}</p></div><span class="resource-arrow">↗</span></a>`).join('')}</div>`:'<p class="empty-placeholder">Follow the current approved SOP and manufacturer IFU.</p>'}`}
 
 function toolHeader(eyebrow,title,description){
  return `<div class="eyebrow">${safeHtml(eyebrow)}</div><h1 class="page-h1">${safeHtml(title)}</h1><p class="lede">${safeHtml(description)}</p>`;
 }
 function calculatorCards(){
- return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-count">0${i+1}</span><span class="calculator-tag">${safeHtml(c.tag)}</span></div><h2>${safeHtml(c.name)} calculator</h2><p>${safeHtml(c.note)}</p><a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} calculator <span>↗</span></a>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:''}</article>`).join('')}</div>`;
+ return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-count">0${i+1}</span><span class="calculator-tag">${safeHtml(c.tag)}</span></div><h2>${safeHtml(c.name)} calculator</h2><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} calculator <span>↗</span></a></article>`).join('')}</div>`;
 }
 function renderCalculators(){
  el('currentCrumb').textContent='Lab calculators';
@@ -408,7 +410,7 @@ function renderCalculators(){
  ['04','Attach and hand off','Generate or print the calculator instructions and upload them to the appropriate chart or Navigator task. Hand the reviewed request back to the front desk for scheduling when applicable.']
  ].map(x=>`<article class="flow-step"><span class="flow-number">${x[0]}</span><strong>${safeHtml(x[1])}</strong><p>${safeHtml(x[2])}</p></article>`).join('')}</div>`;
  h+=`<div class="tool-bottom-link"><span>Processing an outside requisition?</span><button type="button" data-go="orders">Open external requisition workflow <span>→</span></button></div>`;
- h+=`<p class="source-footnote">These links lead to your existing calculators. Verify current receiving-lab requirements before using any collection or submission instructions.</p>`;
+ h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
 function workflowSteps(steps,start=1){return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div><h3>${safeHtml(step[0])}</h3><p>${safeHtml(step[1])}</p></div></article>`).join('')}</div>`;}
@@ -436,7 +438,7 @@ function externalFlow(){
  return h;
 }
 function inhouseFlow(){
- let h=`<div class="workflow-head"><div><span class="eyebrow">IN-HOUSE ORDERS</span><h2>Orders placed by the clinical team</h2><p>A separate quick-reference path for orders initiated internally. Confirm with your approved ordering and collection policy.</p></div><span class="workflow-role-pill">Provider · Tech / RN</span></div>`;
+ let h=`<div class="workflow-head"><div><span class="eyebrow">IN-HOUSE ORDERS</span><h2>Orders placed by the clinical team</h2><p>Orders placed in Athena by the clinical team. Follow current ordering and collection procedures.</p></div><span class="workflow-role-pill">Provider · Tech / RN</span></div>`;
  h+=workflowSteps([
  ['Provider places the order','The Sollis provider places the appropriate tests in Athena. Confirm the receiving laboratory or in-house test requested.'],
  ['Tech or RN reviews the order','Check the ordered test and specimen requirements. For send-outs, select the correct receiving laboratory in the calculator.'],
@@ -451,25 +453,25 @@ function renderOrders(tab='external'){
  tab=tab==='in-house'?'in-house':'external';el('currentCrumb').textContent='Lab order workflows';
  let h=toolHeader('REQUEST INTAKE & HANDOFF','Lab order workflows','Select the workflow based on where the order originated. External requisitions have a dedicated missing-information escalation path.');
  h+=`<div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Order workflow"><button type="button" role="tab" aria-selected="${tab==='external'}" class="tab ${tab==='external'?'active':''}" data-workflowtab="external">External requisition</button><button type="button" role="tab" aria-selected="${tab==='in-house'}" class="tab ${tab==='in-house'?'active':''}" data-workflowtab="in-house">In-house order</button></div><div class="workflow-main">${tab==='external'?externalFlow():inhouseFlow()}</div>`;
- h+=`<p class="source-footnote">This webpage is a staff reference and does not create Navigator tasks, place orders, upload documents or schedule patients. Complete these actions in the approved clinical systems.</p>`;
+ h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
 }
 function orderSetsFor(sec){const sets=window.LAB_ORDER_SETS?.[sec.id];return Array.isArray(sets)?sets.filter(x=>x&&x.name):[];}
 function orderSetsPanel(sec){
  const sets=orderSetsFor(sec);
- let h=`<div class="tab-header"><div><h2 class="tab-heading">${safeHtml(sec.title)} · Athena order sets</h2><p class="tab-description">Space for approved Athena order-set names and reference notes.</p></div></div>`;
- if(!sets.length){h+=`<div class="order-empty"><div class="order-empty-icon">${svg('file-text')}</div><strong>Order sets to be added</strong><p>Reserved for Athena order-set names, reference notes and screenshots. Add verified entries in <code>order-sets.js</code> and republish the website.</p><div class="order-image-placeholder">${svg('file-text')} <span>Athena order-set screenshot space</span></div><span class="order-awaiting">Awaiting verified order sets</span></div>`;}
+ let h=`<div class="tab-header"><div><h2 class="tab-heading">${safeHtml(sec.title)} · Athena order sets</h2><p class="tab-description">Athena order sets and ordering references.</p></div></div>`;
+ if(!sets.length){h+=`<div class="order-empty"><div class="order-empty-icon">${svg('file-text')}</div><strong>No order sets listed</strong><p>Approved Athena order sets will appear here when available.</p><span class="order-awaiting">NOT LISTED</span></div>`;}
  else{h+=`<div class="order-list">${sets.map(x=>`<div class="order-entry"><span class="order-entry-icon">${svg('file-text')}</span><div><strong>${safeHtml(x.name)}</strong>${x.note?`<p>${safeHtml(x.note)}</p>`:''}${x.image&&/^(assets\/order-sets\/[a-z0-9_./%-]+\.(?:png|jpg|jpeg|webp))$/i.test(x.image)&&!x.image.includes('..')?`<img class="order-set-screenshot" src="${safeHtml(x.image)}" loading="lazy" alt="${safeHtml(x.name)} Athena order set screenshot">`:''}</div><span class="order-available">ORDER SET</span></div>`).join('')}</div>`;}
- h+=`<div class="tool-bottom-link"><span>Want to browse other instruments?</span><button type="button" data-go="order-sets">Open order set directory <span>→</span></button></div>`;
+ h+=`<div class="tool-bottom-link"><span>Find another instrument</span><button type="button" data-go="order-sets">Open order set directory <span>→</span></button></div>`;
  return h;
 }
 function renderOrderSetDirectory(){
  el('currentCrumb').textContent='Instrument order sets';
  const inst=all.filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
- let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Instrument order sets','Find an instrument to view its Athena order sets. Each instrument has a reserved section for verified order-set names.');
- h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Order-set directory</strong><p>Entries are intentionally blank until confirmed. This avoids publishing unverified Athena order names.</p></div></div>`;
- h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'TO ADD'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
- h+=`<p class="source-footnote">To publish order sets for all staff, enter the approved names in <code>order-sets.js</code> and deploy the updated file. Do not enter patient information.</p>`;
+ let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Instrument order sets','Browse available Athena order sets by instrument.');
+ h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Order-set directory</strong><p>Only confirmed Athena order sets are displayed.</p></div></div>`;
+ h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
+ h+=`<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p>`;
  el('mainContent').innerHTML=h;
 }
 function videoURL(slot){if(Object.prototype.hasOwnProperty.call(localVideos,slot.id))return localVideos[slot.id];if(slot.id==='calibration'&&Object.prototype.hasOwnProperty.call(localVideos,'qc'))return localVideos.qc;return window.LAB_GUIDE_VIDEOS?.[slot.id]||(slot.id==='calibration'?window.LAB_GUIDE_VIDEOS?.qc:'')||slot.url||''}
@@ -484,20 +486,21 @@ function mediaSource(url){
  return {kind:'empty'};
 }
 function videoLibrary(){
- return `<div class="tab-header"><div><h2 class="tab-heading">PATHFAST video library</h2><p class="tab-description">Training clips can be added for each workflow. None are bundled in this initial version.</p></div></div><div class="video-intro"><span style="font-size:20px;line-height:1">◉</span><div><strong>Made for training and refreshers.</strong> Add your PATHFAST tutorials using the “Add video” buttons. Staff will see published video links when they are configured in the website.</div></div><div class="video-grid">${DATA.videoSlots.map(slot=>{
+ return `<div class="tab-header"><div><h2 class="tab-heading">PATHFAST video library</h2><p class="tab-description">Instrument orientation, patient testing, calibration and quality control.</p></div></div><div class="video-intro"><span style="font-size:20px;line-height:1">◉</span><div><strong>PATHFAST training resources.</strong> Select a video to review the procedure.</div></div><div class="video-grid">${DATA.videoSlots.map(slot=>{
  const url=videoURL(slot);const info=mediaSource(url);let stage='<span class="video-placeholder" aria-label="Video placeholder">▶</span>';
  if(info.kind==='youtube')stage=`<iframe src="${safeHtml(info.url)}" title="${safeHtml(slot.name)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
  if(info.kind==='video')stage=`<video controls playsinline preload="metadata" src="${safeHtml(info.url)}"></video>`;
- return `<article class="video-card ${url?'has-video':''}"><div class="video-stage">${stage}</div><div class="video-content"><strong>${safeHtml(slot.name)}</strong><p>${safeHtml(slot.desc)}</p><div class="video-buttons"><span class="video-status">${url?'Video added':'Video slot available'}</span><div style="display:flex;gap:7px;align-items:center">${info.kind==='external'?`<a class="video-external" href="${safeHtml(info.url)}" target="_blank" rel="noopener noreferrer">Open video ↗</a>`:''}<button class="video-edit" type="button" data-edit-video="${safeHtml(slot.id)}">${url?'Edit link':'Add video +'}</button></div></div></div></article>`}).join('')}</div><p class="source-footnote">Video links edited here are saved only to this browser. To publish links to all devices, edit the website's <code>videos.js</code> configuration and redeploy it. Avoid uploading any patient information.</p>`;
+ return `<article class="video-card ${url?'has-video':''}"><div class="video-stage">${stage}</div><div class="video-content"><strong>${safeHtml(slot.name)}</strong><p>${safeHtml(slot.desc)}</p><div class="video-buttons"><span class="video-status">${url?'Video added':'Video unavailable'}</span><div style="display:flex;gap:7px;align-items:center">${info.kind==='external'?`<a class="video-external" href="${safeHtml(info.url)}" target="_blank" rel="noopener noreferrer">Open video ↗</a>`:''}<button class="video-edit" type="button" data-edit-video="${safeHtml(slot.id)}">${url?'Edit link':'Set video link'}</button></div></div></div></article>`}).join('')}</div><p class="source-footnote">Video links entered here are stored on this device only.</p>`;
 }
 function sectionOverview(sec,groups){
- let h=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Select the procedure you need below, or use the tabs above.</p></div></div>`;
+ let h=window.LAB_EQUIPMENT_ART.render(sec);
+ h+=`<div class="tab-header"<div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Select the procedure you need below, or use the tabs above.</p></div></div>`;
  if(sec.id==='pathfast')h+=`<button class="mini-feature" type="button" data-gotab="cal-qc" style="width:100%;margin-bottom:12px;min-height:90px;border-left:4px solid #208f89"><span class="feature-small-icon" style="background:#e4f5f1;color:#218d88">${svg('clipboard-check')}</span><span><strong>Calibration + QC · every 28 days</strong><small>Six lanes, one combined run · rack loading diagram</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='pathfast')h+=`<button class="mini-feature" type="button" data-gotab="videos" style="width:100%;margin-bottom:17px;min-height:87px"><span class="feature-small-icon" style="background:#e4f5f1;color:#218d88">▶</span><span><strong>PATHFAST video training</strong><small>4 training video slots, including combined calibration + QC</small></span><span class="arrow">↗</span></button>`;
- if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets" style="width:100%;margin-bottom:17px;min-height:75px"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Space reserved for this instrument'}</small></span><span class="arrow">↗</span></button>`;
+ if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets" style="width:100%;margin-bottom:17px;min-height:75px"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery" style="width:100%;margin-bottom:17px;min-height:77px"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
- h+=`<div class="grid-cards">${groups.map(g=>`<button type="button" class="item-card" data-gotab="${safeHtml(g.id)}"><div class="card-head"><span class="card-icon">${svg(sec.icon)}</span><span class="card-category">WORKFLOW</span></div><strong>${safeHtml(g.title)}</strong><p>${g.blocks.length} source notes and steps</p><span class="card-trailing">Open instructions &nbsp;›</span></button>`).join('')}</div>`;
- if(sec.id==='febridx'||sec.id==='outside')h+='<p class="source-footnote">The uploaded cheat sheet refers to a separate document for detailed instructions. That document was not supplied with this website.</p>';
+ h+=`<div class="grid-cards">${groups.map(g=>`<button type="button" class="item-card" data-gotab="${safeHtml(g.id)}"><div class="card-head"><span class="card-icon">${svg(sec.icon)}</span><span class="card-category">WORKFLOW</span></div><strong>${safeHtml(g.title)}</strong><p>Procedure and reference details</p><span class="card-trailing">Open instructions &nbsp;›</span></button>`).join('')}</div>`;
+ if(sec.id==='febridx'||sec.id==='outside')h+='<p class="source-footnote">For detailed procedures, refer to the current approved instrument SOP.</p>';
  return h;
 }
 function sectionRender(sec,tab){
@@ -509,7 +512,7 @@ function sectionRender(sec,tab){
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
  let h=`<div class="detail-header"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${sec.archived?'HISTORICAL REFERENCE':'INSTRUMENT GUIDE'}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p></div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
- h+=`<div class="meta-bar"><div class="meta-chip"><small>Specimen / panel</small><span>${safeHtml(sec.sample)}</span></div><div class="meta-chip"><small>QC / procedure</small><span>${safeHtml(sec.qc)}</span></div><div class="meta-chip"><small>Reference</small><span>Uploaded Lab Cheat Sheet · review against current SOP</span></div></div>`;
+ h+=`<div class="meta-bar"><div class="meta-chip"><small>Specimen / panel</small><span>${safeHtml(sec.sample)}</span></div><div class="meta-chip"><small>QC / procedure</small><span>${safeHtml(sec.qc)}</span></div><div class="meta-chip"><small>Reference</small><span>Current approved SOP / manufacturer IFU</span></div></div>`;
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='sendout'||sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
  else if(sec.id==='pathfast')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Check training and assay-specific requirements.</strong> Verify lot details, QC acceptance, clinical pathways and specimen handling against the latest PATHFAST IFU and approved protocol before patient testing.</div></div>`;
@@ -525,7 +528,7 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
  }
- h+=`<p class="source-footnote">Based on “Lab Cheat Sheet” supplied for this build. Information may be superseded by current SOPs, package inserts, clinical policies or vendor instructions. Do not enter patient details on this site.</p></div>`;
+ h+=`<p class="source-footnote">For staff reference. Verify instrument instructions against the current SOP and manufacturer IFU. Do not enter patient information.</p></div>`;
  el('mainContent').innerHTML=h;
 }
 function render(){
