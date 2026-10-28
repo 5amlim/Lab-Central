@@ -39,13 +39,13 @@ card(4,"RN → Lab tech","Deliver the sample promptly","Hand the properly labele
 card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. The requested operational window is target time through 15 minutes later, never early. Medical leadership must approve 0/+15-minute timing for the local assay-specific algorithm before clinical use. Do not time from result availability.")+
 card(6,"RN","Collect and document the repeat","Use the same specimen type and invert immediately. Record actual draw time. A repeat collected earlier than 60 or 120 minutes must not be counted as the corresponding timed delta sample. For samples outside the authorized site window, notify the provider and document the true collection time.")+
 '</div><h3 class="pcr-section-title">Serial collection clock</h3>'+
-'<div class="pcr-timing-start"><span class="pcr-clock">0 h</span><div><strong>Baseline draw</strong><p>Example: 12:00 PM. Start the timer at this actual collection time.</p></div></div>'+
+window.LAB_PATHFAST_EXTRAS.baselinePicker()+
 window.LAB_PATHFAST_EXTRAS.timing()+
-'<div class="pcr-missed"><strong>Missed the 1-hour window?</strong><p>Notify the provider. Example: If the baseline is 12:00 PM and the 1-hour window has passed at 1:21 PM, notify the provider. If the provider selects the approved 0/2-hour pathway, target <b>2:00 PM</b>, never earlier. Document the actual draw time and do not apply a protocol-specific delta threshold to a sample outside its authorized window.</p></div>'+
+
 '<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span>⌄</span></summary><div>'+
 '<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
 '<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
-'<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Confirm the matching patient ID and lane, acceptable QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
+'<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Inspect the sample appearance for visible clots or fibrin and follow the specimen-acceptability SOP. Verify patient ID, lane, QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
 window.LAB_PATHFAST_EXTRAS.interference()+
 '<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The provider chooses the serial-testing pathway.</p></section>';
 }
