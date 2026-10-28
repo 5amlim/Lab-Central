@@ -154,3 +154,17 @@
 .pcr-ruleout-review-note{margin:0;padding:10px 13px;font-size:10px;line-height:1.6;color:#876c40;background:#fbf8ef}
 .pcr-ruleout-review-note strong{color:#73572e}
 @media(max-width:700px){.pcr-ruleout-review-grid{grid-template-columns:1fr}.pcr-ruleout-review-item:nth-child(odd){border-right:0}.pcr-ruleout-review-head{align-items:flex-start;flex-direction:column;gap:3px}}
+
+/* Approved PATHFAST hs-cTnI 0/1-hour and 0/2-hour decision tree. */
+.pcr-flow-transition{margin:12px 0 4px;padding:13px 15px;display:flex;align-items:flex-start;gap:12px;border:1px solid #a9d8d1;background:#eef9f6;border-radius:12px}
+.pcr-transition-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#187f73;color:#fff;font-size:13px;letter-spacing:.01em;font-weight:900;flex:none}
+.pcr-flow-transition strong{display:block;color:#166d64;font-size:12.5px;margin:0 0 4px}
+.pcr-flow-transition p{margin:0;color:#517c78;line-height:1.6;font-size:11.5px}
+.pcr-flow-foot{display:flex;align-items:flex-start;gap:10px}
+.pcr-flow-foot-icon{border:1px solid #c8b58e;color:#846a39;background:#fff8e8;border-radius:50%;width:18px;height:18px;flex:none;display:grid;place-items:center;font-weight:900;font-family:Georgia,serif;font-size:12px}
+.pcr-flow-question,.pcr-zone-outcome,.pcr-flow-explorer,.pcr-flow-head{min-width:0;max-width:100%;box-sizing:border-box}
+.pcr-flow-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,205px),1fr));gap:9px}
+.pcr-flow-option{width:100%;min-width:0;overflow-wrap:anywhere}
+.pcr-flow-question-header strong{min-width:0;overflow-wrap:anywhere}
+@media(max-width:650px){.pcr-flow-options{grid-template-columns:1fr}.pcr-zone-options{grid-template-columns:repeat(3,minmax(0,1fr))}.pcr-flow-transition{padding:10px}}
+@media print{.pcr-flow-transition{break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
