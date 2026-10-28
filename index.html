@@ -77,6 +77,15 @@
 .pf-video-unlinked p{margin:10px auto 18px;font-size:12px;line-height:1.6;max-width:490px}
 .pf-video-unlinked button{padding:11px 16px;border:0;border-radius:9px;background:#197f79;color:#fff;font:inherit;font-size:12px;font-weight:850;cursor:pointer}
 @media(max-width:650px){.pf-video-player{width:calc(100vw - 18px)}.pf-video-player-head{padding:10px 12px}.pf-video-player-stage iframe,.pf-video-player-stage video{max-height:70vh}}
+
+/* Show the calculator favicon at legible size, without an extra green icon tile. */
+.nav-link .nav-icon.calc-nav-icon{width:43px;height:43px;min-width:43px;background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;margin:0 1px 0 -7px;color:inherit}
+.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{display:block;width:40px!important;height:40px!important;max-width:none;max-height:none;stroke:unset}
+.home-tool-icon.calc-logo-holder{background:transparent!important;border:0!important;border-radius:0!important;width:46px;height:46px;min-width:46px}
+.home-tool-card .home-tool-icon .calculator-logo-svg,.workflow-resource .home-tool-icon .calculator-logo-svg{width:44px!important;height:44px!important}
+.calculator-brand-title .calculator-logo-svg{width:52px!important;height:52px!important}
+@media(max-width:650px){.nav-link .nav-icon.calc-nav-icon{width:38px;height:38px;min-width:38px;margin-left:-4px}.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{width:36px!important;height:36px!important}}
+
 </style>
   
   
@@ -90,7 +99,7 @@
   <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-2" media="all">
-  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-time-picker" media="all">
+  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-provider-larger" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 </head>
 <body>
@@ -177,7 +186,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028-nine-steps-direct-video"></script>
 <script src="pathfast-screen-guide.js?v=20261028-nine-steps"></script>
-<script src="pathfast-interactive.js?v=20261028-timing-editable"></script>
+<script src="pathfast-interactive.js?v=20261028-provider-rn-pathway"></script>
 <script src="pathfast-clinical.js?v=20261028-clot-inspection"></script>
 <script src="equipment-art.js?v=20261028-action-visuals-v2"></script>
 <script>
@@ -243,7 +252,7 @@ function showNav(){
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${svg('book')}</span>Overview</button>`;
  if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">☆</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Lab order workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Instrument order sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Lab order workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Instrument order sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   if(!list.length)continue;
