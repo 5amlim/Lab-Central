@@ -154,29 +154,31 @@ const piccoloImages={
  disc:"data:image/webp;base64,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",
  port:"data:image/webp;base64,UklGRtQEAABXRUJQVlA4IMgEAACwHACdASpaAFoAP0WIs1WwKSQyM5xdIkAoiWUANRAt6zcgq+eneK8LNQI0wk3MQi43CAoTYUpa5b6CCxondO9dEzxYNjraQDagUFa/XbqTZXLqsZL63+d+omPD+BaI660VG1f0P4lSZMyimfn6mr7yPPBITtuQ0k0rIzyZFBhj6t4yjxRg3czKd1lI1KzSdXI743mzgnnsjkee1eN9zw7+beNXeRebJbkJByxgKZknTEMN7qoQKdOITKDfaHEUuwqkXncSUv/T9ky33905ilr/KdKLfRMvkWo8I+0m3RoKVTbXxdpYeJEXgLx4zxIAAP7CrSDTWJXbFeFHQXoKQftZjBSwfNquN20zX25shBeQuABpHwu2i3NEOnCrYm8T+gyuLUdscsrM6uBaleFomCzdEy694/k5riD/8CeDzOmZO1P0fZZBvUguUdcK8C4UrItV9TuEdFuR/UCHS42Xi0PB+xzsXqBhB2D2+foErGh1bCOQzZhKaiyDpQFXHIiM5kGKIOXqrfiBTlhosbJ07Wtxj2LBm3dXStVgBqE5BQL8A1GfIT+gaSAvutrARYjAwidSTJ8oKa1O9RBaZqXsmfGnA4AygP/THlOyAiYmeT4boqeuSOnHPXk9rJJTM9KlFWTTskcNGd8Mm10rkjS1SK7yiHJIclC0/s1f8N1K0IIYewuDquWTkmxckyP18OiGZEisjx9N/oojJF2BQJXqFz+4CAI/FbDQm4fg0vokCWwbCL+ot1AKZGIeuRQYVslop3/sOkh2DZoQq8WgJW5+YShAqIlV/uJEL1I3PPfkbjRSfLr8gFsupjPR9fEbxloWODyN5mO7p1zxQ2HfC7ldWaMtxyFtLthJn1pfoSO6jmP5EU+I33Ta0LGaUJlG5hmUy/EFnF36vWqEBbkcqakYgGejEEXAaWz69BdDTmA8Gkjo02xpH1tRKaqQJg0srVEd1sSoyVUj2p0OeYJCAXBTGGMvZRt6P8xwDyL3GDzRulZu3iEeBgYCO2BjFbImz9dN7bguiCtG8mCBk6vhrW7/QyHQMJ1wKbq7qRl+425TKMYDdaNRJ6DrDvgqqn0Kv2CBofVzpaQ1pSPsbv0282alcZNXgcGFJvdUlxSd7kqxKiTzziBLo//doChXgyvZu06CPCm9HJDC7lv4TTqlGm/qdlmIG0T1yF9SRpTR9qrcV6GSieaYzlB6OxxPgSRF9mrFstXYlov9kvtcZNtrTofqZlOBq0nLmubxGi3W0+HROT1+8jkR3+FMQhLTt3HPhWHhLe/Gpgksh8XMP14vTTW01xAT7UpOTVCsSrEc2A9kMqn8cpgOu4xdNq8EIg5/84N5ViuNsrUaq0OdJk6+ZuJz5nM58vf3hX6v36muQE749vaMmomyNkiQTU+/AtFSiGJsSdYBazMPZGFcy0Tsi5Ixvw43s03shFV2PJrNul9H1F8CoB7l2gIap8EnuEaJqeeMBgx54VtoNZpweHNX3P7lpHzQkwmE4J8Occv5dVO9O5oHPcz49mvbveKcps+SNHpRwS5zmfTH72cs4LWMdwr0GyU72Wee3bKNe1nR7fxoPtTvSr1HHf/tj1m8NS93i+saVBmX2JyQLbJ0ZKeG02O6eyDBD2/AAmgAAAA="
 };
-function piccoloDiscSvg(filled=false,port=true){
- const n=36;
- let spokes=Array.from({length:n},(_,i)=>{const a=2*Math.PI*i/n;const a2=2*Math.PI*(i+.42)/n;
-  const rad=(r,t)=>((170+r*Math.cos(t)).toFixed(1)+","+(156+r*Math.sin(t)).toFixed(1));
-  return '<path d="M'+rad(104,a)+' L'+rad(130,a)+' L'+rad(130,a2)+' L'+rad(104,a2)+'Z" fill="#eef5f8" stroke="#c7d9e1" stroke-width="1.2"/>';
- }).join("");
- const liquid=filled?'<path d="M167 146 L204 149 Q215 160 207 174 L167 175 Z" fill="#bb3340" opacity=".83"/>':'';
- return '<svg class="pic-disc-svg" viewBox="0 0 440 315" role="img" aria-label="Piccolo clear reagent disc; near-center sample inlet and chamber are highlighted">'+
- '<circle cx="170" cy="156" r="137" fill="#f5fafb" stroke="#9eb8c5" stroke-width="7"/>'+
- '<circle cx="170" cy="156" r="125" fill="#fff" stroke="#d0e1e7" stroke-width="2"/>'+spokes+
- '<circle cx="170" cy="156" r="91" fill="#f5fafb" stroke="#a7c1cf" stroke-width="4"/>'+
- '<circle cx="170" cy="156" r="57" fill="#ecf5f8" stroke="#a8c4d0" stroke-width="4"/>'+
- '<circle cx="170" cy="156" r="24" fill="#d4e7ee" stroke="#9aafbb" stroke-width="3"/>'+
- '<path d="M170 111 L170 142 M170 173 L170 196" stroke="#8aadb9" stroke-width="5"/>'+
- '<rect x="184" y="142" width="23" height="27" rx="6" fill="#e4f1f6" stroke="#6e9fb4" stroke-width="2.5"/>'+liquid+
- '<circle cx="192" cy="148" r="5.5" fill="'+(filled?'#bc3543':'#275f7c')+'" stroke="#fff" stroke-width="2"/>'+
- '<path d="M199 146 L268 102 L303 102" fill="none" stroke="#188c9c" stroke-width="3"/>'+
- '<text x="308" y="96" font-size="13" fill="#235c74" font-weight="850">SAMPLE PORT</text>'+
- '<text x="308" y="113" font-size="10.5" fill="#5a8295">Tip enters here</text>'+
- '<path d="M201 169 L264 208 L307 208" fill="none" stroke="#c14c59" stroke-width="2.5"/>'+
- '<text x="308" y="204" font-size="12" fill="#ab4756" font-weight="850">FILL CHAMBER</text>'+
- '<text x="308" y="220" font-size="10.5" fill="#68889a">Follow molded fill marks</text>'+
- '<text x="170" y="304" font-size="11" fill="#708d9e" text-anchor="middle">Keep sample within the molded fill marks</text></svg>';
+function piccoloDiscSvg(filled=false){
+ const spokes=Array.from({length:32},(_,i)=>{
+  const angle=i*360/32;
+  return '<rect x="163" y="23" width="13" height="32" rx="2" transform="rotate('+angle+' 170 159)" fill="#e7f1f5" stroke="#b6cbd7" stroke-width="1.4"/>';
+ }).join('');
+ const blood=filled?'<path d="M193 142 Q199 137 207 142 L218 155 Q220 169 211 177 H191Z" fill="#b63d4a" opacity=".84"/><ellipse cx="201" cy="152" rx="7" ry="4" fill="#ce5b64"/>':'';
+ return '<svg class="pic-disc-svg" viewBox="0 0 530 324" role="img" aria-label="Piccolo reagent disc top view with near-center sample entry port and its fill chamber'+(filled?', with blood in the chamber':' empty')+'">'+
+ '<ellipse cx="170" cy="302" rx="150" ry="9" fill="#e6eff3"/>'+
+ '<circle cx="170" cy="159" r="141" fill="#f9fcfd" stroke="#91b2c2" stroke-width="6"/>'+
+ '<circle cx="170" cy="159" r="128" fill="#f5fafc" stroke="#c6dbe5" stroke-width="2"/>'+
+ spokes+
+ '<circle cx="170" cy="159" r="101" fill="#edf6f9" stroke="#aac8d5" stroke-width="4"/>'+
+ '<circle cx="170" cy="159" r="67" fill="#f9fcfd" stroke="#b5d0db" stroke-width="4"/>'+
+ '<circle cx="170" cy="159" r="28" fill="#e2eff4" stroke="#9cb8c5" stroke-width="3"/>'+
+ '<circle cx="170" cy="159" r="12" fill="#c2d8e2" stroke="#8eacbb" stroke-width="2"/>'+
+ '<path d="M190 136 Q209 131 221 146 L229 160 L220 185 Q202 193 185 179 L186 144Z" fill="#e5f1f5" stroke="#82a9bb" stroke-width="2.5"/>'+blood+
+ '<ellipse cx="201" cy="150" rx="7" ry="5.5" fill="'+(filled?'#b63a48':'#366c88')+'" stroke="#fff" stroke-width="2"/>'+
+ '<path d="M206 148 L298 92 H344" fill="none" stroke="#2c8b9e" stroke-width="3"/>'+
+ '<text x="353" y="89" fill="#286f83" font-size="13" font-family="Arial" font-weight="850">SAMPLE ENTRY</text>'+
+ '<text x="353" y="106" fill="#607f91" font-size="11" font-family="Arial">Adjacent to center hub</text>'+
+ '<path d="M217 178 L296 213 H344" fill="none" stroke="#b94a57" stroke-width="2.5"/>'+
+ '<text x="353" y="208" fill="#a94754" font-size="13" font-family="Arial" font-weight="850">SAMPLE CHAMBER</text>'+
+ '<text x="353" y="224" fill="#657f8f" font-size="11" font-family="Arial">'+(filled?'Sample loaded':'Fill to molded markers')+'</text>'+
+ '<path d="M188 142 v-9 M221 177 v9" stroke="#427e94" stroke-width="2.5"/>'+
+ '<text x="170" y="317" font-size="11" fill="#7893a2" font-family="Arial" text-anchor="middle">'+(filled?'AFTER LOADING':'BEFORE LOADING')+'</text></svg>';
 }
 function piccoloPipetteSvg(){
  return '<svg class="pic-pipette-svg" viewBox="0 0 440 180" role="img" aria-label="Gray Piccolo transfer pipette, separate disposable sample tip, and a 100 microliter sample">'+
@@ -194,24 +196,32 @@ function piccoloPipetteSvg(){
  '<text x="240" y="164" font-size="10.5" fill="#68869a" text-anchor="middle">Use the specified 100 µL pipette and a fresh matching tip</text></svg>';
 }
 function piccoloLoadingSvg(){
- return '<svg class="pic-loading-svg" viewBox="0 0 510 300" role="img" aria-label="Pipette entering the center-adjacent sample port of a Piccolo disc tilted approximately 45 degrees">'+
- '<defs><linearGradient id="picLiquid" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d36267"/><stop offset="1" stop-color="#a52d39"/></linearGradient></defs>'+
- '<g transform="translate(190 204) rotate(-25)"><ellipse cx="0" cy="0" rx="159" ry="68" fill="#f2f7f9" stroke="#9fb9c8" stroke-width="6"/>'+
- Array.from({length:20},(_,i)=>{const t=i*Math.PI/10;return '<ellipse cx="'+(138*Math.cos(t)).toFixed(1)+'" cy="'+(53*Math.sin(t)).toFixed(1)+'" rx="8" ry="6" fill="#d9e8ee" stroke="#adcad5"/>'}).join("")+
- '<ellipse rx="79" ry="36" fill="#e7f1f5" stroke="#aac8d2" stroke-width="3"/>'+
- '<ellipse rx="25" ry="12" fill="#d9e8ee" stroke="#a1b8c6" stroke-width="2"/>'+
- '<ellipse cx="45" cy="-8" rx="11" ry="6" fill="#ae3240" stroke="#7d2633" stroke-width="3"/>'+
- '<path d="M33 0 Q70 5 77 17 Q44 23 22 10Z" fill="#bd3c49" opacity=".68"/></g>'+
- '<path d="M265 25 L290 25 L306 90 L294 111 L304 143 L295 160" fill="none" stroke="#a5b3ba" stroke-width="17" stroke-linejoin="round" stroke-linecap="round"/>'+
- '<path d="M295 159 L284 189" stroke="#dce5e8" stroke-width="7" stroke-linecap="round"/>'+
- '<path d="M284 177 C274 189 278 200 282 201 C294 203 297 194 284 177Z" fill="url(#picLiquid)"/>'+
- '<circle cx="282" cy="204" r="10" fill="none" stroke="#168e8c" stroke-width="3" stroke-dasharray="3 3"/>'+
- '<path d="M287 206 L357 156 L412 156" stroke="#188c9c" stroke-width="2.7" fill="none"/>'+
- '<text x="420" y="151" fill="#276981" font-weight="850" font-size="13" text-anchor="middle">SAMPLE PORT</text>'+
- '<text x="421" y="168" fill="#6c8b9b" font-size="10.5" text-anchor="middle">near disc center</text>'+
- '<text x="38" y="35" fill="#446e86" font-size="13" font-weight="850">TILT DISC ~45°</text>'+
- '<text x="38" y="52" fill="#6c8c9d" font-size="10.5">Port above fill line</text>'+
- '<text x="252" y="292" font-size="11" fill="#718a9b" text-anchor="middle">Fill the marked chamber · avoid bubbles</text></svg>';
+ const chambers=Array.from({length:30},(_,i)=>'<rect x="201" y="28" width="11" height="28" rx="2" transform="rotate('+(i*12)+' 207 170)" fill="#e3eef3" stroke="#bfd3dd" stroke-width="1.2"/>').join('');
+ return '<svg class="pic-loading-svg" viewBox="0 0 660 350" role="img" aria-label="Piccolo reagent disc viewed from above while transfer pipette dispenses into the near-center sample chamber">'+
+ '<ellipse cx="208" cy="328" rx="173" ry="10" fill="#e5eef3"/>'+
+ '<circle cx="207" cy="170" r="149" fill="#f8fbfd" stroke="#94b4c3" stroke-width="6"/>'+
+ '<circle cx="207" cy="170" r="136" fill="#f4fafb" stroke="#c2d9e2" stroke-width="2"/>'+chambers+
+ '<circle cx="207" cy="170" r="107" fill="#edf7fa" stroke="#aec9d6" stroke-width="4"/>'+
+ '<circle cx="207" cy="170" r="68" fill="#f9fcfd" stroke="#b1cad5" stroke-width="4"/>'+
+ '<circle cx="207" cy="170" r="28" fill="#dcebf1" stroke="#93b3c2" stroke-width="3"/>'+
+ '<circle cx="207" cy="170" r="11" fill="#bad4df" stroke="#8baaba" stroke-width="2"/>'+
+ '<path d="M229 146 Q249 142 260 156 L268 172 L258 192 Q244 201 226 188Z" fill="#e1eff5" stroke="#7aa8b9" stroke-width="3"/>'+
+ '<path d="M235 165 Q245 161 256 168 L259 184 Q245 189 232 181Z" fill="#bd4350" opacity=".7"/>'+
+ '<circle cx="241" cy="158" r="7" fill="#b83646" stroke="#fff" stroke-width="2"/>'+
+ '<g transform="translate(243 157) rotate(55)">'+
+ '<path d="M0 -189 H27 L31 -65 H30 L25 -13 L15 0 L7 -12 L1 -65Z" fill="#b5bfc5" stroke="#7f9ca9" stroke-width="3"/>'+
+ '<path d="M10 -184 V-67" stroke="#f4fbfd" stroke-width="5" opacity=".7"/>'+
+ '<path d="M7 -13 L15 0 L25 -13" fill="#d8eaf0" stroke="#7ca6b5" stroke-width="2"/>'+
+ '</g>'+
+ '<path d="M249 157 L390 135 H470" stroke="#2a899d" stroke-width="3" fill="none"/>'+
+ '<text x="480" y="131" fill="#286f82" font-size="15" font-family="Arial" font-weight="900">SAMPLE PORT</text>'+
+ '<text x="480" y="151" fill="#637f90" font-size="12" font-family="Arial">Near center hub</text>'+
+ '<path d="M259 187 L391 253 H474" stroke="#b94c59" stroke-width="3" fill="none"/>'+
+ '<text x="484" y="250" fill="#aa4552" font-size="14" font-family="Arial" font-weight="850">FILL CHAMBER</text>'+
+ '<text x="484" y="270" fill="#6c8796" font-size="11.5" font-family="Arial">Follow molded markers</text>'+
+ '<text x="35" y="23" font-family="Arial" fill="#2c7386" font-size="14" font-weight="850">DISPENSE INTO CENTER-ADJACENT WELL</text>'+
+ '<text x="35" y="341" font-family="Arial" fill="#678493" font-size="11">Keep the sample port visible and avoid bubbles.</text>'+
+ '</svg>';
 }
 function piccoloVisual(text){
  const t=String(text).toLowerCase();
@@ -227,7 +237,7 @@ function piccoloVisual(text){
  }else if(add){
   pieces='<article class="pic-vis-card"><strong>Gray transfer device and disposable tip</strong><img loading="lazy" class="pic-user-photo pic-photo-tip" src="'+piccoloImages.tip+'" alt="User-supplied photograph of gray Piccolo transfer component"/>'+piccoloPipetteSvg()+'<span>Fit a fresh compatible tip. Avoid bubbles during aspiration.</span></article>'+
   (qc?'<article class="pic-vis-card"><strong>Dispense QC material into the sample port</strong>'+piccoloDiscSvg(false)+'<span>Transfer the appropriate QC material using the approved QC procedure and verify the chamber is properly filled.</span></article>':
-  '<article class="pic-vis-card"><strong>Dispense blood into the sample port</strong>'+piccoloLoadingSvg()+'<span>With the disc tilted, place the tip into the sample port and fill the chamber to its molded fill line. Do not introduce bubbles.</span></article>'+
+  '<article class="pic-vis-card"><strong>Dispense blood into the sample port</strong>'+piccoloLoadingSvg()+'<span>Place the transfer tip into the near-center sample port and dispense into the marked sample chamber. Do not introduce bubbles.</span></article>'+
   '<article class="pic-vis-card"><strong>Disc after blood loading</strong>'+piccoloDiscSvg(true)+'<span>The red region illustrates blood in the near-center sample chamber. Start analysis within 10 minutes of filling the disc.</span></article>');
  }else{
   pieces='<article class="pic-vis-card"><strong>Place disc in analyzer drawer</strong>'+piccoloAnalyzerSvg()+'<span>Position the filled disc in the front drawer, then close the drawer and follow the analyzer prompts.</span></article>';
