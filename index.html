@@ -500,6 +500,15 @@ function videoLibrary(){
  return `<article class="video-card ${url?'has-video':''}"><div class="video-stage">${stage}</div><div class="video-content"><strong>${safeHtml(slot.name)}</strong><p>${safeHtml(slot.desc)}</p><div class="video-buttons"><span class="video-status">${url?'Video added':'Video unavailable'}</span><div style="display:flex;gap:7px;align-items:center">${info.kind==='external'?`<a class="video-external" href="${safeHtml(info.url)}" target="_blank" rel="noopener noreferrer">Open video ↗</a>`:''}<button class="video-edit" type="button" data-edit-video="${safeHtml(slot.id)}">${url?'Edit link':'Set video link'}</button></div></div></div></article>`}).join('')}</div><p class="source-footnote">Video links entered here are stored on this device only.</p>`;
 }
 function sectionOverview(sec,groups){
+ if(sec.id==='pathfast')return `<section class="pfux-overview">
+ <div class="pfux-overview-title"><h2>Before you begin</h2><p>Select a workflow above. Start with the patient sample procedure for testing, or use Calibration + QC when an assay is due.</p></div>
+ <div class="pfux-checks">
+ <div><strong>Instrument ready</strong><p>Check the assay status pill. Pink indicates that the selected assay needs CAL/QC before patient testing. Gray indicates ready status.</p></div>
+ <div><strong>Correct specimen</strong><p>Use lithium-heparin whole blood or plasma as permitted by the assay. Mix promptly and check for microclots.</p></div>
+ <div><strong>Timed troponins</strong><p>Use the RN collection guide for actual draw times and approved 1-hour or 2-hour collection windows.</p></div>
+ </div>
+ <p class="pfux-overview-footer">For instrument-specific preparation, testing and result interpretation, follow the current approved SOP and manufacturer IFU.</p>
+ </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(sec.id==='pathfast')h+=`<button class="mini-feature" type="button" data-gotab="cal-qc" style="width:100%;margin-bottom:12px;min-height:90px;border-left:4px solid #208f89"><span class="feature-small-icon" style="background:#e4f5f1;color:#218d88">${svg('clipboard-check')}</span><span><strong>Calibration + QC · every 28 days</strong><small>Six lanes, one combined run · rack loading diagram</small></span><span class="arrow">↗</span></button>`;
@@ -519,12 +528,24 @@ function sectionRender(sec,tab){
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
  let h=`<div class="detail-header"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${sec.archived?'HISTORICAL REFERENCE':'INSTRUMENT GUIDE'}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p></div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
- h+=`<div class="meta-bar"><div class="meta-chip"><small>Specimen / panel</small><span>${safeHtml(sec.sample)}</span></div><div class="meta-chip"><small>QC / procedure</small><span>${safeHtml(sec.qc)}</span></div><div class="meta-chip"><small>Reference</small><span>Current approved SOP / manufacturer IFU</span></div></div>`;
+ if(sec.id==='pathfast')h+=`<div class="pfux-context"><span><strong>Specimen:</strong> ${safeHtml(sec.sample)}</span><span><strong>Calibration:</strong> Every 28 days with QC</span><span><strong>Reference:</strong> Approved SOP / current IFU</span></div>`;
+ else h+=`<div class="meta-bar"><div class="meta-chip"><small>Specimen / panel</small><span>${safeHtml(sec.sample)}</span></div><div class="meta-chip"><small>QC / procedure</small><span>${safeHtml(sec.qc)}</span></div><div class="meta-chip"><small>Reference</small><span>Current approved SOP / manufacturer IFU</span></div></div>`;
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='sendout'||sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
- else if(sec.id==='pathfast')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Check training and assay-specific requirements.</strong> Verify lot details, QC acceptance, clinical pathways and specimen handling against the latest PATHFAST IFU and approved protocol before patient testing.</div></div>`;
+ else if(sec.id==='pathfast')h+=`<p class="pfux-safety"><span aria-hidden="true">ⓘ</span> Verify assay-specific preparation, QC, results and clinical decisions against approved procedures. Clinical decisions remain provider-directed.</p>`;
  if(sec.id==='sendout')h+=`<div class="ops-link-card"><div><strong>Lab Sendout Log: step-by-step handoff</strong><p>Color printing, RN .rn documentation, processing, Microsoft Forms and specimen bin.</p></div><button type="button" data-go="sendout-log">Open Sendout Log →</button></div>`;
- h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div><div class="tab-content" id="activeTabContent">`;
+ if(sec.id==='pathfast'){
+  const workflows=[
+   {id:'patient',title:'Patient samples',subtitle:'Run a patient test',index:'01'},
+   {id:'rn-collection',title:'RN collection',subtitle:'Timing & specimen care',index:'02'},
+   {id:'cal-qc',title:'Calibration + QC',subtitle:'28-day six-lane setup',index:'03'},
+   {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider reference',index:'04'}
+  ];
+  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST primary workflows">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${x.id}" ${tab===x.id?'aria-current="page"':''}><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
+  const supporting=tabs.filter(x=>!workflows.some(y=>y.id===x.id));
+  h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
+ }else h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
+ h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+=window.LAB_PATHFAST_UI.render();
