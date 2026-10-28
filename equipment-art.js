@@ -288,5 +288,167 @@ function specimenGuide(sec){
  '</section>';
 }
 
-window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg};
+
+function kitShape(id,filled,context){
+ const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
+ const specimen=filled?sampleColor:"#e5f1f5";
+ const outline="#87a5b7",dark="#385b72";
+ let h='';
+ if(id==="piccolo"){
+  return piccoloDiscSvg(filled);
+ }
+ if(id==="pathfast"){
+  h='<path d="M127 37 H193 L206 65 L206 177 Q197 187 189 187 H128 Q115 184 115 170 L115 56 Q114 39 127 37Z" fill="#ecf3f6" stroke="'+outline+'" stroke-width="4"/>'+
+    '<rect x="128" y="65" width="65" height="38" rx="6" fill="#a8cad8"/>'+
+    '<rect x="127" y="109" width="66" height="37" rx="7" fill="#d6e7ed" stroke="#89acbc"/>'+
+    '<circle cx="159" cy="124" r="14" fill="'+specimen+'" stroke="#688f9f" stroke-width="3"/>'+
+    '<rect x="143" y="161" width="32" height="10" rx="4" fill="#d7e6ed"/>';
+  return illustratedSvg(h+'<path d="M172 121 L231 88 L267 88" fill="none" stroke="#2f91a1" stroke-width="3"/><text x="231" y="80" fill="'+dark+'" font-size="11" font-weight="850">SAMPLE WELL</text>','PATHFAST reagent cartridge '+(filled?"with sample in well":"before sample application"));
+ }
+ if(id==="sysmex"){
+  h='<rect x="114" y="38" width="91" height="146" rx="15" fill="#edf7fa" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="105" y="26" width="109" height="30" rx="7" fill="#9c69b3" stroke="#7c92a1" stroke-width="3"/>'+
+   '<path d="M119 109 H200 V164 Q200 179 185 180 H135 Q119 178 119 162Z" fill="'+sampleColor+'" opacity="'+(filled?'.78':'.46')+'"/>'+
+   '<rect x="124" y="104" width="72" height="32" rx="3" fill="#fcfeff"/>'+
+   '<text x="160" y="119" font-size="10" fill="#385d75" font-weight="850" text-anchor="middle">EDTA</text>'+
+   '<text x="160" y="131" font-size="8.5" fill="#688297" text-anchor="middle">CBC TUBE</text>';
+  return illustratedSvg(h+(filled?'<path d="M206 171 L250 142 L276 142" fill="none" stroke="#2c96a1" stroke-width="2.7"/><text x="257" y="135" font-size="10" fill="'+dark+'" font-weight="850">CLOSED-TUBE</text>':''),'Sysmex pocH-100i lavender-top blood tube; no reagent cartridge');
+ }
+ if(id==="triage"){
+  h='<rect x="53" y="80" width="214" height="73" rx="12" fill="#f3f6f8" stroke="'+outline+'" stroke-width="3"/>'+
+   '<path d="M79 98 H220" stroke="#c7d9e2" stroke-width="4"/>'+
+   '<rect x="158" y="107" width="62" height="20" rx="4" fill="#e4edf0" stroke="#b2cbd5" stroke-width="2"/>'+
+   '<circle cx="83" cy="117" r="18" fill="'+specimen+'" stroke="#6e9aaa" stroke-width="3"/>'+
+   '<rect x="238" y="108" width="16" height="21" rx="4" fill="#386a82"/>';
+  return illustratedSvg(h+'<path d="M97 102 L115 50 H189" fill="none" stroke="#2f91a1" stroke-width="3"/><text x="142" y="43" font-size="11" fill="'+dark+'" font-weight="850">SAMPLE PORT</text>',"Triage lateral flow test device "+(filled?"after liquid sample applied":"before sample transfer"));
+ }
+ if(id==="torch"||id==="spotfire"){
+  h='<rect x="64" y="26" width="167" height="158" rx="12" fill="#eef5f8" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="82" y="38" width="131" height="35" rx="6" fill="#d6e7ee" stroke="#a9c2cf"/>'+
+   '<path d="M77 84 H216 V160 H77Z" fill="#fcfefe" stroke="#b7cbd4" stroke-width="2"/>'+
+   Array.from({length:13},(_,i)=>'<rect x="'+(84+i*10)+'" y="128" width="7" height="27" rx="2" fill="'+(filled?"#c5e0e6":"#e7f0f4")+'" stroke="#bfced7" stroke-width="1"/>').join("")+
+   '<circle cx="108" cy="90" r="11" fill="'+(filled?"#8fbfd6":"#f4fafc")+'" stroke="#2788b9" stroke-width="3"/>'+
+   '<circle cx="183" cy="90" r="11" fill="'+(filled?specimen:"#f6fafb")+'" stroke="#bf4d59" stroke-width="3"/>'+
+   '<rect x="94" y="165" width="115" height="12" rx="5" fill="#dae9ef"/>'+
+   '<path d="M108 90 L64 60 L20 60" fill="none" stroke="#2b8db7" stroke-width="2"/>'+
+   '<path d="M183 90 L241 57 L297 57" fill="none" stroke="#be5365" stroke-width="2"/>'+
+   '<text x="20" y="52" font-size="10.5" fill="#327a9b" font-weight="830">HYDRATION</text>'+
+   '<text x="241" y="50" font-size="10.5" fill="#a74556" font-weight="830">SAMPLE</text>';
+  return illustratedSvg(h,"BioFire sealed pouch with blue hydration port and red sample port "+(filled?"after transfer":"before transfer"));
+ }
+ if(id==="clinitek"){
+  const cassette='<rect x="20" y="88" width="158" height="58" rx="13" fill="#f6f8fa" stroke="'+outline+'" stroke-width="3"/>'+
+    '<rect x="54" y="108" width="49" height="18" rx="4" fill="#e1edf2"/>'+
+    '<circle cx="135" cy="117" r="11" fill="'+(filled?"#ecd3d5":"#eef6f9")+'" stroke="#9bb6c4" stroke-width="3"/>'+
+    '<text x="76" y="138" font-size="10" fill="#5b7c8e" text-anchor="middle">hCG</text>';
+  const strip='<rect x="199" y="102" width="96" height="22" rx="6" fill="#e9edf0" stroke="#aabdc8" stroke-width="2"/>'+
+    Array.from({length:9},(_,i)=>'<rect x="'+(207+i*9)+'" y="106" width="7" height="14" rx="2" fill="'+(filled?["#cbd870","#e8a875","#b7a8ca","#7fbfb7","#d8c56f"][i%5]:"#fafbfb")+'" stroke="#b2bdc6" stroke-width=".6"/>').join("")+
+    '<text x="246" y="140" font-size="9" fill="#56798d" text-anchor="middle">URINALYSIS STRIP</text>';
+  return illustratedSvg(cassette+strip,"Clinitek hCG cassette and urinalysis reagent strip, "+(filled?"sample applied":"unused"));
+ }
+ if(id==="febridx"){
+  h='<rect x="59" y="67" width="213" height="83" rx="16" fill="#f7fbfc" stroke="'+outline+'" stroke-width="3"/>'+
+    '<rect x="90" y="85" width="89" height="26" rx="7" fill="#edf4f6" stroke="#9dbbca" stroke-width="2"/>'+
+    '<circle cx="223" cy="109" r="16" fill="'+specimen+'" stroke="#bc5264" stroke-width="3"/>'+
+    '<rect x="89" y="120" width="91" height="15" rx="3" fill="#d7e6ec"/>'+
+    '<path d="M221 90 L249 43 L297 43" fill="none" stroke="#ba5364" stroke-width="2.5"/>'+
+    '<text x="245" y="35" font-size="11" fill="'+dark+'" font-weight="850">COLLECTION</text>';
+  return illustratedSvg(h,"FebriDx fingerstick integrated test device "+(filled?"after blood collected":"unused"));
+ }
+ if(id==="drug-screen"){
+  h='<rect x="102" y="45" width="119" height="132" rx="14" fill="#f7fafb" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="96" y="33" width="131" height="25" rx="7" fill="#e2eaf0" stroke="#abc0c9" stroke-width="2"/>'+
+   '<path d="M108 126 H216 V158 Q212 169 198 169 H121 Q108 169 108 158Z" fill="'+(filled?"#e4ba63":"#e8f2f5")+'" opacity=".7"/>'+
+   Array.from({length:12},(_,i)=>'<rect x="'+(114+i*8.4)+'" y="72" width="5" height="42" rx="2" fill="#fafdfd" stroke="#a5b8c6"/>'+
+     '<path d="M'+(116+i*8.4)+' 91 v4" stroke="'+(filled?"#c25d74":"#cbd9e0")+'" stroke-width="2"/>').join("");
+  return illustratedSvg(h,"Multi-panel urine drug screen cup "+(filled?"with urine in container":"empty"));
+ }
+ if(id==="coagsense"){
+  h='<rect x="40" y="89" width="237" height="55" rx="9" fill="#f1f6f8" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="66" y="102" width="109" height="28" rx="5" fill="#dce8ec"/>'+
+   '<circle cx="214" cy="116" r="17" fill="'+specimen+'" stroke="#8eacb7" stroke-width="3"/>'+
+   '<path d="M225 102 L260 55 L298 55" stroke="#2d91a0" stroke-width="2.5" fill="none"/>'+
+   '<text x="249" y="46" font-size="11" fill="'+dark+'" font-weight="850">SAMPLE WELL</text>';
+  return illustratedSvg(h,"Coag-Sense PT INR test strip with capillary sample well "+(filled?"filled":"empty"));
+ }
+ if(id==="hemocue"){
+  h='<path d="M62 84 H222 Q243 84 246 101 V136 Q239 148 225 148 H64 Q50 147 50 134 V99 Q55 84 62 84Z" fill="#eef3f6" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="72" y="99" width="125" height="34" rx="3" fill="'+(filled?"#c04653":"#f7fcfd")+'" stroke="#a5c2ce" stroke-width="2"/>'+
+   '<path d="M196 109 H254 L271 100 L271 138 L254 130 H196Z" fill="#f1f5f8" stroke="#abc4d0" stroke-width="2"/>'+
+   '<text x="145" y="70" text-anchor="middle" font-size="12" fill="'+dark+'" font-weight="820">MICROCUVETTE</text>';
+  return illustratedSvg(h,"HemoCue Hb 201+ single-use microcuvette "+(filled?"filled with blood":"before filling"));
+ }
+ if(id==="sofia"||id==="poc"){
+  h='<rect x="40" y="76" width="240" height="87" rx="15" fill="#fafcfd" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="69" y="94" width="108" height="37" rx="6" fill="#dbe7ed" stroke="#abbfca"/>'+
+   '<rect x="190" y="106" width="41" height="18" rx="5" fill="#e0ebee" stroke="#aac4d0"/>'+
+   '<circle cx="252" cy="119" r="11" fill="'+(filled?"#e2bdd0":"#fff")+'" stroke="#9eafb8" stroke-width="3"/>'+
+   '<path d="M252 107 L270 49 L305 49" stroke="#278e9d" stroke-width="3" fill="none"/>'+
+   '<text x="258" y="39" fill="'+dark+'" font-size="11" font-weight="850">SAMPLE WELL</text>';
+  return illustratedSvg(h,"Rapid test cassette "+(filled?"after assay-specific extracted sample":"unused"));
+ }
+ if(id==="idnow"){
+  h='<rect x="46" y="89" width="104" height="72" rx="11" fill="#eef3f6" stroke="'+outline+'" stroke-width="3"/>'+
+   '<circle cx="98" cy="113" r="18" fill="'+(filled?"#c7dae2":"#f9fdfd")+'" stroke="#a4c0cc" stroke-width="3"/>'+
+   '<rect x="173" y="86" width="100" height="78" rx="12" fill="#eaf3f6" stroke="'+outline+'" stroke-width="3"/>'+
+   '<circle cx="201" cy="117" r="12" fill="#f7f9f9" stroke="#a4c0ca" stroke-width="2"/>'+
+   '<circle cx="245" cy="117" r="12" fill="#e3ebee" stroke="#a4c0ca" stroke-width="2"/>'+
+   '<text x="98" y="176" text-anchor="middle" font-size="10" fill="'+dark+'">SAMPLE RECEIVER</text>'+
+   '<text x="223" y="176" text-anchor="middle" font-size="10" fill="'+dark+'">TEST BASE</text>';
+  return illustratedSvg(h,"Abbott ID NOW sample receiver and test base "+(filled?"after swab elution":"unused"));
+ }
+ if(id==="visby"){
+  h='<rect x="58" y="55" width="218" height="125" rx="21" fill="#f6f9fa" stroke="'+outline+'" stroke-width="3"/>'+
+   '<rect x="83" y="75" width="163" height="29" rx="8" fill="#d9e7ed"/>'+
+   '<circle cx="170" cy="139" r="26" fill="'+(filled?"#dbe7ed":"#f8fcfd")+'" stroke="#a1bdca" stroke-width="3"/>'+
+   '<circle cx="170" cy="139" r="11" fill="#b9cdd7"/>';
+  return illustratedSvg(h,"Visby self-contained molecular test device "+(filled?"after sample processing":"unused"));
+ }
+ return illustratedSvg('<rect x="60" y="65" width="200" height="88" rx="16" fill="#f3f8f9" stroke="#a2c0cb" stroke-width="3"/>',"Assay kit reference");
+}
+function kitScene(id,stage,context){
+ const loaded=stage!=="before",what=stage==="before"?"BEFORE SAMPLE":"AFTER SAMPLE";
+ const opaque=["torch","spotfire","idnow","visby"].includes(id);
+ const noCartridge=id==="sysmex";
+ const qc=context==="qc";
+ const title=noCartridge?(loaded?"TUBE AT ANALYZER":"COLLECTION TUBE"):opaque?(loaded?"AFTER TRANSFER":"UNPREPARED KIT"):qc?(loaded?"QC MATERIAL APPLIED":"BEFORE QC"):what;
+ const note=opaque?"Closed pouches and cartridges conceal the sample after transfer.":"Sample position is schematic; follow the assay IFU for actual fill and handling.";
+ return '<div class="dev-kit-view"><div class="dev-kit-state">'+title+'</div><div class="dev-kit-drawing">'+kitShape(id,loaded,context)+'</div><p>'+note+'</p></div>';
+}
+function workflowVisual(sec,title){
+ if(!sec||!collection[sec.id]||sec.archived)return "";
+ const id=sec.id,t=String(title).toLowerCase();
+ const qc=/\bqc\b|control|calibration/i.test(title);
+ const patient=/running|patient|samples|test|fingerstick|blood|collection/i.test(title);
+ if(id==="piccolo")return "";
+ if(id==="pathfast"&&!/(retrieve cartridges|load cartridges|insert the rack)/i.test(title))return "";
+ if(!(qc||patient))return "";
+ if(/ordering|order set|available locations|results|review, document|maintenance|cleaning|turnaround/i.test(t))return "";
+ let cards=[];
+ if(id==="pathfast"){
+  const current=/retrieve/.test(t)?"before":/load cartridges/.test(t)?"after":"after";
+  cards=[kitScene(id,current,"patient")];
+ }else cards=[kitScene(id,"before",qc?"qc":"patient"),kitScene(id,"after",qc?"qc":"patient")];
+ const media=collection[id];
+ const specimen=qc?"Quality controls: use the controls specified by the current analyzer SOP.":media.map(x=>x[1]).join(" or ");
+ return '<div class="dev-workflow-visual" aria-label="Illustrated kit before and after specimen preparation"><div class="dev-visual-header"><strong>DEVICE & SAMPLE VISUAL GUIDE</strong><span>'+visualEsc(specimen)+'</span></div>'+
+ '<div class="dev-kit-scenes">'+cards.join('')+'</div>'+
+ '<p class="dev-visual-footnote">Schematic shapes, not scale drawings. Verify the correct panel, collection material, port, lot and specimen requirements in the manufacturer IFU.</p></div>';
+}
+function inlineKitVisual(sec,title,depth,rootTitle){
+ if(!sec||!collection[sec.id]||sec.archived||sec.id==="piccolo")return "";
+ const t=String(title).toLowerCase(),root=String(rootTitle||"").toLowerCase();
+ if(depth>1)return "";
+ const relevant=/cartridge|cassette|test kit|pouch|vial|test strip|pipett|microcuvette|disc|reagent|sample port|loading station|sample well|rack|device|insert|dispense|apply sample|transfer pipette|load sample|load the sample|load the rack/i.test(title);
+ const action=/\bgrab\b|\bremove\b|\bload\b|\bprepare\b|\binsert\b|\bdispens|\btransfer\b|\bapply\b|\bdip\b|\bhydrat|\bcollect\b|\bfill\b|\bplace\b/i.test(title);
+ if(!relevant||!action||/printing|printout|log|reagent-status|data|documentation|report|turnaround|unit|normal|expiry|expiration/i.test(t))return "";
+ const before=/grab|remove|prepare|collect|select|new box|new shipment/i.test(title)&&!/load|dispens|transfer|fill/i.test(title);
+ const qc=/\bqc\b|control|calibration/i.test(root);
+ const stage=before?"before":"after";
+ return '<div class="dev-inline-illustration"><span class="dev-inline-kicker">'+(stage==="before"?"CHECK ITEM":"SAMPLE / KIT HANDLING")+'</span>'+
+ '<div class="dev-inline-drawing">'+kitShape(sec.id,stage!=="before",qc?"qc":"patient")+'</div>'+
+ '<span class="dev-inline-caption">'+(stage==="before"?"Identify the correct unused kit or material.":"Use the correct sample location; verify details in the assay IFU.")+'</span></div>';
+}
+
+window.LAB_EQUIPMENT_ART={render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual};
 })();
