@@ -231,7 +231,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-interactive.js?v=20261028-provider-criteria"></script>
 <script src="pathfast-clinical.js?v=20261028-tube-inversion"></script>
 <script src="equipment-art.js?v=20261028-rack-base"></script>
-<script src="qc-guide.js?v=20261028-qc-print-binder"></script>
+<script src="qc-guide.js?v=20261028-qc-screen-actions"></script>
 <script>
 (()=>{
 'use strict';
@@ -467,7 +467,7 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const piccoloVisual=sec&&sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART?.piccoloVisual?window.LAB_EQUIPMENT_ART.piccoloVisual(root.text):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
  const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
- const qcScreenVisual=sec&&window.LAB_QC_GUIDE?.sysmexStep?window.LAB_QC_GUIDE.sysmexStep(sec,groupId,root.text):'';
+ const qcScreenVisual=sec&&window.LAB_QC_GUIDE?.qcClickStep?window.LAB_QC_GUIDE.qcClickStep(sec,groupId,root.text):'';
  const stepBody=(visualizer?visualizer(index):'')+qcScreenVisual+qcPrintVisual+workflowVisual+piccoloVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  if(isPathfast)return '<details class="guide-card pf-step-collapse" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true"></span></summary><div class="pf-step-collapse-body">'+stepBody+'</div></details>';
