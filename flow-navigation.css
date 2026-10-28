@@ -316,3 +316,16 @@
 /* Final Athena save is an explicit illustrated step, not implied by label selection. */
 .ad-mock-data .ad-target.ad-row{min-height:32px}
 .ad-guide-card:has(.ad-mock-data .ad-target em) .ad-mock-data p{line-height:1.55}
+
+
+/* Workflow timeline: neutral gray uninterrupted guide rail, no decorative down-arrows. */
+.workflow-steps::before{background:#d2d9df!important;left:-32px!important;width:2px}
+.workflow-step:not(:last-child)::after{display:none!important;content:none!important}
+.workflow-step-number{left:-52px!important}
+.branch-panel:before{background:#d2d9df!important}
+.branch-number{border-color:#c9d3da!important;background:#eff3f5!important;color:#42677b!important}
+.flow-step-grid{position:relative}
+.flow-step-grid::before{content:'';position:absolute;top:20px;bottom:17px;left:18px;width:2px;background:#d2d9df}
+.flow-step:not(:last-child)::after{display:none!important;content:none!important}
+.flow-step{position:relative}
+@media(max-width:700px){.workflow-steps::before{background:#d2d9df!important}}
