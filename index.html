@@ -56,7 +56,7 @@
   
   
   <link rel="stylesheet" href="flow-navigation.css?v=20261028-7" media="all">
-  <link rel="stylesheet" href="procedure-guide.css?v=20261028-piccolo" media="all">
+  <link rel="stylesheet" href="procedure-guide.css?v=20261028-visuals" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-4" media="all">
@@ -144,7 +144,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261028-4"></script>
 <script src="pathfast-interactive.js?v=20261028-2"></script>
 <script src="pathfast-clinical.js?v=20261028-4"></script>
-<script src="equipment-art.js?v=20261028-piccolo"></script>
+<script src="equipment-art.js?v=20261028-visuals"></script>
 <script>
 (()=>{
 'use strict';
@@ -333,17 +333,18 @@ function guideStepData(nodes){
  if(!steps.length)steps.push({root:{kind:'step',text:'Reference notes',children:nodes},leading:[],notes:[]});
  return steps;
 }
-function guideDetailNodes(nodes,depth){
+function guideDetailNodes(nodes,depth,sec,rootTitle){
  depth=depth||0;
  return nodes.map(function(n){
   if(n.kind==='note'){
    const urgent=/^(IMPORTANT|WARNING|DO NOT|A\) DO NOT|B\) DO NOT)/i.test(n.text);
    return '<aside class="guide-note'+(urgent?' urgent':'')+'">'+markText(n.text)+'</aside>';
   }
+  const stepPicture=sec&&window.LAB_EQUIPMENT_ART?.inlineKitVisual?window.LAB_EQUIPMENT_ART.inlineKitVisual(sec,n.text,depth,rootTitle):'';
   if(n.children&&n.children.length){
-   return '<details class="guide-group" open><summary><span class="guide-group-tag" aria-hidden="true">'+(depth===0?'›':'+')+'</span><span class="guide-group-title">'+markText(n.text)+'</span><span class="guide-group-chevron" aria-hidden="true">⌄</span></summary><div class="guide-group-body">'+guideDetailNodes(n.children,depth+1)+'</div></details>';
+   return '<details class="guide-group" open><summary><span class="guide-group-tag" aria-hidden="true">'+(depth===0?'›':'+')+'</span><span class="guide-group-title">'+markText(n.text)+'</span><span class="guide-group-chevron" aria-hidden="true">⌄</span></summary><div class="guide-group-body">'+stepPicture+guideDetailNodes(n.children,depth+1,sec,rootTitle)+'</div></details>';
   }
-  return '<div class="guide-line"><span class="guide-line-dot" aria-hidden="true"></span><div>'+markText(n.text)+'</div></div>';
+  return '<div class="guide-line"><span class="guide-line-dot" aria-hidden="true"></span><div>'+markText(n.text)+stepPicture+'</div></div>';
  }).join('');
 }
 function guideStepParts(entry,sec){
@@ -356,10 +357,11 @@ function guideStepTitle(parts){
 }
 function guideStepCard(entry,index,total,visualizer,label='Step',sec=null){
  const root=entry.root;
- const content=guideDetailNodes(entry.leading,0)+guideDetailNodes(root.children||[],0)+guideDetailNodes(entry.notes,0);
+ const content=guideDetailNodes(entry.leading,0,sec,root.text)+guideDetailNodes(root.children||[],0,sec,root.text)+guideDetailNodes(entry.notes,0,sec,root.text);
  const title=guideStepTitle(guideStepParts(entry,sec));
  const piccoloVisual=sec&&sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART?.piccoloVisual?window.LAB_EQUIPMENT_ART.piccoloVisual(root.text):'';
- return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+(visualizer?visualizer(index):'')+piccoloVisual+(content?'<div class="guide-card-body">'+content+'</div>':'')+'</article>';
+ const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text):'';
+ return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+(visualizer?visualizer(index):'')+workflowVisual+piccoloVisual+(content?'<div class="guide-card-body">'+content+'</div>':'')+'</article>';
 }
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
@@ -375,6 +377,7 @@ function renderGuidedProcedure(group,sec){
  let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
  h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(isPathfastPatient?'Prepare and load the cartridges and rack first. Then complete the analyzer screens, verify each patient SID and press START.':(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.'))+'</p></div></div>';
  if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
+ if(window.LAB_EQUIPMENT_ART?.specimenGuide&&['Analyzers','Point of care'].includes(sec.category)&&!/QC|calibration|maintenance|cleaning/i.test(group.title))h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
  if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
  else h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' '+(topicMode?(total===1?'topic':'topics'):(total===1?'step':'steps'))+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
@@ -602,6 +605,7 @@ function sectionOverview(sec,groups){
  <p class="pfux-overview-hint"><strong>Analyzer status:</strong> Pink assay indicator means CAL/QC is due. Gray means ready after acceptable QC. Follow the instrument display and approved IFU.</p>
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
+ if(window.LAB_EQUIPMENT_ART?.specimenGuide)h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
