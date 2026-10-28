@@ -283,7 +283,7 @@ function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
- '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>Choose the container for the specific assay. Illustrations are not specimen volume or fill guides.</p></div>'+
+ '<div class="device-collection-heading"><div><span class="device-collection-kicker">'+(sec.id==='pathfast'?'PATIENT TESTING · SPECIMEN':'SPECIMEN & COLLECTION')+'</span><h3>'+(sec.id==='pathfast'?'Sample to use':'What to collect')+'</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU. This illustration does not indicate sample volume.':'Choose the container for the specific assay. Illustrations are not specimen volume or fill guides.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
  '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
@@ -337,7 +337,7 @@ function clinitekVisualGuide(sec){
    '<div class="device-gallery-image">'+visual+'</div><p>'+visualEsc(st[1])+'</p></article>';
   }).join('');
   return '<details class="clinitek-visual-track" '+(open?'open':'')+'><summary><span class="clinitek-track-icon '+color+'">'+(type==="hcg"?"hCG":"UA")+'</span>'+
-   '<span><strong>'+label+'</strong><small>'+desc+'</small></span><span class="clinitek-track-chevron" aria-hidden="true">⌄</span></summary>'+
+   '<span><strong>'+label+'</strong><small>'+desc+'</small></span><span class="clinitek-track-chevron" aria-hidden="true"></span></summary>'+
    '<div class="clinitek-track-content"><div class="device-gallery-grid">'+cards+'</div></div></details>';
  };
  const ua=[
