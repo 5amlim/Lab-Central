@@ -1,0 +1,40 @@
+/* Reference information should be cards, not faux procedure buttons. */
+.archive-nav{border-top:1px solid #e1e9ee}
+.archive-nav .archive-summary{display:flex;justify-content:space-between;align-items:center;list-style:none;cursor:pointer;padding:14px 11px;border-radius:10px;user-select:none}
+.archive-nav .archive-summary::-webkit-details-marker{display:none}
+.archive-nav .archive-summary:hover{background:#f1f5f7}
+.archive-summary-end{display:flex;align-items:center;gap:14px}
+.archive-summary-end .lab-shared-chevron{display:inline-block;width:16px;height:16px;flex:none;transform:rotate(-90deg)}
+.archive-nav[open] .archive-summary-end .lab-shared-chevron{transform:rotate(0)}
+.archive-nav-content{padding:0 2px 8px 0}
+.archive-nav:not([open]) .archive-nav-content{display:none}
+.archive-nav .nav-link{margin-top:5px}
+.reference-summary,.drug-interpretation{border:1px solid #dfeaf0;background:#fff;border-radius:17px;padding:22px;margin:18px 0}
+.reference-summary-heading>span,.drug-interpretation-head>span{color:#258e89;font-size:10px;letter-spacing:.1em;font-weight:900}
+.reference-summary-heading h2,.drug-interpretation-head h2{font-size:23px;letter-spacing:-.03em;color:#294760;margin:9px 0}
+.reference-summary-heading p,.drug-interpretation-head p{font-size:12.5px;line-height:1.7;color:#628096;margin:0;max-width:830px}
+.reference-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.reference-summary-grid article{border:1px solid #dfeaf0;background:#f8fbfd;border-radius:11px;padding:16px}
+.reference-summary-grid article>span{font-size:9px;font-weight:900;letter-spacing:.1em;color:#598b9c;display:block;margin-bottom:7px}
+.reference-summary-grid strong{font-size:13px;color:#355973}
+.reference-summary-grid p{font-size:11px;line-height:1.6;color:#6c8498;margin:7px 0 0}
+.reference-summary-note{border-left:3px solid #55a4a0;padding:12px 15px;background:#f0f8f7;border-radius:0 9px 9px 0}
+.reference-summary-note strong{font-size:12px;color:#267d74}
+.reference-summary-note p{margin:5px 0 0;color:#597c89;font-size:11.5px;line-height:1.6}
+.drug-results-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:20px 0}
+.drug-results-grid article{padding:17px;background:#f8fbfc;border:1px solid #deebef;border-radius:13px;text-align:center;min-width:0}
+.drug-results-grid article>strong{display:block;font-size:12px;color:#325e71;min-height:24px}
+.drug-results-grid article>p{font-size:11px;line-height:1.65;color:#627d8d;text-align:left;margin:12px 0 0}
+.drug-test-example>span{font-size:10px;color:#72889a;display:block;margin:8px 0}
+.drug-test-window{display:grid;position:relative;grid-template-columns:repeat(2,1fr);width:144px;height:99px;border:8px solid #e6eff2;border-radius:9px;margin:auto;background:#fff;box-shadow:inset 0 0 0 1px #bed3dc}
+.drug-test-window>b{font-size:12px;color:#50758a;padding-top:5px}
+.drug-line{height:6px;width:36px;position:absolute;background:#be566d;border-radius:2px;top:51px}
+.drug-line.c{left:19px}
+.drug-line.t{right:19px}
+.drug-interpretation-table{border:1px solid #e1eaef;border-radius:12px;padding:18px}
+.drug-interpretation-table h3{font-size:15px;color:#32556c;margin:0 0 13px}
+.drug-interpretation-table>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
+.drug-interpretation-table>div>div{display:flex;gap:12px;align-items:center;border-bottom:1px solid #ebf1f4;padding:7px 4px;font-size:11.5px;color:#4c6b7f}
+.drug-interpretation-table b{min-width:47px;color:#197d80;font-size:11px;background:#eaf5f4;border-radius:6px;padding:6px;text-align:center}
+.drug-interpretation-caution{padding:12px 15px;border-left:3px solid #c69e60;background:#fbf7ec;color:#79684a;font-size:11.5px;line-height:1.7;margin:16px 0 0}
+@media(max-width:760px){.reference-summary-grid,.drug-results-grid{grid-template-columns:1fr}.drug-interpretation-table>div{grid-template-columns:1fr}.reference-summary,.drug-interpretation{padding:15px}}
