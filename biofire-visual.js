@@ -121,7 +121,8 @@ function analyzer(id){
  text(572,184,"SPOTFIRE",13,"#3c7184")+text(572,205,"AVAILABLE",11,"#49899c")+
  '<rect x="536" y="229" width="71" height="28" rx="5" fill="#b7dce6"/>';
  }
- return svg(body,"BioFire "+(torch?"FilmArray TORCH modular instrument with front loading modules and sloped touchscreen":"SPOTFIRE system with modular drawer units and upright display"));
+ const illustration=svg(body,"BioFire "+(torch?"FilmArray TORCH modular instrument with front loading modules and sloped touchscreen":"SPOTFIRE system with modular drawer units and upright display"));
+ return torch?illustration.replace('viewBox="0 0 920 400"','viewBox="205 0 510 375"'):illustration;
 }
 function ui(id,index){
  const torch=id==="torch";
