@@ -55,7 +55,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261028-3" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261028-4" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
@@ -440,7 +440,7 @@ function renderCalculators(){
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
-function workflowSteps(steps,start=1){return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div><h3>${safeHtml(step[0])}</h3><p>${safeHtml(step[1])}</p></div></article>`).join('')}</div>`;}
+function workflowSteps(steps,start=1){return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><h3>${safeHtml(step[0])}</h3><p>${safeHtml(step[1])}</p>${step[2]==='calculators'?'<button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>':''}</div></article>`).join('')}</div>`;}
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const unresolved=state.reqResolution==='unresolved';
@@ -452,14 +452,13 @@ function externalFlow(){
  <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Manual document upload</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
- ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Find the matched document and reclassify it</h4><ol><li>The incoming fax is automatically matched to the patient chart and auto-classified.</li><li>Verify it is attached to the correct patient chart.</li><li>Change the document classification to <strong>Lab requisition</strong> so it is not missed during review.</li></ol>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the document and classify it</h4><ol><li>When the patient or provider sends the order by email or text, manually upload the requisition to the correct patient chart.</li><li>Set the uploaded document’s classification to <strong>Lab requisition</strong>.</li><li>Confirm the upload is visible in the chart before routing the request.</li></ol>`}
+ ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Find the matched document and reclassify it</h4><ol><li>The incoming fax is automatically matched to the patient chart and auto-classified.</li><li>Verify it is attached to the correct patient chart.</li><li>Change the document classification to <strong>Lab requisition</strong> so it is not missed during review.</li></ol>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the document and classify it</h4><ol><li>Open the correct patient chart in Athena.</li><li>Click the <strong>hamburger menu (☰)</strong>, then select <strong>Add document</strong>.</li><li>Select the requisition file and upload it as a <strong>Clinical document</strong>.</li><li>Reclassify the uploaded document as <strong>Lab requisition</strong>.</li><li>Confirm the requisition is visible in the correct chart before routing the request.</li></ol>`}
  </div><p class="requisition-intake-note">Requisition documents and patient information belong in the approved clinical systems, not in Lab Central.</p>
  </section>`;
  h+=workflowSteps([
- ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to the tech or RN for review.'],
- ['Tech or RN reviews the requisition','Verify the ordered tests, the ordering provider’s account number and the test codes before preparing the lab calculator.']
+ ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to the tech or RN for review.']
  ],2);
- h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">04</span><div><strong>Are the account number and test codes available?</strong><p>Choose a path to display the next steps. No patient information is saved here.</p></div></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${!missing?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${!missing}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
+ h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong>Tech or RN reviews the requisition</strong><p>Verify the requested tests, ordering provider’s account number and test codes before preparing the lab calculator.</p></div></div><div class="branch-review-question"><strong>Are the account number and test codes available?</strong><p>Choose a path to display the next steps. No patient information is saved here.</p></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${!missing?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${!missing}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
  if(missing){
  h+=`<div class="branch-result"><div class="branch-action"><span class="branch-action-icon">!</span><div><strong>Contact the ordering provider’s office</strong><p>The tech or RN reviewing the requisition calls the ordering provider’s office to obtain the missing account number and/or test codes.</p></div></div><div class="branch-options branch-followup" role="group" aria-label="Ordering office follow-up"><button type="button" class="branch-choice ${!unresolved?'selected':''}" data-reqresolution="provided" aria-pressed="${!unresolved}">Information obtained</button><button type="button" class="branch-choice ${unresolved?'selected':''}" data-reqresolution="unresolved" aria-pressed="${unresolved}">Office unable to provide</button></div>`;
  if(unresolved){
@@ -469,10 +468,9 @@ function externalFlow(){
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the lab calculator','The tech or RN opens the appropriate calculator, verifies the requested tests and specimen requirements, then uploads the calculator instructions to the chart or Navigator task.'],
+ ['Prepare and upload the lab calculator','Open the appropriate calculator, verify the tests and specimen requirements, then upload the calculator instructions to the chart or Navigator task.','calculators'],
  ['Return to front desk for scheduling','The tech or RN passes the reviewed request back to front desk and asks front desk to schedule the patient. Scheduling occurs after the missing-information issue has been resolved.']
- ],5)}</div>`;
- h+=`<div class="tool-bottom-link"><span>Ready to prepare the collection instructions?</span><button type="button" data-go="calculators">Open lab calculators <span>→</span></button></div>`;
+ ],4)}</div>`;
  return h;
 }
 function inhouseFlow(){
