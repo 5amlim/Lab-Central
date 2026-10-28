@@ -61,19 +61,19 @@ function body(shape,a){
  +Array.from({length:6},(_,i)=>rect(399+i*12,128,9,80,2,"#d9e5eb","#7e9baa",1)).join("")
  +txt(302,240,"PATHFAST",14,"#2f7998",850);
 }else if(shape==="reader"){
- v=rect(213,73,317,184,23,"url(#equip-white)","#93a8b5",3)+screen(236,91,245,95,a)+rect(290,205,160,31,8,"#b1c5ce","#819dad")+rect(320,208,101,15,4,"#3e505d")+rect(250,236,240,13,5,"#a7c3cd");
+ v=rect(192,68,350,197,14,"#edf2f5","#a6b7bf",3)+rect(206,82,329,107,5,"#b4c0c7")+rect(215,96,200,80,3,"#d7e2e8","#7f99a5",2)+rect(427,98,101,73,8,"#d8e4e9")+Array.from({length:5},(_,i)=>circle(451+(i%3)*24,111+Math.floor(i/3)*25,8,"#eaf1f4","#92a8b5")).join("")+rect(217,194,230,59,7,"#f5f8fa","#c3d0d7")+Array.from({length:12},(_,i)=>txt(237+(i%4)*53,209+Math.floor(i/4)*17,i===9?"0":String(i+1),10,"#4c6472",750)).join("")+rect(454,224,66,25,6,"#2d3d46")+txt(300,88,"Triage MeterPro",11,"#fff",790)+txt(476,215,"Quidel",12,"#92a9b6",810);
  }else if(shape==="urine"){
- v=rect(224,64,300,194,25,"#edf3f5","#93a8b5",3)+screen(262,85,206,98,a)+rect(268,204,211,23,7,"#b5c9d3")+rect(296,211,158,9,4,"#f8fcfd","#9cb7c4")+line(313,216,439,216,"#559890",3);
+ v='<path d="M247 240 L270 67 Q275 48 300 46 L460 46 Q484 52 487 73 L513 238 Q511 257 483 258 L270 258 Q249 256 247 240Z" fill="#eaf0f3" stroke="#9eafbb" stroke-width="3"/>'+rect(287,72,188,99,7,"#9db2bf")+rect(300,85,160,74,5,"#dce9ec")+txt(359,198,"CLINITEK Status+",14,"#465b6d",830)+txt(316,235,"SIEMENS",15,"#2789ad",850)+circle(462,191,12,"#9eb7c2","#738d9b")+rect(393,230,97,22,7,"#3a4b55");
  }else if(shape==="torch"){
- v=rect(264,33,211,245,18,"url(#equip-white)","#91a7b1",3)+Array.from({length:4},(_,i)=>rect(282,51+i*49,172,42,9,"#e7edf0","#a6bac4")+rect(294,61+i*49,148,22,6,"#d7e5ea")+rect(406,66+i*49,25,12,4,a)).join("")+rect(320,254,101,11,4,"#a8bac7");
+ v=rect(270,45,214,236,15,"#e9f0f3","#a2b3bd",3)+Array.from({length:4},(_,i)=>rect(289,62+i*46,175,39,7,"#fafcfd","#a4b7c3",2)+rect(298,72+i*46,151,20,4,"#eef4f6")+rect(418,77+i*46,19,13,3,"#ba4d55")).join("")+rect(287,251,181,18,5,"#50606b")+txt(348,264,"BIOFIRE TORCH",10,"#fff",790);
  }else if(shape==="modules"){
- v=rect(190,36,249,235,16,"url(#equip-white)","#99aab2",3)+Array.from({length:4},(_,i)=>rect(210,51+i*52,207,48,9,"#e9f0f4","#a5b5bf")+rect(317,62+i*52,24,18,5,"#c54348")).join("")+rect(480,68,112,155,14,"#e2eaf0","#92a7b5",3)+screen(491,82,90,117,a)+line(506,226,570,226,"#b0c5d1",6);
+ v=rect(194,104,215,166,18,"#eef3f6","#9cadb9",3)+rect(211,119,180,99,10,"#d9e5ea","#b7cbd4",2)+'<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+rect(214,228,179,29,7,"#dae6eb")+txt(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+rect(404,59,120,196,17,"#f3f7f9","#9db3bf",3)+rect(417,81,95,154,6,"#263c4b")+rect(427,94,75,119,3,"#e1edf2")+txt(465,131,"Available",13,"#356b86",850)+circle(464,243,7,"#4a91aa");
  }else if(shape==="sofia"){
- v=rect(223,74,296,177,35,"#203747","#243d52",3)+rect(236,69,260,22,11,a)+screen(253,92,228,109,a)+rect(350,213,107,28,7,a)+rect(367,219,73,19,4,"#d2eaf6")+line(367,232,440,232,"#7ab5d2",2);
+ v='<path d="M210 92 Q219 62 262 59 L460 69 Q507 76 519 126 L524 241 Q522 258 503 264 L253 266 Q218 258 214 230Z" fill="#223440" stroke="#1a313d" stroke-width="4"/>'+'<path d="M205 119 L223 77 Q245 60 270 59 L270 263 L237 264Z" fill="#117b9b"/>'+rect(284,87,204,121,15,"#1d2835","#638ca1",2)+rect(303,106,166,80,7,"#d9e9ef")+circle(387,146,24,"#edb76c")+txt(388,153,"+",29,"#fff",800)+rect(390,216,103,36,8,"#0d283a")+rect(415,220,55,27,6,"#1587a5")+txt(329,236,"Sofia 2",16,"#e5edf2",800);
  }else if(shape==="hemocue"){
- v=rect(283,64,200,196,29,"#e2e8ec","#7b929d",3)+screen(305,87,154,92,a)+rect(327,196,115,41,10,"#2f404c","#9aaeb9")+rect(354,209,63,15,5,"#e5eff2")+rect(355,238,60,10,4,"#abc2ce");
+ v='<path d="M309 38 Q317 27 340 28 L451 30 Q464 40 465 58 L471 236 Q462 258 449 267 L316 266 Q302 249 302 233Z" fill="#c83c46" stroke="#9e2b34" stroke-width="4"/>'+rect(322,68,129,106,15,"#393e7d","#262e65",3)+rect(337,84,99,50,4,"#d2dfdf")+txt(387,164,"Hb 201+",13,"#fff",750)+rect(342,211,91,39,10,"#272d3b")+rect(349,220,73,16,5,"#151b2a")+txt(386,59,"HemoCue",13,"#fff",850);
  }else if(shape==="coag"){
- v=rect(275,63,218,205,26,"#e2ebee","#95abb4",3)+screen(303,91,161,100,a)+rect(328,207,116,25,10,"#b0c7d0")+rect(347,218,80,11,4,"#eef5f7")+circle(385,247,9,a);
+ v='<path d="M266 242 L268 112 Q274 75 311 70 L448 70 Q489 81 497 118 L508 237 Q505 261 487 267 L289 266 Q269 262 266 242Z" fill="#f1f5f7" stroke="#a2b4bf" stroke-width="3"/>'+rect(295,99,175,105,13,"#1f303e")+rect(314,116,137,68,4,"#d3e9ef")+txt(381,148,"Apply sample",12,"#357b93",800)+txt(377,225,"Coag-Sense",16,"#a94453",850)+rect(361,244,87,28,10,"#293e4b")+rect(383,248,47,13,4,"#b8d0d7");
  }else if(shape==="cup"){
  v=rect(290,84,177,175,20,"#edf3f7","#91a5b2",3)+rect(280,69,198,33,11,"#b9cdd6","#829aa8")+Array.from({length:7},(_,i)=>rect(312+i*19,117,10,98,4,"#f5fafb","#c0d3db")+rect(315+i*19,160,4,16,2,i%2?a:"#c9b6d7")).join("")+rect(328,227,102,12,4,"#aac2cf");
  }else if(shape==="cassette"||shape==="tests"){
@@ -82,7 +82,11 @@ function body(shape,a){
  }else if(shape==="visby"){
  v=rect(247,79,245,178,24,"#f1f4f6","#b3bbc3",3)+rect(268,97,201,28,10,"#dbe2e7")+circle(368,188,56,"#ebf0f3","#9eacb8")+circle(368,188,23,"#b6c8d0","#8a9ca8");
  }else if(shape==="idnow"){
- v=rect(235,74,281,180,25,"#f1f4f6","#a8b3bb",3)+screen(265,97,210,92,"#899aa6")+rect(298,207,156,22,7,"#dae6ea")+circle(378,219,7,"#738c9c");
+ v='<path d="M228 239 L238 108 Q245 68 277 61 L477 61 Q506 72 514 115 L520 236 Q513 259 492 263 L252 263 Q232 261 228 239Z" fill="#eff4f5" stroke="#9bafb8" stroke-width="3"/>'
+ +rect(382,91,109,111,9,"#536d7d","#9cb7c4",2)+rect(390,99,92,92,5,"#d8e8ed")
+ +rect(260,105,107,128,15,"#e3ebef","#c2d0d7",2)
+ +txt(436,225,"ID NOW",17,"#4e6471",850)+txt(437,243,"Abbott",11,"#2672a3",840);
+
  }
  return v;
 }
