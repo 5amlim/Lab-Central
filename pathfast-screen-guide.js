@@ -103,7 +103,7 @@ function physicalStep(i){
  '<div class="pfs-heading"><strong>PATHFAST · PHYSICAL PREPARATION</strong><span>Preparation '+(i+1)+' of 4 · Before screen navigation</span></div>'+
  '<div class="pf-prep-focus-head"><span class="pfs-prep-number">'+stage[0]+'</span><div><strong>'+stage[1]+'</strong><p>'+stage[2]+'</p></div></div>'+
  '<div class="pf-prep-illustrations'+(stage[3]==="setup"||stage[3]==="tips"?" two":"")+'">'+images+'</div>'+
- '<p class="pfs-note">Illustrated training reference. Confirm the actual rack, assay cartridge, tip positions, specimen and current manufacturer IFU before use.</p></section>';
+ '<p class="pfs-note"><strong>Before continuing:</strong> Verify each cartridge is fully seated in the correct lane, the sample wells match the intended assay, and the required pipette tips are ready.</p></section>';
 }
 function patientStep(i){
  if(i>=0&&i<=3)return physicalStep(i);
