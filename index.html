@@ -56,7 +56,7 @@
   
   
   <link rel="stylesheet" href="flow-navigation.css?v=20261028-7" media="all">
-  <link rel="stylesheet" href="procedure-guide.css?v=20261028-visuals" media="all">
+  <link rel="stylesheet" href="procedure-guide.css?v=20261028-clinitek-split" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-4" media="all">
@@ -144,7 +144,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261028-4"></script>
 <script src="pathfast-interactive.js?v=20261028-2"></script>
 <script src="pathfast-clinical.js?v=20261028-4"></script>
-<script src="equipment-art.js?v=20261028-poch100i"></script>
+<script src="equipment-art.js?v=20261028-clinitek-split"></script>
 <script>
 (()=>{
 'use strict';
@@ -355,12 +355,12 @@ function guideStepParts(entry,sec){
 function guideStepTitle(parts){
  return (parts.badge?'<span class="guide-topic-badge">'+safeHtml(parts.badge)+'</span>':'')+markText(parts.title);
 }
-function guideStepCard(entry,index,total,visualizer,label='Step',sec=null){
+function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupId=''){
  const root=entry.root;
- const content=guideDetailNodes(entry.leading,0,sec,root.text)+guideDetailNodes(root.children||[],0,sec,root.text)+guideDetailNodes(entry.notes,0,sec,root.text);
+ const content=guideDetailNodes(entry.leading,0,sec,groupId||root.text)+guideDetailNodes(root.children||[],0,sec,groupId||root.text)+guideDetailNodes(entry.notes,0,sec,groupId||root.text);
  const title=guideStepTitle(guideStepParts(entry,sec));
  const piccoloVisual=sec&&sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART?.piccoloVisual?window.LAB_EQUIPMENT_ART.piccoloVisual(root.text):'';
- const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text):'';
+ const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
  return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+(visualizer?visualizer(index):'')+workflowVisual+piccoloVisual+(content?'<div class="guide-card-body">'+content+'</div>':'')+'</article>';
 }
 function renderGuidedProcedure(group,sec){
@@ -377,7 +377,7 @@ function renderGuidedProcedure(group,sec){
  let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
  h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(isPathfastPatient?'Prepare and load the cartridges and rack first. Then complete the analyzer screens, verify each patient SID and press START.':(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.'))+'</p></div></div>';
  if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
- if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button type="button" class="device-inline-visual-link" data-gotab="visuals">'+svg('file-text')+' See 4 illustrated sample and kit steps <span aria-hidden="true">›</span></button>';
+ if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button type="button" class="device-inline-visual-link" data-gotab="visuals">'+svg('file-text')+' See illustrated collection and test-device steps <span aria-hidden="true">›</span></button>';
  if(window.LAB_EQUIPMENT_ART?.specimenGuide&&['Analyzers','Point of care'].includes(sec.category)&&!/QC|calibration|maintenance|cleaning/i.test(group.title))h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
  if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
@@ -398,9 +398,9 @@ function renderGuidedProcedure(group,sec){
   if(state.guideMode==='guided')h+='<div class="guide-progress" role="progressbar" aria-label="Procedure steps viewed" aria-valuenow="'+(current+1)+'" aria-valuemin="0" aria-valuemax="'+total+'"><span style="width:'+((current+1)/total*100)+'%"></span></div>';
  }
  if(state.guideMode==='all'){
-  h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all">'+steps.map(function(entry,i){return guideStepCard(entry,i,total,patientVisual,unit,sec)}).join('')+'</div>';
+  h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all">'+steps.map(function(entry,i){return guideStepCard(entry,i,total,patientVisual,unit,sec,group.id)}).join('')+'</div>';
  }else{
-  h+='<div class="guide-stage">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec)+'</div>';
+  h+='<div class="guide-stage">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec,group.id)+'</div>';
   h+='<div class="guide-bottom"><span class="guide-step-count">'+(current+1)+' / '+total+' '+(topicMode?'topics':'main steps')+'</span><div class="guide-transport">';
   h+='<button type="button" class="guide-button" data-guide-step="'+(current-1)+'" '+(current===0?'disabled':'')+' aria-label="Previous procedure step">← Previous</button>';
   if(current<total-1)h+='<button type="button" class="guide-button primary" data-guide-step="'+(current+1)+'" aria-label="Next guide section">Next '+(topicMode?'topic':'step')+' →</button>';
@@ -607,7 +607,7 @@ function sectionOverview(sec,groups){
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  if(window.LAB_EQUIPMENT_ART?.specimenGuide)h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
- if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button class="mini-feature device-visual-link" type="button" data-gotab="visuals"><span class="feature-small-icon">'+svg('file-text')+'</span><span><strong>Illustrated sample and kit walkthrough</strong><small>Four visual steps: specimen, unused kit, loaded kit and analyzer</small></span><span class="arrow">›</span></button>';
+ if(window.LAB_EQUIPMENT_ART?.visualGuide&&window.LAB_EQUIPMENT_ART?.ids.includes(sec.id))h+='<button class="mini-feature device-visual-link" type="button" data-gotab="visuals"><span class="feature-small-icon">'+svg('file-text')+'</span><span><strong>Illustrated sample and kit walkthrough</strong><small>'+(sec.id==='clinitek'?'Separate urinalysis strip and hCG cassette workflows':'Specimen, unused kit, loaded kit and analyzer')+'</small></span><span class="arrow">›</span></button>';
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
