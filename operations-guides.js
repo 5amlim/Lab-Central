@@ -31,12 +31,12 @@ h+=card('HTRX stool','<span class="ops-tag">Send-out</span><p>HealthTrackRx liqu
 h+=card('Cedars stool','<span class="ops-tag">Send-out</span><p>Three-vial O&amp;P kit. Fill all three vials to their lines and seal. Vials contain liquid.</p>','amber','STOOL');
 h+=card('HTRX urine','<span class="ops-tag">Send-out</span><p>Standard urine cup, HTRX vial and pipette, plus Castile cleansing wipes.</p>','purple','URINE');
 h+=card('Cedars urine','<span class="ops-tag">Send-out</span><p>Tiger-top urine tube, gray culture tube, Vacutainer cup or transfer straw, and Castile wipes. <strong>Transfer devices contain a needle.</strong></p>','amber','URINE');
-h+=card('Urine dip at home','<span class="ops-tag">In-house</span><p>The uploaded instructions advise against a home-collected in-house dipstick. Use preservative tube and send out. An exception with a standard cup requires immediate refrigeration and same-day return.</p>','blue','URINE');
+h+=card('Urine dip at home','<span class="ops-tag">In-house</span><p>Home collection for an in-house dipstick is not recommended. Use preservative tube and send out. An exception with a standard cup requires immediate refrigeration and same-day return.</p>','blue','URINE');
 h+='</div><h2 class="ops-section-heading">Frequently asked questions</h2>';
-h+=accordion('May a patient return a standard specimen cup?','The source document says specimen should be transferred into the correct medium immediately. It cites a maximum of 1 hour for urine and 2 hours for stool before transfer. If a patient insists on returning a plain cup, the document calls for immediate refrigeration and same-day return. <strong>Check current requirements for the actual test.</strong>',true);
-h+=accordion('Can the patient return a specimen the next day?','The document recommends same-day return. It states specimens in the correct medium may be kept until the next day at room temperature. This does not override test-specific stability requirements; verify the current assay instructions.');
-h+=accordion('What if staff do not yet know which stool test is needed?','The source says to provide both relevant collection options when there is uncertainty, for example HTRX versus GI BioFire. Confirm which test is ordered before processing.');
-h+=notice('<strong>Source review:</strong> Pages 1–2 of the uploaded Home Urine and Stool Collection Instructions. Confirm current preservation, temperature and stability instructions for each assay.','amber');
+h+=accordion('May a patient return a standard specimen cup?','Transfer specimens to the appropriate collection medium as soon as possible (reference limits: urine within 1 hour; stool within 2 hours). If a patient returns a plain cup, refrigerate it immediately after collection and return it the same day. <strong>Check current requirements for the actual test.</strong>',true);
+h+=accordion('Can the patient return a specimen the next day?','Same-day return is preferred. Next-day return and room-temperature storage may be permitted in the correct collection medium, depending on the test. Verify the current specimen stability requirements.');
+h+=accordion('What if staff do not yet know which stool test is needed?','If the requested test is not yet confirmed, provide the appropriate collection options (for example HTRX and GI BioFire) and verify the actual order before processing.');
+h+=notice('<strong>Specimen handling:</strong> Confirm collection media, refrigeration and specimen stability in the current receiving laboratory directory.','amber');
 return h;
 }
 var stoolSteps=[
@@ -72,7 +72,7 @@ h+=accordion('Cedars: transfer straw alternative',list(['<strong>Needle hazard:<
 }
 h+=notice('<strong>At specimen return:</strong> Clinic staff must create an Athena drop-off appointment, and the provider must place a new order for the returned specimen.','amber');
 h+='<div class="ops-action-row">'+action('specimen-dropoff','Specimen drop-off workflow','primary')+action('outside','Kit preparation')+'</div>';
-h+='<p class="ops-citation">Source: uploaded patient collection handout, pages '+(stool?'3':'4–5')+'. Follow the issued handout and currently approved laboratory-specific instructions.</p>';
+h+='<p class="ops-citation">Patient collection instructions · pages '+(stool?'3':'4–5')+'. Follow the issued handout and currently approved laboratory-specific instructions.</p>';
 return h;
 }
 function home(tab){
@@ -97,7 +97,7 @@ h+=steps([
 h+='<h2 class="ops-section-heading">Choose the next route</h2><div class="ops-specimen-route">';
 h+='<div class="ops-route"><strong>In-house test</strong><p>Verify the new order and follow the instrument-specific SOP.</p>'+action('home','Instrument guides')+'</div>';
 h+='<div class="ops-route"><strong>Send-out test</strong><p>Verify the new order, prepare the Lab Calculator, and follow the tech sendout steps.</p>'+action('sendout-log','Sendout Log workflow')+'</div></div>';
-h+=notice('The supplied PDF addresses patient and staff collection, not the new Athena encounter procedure. This drop-off workflow reflects the instructions provided for Lab Central.');
+h+=notice('Follow current Athena documentation requirements and approved procedures for specimen acceptance.');
 return h+'</section>';
 }
 function sendout(){
@@ -117,11 +117,11 @@ if(formReady){
 var safe=formURL.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 h+='<div class="ops-action-row"><a class="ops-action primary" href="'+safe+'" target="_blank" rel="noopener noreferrer">Open Lab Sendout Log form ↗</a></div>';
 }else{
-h+='<div class="ops-form-pending"><strong>Direct form link is awaiting the verified Microsoft Forms URL.</strong>Use the QR code on the laminated lab instructions for now. To make a direct button available to staff, set the responder URL in <code>sendout-form-config.js</code> and republish. This site does not link to an unrelated form.</div>';
+h+='<div class="ops-form-pending"><strong>Lab Sendout Log</strong>Scan the Microsoft Forms QR code posted in the lab to record the sendout.</div>';
 }
 h+=accordion('What goes into the Sendout Log?', 'Use the live form fields for site, date, receiving lab, patient reference, specimen quantities/temperature, and photographs of the bag, requisition, and Lab Calculator. Document STAT pickup notes/confirmation where relevant. <strong>Patient information belongs only in the approved clinical systems and secure Microsoft Form.</strong>',true);
 h+=accordion('Which bin should hold the specimens?', 'Use the dedicated receiving-laboratory and appropriate temperature storage/bin area. Keep routine and STAT bags separate where required and follow the clinic pickup schedule.');
-h+=notice('<strong>Staff use only:</strong> The Lab Central site does not submit forms, chart collections, or handle patient information. Document these actions in the approved Athena and Microsoft 365 workflows.','amber');
+h+=notice('<strong>Documentation:</strong> Complete the Athena collection note and Microsoft Forms Sendout Log in the approved systems.','amber');
 h+='<div class="ops-link-card"><div><strong>Need receiving lab, courier or packaging instructions?</strong><p>Open the Lab send-outs reference for Quest, Cedars, HTRX and Labcorp.</p></div><button type="button" data-go="sendout">Lab send-outs →</button></div>';
 return h+'</section>';
 }
