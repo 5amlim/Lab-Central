@@ -329,3 +329,33 @@
 .flow-step:not(:last-child)::after{display:none!important;content:none!important}
 .flow-step{position:relative}
 @media(max-width:700px){.workflow-steps::before{background:#d2d9df!important}}
+
+/* Appointment-day RN to lab tech handoff, with process-linked visual symbols. */
+.collection-handoff{margin:25px 0 20px;padding:22px;border-radius:17px;background:#fff;border:1px solid #dbe8ed;min-width:0}
+.collection-handoff-heading>span{display:block;font-size:10px;letter-spacing:.12em;font-weight:900;color:#268a87}
+.collection-handoff-heading h2{font-size:20px;color:#294c65;letter-spacing:-.02em;margin:8px 0 5px}
+.collection-handoff-heading p{font-size:12px;color:#688296;line-height:1.6;margin:0 0 17px}
+.collection-handoff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),1fr));gap:10px}
+.collection-handoff-card{display:flex;gap:10px;align-items:flex-start;padding:13px;background:#f7fbfd;border:1px solid #dce9ef;border-radius:11px;min-width:0}
+.collection-handoff-card:nth-child(1),.collection-handoff-card:nth-child(2){border-top:3px solid #297ea6}
+.collection-handoff-card:nth-child(n+3){border-top:3px solid #1d9187}
+.collection-handoff-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:10px;background:#e6f2f8;color:#276f96}
+.collection-handoff-card:nth-child(n+3) .collection-handoff-icon{color:#177b73;background:#e1f4ed}
+.collection-handoff-icon svg{width:21px;height:21px}
+.collection-handoff-copy{min-width:0}
+.collection-handoff-copy small{display:block;font-size:9px;letter-spacing:.08em;color:#5c8496;font-weight:900}
+.collection-handoff-copy h3{font-size:12px;color:#2c5871;line-height:1.45;margin:6px 0 6px;overflow-wrap:anywhere}
+.collection-handoff-copy h3 span{color:#1f8991}
+.collection-handoff-copy p{font-size:10.75px;line-height:1.65;color:#627f90;margin:0}
+.collection-handoff-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border-radius:11px;padding:14px;background:#edf8f5;border:1px solid #cfe9e1;margin-top:14px}
+.collection-handoff-footer strong{font-size:12px;color:#216d65}
+.collection-handoff-footer p{font-size:10.75px;color:#5f8082;margin:4px 0 0}
+.collection-handoff-open,.calculator-sendout-guide button{border:1px solid #19857b;background:#197c75;color:#fff;border-radius:9px;padding:11px 13px;font-size:11.5px;font-weight:850;cursor:pointer;white-space:normal;text-align:center}
+.collection-handoff-open:hover,.calculator-sendout-guide button:hover{background:#126b65}
+.calculator-sendout-guide{display:flex;gap:13px;align-items:center;flex-wrap:wrap;border:1px solid #d0e6df;border-radius:12px;background:#f0f9f5;padding:14px 17px;margin:18px 0}
+.calculator-sendout-icon{display:grid;place-items:center;width:38px;height:38px;flex:none;background:#dcefe7;border-radius:10px;color:#147d74}
+.calculator-sendout-guide>div{flex:1 1 230px;min-width:0}
+.calculator-sendout-guide strong{font-size:12px;color:#215e65}
+.calculator-sendout-guide p{margin:5px 0 0;font-size:11px;line-height:1.55;color:#628487}
+@media(max-width:640px){.collection-handoff{padding:12px}.collection-handoff-grid{grid-template-columns:1fr}.collection-handoff-footer{align-items:stretch}.collection-handoff-open,.calculator-sendout-guide button{width:100%}}
+@media print{.collection-handoff-card{break-inside:avoid}.collection-handoff-open,.calculator-sendout-guide button{display:none}}
