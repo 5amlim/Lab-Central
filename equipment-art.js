@@ -498,6 +498,8 @@ function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
    The six aluminum channels and long black-foil cartridges are drawn after
    manufacturer rack photos, not as a dimensionally exact machine diagram. */
 function pathfastRackSvg(mode="patient",sampleLoaded=true){
+ return pathfastRealRackSvg(mode,sampleLoaded);
+
  const isCal=mode==="cal";
  const items=isCal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["SAMPLE 1","SAMPLE 2","","","",""];
  const fills=["#7caed6","#7caed6","#ad99d4","#ad99d4","#d4aa66","#7cbda7"];
@@ -578,30 +580,72 @@ function pathfastResultsSvg(mode="patient"){
 
 /* PATHFAST preparation: removable six-slot metal rack rests in a clear
    loading base before patient cartridges are inserted. Original schematic. */
-function pathfastRackBaseSvg(){
+/* Rack and transparent loading base based on the submitted reference photo:
+   an acrylic six-channel station with long parallel metal cartridge rails,
+   round rear holders, numbered lanes and transparent end wells. */
+function pathfastRealRackSvg(mode="patient",sampleLoaded=false){
+ const isCal=mode==="cal";
+ const occupied=isCal?6:mode==="setup"?0:2;
+ const numberSvg=Array.from({length:6},(_,i)=>{
+  const x=289+i*93;
+  return '<g>'+
+   '<ellipse cx="'+(x+25)+'" cy="142" rx="25" ry="15" fill="#62717c" stroke="#e9f5f7" stroke-width="5" opacity=".95"/>'+
+   '<ellipse cx="'+(x+25)+'" cy="140" rx="17" ry="9" fill="#233443" opacity=".85"/>'+
+   '<ellipse cx="'+(x+25)+'" cy="106" rx="28" ry="15" fill="#eff9fc" fill-opacity=".34" stroke="#9bb3c1" stroke-width="4"/>'+
+   '<text x="'+(x+25)+'" y="188" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#66727d">'+(i+1)+'</text>'+
+   '</g>';
+ }).join("");
  const slots=Array.from({length:6},(_,i)=>{
-  const x=266+i*103;
-  return '<g><rect x="'+x+'" y="125" width="84" height="108" rx="8" fill="#d5e1e7" stroke="#8fa9b6" stroke-width="2.4"/>'+
-   '<rect x="'+(x+9)+'" y="135" width="66" height="89" rx="5" fill="#edf4f7" stroke="#a4b9c3" stroke-width="2"/>'+
-   '<path d="M'+(x+14)+' 143 v73 M'+(x+70)+' 143 v73" stroke="#fff" stroke-width="3" opacity=".85"/>'+
-   '<text x="'+(x+42)+'" y="250" text-anchor="middle" font-size="13" font-weight="800" fill="#55778a">'+(i+1)+'</text></g>';
- }).join('');
- const h='<defs><linearGradient id="pf-metal-empty" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f7fbfe"/><stop offset=".5" stop-color="#b6c9d2"/><stop offset="1" stop-color="#edf5f8"/></linearGradient></defs>'+
- '<ellipse cx="520" cy="370" rx="420" ry="22" fill="#cddde4" opacity=".38"/>'+
- '<path d="M174 311 L275 264 L828 264 L916 311 L835 370 L260 370Z" fill="#d6f1f9" fill-opacity=".42" stroke="#83b7cc" stroke-width="4"/>'+
- '<path d="M174 311 L260 370 L835 370 L916 311 L916 337 L835 395 L260 395 L174 337Z" fill="#bde1ee" fill-opacity=".30" stroke="#96c3d4" stroke-width="3"/>'+
- '<path d="M212 309 L287 277 L812 277 L880 309 L817 354 L279 354Z" fill="#f3fcff" fill-opacity=".38" stroke="#b0d6e4" stroke-width="2"/>'+
- '<path d="M237 116 L853 116 L853 246 L237 246Z" fill="url(#pf-metal-empty)" stroke="#7d9bab" stroke-width="5" rx="7"/>'+
- slots+
- '<path d="M235 120 L852 120 M235 245 L852 245" stroke="#edf6fa" stroke-width="8" stroke-linecap="round"/>'+
- '<path d="M879 178 L879 263 M865 245 L879 266 L893 245" fill="none" stroke="#198b95" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'+
- '<rect x="35" y="66" width="230" height="39" rx="10" fill="#e7f3f7" stroke="#c5dce6"/>'+
- '<text x="150" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="850" fill="#2a6981">METAL RACK · 6 LANES</text>'+
- '<path d="M265 87 H297 L310 116" fill="none" stroke="#4d8094" stroke-width="3"/>'+
- '<rect x="35" y="311" width="154" height="40" rx="10" fill="#e3f6f8" stroke="#c0e1e7"/>'+
- '<text x="112" y="337" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="850" fill="#20798b">CLEAR BASE</text>'+
- '<path d="M188 332 L213 326" stroke="#4b95a6" stroke-width="3"/>';
- return illustratedSvg(h,"Removable PATHFAST six-lane aluminum rack above its clear loading base, with arrow showing placement into the base","0 0 1000 420");
+  const bx=282+i*96,fx=109+i*124,loaded=i<occupied;
+  const metal='<path d="M'+bx+' 193 L'+(bx+68)+' 197 L'+(fx+84)+' 350 L'+fx+' 350Z" fill="#b8c0c5" stroke="#778e9a" stroke-width="3"/>'+
+   '<path d="M'+(bx+5)+' 198 L'+(bx+61)+' 201 L'+(fx+74)+' 346 L'+(fx+8)+' 346Z" fill="#ecf0f2" stroke="#a5b4be" stroke-width="2"/>'+
+   '<path d="M'+(fx+8)+' 347 L'+(fx+24)+' 347 L'+(bx+22)+' 206 L'+(bx+11)+' 205Z" fill="#fff" opacity=".92"/>';
+  const cartridge=loaded?
+   '<path d="M'+(bx+22)+' 204 L'+(bx+54)+' 205 L'+(fx+56)+' 331 L'+(fx+12)+' 331Z" fill="#1a2028" stroke="#556775" stroke-width="2"/>'+
+   '<path d="M'+(bx+25)+' 207 L'+(bx+50)+' 208 L'+(fx+46)+' 307 L'+(fx+20)+' 307Z" fill="#252c34"/>'+
+   '<path d="M'+(fx+14)+' 312 L'+(fx+56)+' 312 L'+(fx+60)+' 327 L'+(fx+12)+' 327Z" fill="#dd564b"/>'+
+   '<path d="M'+(fx+16)+' 312 L'+(fx+53)+' 312" stroke="#ffd6c9" stroke-width="3"/>'+
+   '<path d="M'+(fx+9)+' 330 L'+(fx+58)+' 330 L'+(fx+67)+' 354 L'+(fx+5)+' 354Z" fill="#d8eef4" stroke="#8eacba" stroke-width="3"/>'+
+   (sampleLoaded?'<path d="M'+(fx+14)+' 336 L'+(fx+55)+' 336 L'+(fx+59)+' 348 L'+(fx+11)+' 348Z" fill="'+(isCal?"#739abf":"#b64152")+'" opacity=".75"/>':'')
+   :'';
+  return '<g>'+metal+cartridge+
+   '<path d="M'+(fx-1)+' 350 L'+(fx+81)+' 350" stroke="#fff" stroke-width="3" opacity=".85"/>'+
+   '<text x="'+(fx+39)+'" y="383" text-anchor="middle" font-family="Arial" font-size="16" font-weight="900" fill="#748e9b">'+(i+1)+'</text>'+
+   '</g>';
+ }).join("");
+ const base='<defs>'+
+  '<linearGradient id="pf-real-metal" x1="0" x2="1" y1="0" y2="0"><stop stop-color="#f1f4f6"/><stop offset=".38" stop-color="#9daeb8"/><stop offset=".72" stop-color="#edf1f3"/><stop offset="1" stop-color="#899aa5"/></linearGradient>'+
+  '</defs>'+
+  '<ellipse cx="493" cy="396" rx="440" ry="17" fill="#dce6ec" opacity=".6"/>'+
+  '<path d="M243 157 L855 172 L921 357 L90 357Z" fill="#f2fafc" fill-opacity=".24" stroke="#b7cfd8" stroke-width="4"/>'+
+  '<path d="M88 350 H923 L940 389 H58Z" fill="#c9e5ed" fill-opacity=".33" stroke="#a7c4d0" stroke-width="3"/>'+
+  '<path d="M75 352 L917 352" stroke="#e9f9fe" stroke-width="10" opacity=".78"/>'+
+  slots+
+  '<path d="M247 96 L841 110 L878 133 L255 116Z" fill="#f0f7f9" fill-opacity=".62" stroke="#a1bac7" stroke-width="3"/>'+
+  '<path d="M257 112 L880 127 L879 190 L259 177Z" fill="#d6eaf0" fill-opacity=".20" stroke="#a9c5d1" stroke-width="4"/>'+
+  numberSvg+
+  '<path d="M255 190 L255 118 M875 194 L875 127" stroke="#f4fcff" stroke-width="8" opacity=".6"/>'+
+  '<path d="M88 352 L244 156 L264 156 L125 351Z" fill="#b9dbe5" fill-opacity=".22" stroke="#a5c4d0" stroke-width="2"/>'+
+  '<path d="M86 363 L919 363" stroke="#f8ffff" stroke-width="5" opacity=".85"/>';
+ const tube=mode==="setup"?
+  '<g><ellipse cx="310" cy="160" rx="21" ry="11" fill="#c3dce4" opacity=".7"/>'+
+  '<rect x="294" y="23" width="33" height="137" rx="11" fill="#eff8f9" fill-opacity=".77" stroke="#8caab9" stroke-width="2.6"/>'+
+  '<path d="M299 102 H323 V145 Q310 154 299 145Z" fill="#ad4652" opacity=".57"/>'+
+  '<rect x="291" y="9" width="40" height="41" rx="12" fill="#198456" stroke="#106e48" stroke-width="3"/>'+
+  Array.from({length:7},(_,i)=>'<path d="M'+(297+i*5)+' 12v32" stroke="#37aa77" stroke-width="1.5"/>').join("")+
+  '<ellipse cx="311" cy="12" rx="13" ry="7" fill="#1b684d"/><ellipse cx="311" cy="12" rx="6.5" ry="3.3" fill="#314a45"/>'+
+  '<rect x="296" y="70" width="29" height="36" rx="3" fill="#fff"/>'+
+  '<path d="M303 74v27 M310 74v27 M319 74v27" stroke="#c1d4da" stroke-width="2"/>'+
+  '</g>':'';
+ const note=mode==="setup"?"CLEAR LOADING BASE • 6 METAL LANES":isCal?"6 CARTRIDGES IN CORRECT ASSIGNED LANES":"EXAMPLE • CARTRIDGES IN LANES 1 AND 2";
+ return illustratedSvg(base+tube+
+  '<rect x="292" y="412" width="430" height="31" rx="9" fill="#eaf5f7" stroke="#cfdee6"/>'+
+  '<text x="505" y="433" font-size="17" font-family="Arial" font-weight="900" fill="#356f87" text-anchor="middle">'+note+'</text>',
+  "PATHFAST acrylic loading base with six long metal cartridge rails, numbered lanes, transparent rear sample tube holders"+(occupied?", "+occupied+" inserted long reagent cartridges":"")+"; matching supplied photograph",
+  "0 0 1000 450");
+}
+function pathfastRackBaseSvg(){
+ return pathfastRealRackSvg("setup",false);
 }
 
 function pathfastActionVisual(stage,mode="patient"){
