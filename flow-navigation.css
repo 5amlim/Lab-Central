@@ -1,0 +1,162 @@
+/* Lab Central navigation and workflow polish, 2026-10-28.
+   The workflow steps preserve the original instructions and interactive branching. */
+:root{--flow-blue:#276994;--flow-teal:#168a83;--flow-purple:#76559a;--flow-amber:#b47b29;--flow-line:#bbd6e4}
+
+/* Findable navigation: colored groups, clear active state, distinct utility shortcuts. */
+.sidebar{background:#fbfcff;box-shadow:3px 0 16px rgba(31,64,99,.04)}
+.sidebar-search input{background:#fff;border:1.5px solid #c9d8e6;box-shadow:0 2px 8px #23435f0a}
+.sidebar-search input:focus{border-color:#277a9a;box-shadow:0 0 0 3px #dbeef2}
+.nav-section{--nav-accent:#316a95;--nav-tint:#eff5fb;--nav-deep:#255679}
+.nav-section:has([data-go="pathfast"]){--nav-accent:#2870a1;--nav-tint:#eaf4fa;--nav-deep:#1e5b83}
+.nav-section:has([data-go="sofia"]),.nav-section:has([data-go="sofia2"]){--nav-accent:#168b84;--nav-tint:#e9f6f4;--nav-deep:#11736e}
+.nav-section:has([data-go="sendout"]){--nav-accent:#aa7830;--nav-tint:#fff6e9;--nav-deep:#845b21}
+.nav-section:has([data-go="calver"]){--nav-accent:#795fa7;--nav-tint:#f2effa;--nav-deep:#604b8d}
+.nav-section:has([data-go="visby"]){--nav-accent:#87909c;--nav-tint:#f2f4f6;--nav-deep:#5e6874}
+.sidebar-nav>.nav-section:not(:first-child){margin-top:16px;padding:11px 7px 9px 8px;border-radius:13px;border:1px solid #e6ecf2;background:#fff}
+.sidebar-nav>.nav-section:not(:first-child) .nav-label{border-left:3px solid var(--nav-accent);color:var(--nav-deep);margin:1px 5px 10px;padding-left:10px;min-height:21px}
+.nav-section .nav-label em{display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:6px;background:var(--nav-tint);color:var(--nav-deep);font-size:10px;font-weight:800}
+.nav-section .nav-link{position:relative;min-height:44px;margin:3px 0;gap:10px;padding:8px 10px;font-weight:640;line-height:1.3;border-radius:10px;transition:background .16s,color .16s,transform .16s}
+.nav-section .nav-link .nav-icon{height:29px;width:30px;border-radius:8px;background:var(--nav-tint);color:var(--nav-accent);flex:none}
+.nav-section .nav-link .nav-icon svg{width:16px;height:16px}
+.nav-section .nav-link:hover{background:var(--nav-tint);color:var(--nav-deep);transform:translateX(2px)}
+.nav-section .nav-link.active{background:var(--nav-tint);color:var(--nav-deep);box-shadow:inset 3px 0 var(--nav-accent);font-weight:850}
+.nav-section .nav-link.active .nav-icon{background:var(--nav-accent);color:white}
+.nav-section .nav-link.active .nav-end{background:white;color:var(--nav-deep)}
+.tool-navigation{--nav-accent:#24778e;--nav-tint:#eaf5f8;--nav-deep:#175d71;border-top:0}
+.tool-navigation .nav-link[data-go="calculators"]{--nav-accent:#2f743f;--nav-tint:#eef6ed;--nav-deep:#275a31}
+.tool-navigation .nav-link[data-go="orders"]{--nav-accent:#286a9e;--nav-tint:#eaf3fc;--nav-deep:#20547d}
+.tool-navigation .nav-link[data-go="order-sets"]{--nav-accent:#8e6728;--nav-tint:#fff6e9;--nav-deep:#75551c}
+.tool-navigation .nav-link.active{box-shadow:inset 3px 0 var(--nav-accent)}
+.sidebar-calculator-button{border:1px solid #cde4d5;background:#eaf6ee;color:#255d35;min-height:44px;box-shadow:0 2px 10px #2b734014}
+.sidebar-calculator-button:hover{background:#dbf0e2}
+
+/* Main browse cards and category filters visually map to the nav groups. */
+.home-tool-card{position:relative;border-top:3px solid #2e9a92;padding-top:13px}
+.home-tool-card:nth-child(2){border-top-color:#2d75a6}
+.home-tool-card:nth-child(3){border-top-color:#bc882c}
+.home-tool-card .home-tool-arrow{background:#f0f6f9;border-radius:8px;width:28px;height:28px;display:grid;place-items:center;color:#326d8d}
+.home-tool-card:focus-visible,.item-card:focus-visible{outline-offset:4px}
+.filter-chip{border-color:#d6e1e9;color:#455f76;min-height:36px}
+.filter-chip:hover{border-color:#a1becd;background:#f5f9fc}
+.filter-chip[data-filter="Analyzers"].active{background:#e4f1fb;color:#1f5b89;border-color:#b7d6eb}
+.filter-chip[data-filter="Point of care"].active{background:#e5f5f2;color:#11796f;border-color:#b5e0d7}
+.filter-chip[data-filter="Send-outs"].active{background:#fff2df;color:#91601a;border-color:#efd2a1}
+.filter-chip[data-filter="Quality & operations"].active{background:#f0eafa;color:#6b4d92;border-color:#d7c6ec}
+.filter-chip[data-filter="Archived"].active{background:#eef1f4;color:#626b79;border-color:#d5dce4}
+.grid-cards .item-card{position:relative;border-top:3px solid #3a87b7;box-shadow:0 2px 9px #213d6509}
+.grid-cards .item-card .card-icon{background:#eaf4fb;color:#286d9d}
+.grid-cards .item-card .card-trailing{color:#246d96;font-weight:790}
+.grid-cards .item-card:hover{border-color:#bfdae7;box-shadow:0 10px 25px #17476918}
+/* Workflows and instrument directory cards use their context to retain a calm palette. */
+.order-directory-grid .item-card:nth-child(3n+2){border-top-color:#138d85}
+.order-directory-grid .item-card:nth-child(3n){border-top-color:#a97e31}
+
+/* Shared direction rail for calculator and requisition steps. */
+.flow-step-grid{display:flex;flex-direction:column;gap:15px;padding:4px 1px 2px 53px;max-width:1000px;margin-top:16px}
+.flow-step{position:relative;min-height:0;display:block;background:#fff;border:1px solid #dce7ef;border-left:4px solid var(--flow-teal);border-radius:13px;padding:18px 20px;box-shadow:0 3px 12px #23435f0a}
+.flow-step .flow-number{position:absolute;left:-55px;top:15px;width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:#e5f5f2;color:#0e8078;font-size:12px;border:2px solid #c5e5df;box-shadow:0 0 0 4px var(--bg);padding:0}
+.flow-step strong{display:block;font-size:14px;color:#24445b;margin-bottom:7px}
+.flow-step p{font-size:12px;line-height:1.65;color:#60788c;max-width:860px}
+.flow-step:not(:last-child)::after{content:'↓';position:absolute;bottom:-29px;left:-47px;height:24px;line-height:24px;font-size:21px;font-weight:800;color:#2d9b93;z-index:1}
+.flow-step:last-child{border-left-color:#34896f;background:#fbfefc}
+.flow-step:last-child .flow-number{background:#e0f3e7;color:#216a4a;border-color:#b4ddc6}
+
+/* External and in-house handoffs: connected vertical timeline plus a decision stage. */
+.workflow-main{max-width:1010px}
+.workflow-head{background:#f7fbfd;border:1px solid #dce9f2;border-radius:15px;padding:21px 23px;margin-bottom:25px}
+.workflow-head .eyebrow{color:#2c7c95}
+.workflow-steps{position:relative;gap:14px;margin-left:47px;display:flex;flex-direction:column}
+.workflow-steps::before{content:'';position:absolute;left:-28px;top:16px;bottom:10px;width:2px;background:#c5dce8}
+.workflow-step{position:relative;min-height:96px;background:#fff;border:1px solid #dae6ee;border-left:4px solid #2d78a5;border-radius:14px;padding:17px 20px;display:block;box-shadow:0 3px 12px #244e670b}
+.workflow-step:last-child{border:1px solid #dae6ee;border-left:4px solid #2d78a5}
+.workflow-step-number{position:absolute;top:17px;left:-52px;min-width:38px;height:38px;border:2px solid #c8e1f1;border-radius:11px;background:#eaf4fb;color:#2b7097;box-shadow:0 0 0 4px var(--bg);font-size:12px}
+.workflow-step h3{font-size:14px;margin:0 0 7px;color:#244159}
+.workflow-step p{font-size:12px;line-height:1.67;color:#60788a}
+.workflow-step:not(:last-child)::after{content:'↓';position:absolute;left:-43px;bottom:-26px;color:#2c82a7;font-size:19px;font-weight:800;line-height:20px;z-index:2}
+.branch-panel{position:relative;margin:20px 0 24px 47px;border:1px solid #c6dce6;border-left:4px solid #a07bc0;background:#f7f5fd;border-radius:15px;padding:19px 20px;box-shadow:0 3px 13px #5442690c}
+.branch-panel:before{content:'';position:absolute;width:2px;height:calc(100% + 40px);background:#d8c9e7;top:-20px;left:-31px;z-index:-1}
+.branch-number{position:absolute;left:-55px;top:19px;background:#7e5ca4;border:2px solid #d9c6ef;box-shadow:0 0 0 4px var(--bg);width:38px;height:38px;border-radius:11px}
+.branch-title{align-items:flex-start;gap:0}
+.branch-title>div{min-width:0}
+.branch-title strong{font-size:14px;color:#4c386c}
+.branch-title p{color:#6e6480}
+.branch-options{margin:17px 0 12px;gap:10px}
+.branch-choice{font-size:12px;padding:12px 15px;min-height:45px;border:1.5px solid #d3d9e4;color:#4d6172;transition:background .15s,border-color .15s,box-shadow .15s}
+.branch-choice:hover{border-color:#987cba;background:#fff}
+.branch-choice.selected{background:#69528f;border-color:#69528f;color:white;box-shadow:0 4px 12px #67518b25}
+.branch-choice[data-reqbranch="complete"].selected,.branch-choice[data-reqresolution="provided"].selected{background:#267c69;border-color:#267c69}
+.branch-choice[data-reqbranch="missing"].selected,.branch-choice[data-reqresolution="unresolved"].selected{background:#ac7730;border-color:#ac7730}
+.branch-result{margin:0}
+.branch-action{border:1px solid #eed4a7;background:#fffaf0}
+.branch-action-icon{background:#f7e7c7;color:#88611e}
+.branch-followup{margin:12px 0 16px}
+.escalation-box{margin-top:12px}
+.resolution-note{border-left:4px solid #2d967a}
+.completion-steps{margin-top:0}
+.completion-steps .workflow-step{border-left-color:#2a8b6b}
+.completion-steps .workflow-step-number{background:#e5f5ed;color:#236f55;border-color:#b8e0c9}
+.completion-steps .workflow-steps::before{background:#c1e6d2}
+.completion-steps .workflow-step:not(:last-child)::after{color:#2c9575}
+.workflow-callouts{margin-left:47px}
+.workflow-resource{border-left:3px solid #2b8c91}
+.workflow-resource:nth-child(2){border-left-color:#a57a31}
+
+/* Individual instrument instructions are a lightweight sequence, even with nested details. */
+.reading-panel{border:1px solid #d9e7ef}
+.reading-body{padding:20px 25px 25px}
+.reading-body>.step-list{padding:0 0 0 7px}
+.reading-body>.step-list>.step-row{border-left:2px solid #c8dce8;margin:0 0 0 10px;padding:0 0 14px 20px}
+.reading-body>.step-list>.step-row:last-child{border-left-color:transparent;padding-bottom:0}
+.reading-body>.step-list>.step-row>.step-main{position:relative;border:1px solid #e2ebf1;border-left:3px solid #2d819c;border-radius:11px;background:#fbfdff;padding:13px 12px;gap:12px;align-items:flex-start}
+.reading-body>.step-list>.step-row>.step-main>.step-marker{background:#dff0f5;color:#226c85;min-width:29px;height:29px;font-size:11px;border-radius:9px;margin:0}
+.reading-body>.step-list>.step-row:not(:last-child)::after{content:'↓';position:absolute;left:-10px;bottom:-5px;color:#4791aa;font-size:16px;font-weight:800;background:var(--bg);line-height:20px}
+.reading-body .step-children{border-left:2px solid #d7e7ec;margin:10px 0 3px 12px;padding-left:12px}
+.reading-body .step-children .step-main{padding:9px 4px}
+.reading-body .step-children .step-toggle{color:#3c7890}
+.step-toggle{background:#edf5f8;color:#2f6e89;font-weight:780;border:1px solid #d5e6ec;border-radius:8px;min-height:30px}
+.step-toggle:hover{background:#e1f0f4}
+.procedure-text.strong-note{border-left:3px solid #c98a2d;background:#fff8e8;padding:12px 15px}
+
+/* Tabs and buttons show which workflow is currently open. */
+.tab-strip{gap:9px;border-bottom:1px solid #d7e5ed;padding-bottom:10px;scrollbar-width:thin}
+.tab{background:#f2f6fa;color:#526a7c;border:1px solid #dce6ee;border-radius:10px;padding:11px 15px;font-weight:760;min-height:41px;white-space:nowrap}
+.tab:hover{background:#e8f1f7;color:#245f85}
+.tab.active{background:#e2f3f0;border:1px solid #94d4c8;color:#116c63;box-shadow:inset 0 -3px #208f82}
+.tab[aria-selected="true"]{font-weight:850}
+.order-workflow-tabs .tab[aria-selected="true"]{background:#e6f1fa;border-color:#9bc6e3;color:#1e5e8d;box-shadow:inset 0 -3px #287da9}
+.tool-bottom-link{border-left:4px solid #268b86;background:#f3f9f8}
+.tool-bottom-link button{background:#fff;color:#206d7a;border:1px solid #c1e0de}
+
+@media(max-width:860px){.sidebar-nav>.nav-section:not(:first-child){margin-top:12px}.sidebar{box-shadow:8px 0 35px #1e435b24}}
+@media(max-width:650px){
+ .flow-step-grid{padding-left:44px;gap:13px}
+ .flow-step{padding:15px 15px 16px}
+ .flow-step .flow-number{left:-47px;width:33px;height:33px}
+ .flow-step:not(:last-child)::after{left:-40px}
+ .workflow-head{padding:17px}
+ .workflow-steps{margin-left:39px;gap:13px}
+ .workflow-steps::before{left:-23px}
+ .workflow-step{padding:14px 14px 15px;min-height:95px}
+ .workflow-step-number{left:-43px;width:35px;min-width:35px;height:35px}
+ .workflow-step:not(:last-child)::after{left:-35px}
+ .branch-panel{margin-left:39px;padding:16px 14px}
+ .branch-panel:before{left:-26px}
+ .branch-number{left:-46px;width:35px;height:35px}
+ .branch-options{flex-direction:column;align-items:stretch}
+ .branch-choice{text-align:center;width:100%}
+ .workflow-callouts{margin-left:0}
+ .reading-body{padding:14px 13px}
+ .reading-body>.step-list>.step-row{padding-left:12px;margin-left:7px}
+ .reading-body>.step-list>.step-row>.step-main{padding:12px 9px;flex-wrap:wrap}
+ .reading-body>.step-list>.step-row>.step-main>.step-text{flex:1 1 calc(100% - 48px)}
+ .reading-body>.step-list>.step-row>.step-main>.step-toggle{margin-left:40px}
+ .tab{padding:10px 12px}
+}
+@media print{
+ .nav-section,.sidebar{display:none!important}
+ .flow-step,.workflow-step,.branch-panel,.reading-body>.step-list>.step-row{break-inside:avoid}
+ .flow-step-grid,.workflow-steps,.branch-panel,.workflow-callouts{margin-left:0;padding-left:0}
+ .flow-step::after,.workflow-step::after,.branch-panel::before,.workflow-steps::before{display:none!important}
+ .flow-step .flow-number,.workflow-step-number,.branch-number{position:static;display:inline-grid;margin:0 0 12px;box-shadow:none}
+ .branch-options{display:none}
+}
