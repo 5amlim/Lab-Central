@@ -718,6 +718,12 @@ function workflowVisual(sec,title,groupTitle=""){
  const id=sec.id,t=String(title).toLowerCase();
  const qc=/\bqc\b|control|calibration/i.test(title);
  const patient=/running|patient|samples|test|fingerstick|blood|collection/i.test(title);
+ if(id==="sysmex"&&qc){
+  return '<div class="dev-workflow-visual sysmex-eightcheck-guide" aria-label="Three-level Sysmex EIGHTCHECK-3WP QC controls">'+
+   '<div class="dev-visual-header"><strong>QC MATERIALS · EIGHTCHECK-3WP</strong><span>Three separate control vials: Low, Normal, High</span></div>'+
+   '<div class="dev-kit-scenes" style="grid-template-columns:minmax(0,600px);justify-content:center">'+kitScene(id,"before","qc")+'</div>'+
+   '<p class="dev-visual-footnote">Remove and prepare all three control levels as directed by the approved pocH-100i SOP. These are control vials, not patient EDTA tubes.</p></div>';
+ }
  if(id==="piccolo")return "";
  if(id==="pathfast"&&!/(retrieve cartridges|load cartridges|insert the rack)/i.test(title))return "";
  if(!(qc||patient))return "";
@@ -736,6 +742,7 @@ function workflowVisual(sec,title,groupTitle=""){
 function inlineKitVisual(sec,title,depth,rootTitle){
  if(!sec||!collection[sec.id]||sec.archived||sec.id==="piccolo")return "";
  if(sec.id==="clinitek")return "";
+ if(sec.id==="sysmex"&&/\bqc\b|controls?/i.test(String(rootTitle||"")))return "";
 
  const t=String(title).toLowerCase(),root=String(rootTitle||"").toLowerCase();
  if(depth>1)return "";
