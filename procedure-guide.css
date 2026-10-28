@@ -116,3 +116,41 @@
 
 /* Keep the user-provided marked port reference legible without upscaling the thumbnail. */
 .pic-photo-port{width:auto;max-width:170px;height:auto;max-height:170px;image-rendering:auto}
+
+
+/* Instrument-specific specimen containers and consumable states. */
+.device-collection-guide{margin:20px 0 24px;border:1px solid #d9e6eb;border-radius:16px;background:#fff;padding:18px 20px}
+.device-collection-heading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
+.device-collection-kicker{display:block;font-size:10px;color:#24898a;letter-spacing:.12em;font-weight:900;margin-bottom:5px}
+.device-collection-heading h3{font-size:17px;letter-spacing:-.02em;margin:0 0 5px;color:#254158}
+.device-collection-heading p{font-size:11.5px;line-height:1.6;color:#768ea0;margin:0}
+.device-historical-mark{font-size:10px;letter-spacing:.06em;padding:6px 9px;border-radius:6px;background:#e9edf0;color:#687988;font-weight:850}
+.device-collection-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.device-collection-item{display:flex;align-items:center;gap:12px;border:1px solid #dfebef;border-radius:12px;padding:11px 13px;background:#f8fbfc;min-width:0}
+.device-media-picture{display:grid;place-items:center;width:90px;height:91px;flex:none;background:#fff;border:1px solid #e2ebef;border-radius:9px;overflow:hidden}
+.device-media-picture svg{display:block;width:105px;max-width:none;height:86px}
+.device-collection-item>div:last-child{min-width:0}
+.device-collection-item strong{display:block;color:#2e546c;font-size:12.5px;line-height:1.4}
+.device-collection-item span{display:block;color:#72899a;font-size:11px;line-height:1.55;margin-top:5px}
+.device-collection-caveat{font-size:11px;line-height:1.55;color:#6c8191;margin:12px 0 0}
+.dev-workflow-visual{border-bottom:1px solid #e1eaf0;background:#f7fbfd;padding:18px 18px 15px}
+.dev-visual-header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}
+.dev-visual-header strong{font-size:10px;font-weight:900;letter-spacing:.11em;color:#287c91}
+.dev-visual-header span{font-size:11px;color:#638298}
+.dev-kit-scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.dev-kit-scenes:has(> :only-child){grid-template-columns:minmax(0,410px);justify-content:center}
+.dev-kit-view{min-width:0;border:1px solid #dbe8ed;border-radius:12px;background:#fff;padding:13px 13px 11px;display:flex;flex-direction:column;align-items:center}
+.dev-kit-state{align-self:stretch;color:#386d82;font-size:10px;font-weight:880;letter-spacing:.075em;margin:2px 0 9px}
+.dev-kit-drawing{display:grid;place-items:center;width:100%;min-height:128px;background:#fcfdfe;border-radius:8px}
+.dev-kit-drawing svg{display:block;max-width:100%;height:145px;width:auto}
+.dev-kit-view p{font-size:10.5px;line-height:1.55;color:#7990a0;margin:10px 0 0;align-self:stretch}
+.dev-visual-footnote{font-size:10px;line-height:1.5;color:#8a9ca8;margin:11px 0 0}
+.dev-inline-illustration{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:490px;background:#f6fafb;border:1px solid #dfebf0;border-radius:10px;padding:8px 10px;margin:10px 0 3px}
+.dev-inline-kicker{font-size:9px;line-height:1.3;letter-spacing:.075em;color:#237d88;font-weight:850;max-width:72px}
+.dev-inline-drawing{flex:none;width:95px;height:76px;display:grid;place-items:center}
+.dev-inline-drawing svg{max-height:76px;width:100%;height:auto}
+.dev-inline-caption{font-size:10.5px;line-height:1.5;color:#6e8899;flex:1;min-width:125px}
+.guide-line .dev-inline-illustration{max-width:100%;margin-top:10px}
+@media(max-width:760px){.dev-kit-scenes{grid-template-columns:1fr}.device-collection-guide{padding:14px}.dev-workflow-visual{padding:13px}.dev-kit-view{padding:10px}.device-collection-list{grid-template-columns:1fr}}
+@media(max-width:450px){.device-media-picture{width:74px;height:78px}.device-media-picture svg{width:90px;height:76px}.dev-inline-illustration{gap:6px}.dev-inline-drawing{width:80px}.dev-inline-caption{min-width:100px}}
+@media print{.device-collection-item,.dev-kit-view,.dev-inline-illustration{break-inside:avoid}.dev-workflow-visual,.device-collection-guide{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
