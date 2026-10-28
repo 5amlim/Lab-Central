@@ -152,3 +152,17 @@
  .pf-calibration-guide .pfs-rebuilt .pfs-target-cue{font-size:8px!important}
  .pf-calibration-guide .pfs-rebuilt .pfs-blue-bar{font-size:14px}
 }
+
+/* Match the photo-based six-rail loading station and keep the two preparation
+   illustrations equally sized without consuming multiple full screens. */
+.pf-prep-illustrations.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:13px}
+.pf-prep-illustrations.two .pf-action-figure{display:flex;flex-direction:column;min-width:0;min-height:0}
+.pf-prep-illustrations.two .pf-action-image{min-height:0;padding:12px;flex:1;display:grid;place-items:center}
+.pf-prep-illustrations.two .pf-action-image svg{max-width:100%;max-height:285px;height:auto;display:block;overflow:visible}
+.pf-prep-illustrations.two .pf-action-figure figcaption{margin-top:auto}
+.pf-prep-illustrations.two .pf-action-heading{font-size:10px;min-height:39px;display:flex;align-items:center}
+.pf-prep-focused .pf-action-figure{box-shadow:0 3px 12px #294b6010}
+.pf-prep-focused .pf-prep-focus-head{margin-bottom:15px}
+.pf-prep-focused .pf-action-figure figcaption{font-size:11px;line-height:1.55}
+@media(max-width:760px){.pf-prep-illustrations.two{grid-template-columns:1fr}.pf-prep-illustrations.two .pf-action-image svg{max-height:280px}}
+@media print{.pf-prep-illustrations.two .pf-action-figure{break-inside:avoid}}
