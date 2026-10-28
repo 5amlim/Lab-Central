@@ -101,7 +101,16 @@ function body(shape,a){
  }else if(shape==="urine"){
  v='<path d="M247 240 L270 67 Q275 48 300 46 L460 46 Q484 52 487 73 L513 238 Q511 257 483 258 L270 258 Q249 256 247 240Z" fill="#eaf0f3" stroke="#9eafbb" stroke-width="3"/>'+rect(287,72,188,99,7,"#9db2bf")+rect(300,85,160,74,5,"#dce9ec")+txt(359,198,"CLINITEK Status+",14,"#465b6d",830)+txt(316,235,"SIEMENS",15,"#2789ad",850)+circle(462,191,12,"#9eb7c2","#738d9b")+rect(393,230,97,22,7,"#3a4b55");
  }else if(shape==="torch"){
- v=rect(270,45,214,236,15,"#e9f0f3","#a2b3bd",3)+Array.from({length:4},(_,i)=>rect(289,62+i*46,175,39,7,"#fafcfd","#a4b7c3",2)+rect(298,72+i*46,151,20,4,"#eef4f6")+rect(418,77+i*46,19,13,3,"#ba4d55")).join("")+rect(287,251,181,18,5,"#50606b")+txt(348,264,"BIOFIRE TORCH",10,"#fff",790);
+ v='<ellipse cx="385" cy="286" rx="235" ry="15" fill="#dae4e9" opacity=".65"/>'+
+ '<path d="M182 99 L234 64 L518 64 L583 100 L583 234 L532 272 L197 272 L180 236Z" fill="#e6edef" stroke="#9cabb6" stroke-width="3"/>'+
+ '<path d="M181 99 L234 64 L278 64 L278 271 L194 269 L182 235Z" fill="#545a64" stroke="#555d69" stroke-width="3"/>'+
+ '<path d="M276 79 H520 L554 103 L554 228 H276Z" fill="#f5f7f7" stroke="#bdcbd0" stroke-width="2"/>'+
+ Array.from({length:4},(_,i)=>{const x=286+(i%2)*133,y=91+Math.floor(i/2)*61;return '<rect x="'+x+'" y="'+y+'" width="124" height="54" rx="6" fill="#fcfdfd" stroke="#a2b5c1" stroke-width="2"/><rect x="'+(x+10)+'" y="'+(y+14)+'" width="20" height="27" rx="4" fill="#26323e"/><path d="M'+(x+35)+' '+(y+18)+'h14" stroke="#c54d54" stroke-width="4"/>';}).join('')+
+ '<path d="M400 226 L566 210 L604 267 L420 282Z" fill="#e0ebef" stroke="#9bafb9" stroke-width="3"/>'+
+ '<path d="M429 229 L556 217 L581 255 L449 268Z" fill="#233746" stroke="#5c7c8e" stroke-width="3"/>'+
+ '<path d="M445 234 L554 226 L568 251 L460 258Z" fill="#d6edf1"/>'+
+ '<text x="229" y="203" transform="rotate(-90 229 203)" fill="#eff3f5" font-family="Arial" font-size="12" font-weight="800">BIOFIRE</text>'+
+ '<text x="509" y="246" fill="#3a7995" font-family="Arial" font-size="11" font-weight="800">TORCH</text>';
  }else if(shape==="modules"){
  v=rect(194,104,215,166,18,"#eef3f6","#9cadb9",3)+rect(211,119,180,99,10,"#d9e5ea","#b7cbd4",2)+'<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+rect(214,228,179,29,7,"#dae6eb")+txt(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+rect(404,59,120,196,17,"#f3f7f9","#9db3bf",3)+rect(417,81,95,154,6,"#263c4b")+rect(427,94,75,119,3,"#e1edf2")+txt(465,131,"Available",13,"#356b86",850)+circle(464,243,7,"#4a91aa");
  }else if(shape==="sofia"){
