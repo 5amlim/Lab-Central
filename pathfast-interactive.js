@@ -14,10 +14,31 @@ function inputTime(total){
  const m=((total%1440)+1440)%1440;
  return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
 }
+// Editable 12-hour time, while retaining the existing clock field's appearance.
+function parseDrawTime(raw, currentPeriod){
+ const s=String(raw).trim().toUpperCase().replace(/\./g,"").replace(/\s+/g,"");
+ const match=s.match(/^(\d{1,4})(?::(\d{1,2}))?(AM|PM|A|P)?$/);
+ if(!match)return null;
+ const meridiem=match[3]?match[3].startsWith("A")?"AM":"PM":null;
+ let hour, minute;
+ if(match[2]!==undefined){hour=Number(match[1]);minute=Number(match[2]);}
+ else if(match[1].length>=3){hour=Number(match[1].slice(0,-2));minute=Number(match[1].slice(-2));}
+ else{hour=Number(match[1]);minute=0;}
+ if(minute>59||hour<0||hour>23)return null;
+ if(meridiem){
+  if(hour<1||hour>12)return null;
+  hour=hour%12+(meridiem==="PM"?12:0);
+ }else if(hour<=12){
+  const period=currentPeriod||"PM";
+  if(hour===0)hour=0;
+  else hour=hour%12+(period==="PM"?12:0);
+ }
+ return hour*60+minute;
+}
 function baselinePicker(){
  return '<div class="pcr-timing-start pcr-custom-baseline" id="pcr-custom-baseline">'+
  '<span class="pcr-clock">0 h</span><div class="pcr-baseline-text"><strong>Baseline draw</strong><p>Enter the actual first collection time, not the result time.</p></div>'+
- '<label class="pcr-time-input-label" for="pcr-baseline-input"><span>FIRST DRAW TIME</span><input id="pcr-baseline-input" type="time" step="60" value="'+inputTime(baselineMinutes)+'" aria-label="First troponin blood collection time"></label>'+
+ '<label class="pcr-time-input-label" for="pcr-baseline-input"><span>FIRST DRAW TIME</span><span class="pcr-time-input-shell"><input id="pcr-baseline-input" type="text" inputmode="text" maxlength="11" spellcheck="false" autocomplete="off" value="'+displayTime(baselineMinutes)+'" aria-label="First troponin blood collection time" aria-describedby="pcr-time-help" placeholder="12:00 PM"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><small id="pcr-time-help" class="pcr-time-help">Type 9:15 AM or 13:15. Press Enter.</small></label>'+
  '</div>';
 }
 function timing(){
@@ -178,11 +199,29 @@ if(typeof document!=='undefined'&&typeof document.addEventListener==='function')
  });
 }
 if(typeof document!=="undefined" && typeof document.addEventListener==="function"){
+ // Click to select the time and type directly. Enter commits; Escape restores.
+ document.addEventListener("focusin",function(ev){
+  if(ev.target&&ev.target.id==="pcr-baseline-input"&&typeof ev.target.select==="function")ev.target.select();
+ });
+ document.addEventListener("keydown",function(ev){
+  if(!ev.target||ev.target.id!=="pcr-baseline-input")return;
+  if(ev.key==="Enter"){ev.preventDefault();ev.target.blur();}
+  if(ev.key==="Escape"){ev.target.value=displayTime(baselineMinutes);ev.target.blur();}
+ });
  document.addEventListener("change",function(ev){
   const input=ev.target && ev.target.closest ? ev.target.closest("#pcr-baseline-input") : null;
-  if(!input || !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(input.value))return;
-  const parts=input.value.split(":").map(Number);
-  baselineMinutes=parts[0]*60+parts[1];
+  if(!input)return;
+  const candidate=parseDrawTime(input.value,baselineMinutes>=720?"PM":"AM");
+  if(candidate===null){
+   input.value=displayTime(baselineMinutes);
+   const help=document.getElementById("pcr-time-help");
+   if(help)help.textContent="Invalid time. Try 9:15 AM or 13:15.";
+   return;
+  }
+  baselineMinutes=candidate;
+  input.value=displayTime(candidate);
+  const help=document.getElementById("pcr-time-help");
+  if(help)help.textContent="Type 9:15 AM or 13:15. Press Enter.";
   const current=document.getElementById("pcr-serial-timing");
   if(current)current.outerHTML=timing();
  });
