@@ -11,12 +11,25 @@ Interactive reference website for clinical lab workflows, instrument instruction
 - Separate in-house ordering workflow
 - Order-set placeholders for each active instrument
 - Archived references for discontinued devices
+- Home stool and urine collection: staff kit preparation, patient instructions and test-specific containers
+- Specimen drop-off: new Athena appointment, new provider order and documentation
+- Lab Sendout Log: color printing from Athena original image, nurse .rn charting, tech processing, Microsoft Forms logging, and bin handoff
 
 ## Website
 
 The main site content, scripts and existing illustrations are in `index.html`. Layout enhancements for connected workflow steps, category-colored menus and active navigation are in `flow-navigation.css`. Keep both files at the repository root when publishing. Open `index.html` in a browser with `flow-navigation.css` alongside it to preview locally.
 
 To publish it with GitHub Pages, use **Settings → Pages → Deploy from a branch → main / (root)**. GitHub Pages deployment is separate from uploading the repository files.
+
+## Sendout Log form link
+
+The direct responder URL for the Microsoft Sendout Log was not available in the supplied materials. The website therefore displays a clear pending-link message and directs staff to the existing QR code on the laminated lab instructions.
+
+To publish the verified link, edit `sendout-form-config.js` and set `window.LAB_SENDOUT_FORM_URL` to the official HTTPS **responder link**, then republish. Do not place a form editor URL, credentials or patient data in the repository.
+
+## Home collection
+
+The home-collection instructions were transcribed from *Home Urine and Stool Collection Instructions for Staff and Patients* (5-page source), with clinical verification cautions for specimen stability. Its source PDF illustrations are not hosted in this repository. Confirm container selection and storage directions against current test-specific guidance. The new Athena drop-off appointment and new order workflow are staff-provided instructions separate from the source document.
 
 ## Training updates
 
