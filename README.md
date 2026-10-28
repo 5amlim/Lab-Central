@@ -36,6 +36,17 @@ To publish the verified link, edit `sendout-form-config.js` and set `window.LAB_
 
 The home-collection instructions were transcribed from *Home Urine and Stool Collection Instructions for Staff and Patients* (5-page source), with clinical verification cautions for specimen stability. Its source PDF illustrations are not hosted in this repository. Confirm container selection and storage directions against current test-specific guidance. The new Athena drop-off appointment and new order workflow are staff-provided instructions separate from the source document.
 
+## PATHFAST RN collection and clinical pathway references
+
+The PATHFAST instrument page has two additional tabs:
+
+- **RN collection & timing**: green-top lithium-heparin tube illustration, immediate 8–10 gentle inversions, actual collection time, microclot precautions, 0/1-hour and 0/2-hour serial collection timing, missed-window escalation, and handoff.
+- **Chest pain pathway**: responsive provider-only visual recreations of the supplied 1-hour interpretation table and 0/1-hour chest-pain flowchart.
+
+These pages are implemented in `pathfast-clinical.js` and styled in `pathfast-clinical.css`. The website does not contain the original slide-image files or the uploaded PDF attachments. Keep both new source files alongside `index.html` when publishing.
+
+**Clinical review required:** The pathway image references have different delta-threshold wording (>3 versus ≥3 ng/L) and initial rule-out conditions. The clinic one-page guide reports a 99th-percentile hs-TnI reference of 29 ng/L while the slide specifies 21.4 ng/L (female) and 29.8 ng/L (male). Medical leadership must confirm the correct assay- and protocol-specific rules before clinical use. The website does not calculate disposition.
+
 ## PATHFAST Calibration + QC
 
 The Calibration + QC page uses a schematic six-lane PATHFAST rack, with **CAL 1 / CAL 1 / CAL 2 / CAL 2 / QC 1 / QC 2** loaded in that order. The 28-day status guidance identifies the pink analyzer pill as the lockout/due state and gray as ready after acceptable results. These illustrations **do not** read live device status.
