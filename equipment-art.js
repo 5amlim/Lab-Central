@@ -336,7 +336,7 @@ function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
- '<div class="device-collection-heading"><div><span class="device-collection-kicker">'+(sec.id==='pathfast'?'PATIENT TESTING · SPECIMEN':'SPECIMEN & COLLECTION')+'</span><h3>'+(sec.id==='pathfast'?'Sample to use':'What to collect')+'</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU. This illustration does not indicate sample volume.':'Choose the container for the specific assay. Illustrations are not specimen volume or fill guides.')+'</p></div>'+
+ '<div class="device-collection-heading"><div><span class="device-collection-kicker">'+(sec.id==='pathfast'?'PATIENT TESTING · SPECIMEN':'SPECIMEN & COLLECTION')+'</span><h3>'+(sec.id==='pathfast'?'Sample to use':'What to collect')+'</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
  '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
@@ -410,7 +410,7 @@ function clinitekVisualGuide(sec){
  '<div class="device-gallery-heading"><div><span>CHOOSE TEST TYPE</span><h2>Two separate testing workflows</h2><p>Open only the test being performed. The UA strip and hCG cassette are not interchangeable.</p></div></div>'+
  build("ua","Urinalysis dipstick","strip",ua.length?ua:[],"Dipstick with reagent pads · Strip Test",true)+
  build("hcg","hCG pregnancy cassette","cassette",hcg,"White cassette and single-use pipette · Cassette Test",false)+
- '<p class="device-gallery-note">Follow the current Siemens CLINITEK Status+ Operator Guide and your approved site SOP. Illustrations are simplified training references.</p></section>';
+ '<p class="device-gallery-note">Follow the current Siemens CLINITEK Status+ Operator Guide and your approved site SOP. Follow the displayed instructions and approved workflow.</p></section>';
 }
 /* PATHFAST reagent cartridge based on the PHC/LSI Medience cartridge reference:
    Long black-foil strip, clear sample trough at the front red tab,
@@ -516,7 +516,7 @@ function pathfastRackSvg(mode="patient",sampleLoaded=true){
  }
  h+='<path d="M106 335 L899 335 L840 361 L149 360Z" fill="#c5d3dc" stroke="#95a7b2" stroke-width="4"/>'+
  '<path d="M142 350 L847 350" stroke="#f7fcff" stroke-width="5" opacity=".9"/>'+
- '<text x="489" y="402" text-anchor="middle" font-size="16" font-weight="850" fill="#607c8e">'+(isCal?"SIX LOADED CARTRIDGES · CAL 1 / CAL 2 / QC":"ILLUSTRATED SAMPLE RACK · TWO OCCUPIED POSITIONS")+'</text>';
+ '<text x="489" y="402" text-anchor="middle" font-size="16" font-weight="850" fill="#607c8e">'+(isCal?"SIX LOADED CARTRIDGES · CAL 1 / CAL 2 / QC":"SAMPLE RACK · TWO OCCUPIED POSITIONS")+'</text>';
  return illustratedSvg(h,"PATHFAST six-slot metal reagent cartridge rack with "+(isCal?"all six long reagent cartridges loaded, CAL 1 twice, CAL 2 twice, QC 1 and QC 2":"two long sample cartridges inserted and four empty aluminum channels"),"0 0 980 420");
 }
 function pathfastTipRackSvg(mode="patient"){
@@ -903,7 +903,7 @@ function visualGuide(sec){
  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>'+title+'</h2><p>'+visualEsc(sec.title)+' · '+(archive?'Archived reference only':'Select the exact assay before testing')+'</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
  (archive?'<p class="device-gallery-archive">Archived device: informational reference only. Do not use for current patient testing.</p>':'')+
  '<div class="device-gallery-grid">'+steps+'</div>'+
- '<p class="device-gallery-note">Illustrative components are simplified, not photographic replicas or accurate fill-scale diagrams. Use the actual kit insert and local approved SOP for volumes, position, timing, specimen handling and QC. Opaque kits may not visibly show their internal sample.</p></section>';
+ '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
 window.LAB_EQUIPMENT_ART={pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
