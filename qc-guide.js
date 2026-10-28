@@ -45,6 +45,12 @@ const configs={
   {heading:"Review the control run",screen:"QC RESULT",items:["Review","History","Printer icon"],focus:"Printer icon",tip:"Open the individual QC result using the instrument's approved result-history workflow."},
   {heading:"Print if supported",screen:"PRINT RESULT",items:["Print","Back"],focus:"Print",tip:"Printing requires a compatible optional portable printer, configured and connected."}
  ],note:"If no compatible printer is installed, create and file the approved QC record instead. Do not invent a paper printout."},
+ pathfast:{brand:"PATHFAST",binder:"PATHFAST Calibration + QC binder",steps:[
+  {heading:"Collect automatic printouts",screen:"ASSAY / HOME",items:["Calibration report","QC 1 / QC 2","CHECK"],focus:"Calibration report",tip:"The analyzer's built-in printer normally prints calibration and QC results after the run."},
+  {heading:"Open saved records if a reprint is needed",screen:"ASSAY / HOME",items:["START","CHECK","SETUP"],focus:"CHECK",tip:"Select CHECK from the home screen to access stored QC and calibration records."},
+  {heading:"Choose QC or calibration",screen:"CHECK",items:["RESULT CHECK","QC CHECK","CAL CHECK"],focus:"QC CHECK",tip:"Choose QC CHECK to review/reprint controls; CAL CHECK for calibration data."},
+  {heading:"Reprint the selected record",screen:"QC / CAL RECORD",items:["Print","Back"],focus:"Print",tip:"Select the correct assay, lot, date, and result, then print per the analyzer screen."}
+ ],note:"Keep the CAL result and both QC levels for each assay/lot together. Confirm QC acceptability and the gray/ready status before returning to patient testing."},
  generic:{brand:"Instrument QC",binder:"Approved QC / Maintenance binder",steps:[
   {heading:"Locate the control result",screen:"RESULTS / QC",items:["Review QC","Results","History"],focus:"Review QC",tip:"Use the current instrument's approved QC-results workflow."},
   {heading:"Print or export",screen:"QC RESULT",items:["Print (if supported)","Export","Back"],focus:"Print (if supported)",tip:"Button labels are illustrative; some instruments require an external printer or electronic log."}
