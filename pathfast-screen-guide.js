@@ -55,7 +55,7 @@ function menu(mode){
 }
 
 function item(analyte){
- return frame("CAL/QC","Step 4 · Select assay",'<div class="pfs-item-caption">SELECT ITEM.</div><div class="pfs-item-list">'+
+ return frame("CAL/QC","Step 5 · Select assay",'<div class="pfs-item-caption">SELECT ITEM.</div><div class="pfs-item-list">'+
  assays.map(function(a){const selected=a===analyte;return '<div class="pfs-item-option '+(selected?'target pfs-click-target':'')+'">'+e(a)+(selected?cue("1 · SELECT"):'')+'</div>';}).join('')+
  '</div><div class="pfs-item-actions"><span class="pfs-click-target">OK'+cue("2 · TAP")+'</span><span>CANCEL</span></div>',
  "SELECT ASSAY AND CONFIRM OK.");
@@ -63,7 +63,7 @@ function item(analyte){
 
 function lanes(mode,analyte){
  const cal=mode!=="patient",a=analyte||"hs-Troponin I",labs=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:Array(6).fill("SAMPLE");
- return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 5 · Review CAL/QC lanes":"Step 8 · Open SAMPLE INFO. and choose lane",
+ return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 6 · Review CAL/QC lanes":"Step 8 · Open SAMPLE INFO. and choose lane",
  nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active '+(!cal?'pfs-click-target':'')+'">SAMPLE INFO.'+(!cal?cue("1 · TAP"):'')+'</span></div>'+
  '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("2 · EXAMPLE"):'')+'</span>'+
  '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):"PATIENT")+'</span><strong>'+(cal?e(x):"SID: —")+'</strong></div>';}).join('')+'</div>'+
@@ -81,7 +81,7 @@ function sid(){
 }
 function start(mode){
  const cal=mode==="cal";
- return frame("ASSAY/HOME",cal?"Step 7 · Start CAL/QC":"Step 10 · Start patient assay",
+ return frame("ASSAY/HOME",cal?"Step 8 · Start CAL/QC":"Step 10 · Start patient assay",
  nav("start")+'<div class="pfs-home-heading">'+(cal?"CAL/QC":"PATIENT SAMPLE")+' · READY TO RUN</div>'+
  '<div class="pfs-start-check"><strong>Check before START</strong><span>Verify assay, specimen IDs, lane assignments and loaded tips on the actual screen.</span></div>'+
  '<div class="pfs-screen-alert">Tap the highlighted START control, then review and confirm the analyzer prompt.</div>',
