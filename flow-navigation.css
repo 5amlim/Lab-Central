@@ -312,3 +312,7 @@
 @media(max-width:800px){.ad-guide-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.ad-guide-body{padding:11px}.ad-mock{margin:0 9px 10px}}
 @media print{.ad-guide-card{break-inside:avoid}.ad-guide{break-inside:avoid}}
+
+/* Final Athena save is an explicit illustrated step, not implied by label selection. */
+.ad-mock-data .ad-target.ad-row{min-height:32px}
+.ad-guide-card:has(.ad-mock-data .ad-target em) .ad-mock-data p{line-height:1.55}
