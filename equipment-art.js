@@ -169,9 +169,9 @@ function piccoloLoadingSvg(){
 }
 function piccoloVisual(text){
  const t=String(text).toLowerCase();
- const take=t.includes("grab the disc")||t.includes("disc for the");
- const add=t.includes("load sample into the disc")||t.includes("load controls into the disc");
- const analyzer=t.includes("click analyze");
+ const take=t.includes("grab the")&&(t.includes("disc")||t.includes("reagent"));
+ const add=(t.includes("load")&&(t.includes("disc sample port")||t.includes("sample into the disc")||t.includes("controls into the disc")));
+ const analyzer=t.includes("insert the filled disc")||t.includes("click analyze")||t.includes("start the analysis");
  if(!take&&!add&&!analyzer)return '';
  let pieces='';
  if(take){
