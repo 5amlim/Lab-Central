@@ -200,7 +200,7 @@ function render(){
       window.LAB_PATHFAST_SCREEN.home(group.label,"cal")+
       '<p class="pf-workflow-note">The pink pill identifies an expired or locked calibration/QC status for <strong>'+x+'</strong>. Other assay pills may remain gray if ready. Gray means calibration and QC remain within the effective period.</p>');
   h+=step(3,'Tap BACK','Return from ASSAY/HOME to the ASSAY menu',
-      window.LAB_PATHFAST_SCREEN.home(group.label,"cal")+
+      window.LAB_PATHFAST_SCREEN.home(group.label,"cal","back")+
       '<p class="pf-workflow-note">Select <strong>BACK</strong> on the instrument to reach the ASSAY operation menu.</p>');
   h+=step(4,'Choose CAL/QC/SAMPLE and the assay','Open the calibration workflow for '+x,
       window.LAB_PATHFAST_SCREEN.menu("cal")+
@@ -215,6 +215,7 @@ function render(){
       '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>Lanes 1–4</b> CAL 1 and CAL 2 in duplicate</span><span><b>Lanes 5–6</b> '+esc(group.qc)+' control levels</span></div></div>'+
       '<p class="pf-workflow-note">Follow assay-specific calibrator reconstitution quantities and handling. Load each cartridge into its assigned rack position until it clicks; pipette into the marked sample well using the current assay IFU.</p>');
   h+=step(7,'Insert the rack and start','Load corresponding tips, then press START',
+      window.LAB_PATHFAST_SCREEN.start("cal")+
       '<p class="pf-workflow-note">Seat the rack fully in PATHFAST, install one new tip for each used lane, close the cover, review on-screen lane assignments, then select START and confirm. Follow displayed run instructions. Typical run time is approximately 17 minutes.</p>');
   h+=step(8,'Review calibration and QC','Confirm acceptable results and gray/ready status',
       status(group)+
