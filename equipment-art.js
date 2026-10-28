@@ -526,40 +526,8 @@ function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
    manufacturer rack photos, not as a dimensionally exact machine diagram. */
 function pathfastRackSvg(mode="patient",sampleLoaded=true){
  return pathfastRealRackSvg(mode,sampleLoaded);
-
- const isCal=mode==="cal";
- const items=isCal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["SAMPLE 1","SAMPLE 2","","","",""];
- const fills=["#7caed6","#7caed6","#ad99d4","#ad99d4","#d4aa66","#7cbda7"];
- let h='<defs><linearGradient id="pfRackMetal" x1="0" y1="0" x2=".75" y2="1"><stop stop-color="#f9fdff"/><stop offset=".5" stop-color="#bccbd2"/><stop offset="1" stop-color="#eef4f6"/></linearGradient><linearGradient id="pfRackWell" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#edfaff" stop-opacity=".95"/><stop offset="1" stop-color="#b0d7e3" stop-opacity=".85"/></linearGradient></defs>'+
- '<ellipse cx="490" cy="370" rx="395" ry="25" fill="#b6c9d2" opacity=".3"/>'+
- '<path d="M88 325 L235 102 L851 105 L930 327 L829 357 L158 357Z" fill="url(#pfRackMetal)" stroke="#8ca5b4" stroke-width="5"/>'+
- '<path d="M203 112 L860 116" stroke="#f6fcff" stroke-width="12" stroke-linecap="round"/>';
- for(let i=0;i<6;i++){
-   const x=160+i*126,active=!!items[i],label=items[i],ink=fills[i],lx=x+42;
-   h+='<g aria-label="Lane '+(i+1)+(active?" with "+label+" cartridge":" empty")+'">'+
-      '<path d="M'+(x-8)+' 123 L'+(x-28)+' 343" stroke="#94aab4" stroke-width="9" stroke-linecap="round"/>'+
-      '<path d="M'+(x+95)+' 123 L'+(x+77)+' 343" stroke="#f5faff" stroke-width="10" stroke-linecap="round"/>'+
-      '<path d="M'+(x-4)+' 131 L'+(x+89)+' 131 L'+(x+71)+' 335 L'+(x-22)+' 335Z" fill="'+(active?"#d8e3e8":"#ecf2f5")+'" stroke="#9cb0bb" stroke-width="2"/>'+
-      (active?'<path d="M'+(x+7)+' 147 L'+(x+74)+' 147 L'+(x+56)+' 309 L'+(x-10)+' 309Z" fill="#1c282e" stroke="#506876" stroke-width="2"/>'+
-        '<path d="M'+(x+7)+' 147 L'+(x+74)+' 147 L'+(x+73)+' 166 L'+(x+5)+' 166Z" fill="#d65850"/>'+
-        '<path d="M'+(x+8)+' 183 L'+(x+70)+' 183" stroke="#dce5e9" stroke-width="6"/>'+
-        Array.from({length:11},(_,j)=>'<path d="M'+(x+14+j*4.8)+' 189 v29" stroke="'+(j%3===0?"#f7fcfd":"#98aab4")+'" stroke-width="'+(j%3===0?2:1)+'"/>').join("")+
-        '<circle cx="'+(x+36)+'" cy="245" r="17" fill="#050b12" stroke="#a7b8c0" stroke-width="4"/>'+
-        '<circle cx="'+(x+36)+'" cy="245" r="6" fill="#34454d"/>'+
-        '<path d="M'+(x-9)+' 296 L'+(x+58)+' 296 L'+(x+54)+' 326 L'+(x-13)+' 326Z" fill="url(#pfRackWell)" stroke="#70a5b6" stroke-width="2.5"/>'+
-        '<path d="M'+(x-5)+' 311 L'+(x+54)+' 311 L'+(x+52)+' 325 L'+(x-8)+' 325Z" fill="'+(sampleLoaded?(isCal?ink:"#a8404e"):"#d9edf4")+'" opacity=".82"/>'+
-        '<path d="M'+(x-4)+' 307 L'+(x+55)+' 307" stroke="#6a9daf" stroke-dasharray="4 3" stroke-width="2"/>' :
-        '<path d="M'+(x+2)+' 143 L'+(x+80)+' 143 M'+(x-12)+' 326 L'+(x+70)+' 326" stroke="#bbcbd3" stroke-width="4"/>' )+
-      '<rect x="'+(lx-45)+'" y="53" width="90" height="48" rx="9" fill="'+(active?"#f3f9fc":"#f5f7f9")+'" stroke="'+(active?"#aec9d5":"#d3dde2")+'"/>'+
-      '<text x="'+lx+'" y="72" font-size="12" text-anchor="middle" font-weight="850" fill="#557b91">LANE '+(i+1)+'</text>'+
-      '<text x="'+lx+'" y="89" font-size="12.5" text-anchor="middle" font-weight="900" fill="'+(active?"#295c73":"#a7b5bf")+'">'+(label||"EMPTY")+'</text>'+
-      '</g>';
- }
- h+='<path d="M106 335 L899 335 L840 361 L149 360Z" fill="#c5d3dc" stroke="#95a7b2" stroke-width="4"/>'+
- '<path d="M142 350 L847 350" stroke="#f7fcff" stroke-width="5" opacity=".9"/>'+
- '<text x="489" y="402" text-anchor="middle" font-size="16" font-weight="850" fill="#607c8e">'+(isCal?"SIX LOADED CARTRIDGES · CAL 1 / CAL 2 / QC":"SAMPLE RACK · TWO OCCUPIED POSITIONS")+'</text>';
- return illustratedSvg(h,"PATHFAST six-slot metal reagent cartridge rack with "+(isCal?"all six long reagent cartridges loaded, CAL 1 twice, CAL 2 twice, QC 1 and QC 2":"two long sample cartridges inserted and four empty aluminum channels"),"0 0 980 420");
 }
+
 function pathfastTipRackSvg(mode="patient"){
  const activeCount=mode==="cal"?6:2;
  let h='<rect x="110" y="215" width="750" height="80" rx="19" fill="#d8e6ec" stroke="#96aebb" stroke-width="5"/>'+
