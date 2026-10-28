@@ -60,13 +60,13 @@ function routeBranch(value,note,kind){
  '<strong>'+value+'</strong><p>'+note+'</p></article>';
 }
 function pathway(){
- return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I 0/1-hour pathway</h2>'+
- '<p>Provider reference for 0/1-hour hs-Troponin I interpretation. Confirm the current approved chest-pain protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
+ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I · Approved pathways</h2>'+
+ '<p>Provider review for PATHFAST high-sensitivity troponin I (hs-cTnI) 0/1-hour and 0/2-hour pathways. Follow the approved site protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
  '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
  window.LAB_PATHFAST_EXTRAS.flow()+
- '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>1-hour interpretation and initial-result routing</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
+ '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>Assay thresholds and timed pathways</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
  '<div class="pcr-reference-content pcr-compact-reference">'+
- '<header class="pcr-reference-subheading"><div><span class="pcr-eyebrow">RESULT INTERPRETATION</span><h3>1-hour result criteria</h3></div><span class="pcr-reference-static">Reference only</span></header>'+
+ '<header class="pcr-reference-subheading"><div><span class="pcr-eyebrow">RESULT INTERPRETATION</span><h3>0/1-hour reference criteria</h3></div><span class="pcr-reference-static">Reference only</span></header>'+
  '<div class="pcr-criteria-table" aria-label="One-hour troponin reference criteria">'+
  referenceRow("Rule-out","Low-risk review",[
   "Initial hs-TnI <b>&lt;4 ng/L</b>",
@@ -89,7 +89,8 @@ function pathway(){
   "Or 1-hour total <b>≥90 ng/L</b>: transfer"
  ],"transfer")+
  '</div>'+
- '<header class="pcr-reference-subheading pcr-route-heading"><div><span class="pcr-eyebrow">INITIAL RESULT</span><h3>Where the 0-hour result leads</h3></div><span class="pcr-reference-static">Provider assessment</span></header>'+
+ '<div class="pcr-2h-reference"><span class="pcr-eyebrow">0/2-HOUR SERIAL PATHWAY</span><h3>2-hour high-sensitivity troponin I</h3><p>When the provider selects the 0/2-hour option or the one-hour window is missed, collect the repeat at 120 minutes from the baseline within the locally authorized window. Interpret the actual value and delta against the approved PATHFAST-specific 0/2-hour limits, not one-hour thresholds.</p><div class="pcr-2h-route"><span><b>0 h</b> Baseline hs-Troponin I</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>2 h</b> Timed repeat + assay-specific delta</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>Provider</b> Rule-out / observation / urgent review</span></div></div>'+
+'<header class="pcr-reference-subheading pcr-route-heading"><div><span class="pcr-eyebrow">INITIAL RESULT</span><h3>Where the 0-hour result leads</h3></div><span class="pcr-reference-static">Provider assessment</span></header>'+
  '<div class="pcr-simple-map" aria-label="Initial troponin routing overview">'+
  '<div class="pcr-route-start"><span class="pcr-route-start-icon" aria-hidden="true">●</span><div><strong>Chest pain presentation</strong><small>Initial hs-TnI (0 hour) + ECG</small></div></div>'+
  '<div class="pcr-route-connector" aria-hidden="true"><span>↓</span></div>'+
