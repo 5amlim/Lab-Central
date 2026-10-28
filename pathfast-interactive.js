@@ -65,33 +65,38 @@ function result(title,body,type){
 function flow(){
  const q=id=>questions.find(x=>x.id===id);
  let h='<section class="pcr-flow-explorer" aria-label="Interactive provider pathway reference">'+
- '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PROVIDER-LED INTERACTIVE REFERENCE</span><h3>Explore the 0/1-hour pathway</h3><p>Select the circumstances below to find the relevant branch of the provided pathway. No patient data is stored; the tool does not diagnose, calculate troponin deltas, or authorize disposition.</p></div>'+
+ '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PROVIDER-LED INTERACTIVE REFERENCE</span><h3>Explore the 0/1-hour pathway</h3><p>Select the circumstances below to find the relevant branch of the clinical reference. No patient data is stored. This tool does not diagnose, calculate deltas, or authorize disposition.</p></div>'+
  '<button type="button" data-pcr-reset class="pcr-flow-reset">Reset flow ↻</button></div>'+
- '<div class="pcr-flow-spine">'+question(q("timing"),1);
- if(selected.timing==="no") h+=result("Outside the 1-hour sampling window","This draw cannot be assigned the 1-hour delta threshold. Record the true time and follow the provider-directed alternate pathway. Do not substitute an out-of-window value for a protocol time point.","warn");
- else if(selected.timing==="pending")h+=result("Collect according to the selected pathway","Start with the timestamp of the original draw. Obtain the follow-up within its approved collection window; do not classify without an appropriately timed specimen.","info");
- else if(selected.timing==="yes"){
- h+=question(q("baseline"),2);
- if(selected.baseline==="high")h+=result("Review high initial-value branch","The reference slide places an initial hs-TnI ≥90 ng/L in its rule-in/transfer evaluation branch. Clinical assessment and urgent provider-directed escalation take priority. Do not use this explorer to make a final disposition.","high");
- else if(selected.baseline==="low"){
-  h+=question(q("onset"),3);
-  if(selected.onset) {
-   h+=question(q("risk"),4);
-   if(selected.risk) h+=result("Review low-initial-value conditions",
-    "The supplied flowchart considers symptom onset, ECG and HEART score. A value under 4 ng/L alone does not authorize discharge. Follow the current approved medical protocol, particularly for early symptom onset or concerning findings.","info");
-  }
- }else if(selected.baseline==="middle"){
-  h+=question(q("delta"),3);
-  if(selected.delta){
-   if(selected.delta==="large")h+=result("Review marked-change branch","The provided 1-hour table identifies a delta ≥20 ng/L as a high-risk branch needing urgent provider evaluation. Do not interpret this without clinical assessment.","high");
-   else{
-    h+=question(q("risk"),4);
-    if(selected.risk)h+=result("Compare all clinical criteria","Review the corresponding rule-out, consider-discharge or observe/consult references below, including sex-specific concentrations, symptoms, ECG and HEART score. The supplied references disagree at the 3 ng/L boundary, so this tool does not classify a final zone.","info");
+ '<div class="pcr-flow-spine">'+question(q("baseline"),1);
+ if(selected.baseline==="high"){
+  h+=result("High initial-value reference","An initial hs-TnI ≥90 ng/L appears in the source rule-in/transfer pathway. Urgent clinical assessment and provider-directed escalation apply irrespective of whether a repeat draw has occurred.","high");
+ }else if(selected.baseline){
+  h+=question(q("timing"),2);
+  if(selected.timing==="no"){
+   h+=result("Outside the 1-hour collection window","The draw cannot be designated as the 1-hour delta specimen. Record its true time, notify the provider and follow the alternate testing plan. Do not use a timed 1-hour delta threshold.","warn");
+  }else if(selected.timing==="pending"){
+   h+=result("Repeat sampling not yet documented","The timed 1-hour delta cannot be assessed until a sample has been collected within the approved 50–70-minute window. Immediate clinical assessment remains essential.","info");
+  }else if(selected.timing==="yes"){
+   if(selected.baseline==="low"){
+    h+=question(q("onset"),3);
+    if(selected.onset){
+     h+=question(q("risk"),4);
+     if(selected.risk)h+=result("Review low initial-value reference","The source considers symptom onset, HEART score and ECG. A value <4 ng/L alone does not authorize discharge. Follow the approved protocol, especially for early symptoms or concerning findings.","info");
+    }
+   }else if(selected.baseline==="middle"){
+    h+=question(q("delta"),3);
+    if(selected.delta){
+     if(selected.delta==="large"){
+      h+=result("Marked 1-hour change in source reference","A delta ≥20 ng/L appears in the source's rule-in/transfer evaluation branch. Confirm the actual clinical course and arrange urgent provider-directed assessment.","high");
+     }else{
+      h+=question(q("risk"),4);
+      if(selected.risk)h+=result("Compare relevant protocol criteria","Review the rule-out, consider-discharge and observe/consult references below, including sex-specific concentration thresholds, symptoms, ECG and HEART. The supplied references disagree at the 3 ng/L boundary and this tool cannot assign a definitive zone.","info");
+     }
+    }
    }
   }
  }
- }
- h+='</div><div class="pcr-flow-foot"><b>Clinical review required:</b> The supplied pathway slides contain unresolved threshold differences, including >3 versus ≥3 ng/L. Always use the approved medical protocol. Do not enter patient identifiers in this guide.</div></section>';
+ h+='</div><div class="pcr-flow-foot"><b>Clinical review required:</b> The clinical source slides contain unresolved threshold differences, including >3 versus ≥3 ng/L. Use the approved medical protocol. Do not enter identifiers in this guide.</div></section>';
  return h;
 }
 function refresh(){
@@ -104,7 +109,7 @@ if(typeof document!=='undefined'&&typeof document.addEventListener==='function')
   const btn=ev.target.closest('[data-pcr-choice]');
   if(btn){const id=btn.getAttribute('data-pcr-choice'),value=btn.getAttribute('data-pcr-value');const q=questions.find(x=>x.id===id);
    if(!q||!q.opts.some(x=>x[0]===value))return;
-   const next={};for(const key of ["timing","baseline","onset","delta","risk"]){if(key===id)break;if(selected[key])next[key]=selected[key];}
+   const next={};for(const key of ["baseline","timing","onset","delta","risk"]){if(key===id)break;if(selected[key])next[key]=selected[key];}
    next[id]=value;selected=next;refresh();return;
   }
   if(ev.target.closest('[data-pcr-reset]')){selected={};refresh();}
