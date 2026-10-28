@@ -238,13 +238,13 @@ function illustratedSvg(inner,label,view="0 0 320 210"){
 function mediaSvg(kind){
  const caps={green:"#37966e",lavender:"#9568b3",red:"#c65b5d",blue:"#548eb6"};
  if(caps[kind]){
-  return illustratedSvg('<ellipse cx="160" cy="174" rx="60" ry="8" fill="#e7eef2"/>'+
-   '<rect x="124" y="41" width="72" height="133" rx="14" fill="#f0f8fa" fill-opacity=".78" stroke="#96b8c7" stroke-width="3"/>'+
-   '<path d="M128 99 H192 V157 Q191 170 176 170 H144 Q128 170 128 155Z" fill="#ac3548" opacity=".67"/>'+
-   '<rect x="117" y="27" width="86" height="30" rx="8" fill="'+caps[kind]+'" stroke="#718f9f" stroke-width="3"/>'+
-   '<rect x="127" y="110" width="66" height="29" rx="3" fill="#fff" opacity=".96"/>'+
-   '<text x="160" y="122" text-anchor="middle" font-size="10" fill="#405e72" font-weight="800">'+(kind==="green"?"LI HEPARIN":"EDTA")+'</text>'+
-   '<text x="160" y="134" text-anchor="middle" font-size="9" fill="#6a8393">WHOLE BLOOD</text>',
+  return illustratedSvg('<ellipse cx="160" cy="174" rx="39" ry="7" fill="#e7eef2"/>'+
+   '<rect x="135" y="41" width="50" height="133" rx="12" fill="#f0f8fa" fill-opacity=".78" stroke="#96b8c7" stroke-width="3"/>'+
+   '<path d="M138 99 H182 V157 Q182 170 172 170 H148 Q138 170 138 155Z" fill="#ac3548" opacity=".67"/>'+
+   '<rect x="130" y="27" width="60" height="30" rx="8" fill="'+caps[kind]+'" stroke="#718f9f" stroke-width="3"/>'+
+   '<rect x="139" y="105" width="42" height="37" rx="3" fill="#fff" opacity=".96"/>'+
+   '<text x="160" y="118" text-anchor="middle" font-size="7.6" fill="#405e72" font-weight="800">'+(kind==="green"?"LI-HEP":"EDTA")+'</text>'+
+   '<text x="160" y="132" text-anchor="middle" font-size="7" fill="#6a8393">BLOOD</text>',
    kind+"-top whole blood collection tube");
  }
  if(kind==="finger")return illustratedSvg(
