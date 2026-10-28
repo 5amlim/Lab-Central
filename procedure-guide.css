@@ -215,3 +215,29 @@
 .clinitek-inline-kit .dev-inline-drawing svg{max-height:85px}
 @media(max-width:700px){.clinitek-visual-track>summary{padding:14px}.clinitek-track-content{padding:12px}.clinitek-track-icon{width:45px;height:43px}.clinitek-visual-track>summary strong{font-size:14px}}
 @media print{.clinitek-visual-track,.clinitek-track-content .device-gallery-step{break-inside:avoid}}
+
+/* Shared overflow and alignment pass across instruction cards, Piccolo and POC. */
+.procedure-flow,.guide-card,.guide-card-head,.guide-card-body,.guide-toolbar,.guide-stepper,.guide-step,.guide-line,.guide-group,.guide-group-body,.device-collection-guide,.device-collection-item,.dev-workflow-visual,.pic-step-visual,.pic-vis-grid,.pic-vis-card{box-sizing:border-box;max-width:100%;min-width:0}
+.guide-card-head>div,.guide-card-body>div,.guide-group-title,.guide-line>div{min-width:0;overflow-wrap:anywhere}
+.guide-card-head{gap:12px;align-items:flex-start}
+.guide-card-head h3{overflow-wrap:anywhere;line-height:1.35}
+.guide-toolbar{gap:14px;flex-wrap:wrap}
+.guide-toolbar-actions{margin-left:auto;min-width:0}
+.guide-stepper{max-width:100%;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.guide-step,.guide-stepper button{min-width:0;overflow-wrap:anywhere}
+.pic-step-visual{min-width:0;overflow:hidden}
+.pic-vis-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:16px}
+.pic-vis-card{min-width:0;max-width:100%;overflow:hidden;justify-content:flex-start;padding:16px;gap:12px}
+.pic-vis-card>strong,.pic-vis-card>span{min-width:0;overflow-wrap:anywhere}
+.pic-vis-card svg,.pic-vis-card img{display:block;width:100%;max-width:100%;height:auto;object-fit:contain;flex-shrink:0;overflow:visible;margin:0 auto}
+.pic-vis-card .pic-disc-svg,.pic-vis-card .pic-loading-svg{max-width:450px;max-height:320px}
+.pic-vis-card .pic-pipette-svg{max-height:145px!important}
+.pic-vis-card .pic-user-photo.pic-photo-port{width:auto;max-width:min(100%,185px);max-height:175px}
+.pic-vis-card:has(.pic-photo-port) .pic-disc-svg{max-height:250px}
+.pic-step-visual .pic-vis-grid:has(.pic-vis-card:nth-child(3)) .pic-vis-card:nth-child(3){max-width:100%;width:100%;grid-column:1/-1}
+.device-gallery-grid{min-width:0;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.device-gallery-step,.device-gallery-media{min-width:0;max-width:100%;overflow:hidden}
+.device-gallery-image svg{width:100%;height:auto;max-width:100%}
+@media(max-width:980px){.pic-vis-grid{grid-template-columns:1fr}.pic-step-visual .pic-vis-grid:has(.pic-vis-card:nth-child(3)) .pic-vis-card:nth-child(3){grid-column:auto}.guide-toolbar-actions{width:100%;justify-content:flex-end}}
+@media(max-width:650px){.guide-card-head{gap:9px}.guide-card-body{padding:12px}.pic-step-visual{padding:10px}.pic-vis-card{padding:11px}.device-collection-guide{padding:12px}.device-collection-item{gap:9px}.guide-toolbar-actions{justify-content:space-between}.guide-stepper{padding-bottom:8px}}
+@media print{.pic-vis-card,.biofire-training-figure,.guide-card{break-inside:avoid}.guide-stepper{overflow:visible}}
