@@ -107,13 +107,8 @@ function status(group){
    '<div class="pf-state-box"><span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Gray · ready</b><small>Calibration and QC accepted</small></div></div></div></div>';
  }).join("")+'</div>';
 }
-function assay(group,index){
- const open=index===0?' open':'';
- return '<details class="pf-assay-dropdown" data-pf-assay="'+group.id+'"'+open+'>'+
- '<summary><span class="pf-assay-icon">'+(group.id==="cardiac"?"♥":"◈")+'</span>'+
- '<span class="pf-assay-summary"><strong>'+esc(group.label)+'</strong><small>Calibration materials and Bio-Rad QC · expand for instructions</small></span>'+
- '<span class="pf-assay-arrow">⌄</span></summary>'+
- '<div class="pf-assay-content">'+status(group)+
+function panelContent(group){
+ return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+status(group)+
  '<h3 class="pf-material-heading">Calibration materials <small>Included in the reagent box</small></h3>'+
  '<div class="pf-material-grid">'+
  material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1')+
@@ -125,7 +120,7 @@ function assay(group,index){
  '<div class="pf-material-grid pf-qc-grid">'+
  material(group.qc,'QC 1 + QC 2',group.detail,svgQC(group.id),group.id)+
  '<div class="pf-qc-note"><strong>QC loading</strong><p>Use '+esc(group.qc)+' for this assay group. Load QC 1 in lane 5 and QC 2 in lane 6. Confirm assigned ranges and acceptable results before patient testing.</p></div>'+
- '</div></div></details>';
+ '</div></div>';
 }
 const workflow=[
  ['Check the analyte status','Select the assay to calibrate. After 28 days, its menu pill turns pink and patient testing is locked.'],
@@ -135,29 +130,74 @@ const workflow=[
  ['Run the six cartridges','Slide cartridges into the rack until they click, insert rack and tips, close the cover and follow the analyzer START prompts.'],
  ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. The analyte pill turns gray after acceptable QC; if still pink, do not test patients.']
 ];
-function render(){
- const w=workflow.map(function(item,i){return '<article class="pf-action"><span class="pf-action-no">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+esc(item[0])+'</h3><p>'+esc(item[1])+'</p></div></article>';}).join("");
- return '<section class="pf-calibration-guide">'+
- '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span><h2>28-day calibration + QC</h2><p>Calibration and QC are performed together using <strong>all six lanes</strong>. Select the assay group below to review its materials and analyzer status.</p></div><span class="pf-interval">↻ 28 DAYS</span></div>'+
- '<div class="pf-assay-list">'+groups.map(assay).join("")+'</div>'+
- '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Illustrated from above</span></div>'+
- '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>1–4</b> Calibration in duplicate</span><span><b>5–6</b> Bio-Rad QC 1 and QC 2</span></div></div>'+
- '<div class="pf-steps-header"><h3>Combined CAL/QC procedure</h3><span>6 steps</span></div>'+
- '<div class="pf-actions">'+w+'</div>'+
- '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Reconstitution and QC:</strong> Use the current assay- and lot-specific manufacturer IFU for diluent volume, mixing, stability, calibration acceptance and QC target ranges. The diagrams are visual references, not validated preparation instructions.</div></div>'+
- '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Calibration + QC video</button><button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>'+
- '<p class="source-footnote">Instrument material and rack illustrations are simplified and not to scale. Verify all operational steps against the approved PATHFAST instructions.</p></section>';
+let selectedPanel=null;
+let panelDropdownOpen=false;
+function selectedGroup(){return groups.find(g=>g.id===selectedPanel)||null;}
+function panelPicker(){
+ const group=selectedGroup();
+ return '<div class="pf-panel-control" id="pfPanelControl">'+
+ '<div class="pf-panel-prompt"><span class="pf-panel-question">01</span><div><strong>Which panel are you running calibration and QC on?</strong><p>Select the assay panel to see its calibrators, QC materials and six-lane setup.</p></div></div>'+
+ '<div class="pf-panel-picker">'+
+ '<button type="button" class="pf-panel-trigger'+(group?' has-selection':'')+'" data-pf-panel-trigger aria-haspopup="true" aria-expanded="'+panelDropdownOpen+'" aria-controls="pfPanelOptions">'+
+ '<span class="pf-panel-trigger-main"><span class="pf-panel-trigger-kicker">'+(group?'SELECTED PANEL':'SELECT PANEL')+'</span><span class="pf-panel-trigger-value">'+(group?esc(group.label):'Choose an assay panel')+'</span></span>'+
+ '<span class="pf-panel-chevron'+(panelDropdownOpen?' open':'')+'" aria-hidden="true">⌄</span></button>'+
+ (panelDropdownOpen?'<div class="pf-panel-options" id="pfPanelOptions" role="group" aria-label="Assay panel options">'+
+ groups.map(g=>'<button type="button" class="pf-panel-option'+(selectedPanel===g.id?' selected':'')+'" data-pf-panel-option="'+g.id+'" aria-pressed="'+(selectedPanel===g.id)+'">'+
+ '<span class="pf-panel-option-mark '+g.id+'" aria-hidden="true">'+(g.id==='cardiac'?'♥':'◆')+'</span><span class="pf-panel-option-text"><strong>'+esc(g.label)+'</strong><small>Calibration + '+esc(g.qc)+'</small></span>'+
+ '<span class="pf-panel-option-check" aria-hidden="true">'+(selectedPanel===g.id?'✓':'›')+'</span></button>').join('')+'</div>':'')+
+ '</div></div>';
 }
-/* Keep both assay panels included when printing the guide. */
-if(typeof window.addEventListener==='function'){
- let pfPrintPanels=[];
- window.addEventListener('beforeprint',function(){
-  pfPrintPanels=Array.from(document.querySelectorAll('.pf-assay-dropdown')).map(function(node){return {node:node,open:node.open};});
-  pfPrintPanels.forEach(function(entry){entry.node.open=true;});
+function repaintPanel(){
+ const old=document.querySelector('.pf-calibration-guide');
+ if(old)old.outerHTML=render();
+}
+function render(){
+ const group=selectedGroup();
+ const w=group?workflow.map(function(item,i){
+  let description=item[1];
+  if(i===0)description='Check the calibration status for '+group.analytes.join(' and ')+'. After 28 days, the analyte pill turns pink and patient testing is locked.';
+  if(i===2)description='Use CAL 1 and the two reconstituted CAL 2 preparations supplied with the reagent box. For QC, use '+group.qc+'. Follow the current assay and control lot instructions.';
+  if(i===5)description='Confirm successful calibration and acceptable '+group.qc+' results against the current assigned limits. The analyte pill turns gray after QC acceptance.';
+  return '<article class="pf-action"><span class="pf-action-no">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+esc(item[0])+'</h3><p>'+esc(description)+'</p></div></article>';
+ }).join(''):'';
+ let h='<section class="pf-calibration-guide">'+
+ '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span><h2>28-day calibration + QC</h2><p>Calibration and QC are performed together using <strong>all six lanes</strong>.</p></div><span class="pf-interval">↻ 28 DAYS</span></div>'+
+ panelPicker();
+ if(!group){
+  h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon" aria-hidden="true">▤</span><strong>Select an assay panel to begin</strong><p>The appropriate calibrator materials, Bio-Rad controls, rack layout and instructions will appear here.</p></div>';
+ }else{
+  h+='<div class="pf-selected-panel" aria-live="polite"><span class="pf-selected-dot"></span><strong>'+esc(group.label)+'</strong><span>CAL + QC · 6 LANES</span></div>'+
+  panelContent(group)+
+  '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Illustrated from above</span></div>'+
+  '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>1–4</b> Calibration in duplicate</span><span><b>5–6</b> '+esc(group.qc)+' QC 1 and QC 2</span></div></div>'+
+  '<div class="pf-steps-header"><h3>'+esc(group.label)+' · CAL/QC procedure</h3><span>6 steps</span></div>'+
+  '<div class="pf-actions">'+w+'</div>'+
+  '<div class="pf-tip"><span class="pf-tip-icon">!</span><div><strong>Reconstitution and QC:</strong> Use the current assay- and lot-specific manufacturer IFU for diluent volume, mixing, stability, calibration acceptance and QC target ranges. The diagrams are visual references, not validated preparation instructions.</div></div>'+
+  '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-gotab="videos">▶ Calibration + QC video</button><button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>'+
+  '<p class="source-footnote">Instrument material and rack illustrations are simplified and not to scale. Verify all operational steps against the approved PATHFAST instructions.</p>';
+ }
+ return h+'</section>';
+}
+if(typeof document!=='undefined' && typeof document.addEventListener==='function'){
+ document.addEventListener('click',function(e){
+  const trigger=e.target.closest('[data-pf-panel-trigger]');
+  if(trigger){panelDropdownOpen=!panelDropdownOpen;repaintPanel();const newTrigger=document.querySelector('[data-pf-panel-trigger]');if(newTrigger)newTrigger.focus();return;}
+  const option=e.target.closest('[data-pf-panel-option]');
+  if(option){
+   const id=option.getAttribute('data-pf-panel-option');
+   if(groups.some(g=>g.id===id)){
+    selectedPanel=id;panelDropdownOpen=false;repaintPanel();
+    const newTrigger=document.querySelector('[data-pf-panel-trigger]');if(newTrigger)newTrigger.focus();
+   }
+   return;
+  }
+  if(panelDropdownOpen&&!e.target.closest('.pf-panel-control')){panelDropdownOpen=false;repaintPanel();}
  });
- window.addEventListener('afterprint',function(){
-  pfPrintPanels.forEach(function(entry){entry.node.open=entry.open;});
-  pfPrintPanels=[];
+ document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&panelDropdownOpen){
+   panelDropdownOpen=false;repaintPanel();
+   const trigger=document.querySelector('[data-pf-panel-trigger]');if(trigger)trigger.focus();
+  }
  });
 }
 window.LAB_PATHFAST_UI={render:render,lanes:lanes,assays:groups.map(x=>x.id)};
