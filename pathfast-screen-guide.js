@@ -68,7 +68,7 @@ function lanes(mode,analyte){
 function patientStep(i){
  if(i===0)return login();
  if(i===1)return home("","patient");
- if(i===2)return menu("patient");
+ if(i===2)return home("","patient");
  if(i===3)return frame("ASSAY","Step 4 · SAMPLE mode",nav()+'<div class="pfs-menu-caption">SELECT OPERATION</div><div class="pfs-assay-options"><div class="pfs-assay-option target">SAMPLE <b>SELECT THIS</b></div><div class="pfs-assay-option">QC/SAMPLE</div><div class="pfs-assay-option">CAL/QC/SAMPLE</div></div>'+foot("SAMPLE"),"CHOOSE SAMPLE FOR PATIENT TESTING.");
  if(i===4)return lanes("patient");
  return "";
