@@ -47,6 +47,20 @@ These pages are implemented in `pathfast-clinical.js` and styled in `pathfast-cl
 
 **Clinical review required:** The pathway image references have different delta-threshold wording (>3 versus ≥3 ng/L) and initial rule-out conditions. The clinic one-page guide reports a 99th-percentile hs-TnI reference of 29 ng/L while the slide specifies 21.4 ng/L (female) and 29.8 ng/L (male). Medical leadership must confirm the correct assay- and protocol-specific rules before clinical use. The website does not calculate disposition.
 
+## PATHFAST assay selection, controls, and screen guide
+
+The PATHFAST patient testing page now contains 11 guided steps with a touchscreen-style ASSAY/HOME illustration. The login note has been removed. Athena PATHFAST D-Dimer, hs-Troponin and pro-BNP order names appear only under the separate Order Sets tab.
+
+The calibration page presents three assay choices: hs-Troponin I, NT-proBNP, and D-dimer. Each selection shows a CAL/QC touchscreen reference, reagent-box calibrator diagrams, six-lane rack, and lot-specific QC bottle drawings.
+
+Control assignments in the SoCal reagent order tracker (Oct 28, 2026):
+- Cardiac (both hs-Troponin I and NT-proBNP): QC 1 lane 5 = **Bio-Rad Cardiac Markers Plus LT Level 1 (#146)**; QC 2 lane 6 = **Level 3 (#148)**.
+- D-dimer: QC 1 lane 5 = **Liquichek D-dimer Level Low (#27100)**; QC 2 lane 6 = **Level 1 (#27101)**.
+
+Vendor storage guidance: PATHFAST reagent kits and calibrators at **2–8°C**; Bio-Rad controls at **−20 to −70°C**. Use the current lot-specific IFU for thawing, preparation and stability. Source: https://polymedco.com/faqs/ .
+
+Interface illustrations in `pathfast-screen-guide.js` and `pathfast-screen-guide.css` are simplified original screen references based on the PATHFAST Operator's Manual; they do not replace the actual instrument display or control an analyzer.
+
 ## PATHFAST Calibration + QC
 
 The Calibration + QC page uses a schematic six-lane PATHFAST rack, with **CAL 1 / CAL 1 / CAL 2 / CAL 2 / QC 1 / QC 2** loaded in that order. The 28-day status guidance identifies the pink analyzer pill as the lockout/due state and gray as ready after acceptable results. These illustrations **do not** read live device status.
