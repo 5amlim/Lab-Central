@@ -83,3 +83,17 @@
 .pcr-twohour-gate span{font-size:11px;line-height:1.55;color:#785c37}
 .pcr-twohour-gate b{color:#88510e;font-weight:850}
 @media(max-width:700px){.pcr-twohour-gate{padding:9px 10px}}
+
+
+/* Compact editable baseline time that updates both serial draw cards immediately. */
+.pcr-custom-baseline{display:flex;align-items:center;gap:13px;flex-wrap:wrap;max-width:750px!important}
+.pcr-custom-baseline .pcr-baseline-text{min-width:170px;flex:1}
+.pcr-time-input-label{display:flex;flex-direction:column;gap:6px;margin-left:auto;flex:none}
+.pcr-time-input-label>span{color:#397e7d;letter-spacing:.08em;font-size:9px;font-weight:850}
+.pcr-time-input-label input{appearance:auto;box-sizing:border-box;min-width:158px;min-height:42px;max-width:100%;background:#fff;border:1px solid #86bcb6;border-radius:9px;color:#246c69;padding:8px 11px;font-family:inherit;font-size:17px;font-weight:800;outline:none;cursor:pointer;font-variant-numeric:tabular-nums}
+.pcr-time-input-label input:focus-visible{outline:3px solid #92cfc6;outline-offset:2px}
+.pcr-time-branches .pcr-window-value span{font-size:9px}
+.pcr-twohour-gate{padding:9px 11px}
+.pcr-interference-steps li:first-child{background:#f0f9f7;border:1px solid #c6e4de;border-left:4px solid #2f9789;border-radius:8px;padding:10px 12px;margin:0 0 5px}
+@media(max-width:600px){.pcr-custom-baseline{align-items:stretch}.pcr-time-input-label{width:100%;margin:0}.pcr-time-input-label input{width:100%}}
+@media print{.pcr-time-input-label input{border:0;background:transparent;padding:3px 0;appearance:none}}
