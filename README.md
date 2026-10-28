@@ -5,7 +5,7 @@ Interactive reference website for clinical lab workflows, instrument instruction
 ## What's included
 
 - Searchable instrument and point-of-care testing guides
-- PATHFAST workflows and editable training-video placeholders
+- PATHFAST workflows, including one combined 28-day Calibration + QC guide with a six-lane rack schematic and a single Calibration + QC video placeholder
 - Lab Calculator links for Quest, Cedars and Labcorp
 - External requisition workflow (Navigator task, clinical review, missing information, provider escalation and front-desk scheduling)
 - Separate in-house ordering workflow
@@ -30,6 +30,14 @@ To publish the verified link, edit `sendout-form-config.js` and set `window.LAB_
 ## Home collection
 
 The home-collection instructions were transcribed from *Home Urine and Stool Collection Instructions for Staff and Patients* (5-page source), with clinical verification cautions for specimen stability. Its source PDF illustrations are not hosted in this repository. Confirm container selection and storage directions against current test-specific guidance. The new Athena drop-off appointment and new order workflow are staff-provided instructions separate from the source document.
+
+## PATHFAST Calibration + QC
+
+The Calibration + QC page uses a schematic six-lane PATHFAST rack, with **CAL 1 / CAL 1 / CAL 2 / CAL 2 / QC 1 / QC 2** loaded in that order. The 28-day status guidance identifies the pink analyzer pill as the lockout/due state and gray as ready after acceptable results. These illustrations **do not** read live device status.
+
+The website displays one combined Calibration + QC training-video slot instead of two separate slots. Add the approved video URL under `calibration` in the `LAB_GUIDE_VIDEOS` configuration within `index.html`.
+
+The rack illustration is in `pathfast-calibration.js`; its styles are in `pathfast-calibration.css`. The workflow reflects staff instructions and should be checked against each current assay's manufacturer IFU and approved SOP. Other QC intervals or triggers may also apply.
 
 ## Training updates
 
