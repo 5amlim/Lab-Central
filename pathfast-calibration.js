@@ -180,7 +180,7 @@ function render(){
  }
  let h='<section class="pf-calibration-guide">'+
  '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
- '<h2>28-day calibration + QC</h2><p>Use one combined six-lane run for the selected assay.</p></div>'+
+ '<h2>28-day calibration + QC</h2><p>Review the screen sequence, dispense calibrators and controls into their assigned cartridges, and load the six-lane rack.</p></div>'+
  '<span class="pf-interval">↻ 28 DAYS</span></div>'+
  panelPicker();
  if(!group){
@@ -210,11 +210,14 @@ function render(){
       window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+
       '<div class="pf-workflow-lane-note"><strong>Required lane order:</strong> CAL 1 · CAL 1 · CAL 2 · CAL 2 · QC 1 · QC 2. Check the displayed assignments on the instrument. Lane assignments can differ with QC lockout or calibration-replicate setup.</div>');
   h+=step(6,'Prepare materials and load the rack','Reagent-box calibrators + matching frozen Bio-Rad QC bottles',
+      (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?'<div class="pf-cal-action-grid">'+window.LAB_EQUIPMENT_ART.pathfastActionVisual('dispense','cal')+window.LAB_EQUIPMENT_ART.pathfastActionVisual('rack','cal')+'</div>':'')+
+      '<details class="pf-cal-material-details"><summary>Calibrator and QC vial references · expand for materials and lane chart <span aria-hidden="true">⌄</span></summary><div class="pf-cal-material-inside">'+
       panelContent(group)+
       '<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK</span><h3>Load the cartridges in this order</h3></div><span class="pf-rack-hint">Top-down illustrated rack</span></div>'+
       '<div class="pf-rack-box">'+rack()+'<div class="pf-rack-foot"><span><b>Lanes 1–4</b> CAL 1 and CAL 2 in duplicate</span><span><b>Lanes 5–6</b> '+esc(group.qc)+' control levels</span></div></div>'+
-      '<p class="pf-workflow-note">Follow assay-specific calibrator reconstitution quantities and handling. Load each cartridge into its assigned rack position until it clicks; pipette into the marked sample well using the current assay IFU.</p>');
+      '<p class="pf-workflow-note">Follow assay-specific calibrator reconstitution quantities and handling. Insert each cartridge into its corresponding metal rack slot; pipette the correct CAL or QC material into the clear sample well to the marked line. Avoid bubbles and start promptly.</p></div></details>');
   h+=step(7,'Insert the rack and start','Load corresponding tips, then press START',
+      (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('tips','cal'):'')+
       window.LAB_PATHFAST_SCREEN.start("cal")+
       '<p class="pf-workflow-note">Seat the rack fully in PATHFAST, install one new tip for each used lane, close the cover, review on-screen lane assignments, then select START and confirm. Follow displayed run instructions. Typical run time is approximately 17 minutes.</p>');
   h+=step(8,'Review calibration and QC','Confirm acceptable results and gray/ready status',
