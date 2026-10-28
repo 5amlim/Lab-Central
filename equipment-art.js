@@ -173,6 +173,7 @@ function piccoloVisual(text){
  const take=t.includes("grab the")&&(t.includes("disc")||t.includes("reagent"));
  const add=(t.includes("load")&&(t.includes("disc sample port")||t.includes("sample into the disc")||t.includes("controls into the disc")));
  const analyzer=t.includes("insert the filled disc")||t.includes("click analyze")||t.includes("start the analysis");
+ const qc=t.includes("qc")||t.includes("controls");
  if(!take&&!add&&!analyzer)return '';
  let pieces='';
  if(take){
@@ -180,8 +181,9 @@ function piccoloVisual(text){
   '<article class="pic-vis-card"><strong>Locate the sample port</strong><img loading="lazy" class="pic-user-photo pic-photo-port" src="'+piccoloImages.port+'" alt="User-provided annotated Piccolo disc diagram highlighting the sample chamber in red"/>'+piccoloDiscSvg(false)+'<span>Use the small sample inlet near the disc hub, not any outer reagent chamber.</span></article>';
  }else if(add){
   pieces='<article class="pic-vis-card"><strong>Gray transfer device and disposable tip</strong><img loading="lazy" class="pic-user-photo pic-photo-tip" src="'+piccoloImages.tip+'" alt="User-supplied photograph of gray Piccolo transfer component"/>'+piccoloPipetteSvg()+'<span>Fit a fresh compatible tip. Avoid bubbles during aspiration.</span></article>'+
+  (qc?'<article class="pic-vis-card"><strong>Dispense QC material into the sample port</strong>'+piccoloDiscSvg(false)+'<span>Transfer the appropriate QC material using the approved QC procedure and verify the chamber is properly filled.</span></article>':
   '<article class="pic-vis-card"><strong>Dispense blood into the sample port</strong>'+piccoloLoadingSvg()+'<span>With the disc tilted, place the tip into the sample port and fill the chamber to its molded fill line. Do not introduce bubbles.</span></article>'+
-  '<article class="pic-vis-card"><strong>Disc after sample loading</strong>'+piccoloDiscSvg(true)+'<span>The red region illustrates blood in the near-center sample chamber. Start analysis within 10 minutes of filling the disc.</span></article>';
+  '<article class="pic-vis-card"><strong>Disc after blood loading</strong>'+piccoloDiscSvg(true)+'<span>The red region illustrates blood in the near-center sample chamber. Start analysis within 10 minutes of filling the disc.</span></article>');
  }else{
   pieces='<article class="pic-vis-card"><strong>Place disc in analyzer drawer</strong>'+piccoloAnalyzerSvg()+'<span>Position the filled disc in the front drawer, then close the drawer and follow the analyzer prompts.</span></article>';
  }
