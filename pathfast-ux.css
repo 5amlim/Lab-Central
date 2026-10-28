@@ -83,3 +83,14 @@
 @media(max-width:1050px){.pfux-primary-nav{grid-template-columns:repeat(2,minmax(0,1fr));position:relative;top:auto}}
 @media(max-width:700px){.pfux-context{gap:3px 13px}.pfux-primary-nav{gap:7px}.pfux-route{min-height:60px;padding:9px 7px}.pfux-route-index{display:none}.pfux-route-body strong{font-size:11px}.pfux-route-body small{font-size:9px}.pfux-supporting{gap:10px 17px}.pfux-checks{grid-template-columns:1fr}.pfux-checks>div{padding:12px 0}.pfux-checks>div+div{border-left:0;border-top:1px solid #e5edf1}.pfux-patient-toolbar{padding:11px}.pfux-patient-toolbar>span{flex-basis:50%}.pfux-view-toggle{width:100%}.pfux-view-toggle button{flex:1}.pfux-jump-options,.pfux-cal-step-menu{grid-template-columns:1fr}.pfux-cal-toolbar{flex-wrap:wrap}.pfux-cal-toolbar-actions{width:100%}.pfux-cal-toolbar-actions button{flex:1}.pfux-cal-navigation button{padding:11px;font-size:10.5px}}
 @media print{.pfux-primary-nav,.pfux-supporting,.pfux-jump,.pfux-cal-toolbar-actions,.pfux-cal-navigation{display:none!important}.pfux-context{break-inside:avoid}.pf-workflow-step{break-inside:auto}}
+
+/* Documentation and caution copy is passive, not an interactive surface. */
+.pf-workflow-detail .pf-freezer,.pf-workflow-detail .pf-qc-note,.pf-workflow-detail .pf-state-caption,
+.pf-workflow-detail .pfs-screen-alert{border:0;border-left:2px solid #b5d8e1;border-radius:0;background:transparent;box-shadow:none!important;cursor:default;padding:7px 11px;margin:10px 0;color:#647e8f}
+.pf-workflow-detail .pf-freezer span:first-child{color:#4e95a7}
+.pf-workflow-detail .pf-qc-note strong{color:#355c72}
+.pf-workflow-detail .pfs-screen-alert{font-size:11px;line-height:1.65}
+.pf-workflow-detail .pf-tip{cursor:default;box-shadow:none}
+.pf-workflow-detail .pf-tip:hover,.pf-workflow-note:hover,.pf-workflow-lane-note:hover{transform:none;filter:none}
+.pfux-patient .guide-line{cursor:text}
+.pfux-patient .guide-line:hover{background:transparent}
