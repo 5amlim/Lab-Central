@@ -183,3 +183,9 @@
 @media(max-width:790px){.device-gallery-grid{grid-template-columns:1fr}.device-gallery-step{padding:14px}.device-gallery-image{min-height:170px}.device-gallery-image svg{height:175px}}
 @media(max-width:450px){.device-gallery-heading h2{font-size:18px}.device-gallery-step-head strong{font-size:13px}.device-gallery-media small{font-size:10px}}
 @media print{.device-gallery-step{break-inside:avoid}.device-gallery{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* Compact link from any analyzer procedure to the full illustrated material sequence. */
+.device-inline-visual-link{display:inline-flex;align-items:center;gap:9px;padding:9px 12px;margin:7px 0 15px;border:1px solid #c7e0e8;border-radius:9px;background:#f4fafb;color:#2a7185;font-size:11.5px;font-weight:800;cursor:pointer;text-align:left}
+.device-inline-visual-link svg{width:16px;height:16px;flex:none}.device-inline-visual-link span{font-size:17px;margin-left:auto}
+.device-inline-visual-link:hover{background:#e8f7f6;border-color:#8ac3c5}.device-inline-visual-link:focus-visible{outline:3px solid #83c8d2;outline-offset:2px}
+@media print{.device-inline-visual-link{display:none}}
