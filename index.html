@@ -58,9 +58,9 @@
   <link rel="stylesheet" href="flow-navigation.css?v=20261028-7" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-clinitek-split" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
-  <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
-  <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-4" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261028-rn-first" media="all">
+  <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-action-visuals" media="all">
+  <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-action-visuals" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-twohour-fallback" media="all">
@@ -140,11 +140,11 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=1"></script>
 <script src="operations-guides.js?v=20261028"></script>
-<script src="pathfast-calibration.js?v=20261028-7"></script>
-<script src="pathfast-screen-guide.js?v=20261028-4"></script>
+<script src="pathfast-calibration.js?v=20261028-action-visuals"></script>
+<script src="pathfast-screen-guide.js?v=20261028-action-visuals"></script>
 <script src="pathfast-interactive.js?v=20261028-twohour-fallback"></script>
 <script src="pathfast-clinical.js?v=20261028-post-target-window"></script>
-<script src="equipment-art.js?v=20261028-pathfast-true-cartridge"></script>
+<script src="equipment-art.js?v=20261028-action-visuals"></script>
 <script>
 (()=>{
 'use strict';
@@ -361,7 +361,10 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const title=guideStepTitle(guideStepParts(entry,sec));
  const piccoloVisual=sec&&sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART?.piccoloVisual?window.LAB_EQUIPMENT_ART.piccoloVisual(root.text):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
- return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+(visualizer?visualizer(index):'')+workflowVisual+piccoloVisual+(content?'<div class="guide-card-body">'+content+'</div>':'')+'</article>';
+ const stepBody=(visualizer?visualizer(index):'')+workflowVisual+piccoloVisual+(content?'<div class="guide-card-body">'+content+'</div>':'');
+ const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
+ if(isPathfast)return '<details class="guide-card pf-step-collapse" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true">⌄</span></summary><div class="pf-step-collapse-body">'+stepBody+'</div></details>';
+ return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+stepBody+'</article>';
 }
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
@@ -687,8 +690,8 @@ function sectionRender(sec,tab){
    {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'02'},
    {id:'chest-pain',title:'Chest pain pathway',subtitle:'Provider review & result zones',index:'03'}
   ];
-  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${x.id}" ${tab===x.id?'aria-current="page"':''}><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">›</span></button>`).join('')}</nav>`;
-  h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="cal-qc" ${tab==='cal-qc'?'aria-current="page"':''}><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">28-DAY MAINTENANCE</span></button></div>`;
+  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true">${tab===x.id?'⌃':'⌄'}</span></button>`).join('')}</nav>`;
+  h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="${tab==='cal-qc'?'overview':'cal-qc'}" aria-expanded="${tab==='cal-qc'}" ${tab==='cal-qc'?'aria-current="page"':''} aria-label="${tab==='cal-qc'?'Collapse':'Open'} Calibration and QC"><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">${tab==='cal-qc'?'CLOSE DETAILS':'28-DAY MAINTENANCE'}</span></button></div>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
