@@ -112,3 +112,21 @@
 .pfs-prep-stage.active strong{color:#176d65}
 @media(max-width:600px){.pfs-prep-stages{grid-template-columns:1fr}.pfs-prep-stage{padding:11px}.pfs-prep-stage.active{padding:10px}}
 @media print{.pfs-prep-stage{break-inside:avoid}.pfs-prep-stage.active{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+
+/* Large, per-action PATHFAST teaching scenes used in both patient and CAL/QC guides. */
+.pf-prep-focused{max-width:1160px;width:100%;padding:19px 21px 15px;margin:12px auto 18px}
+.pf-prep-focus-head{display:flex;align-items:center;gap:15px;margin:6px 0 18px;padding:5px 2px}
+.pf-prep-focus-head .pfs-prep-number{width:37px;height:37px;background:#dfefec;color:#147e72;font-size:12px}
+.pf-prep-focus-head>div{min-width:0}
+.pf-prep-focus-head strong{font-size:14px;letter-spacing:.035em;color:#255c72}
+.pf-prep-focus-head p{margin:5px 0 0;color:#68869a;font-size:12px;line-height:1.6}
+.pf-prep-illustrations{display:grid;grid-template-columns:1fr;gap:14px}
+.pf-prep-illustrations.two{grid-template-columns:1fr}
+.pf-action-figure{width:100%;margin:0;border:1px solid #d4e4eb;border-radius:14px;background:#fff;overflow:hidden;min-width:0}
+.pf-action-heading{font-weight:900;color:#287689;font-size:11px;letter-spacing:.07em;padding:14px 17px 9px;background:#f7fbfc}
+.pf-action-image{width:100%;min-height:265px;display:grid;place-items:center;padding:12px 20px;background:radial-gradient(ellipse at center,#f2f9fb,#fff 70%)}
+.pf-action-image svg{display:block;width:100%;height:auto;max-width:1100px;max-height:540px;margin:auto}
+.pf-action-figure figcaption{color:#657f90;font-size:11.5px;line-height:1.7;padding:12px 16px 14px;border-top:1px solid #e4edf2}
+@media(max-width:700px){.pf-prep-focused{padding:12px}.pf-prep-focus-head{gap:9px}.pf-action-image{min-height:170px;padding:7px}.pf-action-heading{padding:10px 12px}.pf-action-figure figcaption{padding:9px 11px;font-size:10.5px}}
+@media print{.pf-action-figure{break-inside:avoid}.pf-action-image{min-height:0}.pf-action-image svg{max-height:300px}}
