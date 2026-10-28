@@ -59,6 +59,7 @@
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-4" media="all">
+  <link rel="stylesheet" href="pathfast-clinical.css?v=20261028" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028" media="all">
 </head>
 <body>
@@ -136,6 +137,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-form-config.js?v=1"></script>
 <script src="operations-guides.js?v=20261028"></script>
 <script src="pathfast-calibration.js?v=20261028-4"></script>
+<script src="pathfast-clinical.js?v=20261028"></script>
 <script src="equipment-art.js?v=20261028"></script>
 <script>
 (()=>{
@@ -507,7 +509,7 @@ function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
- const tabs=[{id:'overview',title:'Overview'},...groups.map(g=>({id:g.id,title:g.title})),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=[{id:'overview',title:'Overview'},...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
@@ -521,6 +523,8 @@ function sectionRender(sec,tab){
  if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+=window.LAB_PATHFAST_UI.render();
+ else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
+ else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
  else if(tab==='videos')h+=videoLibrary();
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
