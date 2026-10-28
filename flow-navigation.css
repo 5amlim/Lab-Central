@@ -161,3 +161,6 @@
  .flow-step .flow-number,.workflow-step-number,.branch-number{position:static;display:inline-grid;margin:0 0 12px;box-shadow:none}
  .branch-options{display:none}
 }
+
+/* Distinguish vendor ordering from quality and compliance references. */
+.sidebar-nav .nav-section:has([data-go="supplies"]){--nav-accent:#2b857e;--nav-tint:#e8f6f3;--nav-deep:#236861}
