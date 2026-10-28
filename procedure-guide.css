@@ -154,3 +154,32 @@
 @media(max-width:760px){.dev-kit-scenes{grid-template-columns:1fr}.device-collection-guide{padding:14px}.dev-workflow-visual{padding:13px}.dev-kit-view{padding:10px}.device-collection-list{grid-template-columns:1fr}}
 @media(max-width:450px){.device-media-picture{width:74px;height:78px}.device-media-picture svg{width:90px;height:76px}.dev-inline-illustration{gap:6px}.dev-inline-drawing{width:80px}.dev-inline-caption{min-width:100px}}
 @media print{.device-collection-item,.dev-kit-view,.dev-inline-illustration{break-inside:avoid}.dev-workflow-visual,.device-collection-guide{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+
+/* Four-stage visual walkthrough, accessible as a dedicated tab on each platform. */
+.device-visual-link{width:100%;max-width:570px;display:flex;align-items:center;text-align:left;margin:15px 0 9px;gap:12px;border-color:#c2e3e1;background:#f2faf8}
+.device-visual-link:hover{background:#e7f7f4;border-color:#83c4bf}
+.device-gallery{margin:18px 0 26px}
+.device-gallery-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.device-gallery-heading>div>span{display:block;font-size:10px;color:#238a88;letter-spacing:.12em;font-weight:850;margin-bottom:6px}
+.device-gallery-heading h2{margin:0 0 5px;font-size:22px;color:#243e58;letter-spacing:-.035em}
+.device-gallery-heading p{margin:0;color:#8093a4;font-size:12px}
+.device-gallery-count{font-size:10px;color:#41758b;font-weight:850;background:#e8f3f7;border-radius:8px;padding:8px 10px;white-space:nowrap}
+.device-gallery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.device-gallery-step{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #dbe7ed;border-radius:14px;min-width:0;padding:17px;box-shadow:0 3px 16px #1b43530a}
+.device-gallery-step-head{display:flex;align-items:center;gap:10px}
+.device-gallery-step-head>span{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:9px;background:#e5f5ef;color:#167b70;font-size:11px;font-weight:900}
+.device-gallery-step-head strong{font-size:14px;line-height:1.5;color:#2f526d}
+.device-gallery-step>p{color:#5d7b8f;font-size:12px;line-height:1.7;margin:0}
+.device-gallery-image{min-height:200px;display:grid;place-items:center;background:#f9fcfd;border-radius:10px;border:1px solid #eef3f6;overflow:hidden}
+.device-gallery-image svg{height:200px;width:auto;max-width:100%}
+.device-gallery-analyzer svg{width:100%;height:auto;max-height:225px}
+.device-gallery-specimens{display:flex;justify-content:center;align-items:stretch;gap:11px;min-height:200px}
+.device-gallery-media{flex:1;max-width:235px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid #e6eef2;background:#f9fcfd;border-radius:10px;padding:8px}
+.device-gallery-media svg{width:100%;max-height:156px}
+.device-gallery-media small{font-size:11px;line-height:1.4;text-align:center;color:#668397}
+.device-gallery-note{border-left:3px solid #97c7cd;background:#f2f9fa;color:#637c8f;font-size:11.5px;line-height:1.65;padding:12px 14px;margin:17px 0 0}
+.device-gallery-archive{margin:0 0 14px;padding:12px 14px;border-left:3px solid #a3aeb9;background:#f2f4f6;color:#667585;font-size:12px;line-height:1.6}
+@media(max-width:790px){.device-gallery-grid{grid-template-columns:1fr}.device-gallery-step{padding:14px}.device-gallery-image{min-height:170px}.device-gallery-image svg{height:175px}}
+@media(max-width:450px){.device-gallery-heading h2{font-size:18px}.device-gallery-step-head strong{font-size:13px}.device-gallery-media small{font-size:10px}}
+@media print{.device-gallery-step{break-inside:avoid}.device-gallery{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
