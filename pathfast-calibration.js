@@ -125,7 +125,8 @@ function qcGallery(group){
 }
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+status(group)+
- '<h3 class="pf-material-heading">Calibration materials <small>Included in the reagent box</small></h3>'+
+ '<div class="pf-freezer" style="background:#edf7f2;border-color:#d6e8dd;color:#366a56"><span>◷</span><span>PATHFAST reagent kits and calibrators: <strong>refrigerated at 2–8°C</strong>. Bio-Rad QC vials: <strong>frozen at −20 to −70°C</strong>. Confirm current lot-specific instructions.</span></div>'+
+ '<h3 class="pf-material-heading">Calibration materials <small>Included in the refrigerated reagent box</small></h3>'+
  '<div class="pf-material-grid">'+
  material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1')+
  material('CAL 2','2 GLASS VIALS','Both vials contain lyophilized powder. Reconstitute with matching diluent before loading lanes 3 and 4.',svgCal2(),'cal2')+
