@@ -94,3 +94,29 @@
 .pf-workflow-detail .pf-tip:hover,.pf-workflow-note:hover,.pf-workflow-lane-note:hover{transform:none;filter:none}
 .pfux-patient .guide-line{cursor:text}
 .pfux-patient .guide-line:hover{background:transparent}
+
+/* Clear separation between actions and reference text */
+.pfux-start-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 17px}
+.pfux-start-actions button{display:flex;align-items:center;gap:13px;text-align:left;min-width:0;cursor:pointer;border:1px solid #cfe1e8;border-radius:13px;padding:17px;background:#fff;color:#31556b;transition:background .15s,border-color .15s}
+.pfux-start-actions button:hover{background:#edf8f7;border-color:#79b5b2}
+.pfux-start-actions button:focus-visible{outline:3px solid #8ccac5;outline-offset:2px}
+.pfux-start-actions button>span:nth-child(2){flex:1;display:grid;gap:5px;min-width:0}
+.pfux-start-actions button strong{font-size:13px;color:#294c60}
+.pfux-start-actions button small{font-size:11px;color:#71899b;line-height:1.5}
+.pfux-start-actions button>span:last-child{font-size:22px;color:#57959a}
+.pfux-start-pathway{border-left:4px solid #ba8749!important}
+.pfux-start-collection{border-left:4px solid #268c84!important}
+.pfux-start-icon{display:grid;place-items:center;width:39px;height:39px;border-radius:11px;background:#e9f4f5;color:#2a8490;flex:none}
+.pfux-start-pathway .pfux-start-icon{background:#fbefdf;color:#9d713d}
+.pfux-overview-hint{font-size:11px;color:#6f8492;line-height:1.7;padding:10px 0;margin:8px 0;border:0;background:transparent;box-shadow:none}
+.pfux-overview-hint strong{color:#41667a}
+.pcr-guide .pcr-decision-body p{background:transparent!important;border:0!important;border-bottom:1px solid #e7edf0!important;border-radius:0!important;box-shadow:none!important;padding:10px 8px!important;cursor:text!important;min-height:0}
+.pcr-guide .pcr-decision-body p:last-child{border-bottom:0!important}
+.pcr-guide .pcr-decision-body p:hover{background:transparent!important;transform:none!important}
+.pcr-guide .pcr-decision{box-shadow:none}
+.pcr-guide .pcr-decision-head{min-height:70px}
+.pcr-guide .pcr-review-strip{box-shadow:none;cursor:default}
+.pcr-guide .pcr-review-detail>summary{cursor:pointer}
+.pcr-guide .pcr-reference-accordion>summary{cursor:pointer}
+.pcr-guide .pcr-flow-option,.pcr-guide .pcr-flow-reset{cursor:pointer}
+@media(max-width:720px){.pfux-start-actions{grid-template-columns:1fr}.pfux-start-actions button{padding:13px}}
