@@ -299,11 +299,13 @@ function showNav(){
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   if(!list.length)continue;
-  out+=`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
+  const isArchive=cat==='Archived';
+  const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
+  out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
   for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${svg(s.icon)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${svg('clipboard-check')}</span>Specimen drop-off</button>`;
   if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='sendout-log'?'active':''}" data-go="sendout-log"><span class="nav-icon">${svg('file-text')}</span>Lab Sendout Log</button>`;
-  out+='</div>';
+  out+=isArchive?'</div></details>':'</div>';
  }
  nav.innerHTML=out;
 }
@@ -335,6 +337,24 @@ function renderHome(mode='home'){
  el('mainContent').innerHTML=h;
 }
 function buildGroups(section){
+ if(section.id==='api'){
+  const from=section.blocks;
+  const start=from.findIndex(b=>/^Running API samples$/i.test(b.text));
+  const end=from.findIndex((b,i)=>i>start&&b.type==='list'&&b.level===0);
+  return [{id:'running-api-samples',title:'Running proficiency samples',blocks:start>=0?from.slice(start+1,end<0?from.length:end):[]}];
+ }
+ if(section.id==='drug-screen'){
+  return [{id:'patient-testing',title:'Patient testing',blocks:[
+   {type:'list',level:1,text:'Verify the order and specimen'},
+   {type:'list',level:2,text:'Confirm the Athena order Drug Screen Urine (IH), patient identification, collection cup, lot and expiration. Follow the current McKesson 14-panel IFU.'},
+   {type:'list',level:1,text:'Collect specimen and run test'},
+   {type:'list',level:2,text:'Collect urine in the approved drug-screen container and read at the exact manufacturer-specified time. Verify the control indicator and each corresponding test line.'},
+   {type:'list',level:1,text:'Review and interpret every panel'},
+   {type:'list',level:2,text:'Open How to interpret results below for the positive, negative and invalid visual examples and the fourteen analyte abbreviations.'},
+   {type:'list',level:1,text:'Enter and verify results in Relaymed'},
+   {type:'list',level:2,text:'Open Manual Tests, find McKesson 14 Panel Drug Screen and enter each result using its corresponding abbreviation. This immunoassay is presumptive; follow confirmatory testing policy as needed.'}
+  ]}];
+ }
  if(section.groups)return section.groups;
  const groups=[];let active=null;
  for(const b of section.blocks){
@@ -815,12 +835,32 @@ function guideHeaderType(sec){
  if(sec.category==='Quality & compliance')return 'QUALITY & COMPLIANCE REFERENCE';
  return 'STAFF REFERENCE';
 }
+function apiReferenceOverview(sec){
+ return '<section class="reference-summary"><div class="reference-summary-heading"><span>PROFICIENCY TESTING · REFERENCE</span><h2>American Proficiency Institute (API)</h2><p>API is a proficiency-testing provider. It sends blinded samples to evaluate the accuracy of the laboratory’s nonwaived testing and reporting.</p></div>'+
+ '<div class="reference-summary-grid"><article><span>WHAT IT DOES</span><strong>External proficiency assessment</strong><p>Compare laboratory performance against program expectations and assigned events.</p></article>'+
+ '<article><span>FREQUENCY</span><strong>Three events per year</strong><p>Follow the laboratory’s scheduled API events and applicable CLIA requirements.</p></article>'+
+ '<article><span>PROCESS</span><strong>Treat PT specimens as required</strong><p>Follow the event instructions and approved instrument-specific procedure. Do not use patient identifiers.</p></article></div>'+
+ '<div class="reference-summary-note"><strong>Covered disciplines</strong><p>Chemistry, hematology, cardiac markers, infectious disease and other enrolled assays. The assigned event and kit instructions determine the exact material and test requirements.</p></div></section>';
+}
+function drugScreenInterpretation(){
+ const analytes=[['PPX','Propoxyphene'],['THC','Marijuana / THC'],['BUP','Buprenorphine'],['TCA','Tricyclic antidepressants'],['BAR','Barbiturates'],['BZO','Benzodiazepines'],['MTD','Methadone'],['AMP','Amphetamine'],['MOP','Morphine / Opiates'],['OXY','Oxycodone'],['MDMA','Ecstasy / MDMA'],['COC','Cocaine'],['PCP','Phencyclidine'],['MET','Methamphetamine']];
+ function lines(kind,tag){
+  return '<div class="drug-test-example"><span>'+tag+'</span><div class="drug-test-window"><b>C</b><b>T</b><i class="drug-line c"></i>'+(kind==='negative'?'<i class="drug-line t"></i>':'')+'</div></div>';
+ }
+ return '<section class="drug-interpretation"><div class="drug-interpretation-head"><span>McKESSON · URINE DRUG SCREEN</span><h2>How to interpret results</h2><p>Read each analyte window at the manufacturer-specified time. Interpretation follows a competitive immunoassay format only when confirmed by the exact kit IFU.</p></div>'+
+ '<div class="drug-results-grid"><article><strong>NEGATIVE</strong>'+lines('negative','Two visible lines')+'<p>Control (C) and Test (T) lines visible, including a faint T line.</p></article>'+
+ '<article><strong>PRESUMPTIVE POSITIVE</strong>'+lines('positive','Control line only')+'<p>C line visible; no T line. Confirm according to policy before treating as definitive.</p></article>'+
+ '<article><strong>INVALID</strong><div class="drug-test-example"><span>No control line</span><div class="drug-test-window"><b>C</b><b>T</b><i class="drug-line t"></i></div></div><p>Absent C line, regardless of other lines. Repeat with a new device.</p></article></div>'+
+ '<div class="drug-interpretation-table"><h3>14-panel analyte abbreviations</h3><div>'+analytes.map(x=>'<div><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div></div>'+
+ '<p class="drug-interpretation-caution">These are presumptive screening results. Refer to the specific McKesson 14-panel product insert for cutoff values, result timing and any different line-reading requirements. Use appropriate confirmatory testing for clinically consequential results.</p></section>';
+}
+
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=[{id:'overview',title:'Overview'},...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
@@ -845,7 +885,9 @@ function sectionRender(sec,tab){
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else h+=`<div class="tab-strip" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
- if(tab==='overview')h+=sectionOverview(sec,groups);
+ if(tab==='overview'&&sec.id==='api')h+=apiReferenceOverview(sec);
+ else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
+ else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(tab==='visuals'&&hasVisualGuide)h+=window.LAB_EQUIPMENT_ART.visualGuide(sec);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+=window.LAB_PATHFAST_UI.render();
