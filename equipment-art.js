@@ -49,8 +49,18 @@ function body(shape,a){
  txt(367,218,"PICCOLO XPRESS",9,"#cadfea",780)+
  '<ellipse cx="378" cy="293" rx="117" ry="5" fill="#c9d8de" opacity=".4"/>';
  }else if(shape==="pathfast"){
- v=rect(161,75,407,176,22,"url(#equip-white)","#91a4b0",3)+screen(184,96,165,107,a)+rect(370,103,173,124,12,"#d7e4eb","#93abb8")+rect(385,117,144,96,7,"#2a3c47")+Array.from({length:6},(_,i)=>rect(395+i*22,133,16,56,3,"#e5edf1","#8daab7")+rect(397+i*22,138,12,6,1,i<4?a:"#b08b4b")).join("")+rect(206,241,314,12,5,"#a9bdc7");
- }else if(shape==="reader"){
+ v=rect(227,51,283,216,27,"#e8f1f5","#91aab8",3)
+ +'<path d="M370 55 Q407 11 478 50 L505 81 L475 106 L368 91Z" fill="#87c5d7" stroke="#6daabd" stroke-width="3"/>'
+ +rect(255,118,96,103,9,"#2d5063","#829eae",2)
+ +rect(266,128,73,82,4,"#b6d4e2")
+ +rect(271,140,63,15,3,"#3386ab")
+ +rect(271,165,63,5,2,"#a0becb")
+ +rect(271,180,48,5,2,"#a0becb")
+ +rect(380,101,104,133,9,"#b7dce5","#81aabc",2)
+ +rect(394,116,76,102,5,"#3a515e")
+ +Array.from({length:6},(_,i)=>rect(399+i*12,128,9,80,2,"#d9e5eb","#7e9baa",1)).join("")
+ +txt(302,240,"PATHFAST",14,"#2f7998",850);
+}else if(shape==="reader"){
  v=rect(213,73,317,184,23,"url(#equip-white)","#93a8b5",3)+screen(236,91,245,95,a)+rect(290,205,160,31,8,"#b1c5ce","#819dad")+rect(320,208,101,15,4,"#3e505d")+rect(250,236,240,13,5,"#a7c3cd");
  }else if(shape==="urine"){
  v=rect(224,64,300,194,25,"#edf3f5","#93a8b5",3)+screen(262,85,206,98,a)+rect(268,204,211,23,7,"#b5c9d3")+rect(296,211,158,9,4,"#f8fcfd","#9cb7c4")+line(313,216,439,216,"#559890",3);
