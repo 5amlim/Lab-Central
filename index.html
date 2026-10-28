@@ -55,7 +55,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261028-5" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261028-6" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-6" media="all">
@@ -440,18 +440,41 @@ function renderCalculators(){
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
  el('mainContent').innerHTML=h;
 }
+
+function athenaMock(type,label,file){
+ const top='<div class="ad-mock-top"><strong>athenaOne</strong><small>TRAINING EXAMPLE · NO PATIENT DATA</small></div>';
+ if(type==='menu')return '<div class="ad-mock">'+top+'<div class="ad-mock-chart"><span>Patient chart</span><b>☰</b></div><div class="ad-mock-menu"><span>Quickview</span><span>Create order group</span><strong class="ad-target">Add document <em>SELECT</em></strong><span>Chart export</span></div></div>';
+ if(type==='file')return '<div class="ad-mock">'+top+'<div class="ad-mock-upload"><header>Add Document</header><strong>Upload files from computer or network</strong><p>Step 1: Select Document Class</p><div class="ad-field">Select document class <span>⌄</span></div><p>Step 2: Select a file</p><div class="ad-file"><span class="ad-target">Select File</span><small>'+safeHtml(file)+'</small></div><div class="ad-target ad-add">Add Document <em>SELECT</em></div></div></div>';
+ if(type==='existing')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Incoming fax · Patient chart</header><div class="ad-preview">Existing faxed requisition</div><p>Verify the document is matched to the correct patient chart.</p></div></div>';
+ if(type==='classify')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Document in DATAENTRY</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-target ad-row">◉ Reclassify document <em>SELECT</em></div><div class="ad-target ad-row">Clinical Document <em>CHOOSE</em></div><div class="ad-save">Save</div></div></div>';
+ if(type==='label')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document</header><p>Document Label</p><div class="ad-label-search">Search all document labels</div><div class="ad-target ad-row">'+safeHtml(label)+' <em>SELECT</em></div><div class="ad-save">Save</div></div></div>';
+ return '';
+}
+function athenaUploadGuide(kind,faxOnly=false){
+ const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB*';
+ const file=requisition?'Outside requisition.pdf':'Lab Calculator.pdf';
+ const steps=faxOnly?[
+  ['Open and verify the fax','Confirm the automatically matched requisition is in the correct chart.','existing'],
+  ['Reclassify to Clinical Document','Open document actions, choose Reclassify document, then Clinical Document. Save.','classify'],
+  ['Apply the document label','Select the highlighted document label and save.','label']
+ ]:[
+  ['Open Add document','From the patient chart, select ☰ and Add document.','menu'],
+  ['Choose the file and upload','Select the correct PDF file, then Add Document.','file'],
+  ['Reclassify to Clinical Document','Open the uploaded file in DATAENTRY. Choose Reclassify document, select Clinical Document, and save.','classify'],
+  ['Apply the document label','Select the highlighted document label, save and verify the file is in the chart.','label']
+ ];
+ return '<details class="ad-guide" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true">⌄</span></summary>'+
+ '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
+ steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaMock(x[2],label,file)+'</article>';}).join('')+
+ '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Use this for the outside lab order.':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
+}
+function requisitionVersionNotice(){
+ return '<aside class="ad-duplicate-alert"><b>!</b><div><strong>Multiple or updated lab requisitions</strong><p>Confirm which requisition is current and applicable. Delete or remove non-applicable and superseded versions from the active workflow according to the approved medical-record retention/correction policy. Do not leave conflicting versions presented as active orders.</p></div></aside>';
+}
+
 function workflowStepExtras(kind){
  if(kind==='calculator-upload'){
-  return `<div class="workflow-step-extra">
-  <button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>
-  <section class="chart-upload-guide" aria-label="Upload Lab Calculator to chart">
-    <header class="chart-upload-guide-head"><span class="chart-upload-icon" aria-hidden="true">${svg('file-text')}</span><div><strong>After obtaining the Lab Calculator printout</strong><small>Save the printout and attach it to the patient's chart.</small></div></header>
-    <ol><li>Generate the Lab Calculator printout and <strong>save it as a PDF</strong>.</li>
-    <li>Open the correct patient <strong>chart</strong> in Athena.</li>
-    <li>Click the <strong>hamburger menu (☰)</strong>, then select <strong>Add document</strong>.</li>
-    <li>Upload the saved calculator PDF as a <strong>Clinical document</strong>.</li>
-    <li>Reclassify the uploaded document as <strong>Lab requisition</strong> for this lab request. Confirm it is attached to the correct chart.</li></ol>
-  </section></div>`;
+  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><p class="ad-step-note">After generating the Lab Calculator printout, save it as a PDF and upload it to the chart under the <strong>LAB</strong> document label.</p>'+athenaUploadGuide('calculator')+'</div>';
  }
  if(kind==='appointment-print'){
   return `<details class="color-print-guide">
@@ -488,8 +511,11 @@ function externalFlow(){
  <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Manual document upload</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
- ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Find the matched document and reclassify it</h4><ol><li>The incoming fax is automatically matched to the patient chart and auto-classified.</li><li>Verify it is attached to the correct patient chart.</li><li>Change the document classification to <strong>Lab requisition</strong> so it is not missed during review.</li></ol>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the document and classify it</h4><ol><li>Open the correct patient chart in Athena.</li><li>Click the <strong>hamburger menu (☰)</strong>, then select <strong>Add document</strong>.</li><li>Select the requisition file and upload it as a <strong>Clinical document</strong>.</li><li>Reclassify the uploaded document as <strong>Lab requisition</strong>.</li><li>Confirm the requisition is visible in the correct chart before routing the request.</li></ol>`}
- </div><p class="requisition-intake-note">Requisition documents and patient information belong in the approved clinical systems, not in Lab Central.</p>
+ ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Review the automatically matched order</h4><p>Confirm that the fax belongs to the correct patient chart. Reclassify the document as <strong>Clinical Document</strong> with label <strong>LAB REQUISITION</strong>.</p>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the received order</h4><p>Upload the received requisition to the correct patient chart as a clinical document and assign the label <strong>LAB REQUISITION</strong>.</p>`}
+ </div>
+ ${athenaUploadGuide("requisition",fax)}
+ ${requisitionVersionNotice()}
+ <p class="requisition-intake-note">Keep patient details in approved clinical systems. The illustrations contain no patient information.</p>
  </section>`;
  h+=workflowSteps([
  ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to the tech or RN for review.']
@@ -504,7 +530,7 @@ function externalFlow(){
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save it as a PDF and upload it to the patient chart.','calculator-upload'],
+ ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB document label.','calculator-upload'],
  ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, the tech or RN returns the completed request to front desk. Front desk schedules the patient.'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
