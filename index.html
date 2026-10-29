@@ -101,7 +101,7 @@
   <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-six-vertical-lanes-v2" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-pathfast-rack-print-v3" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261029-stage-track-v2" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-two-hour-reference" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-primary-one-hour-v5" media="all">
@@ -592,7 +592,11 @@ function renderGuidedProcedure(group,sec){
  if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-expanded="true" aria-label="Collapse all instruction details">Collapse details <span class="lab-shared-chevron" aria-hidden="true"></span></button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
   if(isPathfastPatient){
-   h+='<details class="pfux-jump"><summary>Jump to another step <span class="lab-shared-chevron" aria-hidden="true"></span></summary><div class="pfux-jump-options">'+steps.map(function(entry,i){return '<button type="button" data-guide-step="'+i+'" class="'+(i===current?'active':'')+'"><span>'+String(i+1).padStart(2,'0')+'</span>'+safeHtml(entry.root.text)+'</button>';}).join('')+'</div></details>';
+   const shortNames=['Retrieve cartridges','Prepare sample rack','Dispense specimen','Load rack + tips','Sign in','Check assay status','Back to menu','Select SAMPLE','Choose lane','Enter patient SID','Start analysis','Review results'];
+   h+='<nav class="pfux-stage-nav" aria-label="PATHFAST patient testing stages"><div class="pfux-stage-track" role="group" aria-label="Select any patient testing stage">'+steps.map(function(entry,i){
+     const name=shortNames[i]||entry.root.text;
+     return '<button type="button" class="pfux-stage-button'+(i===current?' is-current':i<current?' is-previous':'')+'" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(entry.root.text)+'" aria-label="Step '+(i+1)+' of '+total+': '+safeHtml(entry.root.text)+'"><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+safeHtml(name)+'</span></button>';
+   }).join('')+'</div></nav>';
   }else{
   h+='<div class="guide-stepper" role="group" aria-label="Jump to a procedure step">';
   h+=steps.map(function(entry,i){
@@ -1025,7 +1029,7 @@ document.addEventListener('click',e=>{
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
-  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
+  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});const stageTrack=document.querySelector('.pfux-stage-track');const activeStage=stageTrack?.querySelector('[aria-current="step"]');if(stageTrack&&activeStage)stageTrack.scrollTo({left:Math.max(0,activeStage.offsetLeft-stageTrack.offsetLeft-stageTrack.clientWidth/2+activeStage.clientWidth/2),behavior:'smooth'});}
   return;
  }
  const detailsButton=e.target.closest('[data-guide-details]');
