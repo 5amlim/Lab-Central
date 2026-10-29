@@ -99,7 +99,7 @@
   <link rel="stylesheet" href="qc-guide.css?v=20261029-poc-barcode-qcprint-v1" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
-  <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
+  <link rel="stylesheet" href="reference-refresh.css?v=20261029-mckesson-line-count-v1" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-patient-stable-nav-v2" media="all">
@@ -1241,14 +1241,17 @@ function apiReferenceOverview(sec){
 function drugScreenInterpretation(){
  const analytes=[['PPX','Propoxyphene'],['THC','Marijuana / THC'],['BUP','Buprenorphine'],['TCA','Tricyclic antidepressants'],['BAR','Barbiturates'],['BZO','Benzodiazepines'],['MTD','Methadone'],['AMP','Amphetamine'],['MOP','Morphine / Opiates'],['OXY','Oxycodone'],['MDMA','Ecstasy / MDMA'],['COC','Cocaine'],['PCP','Phencyclidine'],['MET','Methamphetamine']];
  function lines(kind,tag){
-  return '<div class="drug-test-example"><span>'+tag+'</span><div class="drug-test-window"><b>C</b><b>T</b><i class="drug-line c"></i>'+(kind==='negative'?'<i class="drug-line t"></i>':'')+'</div></div>';
+  const description=kind==='negative'?'Control and test lines present':kind==='positive'?'Only the control line is present':'Test line only with no control line';
+  return '<div class="drug-test-example"><span>'+tag+'</span><div class="drug-test-window" role="img" aria-label="'+description+'"><b>C</b><b>T</b>'+(kind==='invalid'?'':'<i class="drug-line c"></i>')+(kind!=='positive'?'<i class="drug-line t"></i>':'')+'</div></div>';
  }
- return '<section class="drug-interpretation"><div class="drug-interpretation-head"><span>McKESSON · URINE DRUG SCREEN</span><h2>How to interpret results</h2><p>Read each analyte window at the manufacturer-specified time. Interpretation follows a competitive immunoassay format only when confirmed by the exact kit IFU.</p></div>'+
- '<div class="drug-results-grid"><article><strong>NEGATIVE</strong>'+lines('negative','Two visible lines')+'<p>Control (C) and Test (T) lines visible, including a faint T line.</p></article>'+
- '<article><strong>PRESUMPTIVE POSITIVE</strong>'+lines('positive','Control line only')+'<p>C line visible; no T line. Confirm according to policy before treating as definitive.</p></article>'+
- '<article><strong>INVALID</strong><div class="drug-test-example"><span>No control line</span><div class="drug-test-window"><b>C</b><b>T</b><i class="drug-line t"></i></div></div><p>Absent C line, regardless of other lines. Repeat with a new device.</p></article></div>'+
+ return '<section class="drug-interpretation"><div class="drug-interpretation-head"><span>McKESSON · URINE DRUG SCREEN</span><h2>How to interpret results</h2><p>Read each drug window separately at the time specified in the exact kit instructions.</p><p class="drug-reading-rule">Check the control (C) line first, then count the lines.</p></div>'+
+ '<div class="drug-results-grid">'+
+ '<article class="drug-readout-card drug-negative"><div class="drug-result-readout"><strong class="drug-result-count">2 LINES</strong><span class="drug-result-status">NEGATIVE</span></div>'+lines('negative','C + T lines')+'<p>Both C and T lines appear. <strong>Even a faint T line is negative.</strong></p></article>'+
+ '<article class="drug-readout-card drug-positive"><div class="drug-result-readout"><strong class="drug-result-count">1 LINE</strong><span class="drug-result-status">PRESUMPTIVE POSITIVE</span></div>'+lines('positive','C line only')+'<p><strong>One line at C only</strong>, with no T line. Follow the confirmatory testing policy.</p></article>'+
+ '<article class="drug-readout-card drug-invalid"><div class="drug-result-readout"><strong class="drug-result-count">NO C LINE</strong><span class="drug-result-status">INVALID</span></div>'+lines('invalid','C absent, even if T appears')+'<p><strong>No control (C) line means invalid</strong>, whether a T line is present or not. Repeat with a new device.</p></article>'+
+ '</div>'+
  '<div class="drug-interpretation-table"><h3>14-panel analyte abbreviations</h3><div>'+analytes.map(x=>'<div><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('')+'</div></div>'+
- '<p class="drug-interpretation-caution">These are presumptive screening results. Refer to the specific McKesson 14-panel product insert for cutoff values, result timing and any different line-reading requirements. Use appropriate confirmatory testing for clinically consequential results.</p></section>';
+ '<p class="drug-interpretation-caution">Results are presumptive and assay-specific. Check the exact McKesson cup insert for the correct reading time and cutoffs; confirm preliminary positives with an appropriate laboratory method according to policy.</p></section>';
 }
 
 function sectionRender(sec,tab){
