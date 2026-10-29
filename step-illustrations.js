@@ -270,7 +270,11 @@ art.inlineKitVisual=function(sec,title,depth,root){
  // Piccolo now uses one current disc illustration at the main-step level; never repeat legacy disc art inline.
  return originalInline(sec,title,depth,root);
 };
-/* Keep the original user-provided Piccolo reference photos and the instrument art available to the focused guide. */
+/* One Piccolo disc geometry for all steps: only the chamber fill changes.
+   This is the reference-style disc with central dark hub and crescent fill chamber. */
+art.piccoloDiscSvg=function(filled){return piccoloDisc(Boolean(filled),false);};
+window.LAB_PICCOLO_DISC={empty:()=>piccoloDisc(false,false),filled:()=>piccoloDisc(true,false)};
+
 art.stepIllustration=function(sec,title,group){
  if(!sec||sec.archived||!['Analyzers','Point of care'].includes(sec.category))return '';
  if(sec.id==='piccolo')return piccoloScene(title,group);
