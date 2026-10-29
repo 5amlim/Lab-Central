@@ -158,6 +158,9 @@ function art(mode,scene){
  const body=housing(mode)+(scene?specimenScene(scene):zoom(mode));
  return '<svg class="sofia-device-art" viewBox="0 0 820 408" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(scene?"Sofia 2 instrument with "+scene+" materials":"Sofia 2 front panel with enlarged illustrated "+mode+" screen")+'">'+body+'</svg>';
 }
+function frontArtwork(){
+ return '<svg class="equipment-svg sofia-device-art" viewBox="66 23 306 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sofia 2 analyzer front view with teal upper housing, black touchscreen, barcode scanner and blue lower-right cassette drawer">'+housing("result")+'</svg>';
+}
 function figure(title,mode,note,scene){
  return '<figure class="lc-focus-figure sofia-focus-figure"><header>'+esc(title)+'</header><div class="lc-focus-art">'+art(mode,scene)+'</div><figcaption>'+esc(note)+'</figcaption></figure>';
 }
@@ -197,7 +200,7 @@ const oldRender=A.render.bind(A);
 A.render=sec=>{
  const base=oldRender(sec);
  if(sec?.id!=="sofia")return base;
- return base.replace(/<svg class="equipment-svg"[\s\S]*?<\/svg>/,art("result",null).replace('class="sofia-device-art"','class="equipment-svg sofia-device-art"'));
+ return base.replace(/<svg class="equipment-svg"[\s\S]*?<\/svg>/,frontArtwork());
 };
 const oldKitShape=A.kitShape?.bind(A);
 if(oldKitShape)A.kitShape=(id,filled=false,context="patient")=>{
