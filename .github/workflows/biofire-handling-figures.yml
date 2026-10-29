@@ -1,0 +1,78 @@
+name: Publish BioFire handling figure images
+on:
+  push:
+    paths:
+      - .github/workflows/biofire-handling-figures.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  crop-figures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --disable-pip-version-check pymupdf
+      - name: Extract original BioFire handling figures without redrawing
+        run: |
+          python - <<'PY'
+          import pathlib, urllib.request, fitz, time
+          sources={
+            "filmarray":"https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/rfit-prt-0522_filmarray_rp2_instructions_for_use_en.pdf",
+            "spotfire":"https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/quick-guides/BFR0002-3126-BIOFIRE-SPOTFIRE-R-Panel-Quick-Guide-EN-STD.pdf"
+          }
+          output=pathlib.Path("assets/biofire/handling")
+          output.mkdir(parents=True,exist_ok=True)
+          documents={}
+          for key,url in sources.items():
+            for attempt in range(4):
+              try:
+                req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/pdf,*/*"})
+                with urllib.request.urlopen(req,timeout=60) as stream:
+                  data=stream.read()
+                if not data.startswith(b"%PDF"): raise ValueError("Not a PDF")
+                documents[key]=fitz.open(stream=data,filetype="pdf")
+                break
+              except Exception:
+                if attempt==3: raise
+                time.sleep(4+attempt*2)
+          # Exact manufacturer art from FilmArray RP2 IFU pages 9-11.
+          # Coordinates refer to PDF points, not screenshot dimensions.
+          figures=[
+            ("01-seat-pouch.png","filmarray",8,(447,338,588,450)),
+            ("02-hydrate-blue.png","filmarray",8,(458,486,591,591)),
+            ("03-open-buffer.png","filmarray",9,(428,95,538,177)),
+            ("04-add-buffer.png","filmarray",9,(480,160,588,245)),
+            ("05-transfer-specimen.png","filmarray",9,(441,256,587,409)),
+            ("06-invert-red-vial.png","filmarray",9,(458,416,590,543)),
+            ("07-load-red-port.png","filmarray",10,(452,69,588,191)),
+            ("08-kit-packaging.png","spotfire",3,(405,163,586,258))
+          ]
+          for name,src,page,coords in figures:
+            doc=documents[src]
+            clip=fitz.Rect(*coords)&doc[page].rect
+            if clip.is_empty: raise ValueError("Invalid crop "+name)
+            pix=doc[page].get_pixmap(matrix=fitz.Matrix(3,3),clip=clip,alpha=False)
+            filename=output/name
+            pix.save(str(filename))
+            print(name,pix.width,pix.height)
+          (output/"SOURCE.md").write_text(
+            "Original, unredrawn BioFire manufacturer illustrations cropped from published PDFs.\n"
+            "FilmArray figures: "+sources["filmarray"]+" (pages 9-11).\n"
+            "Kit image: "+sources["spotfire"]+" (page 4).\n"
+            "Hardware reference images only. Use the approved GI, SPOTFIRE R/ST or Mini assay IFU for all processing instructions. "
+            "FilmArray RP2 is not a substitute for the TORCH GI protocol or SPOTFIRE R/ST instructions.\n"
+          )
+          PY
+      - name: Commit original manufacturer figure assets to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/biofire/handling
+          if ! git diff --cached --quiet; then
+            git commit -m "Include direct BioFire kit and loading figures in instrument guides"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
