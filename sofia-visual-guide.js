@@ -6,6 +6,7 @@
 "use strict";
 const A=window.LAB_EQUIPMENT_ART;
 const F=window.LAB_INSTRUMENT_FOCUS;
+const originalFocus=F?.render?.bind(F);
 if(!A||!F)return;
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const txt=(x,y,value,size=14,color="#fff",weight=700,anchor="start")=>'<text x="'+x+'" y="'+y+'" fill="'+color+'" font-size="'+size+'" font-family="Arial,Helvetica,sans-serif" font-weight="'+weight+'" text-anchor="'+anchor+'">'+esc(value)+'</text>';
@@ -159,7 +160,7 @@ function figure(title,mode,note,scene){
  return '<figure class="lc-focus-figure sofia-focus-figure"><header>'+esc(title)+'</header><div class="lc-focus-art">'+art(mode,scene)+'</div><figcaption>'+esc(note)+'</figcaption></figure>';
 }
 function focused(sec,heading,group){
- if(sec?.id!=="sofia")return F.render(sec,heading,group);
+ if(sec?.id!=="sofia")return originalFocus?originalFocus(sec,heading,group):"";
  const g=String(group||"").toLowerCase(),t=String(heading||"").toLowerCase();
  if(g.includes("ordering-tests"))return figure("Order the intended Sofia 2 assay","menu-test","Select the correct Athena test. Flu, SARS, RSV and Strep may use different kit materials and specimen requirements.");
  if(g.includes("running-tests")){
