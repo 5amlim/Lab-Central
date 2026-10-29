@@ -143,6 +143,32 @@ const workflow=[
  ['Run the six cartridges','Slide cartridges into the rack until they click, insert rack and tips, close the cover and follow the analyzer START prompts.'],
  ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. The analyte pill turns gray after acceptable QC; if still pink, do not test patients.']
 ];
+
+function storageSymbol(type){
+ const freezer=type==="qc";
+ const color=freezer?"#785e9d":"#258c8c";
+ return '<svg class="pf-storage-svg" viewBox="0 0 220 170" role="img" aria-label="'+(freezer?'Freezer holding Bio-Rad quality control vials':'Refrigerator holding PATHFAST calibrators')+'">'+
+ '<rect x="30" y="13" width="158" height="145" rx="16" fill="#e7f2f6" stroke="#91b1bf" stroke-width="4"/>'+
+ '<path d="M176 19L198 35V148L176 157Z" fill="#bfd6df" stroke="#91b1bf" stroke-width="3"/>'+
+ '<rect x="42" y="25" width="124" height="119" rx="8" fill="#f9fdff" stroke="#bfd5df" stroke-width="2"/>'+
+ '<path d="M49 75H159M49 120H159" stroke="#a1c0ce" stroke-width="4"/>'+
+ [0,1,2].map(function(i){const x=55+i*35;return '<rect x="'+x+'" y="88" width="25" height="30" rx="5" fill="#eef8fa" stroke="#7fa4b4" stroke-width="2"/>'+
+ '<rect x="'+(x+2)+'" y="83" width="21" height="9" rx="3" fill="'+color+'"/>'+
+ '<rect x="'+(x+4)+'" y="101" width="17" height="11" rx="2" fill="#fff"/>';}).join('')+
+ '<rect x="181" y="70" width="5" height="40" rx="3" fill="#6c96a9"/>'+
+ '</svg>';
+}
+function returnMaterials(group){
+ const header='<div class="pf-storage-intro"><strong>03 · Return materials to their specified storage</strong><p>After the accepted CAL/QC results are printed and filed, return the materials for '+esc(group.label)+' to the correct temperature-controlled locations. Use current open-vial and reconstituted-material stability limits.</p></div>';
+ const cal='<article class="pf-storage-card"><header><span class="pf-storage-dot cal"></span><strong>CAL 1 and CAL 2</strong><small>Refrigerated reagent-kit materials</small></header>'+
+ '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+svgCal2()+'</div>'+storageSymbol("cal")+'</div>'+
+ '<p>Return eligible remaining calibrator materials to <b>2–8°C refrigeration</b>, not to the QC freezer. Dispose of used or unstable reconstituted portions according to the assay insert.</p></article>';
+ const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC 1 and QC 2 · manufacturer-specified freezer</small></header>'+
+ '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC '+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
+ '<p>Return the two Bio-Rad QC levels to the designated <b>−20°C to −70°C freezer</b> only if permitted by the current lot-specific insert and open-vial stability instructions. Secure caps and close the freezer.</p></article>';
+ return '<section class="pf-return-storage" aria-label="Return calibration and QC material to appropriate cold storage">'+header+'<div class="pf-storage-grid">'+cal+qc+'</div><p class="pf-workflow-note"><strong>All three assays:</strong> Apply this same storage check after hs-Troponin I, NT-proBNP and D-dimer CAL/QC. Never assume the calibrators share the QC freezer requirement.</p></section>';
+}
+
 let selectedPanel=null;
 let panelDropdownOpen=false;
 let currentStep=1;
@@ -199,7 +225,7 @@ function render(){
    '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Start with materials and cartridges, then use the screen</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
    (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
     'Gather kits and QC','Prepare CAL and Bio-Rad controls','Place cartridges in rack','Dispense into assigned sample wells','Rack, tips and waste box',
-    'Log in and check status','Back to operation menu','Select CAL/QC and assay','Verify lane assignments','Start and review QC','Print and file'
+    'Log in and check status','Back to operation menu','Select CAL/QC and assay','Verify lane assignments','Start and review QC','Print, file and return materials'
    ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="'+(currentStep===i+1?'active':'')+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+label+'</button>').join('')+'</div>':'')+
    '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/total*100)+'%"></span></div>';
   h+=step(1,'Gather assay cartridges, calibrators and Bio-Rad controls','Confirm the exact QC levels and vials for '+x,
@@ -241,9 +267,9 @@ function render(){
       (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('results','cal'):'')+
       status(group)+
       '<p class="pf-workflow-note">Review CAL 1, CAL 2 and both Bio-Rad controls against lot-specific criteria; confirm status is acceptable before patient testing. Failed controls require resolution before releasing testing.</p>');
-  h+=step(11,'Print and file calibration and QC records','Document both control levels and calibration results',
+  h+=step(11,'Print, file and return CAL/QC materials to storage','Document both control levels and return each material to the correct temperature',
       (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Print and retain the accepted calibration and QC results in the approved binder.</p>')+
-      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>');
+      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>'+returnMaterials(group));
   if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 11</span><button type="button" class="primary" data-pf-next '+(currentStep===11?'disabled':'')+'>Next step →</button></div>';
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
