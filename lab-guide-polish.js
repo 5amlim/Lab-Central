@@ -86,7 +86,7 @@ function piccoloPatientScreen(){
  '<text x="438" y="67" font-size="16" font-family="Arial" font-weight="850" fill="#207f81">VERIFY MRN</text>'+
  nums.map((v,i)=>{const x=82+(i%3)*90,y=140+Math.floor(i/3)*25;return '<rect x="'+x+'" y="'+y+'" width="79" height="23" rx="4" fill="'+(v==='Done'?'#239b8c':'#f4cf68')+'" stroke="'+(v==='Done'?'#18796e':'#b99d48')+'"/>'+
  '<text x="'+(x+39)+'" y="'+(y+16)+'" font-size="13" font-family="Arial" text-anchor="middle" font-weight="800" fill="'+(v==='Done'?'white':'#365468')+'">'+v+'</text>';}).join(''));
- return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.',true)+'</div>';
+ return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.',true)+'</div>';
 }
 function piccoloRunningSvg(){
  // Use the same reference-matched device illustration as the overview and loading step.
