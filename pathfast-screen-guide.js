@@ -37,9 +37,9 @@ function home(analyte,mode,focus){
  const back=focus==="back";
  const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills()+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
- const note='<div class="pfs-external-readiness-note"><div><strong>Verify assay readiness on the actual analyzer.</strong>'+
+ const note=mode==="patient"?'<div class="pfs-external-readiness-note"><div><strong>Verify assay readiness on the actual analyzer.</strong>'+
  '<span>The gray pills are examples only. If an assay is locked or unavailable, stop testing and complete required calibration and QC.</span></div>'+
- '<button type="button" class="pfs-qc-route" data-gotab="cal-qc">Calibration + QC →</button></div>';
+ '<button type="button" class="pfs-qc-route" data-gotab="cal-qc">Calibration + QC →</button></div>':'';
  return frame("ASSAY/HOME",back?"Step 8 · Select BACK":"Step 7 · Check assay status",body,
   back?"ASSAY/HOME":"REAGENT STATUS")+note;
 }
