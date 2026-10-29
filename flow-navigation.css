@@ -472,7 +472,7 @@
 }
 .workflow-main .req-route-kicker{margin-bottom:4px;color:#2b8784;font-size:9.5px;letter-spacing:.1em}
 .workflow-main .requisition-source-instructions h4{font-size:13.5px;line-height:1.4;margin:0 0 3px;font-weight:820;color:#24536a}
-.workflow-main .requisition-source-instructions p{margin:0;font-size:12px;line-height:1.55;color:#557083}
+.workflow-main .req-main-action p{margin:0;font-size:12px;line-height:1.55;color:#557083}
 .workflow-main .requisition-source-instructions p.req-reclassify-instruction{margin-top:7px;color:#111111}
 
 .workflow-main .ad-guide{margin-top:10px;border-color:#d9e5ed;border-radius:10px;background:#fff}
@@ -602,7 +602,7 @@
 .external-workflow-timeline .requisition-intake{margin-left:47px}
 .external-workflow-timeline .completion-steps .workflow-steps::before{content:none!important}
 .external-workflow-timeline .workflow-step:not(:last-child)::after{content:none!important;display:none!important}
-/* Main action and exceptional version control now form one decision card. */
+/* Keep the classification walkthrough in the green card; show version exceptions below. */
 .workflow-main .requisition-source-instructions{
  padding:0;overflow:hidden;background:#f4faf8;border:1px solid #cfebe4;
  border-left:3px solid #26978b;
@@ -611,6 +611,12 @@
  display:flex;align-items:flex-start;gap:11px;padding:14px 15px 13px;
 }
 .workflow-main .req-main-action > div{min-width:0;flex:1}
+.workflow-main .requisition-source-instructions .req-inline-guide{
+ padding:0 15px 15px 56px;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide>.ad-guide{
+ margin:0;
+}
 .workflow-main .req-action-symbol{
  flex:0 0 31px;display:grid;place-items:center;width:31px;height:31px;
  color:#13857a;border-radius:9px;background:#ddf2ec;
@@ -618,9 +624,9 @@
 .workflow-main .req-action-symbol svg{width:18px;height:18px}
 .workflow-main .req-route-kicker{font-size:10px;line-height:1.35;margin-bottom:5px;color:#1a7e79}
 .workflow-main .requisition-source-instructions h4{font-size:14px;line-height:1.4;color:#215c68}
-.workflow-main .requisition-source-instructions p{font-size:12px;line-height:1.6}
+.workflow-main .req-main-action p{font-size:12px;line-height:1.6}
 .workflow-main .req-version-guidance{
- display:flex;align-items:flex-start;gap:10px;margin:0 13px 12px 56px;
+ display:flex;align-items:flex-start;gap:10px;margin:12px 0 0;
  padding:11px 12px;border:1px solid #e9d8b7;border-left:3px solid #c48d2c;
  border-radius:9px;background:#fffaf0;
 }
@@ -699,7 +705,8 @@
   left:-47px!important;width:35px!important;min-width:35px!important;height:35px!important;
  }
  .workflow-main .req-main-action{padding:12px 10px;gap:9px}
- .workflow-main .req-version-guidance{margin:0 10px 10px 10px;padding:10px}
+ .workflow-main .req-version-guidance{margin:10px 0 0;padding:10px}
+ .workflow-main .requisition-source-instructions .req-inline-guide{padding:0 10px 12px 50px}
  .workflow-main .workflow-step h3{gap:7px}
  .workflow-main .workflow-title-icon{width:23px;min-width:23px;height:23px}
  .workflow-main .workflow-step p{padding-left:30px}
