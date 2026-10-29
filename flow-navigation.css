@@ -687,3 +687,50 @@
  .external-workflow-timeline::before{background:#ccd6db!important}
  .workflow-main .req-version-guidance{break-inside:avoid}
 }
+
+/* Athena order catalog: screenshot-matched names and categories */
+.athena-order-groups{
+ display:grid;gap:20px;margin:18px 0 14px;
+}
+.athena-order-group{
+ min-width:0;overflow:hidden;
+ border:1px solid #e3e7ef;border-radius:14px;
+ background:#fff;
+}
+.athena-order-group-title{
+ display:flex;align-items:center;gap:7px;
+ margin:0;padding:18px 21px 13px;
+ color:#56328b;font-size:19px;line-height:1.35;
+ font-weight:850;letter-spacing:-.018em;
+ background:#faf9fd;border-bottom:1px solid #e9e6f0;
+}
+.athena-order-group-title span{font-weight:780;font-variant-numeric:tabular-nums}
+.athena-order-rows{padding:3px 21px 8px}
+.athena-order-row{
+ display:flex;align-items:baseline;gap:12px;min-width:0;
+ padding:13px 3px;border-bottom:1px solid #edf0f4;
+ color:#343a43;font-size:16px;line-height:1.45;
+}
+.athena-order-row:last-child{border-bottom:0}
+.athena-order-name{overflow-wrap:anywhere;min-width:0;flex:1;font-weight:500}
+.athena-order-name strong{font-weight:850;color:#30343b}
+.athena-order-row small{color:#708699;font-size:11px}
+.athena-order-source-note{
+ padding:9px 2px;margin:0 0 8px;
+ color:#73869a;font-size:11.5px;line-height:1.6;
+}
+.athena-order-protocol-note{
+ border:1px solid #efdbb6;border-left:4px solid #d5a056;
+ background:#fff8ed;color:#765d3b;
+ border-radius:10px;padding:12px 15px;margin:5px 0 10px;
+ font-size:12px;line-height:1.6;
+}
+@media(max-width:650px){
+ .athena-order-group-title{font-size:16px;padding:14px 15px 11px}
+ .athena-order-rows{padding:2px 14px 7px}
+ .athena-order-row{padding:12px 2px;font-size:14px}
+}
+@media print{
+ .athena-order-group{break-inside:avoid}
+ .athena-order-group-title{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
