@@ -104,5 +104,35 @@
 .ops-evidence-note{display:flex;gap:11px;align-items:flex-start;background:#eef8f5;border-left:4px solid #218c7f;border-radius:0 10px 10px 0;margin-top:14px;padding:12px 15px}
 .ops-evidence-note span{background:#278e83;color:#fff;border-radius:8px;flex:none;width:26px;height:26px;display:grid;place-items:center;font-size:13px}
 .ops-evidence-note p{margin:0;color:#4e777b;font-size:11px;line-height:1.6}
-@media(max-width:760px){.ops-evidence-grid{grid-template-columns:1fr}.ops-region-forms-grid{grid-template-columns:1fr}.ops-evidence{padding:12px}.ops-evidence-svg{height:140px}}
+/* Clear photo limit and pickup/shipping documentation alongside the three examples. */
+.ops-evidence-card p strong{color:#2b5367;font-weight:850}
+.ops-evidence-details{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:13px;margin-top:15px;
+}
+.ops-evidence-detail{
+ display:flex;gap:12px;align-items:flex-start;
+ min-width:0;padding:15px;border:1px solid #d5e7ed;
+ border-radius:12px;background:#f8fbfc;
+}
+.ops-evidence-detail-icon{
+ display:grid;place-items:center;flex:0 0 35px;
+ width:35px;height:35px;border-radius:10px;
+ background:#e4f4f0;color:#187f75;font-size:14px;font-weight:900;
+}
+.ops-evidence-detail strong{
+ display:block;color:#254f65;font-size:13px;font-weight:850;
+ line-height:1.45;
+}
+.ops-evidence-detail p{
+ margin:5px 0 0;color:#527184;font-size:12px;line-height:1.65;
+}
+.ops-evidence-detail p strong{display:inline;color:#2a5064;font-size:inherit}
+.ops-evidence-note p strong{color:#216d66;font-weight:850}
+@media(max-width:760px){
+ .ops-evidence-grid,.ops-evidence-details,.ops-region-forms-grid{grid-template-columns:1fr}
+ .ops-evidence{padding:12px}
+ .ops-evidence-svg{height:140px}
+ .ops-evidence-detail{padding:13px}
+}
 @media print{.ops-evidence-card{break-inside:avoid}}
