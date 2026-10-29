@@ -60,26 +60,10 @@ function piccoloDisc(filled,pipette){
  'Piccolo reagent disc, permanent sample entry hole next to central hub, '+(filled?'red whole blood in curved inner sample chamber':'no blood added yet')+(pipette?', pipette delivers through the hole':''),'0 0 620 330');
 }
 function piccoloInstrument(){
- return svg('<ellipse cx="315" cy="308" rx="190" ry="12" fill="#dce7ee"/>'+
- '<path d="M208 20L420 22L454 45L455 278L419 303H209L188 277L189 54Z" fill="#2168a6" stroke="#174a7e" stroke-width="5"/>'+
- '<path d="M420 22L454 45V278L419 303V46Z" fill="#154d81"/>'+
- '<rect x="214" y="43" width="210" height="200" rx="14" fill="#132d48" stroke="#0e3050" stroke-width="5"/>'+
- '<rect x="231" y="58" width="176" height="162" rx="6" fill="#e4f0f2"/>'+
- '<rect x="231" y="58" width="176" height="30" fill="#93b4d0"/>'+
- words(319,79,'piccolo xpress',16,'#264c85')+
- '<rect x="250" y="103" width="135" height="34" rx="8" fill="#f8d477"/>'+words(318,125,'ANALYZE',15,'#34566c')+
- '<rect x="250" y="149" width="135" height="28" rx="7" fill="#d5e3e9"/>'+words(318,169,'RESULTS',13,'#577788')+
- '<rect x="222" y="254" width="193" height="19" rx="4" fill="#0d304c"/>'+
- '<path d="M232 272H399L433 306H206Z" fill="#253b4c" stroke="#6c8fa3" stroke-width="4"/>'+
- '<ellipse cx="318" cy="287" rx="51" ry="13" fill="#ebf3f6" stroke="#9cb6c4" stroke-width="3"/>'+
- '<ellipse cx="318" cy="287" rx="30" ry="9" fill="#edf6f9" stroke="#afc9d3" stroke-width="2"/>'+
- '<path d="M305 294A20 8 0 0 0 338 286L326 283Z" fill="#b63747"/>'+
- '<circle cx="318" cy="286" r="6" fill="#263946"/>'+
- '<path d="M366 288L483 250H553" fill="none" stroke="#268997" stroke-width="3"/>'+
- words(553,242,'FRONT DISC DRAWER',13,'#2f7182','end')+
- '<circle cx="432" cy="245" r="9" fill="#59b7e7" stroke="#aad8f0" stroke-width="2"/>',
- 'Piccolo Xpress compact blue analyzer with color touchscreen and front reagent disc drawer showing red sample in disc','0 0 620 330');
+ // The lower disc tray is visible only in the loading illustration.
+ return window.LAB_EQUIPMENT_ART?.piccoloDeviceSvg?.("drawer") || "";
 }
+
 function qcFreezer(){
  let h='<rect x="35" y="37" width="174" height="204" rx="16" fill="#e3f3f8" stroke="#7cacbf" stroke-width="4"/>'+
  '<rect x="47" y="50" width="150" height="178" rx="10" fill="#f6fcfe" stroke="#b7d4df" stroke-width="2"/>'+
