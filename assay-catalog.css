@@ -1,0 +1,55 @@
+/* Instrument assay menu: shared across analyzers and rapid POC tests */
+.assay-catalog{margin:24px 0 28px;clear:both;border:1px solid #d8e6ef;border-radius:19px;background:#fff;padding:22px 23px 24px;color:#24435c;box-shadow:0 5px 20px rgba(39,71,91,.035)}
+.ac-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:17px}
+.ac-eyebrow{display:block;color:#087d7c;letter-spacing:.17em;font-weight:850;font-size:10px;margin-bottom:8px}
+.ac-title h2,.cl-qc-intro h2{font-size:24px;letter-spacing:-.025em;line-height:1.16;margin:0 0 7px;color:#203b52}
+.ac-title p,.cl-qc-intro p{font-size:13px;line-height:1.6;color:#638095;margin:0;max-width:790px}
+.ac-count{border:1px solid #d1e3ed;border-radius:99px;padding:7px 12px;white-space:nowrap;font-size:11px;font-weight:850;color:#446780;background:#f5f9fc}
+.ac-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:14px}
+.assay-catalog .ac-card{position:relative;min-width:0;border:1px solid #d9e6ee;border-top:4px solid var(--ac-strip,#8db9c8);border-radius:14px;background:#fbfdff;overflow:hidden;box-shadow:none}
+.assay-catalog .ac-card[open]{background:#fff}
+.assay-catalog .ac-card-head{display:flex;align-items:center;gap:13px;padding:14px;cursor:pointer;list-style:none;user-select:none;min-height:80px}
+.assay-catalog .ac-card-head::-webkit-details-marker{display:none}
+.assay-catalog .ac-card-head:focus-visible{outline:3px solid #64abb8;outline-offset:-3px}
+.ac-card-summary{flex:1;min-width:0}
+.ac-card-summary strong{display:block;font-size:15px;line-height:1.35;color:#25445d;font-weight:850}
+.ac-card-summary small{display:block;color:#7490a1;margin-top:5px;font-size:11px;line-height:1.4;font-weight:600}
+.ac-card-index{flex:none;display:grid;place-items:center;border-radius:11px;width:45px;height:45px;font-size:18px;font-weight:900;background:#eaf3f7;color:#31677c}
+.ac-complex{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:6px 9px;border-radius:7px;letter-spacing:.04em;font-size:10px;font-weight:900;white-space:nowrap}
+.ac-moderate{background:#fff0dc;border:1px solid #e8c28b;color:#94540d}
+.ac-waived{background:#e9f6f1;border:1px solid #b8ddd0;color:#236d58}
+.ac-header-badge{margin-top:10px;font-size:12px;padding:8px 12px;width:max-content}
+.ac-chevron{flex:none;width:12px;height:12px;border-right:2px solid #48738b;border-bottom:2px solid #48738b;transform:rotate(45deg);transition:transform .18s;align-self:center;margin:0 5px 5px}
+.ac-card[open] .ac-chevron{transform:rotate(225deg);margin-top:9px;margin-bottom:0}
+.ac-card-body{padding:0 16px 17px;border-top:1px solid #e8eff3}
+.ac-group{margin-top:15px}
+.ac-group h4{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#087a81;margin:0 0 8px}
+.ac-group ul{margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px;list-style:none}
+.ac-group li{position:relative;min-width:0;padding:0 0 0 13px;font-size:12px;line-height:1.55;color:#3e627b;overflow-wrap:break-word}
+.ac-group li:before{content:"";position:absolute;top:.63em;left:1px;width:5px;height:5px;background:#77adb9;border-radius:50%}
+.ac-disc-grid .ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ac-disc{position:relative;display:flex;align-items:flex-end;justify-content:center;flex:none;width:62px;height:62px;border-radius:50%;border:4px solid #e6ebef;box-shadow:inset 0 0 0 6px #f8fafb,inset 0 0 0 12px var(--disc-color),0 1px 5px #ccd7df;background:repeating-conic-gradient(from 8deg,#f1f5f7 0deg 13deg,#d9e3e9 13deg 15deg,#fbfdff 15deg 25deg);overflow:hidden}
+.ac-disc-hole{position:absolute;top:22px;left:22px;width:12px;height:12px;background:#e6eef2;border:2px solid #b1c9d7;border-radius:50%}
+.ac-disc span{position:relative;z-index:1;font-size:7px;max-width:55px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.02em;font-weight:900;color:#243e50;padding:1px 5px;background:rgba(255,255,255,.96);border-radius:3px;margin-bottom:4px}
+.ac-source-link,.ac-reference a{color:#0b708a;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.ac-source-link{display:inline-block;font-size:12px;margin-top:16px}
+.ac-footnote{border-left:3px solid #9ec9d3;background:#f5fafd;padding:10px 13px;border-radius:0 8px 8px 0;color:#5c7b8f;font-size:12px;line-height:1.55;margin:17px 0 0}
+.ac-reference{font-size:11px;color:#7190a2;margin:11px 0 0}
+.ac-card-note{background:#fff8ec;color:#86601e;padding:10px 12px;border-radius:8px;font-size:12px;line-height:1.55;margin:13px 0 0}
+.cl-qc-switch{border:1px solid #d8e6ef;border-radius:18px;padding:19px;margin:18px 0;background:#fff}
+.cl-qc-switch-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:16px 0 0}
+.cl-qc-switch-buttons button{display:flex;align-items:center;text-align:left;flex-wrap:wrap;gap:4px 12px;min-height:81px;padding:15px 17px;border:2px solid #d6e5ed;border-radius:13px;background:#f9fcff;color:#25445d;cursor:pointer}
+.cl-qc-switch-buttons button strong{font-size:16px;font-weight:900;flex-basis:100%}
+.cl-qc-switch-buttons button small{font-size:12px;color:#67859a}
+.cl-qc-switch-buttons button .ac-chevron{margin-left:auto}
+.cl-qc-switch-buttons button:hover,.cl-qc-switch-buttons button:focus-visible{border-color:#70b5bd}
+.cl-qc-switch-buttons button.is-active{border-color:#118980;background:#eaf7f4}
+.cl-qc-switch-buttons button.is-active .ac-chevron{transform:rotate(225deg)}
+/* Large workflow-position labels, distinct from the manufacturer's number on vials. */
+.pf-calibration-guide .pf-qc-vial .pf-qc-slot{font-size:23px!important;line-height:1.15!important;min-height:54px!important;padding:12px 17px!important;font-weight:950!important;letter-spacing:.015em!important;color:#075c57!important;background:#def6ef!important;border:2px solid #69c4b2!important;box-shadow:0 2px 0 rgba(8,92,85,.08)}
+.pf-calibration-guide .pf-qc-vial .pf-qc-level{font-size:20px!important}
+.pf-calibration-guide .pf-qc-vial .pf-qc-bottle-wrap{margin-top:8px}
+.pf-calibration-guide .pf-qc-vial .pf-qc-slot::first-letter{color:#063e43}
+@media(max-width:880px){.ac-grid{grid-template-columns:1fr}.ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.assay-catalog{padding:17px 14px}.ac-title{flex-direction:column}.ac-count{align-self:flex-start}.ac-card-head{gap:8px!important;padding:12px!important}.ac-card-summary strong{font-size:13px}.ac-complex{font-size:9px;padding:5px 6px}.ac-disc{width:52px;height:52px}.ac-disc-hole{top:17px;left:17px}.ac-group ul,.ac-disc-grid .ac-group ul{grid-template-columns:1fr}.cl-qc-switch-buttons{grid-template-columns:1fr}.pf-calibration-guide .pf-qc-vial .pf-qc-slot{font-size:19px!important;padding:9px 12px!important}}
+@media print{.assay-catalog .ac-card{break-inside:avoid}.assay-catalog .ac-card-body{display:block!important}.ac-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cl-qc-switch-buttons button{border-color:#aaa!important}}
