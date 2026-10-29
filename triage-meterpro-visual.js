@@ -134,13 +134,62 @@ function chipSvg(){
   R(194,217,34,40,2,"#d9b85d","#a1843f",2);
  return '<svg viewBox="60 40 300 225" role="img" aria-label="Triage reagent CODE CHIP, assay lot identification" xmlns="http://www.w3.org/2000/svg">'+h+'</svg>';
 }
-function pipetteSvg(){
- let h='<path d="M96 45L207 215" stroke="#b6c5cc" stroke-width="24" stroke-linecap="round"/>'+
- '<path d="M207 215L228 245" stroke="#8fa7b0" stroke-width="9" stroke-linecap="round"/>'+
- '<ellipse cx="95" cy="43" rx="19" ry="29" fill="#e7f1f3" stroke="#90adb9" stroke-width="3"/>'+
- '<circle cx="229" cy="250" r="8" fill="#b5485d"/>'+
- T(237,280,"Kit transfer pipette",16,"#56778a",750);
- return '<svg viewBox="45 0 300 310" role="img" aria-label="Kit-supplied Triage transfer pipette with sample drop; assay-specific volume per IFU" xmlns="http://www.w3.org/2000/svg">'+h+'</svg>';
+/* The kit-supplied fixed-volume transfer pipette has TWO bulbs.
+   Large upper bulb aspirates/dispenses. Small lower bulb retains overflow. */
+function pipetteSvg(phase="empty",type="blood"){
+ const hasSample=["filled","inspect","position","dispense"].includes(phase);
+ const color=type==="qc"?"#ac6387":"#b74154";
+ let h='<defs><linearGradient id="tri-pipette-clear" x1="0" x2="1"><stop stop-color="#f7fbfe"/><stop offset=".45" stop-color="#d6e7ee"/><stop offset="1" stop-color="#f9fcfe"/></linearGradient></defs>'+
+  '<path d="M133 76 V236" fill="none" stroke="#b1c8d3" stroke-width="15" stroke-linecap="round"/>'+
+  '<path d="M133 81V233" fill="none" stroke="#f0f9fc" stroke-width="10"/>'+
+  '<path d="M133 224 V272" fill="none" stroke="#b1c8d3" stroke-width="6" stroke-linecap="round"/>'+
+  '<ellipse cx="133" cy="45" rx="23" ry="'+(phase==="bulb"||phase==="dispense"?25:37)+'" fill="url(#tri-pipette-clear)" stroke="#92aeba" stroke-width="3"/>'+
+  // Small lower overflow bulb branches from the barrel, not the upper squeeze bulb.
+  '<path d="M137 213 Q151 211 155 210" fill="none" stroke="#a9c4d1" stroke-width="9"/>'+
+  '<ellipse cx="167" cy="209" rx="15" ry="21" fill="url(#tri-pipette-clear)" stroke="#8eabb8" stroke-width="2.3"/>';
+ if(hasSample){
+  h+='<path d="M129 123 V232" stroke="'+color+'" stroke-width="8" stroke-linecap="round" opacity=".80"/>'+
+    '<path d="M134 223H146" stroke="'+color+'" stroke-width="5" opacity=".80"/>'+
+    '<path d="M162 214 Q165 224 173 213Z" fill="'+color+'" opacity=".75"/>';
+ }
+ if(phase==="dispense"){
+  h+='<path d="M133 273 Q120 293 133 298 Q146 293 133 273" fill="'+color+'"/>';
+ }
+ if(phase==="dip"){
+  h+='<path d="M112 265 H154" stroke="#319388" stroke-width="2" stroke-dasharray="5 4"/>'+
+    T(195,262,"TIP IN",12,"#317c85",800);
+ }
+ h+=P("M101 45H69","none","#4c8b9f",2)+T(65,39,"LARGE",11,"#386b85",850,"end")+T(65,52,"BULB",11,"#386b85",850,"end")+
+  P("M185 207H239","none","#4c8b9f",2)+T(242,203,"SMALL",11,"#437489",850,"start")+T(242,218,"OVERFLOW",11,"#437489",850,"start")+
+  P("M123 154H65","none","#5a8597",2)+T(59,150,"FULL",11,"#386c82",800,"end")+T(59,163,"BARREL",11,"#386c82",800,"end");
+ const alt="Kit-supplied Triage fixed-volume pipette; large upper squeeze bulb, sample barrel and separate small lower overflow bulb. "+phase;
+ return '<svg viewBox="0 0 305 313" role="img" aria-label="'+E(alt)+'" xmlns="http://www.w3.org/2000/svg">'+h+'</svg>';
+}
+function pipettingStage(phase,source="patient",level=1){
+ const qc=source!=="patient";
+ const sample=qc?qcControlsSvg():A.mediaSvg("lavender");
+ const sampleTitle=qc?"QC LEVEL "+level:"EDTA PATIENT SAMPLE";
+ const showSample=["bulb","dip","draw","filled","inspect"].includes(phase);
+ const showCassette=["position","dispense","absorb"].includes(phase);
+ const left=showSample?sample:showCassette?selectedMaterial("troponin",phase!=="position"):sample;
+ const pipette=pipetteSvg(phase==="draw"?"filled":phase,qc?"qc":"blood");
+ const notes={
+  bulb:"1 · Squeeze the LARGE upper bulb",
+  dip:"2 · Immerse tip while bulb stays compressed",
+  draw:"3 · Slowly RELEASE the upper bulb",
+  filled:"4 · Fill barrel; small lower bulb catches overflow",
+  inspect:"CHECK · Barrel full, upper bulb not overfilled",
+  position:"5 · Position tip over the sample well",
+  dispense:"6 · Squeeze upper bulb; transfer BARREL volume only",
+  absorb:"7 · Allow complete absorption before moving"
+ };
+ const title=notes[phase]||"Use the kit-supplied fixed-volume pipette";
+ const leftLabel=showSample?sampleTitle:"MATCH THE ACTUAL ASSAY";
+ const sourceHtml='<div class="triage-pipette-source"><div class="triage-pipette-media">'+left+'</div><small>'+E(leftLabel)+'</small></div>';
+ const pipetteHtml='<div class="triage-pipette-tool"><div class="triage-pipette-media">'+pipette+'</div><small>'+E(phase==="dispense"?"Upper bulb squeezes; lower overflow remains":"Use the kit transfer pipette")+'</small></div>';
+ const arrow='<span class="triage-pipette-arrow" aria-hidden="true">→</span>';
+ return '<div class="triage-pipette-sequence" aria-label="'+E(title)+'"><div class="triage-pipette-instruction">'+E(title)+'</div><div class="triage-pipette-panels">'+(showCassette?pipetteHtml+arrow+sourceHtml:sourceHtml+arrow+pipetteHtml)+'</div>'+
+ '<div class="triage-overflow-caution">Do not force the liquid in the small lower overflow bulb into the device sample well.</div></div>';
 }
 function kitChooser(){
  const panels=assays.map((a,i)=>'<div class="triage-kit-choice" style="--triage-assay:'+a.color+';--triage-ink:'+a.dark+'"><div class="triage-kit-picture">'+cassetteSvg(a.id)+'</div><strong>'+E(a.label)+'</strong><small>White test device · magenta panel · '+(i===0?'blue':i===1?'green':'yellow')+' band</small></div>').join("");
@@ -156,22 +205,52 @@ function selectedMaterial(type,filled){
 }
 function renderStep(title,group){
  const t=String(title||"").toLowerCase(),g=String(group||"").toLowerCase();
- const daily=/daily/.test(g),monthly=/monthly/.test(g),newBox=/new.box/.test(g),qc=daily||monthly||newBox;
- const mode=/code chip|install.*chip/.test(t)?"chip":daily?"qc":/qc sample|qc controls/.test(t)?"qcsample":/patient|mrn/.test(t)?"patient":/machine is ready|result/.test(t)?"result":"home";
- if(/print|log|record|date and initials|file/.test(t))return figure("Document and file the result","result",'<div class="triage-material-note">Print and record results in the appropriate approved QC log or patient chart. Verify lot, operator and patient identification.</div>',"Record the completed result according to the site procedure.");
- if(daily&&/insert.*qc device|insert.*device|press enter.*daily qc/.test(t))return figure("Daily QC · reusable electronic device","qc",qcElectronicSvg(),"The reusable electronic QC Device has no sample well. Do not add liquid or confuse it with single-use patient-test cassettes.");
- if(/chip|install.*chip/i.test(t))return figure("Match and install the new reagent CODE CHIP","chip",chipSvg(),"Install the corresponding lot chip using the prompts. Remove and store it as instructed.");
- if(/freezer|grab the qc sample|total 5|thaw|invert the tube/.test(t))return figure("Prepare Triage Total 5 controls",mode,qcControlsSvg(),"Thaw and prepare the required control vials per approved lot-specific QC instructions.");
- if(/blood samples|collect/.test(t))return figure("EDTA blood for cardiac assays","home",A.mediaSvg("lavender"),"Verify collection tube and specimen stability for the selected cardiac assay.");
- if(/grab the test kit|test kit from the fridge|cassette|pipette|dispens|sample well|port/.test(t)){
-  if(daily)return figure("Reusable electronic QC Device","qc",qcElectronicSvg(),"Daily electronic QC uses the reusable device, never an assay cassette or patient sample.");
-  if(/insert.*port|insert.*cassette/.test(t))return figure("Insert prepared assay device","patient",selectedMaterial("troponin",true),"Illustration shows a Troponin I example. Insert the actual ordered assay device in the instrument's lower front cassette port.");
-  if(/dispens|pipette/.test(t))return figure("Add specimen to the disposable assay cassette",qc?"qcsample":"patient",'<div class="triage-dispense-layout">'+pipetteSvg()+selectedMaterial("bnp",true)+'</div>',"Illustrated BNP example. Use the supplied transfer pipette and the assay-specific sample volume.");
-  return figure("Identify the intended Triage cartridge","home",kitChooser(),"Compare the printed cartridge name and colored identification stripe before preparing the specimen.");
+ const daily=/daily/.test(g),monthly=/monthly/.test(g),newBox=/new.box/.test(g);
+ const qc=monthly||newBox,source=qc?"qc":"patient",level=/level 2|control level 2/.test(t)?2:1;
+ const mode=daily?"qc":qc?"qcsample":"patient";
+ const show=(heading,right,note,m=mode)=>figure(heading,m,right,note);
+ const pip=(phase)=>show(title,pipettingStage(phase,source,level),"Illustrated kit-supplied transfer pipette. Follow the current assay and control package insert.");
+ // Unique daily optical QC steps never depict liquid handling or sample wells.
+ if(daily){
+  if(/power on|select run test|enter or scan user id/.test(t))return show(title,qcElectronicSvg(),"Choose RUN TEST; provide your User ID if prompted. QC DEVICE is separate from liquid QC.");
+  if(/remove the reusable|inspect the qc device|select qc device|insert the reusable|press enter to run/.test(t))
+   return show(title,qcElectronicSvg(),"Keep the reusable QC Device clean and dry. Never pipette liquid onto it.");
+  if(/verify qc device pass|print and document/.test(t))return show(title,qcElectronicSvg(),"Confirm a PASS, record it and follow lockout procedure if QC fails.","result");
+  if(/eject and return/.test(t))return show(title,qcElectronicSvg(),"Return the reusable electronic QC Device to its light-protective opaque case after use.");
+  return show(title,qcElectronicSvg(),"Daily electronic QC does not require any blood, liquid controls or disposable patient cassette.");
  }
- if(/run test|click|select|enter mrn|lot/.test(t))return figure("Navigate the MeterPro buttons",mode,qc?qcElectronicSvg():kitChooser(),"Use the actual screen prompts and physical arrow/Enter keys to select the correct mode and enter identification.");
- if(/turn on|machine is ready|review|result/.test(t))return figure("Quidel Triage MeterPro",mode,qc?qcElectronicSvg():kitChooser(),"This is the actual meter layout; the screen text is a training illustration rather than a literal captured display.");
- return figure(qc?"Triage QC workflow":"Triage patient test workflow",mode,qc?qcControlsSvg():kitChooser(),"Follow the current kit instructions and analyzer prompts for this step.");
+ // Separate details for actual pipette aspiration, chamber inspection, and dispensing.
+ if(/squeeze.*(large|upper)|open.*first cartridge and squeeze|open.*cartridge and squeeze/.test(t))return pip("bulb");
+ if(/place.*tip into|position.*tip over/.test(t))return pip(/place.*tip into/.test(t)?"dip":"position");
+ if(/slowly release|aspirate|draw.*pipette/.test(t))return pip("draw");
+ if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
+ if(/dispense|add.*into.*well/.test(t))return pip("dispense");
+ if(/remove and discard.*pipette|wait for full absorption|let.*absorb/.test(t))return pip("absorb");
+ if(/new cartridge and use a new pipette|new cassette and pipette|fresh assay cartridges and transfer pipettes|two fresh assay cartridges/.test(t))
+  return show(title,kitChooser(),"Each QC level needs a NEW single-use cartridge and its own kit-supplied transfer pipette.");
+ if(/open and label|open a fresh|prepare a new cassette|open.*cartridge/.test(t))
+  return show(title,selectedMaterial("troponin",false),"Illustrated Troponin I cassette. Use the actual selected assay and check its expiration and assigned specimen well.");
+ if(/match the assay|identify.*new assay box|which assay reagent lot|cartridge.*lot|choose.*cassette|identify.*test kit|kit.*temperature|bring kit/.test(t))
+  return show(title,kitChooser(),"Verify the cartridge name and color band, lot, expiration, package integrity and required storage.");
+ if(/code chip|install.*chip|matching reagent/.test(t))
+  return show(title,chipSvg(),"Follow the MeterPro prompts to install the correct reagent or QC Sample CODE CHIP; remove and store it afterward.","chip");
+ if(/thaw|retrieve.*controls|invert.*control|gently invert each control/.test(t))
+  return show(title,qcControlsSvg(),"Use the correct Triage Total 5 control vials 1 and 2. Follow their lot-specific thaw and mixing instructions.");
+ if(/collect edta|blood sample|mixed blood/.test(t))
+  return show(title,A.mediaSvg("lavender"),"Gently invert the EDTA collection tube; verify test-specific specimen preparation and stability.");
+ if(/enter.*user id|select run test|power on|select patient sample|select qc sample|enter.*lot number|enter.*control lot|enter or scan the patient|enter.*mrn|confirm.*patient/.test(t))
+  return show(title,qc?qcControlsSvg():kitChooser(),"Use the actual MeterPro physical keypad and menu prompts to select the correct testing mode and enter required IDs.");
+ if(/level 1 cassette|insert.*level 1|insert.*level 2|insert.*cartridge|insert.*prepared|press enter to start/.test(t))
+  return show(title,selectedMaterial("troponin",true),"A disposable assay cartridge is inserted into the lower front test port after full absorption. Gently insert until it clicks, then press Enter as prompted.","reading");
+ if(/verify specimen type|selected analytes/.test(t))
+  return show(title,kitChooser(),"Select/confirm the requested analyte and specimen type when prompted. If not prompted, follow the configured assay menu.");
+ if(/qc level|qc.*result|both qc levels|both control results|both qc|review.*result|print|document|log|file|record|label the reagent box/.test(t))
+  return show(title,qc?qcControlsSvg():kitChooser(),"Check the internal and external QC status and print or record results in the authorized chart or QC log.","result");
+ if(/check.*qc|current.*qc status|confirm.*qc|confirm order|box for use|release box/.test(t))
+  return show(title,qc?qcControlsSvg():kitChooser(),"Patient testing should only proceed when required QC passes and the intended reagent lot is ready.");
+ if(/eject|store|return|discard/.test(t))
+  return show(title,qc?chipSvg():selectedMaterial("troponin",true),"Store or discard materials according to the specific kit, QC lot and site SOP.");
+ return show(title,qc?qcControlsSvg():kitChooser(),"Follow the actual MeterPro screen and the specific assay package insert for this action.");
 }
 const oldRender=A.render.bind(A);
 A.render=function(sec){
