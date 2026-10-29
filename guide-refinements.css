@@ -134,12 +134,11 @@
 .lc-piccolo-disc-pair .lc-visual{margin:0;min-width:0}
 .lc-piccolo-disc-pair .lc-visual-body{padding:7px}
 .lc-piccolo-disc-pair .lc-visual-body svg{max-height:255px}
-.lc-pic-screen-flow{display:grid;grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);align-items:center;gap:6px;width:100%}
+.lc-pic-screen-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:16px;width:100%}
 .lc-pic-screen-panel{display:flex;flex-direction:column;align-items:center;min-width:0;gap:8px;text-align:center}
 .lc-pic-screen-panel>strong{font-size:13px;color:#256a7f}
 .lc-pic-screen-panel svg{width:100%;max-width:415px;height:auto}
 .lc-pic-screen-panel>small{font-size:12px;line-height:1.4;color:#527b90}
-.lc-pic-screen-flow-arrow{font-size:31px;font-weight:850;color:#188e82}
 .lc-piccolo-screen-step .lc-visual-body{min-height:280px}
 
 /* Result interpretation */
@@ -190,8 +189,7 @@
  .procedure-flow .guide-detail-control,.procedure-flow .guide-mode-switch button{font-size:11px;min-height:40px;padding:9px}
  .lc-piccolo-disc-pair{grid-template-columns:1fr}
  .lc-pic-screen-flow{grid-template-columns:1fr}
- .lc-pic-screen-flow-arrow{transform:rotate(90deg);font-size:24px}
- .pxr-hero{padding:17px;align-items:flex-start}
+  .pxr-hero{padding:17px;align-items:flex-start}
  .pxr-reference-badge{display:none}
  .pxr-printout{padding:10px}
  .pxr-printout-paper{font-size:10px;padding:10px}
