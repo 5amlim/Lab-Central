@@ -104,20 +104,20 @@
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-qc-nav-v1" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
-  <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-serial-layout-v4" media="all">
+  <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-inset-warning-chevron-v5" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261029-twohour-cards-v1" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028-torch-v2" media="all">
 <style id="lab-central-shared-chevron-style">
 
 /* Shared chevron standard: same rounded-stroke SVG as Lab Calculator, consistent on all disclosures. */
 :root{--lab-central-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23233d48' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")}
-.pfux-route-arrow,.pf-step-chevron,.guide-group-chevron,.chevron,.pf-panel-chevron,.pf-workflow-chev,.pcr-reference-chevron,.clinitek-track-chevron,.lab-shared-chevron,.ad-chevron,.color-print-chevron,.pfux-cal-toolbar-actions [data-pf-browse] span,.pfux-jump>summary span,.pf-cal-material-details>summary span,.pcr-accordion>summary span{
+.pfux-route-arrow,.pf-step-chevron,.guide-group-chevron,.chevron,.pf-panel-chevron,.pf-workflow-chev,.pcr-reference-chevron,.clinitek-track-chevron,.lab-shared-chevron,.ad-chevron,.color-print-chevron,.pfux-cal-toolbar-actions [data-pf-browse] span,.pfux-jump>summary span,.pf-cal-material-details>summary span,.pcr-accordion>summary .lab-shared-chevron{
  flex:0 0 20px;width:20px;height:20px;min-width:20px;display:inline-block;align-self:center;
  background-image:var(--lab-central-chevron)!important;background-repeat:no-repeat!important;background-position:center!important;background-size:19px 19px!important;
  border:0!important;box-shadow:none!important;font-size:0!important;line-height:0!important;color:transparent!important;
  transform:rotate(0deg);transition:transform .16s ease;
 }
-.pfux-route[aria-expanded="true"] .pfux-route-arrow,.pf-step-collapse[open] .pf-step-chevron,.guide-group[open] .guide-group-chevron,.pf-panel-chevron.open,.pf-workflow-step[open] .pf-workflow-chev,.pcr-reference-accordion[open] .pcr-reference-chevron,.clinitek-track[open] .clinitek-track-chevron,.pfux-jump[open]>summary span,.pf-cal-material-details[open]>summary span,.pcr-accordion[open]>summary span,.pfux-cal-toolbar-actions [data-pf-browse][aria-expanded="true"] span,
+.pfux-route[aria-expanded="true"] .pfux-route-arrow,.pf-step-collapse[open] .pf-step-chevron,.guide-group[open] .guide-group-chevron,.pf-panel-chevron.open,.pf-workflow-step[open] .pf-workflow-chev,.pcr-reference-accordion[open] .pcr-reference-chevron,.clinitek-track[open] .clinitek-track-chevron,.pfux-jump[open]>summary span,.pf-cal-material-details[open]>summary span,.pcr-accordion[open]>summary .lab-shared-chevron,.pfux-cal-toolbar-actions [data-pf-browse][aria-expanded="true"] span,
 [aria-expanded="true"]>.chevron,[aria-expanded="true"] .chevron,[open]>.guide-group-chevron,[open]>.lab-shared-chevron,[open]>.ad-chevron,[open]>.color-print-chevron{
  transform:rotate(180deg)!important;
 }
@@ -242,8 +242,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028-tech-log-six-steps"></script>
 <script src="pathfast-calibration.js?v=20261029-restored-pouch-box-note-v11"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
-<script src="pathfast-interactive.js?v=20261029-serial-layout-v4"></script>
-<script src="pathfast-clinical.js?v=20261029-default-01-waste-v3"></script>
+<script src="pathfast-interactive.js?v=20261029-shared-fallback-chevron-v5"></script>
+<script src="pathfast-clinical.js?v=20261029-iv-open-chevron-v4"></script>
 <script src="equipment-art.js?v=20261029-coagsense-photo-v19"></script>
 <script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-sysmex-reference-v4"></script>
