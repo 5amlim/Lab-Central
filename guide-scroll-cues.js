@@ -5,9 +5,9 @@ const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-tr
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
-cue.setAttribute("aria-hidden","true");
-cue.innerHTML="<span>Scroll for more ↓</span>";
+cue.innerHTML="<button type=\"button\" aria-label=\"Scroll down for more guide content\">Scroll for more <span aria-hidden=\"true\">↓</span></button>";
 document.body.appendChild(cue);
+cue.querySelector('button').addEventListener('click',function(){window.scrollBy({top:Math.max(300,Math.round(window.innerHeight*.7)),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
 const initialized=new WeakSet();
 function updatePage(){
  const main=document.getElementById("mainContent");

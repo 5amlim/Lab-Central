@@ -11,8 +11,8 @@ const lanes=[
  {name:"QC 2",tone:"#e3f5ec",ink:"#19755e",well:"#a8e1c5"}
 ];
 const groups=[
-{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","181","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","183","LEVEL 3"]]},
-{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","181","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","183","LEVEL 3"]]},
+{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
 {id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad Liquichek D-dimer",catalog:"PF1051-KUS",vials:[["QC 1 · LANE 5","LEVEL LOW","27100","LOW"],["QC 2 · LANE 6","LEVEL 1","27101","LEVEL 1"]]}
 ];
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
@@ -83,6 +83,61 @@ function svgDiluent(){
  '<text x="'+(x+28)+'" y="73" text-anchor="middle" font-size="8" font-weight="900" fill="#2877a9">DILUENT</text>';}
  return out+'</svg>';
 }
+
+function cal2MixIllustration(){
+ function bottle(x,kind){
+  const powder=kind==="powder",diluent=kind==="diluent";
+  const label=powder?"CAL 2":diluent?"BLUE":"MIXED";
+  return '<g transform="translate('+x+',35)">'+
+    '<rect x="18" y="0" width="43" height="23" rx="5" fill="'+(diluent?"#3b98ca":"#dce3e9")+'" stroke="#94aab6" stroke-width="2"/>'+
+    '<rect x="21" y="23" width="37" height="81" rx="7" fill="#e7eef3" stroke="#93afbc" stroke-width="2"/>'+
+    (powder?'<path d="M26 94h27v7H26z" fill="#c7acd9"/>':
+    '<rect x="26" y="'+(diluent?61:53)+'" width="27" height="'+(diluent?40:48)+'" rx="3" fill="'+(diluent?"#70c4e9":"#b6b7e3")+'"/>')+
+    '<rect x="24" y="45" width="31" height="24" rx="2" fill="#fff" opacity=".95"/>'+
+    '<text x="40" y="60" font-size="9" font-weight="900" text-anchor="middle" fill="#536b95">'+label+'</text></g>';
+ }
+ const pair=["A","B"].map((key,i)=>'<g transform="translate('+(i*445)+',0)">'+
+  '<rect x="4" y="3" width="430" height="177" rx="12" fill="#f8fafc" stroke="#d0dfe8" stroke-width="2"/>'+
+  '<rect x="4" y="3" width="430" height="30" rx="12" fill="#edf3fa"/>'+
+  '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2 · VIAL '+key+'</text>'+
+  bottle(25,"powder")+bottle(156,"diluent")+bottle(328,"mixed")+
+  '<text x="137" y="101" font-size="29" text-anchor="middle" fill="#4b94b4" font-weight="800">+</text>'+
+  '<text x="287" y="101" font-size="30" text-anchor="middle" fill="#4b94b4" font-weight="850">→</text>'+
+  '<text x="65" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#6c6692">Powder</text>'+
+  '<text x="195" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#267da6">Blue diluent</text>'+
+  '<text x="368" y="164" font-size="11" font-weight="850" text-anchor="middle" fill="#546d98">Reconstituted</text></g>').join('');
+ return '<figure class="pf-cal2-mix-diagram"><header><strong>CAL 2 reconstitution</strong><span>Two separate preparations, A and B</span></header>'+
+  '<svg role="img" aria-label="CAL 2 powder vial A plus its own blue diluent makes CAL 2 A. Separately, powder vial B plus its own blue diluent makes CAL 2 B." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 890 190">'+pair+'</svg>'+
+  '<figcaption>Add the matching blue diluent to each CAL 2 powder vial separately. Use the current assay IFU for exact volumes, mixing and stability.</figcaption></figure>';
+}
+function cartridgePack(group){
+ const label=esc(group.label);
+ const six=Array.from({length:6},(_,i)=>{
+   const x=178+i*69;
+   return '<g><rect x="'+x+'" y="55" width="57" height="126" rx="7" fill="#889fac" stroke="#495d69" stroke-width="2"/>'+
+    '<rect x="'+(x+5)+'" y="62" width="47" height="112" rx="5" fill="#1c303a" stroke="#728b99"/>'+
+    '<rect x="'+(x+8)+'" y="74" width="41" height="15" rx="2" fill="#bc4e4b"/>'+
+    '<text x="'+(x+28)+'" y="84" font-size="7.5" fill="white" text-anchor="middle" font-weight="850">PATHFAST</text>'+
+    '<rect x="'+(x+12)+'" y="95" width="32" height="47" rx="2" fill="#293944" stroke="#637a82"/>'+
+    '<circle cx="'+(x+28)+'" cy="155" r="10" fill="#91adbd" stroke="#d6e4eb" stroke-width="2"/>'+
+    '<text x="'+(x+28)+'" y="205" text-anchor="middle" font-size="13" font-weight="900" fill="#47657d">'+(i+1)+'</text></g>';
+ }).join('');
+ return '<figure class="pf-cartridge-pack"><header><strong>Assay cartridge pack</strong>'+
+  '<span>6 CARTRIDGES · '+label+'</span></header>'+
+  '<svg role="img" aria-label="Foil PATHFAST '+label+' pack containing six individual assay cartridges" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 290">'+
+  '<defs><linearGradient id="pf-kit-foil"><stop stop-color="#c7d2d8"/><stop offset=".45" stop-color="#f5f8fa"/><stop offset="1" stop-color="#bbc9ce"/></linearGradient></defs>'+
+  '<ellipse cx="390" cy="275" rx="250" ry="10" fill="#dbe4e9"/>'+
+  '<path d="M156 58L171 19H608L622 58V136H156Z" fill="#202529" stroke="#151b20" stroke-width="5"/>'+
+  '<path d="M170 28H606V63H170Z" fill="#34393b" stroke="#747f84" stroke-width="3"/>'+
+  '<path d="M147 114Q392 99 632 114L639 259Q633 273 619 272H166Q152 272 145 259Z" fill="url(#pf-kit-foil)" stroke="#93a9b5" stroke-width="3"/>'+
+  six+
+  '<rect x="191" y="196" width="401" height="40" rx="4" fill="#262d31"/>'+
+  '<text x="208" y="223" fill="white" font-family="Arial,sans-serif" font-size="20" font-weight="900" letter-spacing="2">PATHFAST</text>'+
+  '<text x="572" y="222" text-anchor="end" fill="white" font-family="Arial,sans-serif" font-size="18" font-weight="800">'+label+'</text>'+
+  '<rect x="223" y="242" width="340" height="16" rx="4" fill="#f5f7f8" stroke="#bac8d0"/>'+
+  '<text x="393" y="253" text-anchor="middle" font-size="10" font-weight="800" fill="#455e6c">VERIFY LOT AND EXPIRATION ON PACKAGE</text></svg>'+
+  '<figcaption>Illustrated from the supplied PATHFAST foil-pack photo. Retrieve six matching '+label+' cartridges and verify the actual assay and expiration.</figcaption></figure>';
+}
 function svgQC(kind){
  const tint=kind==="cardiac"?"#ae3d49":"#855a9b",label=kind==="cardiac"?"CARDIAC":"D-DIMER";
  let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two Bio-Rad '+label+' control vials, quality control materials with assay-specific level choices" xmlns="http://www.w3.org/2000/svg">'+defs();
@@ -100,17 +155,13 @@ function material(label,tag,description,svg,color){
  '<div class="pf-material-detail"><span class="pf-material-tag">'+esc(tag)+'</span><h4>'+esc(label)+'</h4><p>'+esc(description)+'</p></div></article>';
 }
 function status(group){
- return '<div class="pf-subtitle">CAL/QC menu status</div>'+
- '<div class="pf-analyte-states">'+group.analytes.map(function(a){
-   return '<div class="pf-analyte-row"><strong>'+esc(a)+'</strong>'+
-   '<div class="pf-state-strip"><div class="pf-state-box"><span class="pf-state-pill overdue">'+esc(a)+'</span><div><b>Pink · locked</b><small>28 days reached</small></div></div>'+
-   '<span class="pf-state-arrow" aria-hidden="true">→</span>'+
-   '<div class="pf-state-box"><span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Gray · ready</b><small>Calibration and QC accepted</small></div></div></div></div>';
- }).join("")+'</div>';
+ return '<div class="pf-subtitle">Verify analyzer calibration and QC status</div>'+
+  '<div class="pf-analyte-states">'+group.analytes.map(function(a){
+    return '<div class="pf-analyte-row"><strong>'+esc(a)+'</strong><div class="pf-state-box">'+
+    '<span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Check the instrument</b>'+
+    '<small>Confirm the analyzer status and acceptable QC results before patient testing.</small></div></div></div>';
+  }).join('')+'</div>';
 }
-
-/* Bottle artwork follows the cap, glass, Liquichek label and level on the photographed vials.
-   Photos are local to this repository; both hover and keyboard focus reveal them. */
 function qcVialArt(group,v,index){
  const d=group.id==="ddimer", low=d&&index===0;
  const cap=low?"#0ab4b4":index===1&&!d?"#26262b":"#f7f8f9";
@@ -155,7 +206,7 @@ function qcGallery(group){
   '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+'). QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Confirm manufacturer compatibility and use lot-specific QC ranges for the installed assay.</p></div>';
 }
 function panelContent(group){
- return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+status(group)+
+ return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+cartridgePack(group)+status(group)+
  '<div class="pf-freezer" style="background:#edf7f2;border-color:#d6e8dd;color:#366a56"><span>◷</span><span>PATHFAST reagent kits and calibrators: <strong>refrigerated at 2–8°C</strong>. Bio-Rad QC vials: <strong>frozen at −20 to −70°C</strong>. Confirm current lot-specific instructions.</span></div>'+
  '<h3 class="pf-material-heading">Calibration materials <small>Included in the refrigerated reagent box</small></h3>'+
  '<div class="pf-material-grid">'+
@@ -163,16 +214,16 @@ function panelContent(group){
  material('CAL 2','2 GLASS VIALS','Both vials contain lyophilized powder. Reconstitute with matching diluent before loading lanes 3 and 4.',svgCal2(),'cal2')+
  material('Blue liquid diluent','2 BUFFER VIALS','Combine the supplied blue liquid diluent with each CAL 2 powder vial using the assay-specific mixing directions and volume.',svgDiluent(),'diluent')+
  '</div>'+
- '<div class="pf-mix-flow" aria-label="Reconstitution: two separate CAL 2 powder vials, each mixed with its corresponding blue diluent vial"><span>CAL 2 powder <b>× 2</b></span><strong>+</strong><span>Blue diluent <b>× 2</b></span><strong>→</strong><span class="pf-mix-result">Reconstituted CAL 2 <b>× 2</b></span></div>'+
+ cal2MixIllustration()+
  '<h3 class="pf-material-heading">Bio-Rad quality controls <small>QC 1 and QC 2</small></h3>'+qcGallery(group)+'</div>';
 }
 const workflow=[
- ['Check the analyte status','Select the assay to calibrate. After 28 days, its menu pill turns pink and patient testing is locked.'],
+ ['Check the analyte status','Verify assay readiness on the actual analyzer and do not test patients if calibration or QC is due or rejected.'],
  ['Confirm reagent lot and enter CAL/QC','If new lot, scan the kit MC ENTRY card as instructed. For existing lot, confirm reagent lot and select CAL/QC for the applicable assay.'],
  ['Prepare calibrators and controls','Use CAL 1 from the reagent box, reconstitute the two CAL 2 powder vials with their matching blue diluents, and select the correct Bio-Rad cardiac or D-dimer QC materials.'],
  ['Load the six-lane rack','CAL 1, CAL 1, CAL 2, CAL 2, QC 1, QC 2. Use sample preparation and volumes from the approved assay insert.'],
  ['Run the six cartridges','Slide cartridges into the rack until they click, insert rack and tips, close the cover and follow the analyzer START prompts.'],
- ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. The analyte pill turns gray after acceptable QC; if still pink, do not test patients.']
+ ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. Verify actual analyzer readiness before patient testing.']
 ];
 
 function storageSymbol(type){
@@ -271,7 +322,7 @@ function render(){
    ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="'+(currentStep===i+1?'active':'')+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+label+'</button>').join('')+'</div>':'')+
    '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/total*100)+'%"></span></div>';
   h+=step(1,'Gather assay cartridges, calibrators and Bio-Rad controls','Confirm the exact QC levels and vials for '+x,
-      '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
+      '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching six-cartridge assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
       panelContent(group)+
       '<p class="pf-workflow-note">Bio-Rad control material: use the current lot-specific insert for frozen storage, thawing, mixing, open-vial stability and acceptable ranges. For BNP/NT-proBNP controls, check the latest revised insert. Do not assume all control products use the same preparation.</p>');
   h+=step(2,'Prepare CAL 1, both CAL 2 vials and the two QC controls','Separate the reagent-kit materials from the Bio-Rad controls',
@@ -279,7 +330,7 @@ function render(){
       material('CAL 1 · ready-to-use','REFRIGERATED KIT','Use CAL 1 as supplied; assign to lanes 1 and 2.',svgCal1(),'cal1')+
       material('Two CAL 2 powder vials','REFRIGERATED KIT','Reconstitute each vial separately with its matching blue liquid diluent using the approved assay insert.',svgCal2(),'cal2')+
       material('Two blue diluents','REFRIGERATED KIT','Use one matching diluent vial per CAL 2 powder vial; confirm required volume and stability.',svgDiluent(),'diluent')+
-      '</div><h3 class="pf-material-heading">Bio-Rad QC vials · '+esc(group.qc)+'</h3>'+qcGallery(group)+
+      '</div>'+cal2MixIllustration()+'<h3 class="pf-material-heading">Bio-Rad QC vials · '+esc(group.qc)+'</h3>'+qcGallery(group)+
       '<div class="pf-qc-prep-emphasis"><strong>Prepare before loading cartridges.</strong><span>Thaw and gently mix each control as its lot-specific insert specifies; check for unsuitable material. Keep CAL 1, CAL 2 A, CAL 2 B, QC 1 and QC 2 separated and identified.</span></div>');
   h+=step(3,'Seat the cartridges in the upright six-lane rack','Place metal rack in clear loading base and insert six assay cartridges',
       laneMap+
@@ -296,7 +347,7 @@ function render(){
   h+=step(7,'Log in and check assay status','Select operator credentials, then inspect the assay pill colors',
       window.LAB_PATHFAST_SCREEN.login()+
       window.LAB_PATHFAST_SCREEN.home(group.label,"cal")+
-      '<p class="pf-workflow-note">Pink indicates an unavailable or expired calibration/QC state; gray indicates ready. Status alone does not replace the actual CAL/QC result review.</p>');
+      '<p class="pf-workflow-note">Verify the actual assay readiness on the analyzer. A locked or unavailable assay must not be used for patient testing until required calibration and QC are accepted.</p>');
   h+=step(8,'Return to the operation menu','Use BACK, then find CAL/QC/SAMPLE or CAL/QC',
       window.LAB_PATHFAST_SCREEN.home(group.label,"cal","back")+
       window.LAB_PATHFAST_SCREEN.menu("cal")+

@@ -175,3 +175,11 @@
 .pfs-qc-route:hover{background:#0e716b}
 .pfs-qc-route:focus-visible{outline:3px solid #64baaf;outline-offset:2px}
 @media print{.pfs-pink-help{background:#fff!important}.pfs-pink-emphasis{border:1px solid #c77798}}
+
+/* Safety note remains outside the depicted analyzer screen, not in its UI. */
+.pfs-external-readiness-note{max-width:1100px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin:12px auto 21px;padding:15px 17px;background:#f6fafc;border:1px solid #cbdfe8;border-radius:12px;color:#36586c}
+.pfs-external-readiness-note>div{display:flex;flex-direction:column;gap:5px}
+.pfs-external-readiness-note strong{font-weight:900;font-size:13px}
+.pfs-external-readiness-note span{font-size:12px;line-height:1.6}
+.pfs-external-readiness-note .pfs-qc-route{flex:none}
+@media(max-width:750px){.pfs-external-readiness-note{flex-direction:column;align-items:stretch}.pfs-external-readiness-note .pfs-qc-route{align-self:flex-start}}

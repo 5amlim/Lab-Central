@@ -309,3 +309,16 @@
 .pf-calibration-guide .pf-analyte-row .pf-state-pill{font-size:13px;font-weight:900;min-height:39px;padding:10px 14px}
 @media(max-width:700px){.pf-calibration-guide .pf-qc-vials{grid-template-columns:1fr}.pf-calibration-guide .pf-qc-vial{padding:14px}.pf-calibration-guide .pf-qc-slot{font-size:13px}.pf-calibration-guide .pf-qc-lane-item{grid-template-columns:32px 75px minmax(0,1fr)}}
 @media print{.pf-qc-image-control{display:none}.pf-qc-photo-popover{display:none!important}}
+
+/* PATHFAST six-cartridge pack and separate CAL2 powder + blue diluent preparations */
+.pf-calibration-guide .pf-cartridge-pack,.pf-calibration-guide .pf-cal2-mix-diagram{display:block;margin:14px 0 21px;border:1px solid #d2e2eb;border-top:3px solid #39829b;border-radius:14px;overflow:hidden;background:#fff}
+.pf-calibration-guide .pf-cal2-mix-diagram{border-top-color:#8d70b7}
+.pf-calibration-guide .pf-cartridge-pack header,.pf-calibration-guide .pf-cal2-mix-diagram header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:13px 17px;background:#edf5f8}
+.pf-calibration-guide .pf-cartridge-pack header strong,.pf-calibration-guide .pf-cal2-mix-diagram header strong{font-size:15px;color:#305773;font-weight:900}
+.pf-calibration-guide .pf-cartridge-pack header span{display:inline-flex;padding:8px 13px;border:1px solid #c1d8e2;background:#fff;border-radius:999px;font-size:12px;font-weight:900;color:#286b83}
+.pf-calibration-guide .pf-cal2-mix-diagram header span{color:#657d93;font-size:12px;font-weight:800}
+.pf-calibration-guide .pf-cartridge-pack>svg{display:block;width:100%;max-width:810px;height:auto;max-height:320px;margin:8px auto}
+.pf-calibration-guide .pf-cal2-mix-diagram>svg{display:block;width:100%;height:auto;max-height:260px}
+.pf-calibration-guide .pf-cartridge-pack figcaption,.pf-calibration-guide .pf-cal2-mix-diagram figcaption{padding:12px 16px 15px;border-top:1px solid #e7eff3;font-size:12px;color:#527184;line-height:1.65}
+@media(max-width:720px){.pf-calibration-guide .pf-cal2-mix-diagram{overflow-x:auto}.pf-calibration-guide .pf-cal2-mix-diagram>svg{min-width:650px}}
+@media print{.pf-calibration-guide .pf-cartridge-pack,.pf-calibration-guide .pf-cal2-mix-diagram{break-inside:avoid}}

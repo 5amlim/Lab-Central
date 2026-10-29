@@ -756,3 +756,14 @@
  .pfux-stage-nav .pfux-stage-name{font-size:12.5px}
  .instrument-overview-links .mini-feature{flex:1 1 100%;min-width:0}
 }
+
+/* Clearly visible, clickable down-scroll cue for long instrument steps. */
+.lc-page-scroll-cue{height:96px;padding-bottom:12px;background:linear-gradient(180deg,transparent,rgba(245,250,252,.85) 48%,#f5fafc);pointer-events:none;z-index:90}
+.lc-page-scroll-cue>button{pointer-events:auto;display:inline-flex;align-items:center;gap:13px;min-height:52px;padding:11px 21px;border-radius:999px;border:2px solid #0e697c;background:#126d80;color:white;font-family:inherit;font-size:15px;font-weight:900;box-shadow:0 7px 19px #164e6745;cursor:pointer}
+.lc-page-scroll-cue>button span{display:grid;place-items:center;border-radius:50%;width:29px;height:29px;background:#ffffff30;font-size:22px}
+.lc-page-scroll-cue>button:hover{background:#0b546a}
+.lc-page-scroll-cue>button:focus-visible{outline:3px solid #50b1c5;outline-offset:3px}
+.lc-scroll-cue-bottom{height:66px;padding-bottom:10px}
+.lc-scroll-cue-bottom>span{padding:10px 16px;background:#146c7c;border:2px solid #0c5f72;color:#fff;font-size:13px;font-weight:900;box-shadow:0 5px 15px #164d6038}
+@media(max-width:650px){.lc-page-scroll-cue{height:82px;padding-bottom:9px}.lc-page-scroll-cue>button{min-height:45px;font-size:13px}}
+@media print{.lc-page-scroll-cue{display:none!important}}

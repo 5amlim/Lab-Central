@@ -20,12 +20,9 @@ function nav(focus){
 }
 
 function foot(text){return '<div class="pfs-footer"><span>◀ BACK</span><span>'+e(text||"ASSAY")+'</span></div>';}
-function pills(selected,locked){
+function pills(){
  return '<div class="pfs-screen-meta">REAGENT / CALIBRATION / QC STATUS</div>'+
- '<div class="pfs-status-pills">'+assays.map(function(a){
- const pink=(locked&&a===selected)||(!locked&&a===assays[0]);
- return '<span class="pfs-real-pill '+(pink?'locked':'available')+'">'+e(a)+'</span>';
- }).join('')+'</div>';
+ '<div class="pfs-status-pills">'+assays.map(function(a){return '<span class="pfs-real-pill available">'+e(a)+'</span>';}).join('')+'</div>';
 }
 function login(mode){
  return frame("LOG-IN",mode==="patient"?"Step 6 · Operator access":"Step 7 · Operator access",
@@ -37,17 +34,15 @@ function login(mode){
 }
 
 function home(analyte,mode,focus){
- const cal=mode!=="patient",back=focus==="back";
- const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills(cal?analyte:"",cal)+
- '<div class="pfs-status-callout '+(cal?'overdue':'ready')+'">'+
- (cal?'<strong>Selected assay: <em class="pfs-pink-emphasis">pink</em></strong><span>CAL/QC expired or locked. Other assays shown in gray.</span>':
- '<strong>EXAMPLE: hs-Troponin I is <em class="pfs-pink-emphasis">pink</em></strong><span>Do not run a locked assay. Check its CAL/QC status and complete required QC before patient testing.</span>')+'</div>'+
-
- '<div class="pfs-pink-help"><span><strong><em class="pfs-pink-emphasis">Pink</em> means CAL/QC attention required.</strong> A pink assay cannot be used for patient testing until the required QC is acceptable.</span><button class="pfs-qc-route" type="button" data-gotab="cal-qc" aria-label="Open PATHFAST Calibration and QC">Open Calibration + QC ↗</button></div>'+
+ const back=focus==="back";
+ const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills()+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
- return frame("ASSAY/HOME",back?(cal?"Step 8 · Select BACK":"Step 8 · Select BACK"):(cal?"Step 7 · Check assay status":"Step 7 · Check assay status"),body,back?"SELECT BACK TO DISPLAY ASSAY MENU.":"CHECK CAL/QC STATUS BEFORE TESTING.");
+ const note='<div class="pfs-external-readiness-note"><div><strong>Verify assay readiness on the actual analyzer.</strong>'+
+ '<span>The gray pills are examples only. If an assay is locked or unavailable, stop testing and complete required calibration and QC.</span></div>'+
+ '<button type="button" class="pfs-qc-route" data-gotab="cal-qc">Calibration + QC →</button></div>';
+ return frame("ASSAY/HOME",back?"Step 8 · Select BACK":"Step 7 · Check assay status",body,
+  back?"ASSAY/HOME":"REAGENT STATUS")+note;
 }
-
 function menu(mode){
  const cal=mode!=="patient",options=["SAMPLE","QC/SAMPLE","CAL/QC/SAMPLE"];
  const rows=options.map(function(x){const selected=x===(cal?"CAL/QC/SAMPLE":"SAMPLE");return '<div class="pfs-assay-option '+(selected?'target pfs-click-target':'')+'"><span>'+x+'</span>'+(selected?cue("TAP THIS OPTION"):'')+'</div>';}).join('');

@@ -100,8 +100,8 @@
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
   <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
-  <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-qc-photo-v1" media="all">
-  <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-qc-link-v4" media="all">
+  <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
+  <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-neutral-home-v3" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-qc-nav-v1" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-compact-rn-v2" media="all">
@@ -236,8 +236,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261028-regional-photo-guide"></script>
 <script src="quality-reference.js?v=20261028-triage-clean"></script>
 <script src="operations-guides.js?v=20261028-tech-log-six-steps"></script>
-<script src="pathfast-calibration.js?v=20261029-qc-photo-v1"></script>
-<script src="pathfast-screen-guide.js?v=20261029-pink-qc-link-v5"></script>
+<script src="pathfast-calibration.js?v=20261029-sixpack-mix-v3"></script>
+<script src="pathfast-screen-guide.js?v=20261029-neutral-home-v3"></script>
 <script src="pathfast-interactive.js?v=20261029-compact-timing-v2"></script>
 <script src="pathfast-clinical.js?v=20261029-guided-rn-v2"></script>
 <script src="equipment-art.js?v=20261029-unified-specimen-v17"></script>
@@ -639,10 +639,8 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
   guideDetailNodes(entry.leading,0,sec,groupId||root.text,!displayedVisual)+
   guideDetailNodes(root.children||[],0,sec,groupId||root.text,!displayedVisual)+
   guideDetailNodes(entry.notes,0,sec,groupId||root.text,!displayedVisual);
- const pathfastPillWarning=sec?.id==='pathfast'&&groupId==='patient'&&/review reagent-status pills/i.test(root.text);
- const highlightedContent=pathfastPillWarning?content.replace(/\bpink\b/gi,'<strong class="pfs-pink-emphasis">pink</strong>'):content;
- const warningLink=pathfastPillWarning?'<div class="pfs-pink-help pf-guide-qc-note"><span><strong class="pfs-pink-emphasis">Pink</strong> means the assay is not available for patient testing until its required CAL/QC is completed and accepted. This is an example, not the actual analyzer status.</span><button type="button" class="pfs-qc-route" data-gotab="cal-qc">Open Calibration + QC →</button></div>':'';
- const stepBody=displayedVisual+(highlightedContent?(sysmexControl?highlightedContent:'<div class="guide-card-body">'+highlightedContent+'</div>'):'')+warningLink;
+ const isPathfastStatus=sec?.id==='pathfast'&&groupId==='patient'&&/review reagent-status pills/i.test(root.text);
+ const stepBody=displayedVisual+(!isPathfastStatus&&content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  const navClass=headerNav?' guide-card-has-nav':'';
  const nav=headerNav?'<div class="guide-card-header-actions">'+headerNav+'</div>':'';
@@ -1207,6 +1205,6 @@ render();
 })();
 
 </script>
-<script src="guide-scroll-cues.js?v=20261029-unified-more-sections-v4"></script>
+<script src="guide-scroll-cues.js?v=20261029-visible-button-v3"></script>
 </body>
 </html>
