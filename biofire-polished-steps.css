@@ -1,0 +1,33 @@
+/* Polished BioFire TORCH / SPOTFIRE illustrated procedure stages.
+   One prominent visual per stage, compact instructions, source link below. */
+.bf-polished{--bf-edge:#d7e5eb;--bf-tone:#eaf5f7;--bf-ink:#276a7b;--bf-mark:#42869b;margin:14px 0 18px;background:#fff;border:1px solid var(--bf-edge);border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(32,69,86,.035)}
+.bf-polished-blue{--bf-tone:#e9f4fb;--bf-ink:#226f9b;--bf-mark:#338bb9}
+.bf-polished-red{--bf-tone:#fbeef0;--bf-ink:#a84057;--bf-mark:#bf5565}
+.bf-polished-green{--bf-tone:#eaf7f4;--bf-ink:#147a70;--bf-mark:#1b8a79}
+.bf-polished-top{display:flex;align-items:center;gap:9px;padding:10px 15px;border-bottom:1px solid var(--bf-edge);background:#f5fafb;flex-wrap:wrap}
+.bf-polished-chip{display:inline-flex;align-items:center;gap:6px;border-radius:7px;background:var(--bf-tone);color:var(--bf-ink);font-size:10px;font-weight:850;letter-spacing:.04em;line-height:1.1;padding:7px 9px;text-transform:uppercase}
+.bf-polished-chip.system{background:#e9f0f4;color:#46687b}
+.bf-polished-inner{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(255px,.8fr);gap:0;min-width:0}
+.bf-polished-media{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;background:linear-gradient(135deg,#fcfefe,#f3f8fa);border-right:1px solid var(--bf-edge);padding:16px}
+.bf-polished-svg{width:100%;min-width:0;display:flex;align-items:center;justify-content:center}
+.bf-polished-svg svg{display:block;width:min(100%,760px);height:auto;max-height:320px}
+.bf-polished-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;justify-content:center;gap:10px;width:100%;min-width:0}
+.bf-polished-pair>.bf-polished-svg,.bf-polished-pair>.bf-photo{height:100%;min-width:0;border-radius:10px;background:#fff;border:1px solid #e1ebef;overflow:hidden}
+.bf-polished-pair>.bf-polished-svg{padding:6px}
+.bf-photo{display:flex;align-items:center;justify-content:center;width:100%;min-height:135px;min-width:0;background:#fff;border-radius:10px}
+.bf-photo img{display:block;object-fit:contain;width:100%;max-height:285px;max-width:100%;height:auto}
+.bf-polished-credit{color:#728997;font-size:10px;text-align:center;line-height:1.4}
+.bf-polished-instruction{display:flex;flex-direction:column;gap:13px;min-width:0;padding:18px 20px}
+.bf-polished-instruction h4{font-size:17px;line-height:1.3;letter-spacing:-.01em;color:#2c5165;font-weight:860;margin:0}
+.bf-polished-points{display:flex;flex-direction:column;gap:10px}
+.bf-polished-point{display:grid;grid-template-columns:8px minmax(0,1fr);align-items:start;column-gap:10px;color:#4b6979;font-size:13px;line-height:1.5}
+.bf-polished-point-dot{width:6px;height:6px;margin-top:7px;border-radius:50%;background:var(--bf-mark)}
+.bf-polished-alert{border-left:3px solid var(--bf-mark);background:var(--bf-tone);border-radius:0 7px 7px 0;color:#4d6673;padding:11px 12px;font-size:12px;line-height:1.5}
+.bf-polished-alert strong{font-weight:850;color:var(--bf-ink)}
+.bf-polished-source{color:#247a90;font-size:12px;font-weight:750;text-decoration:underline;text-underline-offset:2px;margin-top:auto;align-self:start}
+.bf-polished-source:hover{color:#135d72}
+.bf-polished-footer{margin:0;border-top:1px solid var(--bf-edge);background:#f8fbfc;padding:10px 15px;color:#647d8b;font-size:11px;line-height:1.5}
+.bf-polished-footer a{color:#246f87;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:920px){.bf-polished-inner{grid-template-columns:1fr}.bf-polished-media{border-right:0;border-bottom:1px solid var(--bf-edge);padding:14px}.bf-polished-instruction{padding:16px}.bf-polished-svg svg{max-height:310px}}
+@media(max-width:520px){.bf-polished{margin:9px 0 13px;border-radius:12px}.bf-polished-inner{display:block}.bf-polished-top{padding:9px 11px}.bf-polished-chip{font-size:9px;padding:6px 8px}.bf-polished-media{padding:9px;gap:5px}.bf-polished-instruction{padding:13px;gap:10px}.bf-polished-instruction h4{font-size:16px}.bf-polished-pair{grid-template-columns:1fr;gap:9px}.bf-polished-pair>.bf-polished-svg svg{max-height:200px}.bf-polished-pair>.bf-photo{max-height:190px}.bf-polished-pair>.bf-photo img{max-height:190px}.bf-polished-point{font-size:12.5px}.bf-polished-credit{font-size:9px}}
+@media print{.bf-polished{break-inside:avoid;box-shadow:none}.bf-polished-inner{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}.bf-polished-media{border-bottom:0;border-right:1px solid var(--bf-edge)}.bf-polished-photo,.bf-polished-svg{break-inside:avoid}.bf-polished-instruction{padding:11px}}
