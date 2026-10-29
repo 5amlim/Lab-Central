@@ -248,6 +248,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-visual-corrections-20261029.js?v=3"></script>
 <script src="lab-guide-polish.js?v=20261029-stage-images-v1"></script>
 <script src="sysmex-focused.js?v=20261029-patient-v2"></script>
+<script src="clinitek-focused.js?v=20261029-urine-v1"></script>
 <script src="biofire-step-refinement.js?v=20261029-3b-3d-v1"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
 <script>
@@ -505,16 +506,16 @@ function guideStepData(nodes){
  if(!steps.length)steps.push({root:{kind:'step',text:'Reference notes',children:nodes},leading:[],notes:[]});
  return steps;
 }
-function guideDetailNodes(nodes,depth,sec,rootTitle){
+function guideDetailNodes(nodes,depth,sec,rootTitle,showInline=true){
  depth=depth||0;
  return nodes.map(function(n){
   if(n.kind==='note'){
    const urgent=/^(IMPORTANT|WARNING|DO NOT|A\) DO NOT|B\) DO NOT)/i.test(n.text);
    return '<aside class="guide-note'+(urgent?' urgent':'')+'">'+markText(n.text)+'</aside>';
   }
-  const stepPicture=sec&&window.LAB_EQUIPMENT_ART?.inlineKitVisual?window.LAB_EQUIPMENT_ART.inlineKitVisual(sec,n.text,depth,rootTitle):'';
+  const stepPicture=showInline&&sec&&window.LAB_EQUIPMENT_ART?.inlineKitVisual?window.LAB_EQUIPMENT_ART.inlineKitVisual(sec,n.text,depth,rootTitle):'';
   if(n.children&&n.children.length){
-   return '<details class="guide-group" open><summary><span class="guide-group-tag" aria-hidden="true">'+(depth===0?'›':'+')+'</span><span class="guide-group-title">'+markText(n.text)+'</span><span class="guide-group-chevron" aria-hidden="true"></span></summary><div class="guide-group-body">'+stepPicture+guideDetailNodes(n.children,depth+1,sec,rootTitle)+'</div></details>';
+   return '<details class="guide-group" open><summary><span class="guide-group-tag" aria-hidden="true">'+(depth===0?'›':'+')+'</span><span class="guide-group-title">'+markText(n.text)+'</span><span class="guide-group-chevron" aria-hidden="true"></span></summary><div class="guide-group-body">'+stepPicture+guideDetailNodes(n.children,depth+1,sec,rootTitle,showInline)+'</div></details>';
   }
   return '<div class="guide-line"><span class="guide-line-dot" aria-hidden="true"></span><div>'+markText(n.text)+stepPicture+'</div></div>';
  }).join('');
@@ -529,20 +530,27 @@ function guideStepTitle(parts){
 }
 function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupId=''){
  const root=entry.root;
- const sysmexControl=sec&&sec.id==='sysmex'&&groupId==='daily-qc'&&/^Grab the QC controls/i.test(root.text);
- const content=sysmexControl&&window.LAB_QC_GUIDE?.controlNotes?window.LAB_QC_GUIDE.controlNotes():guideDetailNodes(entry.leading,0,sec,groupId||root.text)+guideDetailNodes(root.children||[],0,sec,groupId||root.text)+guideDetailNodes(entry.notes,0,sec,groupId||root.text);
  const title=guideStepTitle(guideStepParts(entry,sec));
+ const sysmexControl=sec&&sec.id==='sysmex'&&groupId==='daily-qc'&&/^Grab the QC controls/i.test(root.text);
+ // Exactly one authoritative illustration source per main step. This prevents
+ // older inline disc art, wrong specimen fallback, and redundant kit views.
  const piccoloVisual=sec&&sec.id==='piccolo'&&window.LAB_GUIDE_POLISH?.piccolo?window.LAB_GUIDE_POLISH.piccolo(root.text,groupId):'';
- const workflowVisual=sec&&sec.id!=='piccolo'&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
- const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
- const qcScreenVisual=sec&&sec.id!=='piccolo'&&window.LAB_QC_GUIDE?.qcClickStep?window.LAB_QC_GUIDE.qcClickStep(sec,groupId,root.text):'';
- const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
- const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
- const primaryVisual=visualizer?visualizer(index):'';
+ const clinitekFocus=sec&&sec.id==='clinitek'&&window.LAB_CLINITEK_FOCUSED?.render?window.LAB_CLINITEK_FOCUSED.render(root.text,groupId):'';
  const sysmexFocus=sec&&sec.id==='sysmex'&&window.LAB_SYSMEX_FOCUSED?.render?window.LAB_SYSMEX_FOCUSED.render(root.text,groupId):'';
- const existingVisual=sysmexFocus||(sec&&sec.id==='piccolo'?piccoloVisual+qcPrintVisual:primaryVisual+qcScreenVisual+qcPrintVisual+qualityStep+biofireStep+workflowVisual);
- const fallbackVisual=!existingVisual&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
- const stepBody=existingVisual+fallbackVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
+ const primaryVisual=visualizer?visualizer(index):'';
+ const qcScreenVisual=sec&&window.LAB_QC_GUIDE?.qcClickStep?window.LAB_QC_GUIDE.qcClickStep(sec,groupId,root.text):'';
+ const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
+ const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
+ const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
+ const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
+ const priorityVisual=clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||workflowVisual;
+ const fallbackVisual=!priorityVisual&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
+ const displayedVisual=priorityVisual||fallbackVisual;
+ const content=sysmexControl&&window.LAB_QC_GUIDE?.controlNotes?window.LAB_QC_GUIDE.controlNotes():
+  guideDetailNodes(entry.leading,0,sec,groupId||root.text,!displayedVisual)+
+  guideDetailNodes(root.children||[],0,sec,groupId||root.text,!displayedVisual)+
+  guideDetailNodes(entry.notes,0,sec,groupId||root.text,!displayedVisual);
+ const stepBody=displayedVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  if(isPathfast)return '<details class="guide-card pf-step-collapse" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true"></span></summary><div class="pf-step-collapse-body">'+stepBody+'</div></details>';
  return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+stepBody+'</article>';
