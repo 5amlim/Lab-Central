@@ -92,17 +92,17 @@ function physicalStep(i){
  const stages=[
   ["01","RETRIEVE CARTRIDGES AND PREPARE SPECIMEN","Bring out only the needed assay cartridges when ready; check the assay and expiration. Gently mix the collected lithium-heparin specimen and inspect for clots.","retrieve"],
   ["02","PREPARE METAL RACK AND LOAD CARTRIDGES","Remove the metal six-slot rack from the idle analyzer, set it securely in the clear loading base, then push each required cartridge into its matching rack lane until fully seated.","setup"],
-  ["03","DISPENSE PATIENT SAMPLE","With the cartridges supported in the rack, transfer the assay-specified volume of freshly mixed whole blood or plasma into each clear front sample well. Fill to the indicated mark; avoid bubbles.","dispense"],
-  ["04","RETURN RACK AND LOAD DISPOSABLE TIPS","Seat the loaded rack back into PATHFAST; place a new approved pipette tip in the holder for each occupied lane and close the analyzer cover.","tips"]
+  ["03","DISPENSE PATIENT SAMPLE","Use the correct assay volume and transfer pipette. Deliver mixed lithium-heparin whole blood or plasma into the clear front sample well, confirm specimen fills the molded dome at the bottom to the fill mark, and avoid bubbles. Never add specimen to the round detection well.","dispense"],
+  ["04","RETURN RACK AND LOAD DISPOSABLE TIPS","Return the sample-loaded rack to the analyzer. Insert a new tip in each matching active tip holder, confirm the center waste-tip box is seated, then close the cover.","tips"]
  ];
  const stage=stages[i]||stages[0];
  const art=window.LAB_EQUIPMENT_ART?.pathfastActionVisual;
  const images=stage[3]==="setup"?(art?art("base","patient")+art("rack-empty","patient"):""):
-  stage[3]==="tips"?(art?art("rack","patient")+art("tips","patient"):""):(art?art(stage[3],"patient"):"");
+  stage[3]==="tips"?(art?art("rack","patient")+art("tips","patient")+art("assembled","patient"):""):(art?art(stage[3],"patient"):"");
  return '<section class="pfs-reference pfs-prep-reference pf-prep-focused" aria-label="PATHFAST physical preparation step '+(i+1)+'">'+
  '<div class="pfs-heading"><strong>PATHFAST · PHYSICAL PREPARATION</strong><span>Preparation '+(i+1)+' of 4 · Before screen navigation</span></div>'+
  '<div class="pf-prep-focus-head"><span class="pfs-prep-number">'+stage[0]+'</span><div><strong>'+stage[1]+'</strong><p>'+stage[2]+'</p></div></div>'+
- '<div class="pf-prep-illustrations'+(stage[3]==="setup"||stage[3]==="tips"?" two":"")+'">'+images+'</div>'+
+ '<div class="pf-prep-illustrations'+(stage[3]==="tips"?" three":stage[3]==="setup"?" two":"")+'">'+images+'</div>'+
  '<p class="pfs-note"><strong>Before continuing:</strong> Verify each cartridge is fully seated in the correct lane, the sample wells match the intended assay, and the required pipette tips are ready.</p></section>';
 }
 function patientStep(i){
