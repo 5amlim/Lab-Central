@@ -72,3 +72,24 @@
 .lc-scroll-cue-right{width:52px}
 .lc-scroll-cue-right>span{padding:10px 8px}
 @media(max-width:650px){.lc-page-scroll-cue{height:57px;padding-bottom:6px}.lc-page-scroll-cue>span{font-size:11px;padding:7px 12px}}
+
+/* True global Collapse details behavior on guided and all-step procedures.
+   Keep each step title and navigation visible, hide its illustration and instructions. */
+.procedure-flow.guide-details-collapsed:not(.pfux-patient) .guide-stage .guide-card > :not(.guide-card-head){
+ display:none!important;
+}
+.procedure-flow.guide-details-collapsed:not(.pfux-patient) .guide-stage .guide-card{
+ overflow:hidden;
+}
+.procedure-flow.guide-details-collapsed:not(.pfux-patient) .guide-stage .guide-card-head{
+ border-bottom:0;
+}
+.procedure-flow .guide-detail-control:focus-visible{
+ outline:3px solid #79c6c0;
+ outline-offset:2px;
+}
+@media print{
+ .procedure-flow.guide-details-collapsed:not(.pfux-patient) .guide-stage .guide-card > :not(.guide-card-head){
+  display:block!important;
+ }
+}
