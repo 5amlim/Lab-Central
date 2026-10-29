@@ -7,7 +7,7 @@ const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g
 const svg=(drawing,view,desc)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+view+'" role="img" aria-label="'+E(desc)+'">'+drawing+'</svg>';
 function uprightRack(mode,filled){
  const cal=mode==="cal",names=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["1","2","3","4","5","6"];
- const colors=["#83b3d4","#83b3d4","#ad9bcf","#ad9bcf","#e0b45e","#84c9af"];
+ const colors=["#a9d8fa","#a9d8fa","#d1c3f3","#d1c3f3","#f4d082","#a8e1c5"]; // Reuse CAL/QC lane palette
  let h='<rect x="40" y="30" width="900" height="450" rx="23" fill="#e8f8fb" fill-opacity=".56" stroke="#a4c7d6" stroke-width="5"/>'+
  '<rect x="61" y="47" width="858" height="414" rx="13" fill="#f7fcfd" stroke="#c3dce6" stroke-width="3"/>';
  const active=mode==="setup"?0:cal?6:2;
@@ -41,13 +41,14 @@ function combinedRack(mode){
  '<text x="614" y="58" text-anchor="middle" font-weight="850" font-size="20" fill="#337388" font-family="Arial">WASTE TIP BOX</text>'+
  '<text x="828" y="58" text-anchor="middle" font-weight="850" font-size="20" fill="#337388" font-family="Arial">NEW TIPS</text>';
  const cal=mode==="cal",active=cal?6:2;
+  const wellColors=["#a9d8fa","#a9d8fa","#d1c3f3","#d1c3f3","#f4d082","#a8e1c5"];
  for(let i=0;i<6;i++){
   const x=86+i*61,has=i<active;
   h+='<rect x="'+x+'" y="106" width="52" height="322" rx="7" fill="#d7e6ed" stroke="#9db5c1" stroke-width="2"/>'+
    '<rect x="'+(x+6)+'" y="115" width="40" height="300" rx="3" fill="'+(has?"#18252f":"#f4f9fa")+'" stroke="#b4c9d3"/>'+
    (has?'<rect x="'+(x+8)+'" y="118" width="36" height="22" fill="#d84c51"/>'+
     '<rect x="'+(x+13)+'" y="348" width="26" height="55" rx="6" fill="#e2eff5" stroke="#8db4c2"/>'+
-    '<path d="M'+(x+17)+' 374h18v24h-18Z" fill="'+(cal?"#99bbce":"#b94857")+'"/>':'')+
+    '<path d="M'+(x+17)+' 374h18v24h-18Z" fill="'+(cal?wellColors[i]:"#b94857")+'"/>':'')+
    '<text x="'+(x+26)+'" y="449" text-anchor="middle" font-size="15" fill="#377084" font-weight="800" font-family="Arial">'+(i+1)+'</text>';
  }
  h+='<rect x="529" y="182" width="165" height="224" rx="20" fill="#e5eef3" stroke="#9fb6c4" stroke-width="5"/>'+
