@@ -149,7 +149,7 @@
 <link rel="stylesheet" href="step-illustrations.css?v=20261028-illustrations-v1" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v3">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261029-collapse-details-v2">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261029-controls-piccolo-v3">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -246,7 +246,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="qc-guide.js?v=20261028-biofire-qc-steps-v3"></script>
 <script src="biofire-visual.js?v=20261029-spotfire-original-device-v7"></script>
 <script src="lab-visual-corrections-20261029.js?v=3"></script>
-<script src="lab-guide-polish.js?v=20261029-curved-disc-v1"></script>
+<script src="lab-guide-polish.js?v=20261029-pipette-screen-v2"></script>
+<script src="piccolo-results.js?v=20261029-printouts-v1"></script>
 <script src="sysmex-focused.js?v=20261029-patient-v2"></script>
 <script src="clinitek-focused.js?v=20261029-audited-v6"></script>
 <script src="instrument-focused.js?v=20261029-step-specific-v1"></script>
@@ -419,6 +420,22 @@ function buildGroups(section){
  }
  if(!groups.length)groups.push({id:'general',title:'Overview & reference notes',blocks:section.blocks});
  // These two source headings are pocH QC handling notes, not separate workflows.
+ if(section.id==='piccolo'){
+  const sample=groups.find(g=>/^running.samp/i.test(g.id)||/^Running Samples/i.test(g.title));
+  if(sample){
+   const blocks=sample.blocks;
+   const i=blocks.findIndex(b=>b.level===1&&/Load the disc and start patient testing/i.test(b.text));
+   if(i>=0&&!blocks.some(b=>b.level===1&&/Select Patient and enter MRN/.test(b.text))){
+    blocks[i]={...blocks[i],text:'Load the disc into Piccolo Xpress'};
+    const next=blocks.findIndex((b,j)=>j>i&&b.level===1);
+    const end=next<0?blocks.length:next;
+    const instruction=blocks.findIndex((b,j)=>j>i&&j<end&&b.level===2);
+    if(instruction>=0)blocks[instruction]={...blocks[instruction],text:'On the home screen select Analyze to open the drawer. Insert the filled disc, select Close and confirm the disc is seated.'};
+    blocks.splice(end,0,{type:'list',level:1,text:'Select Patient and enter MRN'},
+     {type:'list',level:2,text:'Select Patient (not Control), enter the correct patient MRN or approved sample ID, then select Done. The analyzer accepts up to 14 characters and begins processing after verifying disc type.'});
+   }
+  }
+ }
  if(section.id==='sysmex'){
   const daily=groups.find(g=>g.title==='Daily QC');
   if(daily){
@@ -944,7 +961,7 @@ function sectionRender(sec,tab){
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
@@ -979,6 +996,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="Expanded Calibration and QC dropdown"><div class="pfux-cal-nested-label">Inside Calibration + QC · Choose assay panel below</div>'+window.LAB_PATHFAST_UI.render()+'</div>';
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
+ else if(sec.id==='piccolo'&&tab==='result-interpretation')h+=window.LAB_PICCOLO_RESULTS.render();
  else if(tab==='videos')h+=videoLibrary();
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
