@@ -53,3 +53,17 @@
 @media(max-width:880px){.ac-grid{grid-template-columns:1fr}.ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.assay-catalog{padding:17px 14px}.ac-title{flex-direction:column}.ac-count{align-self:flex-start}.ac-card-head{gap:8px!important;padding:12px!important}.ac-card-summary strong{font-size:13px}.ac-complex{font-size:9px;padding:5px 6px}.ac-disc{width:52px;height:52px}.ac-disc-hole{top:17px;left:17px}.ac-group ul,.ac-disc-grid .ac-group ul{grid-template-columns:1fr}.cl-qc-switch-buttons{grid-template-columns:1fr}.pf-calibration-guide .pf-qc-vial .pf-qc-slot{font-size:19px!important;padding:9px 12px!important}}
 @media print{.assay-catalog .ac-card{break-inside:avoid}.assay-catalog .ac-card-body{display:block!important}.ac-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cl-qc-switch-buttons button{border-color:#aaa!important}}
+
+
+/* Sofia 2 assay colors follow the physical kit-box identity:
+   Flu + SARS blue, RSV orange, Strep A deep red. */
+.ac-card.ac-kit-coded{border-color:color-mix(in srgb,var(--ac-strip) 30%,#d9e6ee);border-top-color:var(--ac-strip)}
+.ac-kit-coded .ac-card-head{background:linear-gradient(100deg,var(--ac-kit-tint),#fff 88%)}
+.ac-kit-coded .ac-card-index{background:var(--ac-kit-tint);color:var(--ac-kit-deep)}
+.ac-kit-coded .ac-card-summary strong{color:var(--ac-kit-deep)}
+.ac-kit-coded .ac-card-summary small{color:var(--ac-kit-deep);opacity:.88}
+.ac-kit-coded .ac-group h4{color:var(--ac-kit-deep)}
+.ac-kit-coded .ac-group li:before{width:7px;height:7px;top:.55em;background:var(--ac-strip)}
+.ac-kit-coded .ac-group li{color:#344f66}
+.ac-kit-coded .ac-chevron{border-color:var(--ac-kit-deep)}
+@media print{.ac-kit-coded .ac-card-head{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
