@@ -76,6 +76,8 @@ function piccolo(title,group){
  // Use one consistent, current sample-port diagram across all Piccolo steps.
  const tool=A.piccoloPipetteSvg();
  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
+ // Control menu steps use the QC screen walk-through, not another disc-loading drawing.
+ if(/click analyze|control\s*>\s*enter|enter 1 for low|enter 2 for high/.test(t))return "";
  if(/within 60|sample time|collection|blood tube/.test(t)){
   return fig("Lithium-heparin whole blood",A.mediaSvg?A.mediaSvg("green"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
  }
@@ -95,7 +97,7 @@ function piccolo(title,group){
  if(/insert|drawer|analyz|start|click/.test(t)){
   return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Seat the prepared disc level in the open drawer, close it, then select Analyze and verify patient or control details.","lc-piccolo-insert");
  }
- if(/print|result|log/.test(t))return fig("Document the QC or patient result",statusCard("blue","REVIEW RESULTS","Print / file as required"),"Check accepted QC and instrument status before releasing results.","lc-piccolo-single");
+ if(/print|result|log/.test(t))return (window.LAB_QC_GUIDE?.printStep?.("piccolo")||fig("Document the QC or patient result",statusCard("blue","REVIEW RESULTS","Print / file as required"),"Check accepted QC and instrument status before releasing results.","lc-piccolo-single"));
  return fig("Confirm analyzer and workflow",instrument,"Use the actual Piccolo prompts and current approved IFU.","lc-piccolo-single");
 }
 window.LAB_GUIDE_POLISH={piccolo,biofire};
