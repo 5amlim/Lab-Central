@@ -7,22 +7,17 @@
  const originalAction=art.pathfastActionVisual;
  function dome(src){
   if(!src)return src;
-  const seal='<g class="pf-domed-sample-well" aria-label="Front transparent domed sample chamber with visible red specimen">'+
-    '<path d="M101 169 Q105 204 132 215 Q164 206 175 169L167 165Q154 190 131 192Q110 189 109 164Z" fill="#d8ebf1" fill-opacity=".67" stroke="#79aabf" stroke-width="3"/>'+
-    '<path d="M110 173Q115 199 132 205Q151 199 165 173L156 173Q145 188 133 189Q123 187 120 171Z" fill="#b64352" fill-opacity=".88"/>'+
-    '<path d="M112 180Q126 205 144 197" stroke="#e9a4af" stroke-width="2.6" fill="none"/>'+
-    '<path d="M158 211L223 242H257" stroke="#418b9b" stroke-width="2.3" fill="none"/>'+
-    '<text x="262" y="247" font-size="11" fill="#376e82" font-family="Arial" font-weight="850">DOMED SAMPLE CUP</text>'+
-    '</g>';
-  const inset='<g aria-label="Rounded base of enlarged sample chamber">'+
-    '<path d="M619 177Q618 208 651 213Q684 208 685 177" fill="#e1f3f7" fill-opacity=".62" stroke="#82a9bc" stroke-width="2.5"/>'+
-    '<path d="M626 181Q632 203 651 203Q672 203 678 181Z" fill="#b64353" opacity=".92"/>'+
-    '<path d="M633 194Q652 208 670 194" fill="none" stroke="#e89faa" stroke-width="2"/>'+
-    '</g>';
-  return src.replace('</svg>',seal+inset+'</svg>')
-    .replace('clear front sample well, fill to the mark and avoid bubbles','clear front sample well, confirm the domed base fills with specimen to the marked level, and avoid bubbles');
- }
- function loadedRack(){
+  /* Keep the real cartridge outline, show a shallow transparent dome inside
+     the existing front sample well and remove the former overlapping label. */
+  const chamber='<g aria-label="Red sample in the clear shallow domed sample chamber">'+
+   '<path d="M108 172Q129 195 150 174" fill="none" stroke="#7ba7b6" stroke-width="3"/>'+
+   '<path d="M111 173Q130 190 147 174L146 177Q129 192 112 177Z" fill="#b84957" stroke="#c06b75" stroke-width="1.5"/>'+
+   '<path d="M625 175Q651 197 679 175" fill="none" stroke="#81abbc" stroke-width="3"/>'+
+   '<path d="M629 176Q651 189 675 176" fill="none" stroke="#b84957" stroke-width="5"/>'+
+   '</g>';
+  return src.replace('</svg>',chamber+'</svg>');
+}
+function loadedRack(){
   let shapes='<rect x="18" y="18" width="944" height="420" rx="17" fill="#f5fafc" stroke="#d3e4eb" stroke-width="3"/>'+
     '<rect x="45" y="79" width="403" height="305" rx="12" fill="#e9f8fc" stroke="#a5c8d7" stroke-width="4"/>'+
     '<rect x="54" y="88" width="385" height="286" rx="8" fill="#f3f8fb" stroke="#c6dce5"/>';
