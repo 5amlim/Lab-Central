@@ -36,6 +36,8 @@
 .lc-picker-lead strong{font-size:18px;color:#214a60}
 .lc-picker-lead p{margin:5px 0 15px;color:#668294;font-size:13px}
 .lc-picker-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+/* The Sendout Log chooses a market only. The linked form asks for the clinic. */
+.lc-sendout-log .lc-picker-fields{grid-template-columns:minmax(0,620px)}
 .lc-select-box{position:relative;min-width:0}
 .lc-select-label{font-size:11px;letter-spacing:.1em;font-weight:800;text-transform:uppercase;color:#62849a;margin:0 0 7px}
 .lc-select-trigger{cursor:pointer;width:100%;min-height:52px;padding:10px 12px 10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1.5px solid #a2c8d2;border-radius:11px;color:#244f63;text-align:left;font:inherit;box-shadow:0 1px 4px #133b4c0c}
