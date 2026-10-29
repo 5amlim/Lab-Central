@@ -165,14 +165,17 @@ function cal2MixIllustration(){
  const pair=["ONE VIAL"].map((key,i)=>'<g transform="translate('+(i*445)+',0)">'+
   '<rect x="4" y="3" width="430" height="177" rx="12" fill="#f8fafc" stroke="#d0dfe8" stroke-width="2"/>'+
   '<rect x="4" y="3" width="430" height="30" rx="12" fill="#edf3fa"/>'+
-  '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2 · '+key+'</text>'+
+  '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2</text>'+
+  '<text x="414" y="23" font-size="14" font-weight="900" text-anchor="end" fill="#765aa0">1 VIAL</text>'+
   bottle(25,"powder")+bottle(156,"diluent")+bottle(328,"mixed")+
   '<text x="137" y="101" font-size="29" text-anchor="middle" fill="#4b94b4" font-weight="800">+</text>'+
   '<text x="287" y="101" font-size="30" text-anchor="middle" fill="#4b94b4" font-weight="850">→</text>'+
   '<text x="65" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#6c6692">Powder</text>'+
   '<text x="195" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#267da6">Blue diluent</text>'+
-  '<text x="368" y="164" font-size="11" font-weight="850" text-anchor="middle" fill="#546d98">Reconstituted</text></g>').join('');
- return '<figure class="pf-cal2-mix-diagram"><header><strong>CAL 2 reconstitution</strong><span>Prepare 1 vial only · reserve the unopened second vial</span></header>'+
+  '<text x="368" y="157" font-size="11" font-weight="850" text-anchor="middle" fill="#546d98">Reconstituted</text>'+
+  '<rect x="320" y="165" width="96" height="18" rx="8" fill="#ede7f9" stroke="#c5b3e1" stroke-width="1.3"/>'+
+  '<text x="368" y="178" text-anchor="middle" font-size="10.8" font-weight="900" fill="#76519c">LANES 3 + 4</text></g>').join('');
+ return '<figure class="pf-cal2-mix-diagram"><header><strong>CAL 2 reconstitution</strong><span class="pf-cal-one-vial">1 vial only · reserve the unopened second vial</span></header>'+
   '<svg role="img" aria-label="Reconstitute a single CAL 2 powder vial with one matching blue diluent for both duplicate CAL 2 calibration cartridges." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 445 190">'+pair+'</svg>'+
   '<figcaption><strong>One prepared vial supplies BOTH CAL 2 cartridges (lanes 3 and 4).</strong> Reconstitute only one CAL 2 powder vial with one matching diluent. After use, cap, label and promptly freeze remaining prepared material when allowed by the selected assay IFU. Keep the second powder and diluent unopened.</figcaption></figure>';
 }
@@ -215,8 +218,10 @@ function svgQC(kind){
  '<text x="'+(x+30)+'" y="95" font-size="8.5" font-weight="900" text-anchor="middle" fill="#594f58">QC '+(i+1)+'</text>';}
  return out+'</svg>';
 }
-function material(label,tag,description,svg,color){
- return '<article class="pf-material-card '+(color||"")+'"><div class="pf-material-figure">'+svg+'</div>'+
+function material(label,tag,description,svg,color,laneTag=''){
+ return '<article class="pf-material-card '+(color||"")+'">'+
+ (laneTag?'<span class="pf-material-lane-tag">'+esc(laneTag)+'</span>':'')+
+ '<div class="pf-material-figure">'+svg+'</div>'+
  '<div class="pf-material-detail"><span class="pf-material-tag">'+esc(tag)+'</span><h4>'+esc(label)+'</h4><p>'+esc(description)+'</p></div></article>';
 }
 function status(group){
@@ -275,7 +280,7 @@ function panelContent(group){
  '<div class="pf-freezer" style="background:#edf7f2;border-color:#d6e8dd;color:#366a56"><span>◷</span><span>Unopened reagent kits and CAL 1: <strong>2–8°C refrigerator</strong>. After use, promptly freeze permitted remaining <strong>reconstituted CAL 2</strong> (typically −20°C or colder). Follow assay-specific stability limits. Bio-Rad QC storage follows its own lot insert.</span></div>'+
  '<h3 class="pf-material-heading">Calibration materials <small>Included in the refrigerated reagent box</small></h3>'+
  '<div class="pf-material-grid">'+
- material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1')+
+ material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1','LANES 1 + 2')+
  material('CAL 2','2 GLASS VIALS IN BOX','Reconstitute just one vial at a time, then use the same prepared vial for duplicate CAL 2 cartridges. Freeze the remaining prepared material per selected assay IFU.',svgCal2(1),'cal2')+
  material('Blue liquid diluent','2 BUFFER VIALS IN BOX','Use one matching diluent with the single CAL 2 powder vial. Keep the second vial and diluent unopened.',svgDiluent(1),'diluent')+
  '</div>'+
@@ -361,13 +366,12 @@ function render(){
  function step(n,title,desc,inner){
   if(!showAllSteps&&n!==currentStep)return '';
   const guided=!showAllSteps&&n===currentStep;
-  // Keep the controls outside the native summary to avoid toggling its details.
-  return '<details class="pf-workflow-step'+(guided?' pf-workflow-has-nav':'')+'" '+(!showAllSteps||n===currentStep?'open':'')+'>'+
-    '<summary><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
+  // Main step cards are static. Only explicit step navigation buttons change stages.
+  return '<article class="pf-workflow-step pf-workflow-static'+(guided?' pf-workflow-has-nav':'')+'">'+
+    '<header class="pf-workflow-head"><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
     '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
-    '<span class="pf-workflow-chev"></span></summary>'+
-    (guided?calHeaderNavigation():'')+
-    '<div class="pf-workflow-detail">'+(inner||"")+'</div></details>';
+    (guided?calHeaderNavigation():'')+'</header>'+
+    '<div class="pf-workflow-detail">'+(inner||"")+'</div></article>';
  }
  let h='<section class="pf-calibration-guide">'+
  '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
@@ -401,7 +405,7 @@ function render(){
       '<p class="pf-workflow-note">Bio-Rad control material: use the current lot-specific insert for frozen storage, thawing, mixing, open-vial stability and acceptable ranges. For BNP/NT-proBNP controls, check the latest revised insert. Do not assume all control products use the same preparation.</p>');
   h+=step(2,'Prepare CAL 1, one CAL 2 vial and the two QC controls','Use one CAL 2 powder vial and one matching diluent; reserve the unopened set',
       '<div class="pf-cal-prep-row">'+
-      material('CAL 1 · ready-to-use','REFRIGERATED KIT','Use CAL 1 as supplied; assign to lanes 1 and 2.',svgCal1(),'cal1')+
+      material('CAL 1 · ready-to-use','REFRIGERATED KIT','Use CAL 1 as supplied; assign to lanes 1 and 2.',svgCal1(),'cal1','LANES 1 + 2')+
       material('One CAL 2 powder vial','REFRIGERATED KIT · USE 1 OF 2','Reconstitute one powder vial only. Use this same preparation for the two CAL 2 cartridge wells in lanes 3 and 4.',svgCal2(1),'cal2')+
       material('One blue diluent','REFRIGERATED KIT · USE 1 OF 2','Use one matching diluent bottle with one CAL 2 powder vial. Keep the other diluent and powder vial unopened.',svgDiluent(1),'diluent')+
       '</div>'+cal2MixIllustration()+'<h3 class="pf-material-heading">Bio-Rad QC vials · '+esc(group.qc)+'</h3>'+qcGallery(group)+
