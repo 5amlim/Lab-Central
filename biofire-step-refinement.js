@@ -52,7 +52,7 @@ function stage(id,title){
  if(id!=="torch"&&id!=="spotfire")return before?before(id,title):"";
  const t=String(title).toLowerCase(),gi=id==="torch";
  if(/kit and specimen/.test(t)){
-  return block([card("Check the kit",B.kit?B.kit():photo(1,"Pouch and vial kit"),"Match the ordered "+(gi?"GI panel":"Respiratory / Sore Throat panel")+", pouch expiry, red and blue vials, buffer and specimen.")]);
+  return block([card("Check the kit",photo(1,"BIOFIRE reference illustration of pouch, loading station, red sample vial and blue hydration vial"),"Match the ordered "+(gi?"GI panel":"Respiratory / Sore Throat panel")+", pouch expiry, red and blue vials, buffer and specimen.")]);
  }
  if(/insert pouch|set up vials|loading station/.test(t)){
   return block([card("Insert pouch · red left / blue right",photo(2,"Loading station with red sample well and blue hydration well"),"Seat the pouch in the station. Place the sample vial in the RED well and hydration vial in the BLUE well.")]);
