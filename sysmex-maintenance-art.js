@@ -66,8 +66,8 @@
      '<path d="M698 125V112Q700 99 711 98H867Q879 100 879 112V130" fill="#f0f7f9" stroke="#9ab9c6" stroke-width="4"/>'+
      '<rect x="725" y="92" width="133" height="25" rx="9" fill="#deeff3" stroke="#95b6c7" stroke-width="3"/>'+
      '<rect x="741" y="69" width="38" height="28" rx="8" fill="#c34d58" stroke="#a44854" stroke-width="3"/>'+
-     '<path d="M760 69L760 43C761 25 746 23 724 25L556 27" stroke="#db716f" stroke-width="9" fill="none" stroke-linecap="round"/>'+
-     '<path d="M760 68L760 44C761 24 746 21 724 23L556 25" stroke="#ffe3d4" stroke-width="3" fill="none"/>'+
+     '<path d="M760 69L760 43C761 25 746 23 724 25L518 27" stroke="#db716f" stroke-width="9" fill="none" stroke-linecap="round"/>'+
+     '<path d="M760 68L760 44C761 24 746 21 724 23L518 25" stroke="#ffe3d4" stroke-width="3" fill="none"/>'+
      '<path d="M825 90V335" stroke="#829da8" stroke-width="9" stroke-linecap="round"/>'+
      '<rect x="810" y="329" width="30" height="51" rx="12" fill="#bbc7ce" stroke="#7f9eac" stroke-width="3"/>'+
      '<rect x="715" y="200" width="147" height="82" rx="7" fill="#fff" stroke="#cddde6"/>'+
