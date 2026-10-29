@@ -235,3 +235,30 @@
 .pf-workflow-detail .pfs-reference{max-width:1060px;width:100%}
 @media(max-width:720px){.pf-cal-material-details>summary{padding:11px}.pf-cal-material-inside{padding:9px}.pf-cal-action-grid .pf-action-image{min-height:170px}}
 @media print{.pf-cal-material-details{break-inside:auto}.pf-cal-material-inside{display:block}}
+
+/* CAL/QC 2026-10-29: materials and upright lane chart appear before login. */
+.pf-cal-prep-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:13px;margin:14px 0 18px}
+.pf-cal-prep-row .pf-material-card{min-width:0}
+.pf-qc-prep-emphasis{display:flex;gap:12px;align-items:flex-start;background:#ecf8f5;border:1px solid #c9e4df;border-left:4px solid #219583;border-radius:10px;padding:14px 16px;margin:13px 0 18px;color:#456e70;font-size:12px;line-height:1.7}
+.pf-qc-prep-emphasis strong{color:#176d67;flex:none}
+.pf-qc-vertical-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(240px,1fr);gap:16px;align-items:stretch;margin:8px 0 15px}
+.pf-qc-vertical-layout .pf-rack-box{min-width:0;margin:0;padding:10px;background:linear-gradient(165deg,#f7fbfc,#fff);border:1px solid #dbe8ed;border-radius:12px}
+.pf-qc-vertical-layout .pf-rack-scroll{max-width:100%;overflow-x:auto}
+.pf-qc-vertical-layout .pf-rack-svg{width:100%;height:auto;max-width:none;min-width:640px;display:block}
+.pf-qc-lane-list{display:grid;grid-template-columns:1fr;gap:7px;align-content:center}
+.pf-qc-lane-item{display:grid;grid-template-columns:30px minmax(56px,68px) minmax(0,1fr);gap:8px;align-items:center;padding:8px 11px;border:1px solid #dfebef;border-radius:9px;background:#f8fbfc;min-height:51px;font-size:11px;color:#587688}
+.pf-qc-lane-item:nth-child(1),.pf-qc-lane-item:nth-child(2){background:#f2f8ff}
+.pf-qc-lane-item:nth-child(3),.pf-qc-lane-item:nth-child(4){background:#f7f3ff}
+.pf-qc-lane-item:nth-child(5){background:#fff9eb}
+.pf-qc-lane-item:nth-child(6){background:#effaf6}
+.pf-qc-lane-no{display:grid;place-items:center;width:29px;height:29px;border-radius:7px;background:#2e7590;color:#fff;font-size:13px}
+.pf-qc-lane-item strong{font-weight:850;color:#315a6e;font-size:11.5px}
+.pf-qc-lane-item span{overflow-wrap:anywhere;line-height:1.4}
+.pf-workflow-detail .pf-qc-vials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.pf-workflow-detail .pf-qc-vial{min-width:0}
+.pf-workflow-detail .pf-qc-vial svg{height:155px;width:100%;max-width:190px}
+.pf-workflow-detail .pf-qc-vial strong,.pf-workflow-detail .pf-qc-vial small{overflow-wrap:anywhere}
+.pfux-cal-toolbar strong{white-space:normal}
+@media(max-width:1060px){.pf-qc-vertical-layout{grid-template-columns:1fr}.pf-qc-lane-list{grid-template-columns:repeat(2,minmax(0,1fr))}.pf-qc-lane-item{grid-template-columns:28px 63px minmax(0,1fr)}}
+@media(max-width:700px){.pf-cal-prep-row{grid-template-columns:1fr}.pf-qc-lane-list{grid-template-columns:1fr}.pf-qc-prep-emphasis{flex-direction:column;gap:4px}.pf-workflow-detail .pf-qc-vials{grid-template-columns:1fr}}
+@media print{.pf-qc-vertical-layout{display:block}.pf-qc-lane-list{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}.pf-qc-vertical-layout .pf-rack-svg{min-width:0}}
