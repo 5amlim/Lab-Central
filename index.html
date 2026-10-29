@@ -151,8 +151,9 @@
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
-<link rel="stylesheet" href="assay-catalog.css?v=20261029-assay-menus-v1" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261029-sofia-kit-colors-v2" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
+<link rel="stylesheet" href="home-device-cards.css?v=20261029-instrument-art-v1" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -242,8 +243,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
 <script src="pathfast-interactive.js?v=20261029-compact-timing-v2"></script>
 <script src="pathfast-clinical.js?v=20261029-guided-rn-v2"></script>
-<script src="equipment-art.js?v=20261029-unified-specimen-v17"></script>
-<script src="step-illustrations.js?v=20261029-unified-collection-art-v4"></script>
+<script src="equipment-art.js?v=20261029-sofia-swab-v18"></script>
+<script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-sysmex-reference-v4"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
 <script src="qc-guide.js?v=20261029-sysmex-qcfile-select-v2"></script>
@@ -259,7 +260,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261029-curated-figures-v2"></script>
 <script src="biofire-reference-polish.js?v=20261029-hydration-trim-shared-kit-v6"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
-<script src="assay-catalog.js?v=20261029-assay-menus-v1"></script>
+<script src="assay-catalog.js?v=20261029-sofia-kit-colors-v2"></script>
 <script>
 (()=>{
 'use strict';
@@ -338,7 +339,23 @@ function showNav(){
  nav.innerHTML=out;
 }
 function isMatch(s,q){return [s.title,s.subtitle,s.sourceTitle,s.category,s.sample,s.qc,...s.blocks.map(b=>b.text)].join(' ').toLowerCase().includes(q)}
-function card(s){return `<button type="button" class="item-card" data-go="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="card-category">${safeHtml(s.category)}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">Open guide &nbsp;›</span></button>`}
+// Reuse the instrument guide illustrations in compact cards without altering card dimensions.
+function homepageEquipmentArt(sec,featured=false){
+ if(!sec||!window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id))return '';
+ const markup=window.LAB_EQUIPMENT_ART.render(sec);
+ const matched=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/i);
+ if(!matched)return '';
+ let graphic=matched[0].replace(/class="[^"]*"/,'class="home-device-svg"');
+ if(sec.id!=='sofia'){
+  const crop=sec.id==='pathfast'?'178 8 392 334':'170 12 400 284';
+  graphic=graphic.replace(/viewBox="[^"]*"/,'viewBox="'+crop+'"');
+ }
+ return '<span class="'+(featured?'featured-device-art':'card-device-art')+'" aria-hidden="true">'+graphic+'</span>';
+}
+function card(s){
+ const illustration=homepageEquipmentArt(s);
+ return '<button type="button" class="item-card'+(illustration?' has-device-art':'')+'" data-go="'+safeHtml(s.id)+'"><div class="card-head"><span class="card-icon">'+svg(s.icon)+'</span><span class="card-category">'+safeHtml(s.category)+'</span></div><strong>'+safeHtml(s.title)+'</strong><p>'+safeHtml(s.subtitle)+'</p><span class="card-trailing">Open guide &nbsp;›</span>'+illustration+'</button>';
+}
 function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Confirm the current approved SOP, manufacturer IFU, specimen requirements and site-specific procedures before testing or sending specimens.</div></div>`}
 function renderHome(mode='home'){
  const search=state.search.trim();
@@ -353,7 +370,7 @@ function renderHome(mode='home'){
  h+=noticeText();
  h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Order workflows</strong><small>External requisitions &amp; in-house</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Instrument order sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${svg('droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
- h+=`<div class="featured"><button type="button" class="feature-primary" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span></button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${svg('truck')}</span><span><strong>Lab send-outs</strong><small>Packaging & pickup</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${svg('heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
+ h+=`<div class="featured"><button type="button" class="feature-primary has-featured-art" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span>${homepageEquipmentArt(all.find(s=>s.id==="pathfast"),true)}</button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${svg('truck')}</span><span><strong>Lab send-outs</strong><small>Packaging & pickup</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${svg('heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
  }
  if(isFav)h=`<div class="eyebrow">SAVED REFERENCES</div><h1 class="page-h1">Saved guides</h1><p class="lede">Bookmarks are saved in this browser only.</p>`;
  if(search)h=`<div class="eyebrow">FIND A PROCEDURE</div><h1 class="page-h1">Search the lab guide</h1><p class="lede">Results for “${safeHtml(search)}” across instruments, procedures and reference notes.</p>`;
