@@ -77,10 +77,10 @@ function render(title,group){
      "Check expiration and remove one compatible unused "+(kind==="hcg"?"cassette":"reagent strip")+".");
  if(qc&&/open.*qc|qc test/.test(t))
   return fig("Open QC test mode",scene(kind,"qc"),"Choose the correct QC menu and confirm control ID and lot.");
- if(isHcg&&/dispense urine|dispense qc material|apply.*sample/.test(t))
+ if(kind==='hcg'&&/dispense urine|dispense qc material|apply.*sample/.test(t))
   return fig(qc?"Dispense approved hCG QC":"Dispense urine into hCG cassette",scene(kind,"dispense"),
    "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
- if(isHcg&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Start the hCG cassette workflow first, then use the kit pipette and approved volume.");
+ if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Start the hCG cassette workflow first, then use the kit pipette and approved volume.");
  if(qc&&/run each control/.test(t))
   return fig("Run controls using the urinalysis strip method",scene(kind,"qc-dip"),
    "Use approved control material and the correct QC mode, not a patient urine cup.");
