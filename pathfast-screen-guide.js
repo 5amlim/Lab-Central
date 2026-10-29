@@ -43,6 +43,7 @@ function home(analyte,mode,focus){
  (cal?'<strong>Selected assay: <em class="pfs-pink-emphasis">pink</em></strong><span>CAL/QC expired or locked. Other assays shown in gray.</span>':
  '<strong>EXAMPLE: hs-Troponin I is <em class="pfs-pink-emphasis">pink</em></strong><span>Do not run a locked assay. Check its CAL/QC status and complete required QC before patient testing.</span>')+'</div>'+
 
+ '<div class="pfs-pink-help"><span><strong><em class="pfs-pink-emphasis">Pink</em> means CAL/QC attention required.</strong> A pink assay cannot be used for patient testing until the required QC is acceptable.</span><button class="pfs-qc-route" type="button" data-gotab="cal-qc" aria-label="Open PATHFAST Calibration and QC">Open Calibration + QC ↗</button></div>'+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
  return frame("ASSAY/HOME",back?(cal?"Step 8 · Select BACK":"Step 8 · Select BACK"):(cal?"Step 7 · Check assay status":"Step 7 · Check assay status"),body,back?"SELECT BACK TO DISPLAY ASSAY MENU.":"CHECK CAL/QC STATUS BEFORE TESTING.");
 }
