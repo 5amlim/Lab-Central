@@ -83,3 +83,30 @@
  .grid-cards .item-card.has-device-art,
  .feature-primary.has-featured-art{break-inside:avoid}
 }
+
+/* Fit the complete Piccolo and FebriDx devices inside existing home cards. */
+/* The card and art viewport remain exactly the same size. Scale just the
+   illustrated SVG, keeping the viewBox fully visible and centered. */
+.grid-cards .item-card.has-device-art[data-go="piccolo"] .card-device-art,
+.grid-cards .item-card.has-device-art[data-go="febridx"] .card-device-art{
+ align-items:center;
+ justify-content:center;
+}
+.grid-cards .item-card.has-device-art[data-go="piccolo"] .home-device-svg{
+ width:78%;
+ height:78%;
+ max-width:78%;
+ max-height:78%;
+ object-fit:contain;
+ overflow:visible;
+ flex:none;
+}
+.grid-cards .item-card.has-device-art[data-go="febridx"] .home-device-svg{
+ width:86%;
+ height:86%;
+ max-width:86%;
+ max-height:86%;
+ object-fit:contain;
+ overflow:visible;
+ flex:none;
+}
