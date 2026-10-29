@@ -31,3 +31,13 @@
 @media(max-width:920px){.bf-polished-inner{grid-template-columns:1fr}.bf-polished-media{border-right:0;border-bottom:1px solid var(--bf-edge);padding:14px}.bf-polished-instruction{padding:16px}.bf-polished-svg svg{max-height:310px}}
 @media(max-width:520px){.bf-polished{margin:9px 0 13px;border-radius:12px}.bf-polished-inner{display:block}.bf-polished-top{padding:9px 11px}.bf-polished-chip{font-size:9px;padding:6px 8px}.bf-polished-media{padding:9px;gap:5px}.bf-polished-instruction{padding:13px;gap:10px}.bf-polished-instruction h4{font-size:16px}.bf-polished-pair{grid-template-columns:1fr;gap:9px}.bf-polished-pair>.bf-polished-svg svg{max-height:200px}.bf-polished-pair>.bf-photo{max-height:190px}.bf-polished-pair>.bf-photo img{max-height:190px}.bf-polished-point{font-size:12.5px}.bf-polished-credit{font-size:9px}}
 @media print{.bf-polished{break-inside:avoid;box-shadow:none}.bf-polished-inner{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}.bf-polished-media{border-bottom:0;border-right:1px solid var(--bf-edge)}.bf-polished-photo,.bf-polished-svg{break-inside:avoid}.bf-polished-instruction{padding:11px}}
+
+/* Keep supporting source photos accessible without crowding primary instruction. */
+.bf-polished-more{width:100%;border:1px solid #d8e6eb;border-radius:9px;background:#fff;overflow:hidden}
+.bf-polished-more>summary{list-style:none;cursor:pointer;padding:10px 13px;display:flex;justify-content:space-between;gap:10px;color:#2e7186;font-size:12px;font-weight:760}
+.bf-polished-more>summary::-webkit-details-marker{display:none}
+.bf-polished-more>summary::after{content:"+";font-size:17px;line-height:12px;font-weight:700;color:#6194a7}
+.bf-polished-more[open]>summary::after{content:"−"}
+.bf-polished-more>.bf-photo{padding:10px;border-top:1px solid #e4edef}
+.bf-polished-more img{max-height:260px}
+.bf-polished-more:focus-within{outline:2px solid #77b4c6;outline-offset:2px}
