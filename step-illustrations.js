@@ -250,7 +250,14 @@ art.render=function(sec){
 const originalSpecimen=art.specimenGuide;
 art.specimenGuide=function(sec){
  let h=originalSpecimen(sec);
- if(sec&&/^(piccolo|pathfast)$/.test(sec.id))h=h.replace(/(<div class="device-media-picture">)[\s\S]*?(<\/svg>)/,'$1'+tube('green','lithium'));
+ if(sec&&/^(piccolo|pathfast|sysmex)$/.test(sec.id)){
+  // Match tube scale across specimen cards. Crop off the instructional
+  // outside callouts so the physical tube fills the same shared thumbnail.
+  const lavender=sec.id==='sysmex';
+  const tubePicture=tube(lavender?'lavender':'green',lavender?'edta':'lithium')
+   .replace('viewBox="0 0 550 285"','viewBox="82 24 163 251"');
+  h=h.replace(/(<div class="device-media-picture">)[\s\S]*?(<\/svg>)/,'$1'+tubePicture);
+ }
  return h;
 };
 const oldWorkflow=art.workflowVisual;
