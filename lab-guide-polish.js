@@ -117,7 +117,7 @@ function piccolo(title,group){
    fig("1 · Before loading",empty,"Empty sample port and chamber.")+
    fig("2 · After loading",q?qcDisc:filled,q?"Fill the sample chamber with the approved control material, not patient blood.":"The curved chamber contains sample at the fill mark.")+'</div></div></section>';
  }
- if(/insert|drawer|analyz|start|click/.test(t)){
+ if(/load the disc|insert|drawer|analyz|start|click/.test(t)){
   return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Select Analyze to open the drawer, seat the prepared disc, and select Close. Next, choose Patient and enter the patient MRN.","lc-piccolo-insert");
  }
  if(/print|result|log/.test(t))return (window.LAB_QC_GUIDE?.printStep?.("piccolo")||fig("Document the QC or patient result",statusCard("blue","REVIEW RESULTS","Print / file as required"),"Check accepted QC and instrument status before releasing results.","lc-piccolo-single"));
