@@ -73,8 +73,7 @@ function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
  const empty=A.piccoloDiscSvg(false),filled=A.piccoloDiscSvg(true),qcDisc=filled.replace(/#b63d4a|#ce5b64|#b63a48/g,'#739fae').replace(/with blood in the chamber/g,'with approved QC control in the chamber').replace('Sample loaded','QC control loaded');
- const old=A.piccoloVisual("grab the reagent disc");
- const reference=(old.match(/<img[^>]+>/)||[])[0]||empty;
+ // Use one consistent, current sample-port diagram across all Piccolo steps.
  const tool=A.piccoloPipetteSvg();
  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
  if(/within 60|sample time|collection|blood tube/.test(t)){
@@ -84,7 +83,7 @@ function piccolo(title,group){
   return fig("Prepare the approved BRT or NOD control",(A.stepIllustration({id:'piccolo',category:'Analyzers'},'grab the controls','monthly-qc').match(/<svg[\s\S]*?<\/svg>/)||[])[0]||statusCard("blue","QC CONTROL","Use lot-specific instructions"),"Use the freezer-stored approved control. For QC, the sample chamber is filled with control material, not patient blood.","lc-piccolo-single");
  }
  if(/grab|reagent disc|qc disc|inspect/.test(t)){
-  return fig("Inspect the intact reagent disc",reference,"The sample entry port is built into the disc. Do not peel or create an opening. Remove only one disc at a time.","lc-piccolo-single");
+  return fig("Inspect the intact reagent disc",empty,"The sample entry port is built into the disc. Do not peel or create an opening. Remove only one disc at a time.","lc-piccolo-single");
  }
  if((/load|pipett|sample port|fill chamber|dispense/.test(t))&&!/load the disc|insert.*disc|load.*disc.*start/.test(t)){
   return '<section class="lc-piccolo-prep" aria-label="Two stages of sample loading">'+
