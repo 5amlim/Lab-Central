@@ -104,10 +104,10 @@ function sideSwitch(){
  if(!art?.sysmexDeviceMarkup)return "";
  // Switch is visible in a simplified three-quarter illustration; keep the
  // same faceplate, screen and purple sample bay as every other pocH view.
- const callout='<circle cx="432" cy="320" r="37" fill="none" stroke="#168e88" stroke-width="3.5" stroke-dasharray="7 5"/>'+
- '<path d="M468 311l96-60h125" fill="none" stroke="#208f87" stroke-width="3.5"/>'+
- tx(693,240,"BLACK POWER",17,"#257d81",900,"end")+
- tx(693,261,"SWITCH · OFF",17,"#257d81",900,"end");
+ const callout='<circle cx="428" cy="161" r="36" fill="none" stroke="#168e88" stroke-width="3.5" stroke-dasharray="7 5"/>'+
+ '<path d="M465 151l96-51h128" fill="none" stroke="#208f87" stroke-width="3.5"/>'+
+ tx(693,77,"BLACK POWER",17,"#257d81",900,"end")+
+ tx(693,98,"SWITCH · OFF",17,"#257d81",900,"end");
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 680 465" role="img" aria-label="pocH-100i white cabinet and purple front bay with the physical black side power switch highlighted after shutdown completes">'+
  art.sysmexDeviceMarkup("switch",false)+callout+'</svg>';
 }
