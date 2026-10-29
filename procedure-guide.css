@@ -241,3 +241,33 @@
 @media(max-width:980px){.pic-vis-grid{grid-template-columns:1fr}.pic-step-visual .pic-vis-grid:has(.pic-vis-card:nth-child(3)) .pic-vis-card:nth-child(3){grid-column:auto}.guide-toolbar-actions{width:100%;justify-content:flex-end}}
 @media(max-width:650px){.guide-card-head{gap:9px}.guide-card-body{padding:12px}.pic-step-visual{padding:10px}.pic-vis-card{padding:11px}.device-collection-guide{padding:12px}.device-collection-item{gap:9px}.guide-toolbar-actions{justify-content:space-between}.guide-stepper{padding-bottom:8px}}
 @media print{.pic-vis-card,.biofire-training-figure,.guide-card{break-inside:avoid}.guide-stepper{overflow:visible}}
+
+/* FebriDx reference-matched horizontal device in visual steps */
+.febridx-visual-gallery .device-gallery-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:16px;
+}
+.febridx-visual-gallery .febridx-device-step{
+ min-width:0;overflow:hidden;
+}
+.febridx-visual-gallery .febridx-step-picture{
+ width:100%;min-height:185px;
+ padding:9px 12px;background:#fff;
+ box-sizing:border-box;
+ display:flex;align-items:center;justify-content:center;
+}
+.febridx-visual-gallery .febridx-step-picture svg,
+.febridx-process-visual .dev-kit-drawing svg{
+ width:100%;max-width:100%;height:auto;
+ display:block;overflow:visible;
+}
+.febridx-visual-gallery .febridx-step-picture + .febridx-step-picture{
+ margin-top:7px;
+}
+@media(max-width:800px){
+ .febridx-visual-gallery .device-gallery-grid{grid-template-columns:1fr}
+ .febridx-visual-gallery .febridx-step-picture{min-height:150px}
+}
+@media print{
+ .febridx-visual-gallery .febridx-device-step{break-inside:avoid}
+}
