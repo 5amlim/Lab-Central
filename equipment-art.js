@@ -584,7 +584,7 @@ function mediaSvg(kind){
    (stool?'<path d="M116 145 q12 -15 24 -6 t26 1 t24 4 t20 -4" fill="none" stroke="#654534" stroke-width="9" stroke-linecap="round" opacity=".92"/><ellipse cx="126" cy="158" rx="8" ry="5" fill="#74503a"/><ellipse cx="187" cy="162" rx="7" ry="4" fill="#76513c"/><ellipse cx="169" cy="137" rx="9" ry="4" fill="#74503a"/>':'')+
    '<rect x="117" y="94" width="86" height="28" rx="4" fill="white"/>'+
    '<text x="160" y="111" font-size="12" fill="#486a7c" text-anchor="middle" font-weight="800">'+(stool?"CARY BLAIR":"URINE")+'</text>',
-   stool?"Stool Cary Blair transport container":"Urine collection cup");
+   stool?"Stool Cary Blair transport container":"Urine collection cup","77 39 170 160");
  }
  if(["utm","eswab","swab"].includes(kind)){
   return illustratedSvg('<ellipse cx="157" cy="179" rx="66" ry="8" fill="#e7eef2"/>'+
@@ -594,7 +594,7 @@ function mediaSvg(kind){
    '<path d="M215 32 L213 140" stroke="#ae9d89" stroke-width="5" stroke-linecap="round"/>'+
    '<ellipse cx="213" cy="146" rx="9" ry="16" fill="#f8fcfd" stroke="#b8cad3"/>'+
    '<text x="118" y="34" font-size="11" text-anchor="middle" fill="#486f83" font-weight="800">'+(kind==="utm"?"UTM / VTM":kind==="eswab"?"ESWAB":"SWAB")+'</text>',
-   "Swab with sample transport tube or extraction vial");
+   "Swab with sample transport tube or extraction vial","107 23 157 166");
  }
  return illustratedSvg('<rect x="94" y="65" width="135" height="95" rx="13" fill="#f3f7f9" stroke="#abc1cd" stroke-width="3"/>'+
  '<path d="M109 90 H215 M109 112 H202 M109 134 H188" stroke="#a4c3d0" stroke-width="5" stroke-linecap="round"/>'+
