@@ -11,6 +11,12 @@ const strip=(x,y,orientation=0)=>'<g transform="translate('+x+' '+y+') rotate('+
  '<rect x="-10" y="-103" width="20" height="205" rx="3" fill="#eff5f6" stroke="#94afb9" stroke-width="2"/>'+
  '<rect x="-8" y="-98" width="16" height="34" rx="2" fill="#e6dd91"/>'+
  ['#96c9a5','#cdb598','#c4a5bb','#93a8d7','#dfc279','#a1bbb8','#d1a6a6','#c4c6a7'].map((c,i)=>'<rect x="-8" y="'+(-57+i*18)+'" width="16" height="15" rx="2" fill="'+c+'"/>').join('')+'</g>';
+const cassette=(x=584,y=245)=>'<g transform="translate('+x+' '+y+')">'+
+ '<rect x="-66" y="-21" width="135" height="53" rx="10" fill="#f8fcfd" stroke="#93b1be" stroke-width="3"/>'+
+ '<rect x="-51" y="-9" width="55" height="22" rx="5" fill="#e5eef2" stroke="#a0bbc8" stroke-width="2"/>'+
+ '<rect x="-41" y="-3" width="34" height="9" rx="2" fill="#fff"/>'+
+ '<circle cx="44" cy="3" r="13" fill="#eef6f8" stroke="#92b2bf" stroke-width="3"/>'+
+ tx(-21,26,"CLINITEST hCG",11,"#477587")+'</g>';
 const cup=(x=535,y=102)=>'<g transform="translate('+x+' '+y+')">'+
  '<ellipse cx="67" cy="172" rx="79" ry="8" fill="#dce7ed"/>'+
  '<path d="M13 35H122L112 163Q108 179 68 179Q27 179 22 163Z" fill="#e8f4f7" stroke="#91afbc" stroke-width="4"/>'+
@@ -20,8 +26,8 @@ const cup=(x=535,y=102)=>'<g transform="translate('+x+' '+y+')">'+
  tx(68,94,"URINE",17,"#326c7c")+'</g>';
 function machine(mode="home"){
  const screen=mode==="results"?"RESULTS":mode==="start"?"READY":mode==="cassette"?"CASSETTE TEST":"CLINITEK Status+";
- const options=mode==="home"||mode==="strip"?["Strip Test","Cassette Test"]:mode==="cassette"?["CLINITEST hCG","Back"]:mode==="start"?["START","Cancel"]:mode==="results"?["Result ready","Review / print"]:["Strip Test","Cassette Test"];
- const focus=mode==="strip"?"Strip Test":mode==="cassette"?"CLINITEST hCG":mode==="start"?"START":mode==="results"?"Review / print":"";
+ const options=mode==="home"||mode==="strip"?["Strip Test","Cassette Test"]:mode==="cassette"?["CLINITEST hCG","Back"]:mode==="qc"?["QC Test","Enter control ID"]:mode==="start"?["START","Cancel"]:mode==="results"?["Result ready","Review / print"]:["Strip Test","Cassette Test"];
+ const focus=mode==="strip"?"Strip Test":mode==="cassette"?"CLINITEST hCG":mode==="qc"?"QC Test":mode==="start"?"START":mode==="results"?"Review / print":"";
  return '<ellipse cx="261" cy="333" rx="177" ry="10" fill="#d9e6ec"/>'+
  '<path d="M107 55L130 35H424L448 58V300L420 317H127L105 300Z" fill="#e9eff2" stroke="#8da6b3" stroke-width="5"/>'+
  '<path d="M424 35L448 58V300L420 317V60Z" fill="#bdccd4"/>'+
@@ -34,17 +40,20 @@ function machine(mode="home"){
 }
 function scene(kind,mode){
  const isHcg=kind==="hcg",testName=isHcg?"CLINITEST hCG CASSETTE":"URINALYSIS DIPSTICK";
- let art=machine(mode==="select"?(isHcg?"cassette":"strip"):mode==="start"?"start":mode==="results"?"results":"home");
- if(mode==="specimen"){art+=cup(512,75); art+=isHcg?
-  '<rect x="516" y="274" width="167" height="42" rx="8" fill="#f5fafb" stroke="#96b4bf" stroke-width="3"/>'+tx(600,301,"hCG CASSETTE",13,"#497489"):
-  strip(486,238,80); }
- if(mode==="strip"){art+=strip(570,188,0)+tx(574,329,isHcg?"CASSETTE":"UA STRIP",15);}
- if(mode==="dip"){art+=cup(499,68)+strip(580,173,-23)+
+ let art=machine(mode==="select"?(isHcg?"cassette":"strip"):mode==="qc"?"qc":mode==="start"?"start":mode==="results"?"results":"home");
+ if(mode==="specimen"){art+=cup(512,75);art+=isHcg?cassette(590,301):strip(486,238,80);}
+ if(mode==="strip"){art+=isHcg?cassette(590,200):strip(570,188,0);
+  art+=tx(576,329,isHcg?"hCG CASSETTE":"UA DIPSTICK",15);}
+ if(mode==="dip"){art+=cup(499,68)+(isHcg?cassette(596,264):strip(580,173,-23))+
   '<path d="M612 105C645 123 648 161 621 175" fill="none" stroke="#27958b" stroke-width="5"/>';}
  if(mode==="table"){art+='<rect x="474" y="255" width="236" height="35" rx="8" fill="#edf3f5" stroke="#99b4c1" stroke-width="3"/>';
-  art+=isHcg?'<rect x="520" y="241" width="148" height="33" rx="8" fill="#f8fbfc" stroke="#95b0be" stroke-width="3"/>'+tx(598,263,"hCG",15):strip(592,263,90);
+  art+=isHcg?cassette(593,263):strip(592,263,90);
   art+=tx(588,321,"TEST TABLE",15,"#3e7c8d");}
- if(mode==="start")art+=strip(596,204,45)+tx(587,336,"SELECT START",15,"#1a8578");
+ if(mode==="start")art+=(isHcg?cassette(592,207):strip(596,204,45))+tx(587,336,"SELECT START",15,"#1a8578");
+ if(mode==="dispense"){art+=cassette(587,245)+
+  '<path d="M556 106L577 176" stroke="#8caebd" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M578 179Q590 189 578 205Q565 191 578 179Z" fill="#d7b58e"/>'+
+  tx(590,335,"PIPETTE INTO SAMPLE WELL",13,"#247989");}
  if(mode==="results")art+=tx(587,204,"RESULTS",22,"#2a718a");
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
 }
@@ -62,6 +71,11 @@ function render(title,group){
  if(/prepare the ua|prepare the strip|prepare hcg|prepare and place|prepare urinalysis controls|prepare control/.test(t))
   return fig("Prepare "+(kind==="hcg"?"CLINITEST hCG cassette":"UA dipstick"),scene(kind,"strip"),
      "Check expiration and remove one compatible unused "+(kind==="hcg"?"cassette":"reagent strip")+".");
+ if(qc&&/open.*qc|qc test/.test(t))
+  return fig("Open QC test mode",scene(kind,"qc"),"Choose the correct QC menu and confirm control ID and lot.");
+ if(isHcg&&/dispense urine|dispense qc material|apply.*sample/.test(t))
+  return fig(qc?"Dispense approved hCG QC":"Dispense urine into hCG cassette",scene(kind,"dispense"),
+   "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
  if(/press start|dip and blot|dip.*strip|run each control/.test(t))
   return fig("Press START, dip and blot",scene(kind,"dip"),
      qc?"Apply controls according to the lot-specific SOP.":"Press START, immerse the reagent pads, then blot the strip as directed by the approved procedure.");
