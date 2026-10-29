@@ -76,7 +76,7 @@ function housing(mode){
  '<path d="M89 138 Q91 94 114 100 Q152 83 315 97 Q352 101 363 150 L359 184 Q355 156 326 155 L114 155 Q87 155 76 181Z" fill="url(#sofiaHoodGrad)"/>'+
  '<path d="M76 185 Q78 150 112 149 L324 149 Q357 149 359 190 L357 322 Q355 362 327 369 L109 369 Q78 362 77 323Z" fill="url(#sofiaFaceGrad)"/>'+
  '<rect x="100" y="168" width="234" height="153" rx="22" fill="#131517" stroke="#343638" stroke-width="3"/>'+
- '<svg x="111" y="181" width="212" height="126" viewBox="0 0 340 230" preserveAspectRatio="none">'+sc+'</svg>'+
+ '<g transform="translate(111 181) scale(0.623529 0.547826)">'+sc+'</g>'+
  '<rect x="117" y="331" width="79" height="31" rx="7" fill="#171a1d" stroke="#2d363b" stroke-width="2"/>'+
  '<rect x="130" y="339" width="51" height="14" rx="3" fill="#111b21"/><path d="M136 342 L170 342" stroke="#274c58" stroke-width="2"/>'+
  txt(156,369,"▣ Sofia 2",12,"#e4eaed",700,"middle")+
@@ -88,7 +88,7 @@ function zoom(mode){
  return '<g transform="translate(421 45)">'+rect(0,0,363,298,17,"#e7f1f5","#bbd6e1",2)+
  txt(18,29,mode==="result"?"RESULT DISPLAY":mode==="mode"?"RUN TEST / MODE":mode==="qc-result"?"QC RESULT":mode==="cal-pass"?"CALIBRATION RESULT":"SOFIA 2 TOUCHSCREEN",12,"#356d84",800)+
  rect(11,40,341,235,9,"#192023","#667d88",2)+
- '<svg x="12" y="41" width="339" height="232" viewBox="0 0 340 230">'+screen(mode)+'</svg>'+
+ '<g transform="translate(12 41) scale(0.997059 1.008696)">'+screen(mode)+'</g>'+
  txt(182,291,"ILLUSTRATED SCREEN",10,"#718f9d",750,"middle")+'</g>';
 }
 function cassette(x=450,y=160,type="patient",filled=false){
@@ -132,8 +132,10 @@ function specimenScene(type){
  }else if(type==="cassette"){
   s+=boxText(436,53,334,"SAMPLE WELL","Dispense per current assay package insert");
   s+=cassette(458,148,"patient",true);
-  s+='<path d="M685 97 L679 146" stroke="#2b92ad" stroke-width="3"/>'+
-   '<path d="M679 146 l-7 -12 m7 12 l9 -11" stroke="#2b92ad" stroke-width="3" fill="none"/>';
+  s+='<path d="M748 101 L713 176" stroke="#b0c5cb" stroke-width="10" stroke-linecap="round"/>'+
+   '<ellipse cx="754" cy="86" rx="13" ry="23" transform="rotate(24 754 86)" fill="#e5f2f4" stroke="#8aaeb9" stroke-width="2"/>'+
+   '<path d="M713 176 L700 192" stroke="#d1a5b9" stroke-width="4"/>'+
+   '<path d="M700 179 Q693 187 700 192 Q707 187 700 179" fill="#86bac4"/>';
  }else if(type==="qc"){
   s+=boxText(429,38,345,"POSITIVE + NEGATIVE","Two external controls, separate cassettes");
   s+='<rect x="475" y="116" width="52" height="165" rx="8" fill="#f8f9f8" stroke="#b0c3c8" stroke-width="2"/>'+
