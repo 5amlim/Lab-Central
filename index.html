@@ -540,6 +540,17 @@ function instrumentTabTitle(title){
  // component to wrap the full title where a shorter familiar name is absent.
  return t.replace(/\s+-\s+\(.*$/,'').trim();
 }
+function instrumentTabTitle(title){
+ const t=String(title||'').trim();
+ if(/register.*qc lot/i.test(t))return 'Register QC lot';
+ if(/cleaning.*maintenance/i.test(t))return 'Maintenance';
+ if(/result.*interpretation/i.test(t))return 'Result interpretation';
+ if(t.length<=27)return t;
+ const words=t.replace(/\\([^)]*\\)/g,'').trim().split(/\\s+/);
+ let result='';
+ for(const w of words){if(result.length+w.length+1>26)break;result+=(result?' ':'')+w;}
+ return result||t;
+}
 function guideTabTitle(title){
  const t=String(title||'');
  if(t.length<=31)return t;
@@ -583,6 +594,34 @@ function guideStepParts(entry,sec){
  const text=entry.root.text;
  // Specimen type already appears in the collection reference; avoid duplicate pill badges.
  return {badge:'',title:text};
+}
+// Short navigation labels describe the action. Full instructions stay in
+// the large step header and full text remains in the button title.
+function instrumentStepNavLabel(full){
+ const value=String(full||'').replace(/\\s+/g,' ').trim();
+ const known=[
+  [/^Grab the QC controls/i,'Warm QC controls'],
+  [/^Perform daily shutdown/i,'Daily shutdown'],
+  [/^Turn on the Sysmex/i,'Power on analyzer'],
+  [/^Go to Menu.*BLANK/i,"Print blank check"],
+  [/^Each new vial is to be replaced/i,'Replace QC vials'],
+  [/^If we run out of a certain lot|^Register a new QC lot/i,'Register QC lot'],
+  [/^Print and file the QC records/i,'Print QC records'],
+  [/^Run the QC/i,'Run QC'],
+  [/^Confirm urine specimen/i,'Confirm urine'],
+  [/^Verify, document and repeat/i,'Verify and document']
+ ];
+ for(const [pattern,label] of known)if(pattern.test(value))return label;
+ if(value.length<=34)return value;
+ const short=value.split(/[,.;:(]/)[0].trim();
+ if(short.length>0&&short.length<=34)return short;
+ const words=value.split(/\\s+/);
+ let result='';
+ for(const word of words){
+  if(result.length+word.length+1>33)break;
+  result+=(result?' ':'')+word;
+ }
+ return result||value;
 }
 function guideStepTitle(parts){
  return (parts.badge?'<span class="guide-topic-badge">'+safeHtml(parts.badge)+'</span>':'')+markText(parts.title);
@@ -667,7 +706,8 @@ function renderGuidedProcedure(group,sec){
   h+=steps.map(function(entry,i){
     const parts=guideStepParts(entry,sec);
     const name=entry.root.text;
-    return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+guideStepTitle(parts)+'</span></button>';
+    const navLabel=isInstrumentProcedure?instrumentStepNavLabel(name):name;
+    return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'" aria-label="Step '+(i+1)+': '+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+(isInstrumentProcedure?safeHtml(navLabel):guideStepTitle(parts))+'</span></button>';
   }).join('');
   h+='</div>';
   }
@@ -929,6 +969,16 @@ function sectionOverview(sec,groups){
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  if(window.LAB_EQUIPMENT_ART?.specimenGuide)h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  
+ if(instrumentCategories.includes(sec.category)){
+  // The section tabs already provide workflow navigation. Keep Overview free
+  // from redundant cards; only direct links to order sets and references stay.
+  const references=groups.filter(g=>/references?|resources?|\bsop\b/i.test(g.title));
+  h+='<div class="instrument-overview-links">';
+  if(!sec.archived)h+='<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">'+svg('file-text')+'</span><span><strong>Athena order sets</strong><small>'+(orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference')+'</small></span><span class="arrow">↗</span></button>';
+  if(references.length)h+=references.map(g=>'<button class="mini-feature" type="button" data-gotab="'+safeHtml(g.id)+'"><span class="feature-small-icon">'+svg('book-open')+'</span><span><strong>'+safeHtml(g.title)+'</strong><small>SOP and reference details</small></span><span class="arrow">↗</span></button>').join('');
+  h+='</div>';
+  return h;
+ }
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
  if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
@@ -1033,7 +1083,7 @@ function sectionRender(sec,tab){
   h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="${tab==='cal-qc'?'overview':'cal-qc'}" aria-expanded="${tab==='cal-qc'}" ${tab==='cal-qc'?'aria-current="page"':''} aria-label="${tab==='cal-qc'?'Collapse':'Open'} Calibration and QC"><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">${tab==='cal-qc'?'CLOSE DETAILS':'28-DAY MAINTENANCE'}</span></button></div>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
- }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?x.title:guideTabTitle(x.title))}</button>`).join('')}</div>`;
+ }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
