@@ -44,3 +44,9 @@
 @media(max-width:920px){.qc-control-summary{grid-template-columns:1fr}.qc-binder-layout{grid-template-columns:1fr}.qc-binder-pictogram{min-height:110px}.qc-binder-art{max-width:260px}}
 @media(max-width:650px){.qc-final-doc{padding:12px}.qc-instrument-walkthrough{padding:11px}.qc-screen-gallery{grid-template-columns:1fr}.qc-device-screen{min-height:160px}}
 @media print{.qc-screen-reference,.qc-binder-layout,.qc-control-note{break-inside:avoid}.qc-device-option.targeted,.qc-final-intro,.qc-binder-text>p{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Keep multi-word screen numbers legible instead of forcing into a 25px badge. */
+.qc-visual-top>span{width:auto;min-width:74px;height:27px;padding:4px 8px;white-space:nowrap;letter-spacing:.04em;line-height:1.1;display:flex;justify-content:center;align-items:center}
+.qc-visual-top{align-items:center;min-width:0}
+.qc-visual-top strong{min-width:0;overflow-wrap:break-word}
+@media(max-width:460px){.qc-visual-top{flex-wrap:wrap}.qc-screen-reference{padding:10px}}
