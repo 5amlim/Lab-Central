@@ -211,12 +211,10 @@ window.LAB_GUIDE_VIDEOS = {
 };
 
 </script><script>
-// Athena instrument order-set directory.
-// Add approved order sets for each instrument. Leave empty until verified.
-// Format for each instrument:
-// pathfast: [{ name: "Verified Athena order-set name", note: "Optional display note", image: "assets/order-sets/pathfast-order.png" }],
-// The image property is optional. Only add screenshots with no patient information.
-// Entries are displayed on the instrument's Order sets tab and in the directory.
+// Athena ordering names supplied in reference screenshots. Keep Athena's exact
+// display labels and distinguish individual Point Of Care Tests from Order Sets.
+// The lists are reference-only; they cannot place orders or open Athena previews.
+// Entries appear on each instrument's Athena order tab and in the directory.
 window.LAB_ORDER_SETS = {
   sysmex: [],
   piccolo: [
@@ -1084,10 +1082,10 @@ function orderSetsPanel(sec){
 }
 
 function renderOrderSetDirectory(){
- el('currentCrumb').textContent='Instrument order sets';
+ el('currentCrumb').textContent='Athena orders';
  const inst=all.filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
- let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Instrument order sets','Browse available Athena order sets by instrument.');
- h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Order-set directory</strong><p>Only confirmed Athena order sets are displayed.</p></div></div>`;
+ let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Athena orders & order sets','Browse the Athena order names by instrument.');
+ h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Athena order directory</strong><p>Point of Care Tests and Order Sets are listed using the provided Athena display names.</p></div></div>`;
  h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
  h+=`<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p>`;
  el('mainContent').innerHTML=h;
