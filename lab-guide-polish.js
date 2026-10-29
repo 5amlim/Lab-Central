@@ -69,6 +69,23 @@ function biofire(id,title){
 if(B){
  B.stageVisual=biofire;
 }
+function piccoloPatientScreen(){
+ const visual=(heading,body,note)=>'<div class="lc-pic-screen-panel"><strong>'+heading+'</strong><svg viewBox="0 0 420 290" role="img" aria-label="'+heading+' on the Piccolo Xpress touchscreen">'+body+'</svg><small>'+note+'</small></div>';
+ const screen=(title,body)=>'<rect x="32" y="13" width="354" height="251" rx="18" fill="#1e3e59" stroke="#517489" stroke-width="5"/>'+
+ '<rect x="51" y="35" width="316" height="204" rx="8" fill="#c8e4f4"/>'+
+ '<rect x="51" y="35" width="316" height="49" rx="5" fill="#295a83"/>'+
+ '<text x="209" y="66" text-anchor="middle" fill="#fff" font-size="21" font-weight="800" font-family="Arial">'+title+'</text>'+body;
+ const select=screen('Select Type','<rect x="91" y="106" width="236" height="53" rx="9" fill="#f5d16c" stroke="#b28a20" stroke-width="4"/>'+
+ '<text x="209" y="142" text-anchor="middle" font-size="23" font-family="Arial" fill="#264e69" font-weight="850">Patient</text>'+
+ '<rect x="91" y="171" width="236" height="45" rx="8" fill="#f7f9fa" stroke="#b0c7d3"/>'+
+ '<text x="209" y="201" text-anchor="middle" font-size="21" font-family="Arial" fill="#516e83">Control</text>');
+ const nums=['1','2','3','4','5','6','7','8','9','abc','0','Done'];
+ const keypad=screen('Enter Sample ID','<rect x="78" y="92" width="264" height="38" rx="7" fill="#f8fcfd" stroke="#aac4d3"/>'+
+ '<text x="209" y="118" text-anchor="middle" font-size="17" font-family="Arial" fill="#52768a">Enter patient MRN</text>'+
+ nums.map((v,i)=>{const x=82+(i%3)*90,y=140+Math.floor(i/3)*25;return '<rect x="'+x+'" y="'+y+'" width="79" height="23" rx="4" fill="'+(v==='Done'?'#239b8c':'#f4cf68')+'" stroke="'+(v==='Done'?'#18796e':'#b99d48')+'"/>'+
+ '<text x="'+(x+39)+'" y="'+(y+16)+'" font-size="13" font-family="Arial" text-anchor="middle" font-weight="800" fill="'+(v==='Done'?'white':'#365468')+'">'+v+'</text>';}).join(''));
+ return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.')+'</div>';
+}
 function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
@@ -79,7 +96,8 @@ function piccolo(title,group){
  // Use one consistent, current sample-port diagram across all Piccolo steps.
  const tool=A.piccoloPipetteSvg();
  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
- // Control menu steps use the QC screen walk-through, not another disc-loading drawing.
+ if(/select patient|enter.*mrn|patient.*sample id/.test(t))return fig("Select Patient and enter patient MRN",piccoloPatientScreen(),"After the drawer is closed, select Patient. Enter the correct patient ID (up to 14 characters), then select Done. Verify the identifier before the analyzer processes the disc.","lc-piccolo-single lc-piccolo-screen-step");
+  // Control menu steps use the QC screen walk-through, not another disc-loading drawing.
  if(/click analyze|control\s*>\s*enter|enter 1 for low|enter 2 for high/.test(t))return "";
  if(/within 60|sample time|collection|blood tube/.test(t)){
   return fig("Lithium-heparin whole blood",A.mediaSvg?A.mediaSvg("green"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
@@ -93,12 +111,14 @@ function piccolo(title,group){
  if((/load|pipett|sample port|fill chamber|dispense/.test(t))&&!/load the disc|insert.*disc|load.*disc.*start/.test(t)){
   return '<section class="lc-piccolo-prep" aria-label="Two stages of sample loading">'+
    '<div class="lc-prep-heading"><strong>Load the disc '+(q?"with approved QC material":"with blood")+'</strong><p>Fit a fresh disposable tip to the gray 100 µL transfer device. Transfer the approved volume slowly, avoiding bubbles.</p></div>'+
-   tile(fig("1 · Before loading",empty,"Sample port and chamber are empty. Use the permanent port near the central hub.")+
-   fig("2 · After loading",q?qcDisc:filled,q?"QC fill state is shown in blue-gray to distinguish control material from patient blood. Confirm the required control level and volume.":"Red indicates blood in the chamber after dispensing; verify the molded fill marks."))+
-   '<details class="lc-piccolo-tool"><summary>Show gray pipette and disposable tip</summary>'+tool+'</details></section>';
+   '<div class="lc-piccolo-one-visual">'+
+   fig("100 µL pipette + new disposable tip",tool,"Fit the disposable tip, aspirate approximately 100 µL without bubbles, and dispense through the permanent sample port.")+
+   '<div class="lc-piccolo-disc-pair">'+
+   fig("1 · Before loading",empty,"Empty sample port and chamber.")+
+   fig("2 · After loading",q?qcDisc:filled,q?"Fill the sample chamber with the approved control material, not patient blood.":"The curved chamber contains sample at the fill mark.")+'</div></div></section>';
  }
  if(/insert|drawer|analyz|start|click/.test(t)){
-  return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Seat the prepared disc level in the open drawer, close it, then select Analyze and verify patient or control details.","lc-piccolo-insert");
+  return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Select Analyze to open the drawer, seat the prepared disc, and select Close. Next, choose Patient and enter the patient MRN.","lc-piccolo-insert");
  }
  if(/print|result|log/.test(t))return (window.LAB_QC_GUIDE?.printStep?.("piccolo")||fig("Document the QC or patient result",statusCard("blue","REVIEW RESULTS","Print / file as required"),"Check accepted QC and instrument status before releasing results.","lc-piccolo-single"));
  return fig("Confirm analyzer and workflow",instrument,"Use the actual Piccolo prompts and current approved IFU.","lc-piccolo-single");
