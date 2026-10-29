@@ -235,7 +235,7 @@ function sysmexDeviceSvg(mode,showAccessory=true){
    The strip and CLINITEST hCG cassette use DISTINCT removable table inserts. */
 function clinitekDeviceMarkup(mode="empty"){
  const m=String(mode||"empty").toLowerCase();
- const stripMode=m==="strip",cassetteMode=m==="cassette"||m==="start-cassette",trayOut=!/reading|result|closed/.test(m);
+ const stripMode=/^(strip|start-strip|qc-strip)$/.test(m),cassetteMode=/^(cassette|start-cassette|qc-cassette)$/.test(m),trayOut=!/reading|result|closed/.test(m);
  const T=(x,y,t,size=13,color="#425b69",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+t+'</text>';
  let art=
  '<defs>'+
@@ -252,7 +252,7 @@ function clinitekDeviceMarkup(mode="empty"){
  // Sloped screen recess, wide and gray.
  '<path d="M152 89L162 80H421L432 91V205L424 216H149L141 208V104Z" fill="#c1c9c8" stroke="#aab7b8" stroke-width="3"/>'+
  '<path d="M156 96L167 91H411L419 101V201H157Z" fill="url(#cl-status-glass)" stroke="#8a9da2" stroke-width="2.5"/>'+
- '<path d="M162 98H404L412 124L404 187H161Z" fill="#e6eae7" opacity=".3"/>'+
+ '<path d="M162 98H404L412 124L404 187H161Z" fill="#e6eae7" opacity=".3"/>'+ ((m==="empty")?'<path d="M157 97L167 92H409L418 101V199H157Z" fill="#303b42" stroke="#596e79" stroke-width="2"/>' : '')+
  // Keep real physical interface silhouette. The menu remains schematic.
  ((m==="empty"||m==="ready")?'':(
  '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
@@ -278,31 +278,44 @@ function clinitekDeviceMarkup(mode="empty"){
  // Real black test-table slot at bottom-right front.
  '<path d="M330 306H449V325H330Z" fill="#111a22" stroke="#5d6871" stroke-width="2"/>';
  if(trayOut){
-  // The user's reference shows the table sticking out toward the operator.
-  art+='<path d="M337 319L451 319L479 353L480 391Q466 400 450 402H352Q339 400 337 389Z" fill="url(#cl-status-table)" stroke="#303c45" stroke-width="3"/>'+
-   '<path d="M350 331H444L464 359V377Q457 389 448 389H357Q350 387 350 377Z" fill="#29323a" stroke="#69777f" stroke-width="2"/>'+
-   '<path d="M362 343L434 343L447 365H365Z" fill="#111c25" stroke="#5f7079" stroke-width="1.6"/>'+
-   '<path d="M356 396H466" stroke="#121c24" stroke-width="6" stroke-linecap="round"/>';
+  // One reversible test-table insert protrudes from the LOWER RIGHT front.
+  // UA uses the narrow strip-side track; CLINITEST hCG uses the opposite face.
+  // The same full-length black tray is shown empty or with one distinct device.
+  art+='<path d="M349 319L455 319L467 338L467 439Q464 453 447 455H364Q349 451 348 440Z" fill="url(#cl-status-table)" stroke="#26343c" stroke-width="4"/>'+
+   '<path d="M360 329H451L456 344V436Q451 444 444 444H369Q360 444 360 433Z" fill="#171e24" stroke="#55646d" stroke-width="2.5"/>'+
+   '<path d="M374 337H438V433H374Z" fill="#0d141b" stroke="#35434b" stroke-width="1.8"/>'+
+   '<path d="M353 448H462" stroke="#10181e" stroke-width="5" stroke-linecap="round"/>'+
+   '<path d="M371 340L371 429M443 340V432" stroke="#687681" stroke-width="2" opacity=".5"/>';
   if(stripMode){
-   art+='<g aria-label="UA reagent strip on strip test table insert">'+
-    '<path d="M383 349L394 348L425 378L414 380Z" fill="#f8fcfa" stroke="#9cb2b9" stroke-width="1.6"/>'+
-    ['#ddc88a','#a4c79e','#c5a3b7','#9bafcb','#e4bb89','#98c4c0','#c9b2a0'].map((c,i)=>{
-      const x=389+i*4,y=351+i*4;
-      return '<rect x="'+x+'" y="'+y+'" width="9" height="5" rx="1" fill="'+c+'" transform="rotate(42 '+x+' '+y+')"/>';
-    }).join('')+'</g>';
+   // Pad end enters the analyzer; the white handle extends toward the viewer.
+   // Reagent squares run lengthwise in ONE aligned central row, pads facing up.
+   const pads=['#f7e69b','#a3c8a9','#e2c579','#9bacc7','#d1aa96','#98b1a8','#d9c3b6','#a7bc97'];
+   art+='<g aria-label="Siemens urinalysis dipstick centered lengthwise in its black tray, reagent pads upward">'+
+    '<path d="M394 332H412V448H394Z" fill="#fbfcf8" stroke="#a9bbbd" stroke-width="1.7"/>'+
+    '<rect x="396" y="335" width="14" height="16" rx="1.5" fill="#e7e8e1"/>'+
+    pads.map((col,i)=>'<rect x="396" y="'+(354+i*8)+'" width="14" height="7" rx="1" fill="'+col+'" stroke="#ffffff" stroke-width=".65"/>').join('')+
+    '<path d="M399 418h9m-9 4h9m-9 4h9" stroke="#aab9bd" stroke-width="1.1"/>'+
+    '</g>';
   }
   if(cassetteMode){
-   art+='<g aria-label="CLINITEST hCG cassette on cassette test table insert">'+
-    '<path d="M358 349L424 347L450 371L383 381Z" fill="#f6f9f8" stroke="#b2c5cb" stroke-width="2"/>'+
-    '<path d="M378 356L400 353L411 360L388 364Z" fill="#dfebef" stroke="#99b2bf"/>'+
-    '<ellipse cx="427" cy="367" rx="6" ry="4" fill="#f8f7f1" stroke="#879eac" stroke-width="1.8"/>'+
-    '<path d="M402 371L414 370" stroke="#8aa9b6" stroke-width="1.4"/></g>';
+   // Flipped table side accepts the CLINITEST hCG cassette, NOT a UA strip.
+   // Long rectangular card and sample well match the loaded-cassette photo.
+   art+='<g aria-label="CLINITEST hCG cassette on the flipped, cassette-side insert">'+
+    '<path d="M371 332L437 330L440 442L373 444Z" fill="#f7f9f8" stroke="#a4b4bc" stroke-width="2.8"/>'+
+    '<path d="M375 338H435V355H375Z" fill="#ecf0f0"/>'+
+    '<text x="405" y="347" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="#3e5565" font-weight="750">CLINITEST hCG</text>'+
+    '<rect x="384" y="365" width="39" height="35" rx="3" fill="#edf4f5" stroke="#b8ced0" stroke-width="1.7"/>'+
+    '<path d="M390 376h27m-27 8h27m-27 8h27" stroke="#b6c6cb" stroke-width="1.7"/>'+
+    '<circle cx="408" cy="420" r="8" fill="#e0e9ec" stroke="#879eab" stroke-width="2"/>'+
+    '<circle cx="408" cy="420" r="3" fill="#f7f6e8"/>'+
+    '<path d="M383 434H426" stroke="#b0bfc1" stroke-width="2"/>'+
+    '</g>';
   }
  }else art+='<path d="M341 321H445V335H341Z" fill="#253039" stroke="#66747b" stroke-width="2"/>';
  return art;
 }
 function clinitekDeviceSvg(mode="empty"){
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 420" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(mode==="strip"?"urinalysis strip seated in the black strip test-table insert":mode==="cassette"?"CLINITEST hCG cassette seated in the distinct cassette table insert":"black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(mode==="strip"?"urinalysis strip seated in the black strip test-table insert":mode==="cassette"?"CLINITEST hCG cassette seated in the distinct cassette table insert":"black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
 }
 
 function body(shape,a){
