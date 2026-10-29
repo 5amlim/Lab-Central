@@ -132,23 +132,40 @@ function completedAnalyzer(){
 }
 
 function sideSwitch(){
- return svg(
- '<ellipse cx="304" cy="327" rx="235" ry="12" fill="#dce8ec"/>'+
- '<path d="M122 46H431L472 76V305L431 316H122L98 287V74Z" fill="#e8edf0" stroke="#91a9b6" stroke-width="5"/>'+
- '<path d="M431 46L472 76V305L431 316Z" fill="#b8c9d1" stroke="#879daa" stroke-width="4"/>'+
- '<rect x="128" y="75" width="273" height="156" rx="14" fill="#bacad3" stroke="#93aeba" stroke-width="4"/>'+
- '<rect x="141" y="90" width="246" height="127" rx="7" fill="#e9f5f8"/>'+
- tx(262,130,"SHUTDOWN COMPLETE",17,"#436b7a",850)+
- tx(262,164,"Safe to power off",14,"#567b8a",700)+
- '<rect x="432" y="165" width="36" height="58" rx="5" fill="#29323a" stroke="#101c27" stroke-width="4"/>'+
- '<rect x="441" y="173" width="18" height="43" rx="3" fill="#101b23"/>'+
- '<path d="M443 202L457 196" stroke="#f0f4f5" stroke-width="3"/>'+
- '<path d="M473 189L546 155H622" stroke="#22908b" stroke-width="4" fill="none"/>'+
- tx(621,146,"BLACK POWER",17,"#247b80",900,"end")+
- tx(621,169,"SWITCH · OFF",16,"#247b80",900,"end")+
- '<circle cx="451" cy="194" r="37" fill="none" stroke="#24948c" stroke-width="4" stroke-dasharray="8 6"/>'+
- tx(272,350,"RIGHT SIDE OF ANALYZER",14,"#527a89",850),
- 'After shutdown completes switch off the physical black rocker power switch on the right side of the pocH-100i analyzer');
+ // A three-quarter front/right view keeps the physical switch visible while
+ // retaining the actual instrument's screen, front printer, and sample access.
+ const drawing=
+ '<ellipse cx="310" cy="333" rx="260" ry="12" fill="#e2ebef"/>'+
+ '<path d="M122 80Q123 43 159 38H439Q464 38 479 64L520 91V299Q518 324 480 327H157Q121 326 121 291Z" fill="#edf2f4" stroke="#8ca6b4" stroke-width="5"/>'+
+ '<path d="M438 39Q474 42 490 76L520 91V299Q517 319 481 327H442Z" fill="#cbd8df" stroke="#95afbb" stroke-width="3"/>'+
+ '<rect x="143" y="74" width="278" height="158" rx="14" fill="#b4cad6" stroke="#88a5b5" stroke-width="4"/>'+
+ '<rect x="156" y="89" width="250" height="128" rx="7" fill="#eef9fc"/>'+
+ '<rect x="162" y="95" width="238" height="27" rx="5" fill="#d1e9f4"/>'+
+ tx(169,113,"sysmex",16,"#237fa6",900,"start")+
+ tx(382,113,"Not Ready",12,"#b66c45",750,"end")+
+ '<rect x="178" y="132" width="206" height="65" rx="6" fill="#f7fbfd" stroke="#c9dce5"/>'+
+ tx(281,157,"SHUTDOWN COMPLETE",16,"#315a72",900)+
+ tx(281,181,"Safe to power off",13,"#547b8a",750)+
+ '<path d="M152 238H417" stroke="#b8ccd5" stroke-width="3"/>'+
+ '<path d="M159 250H244" stroke="#2e8fb2" stroke-width="5" stroke-linecap="round"/>'+
+ tx(200,272,"SYSMEX",17,"#22749e",900)+
+ tx(201,288,"pocH-100i",13,"#597789",800)+
+ '<rect x="159" y="293" width="89" height="21" rx="5" fill="#e7eff3" stroke="#a5bbc6"/>'+
+ '<path d="M171 302H234" stroke="#b8c8ce" stroke-width="2"/>'+
+ '<rect x="280" y="244" width="132" height="80" rx="16" fill="#293844" stroke="#819ba9" stroke-width="4"/>'+
+ '<rect x="295" y="254" width="102" height="22" rx="6" fill="#182a35"/>'+
+ '<rect x="303" y="282" width="86" height="34" rx="6" fill="#1e303a" stroke="#576f7c"/>'+
+ '<ellipse cx="346" cy="298" rx="29" ry="11" fill="#101c26" stroke="#7d9caa" stroke-width="3"/>'+
+ '<path d="M469 108h29M469 122h29M469 136h29M469 150h29" stroke="#9ab0bb" stroke-width="5" stroke-dasharray="5 4"/>'+
+ '<rect x="458" y="184" width="35" height="56" rx="5" fill="#2e3841" stroke="#121e25" stroke-width="3"/>'+
+ '<rect x="466" y="190" width="19" height="42" rx="3" fill="#141e25"/>'+
+ tx(476,204,"I",10,"#fff",750)+tx(476,228,"O",11,"#fff",750)+
+ '<path d="M498 211L557 180H632" stroke="#168c85" stroke-width="3.5" fill="none"/>'+
+ '<circle cx="476" cy="211" r="40" stroke="#159489" stroke-width="3" stroke-dasharray="7 6" fill="none"/>'+
+ tx(630,168,"BLACK POWER",16,"#227f7e",900,"end")+
+ tx(630,190,"SWITCH · OFF",16,"#227f7e",900,"end")+
+ tx(283,346,"RIGHT SIDE OF ANALYZER",13,"#577f90",850);
+ return svg(drawing,"Front and right side of pocH-100i, with the black rocker switch highlighted after shutdown completes");
 }
 function shutdown(){
  return '<section class="lc-poc-shutdown" aria-label="pocH shutdown sequence">'+
