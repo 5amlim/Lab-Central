@@ -101,24 +101,26 @@ h+=notice('Follow current Athena documentation requirements and approved procedu
 return h+'</section>';
 }
 function sendout(){
- var h=heading('SEND-OUTS / LAB TECH DOCUMENTATION','Lab Sendout Log','After specimens reach the laboratory, process and package each send-out using the Lab Calculator, capture the required photos, and submit the regional electronic log.');
+ var h=heading('SEND-OUTS / LAB PERSONNEL DOCUMENTATION','Lab Sendout Log','Use this log for routine send-outs, STAT or special pickups, and special test kits sent by UPS or FedEx. Process the specimens, photograph each bag and document the handoff.');
  h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
  h+=window.LAB_SENDOUT_MARKETS.render("log");
- h+='<h2 class="ops-section-heading">Lab tech workflow</h2>';
+ h+='<h2 class="ops-section-heading">Lab personnel workflow</h2>';
  h+=steps([
- ['Lab tech','Process specimens according to the Lab Calculator','Confirm the ordered tests and receiving laboratory. Verify specimen labels, required tubes, processing, centrifugation/aliquots, stability, and collection/transport volumes against the approved directory.'],
- ['Lab tech','Prepare the correct bags and containers','Separate specimens by receiving lab, routine versus STAT priority, and room-temperature, refrigerated or frozen requirements. Use the correct transport container and place the matching requisition in the document sleeve. Seal every bag.'],
- ['Lab tech','Photograph each packaged send-out','Capture the labeled specimen tubes or containers, each sealed transport bag, the matching requisition, and the Lab Calculator reference where requested. Photograph additional bags separately when temperatures or priorities differ.'],
- ['Lab tech','Open and complete the regional Sendout Log','Choose SoCal, NorCal, New York or Florida above. Enter the site, receiving laboratory, patient reference, specimen quantities, bag contents, temperature, and any applicable STAT pickup details in the secure Microsoft Form. Attach the required photos.'],
- ['Lab tech','Submit the form and verify the entry','Review the form for the correct patient/order and receiving lab before submission. Confirm the electronic submission succeeded. Correct missing or mismatched information before proceeding.'],
- ['Lab tech','Place the bags in the designated bin','Place each packaged specimen into the designated receiving-lab/temperature bin, refrigerator, freezer, lockbox or pickup location according to the approved site procedure. Verify the next scheduled courier handoff.']
+ ['Lab personnel','Process specimens according to the Lab Calculator','Confirm the ordered tests and receiving laboratory. Verify labels, tube requirements, centrifugation/aliquots, volume and handling against the approved directory. For special test kits, follow the kit-specific instructions.'],
+ ['Lab personnel','Separate and label transport bags','Follow the Lab Calculator printout to separate specimens into room-temperature, refrigerated and frozen bags. Also separate by receiving lab, routine versus STAT, or special handling where indicated. Seal each bag with the matching paperwork in its document sleeve.'],
+ ['Lab personnel','Photograph each bag separately','Photograph labeled specimens, <strong>each sealed transport bag</strong>, and the matching requisition. The Sendout Log supports <strong>up to 10 photos</strong>. Include the Lab Calculator printout if requested.'],
+ ['Lab personnel','Complete the regional Sendout Log','Select the market, then choose the clinic within its secure Microsoft Form. Record the receiving lab, specimen and bag details, plus any STAT or special pickup confirmation/reference. For special kits shipped by UPS or FedEx, include the carrier and tracking number. Attach the photos.'],
+ ['Lab personnel','Submit the form and verify the entry','Check that the requisition, specimens, temperature groups and documentation match. Verify the entry was submitted successfully and that pickup/shipping details are complete where applicable.'],
+ ['Lab personnel','Place the bags or kits in the approved handoff area','Place routine specimens in the correct receiving-lab bin, lockbox, refrigerator or freezer. For STAT/special pickups or UPS/FedEx test kits, follow the assigned courier handoff or drop-off process, and retain the confirmation/tracking reference.']
  ]);
  h+=window.LAB_SENDOUT_VISUAL.examples();
- h+=accordion('What needs to be photographed?', 'Photograph the labeled specimen(s), every sealed transport bag, and the matching requisition. Include Lab Calculator output when the form requests it. The bag image must make temperature and STAT/routine grouping clear. Use only the approved secure form for patient documentation.',true);
- h+=accordion('How do I group and store multiple bags?', 'Group specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT status. Keep distinct groups in separate correctly labeled transport bags and store in the designated bin or temperature-controlled pickup area. Follow each receiving lab\'s specimen directory.');
- h+=notice('<strong>Before submitting:</strong> Check that the requisition, specimens, bag contents and electronic log all match. Lab technicians own the sendout log entry.','amber');
+ h+=accordion('What needs to be photographed?', 'Photograph all labeled specimens, each separately sealed transport bag, and the matching requisition. You may attach up to 10 photos in the Sendout Log, including the Lab Calculator printout when requested. Separate temperature and STAT/special bags according to the Lab Calculator printout, and photograph each bag individually.',true);
+ h+=accordion('How do I group and store multiple bags?', 'Follow the Lab Calculator printout: separate specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT or special handling when required. Use the designated secure pickup, storage or temperature-controlled area and follow the receiving lab directory.');
+ h+=accordion('Does the log include special courier pickups and shipped kits?', 'Yes. Complete the regional Sendout Log for routine send-outs, STAT or special pickups, and special test kits shipped using UPS or FedEx. Enter pickup confirmation or reference information when applicable, or carrier and tracking number for shipped kits. Use the approved handoff process and secure documentation.');
+ h+=notice('<strong>Before submitting:</strong> Match every bag to the requisition and Lab Calculator. Include photos of each bag (up to 10 total) and any applicable pickup confirmation or UPS/FedEx tracking information.','amber');
  h+='<div class="ops-link-card"><div><strong>Need specific receiving-lab or courier instructions?</strong><p>Open Lab send-outs for Quest, Cedars, HealthTrackRx and Labcorp.</p></div><button type="button" data-go="sendout">Receiving lab guidance →</button></div>';
  return h+'</section>';
 }
+
 window.LAB_OPS={render:function(page,tab){if(page==='outside')return home(tab);if(page==='specimen-dropoff')return dropoff();if(page==='sendout-log')return sendout();return '';},titles:{outside:'Home stool & urine collection','specimen-dropoff':'Specimen drop-off','sendout-log':'Lab Sendout Log'}};
 })();
