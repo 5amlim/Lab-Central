@@ -148,9 +148,9 @@
 
 </style>
 <link rel="stylesheet" href="step-illustrations.css?v=20261028-illustrations-v1" media="all">
-<link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v3">
+<link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261029-horizontal-scroll-cue-v10">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261029-unified-instrument-components-v11">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -240,7 +240,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261029-hood-running-v3"></script>
 <script src="pathfast-interactive.js?v=20261029-compact-timing-v2"></script>
 <script src="pathfast-clinical.js?v=20261029-guided-rn-v2"></script>
-<script src="equipment-art.js?v=20261029-pathfast-complete-base-v14"></script>
+<script src="equipment-art.js?v=20261029-unified-collection-tubes-v15"></script>
 <script src="step-illustrations.js?v=20261029-qc-two-vials-v3"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-sysmex-reference-v4"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
@@ -529,11 +529,16 @@ function drawNodes(nodes,depth=0){
 }
 
 function instrumentTabTitle(title){
- const t=String(title||'');
+ const t=String(title||'').trim();
  if(/^running (?:patient )?samples?\b|^running tests\b/i.test(t))return 'Patient testing';
  if(/^ordering tests\b/i.test(t))return 'Provider ordering';
  if(/^QC Test\b/i.test(t))return 'QC testing';
- return guideTabTitle(t);
+ if(/^register a new QC lot\b/i.test(t))return 'New QC lot';
+ if(/\bparallel QC\b/i.test(t)&&t.length>35)return 'Parallel QC';
+ if(/^cleaning and maintenance\b/i.test(t))return 'Cleaning & maintenance';
+ // Avoid artificial ellipses on instrument tabs. Allow the shared tab
+ // component to wrap the full title where a shorter familiar name is absent.
+ return t.replace(/\s+-\s+\(.*$/,'').trim();
 }
 function guideTabTitle(title){
  const t=String(title||'');
@@ -1002,7 +1007,7 @@ function sectionRender(sec,tab){
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
@@ -1025,7 +1030,7 @@ function sectionRender(sec,tab){
   h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="${tab==='cal-qc'?'overview':'cal-qc'}" aria-expanded="${tab==='cal-qc'}" ${tab==='cal-qc'?'aria-current="page"':''} aria-label="${tab==='cal-qc'?'Collapse':'Open'} Calibration and QC"><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">${tab==='cal-qc'?'CLOSE DETAILS':'28-DAY MAINTENANCE'}</span></button></div>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
- }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.title)}">${safeHtml(guideTabTitle(x.title))}</button>`).join('')}</div>`;
+ }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?x.title:guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
