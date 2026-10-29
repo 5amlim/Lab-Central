@@ -162,7 +162,7 @@
  color:#258778;text-decoration:none;
 }
 .ops-sendout-photo-arrow-label{
- position:absolute;top:50%;left:50%;z-index:2;
+ position:absolute;top:65px;left:50%;z-index:2;
  transform:translate(-50%,-50%);
  display:block;flex:none;max-width:86px;width:100%;
  border:1px solid #b7d9d2;background:#eaf7f3;
