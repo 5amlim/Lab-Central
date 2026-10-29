@@ -196,3 +196,24 @@
 .pcr-two-hour-question .pcr-flow-option.selected .pcr-result-option-body{background:#f7fdf9;color:#456e64}
 @media(max-width:700px){.pcr-two-hour-question .pcr-flow-options{grid-template-columns:1fr;gap:10px;padding:12px}}
 @media print{.pcr-two-hour-question .pcr-flow-option{break-inside:avoid}}
+
+/* Provider notification after missed one-hour collection window */
+.pcr-flow-explorer .pcr-provider-notification{
+ display:grid;gap:7px;
+ margin:0 0 4px;padding:18px 20px;
+ border:1px solid #e9c88e;border-left:5px solid #c78527;
+ border-radius:11px;background:#fff7e8;
+ color:#80531c;
+}
+.pcr-provider-notification-label{
+ font-size:10px;font-weight:900;letter-spacing:.09em;color:#9b611b;
+}
+.pcr-flow-explorer .pcr-provider-notification>strong{
+ font-size:17px;font-weight:900;line-height:1.4;color:#945614;
+}
+.pcr-flow-explorer .pcr-provider-notification>p{
+ font-size:12.5px;line-height:1.65;margin:0;color:#6e5840;
+}
+@media(max-width:650px){
+ .pcr-flow-explorer .pcr-provider-notification{padding:14px}
+}
