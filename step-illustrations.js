@@ -222,7 +222,7 @@ function genericScene(sec,title,group){
  const qc=/qc|calibrat|control/.test(grp);
  const media={sysmex:"lavender",piccolo:"green",pathfast:"green",triage:"lavender",clinitek:"urine",
    torch:"stool",spotfire:"utm",febridx:"finger","drug-screen":"urine",coagsense:"finger",
-   poc:"varies",sofia:"swab",hemocue:"finger"};
+   poc:"varies",sofia:"sofia-kit-swab",hemocue:"finger"};
  const material=media[id]||"varies";
  const specimen=art.mediaSvg?art.mediaSvg(material):art.kitShape?.(id,false,qc?"qc":"patient")||"";
  const device=art.render?.(sec).match(/<svg[\s\S]*?<\/svg>/)?.[0]||art.kitShape?.(id,false,qc?"qc":"patient")||"";
