@@ -271,7 +271,7 @@ const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);
 let favs=[];let localVideos={};
 try{favs=JSON.parse(localStorage.getItem('labGuideFavorites')||'[]')||[];localVideos=JSON.parse(localStorage.getItem('labGuideVideoOverrides')||'{}')||{}}catch(_){favs=[];localVideos={}}
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided'};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -560,7 +560,7 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
 }
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
- if(state.guideRoute!==key){state.guideRoute=key;state.guideStep=0;state.guideMode='guided';}
+ if(state.guideRoute!==key){state.guideRoute=key;state.guideStep=0;state.guideMode='guided';state.guideDetailsExpanded=true;}
  const isQcWorkflow=Boolean(window.LAB_QC_GUIDE?.isQcGroup(sec,group));
  const procedureBlocks=isQcWorkflow?group.blocks.filter(b=>!(b.type==='list'&&b.level===1&&/^(Put printouts?\b|Record the QC in the QC binder\b)/i.test(b.text))):group.blocks;
  const steps=guideStepData(makeTree(procedureBlocks));
@@ -573,7 +573,7 @@ function renderGuidedProcedure(group,sec){
  const unit=topicMode?'Topic':'Step';
  const isPathfastPatient=sec.id==='pathfast'&&group.id==='patient';
  const isInstrumentProcedure=instrumentCategories.includes(sec.category)&&!sec.archived;
- let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
+ let h='<section class="procedure-flow'+(isPathfastPatient?' pfux-patient':'')+(!isPathfastPatient&&!state.guideDetailsExpanded?' guide-details-collapsed':'')+'" aria-label="'+safeHtml(group.title)+' procedure">';
  if(isPathfastPatient)h+='<div class="pcr-heading pf-patient-heading"><div><span class="pcr-eyebrow">PATHFAST / PATIENT TESTING</span><h2>Patient sample testing</h2><p>Prepare the cartridges and sample rack, then verify the patient SID on the analyzer and start the run.</p></div><span class="pcr-role-label">Lab tech</span></div>';
  else if(isInstrumentProcedure){
   const qc=/\bqc\b|\bcontrols?\b|calibrat/i.test(group.title);
@@ -583,13 +583,13 @@ function renderGuidedProcedure(group,sec){
   h+='<div class="pcr-heading instrument-procedure-heading"><div><span class="pcr-eyebrow">'+safeHtml(sec.title).toUpperCase()+' / '+(qc?'QUALITY CONTROL':cleaning?'MAINTENANCE':'TESTING WORKFLOW')+'</span><h2>'+safeHtml(short)+'</h2><p>'+(qc?'Follow the selected QC procedure and approved manufacturer instructions.':cleaning?'Complete the maintenance or cleaning steps in sequence.':'Follow the testing sequence and specimen requirements for this instrument.')+'</p></div><span class="pcr-role-label">'+role+'</span></div>';
  }
  else h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.')+'</p></div></div>';
- if(title.detail)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
+ if(title.detail&&!isInstrumentProcedure)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
  
  if(window.LAB_EQUIPMENT_ART?.specimenGuide&&['Analyzers','Point of care'].includes(sec.category)&&!/QC|calibration|maintenance|cleaning/i.test(group.title))h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
  if(isPathfastPatient)h+='<div class="pfux-patient-toolbar" id="procedureTop"><strong>Step '+(current+1)+' of '+total+'</strong><span>'+safeHtml(steps[current].root.text)+'</span><div class="pfux-view-toggle"><button type="button" data-guide-mode="guided" class="'+(state.guideMode==='guided'?'active':'')+'">Step by step</button><button type="button" data-guide-mode="all" class="'+(state.guideMode==='all'?'active':'')+'">All steps</button></div></div>';
  else h+='<div class="guide-toolbar" id="procedureTop"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+total+' '+(topicMode?(total===1?'topic':'topics'):(total===1?'step':'steps'))+' · '+(state.guideMode==='guided'?'Focused step view':'Complete procedure')+'</span></div>';
- if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-expanded="true" aria-label="Collapse all instruction details">Collapse details <span class="lab-shared-chevron" aria-hidden="true"></span></button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
+ if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><button type="button" class="guide-detail-control" data-guide-details="toggle" aria-expanded="'+String(state.guideDetailsExpanded)+'" aria-controls="guideStageDetails" aria-label="'+(state.guideDetailsExpanded?'Collapse all step details':'Expand all step details')+'">'+(state.guideDetailsExpanded?'Collapse details':'Expand details')+' <span class="lab-shared-chevron" aria-hidden="true"></span></button><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
   if(isPathfastPatient){
    const shortNames=['Retrieve cartridges','Prepare sample rack','Dispense specimen','Load rack + tips','Sign in','Check assay status','Back to menu','Select SAMPLE','Choose lane','Enter patient SID','Start analysis','Review results'];
@@ -609,9 +609,9 @@ function renderGuidedProcedure(group,sec){
   if(state.guideMode==='guided')h+='<div class="guide-progress" role="progressbar" aria-label="Procedure steps viewed" aria-valuenow="'+(current+1)+'" aria-valuemin="0" aria-valuemax="'+total+'"><span style="width:'+((current+1)/total*100)+'%"></span></div>';
  }
  if(state.guideMode==='all'){
-  h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all">'+steps.map(function(entry,i){return guideStepCard(entry,i,total,patientVisual,unit,sec,group.id)}).join('')+'</div>';
+  h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all" id="guideStageDetails">'+steps.map(function(entry,i){return guideStepCard(entry,i,total,patientVisual,unit,sec,group.id)}).join('')+'</div>';
  }else{
-  h+='<div class="guide-stage">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec,group.id)+'</div>';
+  h+='<div class="guide-stage" id="guideStageDetails">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec,group.id)+'</div>';
   h+='<div class="guide-bottom"><span class="guide-step-count">'+(current+1)+' / '+total+' '+(topicMode?'topics':'main steps')+'</span><div class="guide-transport">';
   h+='<button type="button" class="guide-button" data-guide-step="'+(current-1)+'" '+(current===0?'disabled':'')+' aria-label="Previous procedure step">← Previous</button>';
   if(current<total-1)h+='<button type="button" class="guide-button primary" data-guide-step="'+(current+1)+'" aria-label="Next guide section">Next '+(topicMode?'topic':'step')+' →</button>';
@@ -1034,12 +1034,14 @@ document.addEventListener('click',e=>{
  }
  const detailsButton=e.target.closest('[data-guide-details]');
  if(detailsButton){
-  const groups=[...el('mainContent').querySelectorAll('.guide-group')];
-  const shouldClose=groups.some(group=>group.open);
-  groups.forEach(group=>{group.open=!shouldClose;});
-  detailsButton.innerHTML=(shouldClose?'Expand details':'Collapse details')+' <span class="lab-shared-chevron" aria-hidden="true"></span>';
-  detailsButton.setAttribute('aria-expanded',String(!shouldClose));
-  detailsButton.setAttribute('aria-label',shouldClose?'Expand all instruction details':'Collapse all instruction details');
+  // Hide or restore the illustrations and instructions beneath every step header.
+  // Keep the selection when navigating between steps or switching to All steps.
+  state.guideDetailsExpanded=!state.guideDetailsExpanded;
+  const procedure=detailsButton.closest('.procedure-flow');
+  if(procedure)procedure.classList.toggle('guide-details-collapsed',!state.guideDetailsExpanded);
+  detailsButton.innerHTML=(state.guideDetailsExpanded?'Collapse details':'Expand details')+' <span class="lab-shared-chevron" aria-hidden="true"></span>';
+  detailsButton.setAttribute('aria-expanded',String(state.guideDetailsExpanded));
+  detailsButton.setAttribute('aria-label',state.guideDetailsExpanded?'Collapse all step details':'Expand all step details');
   return;
  }
  const modeButton=e.target.closest('[data-guide-mode]');
