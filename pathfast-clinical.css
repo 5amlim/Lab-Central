@@ -304,3 +304,66 @@
  .pcr-waste-summary-badge{print-color-adjust:exact;-webkit-print-color-adjust:exact}
  .pcr-line-waste-alert{break-inside:avoid}
 }
+
+/* Serial clock layout and missed-window action, 2026-10-29 */
+.pcr-guide .pcr-timing-panel .pcr-timing-start.pcr-custom-baseline{
+  width:100%;
+  max-width:none!important;
+  grid-template-columns:58px minmax(180px,1fr) minmax(205px,270px) 88px;
+  column-gap:18px;
+  align-items:center;
+}
+.pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-clock{grid-column:1;grid-row:1}
+.pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-baseline-text{
+  grid-column:2;grid-row:1;min-width:0;
+}
+.pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-time-input-label{
+  grid-column:3;grid-row:1;justify-self:end;
+  width:100%;max-width:270px;min-width:0;margin-left:0;
+}
+.pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-time-input-shell{
+  width:100%;min-width:0;
+}
+.pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-draw-clock-art{
+  grid-column:4;grid-row:1;justify-self:end;align-self:center;
+}
+.pcr-guide .pcr-fallback-timing>summary{
+  background:#fff0da;
+  border-left:4px solid #d7852e;
+  color:#85470d;
+  transition:background-color .18s ease;
+}
+.pcr-guide .pcr-fallback-timing>summary:hover{background:#ffe6c5}
+.pcr-guide .pcr-fallback-timing[open]>summary{background:#ffe5c0}
+.pcr-guide .pcr-fallback-timing>summary span:first-child{color:#904b11}
+.pcr-guide .pcr-fallback-timing>summary strong{color:#994d13}
+.pcr-guide .pcr-fallback-timing .pcr-fallback-chevron{color:#994d13}
+.pcr-guide .pcr-fallback-timing>summary:focus-visible{
+  outline:3px solid #d7852e;outline-offset:-3px;
+}
+@media(max-width:1020px){
+  .pcr-guide .pcr-timing-panel .pcr-timing-start.pcr-custom-baseline{
+    grid-template-columns:52px minmax(0,1fr) minmax(190px,230px) 76px;
+    column-gap:12px;
+  }
+}
+@media(max-width:780px){
+  .pcr-guide .pcr-timing-panel .pcr-timing-start.pcr-custom-baseline{
+    grid-template-columns:52px minmax(0,1fr) 72px;
+    column-gap:12px;row-gap:12px;
+  }
+  .pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-baseline-text{
+    grid-column:2/-1;grid-row:1;
+  }
+  .pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-time-input-label{
+    grid-column:1/3;grid-row:2;justify-self:stretch;max-width:none;
+  }
+  .pcr-guide .pcr-timing-panel .pcr-custom-baseline .pcr-draw-clock-art{
+    grid-column:3;grid-row:2;justify-self:end;
+  }
+}
+@media(max-width:480px){
+  .pcr-guide .pcr-timing-panel .pcr-timing-start.pcr-custom-baseline{
+    grid-template-columns:49px minmax(0,1fr) 56px;column-gap:8px;
+  }
+}
