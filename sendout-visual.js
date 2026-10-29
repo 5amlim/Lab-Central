@@ -52,7 +52,7 @@ function card(title,picture,description){
  '<div class="ops-evidence-svg">'+picture+'</div><p>'+description+'</p></article>';
 }
 function examples(){
- return '<section class="ops-evidence"><div class="ops-evidence-heading"><span>PHOTO DOCUMENTATION</span><h2>Photograph specimens, each bag and the requisition</h2>'+
+ return '<section class="ops-evidence" id="ops-sendout-photo-guide"><div class="ops-evidence-heading"><span>PHOTO DOCUMENTATION</span><h2>Photograph specimens, each bag and the requisition</h2>'+
  '<p>Use the Lab Calculator printout to organize specimens before taking photos for the secure regional Sendout Log.</p></div>'+
  '<div class="ops-evidence-grid">'+
  card("01 · Specimen tubes",tube(),"Photograph all labeled specimen tubes or containers. Make sure the cap color, number of tubes and labels are visible.")+
