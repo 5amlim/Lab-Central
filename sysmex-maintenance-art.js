@@ -9,45 +9,18 @@
  const T=(x,y,v,size=16,color="#345e75",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="'+weight+'" fill="'+color+'" text-anchor="'+anchor+'">'+E(v)+'</text>';
  const S=(markup,title)=>'<svg viewBox="0 0 980 460" role="img" aria-label="'+E(title)+'" xmlns="http://www.w3.org/2000/svg">'+markup+'</svg>';
  function analyzer(mode){
-  let head=mode==="shutdown"?"MAIN · Ready":mode==="transducer"?"MAINT. · Clean Transducer":mode==="other"?"MAINTENANCE":mode==="waste"?"Discard waste":mode==="reagent"?"Replace Reagent":"MAIN";
-  const choices=mode==="shutdown"?["QC","Result","Shutdown"]:
-   mode==="transducer"?["Set CELLCLEAN in sample position","Execute","Cancel"]:
-   mode==="other"?["Clean waste chamber","Auto Rinse","Clog Removal"]:
-   mode==="waste"?["Check waste bottle connection","Execute","Cancel"]:
-   mode==="reagent"?["pocH-pack D / L","Scan reagent barcode","Execute"]:["Main","QC","Result"];
-  const selected=mode==="shutdown"?"Shutdown":mode==="transducer"?"Execute":mode==="other"?"Clean waste chamber":mode==="waste"?"Execute":"Scan reagent barcode";
-  let m='<ellipse cx="329" cy="429" rx="230" ry="15" fill="#d9e4e9" opacity=".75"/>'+
-    '<path d="M148 75Q148 45 177 34L190 29H485Q506 29 516 51L531 78V375Q531 410 493 418H180Q146 413 146 379Z" fill="#eef2f3" stroke="#92a8b4" stroke-width="5"/>'+
-    '<path d="M486 31Q509 34 520 63L531 80V375Q531 399 495 413L491 411V77Z" fill="#c4d2d9" stroke="#91a7b4" stroke-width="3"/>'+
-    '<path d="M170 63L185 48H471L481 61V230H171Z" fill="#f7f9fa"/>'+
-    '<rect x="179" y="72" width="286" height="176" rx="9" fill="#cad7df" stroke="#8ea4b1" stroke-width="5"/>'+
-    '<rect x="193" y="86" width="259" height="147" rx="5" fill="#eef7fa"/>'+
-    '<rect x="193" y="86" width="259" height="30" rx="4" fill="#e4ecf2"/>'+
-    T(207,105,"Sysmex",13,"#2c98b0",850,"start")+
-    T(436,105,mode==="shutdown"?"Ready":"Not Ready",11,mode==="shutdown"?"#318c67":"#b76c49",850,"end")+
-    '<rect x="199" y="123" width="247" height="25" rx="3" fill="#d7e8f0"/>'+
-    T(323,141,head,15,"#315c72",850)+
-    choices.map((v,i)=>{
-      const y=155+i*25,sel=v===selected;
-      return '<rect x="204" y="'+y+'" width="238" height="22" rx="5" fill="'+(sel?"#ccefe8":"#f9fcfd")+'" stroke="'+(sel?"#178676":"#b7ced9")+'" stroke-width="'+(sel?2.5:1)+'"/>'+
-       T(323,y+15,v,v.length>25?9.5:12,sel?"#17695c":"#4d6d7f",sel?900:720);
-    }).join("")+
-    '<path d="M172 250H462" stroke="#c1cbd0" stroke-width="3"/>'+
-    '<path d="M203 264L278 264" stroke="#277eab" stroke-width="5" stroke-linecap="round"/>'+
-    T(240,284,"SYSMEX",18,"#2b7891",900)+
-    T(244,298,"pocH-100i",14,"#677984",800)+
-    '<rect x="330" y="255" width="132" height="157" rx="19" fill="#293943" stroke="#91a7b4" stroke-width="5"/>'+
-    '<rect x="347" y="278" width="102" height="49" rx="9" fill="#182b35"/>'+
-    '<rect x="360" y="330" width="77" height="58" rx="8" fill="#1f313d" stroke="#526773" stroke-width="3"/>'+
-    '<ellipse cx="399" cy="358" rx="27" ry="15" fill="#0c202c" stroke="#647e8a" stroke-width="3"/>'+
-    '<rect x="209" y="329" width="91" height="60" rx="7" fill="#edf1f2" stroke="#c3cdd2" stroke-width="2"/>'+
-    '<path d="M218 350H290" stroke="#c1cbd1" stroke-width="3"/>'+
-    '<path d="M245 392H286" stroke="#b9c8cf" stroke-width="3"/>'+
-    '<circle cx="493" cy="264" r="8" fill="#dcecf3" stroke="#81a3b3" stroke-width="3"/><path d="M163 68Q171 47 192 47H471" fill="none" stroke="#fff" stroke-width="7" opacity=".75"/><path d="M481 41V405" fill="none" stroke="#a8bec8" stroke-width="2"/><rect x="167" y="409" width="31" height="10" rx="3" fill="#647783"/><rect x="465" y="409" width="30" height="10" rx="3" fill="#647783"/><path d="M174 252H325" stroke="#dae4e8" stroke-width="3"/>'+
-    T(328,442,"pocH-100i · actual front geometry (schematic)",13,"#678699");
-  return m;
- }
- function cellclean(){
+ const shared=art.sysmexDeviceMarkup;
+ if(typeof shared!=="function")return "";
+ // Maintenance pictures keep the larger task-specific object at right.
+ // Do not repeat the reagent bottle when illustrating waste, CELLCLEAN,
+ // replacement packs, or a barcode scanner beside the main analyzer.
+ const m=mode==="shutdown"?"shutdown":mode==="reagent"?"reagent":
+  mode==="transducer"?"transducer":mode==="waste"?"waste":
+  mode==="other"?"other":"ready";
+ return '<g transform="translate(38 0) scale(.90)">'+shared(m,false)+'</g>'+
+ T(300,443,"SYSMEX pocH-100i · illustrated front view",13,"#648093");
+}
+function cellclean(){
   return '<ellipse cx="787" cy="410" rx="139" ry="12" fill="#e0e9ef"/>'+
    '<path d="M676 102H898L890 407H688Z" fill="#eaf6f8" stroke="#aec8d4" stroke-width="4" opacity=".65"/>'+
    '<rect x="716" y="125" width="144" height="264" rx="22" fill="#f4fbfd" stroke="#88adbe" stroke-width="5"/>'+
