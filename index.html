@@ -216,7 +216,9 @@ window.LAB_GUIDE_VIDEOS = {
 // The lists are reference-only; they cannot place orders or open Athena previews.
 // Entries appear on each instrument's Athena order tab and in the directory.
 window.LAB_ORDER_SETS = {
-  sysmex: [],
+  sysmex: [
+    {name:'CBC',kind:'poc',emphasis:'CBC'}
+  ],
   piccolo: [
     {name:'Piccolo Comprehensive Metabolic Panel',kind:'poc',emphasis:'Piccolo'},
     {name:'Piccolo Basic Metabolic Panel',kind:'poc',emphasis:'Piccolo'},
@@ -242,18 +244,39 @@ window.LAB_ORDER_SETS = {
     {name:'beta-HCG, qualitative, urine',kind:'poc'},
     {name:'urinalysis, dipstick, auto',kind:'poc',emphasis:'urinalysis'}
   ],
-  torch: [],
-  spotfire: [],
-  febridx: [],
-  "drug-screen": [],
-  coagsense: [],
-  poc: [],
+  torch: [
+    {name:'gastrointestinal pathogens DNA + RNA panel, NAA+non-probe, stool',kind:'poc',emphasis:'gastrointestinal pathogens'}
+  ],
+  spotfire: [
+    {name:'Spotfire FULL Respiratory Panel ($500) (2)',kind:'set',emphasis:'Spotfire'},
+    {name:'Spotfire Mini Pharyngitis Panel ($190) (2)',kind:'set',emphasis:'Spotfire'},
+    {name:'Spotfire MINI Respiratory Panel ($190) (2)',kind:'set',emphasis:'Spotfire'},
+    {name:'Spotfire Full Sore Throat Panel (NY ONLY $500) (2)',kind:'set',emphasis:'Spotfire',note:'New York only'}
+  ],
+  febridx: [
+    {name:'FebriDx (Ages 12-64) (2)',kind:'set',emphasis:'FebriDx'}
+  ],
+  "drug-screen": [
+    {name:'Drug Screen Urine (IH) (2)',kind:'set',emphasis:'Drug Screen Urine'}
+  ],
+  coagsense: [
+    {name:'PT/INR (IH) (1)',kind:'set',emphasis:'PT/INR'}
+  ],
+  poc: [
+    {name:'HIV (1+2) Ab, rapid, unspecified specimen',kind:'poc',emphasis:'HIV'},
+    {name:'mononucleosis, heterophile Ab, blood',kind:'poc',emphasis:'mononucleosis',note:'McKesson rapid mono test'},
+    {name:'RSV (IH) (1)',kind:'set',emphasis:'RSV',note:'QuickVue, not Sofia'},
+    {name:'Strep Throat screen (IH) (1)',kind:'set',emphasis:'Strep Throat screen',note:'QuickVue, not Sofia'},
+    {name:'COVID-19 Antigen (IH) (1)',kind:'set',emphasis:'COVID-19 Antigen',note:'QuickVue, not Sofia'}
+  ],
   sofia: [
     {name:'Sofia - Flu/Covid (2)',kind:'set',emphasis:'Sofia'},
     {name:'Sofia - RSV Test (2)',kind:'set',emphasis:'Sofia'},
     {name:'Sofia - Strep Test (2)',kind:'set',emphasis:'Sofia'}
   ],
-  hemocue: []
+  hemocue: [
+    {name:'hemoglobin (Hb), blood',kind:'poc',emphasis:'hemoglobin'}
+  ]
 };
 
 </script><script>
@@ -1079,6 +1102,8 @@ function orderSetsPanel(sec){
   }
   h+='</div>';
   if(sec.id==='pathfast')h+='<p class="athena-order-protocol-note">These are Athena order names, not pathway instructions. Follow the approved 0/1-hour troponin pathway by default; switch to 0/2 hours only after a missed window and provider authorization. The 3-hour order name does not independently authorize a 3-hour pathway.</p>';
+  if(sec.id==='poc')h+='<p class="athena-order-protocol-note">For flu, COVID-19 antigen, RSV and strep: a non-Sofia Athena order uses the QuickVue test. McKesson is the mono test brand. Confirm the assay and kit before testing. The exact non-Sofia flu order name has not yet been provided.</p>';
+  if(sec.id==='sofia')h+='<p class="athena-order-protocol-note">Use Sofia 2 only when the Athena order explicitly identifies Sofia. Generic flu, COVID-19 antigen, RSV and strep order names refer to QuickVue.</p>';
   h+='<p class="athena-order-source-note">Confirm the selected entry in Athena before placing the order. This reference does not place orders or open Athena previews.</p>';
  }
  h+=`<div class="tool-bottom-link"><span>Find another instrument</span><button type="button" data-go="order-sets">Open order set directory <span>→</span></button></div>`;
