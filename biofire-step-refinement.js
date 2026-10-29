@@ -42,7 +42,12 @@ function specimenSketch(gi){
  '<text x="268" y="254" text-anchor="middle" fill="#2b7383" font-size="18" font-weight="850" font-family="Arial">'+vol+'</text>';
  return illustration(body,"Transfer the "+(gi?"mixed Cary Blair GI specimen using the second line":"SPOTFIRE specimen using the fixed-volume pipette")+" into the red sample injection vial");
 }
-const provenance='<p class="bf-focused-note">The numbered handling illustrations are from the linked BIOFIRE quick guide. They demonstrate vial technique, not the specimen volume for TORCH GI or SPOTFIRE. Follow the ordered assay kit instructions for specimen volume and transport medium.</p>';
+const reference=id=>{
+ const gi=id==="torch";
+ const link=gi?"https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/quick-guides/RFIT-PRT-0141-FilmArray-GI-Panel-Quick-Guide-EN.pdf":
+  "https://www.biomerieux.com/corp/en/service-and-support/support/BioFire-System-Documents.html";
+ return '<p class="bf-focused-note">Figures 3b / 3d illustrate the handling technique from the linked reference and are not a substitute for the assay-specific instructions. Check the <a href="'+link+'" target="_blank" rel="noopener noreferrer">official '+(gi?'FilmArray GI':'SPOTFIRE')+' guide ↗</a> for the correct kit design, specimen volume, and panel workflow.</p>';
+};
 function stage(id,title){
  if(id!=="torch"&&id!=="spotfire")return before?before(id,title):"";
  const t=String(title).toLowerCase(),gi=id==="torch";
@@ -66,10 +71,10 @@ function stage(id,title){
   const third=gi?
    card("Add GI stool specimen",specimenSketch(true),"Mix stool in Cary Blair, draw to the second pipette line (0.2 mL), then add it to the red vial.") :
    card("3c · Add buffer to red vial",photo(6,"BIOFIRE Figure 3c: buffer into the red sample vial"),"Squeeze the full supplied buffer into the red vial without excessive foam.");
-  return '<section class="bf-focused" aria-label="Panel-specific sample preparation"><div class="bf-focused-order">'+order+'</div><div class="bf-focused-grid">'+[first,second,third].join("")+'</div>'+provenance+'</section>';
+  return '<section class="bf-focused" aria-label="Panel-specific sample preparation"><div class="bf-focused-order">'+order+'</div><div class="bf-focused-grid">'+[first,second,third].join("")+'</div>'+reference(id)+'</section>';
  }
  if(/invert|cap red vial|gently mix/.test(t)){
-  return block([card("3d · Close and gently invert 3 times",photo(7,"BIOFIRE Figure 3d: red vial capped and inverted 3 times"),"Tightly cap the red sample vial, gently invert three times, then return it to the red well. Do not shake.")],provenance);
+  return block([card("3d · Close and gently invert 3 times",photo(7,"BIOFIRE Figure 3d: red vial capped and inverted 3 times"),"Tightly cap the red sample vial, gently invert three times, then return it to the red well. Do not shake.")],reference(id));
  }
  if(/load mixture|inject sample|red sample port/.test(t)){
   return block([card("Use the red SAMPLE port",B.station?B.station("sample"):photo(8,"Red sample vial entering the pouch sample port"),"Unscrew the red vial, wait five seconds before lifting, insert into the red pouch port and press until sample is drawn in.")]);
