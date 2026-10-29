@@ -999,7 +999,7 @@ function workflowStepExtras(kind){
 }
 function workflowSteps(steps,start=1){
  const stepIcon=title=>/calculat|upload/i.test(title)?'file-text':/schedule|appointment/i.test(title)?'clipboard-check':/print/i.test(title)?'file-text':'clipboard-check';
- return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3><p>${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
+ return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3><p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
 }
 function externalFlow(){
  const fax=state.reqSource!=='message';
@@ -1035,7 +1035,7 @@ function externalFlow(){
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB document label.','calculator-upload'],
+ ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB document label.','calculator-upload','Confirm the receiving lab.'],
  ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, the tech or RN returns the completed request to front desk. Front desk schedules the patient.'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
