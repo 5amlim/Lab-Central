@@ -38,13 +38,13 @@ function parseDrawTime(raw, currentPeriod){
 function baselinePicker(){
  return '<div class="pcr-timing-start pcr-custom-baseline" id="pcr-custom-baseline">'+
  '<span class="pcr-clock">0 h</span><div class="pcr-baseline-text"><strong>Baseline draw</strong><p>Enter the actual first collection time, not the result time.</p></div>'+
+ '<label class="pcr-time-input-label" for="pcr-baseline-input"><span>FIRST DRAW TIME</span><span class="pcr-time-input-shell"><input id="pcr-baseline-input" type="text" inputmode="text" maxlength="11" spellcheck="false" autocomplete="off" value="'+displayTime(baselineMinutes)+'" aria-label="First troponin blood collection time" aria-describedby="pcr-time-help" placeholder="12:00 PM"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><small id="pcr-time-help" class="pcr-time-help">Type 9:15 AM or 13:15. Press Enter.</small></label>'+
  '<div class="pcr-draw-clock-art" aria-hidden="true">'+
  '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pcr-clock-face" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e6f7f5"/></linearGradient></defs>'+
  '<circle cx="50" cy="50" r="42" fill="#d0ede6" opacity=".55"/><circle cx="50" cy="50" r="38" fill="url(#pcr-clock-face)" stroke="#268f82" stroke-width="4"/>'+
  Array.from({length:12},(_,i)=>'<path d="M50 18V25" transform="rotate('+(i*30)+' 50 50)" stroke="#579e98" stroke-width="3" stroke-linecap="round"/>').join("")+
  '<path d="M50 50L50 29M50 50L64 57" stroke="#1c796e" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="50" r="5" fill="#1c796e"/>'+
  '</svg><span>DRAW TIME</span></div>'+
- '<label class="pcr-time-input-label" for="pcr-baseline-input"><span>FIRST DRAW TIME</span><span class="pcr-time-input-shell"><input id="pcr-baseline-input" type="text" inputmode="text" maxlength="11" spellcheck="false" autocomplete="off" value="'+displayTime(baselineMinutes)+'" aria-label="First troponin blood collection time" aria-describedby="pcr-time-help" placeholder="12:00 PM"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><small id="pcr-time-help" class="pcr-time-help">Type 9:15 AM or 13:15. Press Enter.</small></label>'+
  '</div>';
 }
 function timing(){
