@@ -169,9 +169,10 @@ function sysmexDeviceMarkup(mode,showAccessory=true){
  '<rect x="334" y="364" width="27" height="11" rx="4" fill="#ae86c4"/>';
  if(m==="running")h+='<rect x="176" y="239" width="128" height="5" rx="2" fill="#c2dce3"/>'+
  '<rect x="176" y="239" width="76" height="5" rx="2" fill="#2c9a8f"/>';
- if(off)h+='<rect x="416" y="294" width="24" height="53" rx="5" fill="#242c36" stroke="#101820" stroke-width="3"/>'+
- '<rect x="421" y="301" width="15" height="39" rx="3" fill="#101923"/>'+
- '<path d="M422 326l13-6" stroke="#f7fcfe" stroke-width="2.5"/>';
+ // Right-side power switch sits alongside the upper display, near the Not Ready indicator.
+ if(off)h+='<rect x="416" y="135" width="24" height="53" rx="5" fill="#242c36" stroke="#101820" stroke-width="3"/>'+
+ '<rect x="421" y="142" width="15" height="39" rx="3" fill="#101923"/>'+
+ '<path d="M422 167l13-6" stroke="#f7fcfe" stroke-width="2.5"/>';
  if(showAccessory&&!off){
   // Photo-matched accessory assembly: blue and red rear connectors, clear
   // smoothly routed tubes, purple top fitting, and a WHITE reagent bottle
