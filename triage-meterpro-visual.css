@@ -77,3 +77,42 @@
 .triage-device-gallery .triage-single-cartridge strong{font-size:10px}
 .triage-device-gallery .triage-single-cartridge small{display:none}
 .triage-device-gallery .triage-real-meter{width:100%;max-height:220px}
+
+
+/* Step-by-step, reference-based fixed-volume pipette illustrations. */
+.triage-pipette-step .triage-guide-scene{grid-template-columns:minmax(160px,.54fr) minmax(0,1.46fr)}
+.triage-pipette-step .triage-meter-stage svg{max-height:260px;width:auto}
+.triage-pipette-step .triage-material-stage{display:block;width:100%}
+.triage-pipette-sequence{width:100%;min-width:0;background:#fff;border:1px solid #d9e7ec;border-radius:12px;padding:10px}
+.triage-pipette-instruction{
+ font-size:12.5px;font-weight:850;color:#2c647b;line-height:1.4;
+ padding:9px 10px;border-radius:8px;background:#eaf5f7;margin-bottom:9px;
+}
+.triage-pipette-panels{
+ display:grid;grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);
+ gap:5px;align-items:center;min-width:0;
+}
+.triage-pipette-arrow{display:grid;place-items:center;color:#248d91;font-size:23px;font-weight:850;min-width:0}
+.triage-pipette-source,.triage-pipette-tool{min-width:0;text-align:center;display:flex;align-items:center;flex-direction:column;gap:5px}
+.triage-pipette-source small,.triage-pipette-tool small{font-size:10px;line-height:1.4;font-weight:750;color:#557589}
+.triage-pipette-source>.triage-pipette-media,.triage-pipette-tool>.triage-pipette-media{
+ width:100%;height:187px;display:flex;align-items:center;justify-content:center;min-width:0;
+}
+.triage-pipette-source svg,.triage-pipette-tool svg{height:100%;width:100%;max-width:100%;object-fit:contain}
+.triage-pipette-source .triage-single-cartridge{max-width:155px;padding:4px}
+.triage-pipette-source .triage-single-cartridge>div{height:155px}
+.triage-pipette-source .triage-single-cartridge strong{font-size:10px}
+.triage-pipette-source .triage-single-cartridge small{display:none}
+.triage-overflow-caution{
+ margin:9px 2px 0;border-left:3px solid #ca8d2e;background:#fff8e9;color:#755b2c;
+ padding:8px 10px;font-size:10.5px;line-height:1.5;border-radius:5px;
+}
+@media(max-width:760px){
+ .triage-pipette-step .triage-guide-scene{grid-template-columns:1fr}
+ .triage-pipette-step .triage-meter-stage svg{max-height:145px}
+ .triage-pipette-source>.triage-pipette-media,.triage-pipette-tool>.triage-pipette-media{height:170px}
+}
+@media print{
+ .triage-pipette-step .triage-guide-scene{grid-template-columns:180px minmax(0,1fr)}
+ .triage-pipette-source>.triage-pipette-media,.triage-pipette-tool>.triage-pipette-media{height:140px}
+}
