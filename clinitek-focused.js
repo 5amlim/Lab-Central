@@ -114,6 +114,9 @@ function render(title,group){
   return fig("Select "+(kind==="hcg"?"Cassette Test":"Strip Test")+" on the analyzer",scene(kind,"select"),
      "Select the correct test type and confirm patient ID or QC entry on the analyzer.");
  if(qc&&/prepare.*control|quality control/.test(t))return fig("Prepare approved QC controls",scene(kind,"qc-material"),"Confirm the correct QC material, level, lot, and expiry. Use the approved assay-specific procedure.");
+ if(kind==="hcg"&&/prepare and place|place.*unused.*cassette/.test(t))
+  return fig("Seat CLINITEST hCG cassette on the flipped test table",scene("hcg","table"),
+   "With the cassette-side recess facing up, place the unused CLINITEST hCG cassette flat on the test table. Leave the sample well accessible and do not dispense urine until START is selected.");
  if(/prepare the ua|prepare the strip|prepare hcg|prepare and place|prepare urinalysis controls|prepare control/.test(t))
   return fig("Prepare "+(kind==="hcg"?"CLINITEST hCG cassette":"UA dipstick"),scene(kind,"strip"),
      "Check expiration and remove one compatible unused "+(kind==="hcg"?"cassette":"reagent strip")+".");
