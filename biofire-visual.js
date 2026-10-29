@@ -11,55 +11,103 @@ function text(x,y,s,size=15,color="#326780",anchor="middle",weight="800"){return
 /* Injection vials are drawn apart from the station during mixing.
    The red and blue caps remain in the matching loading-station wells
    when the vial is removed for pouch puncture. */
+/* One loading station shared by TORCH and SPOTFIRE kit illustrations.
+   User-supplied photo: low black clamshell loading base; red circular socket
+   on operator LEFT, blue circular socket on RIGHT; translucent front pouch
+   holder and central white FilmArray mark. White-capped CLEAR injection vials,
+   not solid red/blue bottles, with narrow assay-color bands and printed labels.
+   Diagrams represent orientation only. Assay IFU controls exact vial handling. */
 function vial(x,color,material,mode,y=62){
- const blue=color==="blue",cap=blue?"#168cb7":"#c54f5c",fluid=blue?"#a8dcf1":"#d9a5ae";
- const needle=mode==="needle";
+ const blue=color==="blue",cap=blue?"#267eae":"#c64350",word=blue?"HYDRATION":"SAMPLE";
+ const open=mode==="open",active=mode==="needle";
  return '<g transform="translate('+x+' '+y+')">'+
- '<ellipse cx="40" cy="195" rx="38" ry="6" fill="#deebf1"/>'+
- '<rect x="16" y="34" width="48" height="154" rx="12" fill="#f5fbfd" stroke="#8eafbe" stroke-width="3"/>'+
- '<path d="M21 110H59V167Q52 182 40 182Q26 181 21 167Z" fill="'+fluid+'" opacity=".83"/>'+
- (mode==="open"?'<ellipse cx="40" cy="37" rx="26" ry="8" fill="#e7f4f8" stroke="#82a8b6" stroke-width="3"/><ellipse cx="40" cy="37" rx="17" ry="4" fill="#446b7b"/>':'<rect x="9" y="12" width="62" height="35" rx="11" fill="'+cap+'" stroke="#6b91a3" stroke-width="3"/>')+
- '<path d="M15 20H65" stroke="#fff" stroke-width="3" opacity=".68"/>'+
- '<rect x="23" y="75" width="34" height="44" rx="4" fill="#fff" stroke="#d6e4e9"/>'+
- text(40,94,blue?"HYDR.":"SAMPLE",8.2,"#375d71")+text(40,108,"INJECTION",7.1,"#57798a")+
- (needle?'<path d="M40 12V-7" stroke="#899ba4" stroke-width="8"/><path d="M40 -7V-33" stroke="#a4beca" stroke-width="3"/>':'')+
- text(40,212,material,12,blue?"#277c9d":"#ae4c5b")+'</g>';
+ '<ellipse cx="44" cy="183" rx="28" ry="5" fill="#d7e4ea" opacity=".45"/>'+
+ // Slim clear body rather than a tall solid-color tube.
+ '<path d="M22 54L25 165Q26 181 42 182H47Q63 181 64 165L67 54Z" fill="#eef5f4" fill-opacity=".84" stroke="#91abb7" stroke-width="2.8"/>'+
+ '<path d="M26 59H63M28 81H60M29 160H60" stroke="#fff" stroke-width="3" opacity=".83"/>'+
+ '<path d="M29 129H60V162Q57 176 45 176Q32 176 30 163Z" fill="'+(blue?"#bedce9":"#e8c4c6")+'" opacity=".52"/>'+
+ // Printed vial label and correctly colored small band.
+ '<rect x="26" y="83" width="38" height="48" rx="3" fill="#fcfdfd" stroke="#d5e0e3" stroke-width="1.3"/>'+
+ '<rect x="27" y="84" width="36" height="5" fill="'+cap+'"/>'+
+ text(45,101,word,8.5,cap)+
+ text(45,113,"INJECTION",7.2,"#637d87")+
+ '<path d="M32 121H57" stroke="#c0cdd2" stroke-width="1.6"/>'+
+ '<path d="M35 72H55" stroke="'+cap+'" stroke-width="5" stroke-linecap="round"/>'+
+ // Narrow white collar sits below a broad flattened white cap, per photograph.
+ '<rect x="30" y="41" width="30" height="21" rx="8" fill="#f6f9f7" stroke="#b9c8c8" stroke-width="2"/>'+
+ (open?
+ '<ellipse cx="45" cy="42" rx="17" ry="6" fill="#eaf4f6" stroke="#9db8c0" stroke-width="2.5"/>'+
+ '<ellipse cx="45" cy="42" rx="9" ry="3" fill="#708f9d"/>':
+ '<path d="M4 33Q4 24 16 22L65 19Q84 20 87 30L80 37L12 39Z" fill="#fafcfa" stroke="#c4cfcd" stroke-width="2.2"/>'+
+ '<ellipse cx="45" cy="24" rx="36" ry="6" fill="#fff" stroke="#d0d9d6" stroke-width="1.5"/>'+
+ '<rect x="35" y="34" width="22" height="12" rx="5" fill="#f4f7f5" stroke="#cbd6d6" stroke-width="1.6"/>')+
+ (active?'<path d="M43 180V191" fill="none" stroke="'+cap+'" stroke-width="3" stroke-dasharray="3 3"/>':'')+
+ '</g>';
 }
 function stationBase(){
- const red=385,blue=590;
- return '<ellipse cx="492" cy="339" rx="258" ry="13" fill="#dfe9ed"/>'+
- '<path d="M282 137L347 107H648L724 145L695 276H320Z" fill="#23303a" stroke="#738b99" stroke-width="4"/>'+
- '<path d="M320 276H695V294H320Z" fill="#172832" stroke="#7b93a1" stroke-width="3"/>'+
- '<path d="M283 139L320 275V294L281 174Z" fill="#1a2a34" stroke="#7b93a1" stroke-width="3"/>'+
- '<path d="M341 137H658L688 253H330Z" fill="#3b4e5a" stroke="#7893a2" stroke-width="2.5"/>'+
- '<path d="M386 194L628 194L642 263H373Z" fill="#e2edf1" fill-opacity=".75" stroke="#93abb8" stroke-width="3"/>'+
- Array.from({length:11},(_,i)=>'<rect x="'+(397+i*20)+'" y="206" width="12" height="46" rx="4" fill="#b6d0da" stroke="#91b4c1" stroke-width="1.4"/>').join("")+
- '<path d="M368 259H650" stroke="#b7cdd7" stroke-width="4"/>'+
- '<rect x="346" y="145" width="77" height="26" rx="9" fill="#8e3c49" stroke="#cf6e7a" stroke-width="3"/>'+
- '<ellipse cx="'+red+'" cy="144" rx="27" ry="16" fill="#a34652" stroke="#f2b0b7" stroke-width="4"/>'+
- '<ellipse cx="'+red+'" cy="143" rx="16" ry="8" fill="#762b39"/>'+
- '<rect x="554" y="145" width="73" height="26" rx="9" fill="#18779b" stroke="#80c9df" stroke-width="3"/>'+
- '<ellipse cx="'+blue+'" cy="144" rx="27" ry="16" fill="#218bac" stroke="#a7dfea" stroke-width="4"/>'+
- '<ellipse cx="'+blue+'" cy="143" rx="16" ry="8" fill="#195a7a"/>'+
- text(385,78,"RED · SAMPLE",15,"#b84b5a")+text(590,78,"BLUE · HYDRATION",15,"#2b83a3")+
- '<path d="M385 88V119M590 88V119" stroke="#8daab9" stroke-width="2.4" stroke-dasharray="5 4"/>'+
- '<path d="M413 292H576" stroke="#bed2da" stroke-width="3"/>';
+ // An open-front black base with the pouch laid HORIZONTALLY across the
+ // transparent retaining frame. Nothing here is the analyzer itself.
+ return '<defs>'+
+ '<linearGradient id="bfstation-case" x1="0" y1="0" x2=".8" y2="1">'+
+ '<stop stop-color="#393d40"/><stop offset=".55" stop-color="#151a1d"/><stop offset="1" stop-color="#101519"/></linearGradient>'+
+ '<linearGradient id="bfstation-pouch" x1="0" x2=".85" y1="0" y2="1">'+
+ '<stop stop-color="#f8f5e9"/><stop offset=".55" stop-color="#dadacb"/><stop offset="1" stop-color="#c1c9c6"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="466" cy="361" rx="327" ry="11" fill="#dce7ec" opacity=".52"/>'+
+ // Rear tray lip and top platform, very wide and flat.
+ '<path d="M157 162Q157 145 180 145H746Q769 145 776 161L790 260H146Z" fill="url(#bfstation-case)" stroke="#495358" stroke-width="4"/>'+
+ '<path d="M167 159L751 159L761 237H161Z" fill="#222629" stroke="#373f43" stroke-width="2"/>'+
+ '<path d="M176 174H747" stroke="#5f6668" stroke-width="2" opacity=".63"/>'+
+ // White FilmArray-style mark at center of black top.
+ [0,1,2,3,4].map(i=>{
+   const y=182+i*9;
+   return '<path d="M'+(445-i*3)+' '+y+'l24 -7 16 5 -24 8Z" fill="#f7faf8"/>'+
+   '<path d="M'+(477+i*2)+' '+y+'l-16 8 24 4 16 -8Z" fill="#f7faf8"/>';
+ }).join('')+
+ // Circular sockets with red left and blue right, held around vial bases.
+ '<ellipse cx="253" cy="218" rx="35" ry="18" fill="#a63140" stroke="#d45964" stroke-width="4"/>'+
+ '<ellipse cx="253" cy="218" rx="22" ry="10" fill="#282023" stroke="#e06973" stroke-width="3"/>'+
+ '<ellipse cx="679" cy="218" rx="35" ry="18" fill="#155c94" stroke="#367cb9" stroke-width="4"/>'+
+ '<ellipse cx="679" cy="218" rx="22" ry="10" fill="#192b37" stroke="#4c96cf" stroke-width="3"/>'+
+ // Transparent horizontal pouch cassette is visible in the forward holder.
+ '<path d="M176 230H763L768 308Q764 321 751 322H184Q171 322 168 308Z" fill="#171b1d" stroke="#525b5f" stroke-width="4"/>'+
+ '<path d="M226 238H711Q729 238 731 249V301Q729 309 712 310H226Q213 307 211 298V252Q211 238 226 238Z" fill="#a6b7b8" fill-opacity=".5" stroke="#879a9d" stroke-width="3"/>'+
+ '<rect x="230" y="248" width="478" height="51" rx="5" fill="url(#bfstation-pouch)" stroke="#bac9c7" stroke-width="2"/>'+
+ '<rect x="242" y="253" width="463" height="42" rx="3" fill="#fff8e8" fill-opacity=".61" stroke="#d0c7ad"/>'+
+ '<rect x="253" y="256" width="158" height="35" rx="2" fill="#fffdf6" stroke="#c3bdaa"/>'+
+ text(329,270,"FilmArray panel",10,"#4e5b61")+
+ text(329,285,"POUCH / LOT",8.6,"#60737b")+
+ '<rect x="435" y="257" width="154" height="25" rx="2" fill="#ece7d4" stroke="#c9c4b4"/>'+
+ text(512,274,"SAMPLE ID",10,"#596970")+
+ '<rect x="260" y="287" width="33" height="5" fill="#b94350"/>'+
+ '<rect x="635" y="287" width="33" height="5" fill="#247fad"/>'+
+ // Transparent hinge, locking arm and colored port arrows.
+ '<path d="M201 241H227V308H199Z" fill="#dce9ea" fill-opacity=".52" stroke="#7b939c" stroke-width="2"/>'+
+ '<path d="M720 242H740V305H721Z" fill="#dce9ea" fill-opacity=".48" stroke="#7b939c" stroke-width="2"/>'+
+ '<path d="M201 314H744V336H201Z" fill="#25292c" stroke="#69767c" stroke-width="3"/>'+
+ '<path d="M185 327H770L758 348H197Z" fill="#12191c" stroke="#4c565c" stroke-width="3"/>'+
+ '<path d="M248 337v-23m-8 8 8 -9 8 9" fill="none" stroke="#d24450" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<path d="M687 337v-23m-8 8 8 -9 8 9" fill="none" stroke="#268bc3" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<path d="M198 348H760" stroke="#6b777a" stroke-width="3"/>';
 }
-function station(mode){
- let extra="";
- if(mode==="ready"){
-   extra=vial(345,"red","Sample vial","normal",73)+vial(550,"blue","Hydration vial","normal",73);
- }else if(mode==="hydrate"){
-   extra=vial(548,"blue","Hydration vial","needle",39)+
-   '<path d="M590 158v20" stroke="#3ba9c7" stroke-width="5" stroke-dasharray="5 3"/>'+
-   text(807,241,"HYDRATE BLUE",15,"#267fa3");
- }else if(mode==="sample"){
-   extra=vial(343,"red","Sample vial","needle",39)+
-   '<path d="M384 158v20" stroke="#c55363" stroke-width="5" stroke-dasharray="5 3"/>'+
-   text(130,241,"LOAD SAMPLE",15,"#b64a59");
- }
- return svg(stationBase()+extra,
-  "FilmArray pouch loading station with red sample vial on left and blue hydration vial on right; sample and hydration vial ports remain separate");
+function station(mode="ready"){
+ const m=String(mode||"ready").toLowerCase();
+ const isHydrate=m==="hydrate",isSample=m==="sample";
+ const label=isHydrate?"HYDRATION PORT · BLUE":isSample?"SAMPLE PORT · RED":"RED SAMPLE LEFT · BLUE HYDRATION RIGHT";
+ const active=isHydrate?'<path d="M695 124Q759 148 725 213Q710 239 687 251" fill="none" stroke="#2384b5" stroke-width="4" stroke-dasharray="9 7" stroke-linecap="round"/>'+
+ '<path d="M676 238l11 15 13 -12" fill="none" stroke="#2384b5" stroke-width="4"/>':
+ isSample?'<path d="M232 125Q161 155 196 214Q206 240 247 251" fill="none" stroke="#c44f5c" stroke-width="4" stroke-dasharray="9 7" stroke-linecap="round"/>'+
+ '<path d="M232 239l15 14 9 -15" fill="none" stroke="#c44f5c" stroke-width="4"/>':'';
+ const h=stationBase()+
+ // Both actual white/clear injection vials remain illustrated. The arrows in
+ // hydrate/sample views illustrate the destination of the removed vial.
+ vial(208,"red","Red sample vial","normal",29)+
+ vial(634,"blue","Blue hydration vial","normal",29)+
+ active+
+ '<rect x="315" y="57" width="300" height="36" rx="14" fill="#f3f9fa" stroke="#bfd6df" stroke-width="2"/>'+
+ text(465,80,label,15,isHydrate?"#277eaa":isSample?"#b5485a":"#356c7e");
+ return svg(h,
+ "BioFire TORCH and SPOTFIRE photo-reference pouch loading station: flat black base, horizontal pouch in clear holder, white-capped RED sample injection vial on the left and WHITE-capped BLUE hydration injection vial on the right. "+(isHydrate?"Blue hydration destination is emphasized.":isSample?"Red sample destination is emphasized.":"Both vials are pictured upright."));
 }
 function pipetteShape(x,y){
  return '<g transform="translate('+x+' '+y+') rotate(28 10 94)">'+
@@ -71,14 +119,13 @@ function pipetteShape(x,y){
  '</g>';
 }
 function kit(){
- let h='<rect x="28" y="25" width="864" height="344" rx="18" fill="#fbfdfe" stroke="#dce9ef" stroke-width="2"/>'+
- '<rect x="236" y="49" width="468" height="272" rx="14" fill="#f4f9fb" stroke="#e3edf2" stroke-width="2"/>'+
- stationBase()+
- vial(53,"red","Red sample vial","normal",74)+vial(772,"blue","Blue hydration vial","normal",74)+
- text(114,53,"SAMPLE INJECTION",13,"#b45160")+text(831,53,"HYDRATION INJECTION",13,"#237b9c")+
- '<rect x="326" y="315" width="346" height="33" rx="8" fill="#e5f1f5" stroke="#c5dde8"/>'+
- text(500,336,"POUCH IN LOADING STATION",14,"#356c83");
- return svg(h,"BioFire test kit: two separate injection vials and a single pouch held in the dark loading station. Red vial is left, blue vial is right");
+ const scene=stationBase()+
+ vial(208,"red","Red sample vial","normal",29)+
+ vial(634,"blue","Blue hydration vial","normal",29)+
+ '<rect x="288" y="48" width="352" height="41" rx="12" fill="#f4f9fb" stroke="#bdd5df" stroke-width="2"/>'+
+ text(464,74,"POUCH + BOTH INJECTION VIALS",16,"#315e74");
+ return svg(scene,
+ "BioFire TORCH and SPOTFIRE kit: actual-style black pouch loading station with a horizontal pouch in the transparent front holder; separate transparent white-capped sample injection vial in RED left well and hydration vial in BLUE right well.");
 }
 /* Panel-specific sample volume and sequence must match the assay IFU.
    FilmArray GI: buffer first, then 0.2 mL stool in Cary Blair.
