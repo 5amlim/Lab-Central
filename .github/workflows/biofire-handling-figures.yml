@@ -40,9 +40,10 @@ jobs:
                 time.sleep(4+attempt*2)
           # Exact manufacturer art from FilmArray RP2 IFU pages 9-11.
           # Coordinates refer to PDF points, not screenshot dimensions.
+          # Tight crop removes unrelated printed text left of the hydration illustration.
           figures=[
             ("01-seat-pouch.png","filmarray",8,(447,338,588,450)),
-            ("02-hydrate-blue.png","filmarray",8,(458,486,591,591)),
+            ("02-hydrate-blue-clean.png","filmarray",8,(482,486,591,591)),
             ("03-open-buffer.png","filmarray",9,(428,95,538,177)),
             ("04-add-buffer.png","filmarray",9,(480,160,588,245)),
             ("05-transfer-specimen.png","filmarray",9,(441,256,587,409)),
