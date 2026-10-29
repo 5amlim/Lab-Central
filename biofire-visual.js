@@ -131,60 +131,103 @@ function invert(){
  text(461,334,"Close red vial tightly first · do not shake",15,"#577f90"),
  "BioFire red sample injection vial capped and gently inverted three times to mix specimen with buffer");
 }
+/* FilmArray TORCH benchtop hardware uses one consistent reference drawing.
+   Photo: two large upper module fronts, red L-shaped inset handles, left pouch
+   dock, broad near-black lower touchscreen, red perimeter and front USB.
+   Status highlights are teaching overlays, not claims about exact firmware UI. */
+function torchChassis(state){
+ const mode=String(state||"ready").toLowerCase();
+ const selected=/selected|load|insert/.test(mode),running=/running|start|analy/.test(mode);
+ const result=/result|review|complete/.test(mode);
+ const txt=(x,y,t,size=13,fill="#516b79",weight=800,anchor="middle")=>
+  '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" font-family="Arial,sans-serif">'+t+'</text>';
+ const doors=[{x:160},{x:480}].map((d,i)=>{
+  const x=d.x,fill=i===0&&selected?"#fcfdfc":"#f7f9f8";
+  return '<g>'+
+   '<rect x="'+x+'" y="57" width="311" height="143" rx="11" fill="#b72f40" stroke="#8e2733" stroke-width="3"/>'+
+   '<rect x="'+(x+6)+'" y="63" width="299" height="132" rx="9" fill="'+fill+'" stroke="#c9d1d3" stroke-width="2"/>'+
+   // Highlight is an instructional overlay only when a module is being selected.
+   (i===0&&selected?'<rect x="'+(x+3)+'" y="60" width="305" height="137" rx="10" fill="none" stroke="#2c9b88" stroke-width="4" stroke-dasharray="10 6"/>':'')+
+   '<path d="M'+(x+82)+' 96h45v20h-27v55" fill="none" stroke="#871c32" stroke-width="19" stroke-linecap="square" stroke-linejoin="miter"/>'+
+   '<path d="M'+(x+82)+' 96h45v20h-27v55" fill="none" stroke="#251e25" stroke-width="12" stroke-linecap="square" stroke-linejoin="miter"/>'+
+   '<rect x="'+(x+154)+'" y="101" width="4" height="67" rx="2" fill="#57545b"/>'+
+   '<path d="M'+(x+7)+' 75H'+(x+304)+'" fill="none" stroke="#fff" stroke-width="2" opacity=".66"/>'+
+   '</g>';
+ }).join("");
+ let h='<defs>'+
+ '<linearGradient id="lc-torch-frame" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#767c7f"/><stop offset=".50" stop-color="#52585e"/><stop offset="1" stop-color="#292e33"/></linearGradient>'+
+ '<linearGradient id="lc-torch-surface" x1=".15" y1="0" x2=".85" y2="1"><stop stop-color="#f9fbfa"/><stop offset=".6" stop-color="#e9eeed"/><stop offset="1" stop-color="#c7d2d1"/></linearGradient>'+
+ '<linearGradient id="lc-torch-display" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#31383f"/><stop offset=".5" stop-color="#171e26"/><stop offset="1" stop-color="#090e15"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="480" cy="383" rx="372" ry="10" fill="#cfdee5" opacity=".65"/>'+
+ // Gray housing and top overhang.
+ '<path d="M146 39Q136 40 135 54L112 327Q107 365 151 371H803Q849 368 836 326L819 56Q817 38 805 38Z" fill="url(#lc-torch-frame)" stroke="#707a80" stroke-width="4"/>'+
+ '<path d="M148 38H804L817 45H137Z" fill="#343a3e"/>'+
+ '<rect x="132" y="27" width="691" height="18" rx="7" fill="#646b70" stroke="#4f595e" stroke-width="2"/>'+
+ '<path d="M149 31H803" stroke="#aab2b4" stroke-width="2" opacity=".57"/>'+
+ // Upper two modules, matching the photograph instead of eight fictitious tiles.
+ doors+
+ '<path d="M156 205H796V227H157Z" fill="#cfd3d2" stroke="#9fa9aa" stroke-width="3"/>'+
+ '<path d="M156 214H795" stroke="#f7f9f7" stroke-width="3" opacity=".82"/>'+
+ // Lower sloped surface, red outer border and rounded gray case.
+ '<path d="M153 228H794L823 327Q831 352 800 355H148Q122 353 130 323Z" fill="#b73346" stroke="#ab3748" stroke-width="4"/>'+
+ '<path d="M164 233H784L810 324Q816 344 795 345H150Q137 343 142 326Z" fill="url(#lc-torch-surface)" stroke="#d4d9d8" stroke-width="3"/>'+
+ // Pouch loading dock/reader cover sits LEFT of the touchscreen, as photographed.
+ '<path d="M185 317Q191 264 207 257Q235 242 333 248Q356 250 362 278L369 331H174Z" fill="#eceee9" stroke="#d2d7d2" stroke-width="3"/>'+
+ '<path d="M179 331H373Q364 314 344 309H210Q189 309 179 331Z" fill="#41484c" stroke="#798589" stroke-width="2"/>'+
+ '<path d="M184 329Q207 317 227 319H331Q358 316 368 329" fill="none" stroke="#a8ada9" stroke-width="3"/>'+
+ txt(264,280,"BIOFIRE",13,"#8d3f47",850)+
+ txt(263,296,"POUCH DOCK",11,"#76828a",730)+
+ // Main dark tilted touchscreen, right side and recessed under a narrow bezel.
+ '<path d="M421 244L751 242L783 335H394Z" fill="#151b21" stroke="#515d65" stroke-width="4"/>'+
+ '<path d="M433 251L743 250L767 326H408Z" fill="url(#lc-torch-display)" stroke="#313d44" stroke-width="2"/>'+
+ '<path d="M456 259L728 254" stroke="#99a4a9" stroke-width="2" opacity=".12"/>'+
+ // FilmArray Torch wordmark and front center vented chassis.
+ txt(231,238,"FilmArray® torch",16,"#994550",730,"start")+
+ '<path d="M150 355H802Q808 355 805 365Q798 382 780 383H170Q149 383 146 364Z" fill="#252b30" stroke="#4f5b63" stroke-width="3"/>'+
+ Array.from({length:30},(_,i)=>{
+   const x=195+i*19;
+   return '<rect x="'+x+'" y="369" width="11" height="3.2" rx="1.2" fill="#11191e"/>';
+ }).join("")+
+ '<rect x="444" y="351" width="44" height="37" rx="4" fill="#333b41" stroke="#77858b" stroke-width="2"/>'+
+ [0,1].map(i=>'<rect x="454" y="'+(359+i*14)+'" width="23" height="10" rx="2" fill="#10161a" stroke="#929fa5" stroke-width="1.5"/>'+
+   '<rect x="459" y="'+(361+i*14)+'" width="13" height="3" fill="#9eb1ba"/>').join("")+
+ // Scanner and cord rest on the top of the instrument.
+ '<path d="M316 22Q298 12 306 6Q324 -5 337 15L348 28" stroke="#a9b2b4" stroke-width="7" fill="none" stroke-linecap="round"/>'+
+ '<circle cx="353" cy="18" r="13" fill="#497c9e" stroke="#6e8d9c" stroke-width="4"/>'+
+ '<circle cx="353" cy="18" r="3.5" fill="#25b8ac"/>';
+ if(selected){
+  h+='<path d="M312 209L275 222" fill="none" stroke="#248e83" stroke-width="3.5" stroke-linecap="round"/>'+
+    '<rect x="155" y="208" width="142" height="23" rx="9" fill="#e3f6ef" stroke="#92d0bf" stroke-width="2"/>'+
+    txt(225,224,"SELECTED MODULE",10,"#147a6f",870);
+ }
+ if(running||result){
+  const label=result?"REVIEW RESULTS":"RUN IN PROGRESS";
+  h+='<rect x="487" y="265" width="201" height="43" rx="6" fill="#e9f2f2" fill-opacity=".92"/>'+
+    txt(588,282,label,12,"#296878",850)+
+    '<rect x="525" y="289" width="125" height="7" rx="3" fill="#c4d8da"/>'+
+    '<rect x="525" y="289" width="'+(result?125:77)+'" height="7" rx="3" fill="#269589"/>';
+ }
+ return h;
+}
 function analyzer(id,state){
  const torch=id==="torch";
- let body='<ellipse cx="490" cy="350" rx="300" ry="20" fill="#e1e9ed"/>';
  if(torch){
- const moduleRows=Array.from({length:4},(_,r)=>Array.from({length:2},(_,c)=>{
-  const x=331+c*127,y=37+r*47;
-  return '<g>'+
-   '<rect x="'+(x-3)+'" y="'+(y-3)+'" width="127" height="47" rx="4" fill="#c83e4c"/>'+
-   '<rect x="'+x+'" y="'+y+'" width="119" height="40" rx="4" fill="#f8fafa" stroke="#b6c6cc" stroke-width="1.4"/>'+
-   '<path d="M'+(x+3)+' '+(y+5)+'H'+(x+116)+'" stroke="#fff" stroke-width="2.5" opacity=".9"/>'+
-   '<path d="M'+(x+17)+' '+(y+12)+'h20v7h-8v12" fill="none" stroke="#212a32" stroke-width="8" stroke-linejoin="round" stroke-linecap="square"/>'+
-   '<rect x="'+(x+77)+'" y="'+(y+12)+'" width="4" height="20" rx="2" fill="#8dbc86"/>'+
-   '<rect x="'+(x+83)+'" y="'+(y+12)+'" width="2" height="20" fill="#dae8e8"/>'+
-   '</g>';
- }).join('')).join('');
- body+='<defs>'+
- '<linearGradient id="torch-case" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eef2f2"/><stop offset=".55" stop-color="#c5cdd1"/><stop offset="1" stop-color="#858e95"/></linearGradient>'+
- '<linearGradient id="torch-front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f9fbfb"/><stop offset="1" stop-color="#dfe5e6"/></linearGradient>'+
- '<linearGradient id="torch-screen" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#dff2f4"/><stop offset="1" stop-color="#adceda"/></linearGradient>'+
- '</defs>'+
- '<ellipse cx="474" cy="348" rx="264" ry="19" fill="#cddce4" opacity=".55"/>'+
- '<path d="M282 43 L324 17 H585 L610 36 L611 269 L583 298 L286 289Z" fill="url(#torch-case)" stroke="#909fa8" stroke-width="4"/>'+
- '<path d="M282 43 L324 17 L324 245 L285 278Z" fill="#7b858d" stroke="#59656f" stroke-width="2"/>'+
- '<path d="M323 19 L581 19 L611 37 L606 247 L326 241Z" fill="#dfe4e5" stroke="#9daeb8" stroke-width="2"/>'+
- '<path d="M327 32 H582 V232 H327Z" fill="#d23a48"/>'+
- moduleRows+
- '<path d="M273 236 H610 L664 310 Q668 323 648 331 L316 335 Q289 332 274 318 L245 278Z" fill="#e7ebec" stroke="#8d9ca4" stroke-width="4"/>'+
- '<path d="M275 242 H608 L654 309 L314 317 L254 277Z" fill="#f8f9f8" stroke="#b7c4cb" stroke-width="2"/>'+
- '<path d="M314 317 H655 L646 330 H317Z" fill="#a3aeb4"/>'+
- '<path d="M282 278 L602 278" stroke="#ce4650" stroke-width="4" opacity=".8"/>'+
- '<path d="M415 258 L598 256 L637 302 L441 305Z" fill="#44525d" stroke="#c75c60" stroke-width="4"/>'+
- '<path d="M425 265 L593 263 L624 294 L448 298Z" fill="url(#torch-screen)" stroke="#8ca7b8" stroke-width="2"/>'+
- '<text x="514" y="277" text-anchor="middle" font-size="12" font-family="Arial" fill="#40657b" font-weight="800">BIOFIRE TORCH</text>'+
- '<rect x="462" y="282" width="48" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
- '<rect x="516" y="282" width="47" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
- '<rect x="569" y="282" width="44" height="7" rx="2" fill="#e8f4f3" stroke="#93c5be"/>'+
- '<path d="M306 270 h64" stroke="#dce5e7" stroke-width="13" stroke-linecap="round"/>'+
- '<path d="M303 296h62" stroke="#d9dfe2" stroke-width="14" stroke-linecap="round"/>'+
- '<rect x="380" y="306" width="28" height="12" rx="3" fill="#53656f"/>'+
- '<rect x="386" y="308" width="16" height="8" rx="2" fill="#2b3640"/>'+
- '<text x="328" y="250" font-size="11" font-family="Arial" fill="#8b9ca6" font-weight="850">FilmArray</text>';
- }else{
- body+='<rect x="270" y="105" width="296" height="224" rx="15" fill="#eff4f6" stroke="#8da5b4" stroke-width="5"/>'+
+  return svg(torchChassis(state),
+   "BioFire FilmArray Torch instrument matching photographed wide two-door gray housing, red-trimmed upper modules, left pouch dock, large black lower touchscreen and front USB ports; status overlays are instructional")
+   .replace('viewBox="0 0 920 400"','viewBox="95 0 770 400"');
+ }
+ const body='<ellipse cx="490" cy="350" rx="300" ry="20" fill="#e1e9ed"/>'+
+ '<rect x="270" y="105" width="296" height="224" rx="15" fill="#eff4f6" stroke="#8da5b4" stroke-width="5"/>'+
  Array.from({length:4},(_,i)=>'<rect x="287" y="'+(124+i*43)+'" width="170" height="34" rx="5" fill="#fbfcfc" stroke="#a8bec9" stroke-width="2"/><path d="M304 '+(141+i*43)+' h26" stroke="#3f424d" stroke-width="6"/>').join("")+
  '<path d="M480 116 L646 109 L662 321 L480 328Z" fill="#dfe9ef" stroke="#9aafbb" stroke-width="4"/>'+
  '<rect x="502" y="137" width="141" height="156" rx="6" fill="#1f3d50"/>'+
  '<rect x="511" y="153" width="122" height="124" rx="3" fill="#e5f1f4"/>'+
- text(572,184,"SPOTFIRE",13,"#3c7184")+text(572,205,state==="selected"?"OPEN MODULE":"AVAILABLE",11,state==="selected"?"#158775":"#49899c")+
+ text(572,184,"SPOTFIRE",13,"#3c7184")+
+ text(572,205,state==="selected"?"OPEN MODULE":"AVAILABLE",11,state==="selected"?"#158775":"#49899c")+
  '<rect x="536" y="229" width="71" height="28" rx="5" fill="#b7dce6"/>';
- }
- const illustration=svg(body,"BioFire "+(torch?"FilmArray TORCH modular instrument with front loading modules and sloped touchscreen":"SPOTFIRE system with modular drawer units and upright display"));
- return torch?illustration.replace('viewBox="0 0 920 400"','viewBox="205 0 510 375"'):illustration;
+ return svg(body,"BioFire SPOTFIRE analyzer with modular drawer units and upright display");
 }
-
 function ui(id,index){
  const torch=id==="torch";
  if(!torch){
