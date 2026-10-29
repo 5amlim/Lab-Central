@@ -136,7 +136,7 @@ function qcVialArt(group,v,index){
  '<text x="96" y="146" font-size="6.8" font-weight="850" text-anchor="middle" fill="#37617a">#'+esc(v[2])+'</text></svg>';
 }
 function qcGallery(group){
- const photos=group.id==="ddimer"?["d-dimer-low.jpg","d-dimer-level-1.jpg"]:["cardiac-level-1.jpg","cardiac-level-3.jpg"];
+ const photos=group.id==="ddimer"?["d-dimer-low.webp","d-dimer-level-1.webp"]:["cardiac-level-1.webp","cardiac-level-3.webp"];
  const cards=group.vials.map(function(v,i){
   const src="assets/pathfast-qc/"+photos[i];
   const title=group.label+" "+v[1]+" #"+v[2];
