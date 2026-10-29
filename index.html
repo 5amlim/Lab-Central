@@ -149,6 +149,7 @@
 <link rel="stylesheet" href="step-illustrations.css?v=20261028-illustrations-v1" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v3">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261029-v2">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -246,6 +247,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-visual.js?v=20261029-spotfire-original-device-v7"></script>
 <script src="lab-visual-corrections-20261029.js?v=3"></script>
 <script src="lab-guide-polish.js?v=20261029-stage-images-v1"></script>
+<script src="sysmex-focused.js?v=20261029-patient-v2"></script>
+<script src="biofire-step-refinement.js?v=20261029-3b-3d-v1"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
 <script>
 (()=>{
@@ -358,17 +361,18 @@ function buildGroups(section){
   const torch=section.id==='torch';
   const step=(text,desc)=>[{type:'list',level:1,text},{type:'list',level:2,text:desc}];
   const blocks=[
-   ...step('Gather test kit and specimen',torch?'Confirm GI panel pouch, loading station, hydration vial (blue), sample injection vial (red), sample buffer, transfer pipette and stool specimen in Cary Blair.':'Confirm correct SPOTFIRE respiratory or sore-throat pouch, SPRK, vial set, sample buffer, transfer pipette, specimen transport medium, expiry and IDs.'),
-   ...step('Prepare pouch loading station', 'Clean the work area per SOP, put on fresh gloves, insert the pouch in the loading station, place the red sample vial in the LEFT well and the blue hydration vial in the RIGHT well. Match the pouch to the kit.'),
-   ...step('Hydrate pouch using blue vial', 'Unscrew and remove the blue hydration vial while leaving its blue cover in the loading station. Insert its blunt cannula into the pouch hydration port, push down to puncture the seal and let the hydration solution draw into the pouch. Confirm the pouch hydrated. Avoid touching the cannula.'),
-   ...step('Prepare sample buffer and specimen in red vial',torch?'For the GI panel, dispense the Sample Buffer into the red Sample Injection Vial first using a slow, forceful squeeze followed by a second squeeze. Thoroughly mix stool in Cary Blair, draw to the transfer pipette second line (approximately 0.2 mL), then add to the red vial. Do not use the pipette to mix. Avoid foam and securely cap the red vial.':'For the SPOTFIRE R panel, first transfer specimen using the supplied fixed-volume transfer pipette, then snap open the Sample Buffer tube at its textured tab and squeeze the full buffer contents into the red Sample Injection Vial. Avoid touching the tip or producing excess foam. Cap tightly. Confirm any different volume or handling instructions in the ordered panel IFU.'),
-   ...step('Gently invert capped red vial 3 times','IMPORTANT: Remove the tightly capped red Sample Injection Vial from the loading station. Gently invert it 3 times to mix the buffer and specimen. Do not shake or generate foam. Return the red vial to the red well before loading the sample into the pouch.'),
-   ...step('Inject sample mix into red port', 'Unscrew the prepared red Sample Injection Vial from its cover and pause 5 seconds before lifting it out, leaving the red cover in the loading station to reduce contamination risk. Insert the blunt cannula into the pouch sample port, press fully to puncture its seal and wait for the sample mixture to be drawn into the pouch. Verify loading. Do not touch the cannula or interchange the red and blue ports.'),
-   ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. Follow the analyzer prompts to confirm the correct module and run.'),
-   ...step('Scan pouch barcode', 'Scan the pouch QR/barcode using the connected scanner when prompted. Confirm the scanned panel and pouch identity.'),
-   ...step('Confirm panel and sample ID', torch?'Verify GI panel and enter/scan the correct specimen ID, matching the labeled pouch.':'Choose the ordered Respiratory or Sore Throat panel and verify the specimen ID and pouch barcode.'),
-   ...step('Load pouch and start run', 'Insert the prepared pouch in the indicated module as shown on the instrument. Verify identifiers and choose Start Run only after the system is ready.'),
-   ...step('Review and document results', 'Review the completed assay status and results, verify identifiers, follow Relaymed/charting guidance and discard the pouch under the applicable biohazard procedure.')
+   ...step('Gather the correct pouch kit and specimen',torch?'Check GI pouch, red sample vial, blue hydration vial, buffer, transfer pipette and stool in Cary Blair. Confirm expiry.':'Choose the ordered SPOTFIRE R/ST Mini or Regular pouch. Confirm kit, specimen transport medium (UTM for respiratory or eSwab for throat per assay), and expiry.'),
+   ...step('Insert pouch and set up vials', 'Seat the pouch in a clean loading station. RED sample vial goes in the left well; BLUE hydration vial goes in the right well.'),
+   ...step('Hydrate pouch through blue port', 'Unscrew the blue vial, leaving its cover in the station. Press the vial cannula into the blue hydration port and wait until hydration liquid enters the pouch.'),
+   ...step('Open buffer and prepare red sample vial',torch?
+     'TORCH GI: BUFFER FIRST. Hold the buffer tube tip UP, pinch the textured side tab until the seal snaps (figure 3b), then dispense the buffer into the red vial with a firm squeeze followed by a second squeeze (3c). Mix stool thoroughly in Cary Blair, use the transfer pipette to the SECOND line (0.2 mL), then add specimen to the red vial. Keep the dispensing tip clean and avoid foam.':
+     'SPOTFIRE: SPECIMEN FIRST. Use the kit transfer pipette to place the assay-required specimen volume into the red vial. Then hold buffer tube tip UP, pinch the textured side tab until it snaps (figure 3b), and squeeze the supplied buffer into the red vial (3c). Do not touch the tip. Verify kit-specific volumes and alternate buffer-tube design in the ordered panel IFU.'),
+   ...step('Cap red vial and gently invert 3 times', 'Tightly close the red vial. Gently invert it exactly 3 times as in figure 3d, then return it to the red well. Do not shake.'),
+   ...step('Load mixture into red sample port', 'Unscrew the red vial, wait 5 seconds before lifting it from the cover, then press its cannula into the RED sample port. Wait for the mix to be drawn into the pouch.'),
+   ...step('Select an available module', 'At the correct TORCH or SPOTFIRE analyzer, select an available module.'),
+   ...step('Scan pouch barcode and confirm sample ID', 'Scan the pouch and confirm the ordered assay and matching patient specimen ID or QC identifier.'),
+   ...step('Load pouch and start run', 'Insert the prepared pouch into the selected module. Recheck identifiers, then choose Start Run.'),
+   ...step('Review and document results', 'Confirm run completion, internal control status and patient identifiers. Report and document results according to the approved procedure.')
   ];
   const patient={id:'patient-testing',title:'Patient testing',blocks};
   const groups=[patient];
@@ -535,7 +539,8 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
  const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
  const primaryVisual=visualizer?visualizer(index):'';
- const existingVisual=sec&&sec.id==='piccolo'?piccoloVisual+qcPrintVisual:primaryVisual+qcScreenVisual+qcPrintVisual+qualityStep+biofireStep+workflowVisual;
+ const sysmexFocus=sec&&sec.id==='sysmex'&&window.LAB_SYSMEX_FOCUSED?.render?window.LAB_SYSMEX_FOCUSED.render(root.text,groupId):'';
+ const existingVisual=sysmexFocus||(sec&&sec.id==='piccolo'?piccoloVisual+qcPrintVisual:primaryVisual+qcScreenVisual+qcPrintVisual+qualityStep+biofireStep+workflowVisual);
  const fallbackVisual=!existingVisual&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const stepBody=existingVisual+fallbackVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
