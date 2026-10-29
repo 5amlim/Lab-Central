@@ -113,7 +113,7 @@ const questions=[
  {id:"twoHourTiming",title:"2-hour repeat collection status",opts:[["yes","Collected within the approved 2-hour window","Document the actual collection time and confirm it meets the approved timing criteria."],["pending","2-hour draw not yet collected","Schedule the repeat for 2 hours after the baseline collection time."],["late","Missed the approved 2-hour window","Notify the provider. Do not apply an out-of-window 0/2-hour delta."]]},
  {id:"twoHourResult",title:"Review the 2-hour hs-Troponin I result",opts:[["ruleout","Both values and the 2-hour delta meet approved rule-out criteria","Verify the absolute baseline and repeat concentrations, 2-hour change, actual collection times, ECG and clinical exclusions."],["observe","Observation range or indeterminate result","Continue clinician assessment and any further testing required by the approved protocol."],["rulein","Approved urgent / rule-in criteria met","Immediate provider evaluation using the assay-specific thresholds and ECG / symptoms."],["unknown","Result, delta or threshold not yet verified","Confirm the repeat concentration, exact delta and approved 0/2-hour limits before classification."]]},
  {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window","Document the actual repeat draw time measured from the first collection."],["no","Missed the 1-hour window","Notify the provider. Switch to the approved 0/2-hour pathway if directed."],["pending","Repeat sample not collected yet","Plan the 1-hour draw relative to the baseline collection time."]]},
- {id:"fallbackApproval",title:"After a missed 1-hour window, did the provider authorize the 0/2-hour fallback?",opts:[["yes","Yes, provider authorized 0/2-hour repeat"],["pending","Provider has not confirmed"],["no","No, use the provider's alternative plan"]]},
+ {id:"fallbackApproval",title:"After a missed 1-hour window, did the provider authorize the 0/2-hour fallback?",opts:[["yes","Yes, provider informed and authorized 0/2-hour repeat"],["notInformed","No, provider has not been informed"]]},
  {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Delta unavailable"]]},
  {id:"risk",title:"Clinical assessment · ECG and HEART score",opts:[["low","HEART score ≤3, reassuring ECG, no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Clinical assessment incomplete"]]},
  {id:"onset",title:"Time since symptom onset at the initial blood draw",opts:[["late","More than 3 hours"],["early","3 hours or less"],["unknown","Uncertain or unknown"]]},
@@ -200,8 +200,11 @@ function flow(){
   if(selected.timing==="no"){
    h+=question(q("fallbackApproval"),3);
    if(selected.fallbackApproval==="yes")twoHourBranch(4,"The approved 1-hour collection window was missed, and the provider authorized switching to the 0/2-hour fallback.");
-   else if(selected.fallbackApproval==="pending")outcome("observe","Provider authorization pending","Document actual collection times and do not use the 2-hour interpretation until the provider authorizes it.");
-   else if(selected.fallbackApproval==="no")outcome("observe","Do not switch pathways","Follow the provider's alternative plan.");
+   else if(selected.fallbackApproval==="notInformed"){
+    h+='<div class="pcr-provider-notification" role="alert"><span class="pcr-provider-notification-label">ACTION REQUIRED</span>'+
+     '<strong>Inform the provider now</strong>'+
+     '<p>The approved 1-hour collection window was missed. Notify the provider, document the actual collection times, and obtain direction. Do not switch to the 0/2-hour pathway unless the provider authorizes it.</p></div>';
+   }
   }else if(selected.timing==="pending"){
    outcome("observe","One-hour sample pending","Coordinate the 60-minute draw with the RN. If the approved window is missed, request provider authorization for a 0/2-hour fallback.");
   }else if(selected.timing==="yes"){
