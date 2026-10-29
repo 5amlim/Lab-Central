@@ -62,16 +62,36 @@ function isQcGroup(sec,group){
  return /\bqc\b|\bquality control\b/i.test(group.title) && !/\bnotes\b|reference/i.test(group.title);
 }
 function screenPanel(item,brand,number){
+ const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
+ const header='<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
+ let body="";
+ if(item.kind==="status"){
+  // Startup is a passive system display, not a set of selectable actions.
+  body='<div class="qc-device-state"><div class="qc-device-state-title">'+esc(item.screen)+'</div>'+
+   '<div class="qc-device-state-message"><span class="qc-device-state-indicator" aria-hidden="true"></span>'+
+   '<strong>'+esc(item.status)+'</strong><span>'+esc(item.detail)+'</span></div>'+
+   '<div class="qc-device-state-note">AUTOMATIC PROCESS · NO TOUCHSCREEN ACTION</div></div>';
+ }else if(item.kind==="mainMenu"){
+  // Illustrate the Main screen and its actual navigation target before Str. Data.
+  body='<div class="qc-device-mainbar"><span>MAIN · WB</span><strong class="qc-device-menu-highlight">MENU <b>SELECT</b></strong></div>'+
+   '<div class="qc-device-mainstate"><span>Ready</span><span>Sample ID <b>#####</b></span></div>'+
+   '<div class="qc-device-mainmodes"><span>WB</span><span>PD</span><span>RUN</span></div>'+
+   '<div class="qc-device-mainfooter"><span>QC</span><span>Result</span><span>Shutdown</span></div>';
+ }else{
+  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options">'+
+   item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
+   '<div class="qc-device-screen-bottom"><span>Back</span><span>Review selected action</span></div>';
+ }
  return '<div class="qc-screen-reference" role="img" aria-label="Illustrated '+esc(brand)+' screen: '+esc(item.heading)+'">'+
- '<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>'+
- '<div class="qc-device-face"><div class="qc-device-screen"><div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>'+
- '<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options">'+item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
- '<div class="qc-device-screen-bottom"><span>Back</span><span >Review selected action</span></div></div></div>'+
- '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+  top+'<div class="qc-device-face"><div class="qc-device-screen'+(item.kind==="status"?' qc-device-screen--status':'')+'">'+header+body+'</div></div>'+
+  '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
 }
-function screenGallery(list,brand){
- return '<div class="qc-screen-gallery">'+list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
- '<p class="qc-illustration-disclaimer">Confirm the correct menu, assay, lot and QC level on the analyzer before printing.</p>';
+function screenGallery(list,brand,options={}){
+ const scroll=options.scroll===true;
+ return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+'"'+
+  (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
+  list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
+  '<p class="qc-illustration-disclaimer">Confirm the correct menu, assay, lot and QC level on the analyzer before printing.</p>';
 }
 function sysmexStep(sec,group,title){
  if(sec.id!=="sysmex"||group!=="daily-qc")return "";
@@ -83,14 +103,15 @@ function sysmexStep(sec,group,title){
   {heading:"Shutdown complete",screen:"SHUTDOWN COMPLETE",items:["Remove tube from sample position","Switch OFF main power","Restart (if selected)"],focus:"",tip:"Follow the completion message and use the physical main power switch, not a touchscreen button. Restart for daily QC."}
  ],"Sysmex pocH-100i")+'</div>';
  if(/turn on the sysmex|start.*analyzer|startup blank check/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {heading:"Power on the analyzer",screen:"INITIALIZING",items:["Main power switch ON","System startup","Please wait"],focus:"",tip:"Turn on the physical power switch after the completed shutdown and allow initialization."},
-  {heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",items:["Automated blank check","Processing","Ready when complete"],focus:"",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
+  {kind:"status",heading:"Power on the analyzer",screen:"INITIALIZING",status:"System starting",detail:"Please wait",tip:"Turn on the physical power switch after the completed shutdown. The analyzer initializes automatically."},
+  {kind:"status",heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",status:"Blank check in progress",detail:"Wait for the ready indication",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
  ],"Sysmex pocH-100i")+'</div>';
  if(/go to menu|blank check.*today/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"Select Menu, then Str. Data."},
+  {kind:"mainMenu",heading:"Open the Main screen",screen:"MAIN",tip:"On the ready Main screen, select the highlighted Menu button."},
+  {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"In Menu, select Str. Data."},
   {heading:"Choose today's blank",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored result","Back"],focus:"__BLANK CHECK__",tip:"Select the blank-check record bearing today’s date."},
   {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name in the blank-check section of the Maintenance Log binder."}
- ],"Sysmex pocH-100i")+'</div>';
+ ],"Sysmex pocH-100i",{scroll:true})+'</div>';
  if(/^run (the )?qc/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {heading:"Open QC and check the lot",screen:"MAIN",items:["QC","Result","Shutdown"],focus:"QC",tip:"Select QC, choose the correct Low / Normal / High file and verify the control lot."},
   {heading:"Run the control level",screen:"QC FILE",items:["QC FILE 1 / 2 / 3","Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
