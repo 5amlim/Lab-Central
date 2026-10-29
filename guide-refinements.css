@@ -268,3 +268,83 @@
 .pf-calibration-guide .pfux-cal-navigation button:disabled{opacity:.4;cursor:not-allowed}
 .pf-calibration-guide .pfux-cal-navigation span{font-size:14px;font-weight:800;color:#637f91;white-space:nowrap}
 @media(max-width:700px){.pf-calibration-guide .pfux-cal-navigation button{min-height:49px;padding:11px 14px;font-size:15px!important}.pf-calibration-guide .pfux-cal-navigation{gap:8px}.pf-calibration-guide .pfux-cal-navigation span{font-size:12px}}
+
+
+/* 2026-10-29: Place guided Previous/Next controls in the current step header.
+   PATHFAST's native <summary> keeps the buttons as siblings, preventing
+   accidental detail-toggle clicks while preserving keyboard navigation. */
+.procedure-flow .guide-card-has-nav > .guide-card-head{
+ display:flex;align-items:center;gap:14px;min-height:92px
+}
+.procedure-flow .guide-card-has-nav > .guide-card-head .guide-card-title{
+ flex:1 1 auto;min-width:0
+}
+.procedure-flow .guide-card-has-nav .guide-card-header-actions{
+ flex:none;margin-left:auto;display:flex;align-items:center;justify-content:flex-end;min-width:0
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport{
+ display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:nowrap
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:48px;padding:11px 17px;font-size:15px!important;
+ font-weight:850;line-height:1.2;border-radius:11px;
+ border:1.5px solid #9bbfcd;box-shadow:0 3px 9px rgba(27,87,101,.13);
+ white-space:nowrap;cursor:pointer
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button.primary{
+ background:#138b80;border-color:#0d7f74;color:#fff;
+ box-shadow:0 5px 13px rgba(19,132,121,.20)
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button.primary:hover:not(:disabled){
+ background:#0c7269;border-color:#0c7269;color:#fff
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button:disabled{
+ opacity:.42;cursor:not-allowed
+}
+/* The PATHFAST patient-test card uses <details> and needs a safe control
+   region visually aligned within the header, outside its clickable summary. */
+.procedure-flow .pf-step-collapse.guide-card-has-nav{position:relative}
+.procedure-flow .pf-step-collapse.guide-card-has-nav > summary.guide-card-head{
+ min-height:99px;padding-right:367px
+}
+.procedure-flow .pf-step-collapse.guide-card-has-nav > summary .pf-step-chevron{
+ position:absolute;right:331px;top:36px;z-index:1
+}
+.procedure-flow .pf-step-collapse.guide-card-has-nav > .guide-card-header-actions{
+ position:absolute;top:21px;right:20px;z-index:2
+}
+@media(max-width:1000px){
+ .procedure-flow .guide-card-has-nav:not(.pf-step-collapse) > .guide-card-head{flex-wrap:wrap}
+ .procedure-flow .guide-card-has-nav:not(.pf-step-collapse) > .guide-card-head .guide-card-header-actions{
+  flex-basis:100%;justify-content:flex-start;margin-left:56px
+ }
+ .procedure-flow .pf-step-collapse.guide-card-has-nav > summary.guide-card-head{
+  padding-right:22px;min-height:80px
+ }
+ .procedure-flow .pf-step-collapse.guide-card-has-nav > summary .pf-step-chevron{
+  position:static;right:auto;top:auto
+ }
+ .procedure-flow .pf-step-collapse.guide-card-has-nav > .guide-card-header-actions{
+  position:static;display:flex;justify-content:flex-start;
+  padding:0 18px 15px 79px;margin:0;
+  background:linear-gradient(90deg,#eff8fb,#fbfefe);
+  border-bottom:1px solid #dceaf0
+ }
+}
+@media(max-width:640px){
+ .procedure-flow .guide-card-has-nav .guide-header-transport{width:100%;gap:7px}
+ .procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{
+  min-height:44px;padding:10px 12px;font-size:13px!important;flex:1 1 auto
+ }
+ .procedure-flow .guide-card-has-nav:not(.pf-step-collapse) > .guide-card-head .guide-card-header-actions{
+  margin-left:0
+ }
+ .procedure-flow .pf-step-collapse.guide-card-has-nav > .guide-card-header-actions{
+  padding-left:18px
+ }
+}
+@media print{
+ .procedure-flow .guide-card-has-nav .guide-card-header-actions{display:none!important}
+ .procedure-flow .pf-step-collapse.guide-card-has-nav > summary.guide-card-head{padding-right:20px}
+}
