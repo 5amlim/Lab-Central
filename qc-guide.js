@@ -122,7 +122,7 @@ function qcClickStep(sec,groupId,title){
  else if(sec.id==="spotfire"&&/grab the controls|select the qc tab/.test(t))scenes=[
   {heading:"Open the QC section",screen:"HOME",items:["Patient Test Results","Quality Control","Settings"],focus:"Quality Control",tip:"Select Quality Control at the top or side of the workstation screen."},
   {heading:"Choose the required control",screen:"QUALITY CONTROL",items:["Positive","Negative","View Results"],focus:"Positive",tip:"Complete the correct positive and negative control runs using the displayed instructions."}];
- else if(sec.id==="torch"&&/load the controls/.test(t))scenes=[
+ else if(sec.id==="torch"&&/confirm qc sample name|enter qc sample name|start the control/.test(t))scenes=[
   {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
   {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
  if(!scenes)return "";
