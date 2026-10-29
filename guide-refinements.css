@@ -33,11 +33,23 @@
 .lc-scroll-cue-frame>.pf-rack-scroll,.lc-scroll-cue-frame>.guide-stepper,.lc-scroll-cue-frame>.pf-qc-lane-list,.lc-scroll-cue-frame>.pfux-jump-options{box-sizing:border-box}
 .lc-scroll-cue-bottom,.lc-scroll-cue-right{position:absolute;z-index:12;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease}
 .lc-scroll-cue-bottom{left:1px;right:1px;bottom:-1px;height:45px;padding-bottom:2px;box-sizing:border-box;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.65) 48%,#fff 96%);border-radius:0 0 10px 10px}
-.lc-scroll-cue-right{top:1px;bottom:1px;right:1px;width:43px;align-items:center;background:linear-gradient(to right,transparent,rgba(248,251,252,.92) 90%);border-radius:0 10px 10px 0}
-.lc-scroll-cue-right>span{padding:6px 5px;writing-mode:vertical-rl}
+.lc-scroll-cue-frame.lc-has-horizontal-overflow{padding-bottom:29px;box-sizing:border-box}
+.lc-scroll-cue-right{
+ top:auto;right:4px;bottom:0;width:auto;height:25px;min-width:73px;padding:0 10px;
+ display:flex;align-items:center;justify-content:center;
+ border:1px solid #bed8dd;border-radius:999px;
+ background:#f0f8f9;color:#246f7d;font-family:inherit;font-weight:800;font-size:11px;
+ box-shadow:none;pointer-events:auto;cursor:pointer;line-height:1;
+ white-space:nowrap;appearance:none;
+}
+.lc-scroll-cue-right>span{padding:0;writing-mode:horizontal-tb;display:inline-flex;align-items:center;gap:5px}
+.lc-scroll-cue-right>span>span{font-size:15px;line-height:1}
+.lc-scroll-cue-right:hover{background:#e2f2f4;border-color:#87bcc3}
+.lc-scroll-cue-right:focus-visible{outline:2px solid #2b8996;outline-offset:2px}
+.lc-scroll-cue-right[hidden]{display:none!important}
 .lc-scroll-cue-frame.lc-has-more-below>.lc-scroll-cue-bottom,.lc-scroll-cue-frame.lc-has-more-right>.lc-scroll-cue-right{opacity:1;visibility:visible}
-.lc-scroll-cue-frame.lc-has-more-right.lc-has-more-below>.lc-scroll-cue-bottom{right:33px}
-.lc-scroll-cue-frame.lc-has-more-right.lc-has-more-below>.lc-scroll-cue-right{bottom:34px}
+.lc-scroll-cue-frame.lc-has-more-right.lc-has-more-below>.lc-scroll-cue-bottom{right:1px}
+.lc-scroll-cue-frame.lc-has-more-right.lc-has-more-below>.lc-scroll-cue-right{bottom:0}
 .lc-scroll-cue-frame .pf-rack-scroll:focus-visible,.lc-scroll-cue-frame .guide-stepper:focus-visible{outline:2px solid #2a8090;outline-offset:-2px}
 @media(prefers-reduced-motion:reduce){.lc-scroll-cue-bottom,.lc-scroll-cue-right{transition:none}}
 @media(max-width:900px){.lc-poc-shutdown-grid{grid-template-columns:1fr}.lc-poc-shutdown-grid .lc-poc-art{min-height:170px}.lc-poc-shutdown-grid .lc-poc-art svg{max-height:290px}}
