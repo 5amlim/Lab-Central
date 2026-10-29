@@ -222,19 +222,27 @@ function triageScene(title,group){
  return scene('Triage specimen handling',triageCassette(true),'Follow the selected assay and approved sample handling instructions.');
 }
 function genericScene(sec,title,group){
- const t=String(title).toLowerCase(),qc=/qc|calibrat|control/.test(group),id=sec.id;
- if(/report|print|document|file|results/.test(t))return scene('Check and document',printout(),'Verify instrument output and approved reporting workflow.');
- if(/collect|specimen|blood|tube|urine/.test(t)){
-  const kind=id==='sysmex'||id==='triage'?'lavender':'green';
-  return scene('Collect the correct specimen',tube(kind,kind==='green'?'lithium':'edta'),'Confirm assay-specific specimen, volume, identification and preparation.');
+ const t=String(title).toLowerCase(),grp=String(group||"").toLowerCase(),id=sec.id;
+ const qc=/qc|calibrat|control/.test(grp);
+ const media={sysmex:"lavender",piccolo:"green",pathfast:"green",triage:"lavender",clinitek:"urine",
+   torch:"stool",spotfire:"utm",febridx:"finger","drug-screen":"urine",coagsense:"finger",
+   poc:"varies",sofia:"swab",hemocue:"finger"};
+ const material=media[id]||"varies";
+ const specimen=art.mediaSvg?art.mediaSvg(material):art.kitShape?.(id,false,qc?"qc":"patient")||"";
+ const device=art.render?.(sec).match(/<svg[\s\S]*?<\/svg>/)?.[0]||art.kitShape?.(id,false,qc?"qc":"patient")||"";
+ if(/print|document|record result|report result|file the|log the/.test(t))
+  return scene("Verify and document",printout(),"Review the correct patient, QC and instrument output before documenting.");
+ if(/qc material|control vial|refrigerat.*control|thaw.*control/.test(t)&&qc)
+  return scene("Prepare QC material",generalControls(),"Use only the approved assay-specific controls, lot and levels.");
+ if(/enter|mrn|scan|screen|menu|select|start|run|press|power on|turn on|load.*analyzer|place.*analyzer|insert.*instrument|choose/.test(t))
+  return scene("Use the "+sec.title+" instrument",device,"Follow the active analyzer screen and approved procedure. This is a schematic, not a live screen capture.");
+ if(/collection|collect|specimen|blood|urine|tube|swab|fingerstick|sample stability|within/.test(t))
+  return scene("Correct specimen for "+sec.title,specimen,"Confirm specimen identification, transport medium, timing and volume for the ordered assay.");
+ if(/prepare|load|insert|cassette|cartridge|sample|disc|strip|pipett|dispense|apply/.test(t)){
+  const kit=art.kitShape?art.kitShape(id,/load|insert|apply|dispens/.test(t),qc?"qc":"patient"):device;
+  return scene(qc?"Quality-control test device":"Prepare test device",kit,"Match the device, sample position and assay-specific handling instructions.");
  }
- if(/freezer|fridge|thaw|controls/.test(t)&&qc)return scene('QC material preparation',generalControls(),'Use the exact manufacturer-approved controls and storage requirements for this device.');
- if(/insert|load|cassette|cartridge|sample|disc|strip|swab|pipett/.test(t)){
-  const kit=art.kitShape?art.kitShape(id,/insert|load|apply|pipett/.test(t),qc?'qc':'patient'):'';
-  return scene('Prepare the correct testing material',kit,'Use the actual device, assay and manufacturer-defined collection position.');
- }
- const media=art.kitShape?art.kitShape(id,false,qc?'qc':'patient'):'';
- return scene(qc?'Quality control':'Instrument workflow',media,'Follow the procedure on the analyzer and approved SOP.');
+ return scene(qc?"Quality-control workflow":"Instrument workflow",device,"Verify the current instrument and site SOP.");
 }
 const oldRender=art.render;
 art.render=function(sec){
@@ -259,8 +267,7 @@ const originalInline=art.inlineKitVisual;
 art.inlineKitVisual=function(sec,title,depth,root){
  if(sec&&sec.id==='triage'&&/code chip|chip.*slot|install new code chip/i.test(title))
   return '<div class="lab-inline-device">'+triageMeter('chip')+'<small>Lot-specific CODE CHIP enters the lower left-side port. Select INSTALL NEW CODE CHIP on the main menu and follow the meter prompts.</small></div>';
- if(sec&&sec.id==='piccolo'&&/100 µL pipette|sample port|fill chamber|dispense approximately/i.test(title))
-  return '<div class="lab-inline-device">'+piccoloDisc(true,true)+'<small>The hole is part of the disc. Red shows where whole blood sits after filling; do not peel the disc.</small></div>';
+ // Piccolo now uses one current disc illustration at the main-step level; never repeat legacy disc art inline.
  return originalInline(sec,title,depth,root);
 };
 /* Keep the original user-provided Piccolo reference photos and the instrument art available to the focused guide. */
