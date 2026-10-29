@@ -690,42 +690,45 @@ function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
  const isQC=material==="calqc";
  const red=filled?(isQC?"#a9c5eb":"#bc4654"):"#e8f6fa";
  const liquid=filled?(isQC?"#7196c8":"#a82d45"):"#d9edf4";
- const chambers=Array.from({length:7},(_,i)=>{
-  const x=196+i*46;
-  return '<path d="M'+x+' 161 L'+(x+4)+' 215 Q'+(x+13)+' 234 '+(x+26)+' 216 L'+(x+31)+' 154Z" fill="'+(i%2?'#dcebf1':'#c2dce7')+'" fill-opacity=".72" stroke="#9dbdcd" stroke-width="2"/>'+
-   '<path d="M'+(x+8)+' 168 L'+(x+11)+' 211" stroke="#fff" stroke-opacity=".82" stroke-width="3"/>';
+ const chambers=Array.from({length:8},(_,i)=>{
+  const x=198+i*41,y=177-i*6;
+  return '<path d="M'+x+' '+y+' L'+(x+5)+' '+(y+44)+' Q'+(x+10)+' '+(y+52)+' '+(x+22)+' '+(y+44)+' L'+(x+30)+' '+(y-5)+'Z" fill="'+(i%2?'#dceaf0':'#eef7fa')+'" fill-opacity=".85" stroke="#9fbbc8" stroke-width="1.6"/>'+
+    '<path d="M'+(x+5)+' '+(y+8)+' L'+(x+8)+' '+(y+37)+'" stroke="#fff" stroke-width="3" opacity=".93"/>'+
+    '<path d="M'+(x+7)+' '+(y+37)+' Q'+(x+13)+' '+(y+44)+' '+(x+21)+' '+(y+37)+'" fill="none" stroke="#b6cbd6" stroke-width="1.2"/>';
  }).join("");
  const strips=Array.from({length:20},(_,i)=>{
   const x=468+i*4;
   return '<path d="M'+x+' 122 l0 20" stroke="'+(i%3?"#1c2930":"#f7fcfd")+'" stroke-width="'+(i%4===0?2.6:1.2)+'"/>';
  }).join("");
  const top=
- '<ellipse cx="338" cy="259" rx="253" ry="11" fill="#c6d8e1" opacity=".48"/>'+
+ '<ellipse cx="328" cy="251" rx="258" ry="12" fill="#cfdae1" opacity=".47"/>'+
  chambers+
- '<path d="M157 139 L548 118 L562 157 L165 184Z" fill="#e7f1f6" fill-opacity=".75" stroke="#a0b9c7" stroke-width="2.5"/>'+
- '<path d="M163 115 L544 99 L562 153 L175 169Z" fill="#1d262e" stroke="#7d939f" stroke-width="2.5"/>'+
- '<path d="M177 165 L564 149" fill="none" stroke="#eef8fb" stroke-width="3"/>'+
- '<path d="M215 116 L226 164 M248 113 L260 163 M284 111 L295 162 M319 110 L330 161" stroke="#62737d" stroke-width="1.5" opacity=".72"/>'+
- '<path d="M154 116 L191 114 L202 166 L173 168Z" fill="#e54d43" stroke="#b43f3c" stroke-width="1.8"/>'+
- '<path d="M176 121 L191 120" stroke="#fff0e8" stroke-width="1.8" opacity=".85"/>'+
- '<path d="M447 112 L545 107 L552 143 L454 146Z" fill="#e5edf0" stroke="#8f9fa7" stroke-width="1.8"/>'+
- strips+
- '<rect x="501" y="113" width="41" height="3.5" rx="1" fill="#869ca8"/>'+
- '<path d="M541 99 L559 98 L574 151 L562 153Z" fill="#df5b4e" stroke="#a73d34" stroke-width="1.4"/>'+
- '<ellipse cx="372" cy="134" rx="18" ry="13" fill="#050b0e" stroke="#7d8e9a" stroke-width="3"/>'+
- '<ellipse cx="372" cy="134" rx="8" ry="6" fill="#1c353d" stroke="#495e67" stroke-width="1.5"/>'+
- '<path d="M87 136 L156 125 L176 169 L99 187Z" fill="#eef9fd" fill-opacity=".72" stroke="#8faebe" stroke-width="3"/>'+
- '<path d="M102 145 L145 138 L154 168 L105 178Z" fill="#c3e2ec" fill-opacity=".7" stroke="#84aaba" stroke-width="2"/>'+
- '<path d="M105 157 L149 150 L154 167 L108 174Z" fill="'+liquid+'" fill-opacity="'+(filled?".96":".58")+'"/>'+
- '<path d="M105 156 L148 149" stroke="#86a6b3" stroke-width="1.8" stroke-dasharray="4 3"/>'+
- '<path d="M92 143 L98 169 M100 140 L107 171" stroke="#fff" stroke-opacity=".76" stroke-width="2"/>'+
- '<path d="M89 187 L176 169" stroke="#91b6c6" stroke-width="2"/>';
+ /* Clear front sample well protrudes beyond the foil just like the photographed strip. */
+ '<path d="M82 162 L153 147 L181 181 L112 202 Z" fill="#f6fbfe" fill-opacity=".9" stroke="#afc5d1" stroke-width="3"/>'+
+ '<path d="M103 169 L149 159 L164 184 L112 195 Z" fill="#dceef5" stroke="#a4c2d1" stroke-width="2"/>'+
+ '<path d="M106 174 L150 164 L157 184 L114 190 Z" fill="'+liquid+'" fill-opacity="'+(filled?".92":".35")+'"/>'+
+ '<path d="M112 181 L155 171" stroke="#8cb4c5" stroke-width="2" stroke-dasharray="5 3"/>'+
+ '<path d="M89 163 L106 193 M96 160 L113 193" stroke="#fff" stroke-width="2.4" opacity=".9"/>'+
+ /* Black narrow reagent-cover strip: never draw a fat upright gray cassette. */
+ '<path d="M155 143 L553 84 L573 111 L180 184 Z" fill="#171d23" stroke="#5b707b" stroke-width="3.4"/>'+
+ '<path d="M171 148 L552 91" stroke="#7c939c" stroke-width="1.6"/>'+
+ '<path d="M180 176 L566 110" stroke="#627985" stroke-width="1.6"/>'+
+ '<path d="M154 144 L188 140 L213 179 L182 184Z" fill="#df4b44"/>'+
+ '<path d="M175 148 L198 147" stroke="#fff3ed" stroke-width="2" opacity=".76"/>'+
+ /* Circular black instrument-detection area, separate from the sample well. */
+ '<ellipse cx="365" cy="131" rx="18" ry="13" transform="rotate(-9 365 131)" fill="#050809" stroke="#798e9b" stroke-width="3"/>'+
+ '<ellipse cx="365" cy="131" rx="9" ry="6" fill="#20343e" transform="rotate(-9 365 131)"/>'+
+ /* White label and barcode panel near the far end. */
+ '<path d="M433 105 L540 90 L548 115 L441 132Z" fill="#e6eef1" stroke="#a3b4bd" stroke-width="1.4"/>'+
+ Array.from({length:30},(_,i)=>'<path d="M'+(438+i*3.25)+' '+(106-i*.48)+'l2 18" stroke="'+(i%4===0?'#1a252c':'#53646b')+'" stroke-width="'+(i%5===0?2.2:1)+'"/>').join('')+
+ '<path d="M553 84 L574 88 L591 111 L573 111Z" fill="#df4b44" stroke="#9b3734" stroke-width="1.5"/>'+
+ '<path d="M196 157 L248 149 M258 148 L311 140" stroke="#728793" stroke-width="1.2" opacity=".8"/>';
  const callouts=
- '<path d="M124 145 L110 93 L58 93" fill="none" stroke="#198a99" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'+
- '<circle cx="124" cy="145" r="4.4" fill="#168c9a"/>'+
- '<text x="57" y="83" font-family="Arial,sans-serif" fill="#246b7d" font-size="13" font-weight="850">SAMPLE WELL</text>'+
- '<path d="M372 116 L378 80 L453 80" fill="none" stroke="#647f8c" stroke-width="2" stroke-linecap="round"/>'+
- '<text x="379" y="68" font-family="Arial,sans-serif" fill="#547080" font-size="11" font-weight="750">DETECTION WELL</text>';
+ '<path d="M127 176 L101 101 L51 101" fill="none" stroke="#168c9b" stroke-width="2.8" stroke-linecap="round"/>'+
+ '<circle cx="127" cy="176" r="4.5" fill="#128d9b"/>'+
+ '<text x="49" y="88" font-family="Arial,sans-serif" fill="#246b7d" font-size="14" font-weight="850">SAMPLE WELL</text>'+
+ '<path d="M365 113 L378 62 L455 62" fill="none" stroke="#647f8c" stroke-width="2.5" stroke-linecap="round"/>'+
+ '<text x="380" y="50" font-family="Arial,sans-serif" fill="#547080" font-size="12" font-weight="750">DETECTION WELL</text>';
  const detail=
  '<rect x="574" y="62" width="153" height="180" rx="12" fill="#fff" stroke="#c9dfe8" stroke-width="2"/>'+
  '<text x="651" y="85" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="850" fill="#315e76">SAMPLE WELL</text>'+
@@ -745,7 +748,7 @@ function pathfastCartridgeSvg(filled,showPipette=false,material='blood'){
  '<text x="233" y="30" font-family="Arial,sans-serif" font-size="13" font-weight="850" fill="#376c82">TRANSFER PIPETTE</text>'+
  '<path d="M213 37 L182 58" stroke="#328e9b" stroke-width="2.6" fill="none"/>'+
  '</g>':'';
- const info='<text x="311" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#698395">Long cartridge • clear sample tip • black foil and reagent wells</text>';
+ const info='<text x="311" y="244" text-anchor="middle" font-family="Arial,sans-serif" font-size="10.5" fill="#698395">Long, flat black-foil cartridge • white barcode at far end • clear wells below</text>';
  return illustratedSvg(top+callouts+detail+info+transfer,
   "PATHFAST reagent cartridge, "+(filled?(isQC?"control material":"whole blood")+" in the clear rectangular sample well":"empty clear rectangular sample well")+" at the red-marked front end; separate black detection well must not receive blood",
   "0 0 740 310");
