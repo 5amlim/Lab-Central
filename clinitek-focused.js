@@ -85,7 +85,7 @@ function scene(kind,mode){
  const isHcg=kind==="hcg",testName=isHcg?"CLINITEST hCG CASSETTE":"URINALYSIS DIPSTICK";
  let art=machine(mode,isHcg?"hcg":"ua");
  if(mode==="specimen"){art+=cup(512,75);art+=isHcg?cassette(590,301):strip(486,238,80);}
- if(mode==="qc-material"||mode==="qc-dip"){art+='<g><rect x="532" y="123" width="91" height="147" rx="13" fill="#e9f5f8" stroke="#96b4c1" stroke-width="4"/><rect x="526" y="106" width="103" height="34" rx="7" fill="#639bad"/><rect x="541" y="173" width="73" height="46" rx="6" fill="#fff" stroke="#c4d7df"/></g>'+tx(577,194,"QC CONTROL",12,"#2d7483")+tx(583,318,"APPROVED QC LOT",14,"#487d8c");}
+ if((mode==="qc-material"||mode==="qc-dip")&&isHcg){art+='<g><rect x="532" y="123" width="91" height="147" rx="13" fill="#e9f5f8" stroke="#96b4c1" stroke-width="4"/><rect x="526" y="106" width="103" height="34" rx="7" fill="#639bad"/><rect x="541" y="173" width="73" height="46" rx="6" fill="#fff" stroke="#c4d7df"/></g>'+tx(577,194,"QC CONTROL",12,"#2d7483")+tx(583,318,"APPROVED QC LOT",14,"#487d8c");}
  if(mode==="qc-dip")art+=(isHcg?cassette(590,260):strip(592,240,-20))+
   tx(583,335,"CONTROL MATERIAL",13,"#287a83");
  if(mode==="strip"){art+=isHcg?cassette(590,200):strip(570,188,0);
@@ -98,6 +98,11 @@ function scene(kind,mode){
  if(mode==="dispense")art=machine("dispense","hcg")+tableCloseup("hcg",true);
  if(mode==="results")art+=tx(587,197,isHcg?"CLINITEST hCG":"URINALYSIS",17,"#2a718a")+tx(587,225,"RESULTS",20,"#2a718a");
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
+}
+
+const dipperPhoto='<div class="cl-qc-photo"><img loading="lazy" decoding="async" src="assets/quantimetrix-dipper-controls.jpg" alt="Quantimetrix Dipper Level 1 with pink cap and Level 2 with purple cap, urinalysis QC controls"><span>QUANTIMETRIX DIPPER · LEVEL 1 &amp; 2</span></div>';
+function quantimetrixQCFigure(title,sceneMode,note){
+ return fig(title,'<div class="cl-qc-material-layout"><div class="cl-qc-analyzer">'+scene("ua",sceneMode)+'</div>'+dipperPhoto+'</div>',note);
 }
 function render(title,group){
  const g=String(group||"").toLowerCase(),t=String(title||"").toLowerCase();
@@ -113,7 +118,7 @@ function render(title,group){
  if(/select strip test|select cassette test|choose strip|select hcg/.test(t))
   return fig("Select "+(kind==="hcg"?"Cassette Test":"Strip Test")+" on the analyzer",scene(kind,"select"),
      "Select the correct test type and confirm patient ID or QC entry on the analyzer.");
- if(qc&&/prepare.*control|quality control/.test(t))return fig("Prepare approved QC controls",scene(kind,"qc-material"),"Confirm the correct QC material, level, lot, and expiry. Use the approved assay-specific procedure.");
+ if(qc&&/prepare.*control|quality control/.test(t))return kind==="ua"?quantimetrixQCFigure("Prepare Quantimetrix Dipper Level 1 and Level 2 controls","qc-material","Verify the Quantimetrix Dipper 1 and 2 control vials, correct lot, expiration and storage. Follow the current site SOP and manufacturer insert."):fig("Prepare approved QC controls",scene(kind,"qc-material"),"Confirm the correct QC material, level, lot, and expiry. Use the approved assay-specific procedure.");
  if(kind==="hcg"&&/prepare and place|place.*unused.*cassette/.test(t))
   return fig("Seat CLINITEST hCG cassette on the flipped test table",scene("hcg","table"),
    "With the cassette-side recess facing up, place the unused CLINITEST hCG cassette flat on the test table. Leave the sample well accessible and do not dispense urine until START is selected.");
@@ -127,7 +132,8 @@ function render(title,group){
    "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
  if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Confirm the hCG cassette is seated in the flipped insert, select START, then use the kit pipette and approved volume.");
  if(qc&&/run each control/.test(t))
-  return fig("Run controls using the urinalysis strip method",scene(kind,"qc-dip"),
+  return kind==="ua"?quantimetrixQCFigure("Run each Quantimetrix Dipper control with the UA strip method","qc-dip",
+   "Run Level 1 and Level 2 separately using approved QC mode and reagent-strip technique. Verify acceptable results before patient testing."):fig("Run controls using the urinalysis strip method",scene(kind,"qc-dip"),
    "Use approved control material and the correct QC mode, not a patient urine cup.");
  if(/press start|dip and blot|dip.*strip|run each control/.test(t))
   return fig("Press START, dip and blot",scene(kind,"dip"),
