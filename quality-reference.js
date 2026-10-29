@@ -2,28 +2,31 @@
 (function(){
 "use strict";
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+/* Current API reference: waived respiratory, former drug screen and unassigned
+   coagulation PT categories are intentionally excluded from this menu. */
 const map=[
- {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machine:"Piccolo Xpress + Triage MeterPro",items:[
-  ["Comprehensive chemistry · CH","Piccolo Xpress","MetLyte + CRP / MetLac 12 as specified on the API kit"],
-  ["Cardiac markers · CM","Triage MeterPro","Troponin I and D-dimer on the enrolled panel"],
-  ["Cardiac markers pilot · PSC","Triage MeterPro","Assigned pilot troponin I and D-dimer materials"]
+ {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"]],items:[
+  {code:"CH",title:"Comprehensive chemistry",instrument:"Piccolo Xpress",route:"piccolo",description:"Follow the actual CH shipment. Select the prescribed Piccolo reagent disc and report only its enrolled analytes.",tests:["MetLyte + C-reactive protein","MetLac 12"]},
+  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",description:"Use the enrolled cardiac marker panel and verify the assay-specific reporting units on the API event.",tests:["Cardiac troponin I","D-dimer"]},
+  {code:"PSC",title:"Cardiac markers pilot",instrument:"Triage MeterPro",route:"triage",description:"Run the assigned pilot panel and report only the markers listed on the shipment sheet.",tests:["Cardiac troponin I","D-dimer"]}
  ]},
- {id:"chemistry-miscellaneous",title:"Chemistry Miscellaneous",badge:"UDS",machine:"Assigned drug-screen platform",items:[
-  ["Urine drug screen · UDS","Only a currently validated and enrolled drug-screen platform","Confirm whether this assessment is currently enrolled and use only its separately approved and validated drug-screen method."]
+ {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
+  {code:"HSY",title:"Complete blood count",instrument:"Sysmex pocH-100i",route:"sysmex",description:"Run the hematology proficiency specimen under the correct PT identifier and report the specific enrolled CBC results.",tests:["Complete blood count","Three-part white cell differential"]}
  ]},
- {id:"hematology-coagulation",title:"Hematology / Coagulation",badge:"HSY",machine:"Sysmex pocH-100i",items:[
-  ["Hematology · CBC (HSY)","Sysmex pocH-100i","CBC proficiency specimen; run under the correct PT identifier per analyzer SOP"],
-  ["Coagulation","Only the enrolled and approved instrument","Do not assume the CBC sample also covers coagulation. Check the actual event assignment"]
+ {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
+  {code:"GIP",title:"Gastrointestinal pathogens",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
- {id:"microbiology",title:"Microbiology",badge:"GIP / RSP",machine:"BioFire TORCH / SPOTFIRE",items:[
-  ["GI pathogens · GIP","BioFire TORCH","GI proficiency panel / pouch material specified by the provider"],
-  ["Respiratory pathogens · RSP","BioFire SPOTFIRE or site-approved BioFire platform","Assigned respiratory proficiency material and applicable pouch"]
- ]},
- {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machine:"Rapid HIV test / Piccolo",items:[
-  ["Rapid HIV · HV","Assigned rapid HIV test","Use the enrolled rapid test and its approved proficiency instructions"],
-  ["C-reactive protein · CRP","Piccolo Xpress","MetLyte + CRP disc; confirm the reporting units, e.g. mg/L vs mg/dL"]
+ {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machines:[["Rapid POC tests","poc"],["Piccolo Xpress","piccolo"]],items:[
+  {code:"HV",title:"Rapid human immunodeficiency virus test",instrument:"Rapid POC tests",route:"poc",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["Human immunodeficiency virus antigen / antibody"]},
+  {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte + C-reactive protein disc and confirm reporting units, such as mg/L versus mg/dL.",tests:["C-reactive protein","MetLyte + C-reactive protein"]}
  ]}
 ];
+function apiInstrumentLink(name,route){
+ return '<a class="quality-api-instrument-link" href="#'+esc(route)+'" title="Open '+esc(name)+' instrument guide" aria-label="Open '+esc(name)+' instrument guide">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
+}
+function apiTestBadge(test){
+ return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
+}
 const step=(title,description)=>[{type:"list",level:1,text:title},{type:"list",level:2,text:description}];
 function groups(sec){
  if(sec.id==="api"){
@@ -37,7 +40,7 @@ function groups(sec){
    ]},
    ...map.map(x=>({id:x.id,title:x.title,blocks:[
      ...step("Check the assigned program","API code: "+x.badge+". The event paperwork determines the exact analyte set and material."),
-     ...x.items.map(it=>step(it[0]+" · "+it[1],it[2])).flat(),
+     ...x.items.map(it=>step(it.code+" · "+it.title+" · "+it.instrument,it.description+" Required test menu: "+it.tests.join(", ")+".")).flat(),
      ...step("Review and file the event","Verify units, analyzer/test identification and acceptance of submitted results; retain the event packet and any follow-up.")
    ]}))
   ];
@@ -66,9 +69,23 @@ function groups(sec){
  return null;
 }
 function apiOverview(){
- return '<section class="quality-summary"><div class="quality-kicker">API · PROFICIENCY TESTING</div><h2>Assessment types and assigned analyzers</h2><p>Choose the assessment listed on the API shipment sheet. The exact enrolled analytes, material, method and reporting units govern each event.</p>'+
- '<div class="quality-map-grid">'+map.map(x=>'<article class="quality-map-card"><div class="quality-map-top"><strong>'+esc(x.title)+'</strong><span>'+esc(x.badge)+'</span></div><p class="quality-map-device">Instrument: '+esc(x.machine)+'</p><ul>'+x.items.map(it=>'<li><b>'+esc(it[0])+'</b><span>'+esc(it[1])+'</span><small>'+esc(it[2])+'</small></li>').join("")+'</ul></article>').join("")+'</div>'+
- '<div class="quality-followup"><strong>For every event</strong><p>Use only the enrolled device and the instructions shipped with the program. Retain the submitted report, run records and corrective action documentation.</p></div></section>';
+ return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
+ '<h2>Assessment types and assigned analyzers</h2>'+
+ '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
+ '<div class="quality-map-grid">'+map.map(x=>
+  '<article class="quality-map-card"><div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
+  '<span>'+esc(x.badge)+'</span></div>'+
+  '<div class="quality-api-instrument-row"><span class="quality-api-instrument-label">INSTRUMENT GUIDES</span>'+
+  '<div class="quality-api-instrument-links">'+x.machines.map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
+  '<ul class="quality-api-assessments">'+x.items.map(it=>
+   '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
+    '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
+    apiInstrumentLink(it.instrument,it.route)+'</div>'+
+    '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
+    '<div class="quality-api-badge-group" aria-label="Tests or panels for '+esc(it.code)+'">'+
+    it.tests.map(apiTestBadge).join('')+'</div></li>').join('')+'</ul></article>'
+ ).join('')+'</div>'+
+ '<div class="quality-followup"><strong>For every API event</strong><p>Use only the enrolled test system and assay list on the shipment sheet. Verify the assigned material, units and reporting method; retain submission records and corrective action documentation.</p></div></section>';
 }
 function levelsVisual(){
  const vals=[["LOW","#d6edf5"],["MID","#88c9de"],["HIGH","#2b879b"]];
