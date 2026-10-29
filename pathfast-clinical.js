@@ -80,7 +80,7 @@ window.LAB_PATHFAST_EXTRAS.baselinePicker()+
 window.LAB_PATHFAST_EXTRAS.timing()+'</div>'+
 
 '<details class="pcr-accordion" open><summary>Collection from existing IV lines and other precautions <span class="pcr-summary-actions"><span class="pcr-waste-summary-badge">1 TUBE WASTE</span><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div>'+
-'<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. <strong>For an existing IV line, follow the one-full-tube waste instruction below.</strong></p>'+
+
 '<div class="pcr-line-waste-alert" role="note">'+
 '<svg class="pcr-line-waste-icon" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One sample tube marked for discard">'+
 '<rect x="25" y="6" width="48" height="20" rx="6" fill="#b0c4cb" stroke="#728d99" stroke-width="2"/>'+
