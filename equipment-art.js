@@ -554,7 +554,7 @@ function mediaSvg(kind){
    '<rect x="139" y="105" width="42" height="37" rx="3" fill="#fff" opacity=".96"/>'+
    '<text x="160" y="118" text-anchor="middle" font-size="7.6" fill="#405e72" font-weight="800">'+(kind==="green"?"LI-HEP":"EDTA")+'</text>'+
    '<text x="160" y="132" text-anchor="middle" font-size="7" fill="#6a8393">BLOOD</text>',
-   kind+"-top whole blood collection tube");
+   kind+"-top whole blood collection tube","103 15 114 178");
  }
  if(kind==="finger")return illustratedSvg(
  '<ellipse cx="162" cy="189" rx="100" ry="8" fill="#e4edf1"/>'+
@@ -601,7 +601,7 @@ function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
- '<div class="device-collection-heading"><div><span class="device-collection-kicker">'+(sec.id==='pathfast'?'PATIENT TESTING · SPECIMEN':'SPECIMEN & COLLECTION')+'</span><h3>'+(sec.id==='pathfast'?'Sample to use':'What to collect')+'</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
+ '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
  '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
