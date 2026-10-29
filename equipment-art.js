@@ -322,6 +322,83 @@ function clinitekDeviceSvg(mode="empty"){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(/^(strip|start-strip|qc-strip)$/.test(mode)?"urinalysis strip seated lengthwise on the strip-side test table":/^(cassette|start-cassette|qc-cassette)$/.test(mode)?"CLINITEST hCG cassette on the flipped reversible test-table insert":"empty black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
 }
 
+
+/* Reference-matched Coag-Sense PT/INR meter.
+   Reusable art for overview, instrument cards, and illustrated operating steps.
+   The default display depicts the actual color-coded HOME layout, not an
+   invented analyzer screen. The graphic is an illustration, not a photograph. */
+function coagSenseDeviceMarkup(mode="home"){
+ const test=mode==="test",running=mode==="running",result=mode==="result";
+ const tx=(x,y,copy,size,color,weight,anchor="middle")=>'<text x="'+x+'" y="'+y+'" font-family="Arial,Helvetica,sans-serif" font-size="'+size+'" fill="'+color+'" font-weight="'+weight+'" text-anchor="'+anchor+'">'+copy+'</text>';
+ const shape='<defs>'+
+  '<linearGradient id="lc-coag-case" x1=".08" y1="0" x2=".92" y2="1"><stop offset="0" stop-color="#fbfcfc"/><stop offset=".42" stop-color="#fff"/><stop offset=".87" stop-color="#f1f2f2"/><stop offset="1" stop-color="#d9dddf"/></linearGradient>'+
+  '<linearGradient id="lc-coag-bezel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0d151b"/><stop offset=".56" stop-color="#090d13"/><stop offset="1" stop-color="#06090e"/></linearGradient>'+
+  '<linearGradient id="lc-coag-slit" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0b171a"/><stop offset=".65" stop-color="#101d21"/><stop offset="1" stop-color="#1f2629"/></linearGradient>'+
+  '</defs>'+
+  '<ellipse cx="386" cy="298" rx="103" ry="7.5" fill="#9fb0ba" opacity=".24"/>'+
+  // Widened, softly rounded ivory casing and two feet flanking the lower port.
+  '<path d="M379 9 Q328 9 311 31 Q290 51 289 109 L289 234 Q289 283 314 291 Q319 294 343 294 Q358 294 364 279 L364 253 Q364 237 379 236 L391 236 Q405 236 405 253 L405 278 Q411 294 426 294 L448 294 Q475 292 482 261 Q487 245 486 225 L486 108 Q486 54 467 31 Q448 9 393 9Z" fill="url(#lc-coag-case)" stroke="#d6dce0" stroke-width="2.2"/>'+
+  '<path d="M309 39 Q328 17 368 16 L410 16 Q450 17 468 42" fill="none" stroke="#fff" stroke-width="5" opacity=".93"/>'+
+  '<path d="M298 109 L298 238 Q298 267 308 277" fill="none" stroke="#fff" stroke-width="4.5" opacity=".8"/>'+
+  '<path d="M475 112 L475 224 Q475 266 467 278" fill="none" stroke="#cbd3d8" stroke-width="3" opacity=".55"/>'+
+  // Rounded deep-black touchscreen surround.
+  '<rect x="308" y="36" width="156" height="133" rx="31" fill="url(#lc-coag-bezel)" stroke="#232b31" stroke-width="2.6"/>'+
+  '<rect x="319" y="45" width="135" height="104" rx="3" fill="#202b34"/>'+
+  '<rect x="322" y="47" width="129" height="11" fill="#55484e"/>'+
+  tx(327,55,'12.08.2017  4:06 PM',5.1,'#c9bfc0',500,'start')+
+  tx(444,55,'⌁  ◉ ▰',6.5,'#d9cecb',750,'end');
+ let panels;
+ if(running||result){
+  panels='<rect x="324" y="60" width="125" height="82" rx="3" fill="#0389b5"/>'+
+   tx(386,83,running?'Testing':'Test Result',12,'#fff',700)+
+   tx(386,106,running?'Please wait':'INR  ·  ·  ·',11,'#f5feff',760)+
+   tx(386,131,running?'Do not disturb':'Review result',8,'#effafe',600);
+ }else{
+  panels='<rect x="324" y="60" width="125" height="45" rx="2" fill="'+(test?'#0479a1':'#0088b8')+'" stroke="'+(test?'#d2f6ff':'#2b8fb4')+'" stroke-width="'+(test?1.8:0.6)+'"/>'+
+   // Patient and drop icon on large cyan Test tile.
+   '<circle cx="359" cy="74" r="5.8" stroke="#f6fbff" stroke-width="1.6" fill="none"/>'+
+   '<path d="M352 85 Q353 79 359 79 Q366 79 366 86 V94 H353" stroke="#f8ffff" stroke-width="1.7" fill="none" stroke-linejoin="round"/>'+
+   '<path d="M348 82 Q344 88 348 91 Q353 92 352 88 Z" fill="#fff"/>'+
+   tx(405,85,'Test',12,'#ffffff',600)+
+   '<rect x="324" y="107" width="40" height="35" rx="2" fill="#ef7622"/>'+
+   '<rect x="366" y="107" width="40" height="35" rx="2" fill="#129a52"/>'+
+   '<rect x="408" y="107" width="41" height="35" rx="2" fill="#905872"/>'+
+   // Control syringe; Results report; Settings gear.
+   '<path d="M338 117 l7 7 m-4 0 l10 -10 m-9 13 l-4 4 m10-15 l3 -3 M341 114 l5 5" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/>'+
+   '<path d="M375 115 h5 M375 120 h22 M375 126 h22 M375 132 h22" stroke="#fff" stroke-width="2.3" stroke-linecap="round"/>'+
+   '<circle cx="376" cy="115" r="2" fill="#fff"/>'+
+   '<circle cx="426" cy="121" r="8" fill="none" stroke="#fff" stroke-width="3.6" stroke-dasharray="3.5 2"/>'+
+   '<circle cx="426" cy="121" r="3.1" fill="#fff"/>'+
+   tx(344,138,'Control',7.4,'#fff',650)+
+   tx(386,138,'Results',7.4,'#fff',650)+
+   tx(429,138,'Settings',7.4,'#fff',650);
+ }
+ const screen=panels+
+  '<rect x="319" y="145" width="135" height="20" rx="0" fill="#0b1015"/>'+
+  // Curved Back, square Home, and three-line Menu buttons below display.
+  '<path d="M357 151 q-6 -4 -8 2 q-2 5 5 5 l4 -1 M353 148 l-4 4 l4 2" fill="none" stroke="#9da5a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'+
+  '<rect x="381" y="149" width="9" height="10" rx="2" fill="none" stroke="#9da5a7" stroke-width="1.5"/>'+
+  '<path d="M418 150 h10 M418 154 h10 M418 158 h10" fill="none" stroke="#9da5a7" stroke-width="1.8" stroke-linecap="round"/>';
+ const logo=
+  // Red Coag-Sense circle and wordmark below the glass.
+  '<circle cx="360" cy="190" r="12" fill="none" stroke="#c52626" stroke-width="4.5"/>'+
+  '<path d="M370 183 Q359 178 352 184" stroke="#ed352c" stroke-width="3.1" fill="none"/>'+
+  '<text x="359" y="196" fill="#be292d" font-family="Arial,Helvetica,sans-serif" font-size="7" font-style="italic" font-weight="900">C</text>'+
+  '<text x="374" y="195" font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="850" font-style="italic" fill="#273944">oag-Sense</text>'+
+  // Small circular radio-wave icon on lower left (not a physical sample port).
+  '<g fill="none" stroke="#8ba4af" stroke-width=".75" opacity=".93">'+
+  '<circle cx="331" cy="219" r="10"/><circle cx="331" cy="219" r="7.2"/><circle cx="331" cy="219" r="4.5"/><circle cx="331" cy="219" r="1.7"/></g>';
+ const port=
+  '<path d="M365 251 Q365 236 378 235 L392 235 Q405 235 405 251 L405 288 L365 288Z" fill="url(#lc-coag-slit)"/>'+
+  '<path d="M366 258 L366 285 L404 285 L404 258" fill="#101b1f"/>'+
+  '<path d="M365 286 L405 286 L402 293 L368 293Z" fill="#c3c9cc"/>'+
+  '<path d="M369 286 L401 286" stroke="#7d8b8e" stroke-width="1.5"/>';
+ return shape+screen+logo+port;
+}
+function coagSenseDeviceSvg(mode="home"){
+ return '<svg viewBox="265 0 245 306" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coag-Sense PT INR analyzer, white rounded housing, black touchscreen with cyan Test, orange Control, green Results and purple Settings, front strip opening">'+coagSenseDeviceMarkup(mode)+'</svg>';
+}
+
 function body(shape,a){
  let v="";
  if(shape==="tower"){
@@ -390,7 +467,7 @@ function body(shape,a){
  }else if(shape==="hemocue"){
  v='<path d="M309 38 Q317 27 340 28 L451 30 Q464 40 465 58 L471 236 Q462 258 449 267 L316 266 Q302 249 302 233Z" fill="#c83c46" stroke="#9e2b34" stroke-width="4"/>'+rect(322,68,129,106,15,"#393e7d","#262e65",3)+rect(337,84,99,50,4,"#d2dfdf")+txt(387,164,"Hb 201+",13,"#fff",750)+rect(342,211,91,39,10,"#272d3b")+rect(349,220,73,16,5,"#151b2a")+txt(386,59,"HemoCue",13,"#fff",850);
  }else if(shape==="coag"){
- v='<path d="M266 242 L268 112 Q274 75 311 70 L448 70 Q489 81 497 118 L508 237 Q505 261 487 267 L289 266 Q269 262 266 242Z" fill="#f1f5f7" stroke="#a2b4bf" stroke-width="3"/>'+rect(295,99,175,105,13,"#1f303e")+rect(314,116,137,68,4,"#d3e9ef")+txt(381,148,"Apply sample",12,"#357b93",800)+txt(377,225,"Coag-Sense",16,"#a94453",850)+rect(361,244,87,28,10,"#293e4b")+rect(383,248,47,13,4,"#b8d0d7");
+ v=coagSenseDeviceMarkup("home");
  }else if(shape==="cup"){
  v=rect(290,84,177,175,20,"#edf3f7","#91a5b2",3)+rect(280,69,198,33,11,"#b9cdd6","#829aa8")+Array.from({length:7},(_,i)=>rect(312+i*19,117,10,98,4,"#f5fafb","#c0d3db")+rect(315+i*19,160,4,16,2,i%2?a:"#c9b6d7")).join("")+rect(328,227,102,12,4,"#aac2cf");
  }else if(shape==="cassette"||shape==="tests"){
@@ -1276,5 +1353,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={coagSenseDeviceSvg:coagSenseDeviceSvg,coagSenseDeviceMarkup:coagSenseDeviceMarkup,clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
