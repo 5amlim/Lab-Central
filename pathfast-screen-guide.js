@@ -23,7 +23,7 @@ function foot(text){return '<div class="pfs-footer"><span>◀ BACK</span><span>'
 function pills(selected,locked){
  return '<div class="pfs-screen-meta">REAGENT / CALIBRATION / QC STATUS</div>'+
  '<div class="pfs-status-pills">'+assays.map(function(a){
- const pink=locked&&a===selected;
+ const pink=(locked&&a===selected)||(!locked&&a===assays[0]);
  return '<span class="pfs-real-pill '+(pink?'locked':'available')+'">'+e(a)+'</span>';
  }).join('')+'</div>';
 }
@@ -40,8 +40,9 @@ function home(analyte,mode,focus){
  const cal=mode!=="patient",back=focus==="back";
  const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills(cal?analyte:"",cal)+
  '<div class="pfs-status-callout '+(cal?'overdue':'ready')+'">'+
- (cal?'<strong>Selected assay: pink</strong><span>CAL/QC expired or locked. Other assays shown in gray.</span>':
- '<strong>Assay availability</strong><span>Confirm the selected assay is gray / ready before loading patient samples.</span>')+'</div>'+
+ (cal?'<strong>Selected assay: <em class="pfs-pink-emphasis">pink</em></strong><span>CAL/QC expired or locked. Other assays shown in gray.</span>':
+ '<strong>EXAMPLE: hs-Troponin I is <em class="pfs-pink-emphasis">pink</em></strong><span>Do not run a locked assay. Check its CAL/QC status and complete required QC before patient testing.</span>')+'</div>'+
+ (!cal?'<div class="pfs-pink-help"><span>Example only: <strong class="pfs-pink-emphasis">pink</strong> means the selected assay may need calibration/QC. Gray indicates ready.</span><button type="button" data-gotab="cal-qc" class="pfs-qc-route">Open Calibration + QC →</button></div>':'')+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
  return frame("ASSAY/HOME",back?(cal?"Step 8 · Select BACK":"Step 8 · Select BACK"):(cal?"Step 7 · Check assay status":"Step 7 · Check assay status"),body,back?"SELECT BACK TO DISPLAY ASSAY MENU.":"CHECK CAL/QC STATUS BEFORE TESTING.");
 }
