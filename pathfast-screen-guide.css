@@ -166,3 +166,12 @@
 .pf-prep-focused .pf-action-figure figcaption{font-size:11px;line-height:1.55}
 @media(max-width:760px){.pf-prep-illustrations.two{grid-template-columns:1fr}.pf-prep-illustrations.two .pf-action-image svg{max-height:280px}}
 @media print{.pf-prep-illustrations.two .pf-action-figure{break-inside:avoid}}
+
+/* Reagent-pill teaching example: pink is a lock/QC cue, not a selectable assay. */
+.pfs-pink-emphasis{color:#a82f67!important;font-style:normal;font-weight:900;background:#ffe0eb;border:1px solid #eeb4ca;padding:1px 5px;border-radius:5px}
+.pfs-pink-help{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:11px 13px;background:#fff6f9;border-top:1px solid #f3d6e0;color:#725261;font-size:12px;line-height:1.55}
+.pfs-pink-help>span{flex:1 1 240px}
+.pfs-qc-route{font-family:inherit;font-size:12px;font-weight:850;color:#fff;background:#16877e;border:1px solid #107a72;border-radius:9px;min-height:39px;padding:9px 12px;cursor:pointer;white-space:normal;text-align:center}
+.pfs-qc-route:hover{background:#0e716b}
+.pfs-qc-route:focus-visible{outline:3px solid #64baaf;outline-offset:2px}
+@media print{.pfs-pink-help{background:#fff!important}.pfs-pink-emphasis{border:1px solid #c77798}}
