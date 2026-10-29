@@ -3,7 +3,7 @@
 (function(){
 "use strict";
 const art=window.LAB_EQUIPMENT_ART;if(!art)return;
-const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'"&quot;');
+const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'&quot;');
 const svg=(drawing,view,desc)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+view+'" role="img" aria-label="'+E(desc)+'">'+drawing+'</svg>';
 function uprightRack(mode,filled){
  const cal=mode==="cal",names=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["1","2","3","4","5","6"];
