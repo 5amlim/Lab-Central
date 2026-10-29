@@ -86,6 +86,34 @@ function piccoloPatientScreen(){
  '<text x="'+(x+39)+'" y="'+(y+16)+'" font-size="13" font-family="Arial" text-anchor="middle" font-weight="800" fill="'+(v==='Done'?'white':'#365468')+'">'+v+'</text>';}).join(''));
  return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.')+'</div>';
 }
+function piccoloRunningSvg(){
+ // Silhouette based on the Piccolo Xpress's compact cobalt-blue body, tall
+ // rounded black touch bezel, lower front power LED and no exposed keyboard.
+ const box='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 770 420" role="img" aria-label="Piccolo Xpress chemistry analyzer with a rounded blue housing and black touchscreen showing analysis in progress, with a green confirmation checkmark">'+
+ '<ellipse cx="343" cy="384" rx="235" ry="17" fill="#dce8ef"/>'+
+ '<path d="M225 38Q224 15 250 15H460Q488 16 498 42L535 83V331Q533 357 505 364H245Q218 361 218 336Z" fill="#236baa" stroke="#15517e" stroke-width="5"/>'+
+ '<path d="M458 18L498 43L534 82V333Q531 355 506 363L497 92Z" fill="#134d80"/>'+
+ '<path d="M255 21H438Q462 21 464 47L484 247Q486 273 464 280H247Q223 279 226 251L232 56Q235 21 255 21Z" fill="#1c293b" stroke="#172638" stroke-width="5"/>'+
+ '<rect x="258" y="64" width="188" height="171" rx="9" fill="#d3ebf9" stroke="#658da5" stroke-width="3"/>'+
+ '<rect x="261" y="66" width="182" height="34" rx="5" fill="#2d5b90"/>'+
+ '<text x="351" y="89" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#fff">piccolo xpress</text>'+
+ '<text x="351" y="133" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#346c83">Analyzing</text>'+
+ '<rect x="281" y="151" width="143" height="20" rx="9" fill="#b7d8e5"/>'+
+ '<rect x="281" y="151" width="90" height="20" rx="9" fill="#248f83"/>'+
+ '<text x="351" y="195" text-anchor="middle" font-size="13" font-family="Arial" fill="#507184">Run in progress</text>'+
+ '<rect x="260" y="217" width="181" height="20" rx="4" fill="#a9c8db"/>'+
+ '<text x="352" y="269" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#72bdeb">piccolo</text>'+
+ '<text x="401" y="266" font-size="12" font-family="Arial" fill="#fff">xpress</text>'+
+ '<path d="M248 283H481V348Q479 363 454 365H269Q250 362 248 348Z" fill="#226bab"/>'+
+ '<circle cx="429" cy="328" r="9" fill="#91e8fc" stroke="#dcfbff" stroke-width="3"/>'+
+ '<circle cx="596" cy="146" r="63" fill="#e6f6ee" stroke="#5db995" stroke-width="5"/>'+
+ '<path d="M564 146L586 169L626 124" stroke="#168b66" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>'+
+ '<text x="594" y="231" text-anchor="middle" font-size="22" font-family="Arial" font-weight="850" fill="#1b806b">RUN STARTED</text>'+
+ '<text x="594" y="258" text-anchor="middle" font-size="14" font-family="Arial" fill="#577a8a">Not a results-accepted</text>'+
+ '<text x="594" y="276" text-anchor="middle" font-size="14" font-family="Arial" fill="#577a8a">or QC-passed indicator</text>'+
+ '</svg>';
+ return box;
+}
 function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
@@ -95,7 +123,8 @@ function piccolo(title,group){
  .replace('red whole blood in curved inner sample chamber','QC control material in curved inner sample chamber');
  // Use one consistent, current sample-port diagram across all Piccolo steps.
  const tool=A.piccoloPipetteSvg();
- const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
+  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
+ if(/analysis is running|confirm analysis|run is running|run in progress/.test(t))return fig("Piccolo Xpress · Analysis in progress",piccoloRunningSvg(),"Check that the analyzer has started processing the disc. A green check marks successful run initiation only. Review final analyzer results and internal QC before reporting.","lc-piccolo-single lc-piccolo-running");
  if(/select patient|enter.*mrn|patient.*sample id/.test(t))return fig("Select Patient and enter patient MRN",piccoloPatientScreen(),"After the drawer is closed, select Patient. Enter the correct patient ID (up to 14 characters), then select Done. Verify the identifier before the analyzer processes the disc.","lc-piccolo-single lc-piccolo-screen-step");
   // Control menu steps use the QC screen walk-through, not another disc-loading drawing.
  if(/click analyze|control\s*>\s*enter|enter 1 for low|enter 2 for high/.test(t))return "";
@@ -115,7 +144,7 @@ function piccolo(title,group){
    fig("100 µL pipette + new disposable tip",tool,"Fit the disposable tip, aspirate approximately 100 µL without bubbles, and dispense through the permanent sample port.")+
    '<div class="lc-piccolo-disc-pair">'+
    fig("1 · Before loading",empty,"Empty sample port and chamber.")+
-   fig("2 · After loading",q?qcDisc:filled,q?"Fill the sample chamber with the approved control material, not patient blood.":"The curved chamber contains sample at the fill mark.")+'</div></div></section>';
+   fig("2 · After loading",q?qcDisc:filled,q?"Fill the sample chamber with the approved control material, not patient blood.":"Confirm sample is at the molded fill mark. Avoid bubbles in the sample chamber.")+'</div></div></section>';
  }
  if(/load the disc|insert|drawer|analyz|start|click/.test(t)){
   return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Select Analyze to open the drawer, seat the prepared disc, and select Close. Next, choose Patient and enter the patient MRN.","lc-piccolo-insert");
