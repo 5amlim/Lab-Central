@@ -52,13 +52,13 @@ function stage(id,title){
  if(id!=="torch"&&id!=="spotfire")return before?before(id,title):"";
  const t=String(title).toLowerCase(),gi=id==="torch";
  if(/kit and specimen/.test(t)){
-  return block([card("Check the kit",B.kit?B.kit():photo(1,"BIOFIRE pouch loading station and both color-coded injection vials"),"Match the ordered "+(gi?"GI panel":"Respiratory / Sore Throat panel")+", pouch expiry, red and blue vials, buffer and specimen.")]);
+  return block([card("Check the kit",B.kit?B.kit():"","Match the ordered "+(gi?"GI panel":"Respiratory / Sore Throat panel")+", pouch expiry, red and blue vials, buffer and specimen.")]);
  }
  if(/insert pouch|set up vials|loading station/.test(t)){
-  return block([card("Insert pouch · red left / blue right",B.station?B.station("ready"):photo(2,"FilmArray loading station with red and blue vials"),"Seat the pouch in the station. Place the sample vial in the RED well and hydration vial in the BLUE well.")]);
+  return block([card("Insert pouch · red left / blue right",B.station?B.station("ready"):"","Seat the pouch in the station. Place the sample vial in the RED well and hydration vial in the BLUE well.")]);
  }
  if(/hydrate/.test(t)){
-  return block([card("Inject hydration through blue port",B.station?B.station("hydrate"):photo(2,"Blue hydration vial and pouch"),"Lift the blue vial from its cover, insert into the blue pouch port and press. Wait until hydration solution enters the pouch.")]);
+  return block([card("Inject hydration through blue port",B.station?B.station("hydrate"):"","Lift the blue vial from its cover, insert into the blue pouch port and press. Wait until hydration solution enters the pouch.")]);
  }
  if(/open buffer|prepare red sample|sample buffer|prepare.*specimen/.test(t)){
   const order=gi?"TORCH GI: BUFFER FIRST, THEN STOOL":"SPOTFIRE: SPECIMEN FIRST, THEN BUFFER";
