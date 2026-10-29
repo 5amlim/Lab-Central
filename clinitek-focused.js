@@ -28,8 +28,10 @@ function machine(mode="home",kind="ua"){
  const equipment=window.LAB_EQUIPMENT_ART;
  if(!equipment?.clinitekDeviceMarkup)return "";
  const selectType=kind==="hcg"?"cassette":"strip";
- const shapeMode=mode==="table"?selectType:mode==="dispense"?"cassette":mode==="strip-on-table"?"strip":
-  mode==="results"?"reading":mode==="start"?(kind==="hcg"?"cassette":"empty"):"empty";
+ const shapeMode=mode==="table"?selectType:mode==="dispense"?"cassette":
+  mode==="select"?"select-"+selectType:mode==="qc"?"qc":
+  mode==="results"?"reading":mode==="start"?(kind==="hcg"?"start-cassette":"start-strip"):
+  mode==="dip"?"start-strip":mode==="qc-dip"?"qc":"empty";
  // Original photographed instrument, scaled to leave space for consumable
  // and table-insert closeups on the right. Screens are simplified diagrams.
  return '<g transform="translate(31 -2) scale(.80)">'+equipment.clinitekDeviceMarkup(shapeMode)+'</g>';
