@@ -151,6 +151,7 @@
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
+<link rel="stylesheet" href="assay-catalog.css?v=20261029-assay-menus-v1" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -256,6 +257,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261029-curated-figures-v2"></script>
 <script src="biofire-reference-polish.js?v=20261029-hydration-trim-shared-kit-v6"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
+<script src="assay-catalog.js?v=20261029-assay-menus-v1"></script>
 <script>
 (()=>{
 'use strict';
@@ -275,7 +277,7 @@ const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);
 let favs=[];let localVideos={};
 try{favs=JSON.parse(localStorage.getItem('labGuideFavorites')||'[]')||[];localVideos=JSON.parse(localStorage.getItem('labGuideVideoOverrides')||'{}')||{}}catch(_){favs=[];localVideos={}}
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -949,12 +951,13 @@ function videoLibrary(){
  return `<article class="video-card ${url?'has-video':''}"><div class="video-stage">${stage}</div><div class="video-content"><strong>${safeHtml(slot.name)}</strong><p>${safeHtml(slot.desc)}</p><div class="video-buttons"><span class="video-status">${url?'Video added':'Video unavailable'}</span><div style="display:flex;gap:7px;align-items:center">${info.kind==='external'?`<a class="video-external" href="${safeHtml(info.url)}" target="_blank" rel="noopener noreferrer">Open video ↗</a>`:''}<button class="video-edit" type="button" data-edit-video="${safeHtml(slot.id)}">${url?'Edit link':'Set video link'}</button></div></div></div></article>`}).join('')}</div><p class="source-footnote">Video links entered here are stored on this device only.</p>`;
 }
 function sectionOverview(sec,groups){
- if(sec.id==='pathfast')return window.LAB_EQUIPMENT_ART.render(sec)+window.LAB_EQUIPMENT_ART.specimenGuide(sec)+`<section class="pfux-overview">
+ if(sec.id==='pathfast')return window.LAB_EQUIPMENT_ART.render(sec)+window.LAB_EQUIPMENT_ART.specimenGuide(sec)+window.LAB_ASSAY_CATALOG.render(sec)+`<section class="pfux-overview">
  <p class="pfux-overview-flow-note"><strong>Clinical workflow:</strong> RN collection → Patient testing → Chest pain pathway. <strong>Calibration + QC</strong> is a separate 28-day maintenance task.</p>
  <p class="pfux-overview-hint"><strong>Analyzer status:</strong> Pink assay indicator means CAL/QC is due. Gray means ready after acceptable QC. Follow the instrument display and approved IFU.</p>
  </section>`;
  let h=window.LAB_EQUIPMENT_ART.render(sec);
  if(window.LAB_EQUIPMENT_ART?.specimenGuide)h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
+ if(window.LAB_ASSAY_CATALOG)h+=window.LAB_ASSAY_CATALOG.render(sec);
  
  if(instrumentCategories.includes(sec.category)){
   // The section tabs already provide workflow navigation. Keep Overview free
@@ -1048,13 +1051,15 @@ function sectionRender(sec,tab){
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
  const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
- if(sec.id==='clinitek'&&tab==='monthly-qc')tab='ua-qc';
+ if(sec.id==='clinitek'&&(tab==='ua-qc'||tab==='hcg-qc')){state.clinitekQc=tab;tab='combined-qc';}
+ if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
- let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p></div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
+ let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1>${['sysmex','pathfast','triage','torch','febridx'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}<p class="detail-subtitle">${safeHtml(sec.subtitle)}</p></div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
  if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='sendout'||sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
@@ -1070,7 +1075,7 @@ function sectionRender(sec,tab){
   h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''} ${x.id==='cal-qc'?'maintenance':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
- }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
+ }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
@@ -1083,6 +1088,10 @@ function sectionRender(sec,tab){
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
  else if(sec.id==='piccolo'&&tab==='result-interpretation')h+=window.LAB_PICCOLO_RESULTS.render();
+ else if(sec.id==='clinitek'&&tab==='combined-qc'){
+  const selected=groups.find(x=>x.id===state.clinitekQc)||groups.find(x=>x.id==='ua-qc');
+  h+=window.LAB_ASSAY_CATALOG.qcMenu(selected.id)+renderGuidedProcedure(selected,sec);
+ }
  else if(tab==='videos')h+=videoLibrary();
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
@@ -1162,6 +1171,9 @@ document.addEventListener('click',e=>{
  const branch=e.target.closest('[data-reqbranch]');if(branch){state.reqBranch=branch.dataset.reqbranch;state.reqResolution='provided';render();return}
  const resolution=e.target.closest('[data-reqresolution]');if(resolution){state.reqResolution=resolution.dataset.reqresolution;render();return}
  const os=e.target.closest('[data-goorderset]');if(os){navigate(os.dataset.goorderset,'order-sets');return}
+ const cq=e.target.closest('[data-clinitek-qc]');if(cq&&state.section?.id==='clinitek'){
+  state.clinitekQc=cq.dataset.clinitekQc;render();return;
+ }
  const tb=e.target.closest('[data-gotab]');if(tb&&state.section){navigate(state.section.id,tb.dataset.gotab);return}
  const fit=e.target.closest('[data-filter]');if(fit){state.filter=fit.dataset.filter;render();return}
  const fav=e.target.closest('[data-favorite]');if(fav){const id=fav.dataset.favorite;favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}render();return}
