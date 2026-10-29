@@ -197,7 +197,8 @@ function kitChooser(){
 }
 function figure(title,mode,extra,note){
  const right=extra||kitChooser();
- return '<figure class="lc-focus-figure triage-focus-figure"><header>'+E(title)+'</header><div class="triage-guide-scene"><div class="triage-meter-stage">'+meterSvg(mode)+'</div><div class="triage-material-stage">'+right+'</div></div><figcaption>'+E(note)+'</figcaption></figure>';
+ const isPipette=right.includes('triage-pipette-sequence');
+ return '<figure class="lc-focus-figure triage-focus-figure'+(isPipette?' triage-pipette-step':'')+'"><header>'+E(title)+'</header><div class="triage-guide-scene"><div class="triage-meter-stage">'+meterSvg(mode)+'</div><div class="triage-material-stage">'+right+'</div></div><figcaption>'+E(note)+'</figcaption></figure>';
 }
 function selectedMaterial(type,filled){
  const a=byId(type);
