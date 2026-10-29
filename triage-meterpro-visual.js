@@ -226,7 +226,7 @@ function renderStep(title,group){
  if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
  if(/place.*tip into|position.*tip over/.test(t))return pip(/place.*tip into/.test(t)?"dip":"position");
  if(/squeeze.*(large|upper)|open.*first cartridge and squeeze|open.*cartridge and squeeze/.test(t))return pip("bulb");
- if(/remove and discard.*pipette|wait for full absorption|let.*absorb/.test(t))return pip("absorb");
+ if(/remove and discard.*pipette|wait.*absorb|fully absorbed|let.*absorb/.test(t))return pip("absorb");
  if(/new cartridge and use a new pipette|new cassette and pipette|fresh assay cartridges and transfer pipettes|two fresh assay cartridges|new cassette and use a new pipette/.test(t))
   return show(title,'<div class="triage-materials-prep"><div>'+pipetteSvg("empty","qc")+'</div><div>'+kitChooser()+'</div></div>',"Each QC level needs a NEW single-use cartridge and its own kit-supplied transfer pipette.");
  if(/open and label|open a fresh|prepare a new cassette|open.*cartridge/.test(t))
