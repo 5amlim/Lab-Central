@@ -136,7 +136,7 @@ function render(id,title){
  });
  if(/select.*(analyzer )?module|available module/.test(t))return c({
   title:"Choose an available module",tag:"Instrument",hue:"green",
-  visual:B.analyzer?.(id,"selected"),page:17,
+  visual:gi?B.analyzer?.(id,"selected"):B.spotfireScreenWithZoom?.("selected"),page:17,
   lines:["Move the prepared pouch to the correct analyzer.","Select an available module and follow the actual loading prompts."],
   note:"The instrument drawing is schematic; verify the real module status."
  });
@@ -148,13 +148,13 @@ function render(id,title){
  });
  if(/load pouch and start run|start assay|start run|load.*module/.test(t))return c({
   title:"Load pouch and start test",tag:"Start run",
-  visual:B.analyzer?.(id,"selected"),page:17,
+  visual:gi?B.analyzer?.(id,"selected"):B.spotfireScreenWithZoom?.("selected"),page:17,
   lines:["Insert the prepared pouch into the selected module.","Recheck sample ID and panel, then follow the analyzer START prompts."],
   note:"A started run is not the same as a completed, valid result."
  });
  if(/review.*result|document.*result|print.*result/.test(t))return c({
   title:"Review completed results",tag:"Reporting",
-  visual:B.analyzer?.(id,"results"),page:20,
+  visual:gi?B.analyzer?.(id,"results"):B.spotfireScreenWithZoom?.("results"),page:20,
   lines:["Confirm completion and verify patient or QC identification.","Check internal control acceptance and the complete result report.","Release or document results only under the approved reporting workflow."],
   note:"Failed, invalid or incomplete results require the assay-specific follow-up process."
  });
