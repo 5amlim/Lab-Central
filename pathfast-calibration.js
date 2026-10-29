@@ -64,7 +64,7 @@ function svgCal1(){
  '<text x="105" y="99" text-anchor="middle" fill="#688a9f" font-size="9">LIQUID</text></svg>';
 }
 function svgCal2(count=2){
- let body='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two glass CAL 2 vials containing lyophilized powder" xmlns="http://www.w3.org/2000/svg">'+defs();
+ let body='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="'+(count===1?'One glass CAL 2 vial containing lyophilized powder':'Two glass CAL 2 vials containing lyophilized powder')+'" xmlns="http://www.w3.org/2000/svg">'+defs();
  for(let i=0;i<count;i++){const x=(count===1?84:38+i*92);body+='<g><ellipse cx="'+(x+30)+'" cy="134" rx="29" ry="5" fill="#dce4e8"/>'+
  '<rect x="'+(x+6)+'" y="13" width="47" height="23" rx="5" fill="#d6e3ec" stroke="#8ba4b4" stroke-width="2"/>'+
  '<rect x="'+(x+10)+'" y="36" width="39" height="92" rx="8" fill="url(#pfxglass)" stroke="#8da4b1" stroke-width="2"/>'+
@@ -74,7 +74,7 @@ function svgCal2(count=2){
  return body+'</svg>';
 }
 function svgDiluent(count=2){
- let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two blue liquid buffer diluent vials for CAL 2 reconstitution" xmlns="http://www.w3.org/2000/svg">'+defs();
+ let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="'+(count===1?'One blue liquid buffer diluent vial for CAL 2 reconstitution':'Two blue liquid buffer diluent vials for CAL 2 reconstitution')+'" xmlns="http://www.w3.org/2000/svg">'+defs();
  for(let i=0;i<count;i++){const x=(count===1?82:40+i*90);out+='<ellipse cx="'+(x+28)+'" cy="134" rx="27" ry="6" fill="#dce5eb"/>'+
  '<rect x="'+(x+6)+'" y="18" width="44" height="26" rx="5" fill="#438cc8" stroke="#286fa7" stroke-width="2"/>'+
  '<rect x="'+(x+10)+'" y="44" width="36" height="82" rx="7" fill="url(#pfxglass)" stroke="#90b3c8" stroke-width="2"/>'+
@@ -99,7 +99,7 @@ function cal2MixIllustration(){
  const pair=["ONE VIAL"].map((key,i)=>'<g transform="translate('+(i*445)+',0)">'+
   '<rect x="4" y="3" width="430" height="177" rx="12" fill="#f8fafc" stroke="#d0dfe8" stroke-width="2"/>'+
   '<rect x="4" y="3" width="430" height="30" rx="12" fill="#edf3fa"/>'+
-  '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2 · VIAL '+key+'</text>'+
+  '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2 · '+key+'</text>'+
   bottle(25,"powder")+bottle(156,"diluent")+bottle(328,"mixed")+
   '<text x="137" y="101" font-size="29" text-anchor="middle" fill="#4b94b4" font-weight="800">+</text>'+
   '<text x="287" y="101" font-size="30" text-anchor="middle" fill="#4b94b4" font-weight="850">→</text>'+
@@ -226,9 +226,9 @@ const workflow=[
 ];
 
 function storageSymbol(type){
- const freezer=type==="qc";
+ const freezer=type==="qc"||type==="cal2";
  const color=freezer?"#785e9d":"#258c8c";
- return '<svg class="pf-storage-svg" viewBox="0 0 220 170" role="img" aria-label="'+(freezer?'Freezer holding Bio-Rad quality control vials':'Refrigerator holding PATHFAST calibrators')+'">'+
+ return '<svg class="pf-storage-svg" viewBox="0 0 220 170" role="img" aria-label="'+(type==='cal2'?'Freezer holding the reconstituted CAL 2 vial':type==='qc'?'Freezer holding Bio-Rad quality control vials':'Refrigerator holding CAL 1 and unopened PATHFAST materials')+'">'+
  '<rect x="30" y="13" width="158" height="145" rx="16" fill="#e7f2f6" stroke="#91b1bf" stroke-width="4"/>'+
  '<path d="M176 19L198 35V148L176 157Z" fill="#bfd6df" stroke="#91b1bf" stroke-width="3"/>'+
  '<rect x="42" y="25" width="124" height="119" rx="8" fill="#f9fdff" stroke="#bfd5df" stroke-width="2"/>'+
@@ -240,14 +240,19 @@ function storageSymbol(type){
  '</svg>';
 }
 function returnMaterials(group){
- const header='<div class="pf-storage-intro"><strong>03 · Return materials to their specified storage</strong><p>After the accepted CAL/QC results are printed and filed, return the materials for '+esc(group.label)+' to the correct temperature-controlled locations. Use current open-vial and reconstituted-material stability limits.</p></div>';
- const cal='<article class="pf-storage-card"><header><span class="pf-storage-dot cal"></span><strong>CAL 1 and reconstituted CAL 2</strong><small>CAL 1: refrigerator · prepared CAL 2: freezer</small></header>'+
- '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+svgCal2(1)+'</div>'+storageSymbol("qc")+'</div>'+
- '<p>Return CAL 1 and unopened reagents to <b>2–8°C refrigeration</b>. Promptly freeze the single reconstituted CAL 2 vial at <b>−20°C or colder</b> when the selected assay IFU permits. Label with preparation date/time, lot and expiration, and honor assay-specific stability and freeze-thaw requirements.</p></article>';
- const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC 1 and QC 2 · manufacturer-specified freezer</small></header>'+
- '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC '+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
- '<p>Return the two Bio-Rad QC levels to the designated <b>−20°C to −70°C freezer</b> only if permitted by the current lot-specific insert and open-vial stability instructions. Secure caps and close the freezer.</p></article>';
- return '<section class="pf-return-storage" aria-label="Return calibration and QC material to appropriate cold storage">'+header+'<div class="pf-storage-grid">'+cal+qc+'</div><p class="pf-workflow-note"><strong>All three assays:</strong> Apply this same storage check after hs-Troponin I, NT-proBNP and D-dimer CAL/QC. Follow the selected assay’s CAL 2 frozen-stability limits and the separate Bio-Rad QC storage instructions.</p></section>';
+ const header='<div class="pf-storage-intro"><strong>03 · Return materials to approved storage</strong><p>After recording acceptable results for '+esc(group.label)+', cap and store each material according to its own storage and stability requirements.</p></div>';
+ const cal1='<article class="pf-storage-card"><header><span class="pf-storage-dot cal"></span><strong>CAL 1 and unopened kit</strong><small>Refrigerate at 2–8°C</small></header>'+
+  '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+'</div>'+storageSymbol("cal")+'</div>'+
+  '<p>Refrigerate CAL 1 and the unopened backup CAL 2 powder and matching diluent at <b>2–8°C</b> in accordance with the reagent IFU.</p></article>';
+ const cal2='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>Reconstituted CAL 2</strong><small>Freeze remaining prepared vial after use</small></header>'+
+  '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal2(1)+'</div>'+storageSymbol("cal2")+'</div>'+
+  '<p>After dispensing into both CAL 2 cartridge wells, promptly recap, label and <b>freeze the single prepared CAL 2 vial at −20°C or colder</b> when permitted by the assay IFU. Record reconstitution date, expiration and freeze/thaw history; do not exceed assay-specific stability.</p></article>';
+ const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC1 and QC2 · separate lot-specific instructions</small></header>'+
+  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
+  '<p>Return Bio-Rad QC controls to the approved <b>freezer</b> only when permitted by the current lot-specific insert and open-vial stability instructions. Recap and secure each vial.</p></article>';
+ return '<section class="pf-return-storage" aria-label="Storage for CAL 1, prepared CAL 2 and quality controls">'+header+
+   '<div class="pf-storage-grid pf-storage-three">'+cal1+cal2+qc+'</div>'+
+   '<p class="pf-workflow-note"><strong>Applies to all three assay workflows.</strong> Verify selected-assay CAL 2 reconstitution and freezer limits, and follow the Bio-Rad control-specific storage requirements separately.</p></section>';
 }
 
 let selectedPanel=null;
