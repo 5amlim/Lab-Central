@@ -261,7 +261,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261029-curated-figures-v2"></script>
 <script src="biofire-reference-polish.js?v=20261029-hydration-trim-shared-kit-v6"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
-<script src="assay-catalog.js?v=20261029-triage-cartridge-colors-v3"></script>
+<script src="assay-catalog.js?v=20261029-target-search-v1"></script>
 <script src="triage-meterpro-visual.js?v=20261029-pipette-steps-v2"></script>
 <script>
 (()=>{
@@ -378,7 +378,62 @@ function isMatch(s,q){
  }
  // Require all query words, but don't allow short test codes (e.g. PT, CK)
  // to match letters inside unrelated words.
- return terms.every(t=>t.length<=2?index.words.has(t):index.value.includes(t));
+ return terms.every(t=>t.length<=2?index.words.has(t):index.value.includes(t))||searchPanelMatches(q,[s]).length>0;
+}
+// Index each measured analyte and detected pathogen within its panel.
+const labTargetAliases={
+ sodium:'na',potassium:'k',chloride:'cl',calcium:'ca',
+ 'blood urea nitrogen':'bun',glucose:'glu',creatinine:'creat',
+ 'total carbon dioxide':'co2 tco2','c-reactive protein':'crp',
+ 'creatine kinase':'ck','alanine aminotransferase':'alt',
+ 'aspartate aminotransferase':'ast','alkaline phosphatase':'alp',
+ 'high-sensitivity cardiac troponin i':'hs-ctni hs-tni troponin',
+ 'cardiac troponin i':'tni troponin',
+ 'n-terminal pro-b-type natriuretic peptide':'nt-probnp ntprobnp',
+ 'b-type natriuretic peptide':'bnp','d-dimer':'ddimer',
+ 'severe acute respiratory syndrome coronavirus 2 (sars-cov-2)':'covid covid19 covid-19',
+ 'respiratory syncytial virus':'rsv',
+ 'influenza a virus':'flu a','influenza b virus':'flu b',
+ 'streptococcus pyogenes (group a streptococcus)':'strep throat',
+ hemoglobin:'hgb hb',hematocrit:'hct','platelet count':'plt',
+ 'white blood cell count':'wbc','red blood cell count':'rbc'
+};
+function labTargetText(name){return name+' '+(labTargetAliases[normalizeGuideSearch(name)]||'')}
+function labWordMatch(text,terms){
+ const value=normalizeGuideSearch(text),tokens=new Set(value.split(/\s+/));
+ return terms.every(t=>t.length<=2?tokens.has(t):value.includes(t));
+}
+function searchPanelMatches(query,sections=all){
+ const terms=normalizeGuideSearch(query).split(/\s+/).filter(Boolean);
+ if(!terms.length)return [];
+ const matches=[];
+ for(const section of sections){
+  for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
+   const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
+    (Array.isArray(names)?names:[]).map(name=>({group,name})));
+   const content=[section.title,section.subtitle,panel.title,panel.short,
+    ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name))].join(' ');
+   if(!labWordMatch(content,terms))continue;
+   const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name),[term])));
+   matches.push({section,panel,targets,hits});
+  }
+ }
+ return matches;
+}
+function searchPanelCard({section,panel,targets,hits}){
+ const names=[...new Set(hits.map(t=>t.name))];
+ const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+safeHtml(n)+'</span>').join('');
+ const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
+ const groups=Object.entries(panel.groups||{}).map(([group,arr])=>
+  '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
+  arr.map(n=>'<span>'+safeHtml(n)+'</span>').join('')+'</p></div>').join('');
+ return '<article class="lab-panel-search-result"><div class="lab-panel-search-top"><div>'+
+  '<small>'+safeHtml(section.title)+'</small><h3>'+safeHtml(panel.title)+'</h3>'+
+  (panel.short?'<span class="lab-panel-abbrev">'+safeHtml(panel.short)+'</span>':'')+
+  '</div><button type="button" class="lab-panel-open" data-go="'+safeHtml(section.id)+'">Open guide <span aria-hidden="true">→</span></button></div>'+
+  (names.length?'<div class="lab-panel-target-hits"><strong>Matching analytes / pathogens</strong>'+chips+more+'</div>':'')+
+  '<details class="lab-panel-all-targets"><summary>See all '+targets.length+' analytes / pathogens in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
+  '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
 }
 // Reuse the instrument guide illustrations in compact cards without altering card dimensions.
 function homepageEquipmentArt(sec,featured=false){
@@ -421,6 +476,13 @@ function renderHome(mode='home'){
  h+=`<div class="section-head"><h2 class="section-title">${search?'Matching references':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${filtered.length} guides</span></div>`;
  const cats=['All',...categories.filter(c=>c!=='Archived'),...(search?['Archived']:[])];
  h+=`<div class="filters" role="group" aria-label="Filter guide categories">${cats.map(c=>`<button type="button" data-filter="${safeHtml(c)}" class="filter-chip ${c===state.filter?'active':''}">${safeHtml(c)}</button>`).join('')}</div>`;
+ if(search){
+  const panelResults=searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter));
+  if(panelResults.length){
+   h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelResults.length} panels</span></div>`;
+   h+=`<p class="lab-panel-search-description">Find which instrument panels contain the searched analyte or pathogen. Expand a panel to see its full test menu.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}</div>`;
+  }
+ }
  h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:`<div class="empty-state" style="margin-top:17px">No matching guides. Try searching a different term or choose another category.</div>`;
  if(!search&&!isFav)h+=`<div class="section-head" style="margin-top:32px"><h2 class="section-title">Also available</h2></div><p class="lede">Discontinued instruments are kept under <strong>Archived</strong> for historical reference and excluded from the routine browse list.</p>`;
  el('mainContent').innerHTML=h;
