@@ -168,22 +168,74 @@ function analyzer(id){
  const illustration=svg(body,"BioFire "+(torch?"FilmArray TORCH modular instrument with front loading modules and sloped touchscreen":"SPOTFIRE system with modular drawer units and upright display"));
  return torch?illustration.replace('viewBox="0 0 920 400"','viewBox="205 0 510 375"'):illustration;
 }
+
 function ui(id,index){
  const torch=id==="torch";
- const states=[
-  {title:"Home / available",option:torch?"Available modules":"Available modules",choices:["Home","Available","Running"],focus:"Available"},
-  {title:"Identify the pouch",option:"Scan pouch barcode",choices:["Scan pouch barcode","Enter / scan sample ID","Back"],focus:"Scan pouch barcode"},
-  {title:"Confirm panel and identification",option:torch?"GI panel":"Respiratory / Sore Throat",choices:[torch?"GI panel":"Select correct panel","Patient / specimen ID","Continue"],focus:"Continue"},
-  {title:"Load pouch and start",option:"Ready to run",choices:["Verify pouch and module","Start Run","Back"],focus:"Start Run"}
- ][index]||{};
- return svg('<rect x="205" y="24" width="510" height="356" rx="24" fill="#e4edf2" stroke="#96b0be" stroke-width="8"/>'+
- '<rect x="232" y="48" width="456" height="303" rx="10" fill="#eaf5f7" stroke="#b6d2dc" stroke-width="3"/>'+
- '<rect x="232" y="48" width="456" height="48" rx="8" fill="#233c4d"/>'+
- text(461,79,torch?"BIOFIRE FILMARRAY TORCH":"BIOFIRE SPOTFIRE",19,"#f5fbfc")+
- text(460,126,states.title?.toUpperCase(),16,"#356982")+
- (states.choices||[]).map((x,i)=>'<g><rect x="308" y="'+(147+i*60)+'" width="305" height="45" rx="8" fill="'+(x===states.focus?"#e3f3ef":"#fff")+'" stroke="'+(x===states.focus?"#238b7c":"#bdcfd8")+'" stroke-width="'+(x===states.focus?"3":"2")+'"/>'+text(462,175+i*60,x,15,x===states.focus?"#217668":"#527588")+'</g>').join("")+
- '<rect x="210" y="355" width="501" height="24" rx="8" fill="#a0b4be"/>',
- "Illustrative "+(torch?"TORCH":"SPOTFIRE")+" navigation view "+(index+1));
+ if(!torch){
+  const choices=[["Available modules","Select a free module"],["Pouch barcode","Scan barcode"],["Sample ID / assay","Confirm ordered panel"],["Start Run","Start only after checks"]];
+  const chosen=choices[index]||choices[0];
+  return svg('<rect x="197" y="17" width="536" height="363" rx="19" fill="#e8eef1" stroke="#9fb8c5" stroke-width="6"/>'+
+   '<rect x="222" y="45" width="485" height="302" rx="10" fill="#fff" stroke="#afc4d0"/>'+
+   '<rect x="223" y="45" width="484" height="53" rx="7" fill="#274b67"/>'+
+   text(465,76,"BIOFIRE SPOTFIRE · WORKFLOW REFERENCE",17,"#fff")+
+   '<rect x="268" y="143" width="394" height="52" rx="8" fill="#e6f5f1" stroke="#24968d" stroke-width="3"/>'+
+   text(467,176,chosen[0],20,"#226b73")+
+   '<rect x="298" y="228" width="334" height="47" rx="8" fill="#f1f6f8" stroke="#c0d6e0"/>'+
+   text(465,255,chosen[1],16,"#527589")+
+   text(465,317,"Illustrative workflow only · verify actual screen",12,"#688494"),
+   "BioFire SPOTFIRE simplified workflow stage "+(index+1)+"; verify actual software display");
+ }
+ const stages=[
+  {heading:"DASHBOARD",title:"Select an available module",focus:"module"},
+  {heading:"NEW RUN",title:"Scan pouch barcode · enter Sample ID",focus:"fields"},
+  {heading:"REVIEW RUN",title:"Confirm pouch type and specimen ID",focus:"review"},
+  {heading:"START RUN",title:"Verify and start the run",focus:"start"}
+ ];
+ const stage=stages[index]||stages[0];
+ const toolbar='<rect x="172" y="20" width="583" height="360" rx="14" fill="#e9eef2" stroke="#9eb7c3" stroke-width="5"/>'+
+ '<rect x="192" y="40" width="543" height="318" rx="8" fill="#fff" stroke="#b8cbd5" stroke-width="2"/>'+
+ '<rect x="193" y="40" width="542" height="48" fill="#263f51"/>'+
+ text(287,69,"Dashboard",15,stage.focus==="module"?"#fff":"#d1e5ea")+
+ text(448,69,"Browse Runs",15,"#c5dbe4")+
+ text(576,69,"Settings",15,"#c5dbe4")+
+ text(679,69,"TORCH",19,"#f7fcfd")+
+ '<rect x="206" y="97" width="516" height="36" rx="4" fill="#eaf2f7"/>'+
+ text(464,120,stage.heading,17,"#33687f");
+ let content="";
+ if(stage.focus==="module"){
+   content=Array.from({length:6},(_,i)=>{
+    const x=223+i%3*164,y=150+Math.floor(i/3)*78;
+    return '<rect x="'+x+'" y="'+y+'" width="147" height="63" rx="8" fill="'+(i===0?"#e6f5ec":"#f3f7f9")+'" stroke="'+(i===0?"#238f79":"#ccdee5")+'" stroke-width="'+(i===0?"3":"2")+'"/>'+
+     text(x+73,y+27,"MODULE "+(i+1),12,"#325c73")+
+     text(x+73,y+48,"Available",11,i===0?"#1a866d":"#5e8193");
+   }).join("")+
+   text(459,333,"Select an available module or scan the pouch barcode",13,"#5e7f8e");
+ }else if(stage.focus==="fields"){
+   content='<rect x="246" y="153" width="440" height="54" rx="8" fill="#f8fbfc" stroke="#bed5df" stroke-width="2"/>'+
+    text(274,176,"POUCH BARCODE / LOT / SERIAL",12,"#4c7588","start")+
+    text(275,197,"Scan the fitment label",13,"#2c6881","start")+
+    '<rect x="246" y="224" width="440" height="54" rx="8" fill="#f8fbfc" stroke="#bed5df" stroke-width="2"/>'+
+    text(274,247,"SAMPLE ID",12,"#4c7588","start")+
+    text(275,268,"Scan or enter approved accession ID",13,"#2c6881","start")+
+    '<rect x="560" y="303" width="126" height="35" rx="7" fill="#268f81"/>'+text(623,325,"NEXT",13,"#fff");
+ }else if(stage.focus==="review"){
+   content='<rect x="246" y="153" width="440" height="145" rx="9" fill="#f7fafb" stroke="#c0d7e0"/>'+
+   text(274,179,"Pouch Type",12,"#688294","start")+text(620,179,"GI PANEL",13,"#346d84","end")+
+   '<path d="M262 192H670" stroke="#e0eaf0" stroke-width="2"/>'+
+   text(274,218,"Sample ID",12,"#688294","start")+text(620,218,"VERIFY MATCH",13,"#347588","end")+
+   '<path d="M262 233H670" stroke="#e0eaf0" stroke-width="2"/>'+
+   text(274,260,"Protocol",12,"#688294","start")+text(620,260,"IF PROMPTED",13,"#347588","end")+
+   '<rect x="568" y="311" width="116" height="34" rx="7" fill="#248e81"/>'+text(626,333,"NEXT",13,"#fff");
+ }else{
+   content='<rect x="245" y="151" width="440" height="145" rx="8" fill="#f7fafc" stroke="#c6dbe3"/>'+
+    text(464,182,"REVIEW POUCH + SAMPLE ID",15,"#376d85")+
+    text(464,211,"Confirm the correct module is loaded",13,"#6b8495")+
+    text(464,237,"Confirm operator access on the analyzer",13,"#6b8495")+
+    '<rect x="375" y="260" width="178" height="47" rx="8" fill="#278f80"/>'+
+    text(464,289,"START RUN",18,"#fff");
+ }
+ return svg(toolbar+content,
+ "BioFire FilmArray Torch dashboard and run workflow using documented Dashboard, Browse Runs, Settings, pouch barcode, Sample ID and Start Run controls; schematic not an exact software screenshot");
 }
 function figure(title,desc,picture){
  const type=/blue|hydrat/i.test(title)?'blue':/red|sample|specimen/i.test(title)?'red':/scan|panel|start|module/i.test(title)?'screen':'ready';
