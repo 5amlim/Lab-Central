@@ -288,6 +288,9 @@ function panelPicker(){
 function repaintPanel(){
  const old=document.querySelector('.pf-calibration-guide');
  if(old)old.outerHTML=render();
+ const rail=document.querySelector('.pfux-cal-stage-nav .pfux-stage-track');
+ const active=rail?.querySelector('.pfux-stage-button.is-current');
+ if(rail&&active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
 }
 function render(){
  const group=selectedGroup();
@@ -334,6 +337,7 @@ function render(){
     'Close analyzer hood','Log in and check status','Back to operation menu','Select CAL / QC and assay','Verify six lanes',
     'Press START','Confirm 17-min run','Review CAL and QC','Print, file and freeze'
    ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="pfux-stage-button'+(currentStep===i+1?' is-current':i+1<currentStep?' is-previous':'')+'" aria-label="Step '+(i+1)+' of '+total+': '+esc(label)+'" '+(currentStep===i+1?'aria-current="step"':'')+'><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+esc(label)+'</span></button>').join('')+'</div></nav>'+
+   '<p class="pfux-cal-scroll-hint">Scroll horizontally to view all 14 steps →</p>'+
    '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/total*100)+'%"></span></div>';
   h+=step(1,'Gather assay cartridges, calibrators and Bio-Rad controls','Confirm the exact QC levels and vials for '+x,
       '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching six-cartridge assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
