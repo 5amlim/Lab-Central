@@ -206,7 +206,7 @@ function sysmexDeviceSvg(mode,showAccessory=true){
    The strip and CLINITEST hCG cassette use DISTINCT removable table inserts. */
 function clinitekDeviceMarkup(mode="empty"){
  const m=String(mode||"empty").toLowerCase();
- const stripMode=m==="strip",cassetteMode=m==="cassette",trayOut=!/reading|result|closed/.test(m);
+ const stripMode=m==="strip",cassetteMode=m==="cassette"||m==="start-cassette",trayOut=!/reading|result|closed/.test(m);
  const T=(x,y,t,size=13,color="#425b69",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+t+'</text>';
  let art=
  '<defs>'+
