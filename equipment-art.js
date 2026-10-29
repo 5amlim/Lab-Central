@@ -848,22 +848,70 @@ function pathfastRackBaseSvg(){
  return pathfastRealRackSvg("setup",false);
 }
 
+/* Shared PATHFAST analyzer silhouette from the Overview, with two teaching
+   states: hood raised/arrow to close, and safe closed-hood running. */
+function pathfastMachineStateSvg(state){
+ const open=state==="hood";
+ const analyzer=body("pathfast","#3289a4");
+ const t=(x,y,value,size=16,fill="#315e76",weight=850)=>
+  '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" fill="'+fill+'" font-weight="'+weight+'">'+value+'</text>';
+ const hoodOpen='<path d="M360 65Q375 43 405 42H484Q507 47 512 82V250Q510 274 485 283H370Q353 270 353 235V110Z" fill="#e4eef1" stroke="#a5bcc6" stroke-width="3"/>'+
+  '<path d="M373 109H493V237H373Z" fill="#1e536b" stroke="#548ea3" stroke-width="3"/>'+
+  '<rect x="380" y="125" width="105" height="98" rx="6" fill="#d5e7eb" stroke="#92bcc7" stroke-width="3"/>'+
+  Array.from({length:6},(_,i)=>'<rect x="'+(383+i*17)+'" y="140" width="13" height="68" rx="3" fill="'+(i<2?"#ecf6f8":"#f4f8f9")+'" stroke="#8fa9b1" stroke-width="1.5"/>').join("")+
+  '<path d="M374 241H493V258Q473 276 394 270Z" fill="#2e829b" stroke="#61b1c4" stroke-width="3"/>'+
+  // The blue tinted cover is lifted UP at the back hinge.
+  '<path d="M380 105L402 -25L480 -40L505 85Z" fill="#176a85" stroke="#4babc1" stroke-width="5"/>'+
+  '<path d="M389 95L410 -14L470 -27L493 79Z" fill="#1b536d" stroke="#80cbd5" stroke-width="3"/>'+
+  '<path d="M402 84L418 -4L463 -14L480 71Z" fill="#96d3df" opacity=".43"/>'+
+  '<path d="M382 110H501" stroke="#459ab4" stroke-width="5"/>';
+ if(open){
+  const drawing='<g transform="translate(35 124) scale(1.33)">'+analyzer+hoodOpen+'</g>'+
+  '<path d="M726 88Q777 111 769 185Q765 227 717 249" fill="none" stroke="#1d938c" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M717 219L715 252L746 244" fill="none" stroke="#1d938c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>'+
+  '<rect x="650" y="41" width="249" height="53" rx="14" fill="#e3f4ef" stroke="#69b8a9" stroke-width="2"/>'+
+  t(775,73,"CLOSE THE HOOD",20,"#176f68",900)+
+  '<rect x="542" y="347" width="355" height="58" rx="13" fill="#f0f7f8" stroke="#c1dce2" stroke-width="2"/>'+
+  t(720,371,"Confirm rack, tips and waste box",14)+
+  t(720,391,"before closing the cover.",12,"#5b7f8e",730);
+  return illustratedSvg(drawing,"PATHFAST analyzer with raised translucent hood and downward arrow instructing close hood","0 0 950 440");
+ }
+ const drawing='<g transform="translate(-48 82) scale(1.42)">'+analyzer+'</g>'+
+ '<circle cx="746" cy="115" r="53" fill="#e9f8ef" stroke="#65bb98" stroke-width="4"/>'+
+ '<path d="M719 115l20 20 36-46" fill="none" stroke="#178663" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>'+
+ t(745,195,"RUNNING",26,"#177a63",900)+
+ '<rect x="625" y="218" width="244" height="70" rx="16" fill="#eaf5f8" stroke="#9ac5d2" stroke-width="3"/>'+
+ t(747,252,"17 MINUTES",26,"#286c85",900)+
+ t(747,273,"Approximate assay time",12,"#557d8e",730)+
+ '<rect x="66" y="345" width="825" height="73" rx="14" fill="#fff0ee" stroke="#d94c4a" stroke-width="4"/>'+
+ '<path d="M106 358l27 46h-54Z" fill="#d64745"/>'+
+ '<path d="M106 372v17" stroke="white" stroke-width="6" stroke-linecap="round"/>'+
+ '<circle cx="106" cy="395" r="3.7" fill="white"/>'+
+ t(484,380,"DO NOT OPEN THE HOOD",27,"#ac2d30",900)+
+ t(484,405,"WHILE THE ANALYZER IS RUNNING",18,"#b73b3d",900);
+ return illustratedSvg(drawing,"PATHFAST analyzer running with closed hood, green checkmark, approximately 17 minute run, warning do not open hood while running","0 0 950 440");
+}
 function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
- const pic=stage==="base"?pathfastRackBaseSvg():
+ const pic=(stage==="hood"||stage==="running")?pathfastMachineStateSvg(stage):
+ stage==="base"?pathfastRackBaseSvg():
  stage==="dispense"?pathfastCartridgeSvg(true,true,qc?"calqc":"blood"):
  stage==="rack-empty"?pathfastRackSvg(mode,false):
  stage==="rack"?pathfastRackSvg(mode):
  stage==="tips"?pathfastTipRackSvg(mode):
  stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
- const tag=stage==="base"?"EMPTY METAL SAMPLE RACK":
+ const tag=stage==="hood"?"CLOSE THE ANALYZER HOOD":
+ stage==="running"?"ASSAY IN PROGRESS · 17 MINUTES":
+ stage==="base"?"EMPTY METAL SAMPLE RACK":
  stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
  stage==="rack-empty"?"SAMPLE RACK LOADED WITH CARTRIDGES":
  stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
  stage==="tips"?"SIX LANE TIP POSITIONS":
  stage==="results"?"RESULT AND STATUS VERIFICATION":"CHECK THE UNUSED REAGENT CARTRIDGE";
- const note=stage==="base"?"With the instrument accessible and idle, carefully remove the metal six-slot cartridge rack and seat it in its clear loading base before inserting cartridges.":
+ const note=stage==="hood"?"After loading the rack, tips and waste-tip box, lower the raised hood fully and confirm it is closed before START.":
+ stage==="running"?"Confirm the analyzer accepted START and is running. Typical assay time is approximately 17 minutes. Do not open the hood until the analyzer indicates completion and permits access.":
+ stage==="base"?"With the instrument accessible and idle, carefully remove the metal six-slot cartridge rack and seat it in its clear loading base before inserting cartridges.":
  stage==="dispense"?"Schematic pipette and well. Add the assay-specific material only to the clear front sample well, fill to the mark and avoid bubbles.":
  stage==="rack-empty"?"Seat the assay cartridges fully into the metal rack while it rests in the clear base. Leave the clear front sample wells empty until the next step.":
  stage==="rack"?"Six-slot aluminum rack; actual occupied lanes and assay assignments must match the instrument display.":
@@ -1155,5 +1203,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
