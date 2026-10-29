@@ -215,7 +215,7 @@ if(typeof document!=='undefined'&&typeof document.addEventListener==='function')
   const btn=ev.target.closest('[data-pcr-choice]');
   if(btn){const id=btn.getAttribute('data-pcr-choice'),value=btn.getAttribute('data-pcr-value');const q=questions.find(x=>x.id===id);
    if(!q||!q.opts.some(x=>x[0]===value))return;
-   const next={};for(const key of ["baseline","pathway","timing","twoHourTiming","twoHourResult","delta","risk","onset","confirmation"]){if(key===id)break;if(selected[key])next[key]=selected[key];}
+   const next={pathway:selected.pathway==="two"?"two":"one"};for(const key of ["baseline","pathway","timing","twoHourTiming","twoHourResult","delta","risk","onset","confirmation"]){if(key===id)break;if(selected[key])next[key]=selected[key];}
    next[id]=value;selected=next;refresh();return;
   }
   const alternative=ev.target.closest('[data-pcr-secondary]');
