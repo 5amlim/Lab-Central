@@ -45,16 +45,20 @@ function timing(){
  const base=displayTime(baselineMinutes);
  const one=displayTime(baselineMinutes+60),one15=displayTime(baselineMinutes+75);
  const two=displayTime(baselineMinutes+120),two15=displayTime(baselineMinutes+135);
- return '<div id="pcr-serial-timing">'+
- '<div class="pcr-window-rule"><strong>Repeat collection: never before the target time</strong>'+
- '<p>Timing starts at the initial blood draw ('+base+'). The +15-minute allowance must be approved locally for assay-specific delta interpretation.</p></div>'+
- '<div class="pcr-time-branches">'+
- '<article class="pcr-valid-time"><span class="pcr-time-badge">0/1 HOUR</span><strong>60 min + 0–15 min</strong><p>Target: <b>'+one+'</b></p><div class="pcr-window-value"><span>COLLECTION WINDOW</span><b>'+one+'–'+one15+'</b><small>60–75 minutes after the baseline · Never earlier</small></div></article>'+
- '<article class="pcr-valid-time"><span class="pcr-time-badge alt">0/2 HOUR</span><strong>120 min + 0–15 min</strong><p>Target: <b>'+two+'</b></p>'+
- '<div class="pcr-twohour-gate" role="note"><strong>MISSED THE 75-MINUTE MARK?</strong><span>Draw the repeat at <b>120 minutes from the initial draw.</b></span></div>'+
- '<div class="pcr-window-value"><span>COLLECTION WINDOW</span><b>'+two+'–'+two15+'</b><small>120–135 minutes after the baseline · Never earlier</small></div></article></div>'+
- '<div class="pcr-invalid-time"><strong>Outside the authorized collection window?</strong><p>Do not treat an out-of-window specimen as a timed delta. Record the actual time, notify the provider and follow the approved alternative plan.</p></div>'+
- '</div>';
+ const row=(name,minutes,target,windowEnd,windowText,extra,alt)=>'<div class="pcr-timing-row'+(alt?' secondary':'')+'">'+
+  '<div class="pcr-timing-path"><span class="pcr-time-badge'+(alt?' alt':'')+'">'+name+'</span><strong>'+minutes+' minutes</strong></div>'+
+  '<div class="pcr-timing-value"><span>TARGET DRAW</span><strong>'+target+'</strong></div>'+
+  '<div class="pcr-timing-value"><span>COLLECTION WINDOW</span><strong>'+target+'–'+windowEnd+'</strong><small>'+windowText+'</small></div>'+
+  (extra?'<p class="pcr-timing-extra">'+extra+'</p>':'')+'</div>';
+ return '<div id="pcr-serial-timing" class="pcr-timing-compact">'+
+  '<div class="pcr-timing-summary"><strong>Repeat collection from the first draw ('+base+')</strong>'+
+  '<p>Never draw early. The +15-minute allowance must be approved locally for assay-specific delta interpretation.</p></div>'+
+  '<div class="pcr-timing-rows">'+
+  row('0/1 HOUR','60',one,one15,'60–75 min from baseline','','')+
+  row('0/2 HOUR','120',two,two15,'120–135 min from baseline','Missed the 75-minute mark? Collect at 120 minutes from the original draw.','alt')+
+  '</div>'+
+  '<div class="pcr-timing-footnote"><strong>Outside the authorized window?</strong> Record the actual collection time, notify the provider, and follow the approved alternative plan. Do not classify the sample as an in-window timed delta.</div>'+
+  '</div>';
 }
 function plasmaTube(){
  return '<svg class="pcr-plasma-svg" viewBox="0 0 355 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Green-top lithium-heparin specimen after a 10-minute spin per local SOP, showing plasma above buffy coat and red blood cells">'+
