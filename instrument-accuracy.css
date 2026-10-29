@@ -1,17 +1,5 @@
 /* Revision: accuracy and legibility for instrument training screens. */
-.pfux-patient .device-collection-item{align-items:center;gap:18px}
-.pfux-patient .device-collection-item .device-media-picture{
-  width:172px;min-width:172px;min-height:170px;display:grid;place-items:center;
-  padding:8px;border:1px solid #e0eaef;border-radius:13px;background:#fff
-}
-.pfux-patient .device-collection-item .device-media-picture svg{
-  display:block;width:auto;max-width:145px;max-height:165px;height:165px
-}
-/* Also enlarge the Piccolo lithium-heparin thumbnail. */
-.device-collection-item:has(svg[aria-label*="Green-top"]) .device-media-picture{min-width:170px;width:170px;min-height:180px;padding:8px;display:grid;place-items:center;background:#fff;border:1px solid #e1eaf0;border-radius:12px}
-.device-collection-guide .device-media-picture svg[aria-label*="Green-top"]{
-  width:auto;max-height:165px;height:165px;max-width:145px
-}
+/* Collection thumbnails are sized centrally in guide-refinements.css for every instrument. */
 .pf-prep-illustrations.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
 .pf-prep-illustrations.three .pf-action-figure{min-width:0}
 .pf-prep-illustrations.three .pf-action-image{min-height:185px;padding:10px}
@@ -42,8 +30,6 @@
 @media(max-width:680px){
  .pf-prep-illustrations.three{grid-template-columns:minmax(0,1fr)}
  .pf-prep-illustrations.three .pf-assembled-figure{grid-column:auto}
- .pfux-patient .device-collection-item .device-media-picture{width:130px;min-width:130px;min-height:150px}
- .pfux-patient .device-collection-item .device-media-picture svg{height:150px}
  .lab-step-scene.sysmex-maint-scene .lab-step-scene-media{min-height:185px}
  .lab-step-scene.sysmex-maint-scene .lab-step-scene-media svg{max-height:230px}
  .guide-line>div{font-size:12px;line-height:1.65}
