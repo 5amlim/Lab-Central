@@ -83,12 +83,17 @@ function stage(id,title){
   return block([card(gi?"Choose a TORCH module":"Choose a SPOTFIRE module",B.analyzer?B.analyzer(id):"","Select an available module before initiating the run.")]);
  }
  if(/scan.*barcode|confirm.*id/.test(t)){
-  return block([card("Scan pouch and verify specimen ID",B.ui?B.ui(id,2):"","Scan the pouch barcode. Confirm the ordered panel and patient or QC specimen ID before loading.")]);
+  return block([card("Scan pouch and verify specimen ID",B.ui?B.ui(id,1):"","Scan the pouch barcode. Confirm the ordered panel and patient or QC specimen ID before loading.")]);
  }
  if(/start run|load pouch/.test(t)){
   return block([card("Load prepared pouch",B.analyzer?B.analyzer(id,"selected"):"","Seat the prepared pouch in the selected module."),card("Start run",B.ui?B.ui(id,3):"","Confirm pouch and specimen information, then select Start Run.")]);
  }
- if(/review.*result/.test(t))return block([card("Review assay result and controls",B.ui?B.ui(id,3):"","Confirm completed run, internal controls and specimen identifiers. Follow the approved reporting workflow.")]);
+ if(/run in progress|analysis started|confirm analysis|analyzing|running/.test(t)){
+  return block([card("Confirm the analyzer has started",B.analyzer?B.analyzer(id,"running"):"","The run-start display is an instructional reference, not proof of acceptable results or internal QC.")]);
+ }
+ if(/review.*result|document.*result|print.*result/.test(t))return block([
+  card("Review assay result and controls",B.analyzer?B.analyzer(id,"results"):"","On the actual analyzer, confirm the run has completed and review internal controls, specimen ID and results before reporting.")
+ ]);
  return before?before(id,title):"";
 }
 B.stageVisual=stage;
