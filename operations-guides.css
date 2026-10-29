@@ -173,16 +173,14 @@
 }
 .ops-sendout-arrow-track{
  position:relative;display:block;flex:1 1 auto;
- width:2px;min-height:55px;margin:13px auto 8px;
+ width:2px;min-height:55px;margin:112px auto 8px;
  background:repeating-linear-gradient(
   to bottom,#77b4aa 0,#77b4aa 7px,transparent 7px,transparent 13px
  );
  border-radius:2px;
 }
 .ops-sendout-arrow-track:before{
- content:"";position:absolute;left:50%;top:-4px;
- transform:translateX(-50%);
- width:7px;height:7px;border-radius:50%;background:#258778;
+ display:none;
 }
 .ops-sendout-arrow-end{
  display:grid;place-items:center;flex:none;
