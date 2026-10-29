@@ -346,7 +346,7 @@ function homepageEquipmentArt(sec,featured=false){
  const matched=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/i);
  if(!matched)return '';
  let graphic=matched[0].replace(/class="[^"]*"/,'class="home-device-svg"');
- if(sec.id!=='sofia'){
+ if(sec.id!=='sofia'&&sec.id!=='torch'){
   const crop=sec.id==='pathfast'?'178 8 392 334':'170 12 400 284';
   graphic=graphic.replace(/viewBox="[^"]*"/,'viewBox="'+crop+'"');
  }
