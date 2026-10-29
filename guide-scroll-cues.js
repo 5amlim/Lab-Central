@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll";
+const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
@@ -26,8 +26,9 @@ function setup(node){
  const right=document.createElement("button");right.className="lc-scroll-cue-right";
  right.type="button";right.hidden=true;
  const steps=node.matches(".pfux-stage-track, .guide-stepper");
- right.setAttribute("aria-label",steps?"Show more procedure steps to the right":"Show more items to the right");
- right.innerHTML="<span>"+(steps?"More steps":"More")+" <span aria-hidden=\"true\">→</span></span>";
+ const tabs=node.matches(".tab-strip.instrument-matched-tabs");
+ right.setAttribute("aria-label",steps?"Show more procedure steps to the right":tabs?"Show more instrument sections to the right":"Show more items to the right");
+ right.innerHTML="<span>"+(steps?"More steps":tabs?"More sections":"More")+" <span aria-hidden=\"true\">→</span></span>";
  right.addEventListener("click",function(){
   const distance=Math.max(240,Math.round(node.clientWidth*.72));
   node.scrollBy({left:distance,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
