@@ -72,7 +72,10 @@ if(B){
 function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
- const empty=A.piccoloDiscSvg(false),filled=A.piccoloDiscSvg(true),qcDisc=filled.replace(/#b63d4a|#ce5b64|#b63a48/g,'#739fae').replace(/with blood in the chamber/g,'with approved QC control in the chamber').replace('Sample loaded','QC control loaded');
+ const empty=A.piccoloDiscSvg(false),filled=A.piccoloDiscSvg(true),
+ qcDisc=filled.replace(/#b82e40|#a73241|#ea8190|#b5223a/g,'#739fae')
+ .replace('Blood visible (red)','Control material visible')
+ .replace('red whole blood in curved inner sample chamber','QC control material in curved inner sample chamber');
  // Use one consistent, current sample-port diagram across all Piccolo steps.
  const tool=A.piccoloPipetteSvg();
  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
