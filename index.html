@@ -99,7 +99,7 @@
   <link rel="stylesheet" href="qc-guide.css?v=20261029-poc-barcode-qcprint-v1" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
-  <link rel="stylesheet" href="reference-refresh.css?v=20261029-febridx-interpretation-v2" media="all">
+  <link rel="stylesheet" href="reference-refresh.css?v=20261029-drug-strip-illustrations-v3" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-patient-stable-nav-v2" media="all">
@@ -1241,8 +1241,15 @@ function apiReferenceOverview(sec){
 function drugScreenInterpretation(){
  const analytes=[['PPX','Propoxyphene'],['THC','Marijuana / THC'],['BUP','Buprenorphine'],['TCA','Tricyclic antidepressants'],['BAR','Barbiturates'],['BZO','Benzodiazepines'],['MTD','Methadone'],['AMP','Amphetamine'],['MOP','Morphine / Opiates'],['OXY','Oxycodone'],['MDMA','Ecstasy / MDMA'],['COC','Cocaine'],['PCP','Phencyclidine'],['MET','Methamphetamine']];
  function lines(kind,tag){
-  const description=kind==='negative'?'Control and test lines present':kind==='positive'?'Only the control line is present':'Test line only with no control line';
-  return '<div class="drug-test-example"><span>'+tag+'</span><div class="drug-test-window" role="img" aria-label="'+description+'"><b>C</b><b>T</b>'+(kind==='invalid'?'':'<i class="drug-line c"></i>')+(kind!=='positive'?'<i class="drug-line t"></i>':'')+'</div></div>';
+  const description=kind==='negative'?'Vertical test strip with a line at C and a line at T':kind==='positive'?'Vertical test strip with a line at C only':'Vertical test strip with no line at C and a line at T, invalid result';
+  const control=kind!=='invalid',test=kind!=='positive';
+  return '<div class="drug-test-example"><span>'+tag+'</span>'+
+   '<div class="drug-strip-cassette" role="img" aria-label="'+description+'">'+
+    '<div class="drug-strip-inner-window">'+
+     '<div class="drug-strip-row"><b>C</b><i class="drug-strip-band '+(control?'is-visible':'is-absent')+'"></i></div>'+
+     '<div class="drug-strip-row"><b>T</b><i class="drug-strip-band '+(test?'is-visible':'is-absent')+'"></i></div>'+
+    '</div><small>ONE TEST STRIP</small>'+
+   '</div></div>';
  }
  return '<section class="drug-interpretation"><div class="drug-interpretation-head"><span>McKESSON · URINE DRUG SCREEN</span><h2>How to interpret results</h2><p>Read each drug window separately at the time specified in the exact kit instructions.</p><p class="drug-reading-rule">Check the control (C) line first, then count the lines.</p></div>'+
  '<div class="drug-results-grid">'+
