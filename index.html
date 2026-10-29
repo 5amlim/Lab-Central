@@ -99,7 +99,7 @@
   <link rel="stylesheet" href="qc-guide.css?v=20261029-poc-barcode-qcprint-v1" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
-  <link rel="stylesheet" href="reference-refresh.css?v=20261029-mckesson-line-count-v1" media="all">
+  <link rel="stylesheet" href="reference-refresh.css?v=20261029-febridx-interpretation-v2" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-patient-stable-nav-v2" media="all">
@@ -1254,12 +1254,42 @@ function drugScreenInterpretation(){
  '<p class="drug-interpretation-caution">Results are presumptive and assay-specific. Check the exact McKesson cup insert for the correct reading time and cutoffs; confirm preliminary positives with an appropriate laboratory method according to policy.</p></section>';
 }
 
+
+function febridxResultInterpretation(){
+ function strip(crp,mxa,control,label){
+  return '<div class="fbr-strip" role="img" aria-label="'+label+'">'+
+   '<div class="fbr-lane"><span>CRP</span><i class="fbr-crp'+(crp?' is-present':'')+'"></i></div>'+
+   '<div class="fbr-lane"><span>MxA</span><i class="fbr-mxa'+(mxa?' is-present':'')+'"></i></div>'+
+   '<div class="fbr-lane"><span>Control</span><i class="fbr-control'+(control?' is-present':'')+'"></i></div></div>';
+ }
+ return '<section class="fbr-interpretation"><div class="fbr-header"><span>FEBRIDX · RESULT REFERENCE</span><h2>Result interpretation</h2>'+
+ '<p>Read the test after 10 minutes, when the result window is clear of blood. Do not interpret after one hour.</p></div>'+
+ '<div class="fbr-quick-rule"><strong>First check for the blue control line.</strong> It must appear for the result to be valid. Red = MxA; dark gray/black = CRP.</div>'+
+ '<div class="fbr-results-grid">'+
+ '<article class="fbr-result-card fbr-bacterial"><div class="fbr-card-head"><small>CRP positive · MxA negative</small><strong>Bacterial infection pattern</strong></div>'+
+ strip(true,false,true,'Black CRP line and blue control line, no red MxA line')+
+ '<p><strong>Black CRP line only</strong> (plus blue control). Manufacturer interpretation: bacterial infection.</p></article>'+
+ '<article class="fbr-result-card fbr-viral"><div class="fbr-card-head"><small>MxA positive · CRP negative</small><strong>Non-bacterial / viral-response pattern</strong></div>'+
+ strip(false,true,true,'Red MxA line and blue control line, no black CRP line')+
+ '<p><strong>Red MxA line only</strong> (plus blue control). Manufacturer interpretation: non-bacterial etiology.</p></article>'+
+ '<article class="fbr-result-card fbr-both"><div class="fbr-card-head"><small>MxA positive · CRP positive</small><strong>Non-bacterial / viral-response pattern</strong></div>'+
+ strip(true,true,true,'Black CRP, red MxA and blue control lines')+
+ '<p><strong>Both red MxA and black CRP lines</strong> (plus blue control). The manufacturer still classifies this as non-bacterial. Coinfection cannot be excluded clinically.</p></article>'+
+ '<article class="fbr-result-card fbr-none"><div class="fbr-card-head"><small>MxA negative · CRP negative</small><strong>No markers detected</strong></div>'+
+ strip(false,false,true,'Blue control line only, no MxA or CRP result lines')+
+ '<p><strong>Blue control line only.</strong> Non-bacterial test classification; this does not rule out respiratory infection.</p></article>'+
+ '</div>'+
+ '<div class="fbr-invalid"><b>INVALID</b><div><strong>No blue control line:</strong> do not report the result, even if red or black lines appear. Discard and repeat with a new test.</div></div>'+
+ '<p class="fbr-caution">Faint, incomplete or uneven result lines count as present. Verify the blood-clearance indicator and the specific test instructions. FebriDx is an aid to clinical assessment, not a standalone diagnosis or treatment decision. <a href="https://lumosdiagnostics.com/how-to-use" target="_blank" rel="noopener noreferrer">Manufacturer instructions</a>.</p>'+
+ '</section>';
+}
+
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -1289,6 +1319,7 @@ function sectionRender(sec,tab){
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
  else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
+ else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
  else if(sec.id==='sendout'&&tab!=='resources')h+=window.LAB_SENDOUT_MARKETS.render('guide');
  else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(tab==='visuals'&&hasVisualGuide)h+=window.LAB_EQUIPMENT_ART.visualGuide(sec);
