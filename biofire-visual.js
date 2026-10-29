@@ -162,21 +162,17 @@ function pipette(id){
  "FilmArray GI: hold sample buffer tube tip up and snap textured plastic tab, dispense buffer first into red vial and add 0.2 mL well-mixed Cary Blair specimen");
 }
 function invert(){
- const left=vial(146,"red","Capped vial","normal",75);
- const right='<g transform="rotate(180 630 175)">'+
- '<rect x="606" y="75" width="48" height="156" rx="12" fill="#f6fbfc" stroke="#8daebb" stroke-width="3"/>'+
- '<path d="M610 173H650V215Q646 227 630 228Q612 227 610 215Z" fill="#d4a0ab"/>'+
- '<rect x="598" y="219" width="64" height="35" rx="10" fill="#c84f5e" stroke="#8299a8" stroke-width="3"/>'+
- '<rect x="613" y="124" width="34" height="42" rx="4" fill="#fff"/>'+
- text(630,144,"MIX",10,"#396b83")+
- '</g>';
+ // Both positions now use the SAME white-capped, clear red-injection vial
+ // geometry found in the pictured loading station.
+ const left=vial(146,"red","Capped red sample vial","normal",75);
+ const right='<g transform="rotate(180 630 175)">'+vial(585,"red","Inverted red sample vial","normal",80)+'</g>';
  return svg('<rect x="58" y="20" width="804" height="354" rx="18" fill="#f8fcfd" stroke="#d7e8ef"/>'+
  left+right+
  '<path d="M374 158C414 57 523 60 553 146" fill="none" stroke="#238d92" stroke-width="9" stroke-linecap="round"/>'+
  '<path d="M535 128L554 157L563 128" fill="none" stroke="#238d92" stroke-width="7" stroke-linecap="round"/>'+
  text(461,58,"GENTLY INVERT 3 TIMES",22,"#247d83")+
  text(461,334,"Close red vial tightly first · do not shake",15,"#577f90"),
- "BioFire red sample injection vial capped and gently inverted three times to mix specimen with buffer");
+ "Same white-capped BioFire red sample injection vial shown upright and inverted three times; no vigorous shaking");
 }
 /* FilmArray TORCH benchtop hardware uses one consistent reference drawing.
    Photo: two large upper module fronts, red L-shaped inset handles, left pouch
