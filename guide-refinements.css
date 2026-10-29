@@ -1,0 +1,38 @@
+/* Focused Pochi patient and shutdown illustrations */
+.lc-poc-figure{margin:16px 0;border:1px solid #dce9ee;border-radius:15px;overflow:hidden;background:#fff}
+.lc-poc-figure>header{padding:12px 16px;background:#eff7f9;color:#286b81;font-size:13px;font-weight:850;letter-spacing:.035em}
+.lc-poc-art{display:flex;align-items:center;justify-content:center;padding:12px 14px;background:#f9fcfd;min-height:205px}
+.lc-poc-art svg{display:block;width:min(100%,810px);max-height:390px;height:auto}
+.lc-poc-figure>figcaption{padding:12px 16px;color:#597c8d;font-size:13px;line-height:1.55;border-top:1px solid #e8eff3}
+.lc-poc-shutdown{margin:14px 0}
+.lc-poc-shutdown-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lc-poc-shutdown-grid .lc-poc-figure{margin:0}
+.lc-poc-shutdown-grid .lc-poc-art{min-height:150px;padding:7px}
+.lc-poc-shutdown-grid .lc-poc-art svg{max-height:270px}
+.lc-poc-shutdown-grid .lc-poc-figure>figcaption{font-size:12px}
+/* BIOFIRE focused one-action-at-a-time cards and true 3b/3c/3d manual references */
+.bf-focused{margin:12px 0 18px}
+.bf-focused-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,225px),1fr));gap:13px}
+.bf-focused-grid:has(> :only-child){grid-template-columns:minmax(0,1fr)}
+.bf-focused-card{margin:0;min-width:0;border-radius:14px;border:1px solid #d8e8ed;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.bf-focused-card-head{color:#296980;background:#eff7f8;border-bottom:1px solid #e2edf0;padding:12px 14px;font-size:13px;font-weight:850}
+.bf-focused-card-art{display:flex;align-items:center;justify-content:center;min-width:0;padding:14px 9px;background:#fbfdfd;min-height:155px}
+.bf-focused-card-art svg{display:block;width:100%;max-height:260px}
+.bf-focused-photo{display:flex;align-items:center;justify-content:center;width:100%}
+.bf-focused-photo img{object-fit:contain;display:block;max-width:100%;max-height:270px;border-radius:6px;background:#fff}
+.bf-focused-card figcaption{padding:12px 14px;font-size:13px;line-height:1.55;color:#597b8b;margin-top:auto;border-top:1px solid #e8eff2}
+.bf-focused-order{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.09em;color:#126d73;background:#e4f5f2;border-radius:999px;padding:8px 12px;margin:2px 0 13px}
+.bf-focused-note{font-size:12px;color:#688698;line-height:1.55;margin:11px 4px 5px}
+.bf-focused .bf-focused-card-art .biofire-training-image,.bf-focused .bf-focused-card-art .biofire-training-grid{max-width:100%}
+/* Reusable cues: page has more below, or a specific pane is scrollable sideways */
+.lc-scroll-down{position:fixed;right:22px;bottom:22px;z-index:95;display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:999px;box-shadow:0 8px 25px #153b5138;border:1px solid #b4d8dc;background:#f8fefe;color:#227686;font:800 12px/1.2 Arial,sans-serif;cursor:pointer;transition:opacity .15s,transform .15s}
+.lc-scroll-down:hover{background:#e7f7f5;transform:translateY(-2px)}
+.lc-scroll-down svg{width:17px;height:17px;stroke:#238c88;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.lc-scroll-down[hidden]{display:none!important}
+.lc-horizontal-shell{position:relative;min-width:0}
+.lc-horizontal-hint{position:absolute;right:1px;top:50%;transform:translateY(-50%);z-index:4;display:flex;align-items:center;justify-content:center;width:40px;height:50px;border-radius:11px;background:linear-gradient(90deg,#f5fcfcce,#e0f3f3);border:1px solid #a4d0d1;box-shadow:0 4px 14px #2549601c;color:#197d80;cursor:pointer}
+.lc-horizontal-hint svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.lc-horizontal-hint[hidden]{display:none!important}
+@media(max-width:900px){.lc-poc-shutdown-grid{grid-template-columns:1fr}.lc-poc-shutdown-grid .lc-poc-art{min-height:170px}.lc-poc-shutdown-grid .lc-poc-art svg{max-height:290px}}
+@media(max-width:650px){.lc-poc-art{padding:8px;min-height:150px}.bf-focused-grid{grid-template-columns:1fr}.lc-scroll-down{right:12px;bottom:14px;padding:9px 12px}.bf-focused-card-art{min-height:130px}.lc-poc-figure>figcaption{font-size:12px}}
+@media print{.lc-scroll-down,.lc-horizontal-hint{display:none!important}.lc-poc-figure,.bf-focused-card{break-inside:avoid}}
