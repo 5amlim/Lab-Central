@@ -239,7 +239,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="equipment-art.js?v=20261028-pathfast-straight-rack-v4"></script>
 <script src="step-illustrations.js?v=20261028-illustrations-v2"></script>
 <script src="qc-guide.js?v=20261028-biofire-qc-steps-v3"></script>
-<script src="biofire-visual.js?v=20261028-torch-manual-screen-v4"></script>
+<script src="biofire-visual.js?v=20261028-gi-buffer-first-v5"></script>
 <script>
 (()=>{
 'use strict';
@@ -354,7 +354,7 @@ function buildGroups(section){
    ...step('Gather test kit and specimen',torch?'Confirm GI panel pouch, loading station, hydration vial (blue), sample injection vial (red), sample buffer, transfer pipette and stool specimen in Cary Blair.':'Confirm correct SPOTFIRE respiratory or sore-throat pouch, SPRK, vial set, sample buffer, transfer pipette, specimen transport medium, expiry and IDs.'),
    ...step('Prepare pouch loading station', 'Clean the work area per SOP, put on fresh gloves, insert the pouch in the loading station, place the red sample vial in the LEFT well and the blue hydration vial in the RIGHT well. Match the pouch to the kit.'),
    ...step('Hydrate pouch using blue vial', 'Remove the blue hydration vial from its cover, insert the blunt cannula into the blue hydration port and puncture the seal as described in the IFU. Verify fluid enters reagent wells.'),
-   ...step('Prepare sample buffer and specimen in red vial',torch?'Add GI specimen from Cary Blair and sample buffer to the red Sample Injection Vial in the assay-specific sequence and volumes. Close the red cap securely.':'Use the correct specimen and sample buffer for the ordered SPOTFIRE panel. Close the red Sample Injection Vial securely.'),
+   ...step('Prepare sample buffer and specimen in red vial',torch?'For the GI panel, dispense the Sample Buffer into the red Sample Injection Vial first using a slow, forceful squeeze followed by a second squeeze. Thoroughly mix stool in Cary Blair, draw to the transfer pipette second line (approximately 0.2 mL), then add to the red vial. Do not use the pipette to mix. Avoid foam and securely cap the red vial.':'Use the correct specimen and sample buffer for the ordered SPOTFIRE panel. Close the red Sample Injection Vial securely.'),
    ...step('Gently invert capped red vial 3 times','IMPORTANT: Remove the tightly capped red Sample Injection Vial from the loading station. Gently invert it 3 times to mix the buffer and specimen. Do not shake or generate foam. Return the red vial to the red well before loading the sample into the pouch.'),
    ...step('Inject sample mix into red port', 'Unscrew the red vial and insert its blunt cannula into the red sample port. Puncture the seal and verify the specimen mixture is drawn into the pouch. Do not interchange the red and blue ports.'),
    ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. Follow the analyzer prompts to confirm the correct module and run.'),
