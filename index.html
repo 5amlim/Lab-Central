@@ -582,7 +582,7 @@ function guideStepParts(entry,sec){
 function guideStepTitle(parts){
  return (parts.badge?'<span class="guide-topic-badge">'+safeHtml(parts.badge)+'</span>':'')+markText(parts.title);
 }
-function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupId=''){
+function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupId='',headerNav=''){
  const root=entry.root;
  const title=guideStepTitle(guideStepParts(entry,sec));
  const sysmexControl=sec&&sec.id==='sysmex'&&groupId==='daily-qc'&&/^Grab the QC controls/i.test(root.text);
@@ -608,8 +608,12 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
   guideDetailNodes(entry.notes,0,sec,groupId||root.text,!displayedVisual);
  const stepBody=displayedVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
- if(isPathfast)return '<details class="guide-card pf-step-collapse" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true"></span></summary><div class="pf-step-collapse-body">'+stepBody+'</div></details>';
- return '<article class="guide-card"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div></header>'+stepBody+'</article>';
+ const navClass=headerNav?' guide-card-has-nav':'';
+ const nav=headerNav?'<div class="guide-card-header-actions">'+headerNav+'</div>':'';
+ // PATHFAST uses a native details/summary. Keep navigation buttons OUTSIDE
+ // summary so selecting Next/Previous never accidentally collapses the stage.
+ if(isPathfast)return '<details class="guide-card pf-step-collapse'+navClass+'" open><summary class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div><span class="pf-step-chevron" aria-hidden="true"></span></summary>'+nav+'<div class="pf-step-collapse-body">'+stepBody+'</div></details>';
+ return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+'</article>';
 }
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
@@ -664,12 +668,13 @@ function renderGuidedProcedure(group,sec){
  if(state.guideMode==='all'){
   h+='<p class="guide-all-note">Complete procedure shown in sequence. Use Guided view to focus on one main step at a time.</p><div class="guide-stage guide-view-all" id="guideStageDetails">'+steps.map(function(entry,i){return guideStepCard(entry,i,total,patientVisual,unit,sec,group.id)}).join('')+'</div>';
  }else{
-  h+='<div class="guide-stage" id="guideStageDetails">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec,group.id)+'</div>';
-  h+='<div class="guide-bottom"><span class="guide-step-count">'+(current+1)+' / '+total+' '+(topicMode?'topics':'main steps')+'</span><div class="guide-transport">';
-  h+='<button type="button" class="guide-button" data-guide-step="'+(current-1)+'" '+(current===0?'disabled':'')+' aria-label="Previous procedure step">← Previous</button>';
-  if(current<total-1)h+='<button type="button" class="guide-button primary" data-guide-step="'+(current+1)+'" aria-label="Next guide section">Next '+(topicMode?'topic':'step')+' →</button>';
-  else h+='<button type="button" class="guide-button primary" data-guide-mode="all">View all steps ↗</button>';
-  h+='</div></div>';
+  // Controls sit beside the current step heading, not below the illustration.
+  let headerNav='<div class="guide-transport guide-header-transport" role="group" aria-label="Procedure step navigation">';
+  headerNav+='<button type="button" class="guide-button" data-guide-step="'+(current-1)+'" '+(current===0?'disabled':'')+' aria-label="Previous procedure step">← Previous</button>';
+  if(current<total-1)headerNav+='<button type="button" class="guide-button primary" data-guide-step="'+(current+1)+'" aria-label="Next procedure step">Next '+(topicMode?'topic':'step')+' →</button>';
+  else headerNav+='<button type="button" class="guide-button primary" data-guide-mode="all">View all steps ↗</button>';
+  headerNav+='</div>';
+  h+='<div class="guide-stage" id="guideStageDetails">'+guideStepCard(steps[current],current,total,patientVisual,unit,sec,group.id,headerNav)+'</div>';
  }
  return h+'</section>';
 }
