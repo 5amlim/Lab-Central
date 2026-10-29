@@ -371,3 +371,174 @@
 .color-print-legend{flex-wrap:wrap;gap:9px 18px}
 @media(max-width:700px){.color-print-alert{padding:10px 11px}.color-print-mock-toolbar{flex-wrap:wrap}}
 @media print{.color-print-alert{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+
+/* Order workflows hierarchy refinement, 2026-10-29.
+   Scope deliberately limited to the external/in-house workflow page. */
+.order-workflow-tabs{
+  display:flex;align-items:center;gap:6px;width:max-content;max-width:100%;
+  padding:5px;border:1px solid #dce6ed;background:#f5f8fb;
+  border-radius:12px;margin:20px 0 16px;
+  overflow-x:auto;scrollbar-width:thin;
+}
+.order-workflow-tabs.tab-strip{border-bottom:1px solid #dce6ed}
+.order-workflow-tabs .tab{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:42px;padding:10px 17px;margin:0;border:1px solid transparent;
+  border-radius:9px;background:transparent;color:#516c80;box-shadow:none;
+  font-size:12.5px;line-height:1.3;font-weight:750;white-space:nowrap;
+}
+.order-workflow-tabs .tab:hover{background:#e9f1f6;color:#255b77}
+.order-workflow-tabs .tab.active,
+.order-workflow-tabs .tab[aria-selected="true"]{
+  background:#fff;border-color:#c4dce8;color:#176b86;
+  box-shadow:0 2px 7px #2d53691a,inset 0 -2px #1a8990;font-weight:850;
+}
+.order-workflow-tabs .tab:focus-visible{outline:3px solid #71b6d0;outline-offset:2px}
+
+.workflow-main{max-width:1050px;margin-top:17px;color:#29485e}
+.workflow-main .workflow-head{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  margin-bottom:22px;padding:20px 23px;background:linear-gradient(115deg,#f2f8fc 0%,#fbfdff 72%);
+  border:1px solid #d9e7f0;border-left:4px solid #3183a4;border-radius:14px;
+  box-shadow:none;
+}
+.workflow-main .workflow-head .eyebrow{display:block;color:#247994;letter-spacing:.13em;font-size:10px;font-weight:850}
+.workflow-main .workflow-head h2{font-size:clamp(21px,2.3vw,25px);line-height:1.2;letter-spacing:-.035em;margin:7px 0 7px;font-weight:830}
+.workflow-main .workflow-head p{font-size:12.5px;line-height:1.6;color:#647c91;max-width:720px}
+.workflow-main .workflow-role-pill{
+  flex:none;align-self:flex-start;margin-top:4px;padding:7px 11px;
+  font-size:10px;color:#32766f;background:#e8f5f2;border:1px solid #cfe5df;
+  border-radius:999px;
+}
+
+.workflow-main .requisition-intake{
+  margin:0 0 15px 47px;padding:19px 20px 15px;
+  background:#fff;border:1px solid #d3e5e9;border-left:4px solid #218e91;
+  border-radius:14px;box-shadow:0 3px 12px #234e6208;
+}
+.workflow-main .req-intake-number{top:18px;background:#e2f4f1;border-color:#a8d8d3;color:#14756e}
+.workflow-main .requisition-intake-header{gap:10px;margin-bottom:14px}
+.workflow-main .requisition-intake-header h3{font-size:17px;line-height:1.3;font-weight:830;margin-bottom:4px;letter-spacing:-.02em;color:#23455d}
+.workflow-main .requisition-intake-header p{font-size:12.5px;line-height:1.5;color:#6a8090}
+
+.workflow-main .requisition-source-options{gap:10px}
+.workflow-main .requisition-source-option{
+  display:flex;align-items:center;gap:11px;min-height:64px;
+  padding:11px 13px;border:1.5px solid #d7e5eb;border-radius:11px;
+  background:#f9fbfd;color:#2c4a61;box-shadow:none;
+  transition:background .16s,border-color .16s,box-shadow .16s,transform .16s;
+}
+.workflow-main .requisition-source-option:hover{background:#f0f8fa;border-color:#84bdc6;transform:translateY(-1px)}
+.workflow-main .requisition-source-option.selected{
+  background:#e9f7f4;border-color:#248d83;
+  box-shadow:inset 0 0 0 1px #248d83;
+}
+.workflow-main .requisition-source-icon{width:37px;height:37px;border-radius:10px}
+.workflow-main .requisition-source-icon svg{width:19px;height:19px}
+.workflow-main .requisition-source-copy{gap:3px}
+.workflow-main .requisition-source-copy strong{font-size:13.5px;line-height:1.25;font-weight:830;color:#26475e}
+.workflow-main .requisition-source-copy small{font-size:11.5px;line-height:1.35;color:#71889b}
+.workflow-main .requisition-source-indicator{width:20px;height:20px}
+.workflow-main .requisition-source-option:focus-visible{outline:3px solid #71b6c5;outline-offset:3px}
+
+.workflow-main .requisition-source-instructions{
+  margin-top:11px;padding:12px 15px 13px;border:1px solid #d7e9e7;
+  border-left:3px solid #32a196;border-radius:10px;background:#f4faf9;
+}
+.workflow-main .req-route-kicker{margin-bottom:4px;color:#2b8784;font-size:9.5px;letter-spacing:.1em}
+.workflow-main .requisition-source-instructions h4{font-size:13.5px;line-height:1.4;margin:0 0 3px;font-weight:820;color:#24536a}
+.workflow-main .requisition-source-instructions p{margin:0;font-size:12px;line-height:1.55;color:#557083}
+.workflow-main .ad-guide{margin-top:10px;border-color:#d9e5ed;border-radius:10px;background:#fff}
+.workflow-main .ad-guide>summary{
+  min-height:50px;padding:9px 12px;gap:11px;color:#2a6886;
+}
+.workflow-main .ad-guide>summary:hover{background:#f4f9fc}
+.workflow-main .ad-guide-icon{width:31px;height:31px;border-radius:8px;background:#e7f1f7}
+.workflow-main .ad-guide-label strong{font-size:12.5px;line-height:1.35;color:#276586}
+.workflow-main .ad-guide-label small{font-size:10.75px;margin-top:2px}
+.workflow-main .ad-chevron{margin-left:auto;flex:none}
+.workflow-main .ad-duplicate-alert{
+  display:flex;align-items:flex-start;gap:9px;margin-top:11px;padding:11px 12px;
+  background:#fffbf4;border:1px solid #f0e2c6;border-left:3px solid #c3913a;
+  border-radius:9px;
+}
+.workflow-main .ad-duplicate-alert>b{width:22px;height:22px;border-radius:6px;font-size:12px}
+.workflow-main .ad-duplicate-alert strong{font-size:11.75px;color:#8a6024}
+.workflow-main .ad-duplicate-alert p{font-size:11px;line-height:1.5;color:#806d4d;margin-top:3px}
+.workflow-main .requisition-intake-note{margin-top:10px;font-size:10.5px;line-height:1.5;color:#8797a4}
+
+.workflow-main .workflow-steps{gap:13px;margin-left:47px}
+.workflow-main .workflow-step{
+  min-height:0;padding:17px 19px;background:#fff;border:1px solid #dbe6ee;
+  border-left:4px solid #327fa5;border-radius:13px;box-shadow:0 3px 12px #244e6708;
+}
+.workflow-main .workflow-step:last-child{border-left:4px solid #327fa5}
+.workflow-main .workflow-step-number{top:15px}
+.workflow-main .workflow-step h3{font-size:15px;line-height:1.35;font-weight:830;color:#26475f;margin:0 0 5px;letter-spacing:-.012em}
+.workflow-main .workflow-step p{font-size:12.5px;line-height:1.6;color:#627e90;max-width:900px}
+.workflow-main .workflow-step-action{
+  min-height:42px;padding:10px 16px;border:1px solid #197e78;border-radius:9px;
+  background:#197e78;color:#fff;font-size:12.5px;font-weight:820;
+  box-shadow:0 2px 6px #0b756b1c;
+}
+.workflow-main .workflow-step-action:hover{background:#126e68;color:#fff;border-color:#126e68}
+.workflow-main .workflow-step-action:focus-visible{outline:3px solid #75c4c8;outline-offset:3px}
+.workflow-main .workflow-step-action span{color:inherit}
+.workflow-main .branch-panel{
+  margin:15px 0 21px 47px;padding:17px 19px;background:#fbf9ff;
+  border:1px solid #ddd6e8;border-left:4px solid #9274b3;border-radius:13px;
+  box-shadow:0 3px 12px #54426908;
+}
+.workflow-main .branch-number{top:16px}
+.workflow-main .branch-title strong{display:block;font-size:15px;line-height:1.4;color:#4c3b69;font-weight:830}
+.workflow-main .branch-title p{margin-top:4px;font-size:12.5px;line-height:1.6;color:#716785}
+.workflow-main .branch-review-question{margin:13px 0 0;padding-top:12px;border-color:#e6dfed}
+.workflow-main .branch-review-question strong{font-size:12.5px}
+.workflow-main .branch-review-question p{font-size:11.5px;margin-top:4px}
+.workflow-main .branch-options{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 11px}
+.workflow-main .branch-choice{
+  display:inline-flex;align-items:center;justify-content:center;min-height:43px;
+  width:auto;max-width:100%;padding:10px 14px;border-radius:9px;
+  font-size:12.5px;line-height:1.3;font-weight:760;text-align:center;
+}
+.workflow-main .branch-choice:focus-visible{outline:3px solid #b9a6d0;outline-offset:3px}
+.workflow-main .branch-result{margin-left:0}
+.workflow-main .completion-steps .workflow-step{border-left-color:#2b906e}
+.workflow-main .completion-steps .workflow-step:last-child{border-left-color:#2b906e}
+
+@media(max-width:800px){
+  .workflow-main .workflow-head{align-items:flex-start;gap:11px;flex-direction:column}
+  .workflow-main .workflow-role-pill{white-space:normal}
+}
+@media(max-width:650px){
+  .order-workflow-tabs{width:100%;padding:4px;gap:4px;margin:16px 0 13px}
+  .order-workflow-tabs .tab{flex:1 1 0;white-space:normal;text-align:center;padding:10px 8px;min-height:44px;font-size:12px}
+  .workflow-main{margin-top:13px}
+  .workflow-main .workflow-head{padding:17px 16px;margin-bottom:19px}
+  .workflow-main .workflow-head h2{font-size:21px}
+  .workflow-main .requisition-intake{margin-left:39px;padding:15px 12px 13px}
+  .workflow-main .req-intake-number{left:-46px;top:15px}
+  .workflow-main .requisition-intake-header h3{font-size:16px}
+  .workflow-main .requisition-source-options{grid-template-columns:1fr;gap:8px}
+  .workflow-main .requisition-source-option{min-height:60px;padding:10px 11px}
+  .workflow-main .requisition-source-instructions{padding:11px 12px}
+  .workflow-main .ad-guide>summary{min-height:50px;padding:10px}
+  .workflow-main .workflow-steps{margin-left:39px;gap:11px}
+  .workflow-main .workflow-step{padding:15px 13px}
+  .workflow-main .workflow-step-number{left:-43px!important}
+  .workflow-main .workflow-step h3{font-size:14px}
+  .workflow-main .branch-panel{margin-left:39px;padding:15px 13px}
+  .workflow-main .branch-number{left:-46px}
+  .workflow-main .branch-options{display:flex;flex-direction:column;align-items:stretch}
+  .workflow-main .branch-choice{width:100%;min-height:44px}
+  .workflow-main .workflow-step-action{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .workflow-main .requisition-source-option{transition:none;transform:none}
+}
+@media print{
+ .order-workflow-tabs{display:none}
+ .workflow-main .requisition-source-option:hover{transform:none}
+ .workflow-main .workflow-head,.workflow-main .requisition-intake,.workflow-main .workflow-step,.workflow-main .branch-panel{box-shadow:none}
+}
