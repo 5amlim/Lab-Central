@@ -116,3 +116,21 @@
  .triage-pipette-step .triage-guide-scene{grid-template-columns:180px minmax(0,1fr)}
  .triage-pipette-source>.triage-pipette-media,.triage-pipette-tool>.triage-pipette-media{height:140px}
 }
+
+
+/* New-cartridge and new-pipette prep stage for QC Levels 1 and 2. */
+.triage-materials-prep{
+ display:grid;grid-template-columns:minmax(72px,.28fr) minmax(0,.72fr);
+ width:100%;gap:6px;align-items:center;min-width:0;
+}
+.triage-materials-prep>div{min-width:0;display:flex;align-items:center;justify-content:center}
+.triage-materials-prep>div:first-child svg{width:100%;max-width:120px;height:auto;max-height:190px}
+.triage-materials-prep .triage-kit-chooser{gap:5px}
+.triage-materials-prep .triage-kit-choice{padding:5px 2px;gap:2px}
+.triage-materials-prep .triage-kit-choice .triage-kit-picture{height:145px}
+.triage-materials-prep .triage-kit-choice strong{font-size:9.5px}
+.triage-materials-prep .triage-kit-choice small{display:none}
+@media(max-width:520px){
+ .triage-materials-prep{grid-template-columns:minmax(58px,.25fr) minmax(0,.75fr)}
+ .triage-materials-prep .triage-kit-choice .triage-kit-picture{height:110px}
+}
