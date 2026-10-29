@@ -49,7 +49,7 @@ function stage(id,title){
  const gi=id==="torch", ref=gi?manual:spotGuide;
  const page=(p)=>gi?ref:ref+"#page="+p;
  const picCredit="Technique photo from linked FilmArray loading-station guide. This guide is not the GI assay IFU.";
- const spotCredit="Manufacturer visual. Verify exact pouch kit and current R / R-ST / Mini IFU before testing.";
+ const spotCredit="Manufacturer photo. The linked R-panel PDF is an international illustrative edition, not a substitute for the approved U.S. R / R-ST / Mini IFU.";
  const docNote='<strong>Procedure source:</strong> <a href="'+library+'" target="_blank" rel="noopener noreferrer">Current BioFire documents</a>. These visuals are aids, not a substitute for the selected panel IFU or your approved SOP.';
  if(/gather|retrieve|materials|kit and specimen/.test(t)){
   return block({id,title:"Confirm the pouch kit and specimen",visual:gi?
@@ -76,7 +76,8 @@ function stage(id,title){
  }
  if(/open buffer|prepare red sample|sample buffer|prepare.*specimen/.test(t)){
   return block({id,kind:"red",title:gi?"Prepare the GI sample mixture · BUFFER FIRST":"Prepare SPOTFIRE sample mixture · SPECIMEN FIRST",
-   visual:gi?pair(picture(5,"BioFire sample-buffer tube opening, textured-tab reference"),picture(6,"BioFire buffer dispensed into red injection vial")):diagram(B.pipette?.("spotfire")),
+   visual:gi?pair(picture(5,"BioFire sample-buffer tube opening, textured-tab reference"),picture(6,"BioFire buffer dispensed into red injection vial"))+
+   '<details class="bf-polished-more"><summary>See specimen-transfer reference photo</summary>'+picture(4,"BioFire transfer pipette showing specimen transfer technique")+'</details>':diagram(B.pipette?.("spotfire")),
    steps:gi?
    ["Open the supplied GI sample-buffer tube using its actual tab design.","Squeeze buffer into the RED sample vial first.","Add the approved volume of thoroughly mixed Cary Blair stool with the specified pipette."]:
    ["Transfer the assay-specified sample with the fixed-volume pipette to the RED vial first.","Twist the tab off the buffer tube, without touching the tip.","Add the full supplied buffer volume to the RED vial."],
