@@ -542,3 +542,148 @@
  .workflow-main .requisition-source-option:hover{transform:none}
  .workflow-main .workflow-head,.workflow-main .requisition-intake,.workflow-main .workflow-step,.workflow-main .branch-panel{box-shadow:none}
 }
+
+
+/* Requisition workflow structure and continuous, aligned timeline. 2026-10-29 */
+.external-workflow-timeline{
+ position:relative;isolation:isolate;--timeline-indent:47px;--timeline-marker:38px;
+}
+.external-workflow-timeline::before{
+ content:"";position:absolute;z-index:0;pointer-events:none;
+ top:34px;bottom:31px;left:11px;width:2px;border-radius:2px;background:#cbd6df;
+}
+.external-workflow-timeline .requisition-intake,
+.external-workflow-timeline .workflow-steps,
+.external-workflow-timeline .branch-panel,
+.external-workflow-timeline .completion-steps{z-index:1}
+.external-workflow-timeline .workflow-steps::before,
+.external-workflow-timeline .branch-panel::before{
+ content:none!important;display:none!important;
+}
+.external-workflow-timeline .req-intake-number,
+.external-workflow-timeline .workflow-step-number,
+.external-workflow-timeline .branch-number{
+ box-sizing:border-box!important;
+ width:38px!important;min-width:38px!important;height:38px!important;
+ left:-55px!important;z-index:2;
+ border-width:2px;box-shadow:0 0 0 5px var(--bg);
+}
+.external-workflow-timeline .workflow-step-number{top:15px}
+.external-workflow-timeline .branch-number{top:16px}
+.external-workflow-timeline .req-intake-number{top:17px}
+.external-workflow-timeline .workflow-steps{margin-left:47px}
+.external-workflow-timeline .branch-panel{margin-left:47px}
+.external-workflow-timeline .requisition-intake{margin-left:47px}
+.external-workflow-timeline .completion-steps .workflow-steps::before{content:none!important}
+.external-workflow-timeline .workflow-step:not(:last-child)::after{content:none!important;display:none!important}
+/* Main action and exceptional version control now form one decision card. */
+.workflow-main .requisition-source-instructions{
+ padding:0;overflow:hidden;background:#f4faf8;border:1px solid #cfebe4;
+ border-left:3px solid #26978b;
+}
+.workflow-main .req-main-action{
+ display:flex;align-items:flex-start;gap:11px;padding:14px 15px 13px;
+}
+.workflow-main .req-main-action > div{min-width:0;flex:1}
+.workflow-main .req-action-symbol{
+ flex:0 0 31px;display:grid;place-items:center;width:31px;height:31px;
+ color:#13857a;border-radius:9px;background:#ddf2ec;
+}
+.workflow-main .req-action-symbol svg{width:18px;height:18px}
+.workflow-main .req-route-kicker{font-size:10px;line-height:1.35;margin-bottom:5px;color:#1a7e79}
+.workflow-main .requisition-source-instructions h4{font-size:14px;line-height:1.4;color:#215c68}
+.workflow-main .requisition-source-instructions p{font-size:12px;line-height:1.6}
+.workflow-main .req-version-guidance{
+ display:flex;align-items:flex-start;gap:10px;margin:0 13px 12px 56px;
+ padding:11px 12px;border:1px solid #e9d8b7;border-left:3px solid #c48d2c;
+ border-radius:9px;background:#fffaf0;
+}
+.workflow-main .req-version-symbol{
+ flex:0 0 22px;width:22px;height:22px;display:grid;place-items:center;
+ background:#f8e9c9;border-radius:6px;color:#8a601e;font-size:12px;font-weight:900;
+}
+.workflow-main .req-version-guidance strong{font-size:12px;font-weight:850;color:#875d22}
+.workflow-main .req-version-guidance p{
+ font-size:11.3px;line-height:1.55;margin:3px 0 0;color:#7b6a50;
+}
+.workflow-main .requisition-intake .ad-guide{margin-top:11px}
+.workflow-main .requisition-intake .requisition-intake-note{margin-top:11px}
+/* Instructions use lightweight symbols, with descriptions aligned beneath titles. */
+.workflow-main .workflow-step h3{
+ display:flex;align-items:center;gap:10px;
+}
+.workflow-main .workflow-title-icon{
+ width:26px;height:26px;min-width:26px;display:grid;place-items:center;
+ border-radius:8px;background:#eaf3f8;color:#2a799d;
+}
+.workflow-main .workflow-title-icon svg{width:16px;height:16px}
+.workflow-main .workflow-step p{padding-left:36px}
+.workflow-main .workflow-step-extra{padding-left:36px;max-width:100%}
+.workflow-main .completion-steps .workflow-title-icon{background:#e8f5ed;color:#258263}
+/* Step 03 shows a deliberate downward transition to the indented decision. */
+.workflow-main .branch-title strong{
+ display:flex;align-items:center;gap:9px;
+}
+.workflow-main .branch-title-symbol{
+ display:grid;place-items:center;width:26px;height:26px;flex:none;
+ background:#f0e8f8;color:#7a589e;border-radius:8px;
+}
+.workflow-main .branch-title-symbol svg{width:17px;height:17px}
+.workflow-main .branch-title p{padding-left:35px}
+.workflow-main .branch-inline-key{
+ color:#604783;font-weight:850;border-bottom:2px solid #ccb8e4;
+}
+.workflow-main .branch-review-transition{
+ height:28px;margin:6px 0 0 13px;width:2px;background:#beacd5;
+ position:relative;
+}
+.workflow-main .branch-review-transition span{
+ position:absolute;left:-10px;bottom:-5px;display:grid;place-items:center;
+ width:22px;height:22px;border:1px solid #dacde8;
+ border-radius:999px;background:#f6f0fc;color:#805da7;
+ font-size:17px;line-height:1;font-weight:900;
+}
+.workflow-main .branch-review-question{
+ margin:7px 0 0 26px;padding:13px 15px 12px;
+ border:1px solid #e1d8ec;border-left:3px solid #9973be;
+ border-radius:10px;background:#fff;
+}
+.workflow-main .branch-review-question strong{font-size:13.5px;color:#513a76;line-height:1.6}
+.workflow-main .branch-focus-term{
+ display:inline-block;padding:1px 7px;border-radius:6px;
+ color:#643e88;background:#eee2f8;font-weight:850;
+ white-space:normal;
+}
+.workflow-main .branch-review-question p{
+ font-size:11.6px;color:#7c718c;margin-top:6px;line-height:1.5;
+}
+.workflow-main .branch-question-hint{font-size:16px;font-weight:850;color:#8a72a3;margin-right:3px}
+.workflow-main .branch-panel > .branch-options{margin:11px 0 11px 26px}
+.workflow-main .branch-panel > .branch-result{margin-left:26px}
+.workflow-main .branch-panel .branch-choice{min-height:44px}
+@media(max-width:650px){
+ .external-workflow-timeline{--timeline-indent:39px;--timeline-marker:35px}
+ .external-workflow-timeline::before{left:9px;top:30px;bottom:25px}
+ .external-workflow-timeline .requisition-intake,
+ .external-workflow-timeline .workflow-steps,
+ .external-workflow-timeline .branch-panel{margin-left:39px}
+ .external-workflow-timeline .req-intake-number,
+ .external-workflow-timeline .workflow-step-number,
+ .external-workflow-timeline .branch-number{
+  left:-47px!important;width:35px!important;min-width:35px!important;height:35px!important;
+ }
+ .workflow-main .req-main-action{padding:12px 10px;gap:9px}
+ .workflow-main .req-version-guidance{margin:0 10px 10px 10px;padding:10px}
+ .workflow-main .workflow-step h3{gap:7px}
+ .workflow-main .workflow-title-icon{width:23px;min-width:23px;height:23px}
+ .workflow-main .workflow-step p{padding-left:30px}
+ .workflow-main .workflow-step-extra{padding-left:0}
+ .workflow-main .branch-title p{padding-left:0}
+ .workflow-main .branch-review-question{margin-left:14px;padding:11px 10px}
+ .workflow-main .branch-panel > .branch-options,
+ .workflow-main .branch-panel > .branch-result{margin-left:14px}
+}
+@media print{
+ .external-workflow-timeline::before{background:#ccd6db!important}
+ .workflow-main .req-version-guidance{break-inside:avoid}
+}
