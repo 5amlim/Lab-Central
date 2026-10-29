@@ -102,7 +102,7 @@
   <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261029-qc-nav-v1" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261029-patient-stable-nav-v2" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-fallback-showmore-v6" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261029-twohour-cards-v1" media="all">
@@ -1273,7 +1273,22 @@ document.addEventListener('click',e=>{
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
-  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
+  if(Number.isSafeInteger(next)&&next>=0){
+   // Header Previous/Next buttons remain stationary; stage shortcuts still jump.
+   const keepHeader=state.section.id==='pathfast'&&Boolean(stepButton.closest('.guide-header-transport'));
+   const oldHeader=keepHeader?stepButton.closest('.guide-card-head'):null;
+   const oldTop=oldHeader?oldHeader.getBoundingClientRect().top:null;
+   state.guideStep=next;
+   state.guideMode='guided';
+   render();
+   if(oldTop!==null){
+    const newHeader=el('guideStageDetails')?.querySelector('.guide-card-head');
+    if(newHeader)window.scrollBy(0,newHeader.getBoundingClientRect().top-oldTop);
+   }else{
+    const top=el('procedureTop');
+    if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
+   }
+  }
   return;
  }
  const modeButton=e.target.closest('[data-guide-mode]');
