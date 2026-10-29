@@ -32,13 +32,13 @@ function biofire(id,title){
  const note=isTorch?"GI: sample buffer then well-mixed Cary Blair stool (0.2 mL per current GI workflow).":"SPOTFIRE: use the exact kit and sample sequence for the selected Respiratory or Sore Throat assay.";
  let cards="";
  if(/gather|retrieve|materials/.test(t)){
-  cards=tile(fig("Pouch and loading-station kit",manual(1,"Pouch, blue hydration vial, red sample vial, pipette, snap-tab buffer tube and dark loading station"),"Confirm the requested panel, pouch, both vials, buffer, pipette, specimen and expiration."))+
+  cards=tile(fig("Pouch and loading-station kit",B&&B.kit?B.kit():statusCard("blue","POUCH KIT","Red sample / blue hydration"),"Confirm the requested panel, pouch, both vials, buffer, pipette, specimen and expiration."))+
     fig("Panel and media",statusCard("blue",panel,isTorch?"GI pouch · Cary Blair stool":"R/ST pouch · UTM or eSwab as permitted"),"Use the kit and specimen type for the ordered assay.");
  }else if(/loading station|prepare pouch/.test(t)){
-  cards=tile(fig("Seat the pouch in its station",manual(2,"Pouch slides into dark station; red sample well left and blue hydration well right"),"Place the pouch level in the loading station; red sample well LEFT, blue hydration well RIGHT.")+
+  cards=tile(fig("Seat the pouch in its station",B&&B.station?B.station("ready"):statusCard("blue","LOADING STATION","Red left / blue right"),"Place the pouch level in the loading station; red sample well LEFT, blue hydration well RIGHT.")+
    fig("Confirm the ports",pouchWithArrow(),"Keep the red sample and blue hydration paths separate. Match the orientation to the actual kit."));
  }else if(/hydrate/.test(t)){
-  cards=tile(fig("Blue hydration vial",manual(2,"BioFire blue hydration vial in the blue loading-station well"),"Unscrew blue vial while leaving its plastic cover in the station. Insert into the blue hydration port, press and wait.")+
+  cards=tile(fig("Blue hydration vial",B&&B.station?B.station("hydrate"):statusCard("blue","HYDRATE","Blue vial and port"),"Unscrew blue vial while leaving its plastic cover in the station. Insert into the blue hydration port, press and wait.")+
    fig("Verify hydration",B&&B.station?B.station("hydrate"):statusCard("blue","Hydration","Blue port"),"Check that hydration liquid entered the pouch before proceeding."));
  }else if(/sample.*buffer|mix specimen|prepare specimen/.test(t)){
   cards=tile(fig("Sample and transfer pipette",B&&B.pipette?B.pipette(id):statusCard("red","SAMPLE PREP","Match assay-specific pipette"),isTorch?"Mix stool in Cary Blair; transfer the GI-assay volume with the kit pipette.":"Follow SPOTFIRE kit instructions for specimen transfer and volume.")+
@@ -62,7 +62,7 @@ function biofire(id,title){
   cards=tile(fig("Review the completed run",B&&B.analyzer?B.analyzer(id,"results"):statusCard("blue","REVIEW RESULTS","Verify internal controls and identity"),"Read internal control status, sample ID and results; handle incomplete/invalid runs per the assay IFU."));
  }else if(/qc|control/.test(t)){
   cards=tile(fig("Prepare QC in red vial",B&&B.station?B.station("ready"):statusCard("red","QC SAMPLE","Use approved QC materials"),"Use the correct QC positive/negative material and the panel-specific IFU; record the control ID.")+
-   fig("Load QC pouch",manual(2,"BioFire pouch ready in loading station"),"Follow the same blue hydration and red sample paths for both QC levels."));
+   fig("Load QC pouch",B&&B.station?B.station("ready"):statusCard("blue","POUCH STATION","Red left / blue right"),"Follow the same blue hydration and red sample paths for both QC levels."));
  }
  return cards?'<section class="lc-biofire-stages" aria-label="'+panel+' illustrated step">'+cards+ref+'</section>':"";
 }
