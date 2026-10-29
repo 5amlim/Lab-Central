@@ -9,7 +9,7 @@ const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g
 const figure=(heading,art,note)=>'<figure class="lc-focus-figure"><header>'+E(heading)+'</header><div class="lc-focus-art">'+art+'</div><figcaption>'+E(note)+'</figcaption></figure>';
 const svg=(body,alt)=>'<svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+E(alt)+'">'+body+'</svg>';
 const label=(x,y,t,size=17,color="#345f76")=>'<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="800" fill="'+color+'">'+E(t)+'</text>';
-const device=(id)=>{const s=A.render({id,title:id==="sofia"?"Sofia 2":id==="coagsense"?"Coag-Sense":"HemoCue",category:"Point of care"});return (s.match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";};
+const device=(id)=>{if(id==="coagsense"&&A.coagSenseDeviceSvg)return A.coagSenseDeviceSvg("home");const s=A.render({id,title:id==="sofia"?"Sofia 2":id==="coagsense"?"Coag-Sense":"HemoCue",category:"Point of care"});return (s.match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";};
 const material=(id,filled=false,qc=false)=>A.kitShape?.(id,filled,qc?"qc":"patient")||"";
 function menu(title,choices,active){
  const card='<rect x="76" y="17" width="448" height="266" rx="17" fill="#e5eef3" stroke="#a1b8c4" stroke-width="4"/>'+
