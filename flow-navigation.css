@@ -408,9 +408,9 @@
 .order-workflow-tabs.tab-strip{border-bottom:1px solid #dce6ed}
 .order-workflow-tabs .tab{
   display:inline-flex;align-items:center;justify-content:center;
-  min-height:42px;padding:10px 17px;margin:0;border:1px solid transparent;
+  min-width:205px;min-height:58px;padding:15px 24px;margin:0;border:1px solid transparent;
   border-radius:9px;background:transparent;color:#516c80;box-shadow:none;
-  font-size:12.5px;line-height:1.3;font-weight:750;white-space:nowrap;
+  font-size:15.5px;line-height:1.3;font-weight:780;white-space:nowrap;
 }
 .order-workflow-tabs .tab:hover{background:#e9f1f6;color:#255b77}
 .order-workflow-tabs .tab.active,
@@ -539,7 +539,7 @@
 }
 @media(max-width:650px){
   .order-workflow-tabs{width:100%;padding:4px;gap:4px;margin:16px 0 13px}
-  .order-workflow-tabs .tab{flex:1 1 0;white-space:normal;text-align:center;padding:10px 8px;min-height:44px;font-size:12px}
+  .order-workflow-tabs .tab{flex:1 1 0;min-width:0;white-space:normal;text-align:center;padding:12px 8px;min-height:56px;font-size:14px}
   .workflow-main{margin-top:13px}
   .workflow-main .workflow-head{padding:17px 16px;margin-bottom:19px}
   .workflow-main .workflow-head h2{font-size:21px}
