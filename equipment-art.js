@@ -25,6 +25,81 @@ function circle(x,y,r,fill,stroke){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+
 function line(x1,y1,x2,y2,color,w){return '<path d="M'+x1+' '+y1+' L'+x2+' '+y2+'" stroke="'+color+'" stroke-width="'+(w||3)+'" stroke-linecap="round"/>'}
 function txt(x,y,t,size,color,weight){return '<text x="'+x+'" y="'+y+'" font-size="'+(size||12)+'" fill="'+(color||'#314e62')+'" font-weight="'+(weight||750)+'" font-family="Arial,sans-serif" text-anchor="middle">'+t+'</text>'}
 function screen(x,y,w,h,accent){return rect(x,y,w,h,9,"#243a49","#7c939f",2)+rect(x+12,y+12,w-24,h-24,5,"#e7f1f3")+rect(x+24,y+24,w-48,13,3,accent)+line(x+24,y+53,x+w-38,y+53,"#aec8d1",3)+line(x+24,y+68,x+w-56,y+68,"#c0d4dc",3)}
+
+/* Shared Piccolo Xpress silhouette, based on the user-supplied front reference.
+   Reuse it in the overview, sample-loading guide, and final run confirmation.
+   On-screen instructions are schematic; physical enclosure is front-oriented. */
+function piccoloDeviceMarkup(mode){
+ const isRunning=mode==="running",drawer=mode==="drawer";
+ const screenInner=isRunning
+ ? '<rect x="268" y="77" width="157" height="206" rx="3" fill="#d5e8f4" stroke="#87a6ba" stroke-width="2"/>'+
+   '<rect x="271" y="80" width="151" height="38" fill="#315f91"/>'+
+   txt(347,104,"piccolo xpress",14,"#fff",840)+
+   txt(347,154,"Analyzing",17,"#32647c",850)+
+   '<rect x="288" y="177" width="119" height="17" rx="8" fill="#b5d5e3"/>'+
+   '<rect x="288" y="177" width="73" height="17" rx="8" fill="#23998b"/>'+
+   txt(347,227,"Run in progress",12,"#547a8c",690)
+ : drawer
+ ? '<rect x="268" y="77" width="157" height="206" rx="3" fill="#d5e8f4" stroke="#87a6ba" stroke-width="2"/>'+
+   '<rect x="271" y="80" width="151" height="38" fill="#315f91"/>'+
+   txt(347,104,"piccolo xpress",14,"#fff",840)+
+   txt(347,152,"Load Disc",18,"#316a81",850)+
+   txt(347,177,"Place disc in drawer",12,"#547a8c",690)+
+   '<rect x="287" y="209" width="121" height="32" rx="7" fill="#e7f3f6" stroke="#aac4d1"/>'+
+   txt(347,230,"Close drawer",12,"#416f84",800)
+ : '<rect x="268" y="77" width="157" height="206" rx="3" fill="url(#lcpx-screen)" stroke="#536e84" stroke-width="2"/>'+
+   '<path d="M278 79H308L406 279H375Z" fill="#a1c4d8" opacity=".09"/>';
+ const body=
+ '<defs><linearGradient id="lcpx-black" x1="0" x2=".92" y1="0" y2="1"><stop stop-color="#263342"/><stop offset=".42" stop-color="#111d2e"/><stop offset="1" stop-color="#111928"/></linearGradient>'+
+ '<linearGradient id="lcpx-blue" x1="0" x2="1" y1="0" y2=".9"><stop stop-color="#277dbf"/><stop offset=".45" stop-color="#1766a9"/><stop offset="1" stop-color="#15518a"/></linearGradient>'+
+ '<linearGradient id="lcpx-screen" x1="0" x2=".8" y1="0" y2="1"><stop stop-color="#394657"/><stop offset="1" stop-color="#0b1726"/></linearGradient>'+
+ '<radialGradient id="lcpx-button"><stop stop-color="#f8fcff"/><stop offset=".6" stop-color="#bfcfd9"/><stop offset="1" stop-color="#819aaa"/></radialGradient></defs>'+
+ '<ellipse cx="348" cy="'+(drawer?541:510)+'" rx="152" ry="10" fill="#cedde6" opacity=".6"/>'+
+ // Tray and the royal-blue lower cabinet remain visible under the upper black facade.
+ '<path d="M246 311Q231 312 231 329V469Q232 486 252 486H443Q463 485 463 465V329Q463 312 447 311Z" fill="url(#lcpx-blue)" stroke="#1d5686" stroke-width="3"/>'+
+ '<path d="M245 333Q267 348 285 349H446" fill="none" stroke="#5da8d4" stroke-width="3" opacity=".58"/>'+
+ '<path d="M239 468H456V489H239Z" fill="#eef4f6" stroke="#c0cbd1" stroke-width="2"/>'+
+ // Tall near-vertical black front, rounded top and bottom, flush with the top of the blue base.
+ '<path d="M255 16H439Q462 16 463 45V318Q463 336 444 337H252Q231 336 231 317V46Q231 16 255 16Z" fill="url(#lcpx-black)" stroke="#1b527c" stroke-width="3"/>'+
+ '<path d="M258 20H440Q456 20 458 44" fill="none" stroke="#5b768f" stroke-width="2" opacity=".5"/>'+
+ '<path d="M241 284H456" fill="none" stroke="#4e5d6a" stroke-width="1.8" opacity=".82"/>'+
+ // Actual analyzer reference places the small ABAXIS logo above the tall display.
+ txt(347,35,"a product of",7.7,"#b7c3cf",550)+
+ txt(347,48,"ABAXIS",13,"#edf2f5",850)+
+ '<path d="M365 39l9 -4 5 3" fill="none" stroke="#bc4b5b" stroke-width="2.2"/>'+
+ screenInner+
+ // Keep logo on the black bezel, not on the colored lower cabinet.
+ txt(335,313,"piccolo",19,"#2994dd",850)+
+ txt(386,312,"xpress",11,"#e9f1f6",850)+
+ '<path d="M388 302l13 -6" stroke="#bf525c" stroke-width="2.2" stroke-linecap="round"/>'+
+ txt(347,323,"chemistry analyzer",7.5,"#a7b7c6",520)+
+ '<path d="M250 342H445" stroke="#4e8bb7" stroke-width="3" opacity=".35"/>'+
+ // Button is low and on the right of the blue front panel.
+ '<circle cx="432" cy="438" r="10" fill="#8ba6b5" stroke="#325b77" stroke-width="2"/>'+
+ '<circle cx="432" cy="438" r="7" fill="url(#lcpx-button)" stroke="#e3eff5" stroke-width="1.7"/>';
+ if(!drawer)return body;
+ // The disc is visible only when the lower tray is pulled outward.
+ const disc='<ellipse cx="347" cy="522" rx="73" ry="19" fill="#f2f7f8" stroke="#a1bac6" stroke-width="3"/>'+
+ '<ellipse cx="347" cy="522" rx="60" ry="15" fill="#d3e4ec" stroke="#8da8b8" stroke-width="2"/>'+
+ Array.from({length:16},function(_,i){const a=i*2*Math.PI/16,x=347+49*Math.cos(a),y=522+12*Math.sin(a);return '<ellipse cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" rx="4" ry="3" fill="#f6fafb" stroke="#b5c8cf" stroke-width=".8"/>';}).join('')+
+ '<ellipse cx="347" cy="522" rx="10" ry="4" fill="#edf7fa" stroke="#8caebc" stroke-width="2"/>';
+ return body+
+ '<path d="M247 491H449L475 515Q476 535 459 539H238Q221 537 221 521Z" fill="#ecf1f4" stroke="#a3bac6" stroke-width="3"/>'+
+ disc+
+ '<path d="M250 536H446" stroke="#b5cbd5" stroke-width="3"/>';
+}
+function piccoloDeviceSvg(mode){
+ const m=mode||"ready",view=m==="running"?"160 0 560 540":"165 0 385 550";
+ let check="";
+ if(m==="running")check=
+ '<circle cx="595" cy="218" r="54" fill="#e7f6ee" stroke="#66bc9f" stroke-width="4"/>'+
+ '<path d="M568 218l20 20 35-40" fill="none" stroke="#178e68" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>'+
+ txt(595,302,"RUN STARTED",18,"#177e69",900)+
+ txt(595,328,"Run initiation only",12,"#587a89",700)+
+ txt(595,345,"Verify final results and QC",11,"#587a89",640);
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+view+'" role="img" aria-label="'+(m==="running"?"Piccolo Xpress analyzer with analysis in progress and successful run-start confirmation":m==="drawer"?"Piccolo Xpress analyzer with lower reagent disc tray extended":"Piccolo Xpress analyzer, front view")+'">'+piccoloDeviceMarkup(m)+check+'</svg>';
+}
+
 function body(shape,a){
  let v="";
  if(shape==="tower"){
@@ -56,34 +131,9 @@ function body(shape,a){
  '<path d="M539 148 H588" stroke="#c7d9e1" stroke-width="3"/>'+
  '<rect x="538" y="176" width="51" height="41" rx="6" fill="#b8a1c9" opacity=".65"/>'+
  '<path d="M551 80 Q544 62 527 65 L514 66" stroke="#cfdee5" stroke-width="5" fill="none"/>';
- }else if(shape==="rotor"){
- /* Piccolo Xpress: royal-blue tall housing, large front touch display,
-    top brand plate, blue latch button and bottom pull-out chemistry disc drawer. */
- v='<ellipse cx="377" cy="295" rx="139" ry="9" fill="#c9d9df" opacity=".34"/>'+
- '<path d="M277 18 Q272 18 261 29 L247 260 Q249 282 269 285 H492 Q504 282 506 265 L501 31 Q495 18 480 18Z" fill="#174f82" stroke="#133d69" stroke-width="3"/>'+
- '<path d="M276 21 H483 Q491 22 493 34 L493 250 Q492 263 477 264 H273 Q258 256 258 238 L264 33 Q267 22 276 21Z" fill="#2764a0" stroke="#1a518a" stroke-width="3"/>'+
- '<rect x="291" y="29" width="163" height="38" rx="5" fill="#e1e5e7" stroke="#5f829c" stroke-width="3"/>'+
- '<text x="372" y="48" text-anchor="middle" font-size="16" font-weight="850" fill="#293d7c">piccolo</text>'+
- '<text x="413" y="59" text-anchor="middle" font-size="10" font-weight="800" fill="#c95156">xpress</text>'+
- '<path d="M287 70 H457 V217 H287Z" fill="#253a50" stroke="#1a3c5c" stroke-width="3"/>'+
- '<rect x="297" y="80" width="150" height="129" rx="3" fill="#cfe8f4"/>'+
- '<rect x="300" y="82" width="144" height="18" fill="#326ba5"/>'+
- '<text x="373" y="95" font-size="10" font-weight="850" text-anchor="middle" fill="#fff">Load Disc</text>'+
- '<text x="373" y="129" font-size="10.5" text-anchor="middle" fill="#4a728a">Close drawer to</text>'+
- '<text x="373" y="143" font-size="10.5" text-anchor="middle" fill="#4a728a">analyze a sample</text>'+
- '<circle cx="374" cy="164" r="12" fill="#f4ca67"/><text x="374" y="169" font-size="13" font-weight="900" text-anchor="middle" fill="#fff">i</text>'+
- '<rect x="306" y="189" width="136" height="15" rx="3" fill="#2575a8"/>'+
- '<text x="374" y="200" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="900">CLOSE</text>'+
- '<path d="M284 221 H465 V245 H284Z" fill="#b3c3cc" stroke="#64839b" stroke-width="2.5"/>'+
- '<rect x="295" y="241" width="160" height="17" rx="2" fill="#263949"/>'+
- '<path d="M297 259 L453 259 L474 290 H275Z" fill="#142f47" stroke="#345b7a" stroke-width="2.5"/>'+
- '<path d="M303 266 H449 L459 286 H291Z" fill="#263f50"/>'+
- '<ellipse cx="375" cy="273" rx="43" ry="15" fill="#253d4e"/>'+
- '<ellipse cx="375" cy="272" rx="31" ry="11" fill="#e4eef1" stroke="#9fb8c4" stroke-width="2"/>'+
- Array.from({length:14},(_,i)=>{const theta=i*Math.PI/7;return '<circle cx="'+(375+24*Math.cos(theta)).toFixed(1)+'" cy="'+(272+7*Math.sin(theta)).toFixed(1)+'" r="2" fill="#8ab0bf"/>';}).join('')+
- '<circle cx="375" cy="272" r="6.5" fill="#c3d7df" stroke="#8baab9"/>'+
- '<circle cx="477" cy="223" r="10" fill="#57a9e7" stroke="#d2eaf7" stroke-width="2.5"/>'+
- '<path d="M265 40 L256 237" stroke="#3f82bd" stroke-width="6" opacity=".5"/>';
+  }else if(shape==="rotor"){
+ /* Reuse the same reference-matched tall, narrow Piccolo art as procedure steps. */
+ v='<g transform="translate(176 4) scale(.56)">'+piccoloDeviceMarkup("ready")+'</g>';
  }else if(shape==="pathfast"){
  // Curved white PATHFAST compact analyzer, left touchscreen/printer, large
  // teal-blue transparent right chamber and central blue handle.
@@ -274,24 +324,9 @@ function piccoloVisual(text){
  return '<section class="pic-step-visual" aria-label="Piccolo sample preparation images"><div class="pic-step-head"><strong>PICCOLO · VISUAL REFERENCE</strong><span>Follow each pictured action</span></div><div class="pic-vis-grid">'+pieces+'</div></section>';
 }
 function piccoloAnalyzerSvg(){
- return '<svg viewBox="0 0 430 315" role="img" aria-label="Piccolo Xpress tall blue analyzer with black touchscreen, open front drawer and inserted reagent disc">'+
- '<path d="M101 26 L289 25 L338 49 L338 278 L285 298 L100 279Z" fill="#2177a6" stroke="#1d5576" stroke-width="3"/>'+
- '<path d="M287 26 L338 49 L338 277 L287 297Z" fill="#185b86"/>'+
- '<rect x="116" y="34" width="172" height="202" rx="14" fill="#152b3a"/>'+
- '<rect x="131" y="50" width="142" height="158" rx="5" fill="#d9e9ef" stroke="#517c94"/>'+
- '<rect x="147" y="74" width="108" height="21" rx="4" fill="#a9cddd"/>'+
- '<rect x="147" y="109" width="108" height="22" rx="4" fill="#efd275"/>'+
- '<rect x="147" y="145" width="108" height="22" rx="4" fill="#c0d5df"/>'+
- '<text x="202" y="66" text-anchor="middle" font-size="12" font-weight="800" fill="#226b91">piccolo xpress</text>'+
- '<rect x="148" y="239" width="113" height="17" rx="3" fill="#152c3a"/>'+
- '<path d="M156 253 L255 253 L292 290 L111 290Z" fill="#243f50" stroke="#5f8298" stroke-width="2"/>'+
- '<ellipse cx="205" cy="274" rx="43" ry="13" fill="#eaf2f6" stroke="#afc4ce" stroke-width="3"/>'+
- '<ellipse cx="205" cy="274" rx="19" ry="7" fill="#e1edf2" stroke="#a7c2d1" stroke-width="2"/>'+
- '<circle cx="216" cy="272" r="4" fill="#b53a43"/>'+
- '<path d="M245 272 L345 263" fill="none" stroke="#2b93a1" stroke-width="2.5"/>'+
- '<text x="365" y="251" text-anchor="middle" font-size="10" font-weight="850" fill="#29677d">DISC DRAWER</text>'+
- '<text x="213" y="309" font-size="10.5" fill="#69889a" text-anchor="middle">Close the disc drawer before starting</text></svg>';
+ return piccoloDeviceSvg("drawer");
 }
+
 
 
 /* Procedure-linked consumable and collection media references.
@@ -940,5 +975,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
