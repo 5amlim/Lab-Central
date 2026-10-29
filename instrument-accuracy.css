@@ -54,3 +54,14 @@
  .guide-card-body,.guide-line>div{overflow:visible!important;max-height:none!important}
  .sysmex-maint-scene{break-inside:avoid}
 }
+/* Upright, lane-numbered PATHFAST training illustrations with readable detail. */
+.pf-upright-rack .pf-action-image{min-height:350px;padding:15px 19px}
+.pf-upright-rack .pf-action-image svg{width:100%;height:auto;max-height:500px;max-width:990px}
+.pf-prep-illustrations.three{grid-template-columns:1fr!important;gap:14px}
+.pf-prep-illustrations.three .pf-assembled-figure{grid-column:auto}
+.pf-prep-illustrations.three .pf-action-image{min-height:240px}
+.pf-prep-illustrations.three .pf-upright-rack .pf-action-image svg{max-height:470px}
+.pf-prep-illustrations.two .pf-upright-rack .pf-action-image svg{max-height:500px}
+.lab-triage-new .lab-step-scene-media{min-height:270px}
+.lab-triage-new .lab-step-scene-media svg{max-height:340px;width:auto;max-width:100%}
+@media(max-width:700px){.pf-upright-rack .pf-action-image{padding:8px;min-height:240px}.pf-upright-rack .pf-action-image svg{max-height:380px}}
