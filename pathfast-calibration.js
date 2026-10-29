@@ -181,65 +181,47 @@ function cal2MixIllustration(){
 }
 /* Foil-pouch packaging shown in the user reference photograph.
    Each single-use assay cartridge is individually protected in its own sealed pouch. */
+/* One kit box contains six matching assay cartridges. Schematic packaging
+   rather than six individually packaged pouches; the box opens to show contents. */
 function cartridgePack(group){
  const label=esc(group.label);
  const printed=group.id==='troponin'?'hs-cTnI':group.id==='ntprobnp'?'NTproBNP':'D-dimer';
- const folds=Array.from({length:23},(_,i)=>{
-   const x=256+i*13;
-   return '<path d="M'+x+' 318l2 19" stroke="'+(i%3===0?'#b3bbc0':'#e4e8eb')+'" stroke-width="'+(i%3===0?2:1)+'" opacity=".72"/>';
+ const strips=Array.from({length:6},(_,i)=>{
+  const y=82+i*23;
+  return '<g aria-label="Cartridge '+(i+1)+' of 6">'+
+   '<rect x="236" y="'+(y-2)+'" width="340" height="21" rx="3" fill="#111b20" stroke="#82959e" stroke-width="1.6"/>'+
+   '<path d="M239 '+(y+2)+'h21v12h-21z" fill="#f4fafc" stroke="#bdcfd8" stroke-width="1"/>'+
+   '<path d="M260 '+(y-1)+'h19v18h-19z" fill="#d94f4d"/>'+
+   '<circle cx="374" cy="'+(y+8)+'" r="7.5" fill="#020609" stroke="#80949d" stroke-width="2.1"/>'+
+   '<rect x="489" y="'+(y+2)+'" width="61" height="11" rx="1" fill="#eaf1f3"/>'+
+   Array.from({length:15},(_,j)=>'<path d="M'+(493+j*3.7)+' '+(y+3)+'v9" stroke="'+(j%4===0?'#151a1e':'#617580')+'" stroke-width="'+(j%4===0?1.6:.75)+'"/>').join('')+
+   '<path d="M562 '+(y-1)+'h14v18h-14z" fill="#c64243"/>'+
+  '</g>';
  }).join('');
- const cartridgeWells=Array.from({length:7},(_,i)=>{
-   const x=295+i*29;
-   return '<rect x="'+x+'" y="112" width="18" height="39" rx="5" fill="'+(i%2?'#6b777c':'#818d91')+'" stroke="#a7b3ba" stroke-width="1.7" opacity=".74"/>';
- }).join('');
- const crimp=Array.from({length:26},(_,i)=>'<path d="M'+(260+i*10.4)+' 33v13" stroke="'+(i%3===0?'#777e83':'#505a60')+'" stroke-width="1.3"/>').join('');
- const repeat=Array.from({length:6},(_,i)=>{
-   const x=614+(i%3)*34,y=159+Math.floor(i/3)*53;
-   return '<g><rect x="'+x+'" y="'+y+'" width="27" height="40" rx="3" fill="#d9e2e7" stroke="#a4b5bd" stroke-width="1.6"/>'+
-   '<rect x="'+(x+3)+'" y="'+(y+4)+'" width="21" height="13" rx="2" fill="#29343a"/>'+
-   '<path d="M'+(x+3)+' '+(y+24)+'h21" stroke="#b3c1c9" stroke-width="2"/>'+
-   '<text x="'+(x+13.5)+'" y="'+(y+35)+'" fill="#54758b" font-size="8" font-weight="900" text-anchor="middle">'+(i+1)+'</text></g>';
- }).join('');
- return '<figure class="pf-cartridge-pack pf-cartridge-pouch"><header><strong>Individually sealed PATHFAST reagent cartridges</strong>'+
-  '<span>RETRIEVE 6 · '+label+'</span></header>'+
-  '<svg role="img" aria-label="Front of a sealed silver and black PATHFAST '+label+' reagent cartridge foil pouch, matching the supplied packaging photograph. Six small pouch icons indicate the quantity needed." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 360">'+
-  '<defs>'+
-   '<linearGradient id="pf-pouch-foil" x1="0" y1="0" x2=".9" y2=".14"><stop stop-color="#fdfefe"/><stop offset=".14" stop-color="#b3c0c8"/><stop offset=".34" stop-color="#f9fbfc"/><stop offset=".64" stop-color="#d1dbe1"/><stop offset=".82" stop-color="#f5f7f8"/><stop offset="1" stop-color="#adbcc5"/></linearGradient>'+
-   '<linearGradient id="pf-pouch-dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b0f12"/><stop offset=".4" stop-color="#252c30"/><stop offset=".72" stop-color="#0a0c0e"/><stop offset="1" stop-color="#42494e"/></linearGradient>'+
-   '<linearGradient id="pf-pouch-window" x1="0" y1="0" x2="1" y2=".7"><stop stop-color="#151e21"/><stop offset=".5" stop-color="#4d565a" stop-opacity=".9"/><stop offset="1" stop-color="#20272a"/></linearGradient>'+
-  '</defs>'+
-  '<ellipse cx="406" cy="347" rx="186" ry="11" fill="#c5d5df" opacity=".5"/>'+
-  /* Pouch outer sealed silver body and uneven crimping. */
-  '<path d="M257 19Q251 20 250 31L239 300Q235 329 252 337L551 339Q567 333 563 313L554 38Q551 19 540 17Z" fill="url(#pf-pouch-foil)" stroke="#83949e" stroke-width="2.7"/>'+
-  '<path d="M251 25L547 23L551 53L247 54Z" fill="url(#pf-pouch-dark)" stroke="#3d484e" stroke-width="3"/>'+crimp+
-  '<path d="M256 326L552 327" fill="none" stroke="#f9fcfe" stroke-width="3"/>'+folds+
-  /* Actual black hinged top and long cassette visible behind translucent upper pouch. */
-  '<path d="M267 42L543 40L537 154L265 157Z" fill="url(#pf-pouch-window)" stroke="#48565d" stroke-width="3"/>'+
-  cartridgeWells+
-  '<path d="M272 46H536V99Q532 109 525 113L289 113Q275 105 272 92Z" fill="url(#pf-pouch-dark)" stroke="#4e575b" stroke-width="2.6"/>'+
-  '<path d="M290 57Q337 51 385 56H526" fill="none" stroke="#879198" stroke-opacity=".52" stroke-width="2"/>'+
-  '<path d="M281 116L524 115" fill="none" stroke="#0b1317" stroke-width="9" opacity=".5"/>'+
-  '<path d="M274 150L538 151L545 320L251 317Z" fill="#e7eef2" opacity=".87"/>'+
-  '<path d="M270 153L280 306" stroke="#fff" stroke-width="9" opacity=".5"/>'+
-  '<path d="M529 156L541 309" stroke="#b0bbc2" stroke-width="8" opacity=".45"/>'+
-  /* The assay name is on a long dark label, like the supplied NTproBNP pouch. */
-  '<rect x="289" y="181" width="236" height="36" rx="5" fill="#2e3438"/>'+
-  '<text x="306" y="203" font-family="Arial,sans-serif" font-size="16" font-weight="900" letter-spacing="2.2" fill="#fff">PATHFAST</text>'+
-  '<text x="507" y="203" text-anchor="end" font-family="Arial,sans-serif" font-size="15" font-weight="850" fill="#f3f6f8">'+esc(printed)+'</text>'+
-  '<text x="406" y="245" text-anchor="middle" fill="#4e5963" font-size="12" font-weight="700">Keep this side up</text>'+
-  '<rect x="287" y="257" width="239" height="46" rx="3" fill="#e7ebee" stroke="#6e808b" stroke-width="1.6"/>'+
-  '<text x="300" y="275" font-size="12" font-weight="750" fill="#41515b">CARTRIDGE</text>'+
-  '<path d="M289 282H521" stroke="#a1adb6" stroke-width="1"/>'+
-  '<text x="300" y="296" font-size="11" fill="#5a6b76">VERIFY ASSAY / LOT / EXPIRATION</text>'+
-  '<path d="M250 303L282 331" stroke="#fff" opacity=".53" stroke-width="5"/>'+
-  /* Quantity reference to the right; does not imply six cartridges share a pouch. */
-  '<rect x="596" y="73" width="150" height="199" rx="13" fill="#f0f7fa" stroke="#cee1e9" stroke-width="2"/>'+
-  '<text x="671" y="101" text-anchor="middle" fill="#2a687e" font-size="13" font-weight="900">GATHER SIX</text>'+
-  '<text x="671" y="125" text-anchor="middle" fill="#3f6980" font-size="11" font-weight="700">matching pouches</text>'+
-  repeat+
-  '<text x="408" y="354" text-anchor="middle" fill="#688497" font-size="10.5" font-weight="800">ILLUSTRATION OF ONE SEALED FOIL POUCH</text>'+
+ return '<figure class="pf-cartridge-pack pf-cartridge-box"><header><strong>PATHFAST reagent cartridge box</strong>'+
+  '<span>1 BOX · 6 CARTRIDGES · '+label+'</span></header>'+
+  '<svg role="img" aria-label="One compact PATHFAST '+label+' reagent carton opened to reveal six matching long black cartridge strips stored together in a single small box" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 365">'+
+  '<defs><linearGradient id="pfx-box-front" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4f8fa"/><stop offset=".45" stop-color="#d9e3e8"/><stop offset="1" stop-color="#aebec7"/></linearGradient>'+
+  '<linearGradient id="pfx-box-lid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4c555a"/><stop offset=".5" stop-color="#0d1114"/><stop offset="1" stop-color="#343a40"/></linearGradient></defs>'+
+  '<ellipse cx="406" cy="351" rx="245" ry="10" fill="#bacbd5" opacity=".36"/>'+
+  /* A single silver-gray carton and its hinged black lid. */
+  '<path d="M191 95L245 39H600L649 93L604 115H238Z" fill="url(#pfx-box-lid)" stroke="#313c44" stroke-width="4" stroke-linejoin="round"/>'+
+  '<path d="M245 38L268 21H585L602 38" fill="none" stroke="#86939c" stroke-width="4"/>'+
+  '<path d="M207 79L239 49H601L633 81" fill="none" stroke="#79868e" stroke-width="2" opacity=".7"/>'+
+  '<path d="M185 93L224 71H612L655 94L638 241H203Z" fill="#45555e" stroke="#82949f" stroke-width="3.5"/>'+
+  '<path d="M211 105L232 88H603L631 105L619 225H221Z" fill="#dce9ee" stroke="#a2b7c2" stroke-width="2.6"/>'+
+  '<rect x="222" y="75" width="393" height="158" rx="8" fill="#26323b" stroke="#9cb2bd" stroke-width="3"/>'+
+  '<path d="M228 76H609" stroke="#e3ecf1" stroke-width="3" opacity=".7"/>'+
+  strips+
+  /* The front is one unbroken labeled box, not separate packages. */
+  '<path d="M203 235H640L624 331Q620 341 610 341H219Q209 340 205 328Z" fill="url(#pfx-box-front)" stroke="#8da6b4" stroke-width="3" stroke-linejoin="round"/>'+
+  '<rect x="246" y="250" width="335" height="34" rx="4" fill="#30383d"/>'+
+  '<text x="266" y="273" font-family="Arial,sans-serif" font-size="18" letter-spacing="2.2" font-weight="900" fill="#fff">PATHFAST</text>'+
+  '<text x="558" y="273" font-family="Arial,sans-serif" font-size="17" font-weight="850" fill="#f6fafb" text-anchor="end">'+esc(printed)+'</text>'+
+  '<text x="410" y="303" fill="#476577" font-size="15" text-anchor="middle" font-weight="900">6 REAGENT CARTRIDGES · 1 BOX</text>'+
+  '<text x="410" y="324" fill="#657f8b" font-size="11" text-anchor="middle">Confirm assay, lot, expiration and packaging integrity</text>'+
   '</svg>'+
-  '<figcaption>The drawing shows <strong>one individually sealed silver PATHFAST foil pouch</strong>, matching the packaging reference. Gather <strong>six matching '+label+' cartridges</strong> for the six-lane CAL/QC setup. Confirm each pouch label, expiration, lot and seal before opening.</figcaption></figure>';
+  '<figcaption><strong>One small kit box contains six matching '+label+' reagent cartridges.</strong> Retrieve one box for the six-cartridge calibration and QC setup. Check the printed assay, lot, expiration and packaging integrity before use. Illustration is schematic; follow the supplied kit labeling.</figcaption></figure>';
 }
 function svgQC(kind){
  const tint=kind==="cardiac"?"#ae3d49":"#855a9b",label=kind==="cardiac"?"CARDIAC":"D-DIMER";
