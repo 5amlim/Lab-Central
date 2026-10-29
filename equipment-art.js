@@ -10,7 +10,7 @@ const specs={
  clinitek:{label:"URINALYSIS",shape:"urine",accent:"#358c88",tip:"Urine sample"},
  torch:{label:"GI PANEL",shape:"torch",accent:"#387c9a",tip:"Stool / Cary Blair"},
  spotfire:{label:"RESPIRATORY PANEL",shape:"modules",accent:"#386f9d",tip:"UTM / eSwab"},
- febridx:{label:"RAPID TEST",shape:"cassette",accent:"#9267a4",tip:"Specimen per test IFU"},
+ febridx:{label:"HOST-RESPONSE TEST",shape:"febridx",accent:"#9267a4",tip:"Fingerstick capillary blood · integrated collection tube"},
  "drug-screen":{label:"URINE DRUG SCREEN",shape:"cup",accent:"#8370a0",tip:"Urine sample"},
  coagsense:{label:"PT / INR",shape:"coag",accent:"#387e90",tip:"Fingerstick"},
  poc:{label:"RAPID TEST MENU",shape:"tests",accent:"#377f89",tip:"Specimen varies by test"},
@@ -462,6 +462,8 @@ function body(shape,a){
  v=visual.replace("<svg ","<svg x=\"52\" y=\"8\" width=\"630\" height=\"295\" ");
  }else if(shape==="modules"){
  v=rect(194,104,215,166,18,"#eef3f6","#9cadb9",3)+rect(211,119,180,99,10,"#d9e5ea","#b7cbd4",2)+'<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+rect(214,228,179,29,7,"#dae6eb")+txt(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+rect(404,59,120,196,17,"#f3f7f9","#9db3bf",3)+rect(417,81,95,154,6,"#263c4b")+rect(427,94,75,119,3,"#e1edf2")+txt(465,131,"Available",13,"#356b86",850)+circle(464,243,7,"#4a91aa");
+ }else if(shape==="febridx"){
+  v='<g transform="translate(5 5) scale(.84)">'+febridxDeviceMarkup("ready")+'</g>';
  }else if(shape==="sofia"){
  v='<path d="M210 92 Q219 62 262 59 L460 69 Q507 76 519 126 L524 241 Q522 258 503 264 L253 266 Q218 258 214 230Z" fill="#223440" stroke="#1a313d" stroke-width="4"/>'+'<path d="M205 119 L223 77 Q245 60 270 59 L270 263 L237 264Z" fill="#117b9b"/>'+rect(284,87,204,121,15,"#1d2835","#638ca1",2)+rect(303,106,166,80,7,"#d9e9ef")+circle(387,146,24,"#edb76c")+txt(388,153,"+",29,"#fff",800)+rect(390,216,103,36,8,"#0d283a")+rect(415,220,55,27,6,"#1587a5")+txt(329,236,"Sofia 2",16,"#e5edf2",800);
  }else if(shape==="hemocue"){
@@ -611,7 +613,7 @@ const collection={
  clinitek:[["urine","Fresh urine","Clean collection cup"]],
  torch:[["stool","Stool in Cary Blair","GI panel transport medium"]],
  spotfire:[["utm","Respiratory swab","UTM/VTM per assay"],["eswab","Throat swab","eSwab per assay"]],
- febridx:[["finger","Fingerstick capillary blood","Direct application; no collection tube"]],
+ febridx:[["finger","Fingerstick capillary blood","Use the integrated blood collection tube on the FebriDx device"]],
  "drug-screen":[["urine","Urine specimen","Screening collection cup"]],
  coagsense:[["finger","Fingerstick capillary blood","Transfer tube; no EDTA tube"]],
  poc:[["varies","Specimen varies","Confirm the specific assay IFU"]],
@@ -1096,6 +1098,58 @@ function eightcheckControlSvg(){
  return illustratedSvg(art,'Three distinct Sysmex EIGHTCHECK-3WP blood control vials: low with red cap, normal with white cap, high with black cap','0 0 390 220');
 }
 
+
+/* Reference-matched FebriDx integrated test. Geometric details follow the
+   supplied component diagram, not the previous generic cassette. */
+function febridxDeviceMarkup(stage="ready"){
+ const filled=["transfer","buffer","read"].includes(stage);
+ const emphasis={collection:[138,142],transfer:[431,155],buffer:[553,158],read:[670,159]}[stage];
+ const paths=[
+  '<ellipse cx="457" cy="271" rx="322" ry="10" fill="#d7e4e9" opacity=".62"/>',
+  // Protective lancet tab and integrated collection tube on the left.
+  '<rect x="15" y="178" width="100" height="23" rx="5" fill="#79b65f" stroke="#658952" stroke-width="2.5"/>',
+  '<path d="M108 183L154 179L159 193L108 197Z" fill="#e8f0ed" stroke="#8a9e99" stroke-width="2.5"/>',
+  // Main white rounded body with a long flattened result-side profile.
+  '<path d="M183 93 Q223 86 286 96 L722 100 Q796 101 818 150 Q846 199 789 242 Q760 260 720 258 L280 250 Q214 252 183 222 Q159 196 161 152 Q163 115 183 93Z" fill="#f2f5f6" stroke="#65747d" stroke-width="3.5"/>',
+  '<path d="M191 109 Q248 100 287 111 L721 119 Q780 121 796 156 Q813 196 775 221 Q754 236 714 235 L281 233 Q216 232 201 212Z" fill="#fff" stroke="#c1c8ca" stroke-width="2"/>',
+  '<path d="M193 117L264 110 M744 129Q783 148 777 194" stroke="#fff" stroke-width="8" fill="none" opacity=".8"/>',
+  // Curved beige left hinged cover around the collection mechanism.
+  '<path d="M159 110 Q131 62 102 76 Q72 91 86 144 L94 212 Q110 241 172 259 L255 271 Q289 272 292 250 L210 235 Q147 227 138 190 L123 123 Q133 103 159 110Z" fill="#d6d1af" stroke="#77715c" stroke-width="3"/>',
+  '<path d="M154 125 Q159 103 185 107 L267 113 Q285 116 285 134 L283 216 Q278 227 260 232 L173 228 Q151 227 151 201Z" fill="#eaf0f2" stroke="#74828b" stroke-width="3"/>',
+  '<rect x="164" y="119" width="113" height="98" rx="16" fill="#fff" stroke="#aab9c0" stroke-width="2"/>',
+  // Capillary tube extends horizontally from the collar.
+  '<path d="M66 125L149 133" stroke="#7f7761" stroke-width="13" stroke-linecap="round"/>',
+  '<path d="M66 125L149 133" stroke="#ebe4be" stroke-width="7" stroke-linecap="round"/>',
+  '<path d="M55 120L76 124L75 137L53 132Z" fill="#d9d4ba" stroke="#6d6454" stroke-width="2"/>',
+  filled?'<path d="M82 128L145 133" stroke="#bd5663" stroke-width="3.6" stroke-linecap="round"/>':'',
+  // Oval blood transfer zone.
+  '<ellipse cx="431" cy="158" rx="34" ry="18" fill="#fff" stroke="#74818b" stroke-width="2.7"/>',
+  '<ellipse cx="438" cy="158" rx="16" ry="9" fill="'+(filled?'#ddaeb4':'#edf3f5')+'" stroke="#b9ccd4" stroke-width="1.3"/>',
+  // Buffer release: elongated raised button and printed activation marking.
+  '<rect x="510" y="143" width="91" height="31" rx="15.5" fill="#fff" stroke="#6f7c82" stroke-width="2.6"/>',
+  '<rect x="518" y="150" width="75" height="17" rx="8.5" fill="#ecf2f4" stroke="#a8bac4" stroke-width="1.7"/>',
+  '<path d="M551 122V111 M546 115A9 9 0 1 0 557 115" fill="none" stroke="#657780" stroke-width="2.3" stroke-linecap="round"/>',
+  // Distinct blue result window to the right (no fake test lines).
+  '<rect x="636" y="141" width="66" height="35" rx="5" fill="#fdfefe" stroke="#5d7080" stroke-width="2.8"/>',
+  '<rect x="640" y="146" width="58" height="26" rx="3" fill="#8db3d5" stroke="#6c92b5" stroke-width="1.2"/>'
+ ];
+ if(emphasis){
+  const [cx,cy]=emphasis;
+  paths.push('<circle cx="'+cx+'" cy="'+cy+'" r="'+(stage==="collection"?47:39)+'" fill="none" stroke="#178f88" stroke-width="5" stroke-dasharray="9 7"/>');
+ }
+ return paths.join("");
+}
+function febridxDeviceSvg(stage="ready"){
+ const labels={
+  ready:"FebriDx integrated fingerstick test with left-side blood collection tube and green protective lancet tab, blood transfer zone, buffer release button, and right-side blue result window",
+  collection:"FebriDx collection tube and protective lancet tab highlighted on the left",
+  transfer:"FebriDx oval blood transfer zone highlighted",
+  buffer:"FebriDx buffer release button highlighted",
+  read:"FebriDx blue result window highlighted"
+ };
+ return illustratedSvg(febridxDeviceMarkup(stage),labels[stage]||labels.ready,"0 0 860 310");
+}
+
 function kitShape(id,filled,context){
  const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
  const specimen=filled?sampleColor:"#e5f1f5";
@@ -1130,15 +1184,7 @@ function kitShape(id,filled,context){
   return B?.station?.(filled?"sample":"ready")||"";
  }
  if(id==="clinitek")return clinitekKit(context==="hcg"?"hcg":"ua",filled);
-  if(id==="febridx"){
-  h='<rect x="59" y="67" width="213" height="83" rx="16" fill="#f7fbfc" stroke="'+outline+'" stroke-width="3"/>'+
-    '<rect x="90" y="85" width="89" height="26" rx="7" fill="#edf4f6" stroke="#9dbbca" stroke-width="2"/>'+
-    '<circle cx="223" cy="109" r="16" fill="'+specimen+'" stroke="#bc5264" stroke-width="3"/>'+
-    '<rect x="89" y="120" width="91" height="15" rx="3" fill="#d7e6ec"/>'+
-    '<path d="M221 90 L249 43 L297 43" fill="none" stroke="#ba5364" stroke-width="2.5"/>'+
-    '<text x="245" y="35" font-size="11" fill="'+dark+'" font-weight="850">COLLECTION</text>';
-  return illustratedSvg(h,"FebriDx fingerstick integrated test device "+(filled?"after blood collected":"unused"));
- }
+  if(id==="febridx")return febridxDeviceSvg(filled?"transfer":"ready");
  if(id==="drug-screen"){
   h='<rect x="102" y="45" width="119" height="132" rx="14" fill="#f7fafb" stroke="'+outline+'" stroke-width="3"/>'+
    '<rect x="96" y="33" width="131" height="25" rx="7" fill="#e2eaf0" stroke="#abc0c9" stroke-width="2"/>'+
