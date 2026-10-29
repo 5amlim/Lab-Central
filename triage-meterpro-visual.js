@@ -159,9 +159,9 @@ function renderStep(title,group){
  const daily=/daily/.test(g),monthly=/monthly/.test(g),newBox=/new.box/.test(g),qc=daily||monthly||newBox;
  const mode=/code chip|install.*chip/.test(t)?"chip":daily?"qc":/qc sample|qc controls/.test(t)?"qcsample":/patient|mrn/.test(t)?"patient":/machine is ready|result/.test(t)?"result":"home";
  if(/print|log|record|date and initials|file/.test(t))return figure("Document and file the result","result",'<div class="triage-material-note">Print and record results in the appropriate approved QC log or patient chart. Verify lot, operator and patient identification.</div>',"Record the completed result according to the site procedure.");
- if(daily&&/qc device|insert.*qc device/.test(t))return figure("Daily QC · reusable electronic device","qc",qcElectronicSvg(),"The reusable electronic QC Device has no sample well. Do not add liquid or confuse it with single-use patient-test cassettes.");
+ if(daily&&/insert.*qc device|insert.*device|press enter.*daily qc/.test(t))return figure("Daily QC · reusable electronic device","qc",qcElectronicSvg(),"The reusable electronic QC Device has no sample well. Do not add liquid or confuse it with single-use patient-test cassettes.");
  if(/chip|install.*chip/i.test(t))return figure("Match and install the new reagent CODE CHIP","chip",chipSvg(),"Install the corresponding lot chip using the prompts. Remove and store it as instructed.");
- if(/freezer|qc sample|total 5|thaw/.test(t))return figure("Prepare Triage Total 5 controls",mode,qcControlsSvg(),"Thaw and prepare the required control vials per approved lot-specific QC instructions.");
+ if(/freezer|grab the qc sample|total 5|thaw|invert the tube/.test(t))return figure("Prepare Triage Total 5 controls",mode,qcControlsSvg(),"Thaw and prepare the required control vials per approved lot-specific QC instructions.");
  if(/blood samples|collect/.test(t))return figure("EDTA blood for cardiac assays","home",A.mediaSvg("lavender"),"Verify collection tube and specimen stability for the selected cardiac assay.");
  if(/grab the test kit|test kit from the fridge|cassette|pipette|dispens|sample well|port/.test(t)){
   if(daily)return figure("Reusable electronic QC Device","qc",qcElectronicSvg(),"Daily electronic QC uses the reusable device, never an assay cassette or patient sample.");
@@ -169,7 +169,7 @@ function renderStep(title,group){
   if(/dispens|pipette/.test(t))return figure("Add specimen to the disposable assay cassette",qc?"qcsample":"patient",'<div class="triage-dispense-layout">'+pipetteSvg()+selectedMaterial("bnp",true)+'</div>',"Illustrated BNP example. Use the supplied transfer pipette and the assay-specific sample volume.");
   return figure("Identify the intended Triage cartridge","home",kitChooser(),"Compare the printed cartridge name and colored identification stripe before preparing the specimen.");
  }
- if(/run test|click|enter mrn|lot/.test(t))return figure("Navigate the MeterPro buttons",mode,qc?qcElectronicSvg():kitChooser(),"Use the actual screen prompts and physical arrow/Enter keys to select the correct mode and enter identification.");
+ if(/run test|click|select|enter mrn|lot/.test(t))return figure("Navigate the MeterPro buttons",mode,qc?qcElectronicSvg():kitChooser(),"Use the actual screen prompts and physical arrow/Enter keys to select the correct mode and enter identification.");
  if(/turn on|machine is ready|review|result/.test(t))return figure("Quidel Triage MeterPro",mode,qc?qcElectronicSvg():kitChooser(),"This is the actual meter layout; the screen text is a training illustration rather than a literal captured display.");
  return figure(qc?"Triage QC workflow":"Triage patient test workflow",mode,qc?qcControlsSvg():kitChooser(),"Follow the current kit instructions and analyzer prompts for this step.");
 }
