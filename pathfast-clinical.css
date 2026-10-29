@@ -367,3 +367,48 @@
     grid-template-columns:49px minmax(0,1fr) 56px;column-gap:8px;
   }
 }
+
+/* Serial timing: inset the warning divider, and keep just one consistent disclosure chevron. */
+.pcr-guide .pcr-timing-panel .pcr-timing-footnote{
+ position:relative;
+ border-top:0;
+ padding-top:16px;
+}
+.pcr-guide .pcr-timing-panel .pcr-timing-footnote::before{
+ content:"";
+ position:absolute;
+ top:0;
+ left:19px;
+ right:19px;
+ height:1px;
+ background:#ebdec8;
+ pointer-events:none;
+}
+.pcr-guide .pcr-accordion>summary{gap:12px}
+.pcr-guide .pcr-accordion>summary .pcr-summary-actions{
+ display:inline-flex;
+ align-items:center;
+ gap:10px;
+ flex:none;
+ margin-left:auto;
+}
+.pcr-guide .pcr-accordion>summary .pcr-summary-actions .pcr-waste-summary-badge{
+ margin-left:0;
+}
+.pcr-guide .pcr-accordion>summary .lab-shared-chevron{
+ flex:0 0 20px;
+ margin-left:0;
+}
+.pcr-guide .pcr-fallback-timing>summary .pcr-fallback-chevron{
+ margin-left:auto;
+ flex:0 0 20px;
+}
+.pcr-guide .pcr-fallback-timing[open]>summary .pcr-fallback-chevron{
+ transform:rotate(180deg)!important;
+}
+@media(max-width:480px){
+ .pcr-guide .pcr-timing-panel .pcr-timing-footnote::before{
+  left:13px;right:13px;
+ }
+ .pcr-guide .pcr-accordion>summary{flex-wrap:wrap}
+}
