@@ -215,18 +215,19 @@ function torchChassis(state){
  // Lower sloped surface, red outer border and rounded gray case.
  '<path d="M153 228H794L823 327Q831 352 800 355H148Q122 353 130 323Z" fill="#b73346" stroke="#ab3748" stroke-width="4"/>'+
  '<path d="M164 233H784L810 324Q816 344 795 345H150Q137 343 142 326Z" fill="url(#lc-torch-surface)" stroke="#d4d9d8" stroke-width="3"/>'+
+ // Keep the equipment wordmark centered in the silver fascia, clear of the dock and red edge.
+ txt(476,221,"FilmArray® TORCH",14,"#45545c",850)+
  // Pouch loading dock/reader cover sits LEFT of the touchscreen, as photographed.
  '<path d="M185 317Q191 264 207 257Q235 242 333 248Q356 250 362 278L369 331H174Z" fill="#eceee9" stroke="#d2d7d2" stroke-width="3"/>'+
  '<path d="M179 331H373Q364 314 344 309H210Q189 309 179 331Z" fill="#41484c" stroke="#798589" stroke-width="2"/>'+
  '<path d="M184 329Q207 317 227 319H331Q358 316 368 329" fill="none" stroke="#a8ada9" stroke-width="3"/>'+
- txt(264,280,"BIOFIRE",13,"#8d3f47",850)+
- txt(263,296,"POUCH DOCK",11,"#76828a",730)+
+ txt(273,280,"BIOFIRE",13,"#8d3f47",850)+
+ txt(273,297,"POUCH DOCK",11,"#65757d",750)+
  // Main dark tilted touchscreen, right side and recessed under a narrow bezel.
  '<path d="M421 244L751 242L783 335H394Z" fill="#151b21" stroke="#515d65" stroke-width="4"/>'+
  '<path d="M433 251L743 250L767 326H408Z" fill="url(#lc-torch-display)" stroke="#313d44" stroke-width="2"/>'+
  '<path d="M456 259L728 254" stroke="#99a4a9" stroke-width="2" opacity=".12"/>'+
- // FilmArray Torch wordmark and front center vented chassis.
- txt(231,238,"FilmArray® torch",16,"#994550",730,"start")+
+ // Front center vented chassis. Brand lettering lives on the unobstructed silver fascia above.
  '<path d="M150 355H802Q808 355 805 365Q798 382 780 383H170Q149 383 146 364Z" fill="#252b30" stroke="#4f5b63" stroke-width="3"/>'+
  Array.from({length:30},(_,i)=>{
    const x=195+i*19;
@@ -235,10 +236,8 @@ function torchChassis(state){
  '<rect x="444" y="351" width="44" height="37" rx="4" fill="#333b41" stroke="#77858b" stroke-width="2"/>'+
  [0,1].map(i=>'<rect x="454" y="'+(359+i*14)+'" width="23" height="10" rx="2" fill="#10161a" stroke="#929fa5" stroke-width="1.5"/>'+
    '<rect x="459" y="'+(361+i*14)+'" width="13" height="3" fill="#9eb1ba"/>').join("")+
- // Scanner and cord rest on the top of the instrument.
- '<path d="M316 22Q298 12 306 6Q324 -5 337 15L348 28" stroke="#a9b2b4" stroke-width="7" fill="none" stroke-linecap="round"/>'+
- '<circle cx="353" cy="18" r="13" fill="#497c9e" stroke="#6e8d9c" stroke-width="4"/>'+
- '<circle cx="353" cy="18" r="3.5" fill="#25b8ac"/>';
+ // Keep the upper lid clean; do not depict an unattached scanner or cord.
+ '';
  if(selected){
   h+='<path d="M312 209L275 222" fill="none" stroke="#248e83" stroke-width="3.5" stroke-linecap="round"/>'+
     '<rect x="155" y="208" width="142" height="23" rx="9" fill="#e3f6ef" stroke="#92d0bf" stroke-width="2"/>'+
