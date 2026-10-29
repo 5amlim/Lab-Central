@@ -1268,6 +1268,13 @@ function workflowVisual(sec,title,groupTitle=""){
    '<div class="dev-kit-scenes" style="grid-template-columns:minmax(0,600px);justify-content:center">'+kitScene(id,"before","qc")+'</div>'+
    '<p class="dev-visual-footnote">Remove and prepare all three control levels as directed by the approved pocH-100i SOP. These are control vials, not patient EDTA tubes.</p></div>';
  }
+ if(id==="febridx"){
+  const stage=/buffer|release/.test(t)?"buffer":/transfer|apply|load sample/.test(t)?"transfer":/result|read|interpret/.test(t)?"read":/collect|finger|lancet|blood/.test(t)?"collection":"ready";
+  return '<div class="dev-workflow-visual febridx-process-visual" aria-label="Reference-matched FebriDx device">'+
+    '<div class="dev-visual-header"><strong>FEBRIDX · DEVICE COMPONENTS</strong><span>Integrated fingerstick test</span></div>'+
+    '<div class="dev-kit-scenes" style="grid-template-columns:minmax(0,760px);justify-content:center"><div class="dev-kit-view"><div class="dev-kit-drawing">'+febridxDeviceSvg(stage)+'</div></div></div>'+
+    '<p class="dev-visual-footnote">Use the integrated tube, lancet tab, oval transfer zone, buffer button and result window. Follow the current approved IFU.</p></div>';
+ }
  if(id==="torch"||id==="spotfire")return "";
  if(id==="piccolo")return "";
  if(id==="pathfast"&&!/(retrieve cartridges|load cartridges|insert the rack)/i.test(title))return "";
@@ -1312,7 +1319,7 @@ const visualStepsText={
  clinitek:[["Select the applicable workflow","Urinalysis dipstick and CLINITEST hCG cassette are separate consumables with different sampling methods."],["Use the correct consumable","See the two dedicated workflows below."],["Load only after START","Siemens requires pressing START before sample application for both test types."],["Review analyzer output","Verify the intended test mode and patient before recording results."]],
  torch:[["Collect stool in Cary Blair","GI panel specimens require an approved stool transport medium."],["Prepare pouch and loading station","Identify the pouch, blue hydration port, red sample port and corresponding vials."],["Hydrate and transfer sample","Follow the panel IFU. Fluids enter the sealed pouch and are not directly visible afterward."],["Insert prepared pouch","Load the pouch into the correct TORCH module and run the assigned panel."]],
  spotfire:[["Select correct transport media","Choose UTM/VTM for respiratory or eSwab for throat per the selected assay."],["Prepare kit and pouch","Identify the blue hydration vial and red sample injection vial."],["Hydrate and transfer sample","Use the pouch loading station and assay-specific transfer steps."],["Run on SPOTFIRE","Insert the prepared pouch and confirm panel selection on the analyzer."]],
- febridx:[["Collect fingerstick blood","FebriDx uses a direct fingerstick sample. No purple or green-top tube is used."],["Check the unused FebriDx device","Identify the integrated single-use blood collection and test device."],["Load sample into device","Use the integrated collection tube and actuation method described by the current kit IFU."],["Develop and read","Follow the manufacturer timing and interpretation instructions; the device is not an analyzer cartridge."]],
+ febridx:[["Collect capillary blood","Use the integrated blood collection tube on the FebriDx test device."],["Identify device parts","Locate the lancet tab, blood transfer zone, buffer release button and result window."],["Transfer blood and release buffer","Follow the FebriDx IFU for transfer and buffer activation."],["Read result window","Use the approved development interval and interpretation instructions."]],
  "drug-screen":[["Collect urine","Use the approved urine drug screen collection cup."],["Check the unused screening cup","Confirm the correct panel count, packaging and expiration."],["Fill the cup","Collect and secure the urine specimen using the current kit instructions; do not expose test strips."],["Read and document","Follow the prescribed wait/read window and facility confirmation policy."]],
  coagsense:[["Collect capillary blood","Obtain a fingerstick sample with the approved capillary transfer device; no routine blood tube."],["Insert unused PT/INR strip","Identify the strip's sample application well."],["Transfer the sample","Apply blood only when the meter indicates it is ready, using the transfer tube."],["Read meter result","Follow the actual instrument's prompts and approved SOP."]],
  poc:[["Check assay specimen","Other POC tests include multiple specimen types, not one universal tube."],["Choose the correct test kit","Confirm the actual product instructions before collecting or handling the specimen."],["Apply the specimen","Use the indicated specimen port and manufacturer-specified extraction/transfer method."],["Read and report","Follow the kit-specific timing, interpretation and documentation requirements."]],
@@ -1375,9 +1382,29 @@ function sysmexVisualGuide(sec){
   '</section>';
 }
 
+/* FebriDx four-stage training illustrations reuse the same reference-based device. */
+function febridxVisualGuide(sec){
+ const steps=[
+  ["Collect fingerstick capillary blood","collection","Identify the green protective lancet tab and the small integrated collection tube on the left. Follow the current FebriDx IFU for filling."],
+  ["Identify all device components","ready","Locate the integrated collection tube, oval blood transfer zone, buffer release button and blue result window."],
+  ["Transfer sample and release buffer","transfer","Use the oval blood transfer zone and activate the buffer release button in the manufacturer-approved sequence."],
+  ["Develop and read result","read","Read the blue result window at the IFU-specified time. The drawing intentionally shows no interpreted test result."]
+ ];
+ const cards=steps.map(([title,stage,note],i)=>{
+  const images='<div class="device-gallery-image febridx-step-picture">'+febridxDeviceSvg(stage)+'</div>'+
+   (stage==="transfer"?'<div class="device-gallery-image febridx-step-picture">'+febridxDeviceSvg("buffer")+'</div>':'');
+  return '<article class="device-gallery-step febridx-device-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(title)+'</strong></div>'+images+'<p>'+visualEsc(note)+'</p></article>';
+ }).join("");
+ return '<section class="device-gallery febridx-visual-gallery" aria-label="FebriDx step-by-step device reference">'+
+  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>FebriDx · sample testing</h2><p>Collection tube → Blood transfer zone → Buffer release → Result window</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
+  '<div class="device-gallery-grid">'+cards+'</div>'+
+  '<p class="device-gallery-note">Device illustration follows the supplied component reference. For collection volume, activation timing, and results interpretation follow the current approved manufacturer IFU and local SOP.</p></section>';
+}
+
 function visualGuide(sec){
  if(!sec||!specs[sec.id]||!visualStepsText[sec.id])return "";
  if(sec.id==="clinitek")return clinitekVisualGuide(sec);
+ if(sec.id==="febridx")return febridxVisualGuide(sec);
  if(sec.id==="sysmex")return sysmexVisualGuide(sec);
  const id=sec.id,arr=visualStepsText[id],med=collection[id]||[],archive=!!sec.archived;
  const title=archive?"Historical consumable reference":"Specimen to instrument · visual steps";
@@ -1399,5 +1426,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={coagSenseDeviceSvg:coagSenseDeviceSvg,coagSenseDeviceMarkup:coagSenseDeviceMarkup,clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={coagSenseDeviceSvg:coagSenseDeviceSvg,coagSenseDeviceMarkup:coagSenseDeviceMarkup,clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide,febridxDeviceSvg:febridxDeviceSvg};
 })();
