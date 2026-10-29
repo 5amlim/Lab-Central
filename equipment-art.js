@@ -198,6 +198,84 @@ function sysmexDeviceSvg(mode,showAccessory=true){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 650 465" role="img" aria-label="Sysmex pocH-100i CBC analyzer with upper left screen, white cabinet, lower purple sample chamber'+(showAccessory?' and right-hand reagent bottle':'')+'">'+sysmexDeviceMarkup(mode,showAccessory)+'</svg>';
 }
 
+
+/* Shared Siemens CLINITEK Status+ housing, matched to supplied reference photo.
+   The white angled housing has a wide upper gray screen, top printer slot,
+   power button on screen-right, branding beneath and an actual pull-out
+   black test table under the right-front face.
+   The strip and CLINITEST hCG cassette use DISTINCT removable table inserts. */
+function clinitekDeviceMarkup(mode="empty"){
+ const m=String(mode||"empty").toLowerCase();
+ const stripMode=m==="strip",cassetteMode=m==="cassette",trayOut=!/reading|result|closed/.test(m);
+ const T=(x,y,t,size=13,color="#425b69",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+t+'</text>';
+ let art=
+ '<defs>'+
+ '<linearGradient id="cl-status-case" x1="0" x2=".94" y1="0" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#f5f6f1"/><stop offset="1" stop-color="#d6dad7"/></linearGradient>'+
+ '<linearGradient id="cl-status-glass" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#eef0ed"/><stop offset="1" stop-color="#bfc9cb"/></linearGradient>'+
+ '<linearGradient id="cl-status-table" x1="0" x2=".9" y1="0" y2="1"><stop stop-color="#353d44"/><stop offset="1" stop-color="#0e151d"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="303" cy="363" rx="215" ry="10" fill="#dfe8ec"/>'+
+ // Top printer recess, as in the source photo.
+ '<path d="M132 56L152 25Q166 14 192 14H407Q440 16 453 41L479 287Q477 311 458 316H123Q101 316 101 292L109 91Q112 66 132 56Z" fill="url(#cl-status-case)" stroke="#c7cfce" stroke-width="3"/>'+
+ '<path d="M179 40L189 24H394L404 42Z" fill="#e7ebe8" stroke="#d3d9d5" stroke-width="2"/>'+
+ '<path d="M208 28H371L361 39H216Z" fill="#c8cfce"/>'+
+ '<path d="M125 71Q138 55 157 52L421 50" fill="none" stroke="#fff" stroke-width="7" opacity=".7"/>'+
+ // Sloped screen recess, wide and gray.
+ '<path d="M152 89L162 80H421L432 91V205L424 216H149L141 208V104Z" fill="#c1c9c8" stroke="#aab7b8" stroke-width="3"/>'+
+ '<path d="M156 96L167 91H411L419 101V201H157Z" fill="url(#cl-status-glass)" stroke="#8a9da2" stroke-width="2.5"/>'+
+ '<path d="M162 98H404L412 124L404 187H161Z" fill="#e6eae7" opacity=".3"/>'+
+ // Keep real physical interface silhouette. The menu remains schematic.
+ ((m==="empty"||m==="ready")?'':(
+ '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
+ T(287,137,m==="cassette"?"Cassette Test":m==="strip"?"Strip Test":m==="result"?"Results":"CLINITEK Status+",13,"#426679",850)+
+ '<rect x="199" y="147" width="172" height="23" rx="4" fill="#c9e8e7" stroke="#b1cdd2"/>'+
+ T(285,163,m==="cassette"?"CLINITEST hCG":m==="strip"?"Urinalysis strip":m==="result"?"Review report":"Follow screen prompts",11,"#376577",700)
+ ))+
+ // Correct CLINITEK Status+ / Siemens branding and power button.
+ T(162,244,"CLINITEK Status+",19,"#273944",820,"start")+
+ T(255,260,"Analyzer",9,"#647681",620)+
+ T(164,291,"SIEMENS",22,"#3299b0",900,"start")+
+ '<circle cx="434" cy="242" r="19" fill="#abb6b8" stroke="#86999d" stroke-width="3"/>'+
+ '<circle cx="434" cy="241" r="14" fill="#ecf1f0" stroke="#bdc9c9" stroke-width="2"/>'+
+ '<path d="M434 230V241M426 238A10 10 0 1 0 442 238" stroke="#6c8085" stroke-width="2.5" fill="none" stroke-linecap="round"/>'+
+ // Pictogram on real face, subtle and non-instructional.
+ '<rect x="307" y="264" width="125" height="32" rx="3" fill="#fcfbf8" stroke="#d2d9d7"/>'+
+ '<rect x="316" y="270" width="29" height="18" fill="#f4f8f8" stroke="#c38e9e"/>'+
+ '<rect x="351" y="270" width="33" height="18" fill="#eef1f1" stroke="#b5c2c5"/>'+
+ '<path d="M391 273h32m-16-6v23" stroke="#a6b8c0" stroke-width="2"/>'+
+ // Instrument base feet, not a fictional hinged right-side drawer.
+ '<path d="M132 316H457V329Q455 341 443 341H142Q131 340 132 330Z" fill="#c9d2d3" stroke="#acb8bb" stroke-width="2"/>'+
+ '<path d="M146 337H220M379 337H452" stroke="#8f9b9f" stroke-width="4"/>'+
+ // Real black test-table slot at bottom-right front.
+ '<path d="M330 306H449V325H330Z" fill="#111a22" stroke="#5d6871" stroke-width="2"/>';
+ if(trayOut){
+  // The user's reference shows the table sticking out toward the operator.
+  art+='<path d="M337 319L451 319L479 353L480 391Q466 400 450 402H352Q339 400 337 389Z" fill="url(#cl-status-table)" stroke="#303c45" stroke-width="3"/>'+
+   '<path d="M350 331H444L464 359V377Q457 389 448 389H357Q350 387 350 377Z" fill="#29323a" stroke="#69777f" stroke-width="2"/>'+
+   '<path d="M362 343L434 343L447 365H365Z" fill="#111c25" stroke="#5f7079" stroke-width="1.6"/>'+
+   '<path d="M356 396H466" stroke="#121c24" stroke-width="6" stroke-linecap="round"/>';
+  if(stripMode){
+   art+='<g aria-label="UA reagent strip on strip test table insert">'+
+    '<path d="M383 349L394 348L425 378L414 380Z" fill="#f8fcfa" stroke="#9cb2b9" stroke-width="1.6"/>'+
+    ['#ddc88a','#a4c79e','#c5a3b7','#9bafcb','#e4bb89','#98c4c0','#c9b2a0'].map((c,i)=>{
+      const x=389+i*4,y=351+i*4;
+      return '<rect x="'+x+'" y="'+y+'" width="9" height="5" rx="1" fill="'+c+'" transform="rotate(42 '+x+' '+y+')"/>';
+    }).join('')+'</g>';
+  }
+  if(cassetteMode){
+   art+='<g aria-label="CLINITEST hCG cassette on cassette test table insert">'+
+    '<path d="M358 349L424 347L450 371L383 381Z" fill="#f6f9f8" stroke="#b2c5cb" stroke-width="2"/>'+
+    '<path d="M378 356L400 353L411 360L388 364Z" fill="#dfebef" stroke="#99b2bf"/>'+
+    '<ellipse cx="427" cy="367" rx="6" ry="4" fill="#f8f7f1" stroke="#879eac" stroke-width="1.8"/>'+
+    '<path d="M402 371L414 370" stroke="#8aa9b6" stroke-width="1.4"/></g>';
+  }
+ }else art+='<path d="M341 321H445V335H341Z" fill="#253039" stroke="#66747b" stroke-width="2"/>';
+ return art;
+}
+function clinitekDeviceSvg(mode="empty"){
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 420" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(mode==="strip"?"urinalysis strip seated in the black strip test-table insert":mode==="cassette"?"CLINITEST hCG cassette seated in the distinct cassette table insert":"black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
+}
+
 function body(shape,a){
  let v="";
  if(shape==="tower"){
@@ -248,7 +326,7 @@ function body(shape,a){
 }else if(shape==="reader"){
  v=rect(192,68,350,197,14,"#edf2f5","#a6b7bf",3)+rect(206,82,329,107,5,"#b4c0c7")+rect(215,96,200,80,3,"#d7e2e8","#7f99a5",2)+rect(427,98,101,73,8,"#d8e4e9")+Array.from({length:5},(_,i)=>circle(451+(i%3)*24,111+Math.floor(i/3)*25,8,"#eaf1f4","#92a8b5")).join("")+rect(217,194,230,59,7,"#f5f8fa","#c3d0d7")+Array.from({length:12},(_,i)=>txt(237+(i%4)*53,209+Math.floor(i/4)*17,i===9?"0":String(i+1),10,"#4c6472",750)).join("")+rect(454,224,66,25,6,"#2d3d46")+txt(300,88,"Triage MeterPro",11,"#fff",790)+txt(476,215,"Quidel",12,"#92a9b6",810);
  }else if(shape==="urine"){
- v='<path d="M247 240 L270 67 Q275 48 300 46 L460 46 Q484 52 487 73 L513 238 Q511 257 483 258 L270 258 Q249 256 247 240Z" fill="#eaf0f3" stroke="#9eafbb" stroke-width="3"/>'+rect(287,72,188,99,7,"#9db2bf")+rect(300,85,160,74,5,"#dce9ec")+txt(359,198,"CLINITEK Status+",14,"#465b6d",830)+txt(316,235,"SIEMENS",15,"#2789ad",850)+circle(462,191,12,"#9eb7c2","#738d9b")+rect(393,230,97,22,7,"#3a4b55");
+ v='<g transform="translate(75 0) scale(.73)">'+clinitekDeviceMarkup("empty")+'</g>';
  }else if(shape==="torch"){
  v='<ellipse cx="385" cy="286" rx="235" ry="15" fill="#dae4e9" opacity=".65"/>'+
  '<path d="M182 99 L234 64 L518 64 L583 100 L583 234 L532 272 L197 272 L180 236Z" fill="#e6edef" stroke="#9cabb6" stroke-width="3"/>'+
@@ -1047,5 +1125,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
