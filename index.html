@@ -147,7 +147,7 @@
 
 </style>
 <link rel="stylesheet" href="step-illustrations.css?v=20261028-illustrations-v1" media="all">
-<link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v2">
+<link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v3">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -242,8 +242,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sysmex-maintenance-art.js?v=20261029-maint-v2"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
 <script src="qc-guide.js?v=20261028-biofire-qc-steps-v3"></script>
-<script src="biofire-visual.js?v=20261029-snap-buffer-r-v6"></script>
-<script src="lab-visual-corrections-20261029.js?v=2"></script>
+<script src="biofire-visual.js?v=20261029-spotfire-original-device-v7"></script>
+<script src="lab-visual-corrections-20261029.js?v=3"></script>
 <script>
 (()=>{
 'use strict';
@@ -357,10 +357,10 @@ function buildGroups(section){
   const blocks=[
    ...step('Gather test kit and specimen',torch?'Confirm GI panel pouch, loading station, hydration vial (blue), sample injection vial (red), sample buffer, transfer pipette and stool specimen in Cary Blair.':'Confirm correct SPOTFIRE respiratory or sore-throat pouch, SPRK, vial set, sample buffer, transfer pipette, specimen transport medium, expiry and IDs.'),
    ...step('Prepare pouch loading station', 'Clean the work area per SOP, put on fresh gloves, insert the pouch in the loading station, place the red sample vial in the LEFT well and the blue hydration vial in the RIGHT well. Match the pouch to the kit.'),
-   ...step('Hydrate pouch using blue vial', 'Remove the blue hydration vial from its cover, insert the blunt cannula into the blue hydration port and puncture the seal as described in the IFU. Verify fluid enters reagent wells.'),
+   ...step('Hydrate pouch using blue vial', 'Unscrew and remove the blue hydration vial while leaving its blue cover in the loading station. Insert its blunt cannula into the pouch hydration port, push down to puncture the seal and let the hydration solution draw into the pouch. Confirm the pouch hydrated. Avoid touching the cannula.'),
    ...step('Prepare sample buffer and specimen in red vial',torch?'For the GI panel, dispense the Sample Buffer into the red Sample Injection Vial first using a slow, forceful squeeze followed by a second squeeze. Thoroughly mix stool in Cary Blair, draw to the transfer pipette second line (approximately 0.2 mL), then add to the red vial. Do not use the pipette to mix. Avoid foam and securely cap the red vial.':'For the SPOTFIRE R panel, first transfer specimen using the supplied fixed-volume transfer pipette, then snap open the Sample Buffer tube at its textured tab and squeeze the full buffer contents into the red Sample Injection Vial. Avoid touching the tip or producing excess foam. Cap tightly. Confirm any different volume or handling instructions in the ordered panel IFU.'),
    ...step('Gently invert capped red vial 3 times','IMPORTANT: Remove the tightly capped red Sample Injection Vial from the loading station. Gently invert it 3 times to mix the buffer and specimen. Do not shake or generate foam. Return the red vial to the red well before loading the sample into the pouch.'),
-   ...step('Inject sample mix into red port', 'Unscrew the red vial and insert its blunt cannula into the red sample port. Puncture the seal and verify the specimen mixture is drawn into the pouch. Do not interchange the red and blue ports.'),
+   ...step('Inject sample mix into red port', 'Unscrew the prepared red Sample Injection Vial from its cover and pause 5 seconds before lifting it out, leaving the red cover in the loading station to reduce contamination risk. Insert the blunt cannula into the pouch sample port, press fully to puncture its seal and wait for the sample mixture to be drawn into the pouch. Verify loading. Do not touch the cannula or interchange the red and blue ports.'),
    ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. Follow the analyzer prompts to confirm the correct module and run.'),
    ...step('Scan pouch barcode', 'Scan the pouch QR/barcode using the connected scanner when prompted. Confirm the scanned panel and pouch identity.'),
    ...step('Confirm panel and sample ID', torch?'Verify GI panel and enter/scan the correct specimen ID, matching the labeled pouch.':'Choose the ordered Respiratory or Sore Throat panel and verify the specimen ID and pouch barcode.'),
