@@ -646,3 +646,13 @@
  }
  .device-collection-guide .device-media-picture svg{max-width:88px;max-height:88px}
 }
+
+/* CLINITEK UA QC uses the manufacturer's actual Quantimetrix Dipper photo. */
+.cl-qc-material-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(220px,.65fr);gap:14px;align-items:center;width:100%;max-width:920px}
+.cl-qc-analyzer{min-width:0;display:grid;place-items:center}
+.cl-qc-analyzer>svg{width:100%;height:auto;max-height:340px}
+.cl-qc-photo{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:0;background:#fff;border:1px solid #dfebf0;border-radius:12px;padding:12px 12px 9px;gap:7px}
+.cl-qc-photo img{display:block;width:auto;height:auto;max-height:302px;max-width:100%;object-fit:contain}
+.cl-qc-photo span{font-size:11px;line-height:1.35;color:#557b8b;font-weight:800;text-align:center;letter-spacing:.05em}
+@media(max-width:700px){.cl-qc-material-layout{grid-template-columns:minmax(0,1fr);gap:8px}.cl-qc-analyzer>svg{max-height:210px}.cl-qc-photo img{max-height:250px}}
+@media print{.cl-qc-material-layout{grid-template-columns:minmax(0,1fr) minmax(140px,.55fr)}.cl-qc-photo img{max-height:225px}}
