@@ -28,7 +28,7 @@ function pills(selected,locked){
  }).join('')+'</div>';
 }
 function login(mode){
- return frame("LOG-IN",mode==="patient"?"Step 5 · Operator access":"Step 1 · Operator access",
+ return frame("LOG-IN",mode==="patient"?"Step 6 · Operator access":"Step 7 · Operator access",
  '<div class="pfs-login"><div class="pfs-login-mark"><b>PATHFAST</b><span>OPERATOR ACCESS</span></div>'+
  '<div class="pfs-form-row"><label>USER</label><div class="pfs-form-box pfs-click-target">Select User ID'+cue("1 · SELECT")+'</div></div>'+
  '<div class="pfs-form-row"><label>PASSWORD</label><div class="pfs-form-box pfs-click-target">••••••••'+cue("2 · ENTER")+'</div></div>'+
@@ -43,19 +43,19 @@ function home(analyte,mode,focus){
  (cal?'<strong>Selected assay: pink</strong><span>CAL/QC expired or locked. Other assays shown in gray.</span>':
  '<strong>Assay availability</strong><span>Confirm the selected assay is gray / ready before loading patient samples.</span>')+'</div>'+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
- return frame("ASSAY/HOME",back?(cal?"Step 3 · Select BACK":"Step 7 · Select BACK"):(cal?"Step 2 · Check assay status":"Step 6 · Check assay status"),body,back?"SELECT BACK TO DISPLAY ASSAY MENU.":"CHECK CAL/QC STATUS BEFORE TESTING.");
+ return frame("ASSAY/HOME",back?(cal?"Step 8 · Select BACK":"Step 8 · Select BACK"):(cal?"Step 7 · Check assay status":"Step 7 · Check assay status"),body,back?"SELECT BACK TO DISPLAY ASSAY MENU.":"CHECK CAL/QC STATUS BEFORE TESTING.");
 }
 
 function menu(mode){
  const cal=mode!=="patient",options=["SAMPLE","QC/SAMPLE","CAL/QC/SAMPLE"];
  const rows=options.map(function(x){const selected=x===(cal?"CAL/QC/SAMPLE":"SAMPLE");return '<div class="pfs-assay-option '+(selected?'target pfs-click-target':'')+'"><span>'+x+'</span>'+(selected?cue("TAP THIS OPTION"):'')+'</div>';}).join('');
- return frame("ASSAY",cal?"Step 4 · Select CAL/QC":"Step 8 · Choose SAMPLE",nav()+
+ return frame("ASSAY",cal?"Step 9 · Select CAL/QC":"Step 9 · Choose SAMPLE",nav()+
  '<div class="pfs-menu-caption">SELECT OPERATION</div><div class="pfs-assay-options">'+rows+'</div>'+
  '<div class="pfs-screen-alert">'+(cal?'Choose CAL/QC/SAMPLE, or CAL/QC if shown on the analyzer with QC Lockout ON.':'Choose SAMPLE to enter patient information.')+'</div>'+foot("ASSAY / SELECT OPERATION"));
 }
 
 function item(analyte){
- return frame("CAL/QC","Step 5 · Select assay",'<div class="pfs-item-caption">SELECT ITEM.</div><div class="pfs-item-list">'+
+ return frame("CAL/QC","Step 9 · Select assay",'<div class="pfs-item-caption">SELECT ITEM.</div><div class="pfs-item-list">'+
  assays.map(function(a){const selected=a===analyte;return '<div class="pfs-item-option '+(selected?'target pfs-click-target':'')+'">'+e(a)+(selected?cue("1 · SELECT"):'')+'</div>';}).join('')+
  '</div><div class="pfs-item-actions"><span class="pfs-click-target">OK'+cue("2 · TAP")+'</span><span>CANCEL</span></div>',
  "SELECT ASSAY AND CONFIRM OK.");
@@ -63,7 +63,7 @@ function item(analyte){
 
 function lanes(mode,analyte){
  const cal=mode!=="patient",a=analyte||"hs-Troponin I",labs=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:Array(6).fill("SAMPLE");
- return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 6 · Review CAL/QC lanes":"Step 9 · Open SAMPLE INFO. and choose lane",
+ return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 10 · Review CAL/QC lanes":"Step 10 · Open SAMPLE INFO. and choose lane",
  nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active '+(!cal?'pfs-click-target':'')+'">SAMPLE INFO.'+(!cal?cue("1 · TAP"):'')+'</span></div>'+
  '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("2 · EXAMPLE"):'')+'</span>'+
  '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):"PATIENT")+'</span><strong>'+(cal?e(x):"SID: —")+'</strong></div>';}).join('')+'</div>'+
@@ -71,7 +71,7 @@ function lanes(mode,analyte){
  foot(cal?"CAL/QC → START":"SAMPLE INFO. → SID → OK"));
 }
 function sid(){
- return frame("SAMPLE INFO.","Step 10 · Enter and confirm SID",nav()+
+ return frame("SAMPLE INFO.","Step 11 · Enter and confirm SID",nav()+
  '<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active">SAMPLE INFO.</span></div>'+
  '<div class="pfs-sid-selection"><span>SELECTED LANE</span><strong>Example: lane 1</strong></div>'+
  '<div class="pfs-sid-panel"><strong>PATIENT IDENTIFICATION</strong><div class="pfs-sid-entry"><span>SID</span><div class="pfs-click-target">Enter / scan MRN'+cue("1 · SELECT SID")+'</div></div>'+
@@ -81,7 +81,7 @@ function sid(){
 }
 function start(mode){
  const cal=mode==="cal";
- return frame("ASSAY/HOME",cal?"Step 8 · Start CAL/QC":"Step 11 · Start patient assay",
+ return frame("ASSAY/HOME",cal?"Step 11 · Start CAL/QC":"Step 12 · Start patient assay",
  nav("start")+'<div class="pfs-home-heading">'+(cal?"CAL/QC":"PATIENT SAMPLE")+' · READY TO RUN</div>'+
  '<div class="pfs-start-check"><strong>Check before START</strong><span>Verify assay, specimen IDs, lane assignments and loaded tips on the actual screen.</span></div>'+
  '<div class="pfs-screen-alert">Tap the highlighted START control, then review and confirm the analyzer prompt.</div>',
