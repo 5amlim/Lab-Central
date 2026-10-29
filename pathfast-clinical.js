@@ -20,7 +20,7 @@ return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org
 '</svg>';
 }
 function card(n,role,title,body){
-return '<article class="pcr-step"><span class="pcr-step-index">'+String(n).padStart(2,"0")+'</span><div><span class="pcr-role">'+role+'</span><h3>'+title+'</h3><p>'+body+'</p></div></article>';
+return '<article class="pcr-step"><span class="pcr-step-index">'+String(n).padStart(2,"0")+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></article>';
 }
 function collection(){
 return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / NURSING COLLECTION</span>'+
