@@ -145,12 +145,12 @@ function pipetteSvg(phase="empty",type="blood"){
   '<path d="M133 224 V272" fill="none" stroke="#b1c8d3" stroke-width="6" stroke-linecap="round"/>'+
   '<ellipse cx="133" cy="45" rx="23" ry="'+(phase==="bulb"||phase==="dispense"?25:37)+'" fill="url(#tri-pipette-clear)" stroke="#92aeba" stroke-width="3"/>'+
   // Small lower overflow bulb branches from the barrel, not the upper squeeze bulb.
-  '<path d="M137 213 Q151 211 155 210" fill="none" stroke="#a9c4d1" stroke-width="9"/>'+
-  '<ellipse cx="167" cy="209" rx="15" ry="21" fill="url(#tri-pipette-clear)" stroke="#8eabb8" stroke-width="2.3"/>';
+  '<path d="M137 153 Q151 151 155 150" fill="none" stroke="#a9c4d1" stroke-width="9"/>'+
+  '<ellipse cx="167" cy="149" rx="15" ry="21" fill="url(#tri-pipette-clear)" stroke="#8eabb8" stroke-width="2.3"/>';
  if(hasSample){
   h+='<path d="M129 123 V232" stroke="'+color+'" stroke-width="8" stroke-linecap="round" opacity=".80"/>'+
-    '<path d="M134 223H146" stroke="'+color+'" stroke-width="5" opacity=".80"/>'+
-    '<path d="M162 214 Q165 224 173 213Z" fill="'+color+'" opacity=".75"/>';
+    '<path d="M134 157H146" stroke="'+color+'" stroke-width="5" opacity=".80"/>'+
+    '<path d="M162 156 Q165 166 173 155Z" fill="'+color+'" opacity=".75"/>';
  }
  if(phase==="dispense"){
   h+='<path d="M133 273 Q120 293 133 298 Q146 293 133 273" fill="'+color+'"/>';
@@ -160,7 +160,7 @@ function pipetteSvg(phase="empty",type="blood"){
     T(195,262,"TIP IN",12,"#317c85",800);
  }
  h+=P("M101 45H69","none","#4c8b9f",2)+T(65,39,"LARGE",11,"#386b85",850,"end")+T(65,52,"BULB",11,"#386b85",850,"end")+
-  P("M185 207H239","none","#4c8b9f",2)+T(242,203,"SMALL",11,"#437489",850,"start")+T(242,218,"OVERFLOW",11,"#437489",850,"start")+
+  P("M185 147H239","none","#4c8b9f",2)+T(242,143,"SMALL",11,"#437489",850,"start")+T(242,158,"OVERFLOW",11,"#437489",850,"start")+
   P("M123 154H65","none","#5a8597",2)+T(59,150,"FULL",11,"#386c82",800,"end")+T(59,163,"BARREL",11,"#386c82",800,"end");
  const alt="Kit-supplied Triage fixed-volume pipette; large upper squeeze bulb, sample barrel and separate small lower overflow bulb. "+phase;
  return '<svg viewBox="0 0 305 313" role="img" aria-label="'+E(alt)+'" xmlns="http://www.w3.org/2000/svg">'+h+'</svg>';
