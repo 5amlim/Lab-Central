@@ -70,7 +70,7 @@ if(B){
  B.stageVisual=biofire;
 }
 function piccoloPatientScreen(){
- const visual=(heading,body,note)=>'<div class="lc-pic-screen-panel"><strong>'+heading+'</strong><svg viewBox="0 0 420 290" role="img" aria-label="'+heading+' on the Piccolo Xpress touchscreen">'+body+'</svg><small>'+note+'</small></div>';
+ const visual=(heading,body,note,wide=false)=>'<div class="lc-pic-screen-panel"><strong>'+heading+'</strong><svg viewBox="0 0 '+(wide?550:420)+' 290" role="img" aria-label="'+heading+' on the Piccolo Xpress touchscreen">'+body+'</svg><small>'+note+'</small></div>';
  const screen=(title,body)=>'<rect x="32" y="13" width="354" height="251" rx="18" fill="#1e3e59" stroke="#517489" stroke-width="5"/>'+
  '<rect x="51" y="35" width="316" height="204" rx="8" fill="#c8e4f4"/>'+
  '<rect x="51" y="35" width="316" height="49" rx="5" fill="#295a83"/>'+
@@ -81,10 +81,12 @@ function piccoloPatientScreen(){
  '<text x="209" y="201" text-anchor="middle" font-size="21" font-family="Arial" fill="#516e83">Control</text>');
  const nums=['1','2','3','4','5','6','7','8','9','abc','0','Done'];
  const keypad=screen('Enter Sample ID','<rect x="78" y="92" width="264" height="38" rx="7" fill="#f8fcfd" stroke="#aac4d3"/>'+
- '<text x="209" y="118" text-anchor="middle" font-size="17" font-family="Arial" fill="#52768a">Enter patient MRN</text>'+
+ '<text x="209" y="119" text-anchor="middle" font-size="20" font-family="Arial" font-weight="850" letter-spacing="3" fill="#52768a">#####</text>'+
+ '<path d="M343 108L408 108L434 78" stroke="#188c86" stroke-width="3" fill="none"/>'+
+ '<text x="438" y="67" font-size="16" font-family="Arial" font-weight="850" fill="#207f81">VERIFY MRN</text>'+
  nums.map((v,i)=>{const x=82+(i%3)*90,y=140+Math.floor(i/3)*25;return '<rect x="'+x+'" y="'+y+'" width="79" height="23" rx="4" fill="'+(v==='Done'?'#239b8c':'#f4cf68')+'" stroke="'+(v==='Done'?'#18796e':'#b99d48')+'"/>'+
  '<text x="'+(x+39)+'" y="'+(y+16)+'" font-size="13" font-family="Arial" text-anchor="middle" font-weight="800" fill="'+(v==='Done'?'white':'#365468')+'">'+v+'</text>';}).join(''));
- return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.')+'</div>';
+ return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.',true)+'</div>';
 }
 function piccoloRunningSvg(){
  // Silhouette based on the Piccolo Xpress's compact cobalt-blue body, tall
@@ -93,7 +95,7 @@ function piccoloRunningSvg(){
  '<ellipse cx="343" cy="384" rx="235" ry="17" fill="#dce8ef"/>'+
  '<path d="M225 38Q224 15 250 15H460Q488 16 498 42L535 83V331Q533 357 505 364H245Q218 361 218 336Z" fill="#236baa" stroke="#15517e" stroke-width="5"/>'+
  '<path d="M458 18L498 43L534 82V333Q531 355 506 363L497 92Z" fill="#134d80"/>'+
- '<path d="M255 21H438Q462 21 464 47L484 247Q486 273 464 280H247Q223 279 226 251L232 56Q235 21 255 21Z" fill="#1c293b" stroke="#172638" stroke-width="5"/>'+
+ '<path d="M249 20Q231 20 230 42L224 250Q224 280 246 281H464Q488 281 485 254L475 47Q470 19 443 20Z" fill="#182536" stroke="#101b2c" stroke-width="5"/>'+
  '<rect x="258" y="64" width="188" height="171" rx="9" fill="#d3ebf9" stroke="#658da5" stroke-width="3"/>'+
  '<rect x="261" y="66" width="182" height="34" rx="5" fill="#2d5b90"/>'+
  '<text x="351" y="89" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#fff">piccolo xpress</text>'+
@@ -104,7 +106,9 @@ function piccoloRunningSvg(){
  '<rect x="260" y="217" width="181" height="20" rx="4" fill="#a9c8db"/>'+
  '<text x="352" y="269" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#72bdeb">piccolo</text>'+
  '<text x="401" y="266" font-size="12" font-family="Arial" fill="#fff">xpress</text>'+
- '<path d="M248 283H481V348Q479 363 454 365H269Q250 362 248 348Z" fill="#226bab"/>'+
+ '<path d="M248 283H481V346Q481 365 457 366H269Q248 365 248 347Z" fill="#2369ac"/>'+
+ '<path d="M260 292H472" stroke="#4b91c5" stroke-width="3" opacity=".62"/>'+
+ '<rect x="272" y="367" width="180" height="11" rx="2" fill="#f5f7f8" stroke="#c1d2da" stroke-width="2"/>'+
  '<circle cx="429" cy="328" r="9" fill="#91e8fc" stroke="#dcfbff" stroke-width="3"/>'+
  '<circle cx="596" cy="146" r="63" fill="#e6f6ee" stroke="#5db995" stroke-width="5"/>'+
  '<path d="M564 146L586 169L626 124" stroke="#168b66" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>'+
