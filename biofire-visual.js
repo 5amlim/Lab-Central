@@ -279,5 +279,5 @@ function stageVisual(id,title){
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
-window.LAB_BIOFIRE_ART={stageVisual,station,kit,analyzer,ui};
+window.LAB_BIOFIRE_ART={stageVisual,station,kit,analyzer,ui,pipette,invert};
 })();
