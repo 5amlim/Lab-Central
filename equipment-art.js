@@ -315,7 +315,7 @@ function clinitekDeviceMarkup(mode="empty"){
  return art;
 }
 function clinitekDeviceSvg(mode="empty"){
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(/strip/.test(mode)?"urinalysis strip seated lengthwise on the strip-side test table":/cassette/.test(mode)?"CLINITEST hCG cassette on the flipped reversible test-table insert":"empty black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(/^(strip|start-strip|qc-strip)$/.test(mode)?"urinalysis strip seated lengthwise on the strip-side test table":/^(cassette|start-cassette|qc-cassette)$/.test(mode)?"CLINITEST hCG cassette on the flipped reversible test-table insert":"empty black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
 }
 
 function body(shape,a){
