@@ -278,6 +278,9 @@ function clinitekDeviceMarkup(mode="empty"){
  // Real black test-table slot at bottom-right front.
  '<path d="M330 306H449V325H330Z" fill="#111a22" stroke="#5d6871" stroke-width="2"/>';
  if(trayOut){
+  // Narrow black tray, approximately 20 percent slimmer, consistent with
+  // photos of the real CLINITEK Status+ table insert.
+  art+='<g transform="translate(83 0) scale(.8 1)">';
   // One reversible test-table insert protrudes from the LOWER RIGHT front.
   // UA uses the narrow strip-side track; CLINITEST hCG uses the opposite face.
   // The same full-length black tray is shown empty or with one distinct device.
@@ -311,6 +314,7 @@ function clinitekDeviceMarkup(mode="empty"){
     '<path d="M383 434H426" stroke="#b0bfc1" stroke-width="2"/>'+
     '</g>';
   }
+  art+='</g>';
  }else art+='<path d="M341 321H445V335H341Z" fill="#253039" stroke="#66747b" stroke-width="2"/>';
  return art;
 }
