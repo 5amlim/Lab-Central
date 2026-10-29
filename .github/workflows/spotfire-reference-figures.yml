@@ -1,0 +1,76 @@
+name: Extract BioFire SPOTFIRE reference figures
+on:
+  push:
+    paths:
+      - .github/workflows/spotfire-reference-figures.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Lab Central
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF image renderer
+        run: python -m pip install --disable-pip-version-check pymupdf
+      - name: Extract original manufacturer diagrams, no redrawing
+        run: |
+          python - <<'PY'
+          import pathlib, time, urllib.request, fitz
+          url = "https://biofiredefense.com/content/BIOFIRE-SPOTFIRE-Support/SPOTFIRE-Product-Labeling/BioFire-BioThreat-Instructions-SPOTFIRE-DFA2-PRT-0283.pdf"
+          pdf_bytes = None
+          for attempt in range(3):
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0 Lab-Central source-image sync","Accept":"application/pdf,*/*"})
+                  with urllib.request.urlopen(req, timeout=45) as response:
+                      pdf_bytes = response.read()
+                  if not pdf_bytes.startswith(b"%PDF"):
+                      raise ValueError("Manufacturer link did not return a PDF")
+                  break
+              except Exception:
+                  if attempt == 2: raise
+                  time.sleep(3 + attempt * 3)
+          doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+          assert len(doc) >= 12, "Incorrect source PDF"
+          output = pathlib.Path("assets/biofire")
+          output.mkdir(parents=True, exist_ok=True)
+          # Each box isolates the actual manufacturer figure from printed pages
+          # 8, 9, and 10 (PDF indices 9, 10, 11). No reillustration.
+          figures = [
+              ("spotfire-seat-pouch.png", 9, (427,206,594,340)),
+              ("spotfire-hydrate-pouch.png", 9, (459,399,594,514)),
+              ("spotfire-buffer-ampoule.png", 10, (469,90,592,284)),
+              ("spotfire-mix-vial.png", 10, (466,373,590,453)),
+              ("spotfire-red-port-wait.png", 11, (453,98,593,230)),
+          ]
+          for filename, page_number, bounds in figures:
+              page = doc[page_number]
+              rect = fitz.Rect(*bounds) & page.rect
+              if rect.is_empty: raise ValueError("Invalid figure crop: "+filename)
+              pix = page.get_pixmap(matrix=fitz.Matrix(3,3), clip=rect, alpha=False)
+              pix.save(str(output / filename))
+              print(filename, pix.width, pix.height)
+          (output / "SOURCE.md").write_text(
+              "BioFire original pouch-loading figures, cropped from the user-supplied BioFire "
+              "BioThreat Instructions for SPOTFIRE (DFA2-PRT-0283), printed pages 8–10:\n"
+              + url + "\n\nFor physical hardware illustration only. The source is for "
+              "environmental surveillance/research and is NOT for clinical diagnosis. "
+              "Use the approved R/ST or R/ST Mini IFU for patient testing.\n"
+          )
+          PY
+      - name: Commit image assets to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/biofire
+          if ! git diff --cached --quiet; then
+            git commit -m "Add cropped original SPOTFIRE manufacturer instruction figures"
+            git push origin HEAD:main
+          fi
