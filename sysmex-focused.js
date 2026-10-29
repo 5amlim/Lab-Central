@@ -55,21 +55,34 @@ function screen(mode){
    first?"pocH main screen with Shutdown menu action highlighted":"pocH shutdown screen with Execute confirmation action highlighted");
  }
  const mrn=mode==="mrn",start=mode==="run";
- const lines=
- '<rect x="97" y="79" width="482" height="218" rx="9" fill="#f6fbfc" stroke="#a5bcc8" stroke-width="2"/>'+
- '<rect x="99" y="81" width="478" height="47" fill="#2b536c"/>'+tx(127,110,"Sysmex pocH-100i",17,"#fff",850,"start")+
- tx(524,110,"PATIENT",12,"#d6ecef",850,"end")+
- '<rect x="120" y="144" width="435" height="38" rx="6" fill="#e6eff3" stroke="#c5d9e2"/>'+
- tx(134,168,"Sample ID / MRN",14,"#345f73",800,"start")+
- '<rect x="120" y="190" width="435" height="46" rx="7" fill="'+(mrn?"#e2f6f1":"#ffffff")+'" stroke="'+(mrn?"#188e83":"#c3d9e2")+'" stroke-width="'+(mrn?3:2)+'"/>'+
- tx(138,219,mrn?"Tap field, then enter MRN":"Verify patient ID matches tube",16,"#426d7d",750,"start")+
- '<rect x="123" y="247" width="152" height="33" rx="7" fill="'+(mrn?"#188b80":"#e7f1f5")+'" stroke="'+(mrn?"#188b80":"#c5dbe3")+'"/>'+
- tx(199,269,"Ent / Confirm",13,mrn?"#fff":"#5e7e8d",850)+
- '<rect x="404" y="245" width="151" height="37" rx="7" fill="'+(start?"#178f83":"#eaf1f5")+'" stroke="'+(start?"#12786f":"#c4d7e0")+'" stroke-width="'+(start?3:1.5)+'"/>'+
- tx(479,269,"RUN",17,start?"#fff":"#547484",900)+
- (mrn?'<path d="M444 320L430 289" stroke="#168c82" stroke-width="4"/>'+tx(451,334,"MRN confirmed",14,"#16877a",850):'');
- return svg('<rect x="54" y="26" width="566" height="296" rx="21" fill="#e6eef2" stroke="#95adba" stroke-width="5"/>'+lines,
- mrn?"Schematic pocH-100i patient screen with sample ID MRN field and Enter button highlighted":"Schematic pocH-100i patient screen with RUN button highlighted");
+ // Schematic matched to the pocH-100i main-screen control arrangement in the IFU:
+ // Sample ID at left, WB/PD analysis mode, RUN on right, QC/Result/Shutdown below.
+ const border='<rect x="55" y="28" width="571" height="290" rx="27" fill="#e5edf1" stroke="#a0b7c3" stroke-width="6"/>'+
+ '<rect x="73" y="48" width="534" height="248" rx="10" fill="#ebf5fa" stroke="#91acb9" stroke-width="3"/>';
+ const top='<rect x="77" y="52" width="526" height="41" rx="6" fill="#d1ebf7"/>'+
+ tx(89,78,"sysmex",18,"#159bb0",900,"start")+
+ '<rect x="195" y="55" width="116" height="28" rx="5" fill="#e5a6c6"/>'+tx(252,74,"Ready",15,"#6f315c",850)+
+ tx(354,76,"[ Main ]",16,"#506e88",850)+
+ '<rect x="509" y="55" width="86" height="30" rx="5" fill="#c2d7e7" stroke="#98b2c4" stroke-width="2"/>'+tx(552,76,"Menu",15,"#365c78",850);
+ const left=tx(100,119,"Sample ID",17,"#466e82",850,"start")+
+ '<rect x="103" y="127" width="206" height="39" rx="5" fill="#fdfefe" stroke="'+(mrn?"#13978e":"#8baabb")+'" stroke-width="'+(mrn?4:2)+'"/>'+
+ tx(292,153,"#####",19,"#3d6582",850,"end")+
+ tx(100,187,"Analysis Mode",14,"#53778c",750,"start")+
+ '<rect x="103" y="193" width="96" height="42" rx="6" fill="#f6dce1" stroke="#b57c8e" stroke-width="2"/>'+tx(152,220,"WB",19,"#8d4f60",850)+
+ '<rect x="208" y="193" width="96" height="42" rx="6" fill="#f8fbfc" stroke="#aac4d0" stroke-width="2"/>'+tx(255,220,"PD",19,"#54758a",850);
+ const right=tx(339,124,"Set a mixed sample",16,"#4b6c7d",700,"start")+
+ tx(339,146,"and press [RUN].",16,"#4b6c7d",700,"start")+
+ '<rect x="372" y="165" width="173" height="77" rx="13" fill="'+(start?"#168e83":"#c0f0ef")+'" stroke="'+(start?"#097c72":"#56aeb4")+'" stroke-width="'+(start?5:3)+'"/>'+
+ tx(457,214,"RUN",27,start?"#fff":"#326d75",900);
+ const bottom='<rect x="94" y="254" width="112" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(150,274,"QC",14,"#365b70",850)+
+ '<rect x="215" y="254" width="119" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(274,274,"Result",14,"#365b70",850)+
+ '<rect x="465" y="254" width="126" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(528,274,"Shutdown",13,"#365b70",850);
+ const callout=(mrn||start)?'<path d="M290 169L324 304L410 327" stroke="#178a83" stroke-width="3.5" fill="none" stroke-linejoin="round"/>'+
+ '<circle cx="290" cy="169" r="6" fill="#188e84"/>'+
+ tx(415,339,"Verify MRN matches tube",15,"#187f77",850,"start"):'';
+ return svg(border+top+left+right+bottom+callout,
+ "Sysmex pocH-100i main screen with Sample ID entered as number signs, WB whole-blood mode, and "+(start?"the RUN control highlighted":"Sample ID entry highlighted")+"; verify patient identity outside the screen");
+
 }
 function analyzer(){
  const patient=tube(414,123);
@@ -95,6 +108,29 @@ function analyzer(){
  tx(302,347,"CLOSED CAP · EDTA SAMPLE · GRAY BASE",15,"#327689",850),
  'pocH-100i analyzer with lavender top patient EDTA tube inserted upright with the cap closed in gray patient sample base');
 }
+function completedAnalyzer(){
+ // Rounded off-white cabinet, recessed main touchscreen and purple sample-door housing.
+ // Diagram shows "analysis started" as a workflow confirmation, not a fabricated result.
+ const body='<ellipse cx="314" cy="333" rx="229" ry="13" fill="#dce8ed"/>'+
+ '<path d="M142 58Q143 26 179 24H444Q474 24 493 52L515 78V288Q515 321 481 323H176Q142 321 138 288Z" fill="#e7edf0" stroke="#96afba" stroke-width="5"/>'+
+ '<path d="M443 27Q476 24 496 59L515 79V288Q515 309 492 319L474 326V72Z" fill="#bdcad1" stroke="#98abb6" stroke-width="3"/>'+
+ '<path d="M163 64Q163 53 176 51H426Q439 51 439 64V198Q439 211 427 211H178Q163 211 163 198Z" fill="#a8c0ce" stroke="#829daa" stroke-width="4"/>'+
+ '<rect x="176" y="64" width="249" height="133" rx="8" fill="#e9f6fb"/>'+
+ '<rect x="183" y="70" width="235" height="30" rx="4" fill="#b9dbeb"/>'+
+ tx(191,92,"sysmex",16,"#2092b1",900,"start")+tx(362,92,"[ Main ]",13,"#446b80",850)+
+ tx(300,128,"Analyzing sample",18,"#365e71",850)+
+ '<rect x="207" y="146" width="178" height="22" rx="9" fill="#d3e9ec" stroke="#b4d5da"/>'+
+ '<rect x="207" y="146" width="116" height="22" rx="9" fill="#23998a"/>'+
+ '<path d="M364 216H471Q488 216 488 235V304Q488 322 472 322H370Q351 322 351 304V233Q351 216 364 216Z" fill="#66417d" stroke="#4e4065" stroke-width="5"/>'+
+ '<path d="M371 241H469V293Q466 307 454 308H385Q373 307 371 292Z" fill="#302e3b"/>'+
+ '<rect x="382" y="233" width="74" height="18" rx="5" fill="#906eaa"/>'+
+ tx(222,257,"pocH-100i",20,"#536b79",850)+
+ '<circle cx="565" cy="133" r="54" fill="#e2f4ed" stroke="#5db69d" stroke-width="5"/>'+
+ '<path d="M537 134L557 153L593 112" stroke="#198c65" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'+
+ tx(570,209,"RUN STARTED",17,"#187b6d",900);
+ return svg(body,"Rounded white Sysmex pocH-100i analyzer with a purple front sample holder, running-status display, and green confirmation checkmark");
+}
+
 function sideSwitch(){
  return svg(
  '<ellipse cx="304" cy="327" rx="235" ry="12" fill="#dce8ec"/>'+
@@ -128,7 +164,9 @@ function patient(title){
  if(/invert/.test(t))return figure('Gently invert the lavender tube',invert(),'Invert the capped tube a few times to mix EDTA whole blood. Do not substitute a static tube picture.');
  if(/patient mrn|enter.*mrn|sample id/.test(t))return figure('Enter patient MRN on the analyzer',screen('mrn'),'Choose Sample ID, enter the correct MRN and confirm with Ent. Verify it matches the patient tube.');
  if(/load the sample|gray base/.test(t))return figure('Place patient tube in gray sample base',analyzer(),'Keep tube cap closed. Use the gray patient adapter, not the green QC adapter.');
- if(/click run|start run/.test(t))return figure('Press Run on the analyzer',screen('run'),'Confirm the patient identity and select Run. The highlighted control is illustrative.');
+ if(/confirm analysis|analysis started|run in progress|verify run/.test(t))
+  return figure('Analysis started · pocH-100i',completedAnalyzer(),'Confirm the analyzer has entered its running state with the correct patient ID. The check indicates the run started, not that results or QC were accepted.');
+  if(/click run|start run/.test(t))return figure('Press Run on the analyzer',screen('run'),'Confirm the patient identity and select Run. The highlighted control is illustrative.');
  return "";
 }
 function render(title,group){
@@ -138,5 +176,5 @@ function render(title,group){
  if(/cleaning|maintenance/.test(g)&&/performing daily shutdown/.test(t))return shutdown();
  return "";
 }
-window.LAB_SYSMEX_FOCUSED={render,patient,shutdown,screen,sideSwitch};
+window.LAB_SYSMEX_FOCUSED={render,patient,shutdown,screen,sideSwitch,completedAnalyzer};
 })();
