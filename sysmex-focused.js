@@ -85,87 +85,31 @@ function screen(mode){
 
 }
 function analyzer(){
- const patient=tube(414,123);
- return svg(
- '<ellipse cx="326" cy="330" rx="225" ry="12" fill="#dce7ed"/>'+
- '<path d="M155 29H460L490 59V317H163L144 290V56Z" fill="#e8eff2" stroke="#8da4b0" stroke-width="5"/>'+
- '<path d="M460 29L490 59V315L462 316Z" fill="#bfcdd4"/>'+
- '<rect x="168" y="55" width="283" height="153" rx="12" fill="#adbec9" stroke="#7894a4" stroke-width="4"/>'+
- '<rect x="183" y="70" width="251" height="119" rx="6" fill="#f2fafc"/>'+
- '<rect x="183" y="70" width="251" height="33" rx="5" fill="#2e566c"/>'+
- tx(304,92,"pocH-100i",19,"#fff",850)+
- tx(302,128,"PATIENT SAMPLE",17,"#306e7d",850)+
- '<rect x="215" y="141" width="179" height="33" rx="6" fill="#e1f6f0" stroke="#66bcb0"/>'+
- tx(304,162,"ID VERIFIED",13,"#167e76",850)+
- '<rect x="338" y="226" width="129" height="94" rx="15" fill="#293e4b" stroke="#90aaba" stroke-width="5"/>'+
- '<rect x="365" y="245" width="75" height="59" rx="10" fill="#465968"/>'+
- '<ellipse cx="404" cy="277" rx="36" ry="20" fill="#a7adb4" stroke="#d8e0e4" stroke-width="5"/>'+
- '<ellipse cx="404" cy="277" rx="26" ry="14" fill="#eff4f6"/>'+
- '<g transform="translate(385 203) scale(.41)">'+
- tube(0,0)+'</g>'+
- '<path d="M463 263L558 222H624" stroke="#208b87" stroke-width="4" fill="none"/>'+
- tx(625,212,"PATIENT",14,"#207c80",900,"end")+tx(625,234,"GRAY BASE",13,"#527788",800,"end")+
- tx(302,347,"CLOSED CAP · EDTA SAMPLE · GRAY BASE",15,"#327689",850),
- 'pocH-100i analyzer with lavender top patient EDTA tube inserted upright with the cap closed in gray patient sample base');
+ return window.LAB_EQUIPMENT_ART?.sysmexDeviceSvg
+  ? window.LAB_EQUIPMENT_ART.sysmexDeviceSvg("patient",true)
+  : "";
 }
 function completedAnalyzer(){
- // Rounded off-white cabinet, recessed main touchscreen and purple sample-door housing.
- // Diagram shows "analysis started" as a workflow confirmation, not a fabricated result.
- const body='<ellipse cx="314" cy="333" rx="229" ry="13" fill="#dce8ed"/>'+
- '<path d="M142 58Q143 26 179 24H444Q474 24 493 52L515 78V288Q515 321 481 323H176Q142 321 138 288Z" fill="#e7edf0" stroke="#96afba" stroke-width="5"/>'+
- '<path d="M443 27Q476 24 496 59L515 79V288Q515 309 492 319L474 326V72Z" fill="#bdcad1" stroke="#98abb6" stroke-width="3"/>'+
- '<path d="M163 64Q163 53 176 51H426Q439 51 439 64V198Q439 211 427 211H178Q163 211 163 198Z" fill="#a8c0ce" stroke="#829daa" stroke-width="4"/>'+
- '<rect x="176" y="64" width="249" height="133" rx="8" fill="#e9f6fb"/>'+
- '<rect x="183" y="70" width="235" height="30" rx="4" fill="#b9dbeb"/>'+
- tx(191,92,"sysmex",16,"#2092b1",900,"start")+tx(362,92,"[ Main ]",13,"#446b80",850)+
- tx(300,128,"Analyzing sample",18,"#365e71",850)+
- '<rect x="207" y="146" width="178" height="22" rx="9" fill="#d3e9ec" stroke="#b4d5da"/>'+
- '<rect x="207" y="146" width="116" height="22" rx="9" fill="#23998a"/>'+
- '<path d="M364 216H471Q488 216 488 235V304Q488 322 472 322H370Q351 322 351 304V233Q351 216 364 216Z" fill="#66417d" stroke="#4e4065" stroke-width="5"/>'+
- '<path d="M371 241H469V293Q466 307 454 308H385Q373 307 371 292Z" fill="#302e3b"/>'+
- '<rect x="382" y="233" width="74" height="18" rx="5" fill="#906eaa"/>'+
- tx(222,257,"pocH-100i",20,"#536b79",850)+
- '<circle cx="565" cy="133" r="54" fill="#e2f4ed" stroke="#5db69d" stroke-width="5"/>'+
- '<path d="M537 134L557 153L593 112" stroke="#198c65" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'+
- tx(570,209,"RUN STARTED",17,"#187b6d",900);
- return svg(body,"Rounded white Sysmex pocH-100i analyzer with a purple front sample holder, running-status display, and green confirmation checkmark");
+ const art=window.LAB_EQUIPMENT_ART;
+ if(!art?.sysmexDeviceMarkup)return "";
+ const check='<circle cx="731" cy="164" r="45" fill="#e4f5ed" stroke="#59b69a" stroke-width="4"/>'+
+ '<path d="M707 164l16 16 30-36" fill="none" stroke="#188d69" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'+
+ tx(730,229,"RUN STARTED",17,"#187b6d",900)+
+ tx(730,252,"Run initiation only",12,"#54798a",750);
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 750 465" role="img" aria-label="Reference-based pocH-100i CBC analyzer with an analyzing screen and a checkmark indicating only that the run started">'+
+ art.sysmexDeviceMarkup("running",true)+check+'</svg>';
 }
-
 function sideSwitch(){
- // A three-quarter front/right view keeps the physical switch visible while
- // retaining the actual instrument's screen, front printer, and sample access.
- const drawing=
- '<ellipse cx="310" cy="333" rx="260" ry="12" fill="#e2ebef"/>'+
- '<path d="M122 80Q123 43 159 38H439Q464 38 479 64L520 91V299Q518 324 480 327H157Q121 326 121 291Z" fill="#edf2f4" stroke="#8ca6b4" stroke-width="5"/>'+
- '<path d="M438 39Q474 42 490 76L520 91V299Q517 319 481 327H442Z" fill="#cbd8df" stroke="#95afbb" stroke-width="3"/>'+
- '<rect x="143" y="74" width="278" height="158" rx="14" fill="#b4cad6" stroke="#88a5b5" stroke-width="4"/>'+
- '<rect x="156" y="89" width="250" height="128" rx="7" fill="#eef9fc"/>'+
- '<rect x="162" y="95" width="238" height="27" rx="5" fill="#d1e9f4"/>'+
- tx(169,113,"sysmex",16,"#237fa6",900,"start")+
- tx(382,113,"Not Ready",12,"#b66c45",750,"end")+
- '<rect x="178" y="132" width="206" height="65" rx="6" fill="#f7fbfd" stroke="#c9dce5"/>'+
- tx(281,157,"SHUTDOWN COMPLETE",16,"#315a72",900)+
- tx(281,181,"Safe to power off",13,"#547b8a",750)+
- '<path d="M152 238H417" stroke="#b8ccd5" stroke-width="3"/>'+
- '<path d="M159 250H244" stroke="#2e8fb2" stroke-width="5" stroke-linecap="round"/>'+
- tx(200,272,"SYSMEX",17,"#22749e",900)+
- tx(201,288,"pocH-100i",13,"#597789",800)+
- '<rect x="159" y="293" width="89" height="21" rx="5" fill="#e7eff3" stroke="#a5bbc6"/>'+
- '<path d="M171 302H234" stroke="#b8c8ce" stroke-width="2"/>'+
- '<rect x="280" y="244" width="132" height="80" rx="16" fill="#293844" stroke="#819ba9" stroke-width="4"/>'+
- '<rect x="295" y="254" width="102" height="22" rx="6" fill="#182a35"/>'+
- '<rect x="303" y="282" width="86" height="34" rx="6" fill="#1e303a" stroke="#576f7c"/>'+
- '<ellipse cx="346" cy="298" rx="29" ry="11" fill="#101c26" stroke="#7d9caa" stroke-width="3"/>'+
- '<path d="M469 108h29M469 122h29M469 136h29M469 150h29" stroke="#9ab0bb" stroke-width="5" stroke-dasharray="5 4"/>'+
- '<rect x="458" y="184" width="35" height="56" rx="5" fill="#2e3841" stroke="#121e25" stroke-width="3"/>'+
- '<rect x="466" y="190" width="19" height="42" rx="3" fill="#141e25"/>'+
- tx(476,204,"I",10,"#fff",750)+tx(476,228,"O",11,"#fff",750)+
- '<path d="M498 211L557 180H632" stroke="#168c85" stroke-width="3.5" fill="none"/>'+
- '<circle cx="476" cy="211" r="40" stroke="#159489" stroke-width="3" stroke-dasharray="7 6" fill="none"/>'+
- tx(630,168,"BLACK POWER",16,"#227f7e",900,"end")+
- tx(630,190,"SWITCH · OFF",16,"#227f7e",900,"end")+
- tx(283,346,"RIGHT SIDE OF ANALYZER",13,"#577f90",850);
- return svg(drawing,"Front and right side of pocH-100i, with the black rocker switch highlighted after shutdown completes");
+ const art=window.LAB_EQUIPMENT_ART;
+ if(!art?.sysmexDeviceMarkup)return "";
+ // Switch is visible in a simplified three-quarter illustration; keep the
+ // same faceplate, screen and purple sample bay as every other pocH view.
+ const callout='<circle cx="432" cy="320" r="37" fill="none" stroke="#168e88" stroke-width="3.5" stroke-dasharray="7 5"/>'+
+ '<path d="M468 311l96-60h125" fill="none" stroke="#208f87" stroke-width="3.5"/>'+
+ tx(693,240,"BLACK POWER",17,"#257d81",900,"end")+
+ tx(693,261,"SWITCH · OFF",17,"#257d81",900,"end");
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 680 465" role="img" aria-label="pocH-100i white cabinet and purple front bay with the physical black side power switch highlighted after shutdown completes">'+
+ art.sysmexDeviceMarkup("switch",false)+callout+'</svg>';
 }
 function shutdown(){
  return '<section class="lc-poc-shutdown" aria-label="pocH shutdown sequence">'+
