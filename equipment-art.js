@@ -227,9 +227,9 @@ function clinitekDeviceMarkup(mode="empty"){
  // Keep real physical interface silhouette. The menu remains schematic.
  ((m==="empty"||m==="ready")?'':(
  '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
- T(287,137,m==="cassette"?"Cassette Test":m==="strip"?"Strip Test":m==="result"?"Results":"CLINITEK Status+",13,"#426679",850)+
+ T(287,137,(/cassette/.test(m))?"Cassette Test":(/strip/.test(m))?"Strip Test":m==="qc"?"QC Test":/start/.test(m)?"READY / START":/result|reading/.test(m)?"Results":"CLINITEK Status+",13,"#426679",850)+
  '<rect x="199" y="147" width="172" height="23" rx="4" fill="#c9e8e7" stroke="#b1cdd2"/>'+
- T(285,163,m==="cassette"?"CLINITEST hCG":m==="strip"?"Urinalysis strip":m==="result"?"Review report":"Follow screen prompts",11,"#376577",700)
+ T(285,163,(/cassette/.test(m))?"CLINITEST hCG":(/strip/.test(m))?"Urinalysis strip":m==="qc"?"Confirm control ID":/result|reading/.test(m)?"Review report":"Follow screen prompts",11,"#376577",700)
  ))+
  // Correct CLINITEK Status+ / Siemens branding and power button.
  T(162,244,"CLINITEK Status+",19,"#273944",820,"start")+
