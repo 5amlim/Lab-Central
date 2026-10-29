@@ -123,10 +123,15 @@ function ruleoutCriteria(){
  '</div>';
 }
 function question(q,index){
- return '<div class="pcr-flow-question"><div class="pcr-flow-question-header"><span class="pcr-flow-number">'+index+'</span><strong>'+esc(q.title)+'</strong></div>'+
+ const twoHour=q.id==="twoHourResult";
+ return '<div class="pcr-flow-question'+(twoHour?' pcr-two-hour-question':'')+'"><div class="pcr-flow-question-header"><span class="pcr-flow-number">'+index+'</span><strong>'+esc(q.title)+'</strong></div>'+
  (q.id==="confirmation"?ruleoutCriteria():"")+
  '<div class="pcr-flow-options" role="group" aria-label="'+esc(q.title)+'">'+q.opts.map(([value,label,description])=>
- '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+esc(label)+(description?'<small class="pcr-flow-choice-note">'+esc(description)+'</small>':'')+(selected[q.id]===value?' ✓':'')+'</button>').join('')+'</div></div>';
+ '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+
+ (twoHour
+ ?'<span class="pcr-result-option-header"><strong>'+esc(label)+'</strong><span class="pcr-result-selected" aria-hidden="true">'+(selected[q.id]===value?'✓':'')+'</span></span><span class="pcr-result-option-body">'+(description?esc(description):'')+'</span>'
+ :esc(label)+(description?'<small class="pcr-flow-choice-note">'+esc(description)+'</small>':'')+(selected[q.id]===value?' ✓':''))+
+ '</button>').join('')+'</div></div>';
 }
 function zoneOutcome(zone,title,explanation,nextAction){
  const zones=[
