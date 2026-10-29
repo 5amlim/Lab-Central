@@ -538,7 +538,7 @@ const collection={
  "drug-screen":[["urine","Urine specimen","Screening collection cup"]],
  coagsense:[["finger","Fingerstick capillary blood","Transfer tube; no EDTA tube"]],
  poc:[["varies","Specimen varies","Confirm the specific assay IFU"]],
- sofia:[["swab","Respiratory or throat swab","Assay-specific extraction kit"]],
+ sofia:[["sofia-kit-swab","Kit-supplied collection swab","Use the swab and collection site specified by the selected Sofia assay"]],
  hemocue:[["finger","Capillary whole blood","Direct-fill microcuvette; no tube"]],
  visby:[["swab","Assay-specific swab","Archived platform"]],
  idnow:[["swab","Direct swab","Archived; use assay-specific IFU"]]
@@ -549,6 +549,18 @@ function illustratedSvg(inner,label,view="0 0 320 210"){
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+inner+'</svg>';
 }
 function mediaSvg(kind){
+ if(kind==="sofia-kit-swab"){
+  return illustratedSvg(
+   '<ellipse cx="160" cy="185" rx="78" ry="8" fill="#e7eef2"/>'+
+   '<path d="M173 162 L145 53" fill="none" stroke="#c9b9a4" stroke-width="7" stroke-linecap="round"/>'+
+   '<path d="M145 53 L141 37" stroke="#b7b8ab" stroke-width="8" stroke-linecap="round"/>'+
+   '<ellipse cx="138" cy="29" rx="11" ry="24" transform="rotate(-14 138 29)" fill="#fbfcfd" stroke="#aebfc6" stroke-width="1.8"/>'+
+   '<path d="M131 16 Q137 11 144 19 M130 29 Q138 22 147 29" fill="none" stroke="#e0e7ea" stroke-width="2"/>'+
+   '<path d="M99 174 H220" stroke="#c4d2da" stroke-width="2" opacity=".65"/>'+
+   '<text x="160" y="209" font-size="12" font-family="Arial" font-weight="800" text-anchor="middle" fill="#4b788d">KIT-SUPPLIED SWAB</text>',
+   "Sofia assay kit sterile collection swab alone, without a collection or transport tube",
+   "100 4 130 208");
+ }
  const caps={green:"#37966e",lavender:"#9568b3",red:"#c65b5d",blue:"#548eb6"};
  if(caps[kind]){
   return illustratedSvg('<ellipse cx="160" cy="174" rx="39" ry="7" fill="#e7eef2"/>'+
