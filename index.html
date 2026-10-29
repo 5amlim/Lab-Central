@@ -99,7 +99,7 @@
   <link rel="stylesheet" href="qc-guide.css?v=20261028-screen-badge-v4" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
-  <link rel="stylesheet" href="pathfast-calibration.css?v=20261028-action-visuals" media="all">
+  <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-six-vertical-lanes-v2" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261028-pathfast-rack-print-v3" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261028-collapsible-steps" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
@@ -233,16 +233,17 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261028-regional-photo-guide"></script>
 <script src="quality-reference.js?v=20261028-triage-clean"></script>
 <script src="operations-guides.js?v=20261028-tech-log-six-steps"></script>
-<script src="pathfast-calibration.js?v=20261028-unified-chevron"></script>
+<script src="pathfast-calibration.js?v=20261029-biorad-materials-first-v2"></script>
 <script src="pathfast-screen-guide.js?v=20261029-three-panels-v1"></script>
 <script src="pathfast-interactive.js?v=20261028-one-hour-default-v4"></script>
 <script src="pathfast-clinical.js?v=20261028-one-hour-title-v5"></script>
 <script src="equipment-art.js?v=20261028-pathfast-straight-rack-v4"></script>
 <script src="step-illustrations.js?v=20261028-illustrations-v2"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-maint-v2"></script>
-<script src="pathfast-accurate-details.js?v=20261029-domed-rack-v2"></script>
+<script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
 <script src="qc-guide.js?v=20261028-biofire-qc-steps-v3"></script>
-<script src="biofire-visual.js?v=20261028-gi-buffer-first-v5"></script>
+<script src="biofire-visual.js?v=20261029-snap-buffer-r-v6"></script>
+<script src="lab-visual-corrections-20261029.js?v=2"></script>
 <script>
 (()=>{
 'use strict';
@@ -357,7 +358,7 @@ function buildGroups(section){
    ...step('Gather test kit and specimen',torch?'Confirm GI panel pouch, loading station, hydration vial (blue), sample injection vial (red), sample buffer, transfer pipette and stool specimen in Cary Blair.':'Confirm correct SPOTFIRE respiratory or sore-throat pouch, SPRK, vial set, sample buffer, transfer pipette, specimen transport medium, expiry and IDs.'),
    ...step('Prepare pouch loading station', 'Clean the work area per SOP, put on fresh gloves, insert the pouch in the loading station, place the red sample vial in the LEFT well and the blue hydration vial in the RIGHT well. Match the pouch to the kit.'),
    ...step('Hydrate pouch using blue vial', 'Remove the blue hydration vial from its cover, insert the blunt cannula into the blue hydration port and puncture the seal as described in the IFU. Verify fluid enters reagent wells.'),
-   ...step('Prepare sample buffer and specimen in red vial',torch?'For the GI panel, dispense the Sample Buffer into the red Sample Injection Vial first using a slow, forceful squeeze followed by a second squeeze. Thoroughly mix stool in Cary Blair, draw to the transfer pipette second line (approximately 0.2 mL), then add to the red vial. Do not use the pipette to mix. Avoid foam and securely cap the red vial.':'Use the correct specimen and sample buffer for the ordered SPOTFIRE panel. Close the red Sample Injection Vial securely.'),
+   ...step('Prepare sample buffer and specimen in red vial',torch?'For the GI panel, dispense the Sample Buffer into the red Sample Injection Vial first using a slow, forceful squeeze followed by a second squeeze. Thoroughly mix stool in Cary Blair, draw to the transfer pipette second line (approximately 0.2 mL), then add to the red vial. Do not use the pipette to mix. Avoid foam and securely cap the red vial.':'For the SPOTFIRE R panel, first transfer specimen using the supplied fixed-volume transfer pipette, then snap open the Sample Buffer tube at its textured tab and squeeze the full buffer contents into the red Sample Injection Vial. Avoid touching the tip or producing excess foam. Cap tightly. Confirm any different volume or handling instructions in the ordered panel IFU.'),
    ...step('Gently invert capped red vial 3 times','IMPORTANT: Remove the tightly capped red Sample Injection Vial from the loading station. Gently invert it 3 times to mix the buffer and specimen. Do not shake or generate foam. Return the red vial to the red well before loading the sample into the pouch.'),
    ...step('Inject sample mix into red port', 'Unscrew the red vial and insert its blunt cannula into the red sample port. Puncture the seal and verify the specimen mixture is drawn into the pouch. Do not interchange the red and blue ports.'),
    ...step('Select available module', 'At the analyzer, select an available TORCH or SPOTFIRE module. Follow the analyzer prompts to confirm the correct module and run.'),
