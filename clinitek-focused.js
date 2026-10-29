@@ -41,6 +41,7 @@ function tableCloseup(kind,dispense=false){
  const header=hcg?"FLIPPED hCG CASSETTE SIDE":"UA STRIP SIDE";
  const shell='<rect x="495" y="55" width="244" height="325" rx="15" fill="#f4f9fa" stroke="#bed3dc" stroke-width="3"/>'+
   tx(617,87,header,14,"#2a7187")+
+  '<g transform="translate(90 0) scale(.85 1)">'+
   '<path d="M556 104H681L702 123V343Q698 358 683 361H559Q545 355 545 341V124Z" fill="#202932" stroke="#576c79" stroke-width="4"/>'+
   '<path d="M568 116H677L688 132V334Q684 347 675 347H571Q560 344 560 329V129Z" fill="#0f1820" stroke="#415862" stroke-width="3"/>';
  if(!hcg){
@@ -48,6 +49,7 @@ function tableCloseup(kind,dispense=false){
   return shell+
    '<path d="M613 127H631V352H613Z" fill="#f9fcfa" stroke="#9fb8c0" stroke-width="2"/>'+
    colors.map((c,i)=>'<rect x="616" y="'+(138+i*19)+'" width="12" height="16" rx="1.3" fill="'+c+'"/>').join('')+
+   '</g>'+
    tx(620,371,"STRIP · PADS UP",11,"#4c7b8c");
  }
  return shell+
@@ -60,6 +62,7 @@ function tableCloseup(kind,dispense=false){
   '<circle cx="624" cy="298" r="6" fill="#fffefa"/>'+
   (dispense?'<path d="M627 179V273" stroke="#5c8c99" stroke-width="5" stroke-linecap="round"/>'+
    '<path d="M623 269q-13 16 1 23q13-4 0-23" fill="#ecd2a5" stroke="#d1ad68" stroke-width="1.5"/>':'')+
+  '</g>'+
   tx(619,371,"CASSETTE · SAMPLE WELL",11,"#4c7b8c");
 }
 function flipInsertCloseup(){
