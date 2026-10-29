@@ -112,31 +112,30 @@ function cal2MixIllustration(){
 }
 function cartridgePack(group){
  const label=esc(group.label);
- const six=Array.from({length:6},(_,i)=>{
-   const x=178+i*69;
-   return '<g><rect x="'+x+'" y="55" width="57" height="126" rx="7" fill="#889fac" stroke="#495d69" stroke-width="2"/>'+
-    '<rect x="'+(x+5)+'" y="62" width="47" height="112" rx="5" fill="#1c303a" stroke="#728b99"/>'+
-    '<rect x="'+(x+8)+'" y="74" width="41" height="15" rx="2" fill="#bc4e4b"/>'+
-    '<text x="'+(x+28)+'" y="84" font-size="7.5" fill="white" text-anchor="middle" font-weight="850">PATHFAST</text>'+
-    '<rect x="'+(x+12)+'" y="95" width="32" height="47" rx="2" fill="#293944" stroke="#637a82"/>'+
-    '<circle cx="'+(x+28)+'" cy="155" r="10" fill="#91adbd" stroke="#d6e4eb" stroke-width="2"/>'+
-    '<text x="'+(x+28)+'" y="205" text-anchor="middle" font-size="13" font-weight="900" fill="#47657d">'+(i+1)+'</text></g>';
- }).join('');
- return '<figure class="pf-cartridge-pack"><header><strong>Assay cartridge pack</strong>'+
+ const cartridge=(i)=>{
+   const y=29+i*37;
+   const wells=Array.from({length:8},(_,n)=>{const x=243+n*40;return '<path d="M'+x+' '+(y+18)+'l2 17q8 7 15 0l5 -18Z" fill="#eef8fc" fill-opacity=".9" stroke="#a6c2cf" stroke-width="1.25"/>';}).join('');
+   const stripes=Array.from({length:23},(_,j)=>'<path d="M'+(535+j*2.7)+' '+(y+3)+'v9" stroke="'+(j%4===0?'#fff':'#7c959e')+'" stroke-width="'+(j%4===0?1.5:.7)+'"/>').join('');
+   return '<g aria-label="Cartridge '+(i+1)+'">'+
+    wells+
+    '<path d="M165 '+(y+9)+'L213 '+(y+8)+'L225 '+(y+23)+'L176 '+(y+27)+'Z" fill="#f5fbfd" stroke="#a9c3ce" stroke-width="2"/>'+
+    '<path d="M179 '+(y+15)+'L213 '+(y+13)+'L219 '+(y+22)+'L184 '+(y+23)+'Z" fill="#cfe6ed"/>'+
+    '<path d="M216 '+(y+9)+'L653 '+(y-1)+'L666 '+(y+14)+'L222 '+(y+25)+'Z" fill="#181e23" stroke="#617783" stroke-width="1.8"/>'+
+    '<path d="M215 '+(y+8)+'l19 0 7 16 -19 1Z" fill="#cf5048"/>'+
+    '<circle cx="411" cy="'+(y+9)+'" r="8.5" fill="#080c0e" stroke="#91a4ac" stroke-width="2"/>'+
+    '<rect x="534" y="'+(y+1)+'" width="81" height="13" fill="#e9f0f2" stroke="#acbec7" stroke-width=".8"/>'+stripes+
+    '<path d="M653 '+(y-1)+'L669 '+(y+3)+'L677 '+(y+14)+'L666 '+(y+14)+'Z" fill="#d44c48"/>'+
+    '<text x="130" y="'+(y+23)+'" fill="#4e6c7b" font-size="15" font-weight="850">'+(i+1)+'</text>'+
+    '</g>';
+ };
+ return '<figure class="pf-cartridge-pack"><header><strong>Six matching PATHFAST reagent cartridges</strong>'+
   '<span>6 CARTRIDGES · '+label+'</span></header>'+
-  '<svg role="img" aria-label="Foil PATHFAST '+label+' pack containing six individual assay cartridges" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 290">'+
-  '<defs><linearGradient id="pf-kit-foil"><stop stop-color="#c7d2d8"/><stop offset=".45" stop-color="#f5f8fa"/><stop offset="1" stop-color="#bbc9ce"/></linearGradient></defs>'+
-  '<ellipse cx="390" cy="275" rx="250" ry="10" fill="#dbe4e9"/>'+
-  '<path d="M156 58L171 19H608L622 58V136H156Z" fill="#202529" stroke="#151b20" stroke-width="5"/>'+
-  '<path d="M170 28H606V63H170Z" fill="#34393b" stroke="#747f84" stroke-width="3"/>'+
-  '<path d="M147 114Q392 99 632 114L639 259Q633 273 619 272H166Q152 272 145 259Z" fill="url(#pf-kit-foil)" stroke="#93a9b5" stroke-width="3"/>'+
-  six+
-  '<rect x="191" y="196" width="401" height="40" rx="4" fill="#262d31"/>'+
-  '<text x="208" y="223" fill="white" font-family="Arial,sans-serif" font-size="20" font-weight="900" letter-spacing="2">PATHFAST</text>'+
-  '<text x="572" y="222" text-anchor="end" fill="white" font-family="Arial,sans-serif" font-size="18" font-weight="800">'+label+'</text>'+
-  '<rect x="223" y="242" width="340" height="16" rx="4" fill="#f5f7f8" stroke="#bac8d0"/>'+
-  '<text x="393" y="253" text-anchor="middle" font-size="10" font-weight="800" fill="#455e6c">VERIFY LOT AND EXPIRATION ON PACKAGE</text></svg>'+
-  '<figcaption>Illustrated from the supplied PATHFAST foil-pack photo. Retrieve six matching '+label+' cartridges and verify the actual assay and expiration.</figcaption></figure>';
+  '<svg role="img" aria-label="Six long narrow PATHFAST '+label+' reagent cartridges, each with clear sample end, flat black foil barcoded strip, separate circular detection port and translucent reagent wells" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 287">'+
+  '<rect x="100" y="11" width="615" height="258" rx="18" fill="#f1f7fa" stroke="#c7d9e2" stroke-width="3"/>'+
+  '<text x="125" y="22" font-size="9" fill="#718b9a" font-weight="800">SIX INDIVIDUAL SINGLE-USE CARTRIDGES</text>'+
+  Array.from({length:6},(_,i)=>cartridge(i)).join('')+
+  '<text x="395" y="281" font-size="10.5" text-anchor="middle" fill="#69849a">Confirm printed assay, reagent lot and expiration before use</text></svg>'+
+  '<figcaption>Reference drawing based on the supplied cartridge photograph. Each cartridge is a <strong>long, horizontal black-foil strip with clear wells below</strong>, not an upright cassette. Unused sample wells remain empty until the corresponding step.</figcaption></figure>';
 }
 function svgQC(kind){
  const tint=kind==="cardiac"?"#ae3d49":"#855a9b",label=kind==="cardiac"?"CARDIAC":"D-DIMER";
