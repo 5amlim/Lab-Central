@@ -73,6 +73,16 @@ function svgCal2(count=2){
  '<path d="M'+(x+15)+' 113 Q'+(x+30)+' 104 '+(x+46)+' 113 L'+(x+46)+' 121 L'+(x+15)+' 121Z" fill="#e8dcf2" stroke="#b8aad1"/></g>'}
  return body+'</svg>';
 }
+function svgReconstitutedCal2(){
+ return '<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="One reconstituted CAL 2 glass vial containing mixed calibrator ready for freezer storage" xmlns="http://www.w3.org/2000/svg">'+defs()+
+ '<ellipse cx="105" cy="134" rx="37" ry="6" fill="#dce4e8"/>'+
+ '<rect x="81" y="13" width="48" height="23" rx="5" fill="#d6e3ec" stroke="#8ba4b4" stroke-width="2"/>'+
+ '<rect x="85" y="36" width="40" height="92" rx="8" fill="url(#pfxglass)" stroke="#8da4b1" stroke-width="2"/>'+
+ '<rect x="90" y="77" width="30" height="46" rx="4" fill="#b9b4e5" stroke="#9692bf" stroke-width="1"/>'+
+ '<rect x="89" y="54" width="32" height="26" rx="3" fill="#f5f8fc" stroke="#b8cad4"/>'+
+ '<text x="105" y="68" text-anchor="middle" font-size="10" fill="#745ba3" font-weight="900">CAL 2</text>'+
+ '<text x="105" y="76" text-anchor="middle" font-size="6" fill="#745ba3">MIXED</text></svg>';
+}
 function svgDiluent(count=2){
  let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="'+(count===1?'One blue liquid buffer diluent vial for CAL 2 reconstitution':'Two blue liquid buffer diluent vials for CAL 2 reconstitution')+'" xmlns="http://www.w3.org/2000/svg">'+defs();
  for(let i=0;i<count;i++){const x=(count===1?82:40+i*90);out+='<ellipse cx="'+(x+28)+'" cy="134" rx="27" ry="6" fill="#dce5eb"/>'+
@@ -245,7 +255,7 @@ function returnMaterials(group){
   '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+'</div>'+storageSymbol("cal")+'</div>'+
   '<p>Refrigerate CAL 1 and the unopened backup CAL 2 powder and matching diluent at <b>2–8°C</b> in accordance with the reagent IFU.</p></article>';
  const cal2='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>Reconstituted CAL 2</strong><small>Freeze remaining prepared vial after use</small></header>'+
-  '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal2(1)+'</div>'+storageSymbol("cal2")+'</div>'+
+  '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgReconstitutedCal2()+'</div>'+storageSymbol("cal2")+'</div>'+
   '<p>After dispensing into both CAL 2 cartridge wells, promptly recap, label and <b>freeze the single prepared CAL 2 vial at −20°C or colder</b> when permitted by the assay IFU. Record reconstitution date, expiration and freeze/thaw history; do not exceed assay-specific stability.</p></article>';
  const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC1 and QC2 · separate lot-specific instructions</small></header>'+
   '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
