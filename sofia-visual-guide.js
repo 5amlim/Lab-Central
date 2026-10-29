@@ -147,6 +147,15 @@ function specimenScene(type){
    txt(688,147,"QC CARD",16,"#336e83",800,"middle")+
    Array.from({length:13},(_,i)=>rect(643+i*7,169,i%3===0?3:2,38,0,"#334a58")).join("")+
    txt(688,242,"Scan kit-specific",12,"#5e8191",650,"middle")+txt(688,256,"lot barcode",12,"#5e8191",650,"middle");
+ }else if(type==="record"){
+  s+=boxText(433,44,337,"QC DOCUMENTATION","Record both controls and label the kit box");
+  s+=rect(477,124,255,184,12,"#e8f1f4","#97b1bc",3)+
+   rect(498,144,213,144,5,"#fff","#c0d0d8",1.5)+
+   txt(515,169,"SOFIA 2 QC KIT",16,"#335f75",800)+
+   txt(515,199,"Lot / Expiration",13,"#5b7789",600)+
+   txt(515,223,"Date Received",13,"#5b7789",600)+
+   txt(515,247,"QC Date / Operator",13,"#5b7789",600)+
+   line(516,268,686,268,"#b5ccd6",1.5);
  }else if(type==="cal"){
   s+=boxText(431,48,340,"OPTICAL CALIBRATION","Dedicated cassette, not a test cassette");
   s+=cassette(453,139,"cal",false);
@@ -184,9 +193,9 @@ function focused(sec,heading,group){
   if(t.includes("run qc")||t.includes("scan"))return figure("Menu → Run QC; scan the QC card","scan-qc","Scan or enter User ID, then scan the QC card for the exact assay kit lot. This differs from calibration.","qc");
   if(t.includes("positive")&&t.includes("prepare"))return figure("Prepare positive QC first","qc-load","Use the positive swab with extraction reagents and a fresh cassette following the assay IFU.","qc");
   if(t.includes("positive")&&t.includes("insert"))return figure("Read the positive control cassette","qc-load","Insert the prepared positive QC cassette in the blue drawer using the selected development mode.");
-  if(t.includes("negative"))return figure("Next arrow → prepare and read negative QC","qc-load","After positive QC, select the forward arrow rather than the skip icon. Use a fresh negative swab and cassette.","qc");
-  if(t.includes("result")||t.includes("document")||t.includes("record"))return figure("Check positive and negative QC results","qc-result","Both controls must pass before patient testing. Record results and follow the site's failed-QC procedure.");
-  if(t.includes("box")||t.includes("lot"))return figure("Document kit receipt and QC","qc-result","Mark receipt date, QC date and operator according to the approved site policy.");
+  if(t.includes("negative")&&!t.includes("result"))return figure("Next arrow → prepare and read negative QC","qc-load","After positive QC, select the forward arrow rather than the skip icon. Use a fresh negative swab and cassette.","qc");
+  if(t.includes("result"))return figure("Check positive and negative QC results","qc-result","Both controls must pass before patient testing. Record results and follow the site's failed-QC procedure.");
+  if(t.includes("document")||t.includes("record")||t.includes("box")||t.includes("lot"))return figure("Record QC and label the assay kit","qc-result","Record receipt date, QC date, lot and operator according to the approved site policy.","record");
  }
  if(g.includes("calibration")){
   if(t.includes("due")||t.includes("30 day"))return figure("Check calibration due status","menu-cal","Perform a Sofia 2 optical calibration check at intervals of 30 days or less, before patient testing.");
