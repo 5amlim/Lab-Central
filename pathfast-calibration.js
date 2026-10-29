@@ -11,9 +11,9 @@ const lanes=[
  {name:"QC 2",tone:"#e3f5ec",ink:"#19755e",well:"#a8e1c5"}
 ];
 const groups=[
-{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
-{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
-{id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad Liquichek D-dimer",catalog:"PF1051-KUS",vials:[["QC 1 · LANE 5","LEVEL LOW","27100","LOW"],["QC 2 · LANE 6","LEVEL 1","27101","LEVEL 1"]]}
+{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1261-KUS",vials:[["QC1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1061-KUS",vials:[["QC1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad Liquichek D-dimer",catalog:"PF1051-KUS",vials:[["QC1 · LANE 5","LEVEL LOW","27100","LOW"],["QC2 · LANE 6","LEVEL 1","27101","LEVEL 1"]]}
 ];
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
 function defs(){return '<defs>'+
