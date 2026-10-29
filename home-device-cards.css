@@ -1,0 +1,85 @@
+/* Homepage instrument thumbnail layout. Keep the existing directory card dimensions
+   and the existing PATHFAST blue feature gradient unchanged. */
+.grid-cards .item-card.has-device-art{
+ position:relative;isolation:isolate;overflow:hidden;
+ height:147px;min-height:147px;max-height:147px;
+}
+.grid-cards .item-card.has-device-art .card-head,
+.grid-cards .item-card.has-device-art > strong,
+.grid-cards .item-card.has-device-art > p,
+.grid-cards .item-card.has-device-art .card-trailing{
+ position:relative;z-index:2;
+}
+.grid-cards .item-card.has-device-art > strong,
+.grid-cards .item-card.has-device-art > p{
+ max-width:61%;overflow-wrap:break-word;
+}
+.grid-cards .item-card.has-device-art .card-trailing{
+ width:max-content;
+ max-width:65%;
+}
+.grid-cards .item-card.has-device-art .card-category{
+ background:#ffffffdd;border-radius:5px;padding:2px 4px;
+}
+.grid-cards .item-card.has-device-art .card-device-art{
+ position:absolute;z-index:1;pointer-events:none;
+ right:7px;bottom:17px;width:47%;height:103px;
+ display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.grid-cards .item-card.has-device-art .home-device-svg{
+ display:block;width:100%;height:100%;max-width:100%;max-height:100%;
+ object-fit:contain;overflow:visible;
+ filter:drop-shadow(0 3px 3px rgba(23,49,70,.10));
+}
+.grid-cards .item-card.has-device-art[data-go="sofia"] .card-device-art{
+ width:34%;height:116px;right:17px;bottom:12px;
+}
+.grid-cards .item-card.has-device-art[data-go="piccolo"] .card-device-art,
+.grid-cards .item-card.has-device-art[data-go="sysmex"] .card-device-art{
+ height:110px;bottom:12px;
+}
+/* The artwork is an overlay only; retain the blue gradient and fixed minimum
+   dimensions of the existing featured PATHFAST card. */
+.feature-primary.has-featured-art{
+ position:relative;isolation:isolate;overflow:hidden;
+}
+.feature-primary.has-featured-art > small,
+.feature-primary.has-featured-art > strong,
+.feature-primary.has-featured-art > p,
+.feature-primary.has-featured-art > .feature-cta{
+ position:relative;z-index:3;
+}
+.feature-primary.has-featured-art > small,
+.feature-primary.has-featured-art > strong,
+.feature-primary.has-featured-art > p{
+ max-width:59%;
+}
+.feature-primary.has-featured-art .featured-device-art{
+ position:absolute;right:4px;bottom:4px;z-index:1;
+ width:48%;height:94%;pointer-events:none;
+ display:flex;align-items:flex-end;justify-content:center;
+}
+.feature-primary.has-featured-art .featured-device-art .home-device-svg{
+ display:block;width:100%;height:100%;max-width:100%;max-height:100%;
+ filter:drop-shadow(0 6px 8px rgba(4,23,39,.29));
+}
+@media(max-width:780px){
+ .grid-cards .item-card.has-device-art .card-device-art{right:3px;width:44%;height:100px}
+ .grid-cards .item-card.has-device-art > strong,
+ .grid-cards .item-card.has-device-art > p{max-width:60%}
+ .feature-primary.has-featured-art .featured-device-art{width:43%;right:0}
+}
+@media(max-width:560px){
+ .grid-cards .item-card.has-device-art > strong,
+ .grid-cards .item-card.has-device-art > p{max-width:62%}
+ .grid-cards .item-card.has-device-art .card-device-art{width:39%;right:5px;height:99px}
+ .grid-cards .item-card.has-device-art[data-go="sofia"] .card-device-art{width:32%;right:12px}
+ .feature-primary.has-featured-art > p,
+ .feature-primary.has-featured-art > strong,
+ .feature-primary.has-featured-art > small{max-width:65%}
+ .feature-primary.has-featured-art .featured-device-art{width:43%;right:-7px}
+}
+@media print{
+ .grid-cards .item-card.has-device-art,
+ .feature-primary.has-featured-art{break-inside:avoid}
+}
