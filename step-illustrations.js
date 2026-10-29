@@ -263,7 +263,7 @@ art.inlineKitVisual=function(sec,title,depth,root){
   return '<div class="lab-inline-device">'+piccoloDisc(true,true)+'<small>The hole is part of the disc. Red shows where whole blood sits after filling; do not peel the disc.</small></div>';
  return originalInline(sec,title,depth,root);
 };
-art.piccoloVisual=function(){return '';};
+/* Keep the original user-provided Piccolo reference photos and the instrument art available to the focused guide. */
 art.stepIllustration=function(sec,title,group){
  if(!sec||sec.archived||!['Analyzers','Point of care'].includes(sec.category))return '';
  if(sec.id==='piccolo')return piccoloScene(title,group);
