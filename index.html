@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-workflow-hierarchy-v1" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261029-workflow-timeline-v2" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-piccolo-overflow" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-sendout-photos" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1149,7 +1149,7 @@ document.addEventListener('click',e=>{
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
-  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});const stageTrack=document.querySelector('.pfux-stage-track');const activeStage=stageTrack?.querySelector('[aria-current="step"]');if(stageTrack&&activeStage)stageTrack.scrollTo({left:Math.max(0,stageTrack.scrollLeft+activeStage.getBoundingClientRect().left-stageTrack.getBoundingClientRect().left-stageTrack.clientWidth/2+activeStage.clientWidth/2),behavior:'smooth'});}
+  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});}
   return;
  }
  const modeButton=e.target.closest('[data-guide-mode]');
@@ -1212,6 +1212,6 @@ render();
 })();
 
 </script>
-<script src="guide-scroll-cues.js?v=20261029-visible-button-v3"></script>
+<script src="guide-scroll-cues.js?v=20261029-scroll-retention-v4"></script>
 </body>
 </html>
