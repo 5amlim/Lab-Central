@@ -540,17 +540,6 @@ function instrumentTabTitle(title){
  // component to wrap the full title where a shorter familiar name is absent.
  return t.replace(/\s+-\s+\(.*$/,'').trim();
 }
-function instrumentTabTitle(title){
- const t=String(title||'').trim();
- if(/register.*qc lot/i.test(t))return 'Register QC lot';
- if(/cleaning.*maintenance/i.test(t))return 'Maintenance';
- if(/result.*interpretation/i.test(t))return 'Result interpretation';
- if(t.length<=27)return t;
- const words=t.replace(/\\([^)]*\\)/g,'').trim().split(/\\s+/);
- let result='';
- for(const w of words){if(result.length+w.length+1>26)break;result+=(result?' ':'')+w;}
- return result||t;
-}
 function guideTabTitle(title){
  const t=String(title||'');
  if(t.length<=31)return t;
@@ -598,7 +587,7 @@ function guideStepParts(entry,sec){
 // Short navigation labels describe the action. Full instructions stay in
 // the large step header and full text remains in the button title.
 function instrumentStepNavLabel(full){
- const value=String(full||'').replace(/\\s+/g,' ').trim();
+ const value=String(full||'').replace(/\s+/g,' ').trim();
  const known=[
   [/^Grab the QC controls/i,'Warm QC controls'],
   [/^Perform daily shutdown/i,'Daily shutdown'],
@@ -615,7 +604,7 @@ function instrumentStepNavLabel(full){
  if(value.length<=34)return value;
  const short=value.split(/[,.;:(]/)[0].trim();
  if(short.length>0&&short.length<=34)return short;
- const words=value.split(/\\s+/);
+ const words=value.split(/\s+/);
  let result='';
  for(const word of words){
   if(result.length+word.length+1>33)break;
