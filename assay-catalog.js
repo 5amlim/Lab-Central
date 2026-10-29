@@ -18,9 +18,9 @@ const tests={
   {title:'D-dimer',complexity:'moderate',groups:{'Coagulation / fibrinolysis marker':A('D-dimer')}}
  ],
  triage:[
-  {title:'Cardiac troponin I',complexity:'moderate',groups:{'Cardiac injury marker':A('Cardiac troponin I')}},
-  {title:'D-dimer',complexity:'moderate',groups:{'Coagulation / fibrinolysis marker':A('D-dimer')}},
-  {title:'B-type natriuretic peptide',complexity:'moderate',groups:{'Heart failure marker':A('B-type natriuretic peptide')}}
+  {title:'Cardiac troponin I',complexity:'moderate',color:'#8b9fcf',tint:'#edf0f9',deep:'#4e6eaa',boxColor:'Blue stripe · magenta cassette',groups:{'Cardiac injury marker':A('Cardiac troponin I')}},
+  {title:'D-dimer',complexity:'moderate',color:'#f0c631',tint:'#fff9df',deep:'#8e6c09',boxColor:'Yellow stripe · magenta cassette',groups:{'Coagulation / fibrinolysis marker':A('D-dimer')}},
+  {title:'B-type natriuretic peptide',complexity:'moderate',color:'#419a84',tint:'#e7f5f0',deep:'#226c5c',boxColor:'Green stripe · magenta cassette',groups:{'Heart failure marker':A('B-type natriuretic peptide')}}
  ],
  clinitek:[
   {title:'Urinalysis reagent strip',complexity:'waived',groups:{'Urinalysis parameters':A('Glucose|Bilirubin|Ketones|Specific gravity|Blood / hemoglobin|pH|Protein|Urobilinogen|Nitrite|Leukocyte esterase')}},
