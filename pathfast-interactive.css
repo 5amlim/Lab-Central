@@ -168,3 +168,19 @@
 .pcr-flow-question-header strong{min-width:0;overflow-wrap:anywhere}
 @media(max-width:650px){.pcr-flow-options{grid-template-columns:1fr}.pcr-zone-options{grid-template-columns:repeat(3,minmax(0,1fr))}.pcr-flow-transition{padding:10px}}
 @media print{.pcr-flow-transition{break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Keep 0/1-hour as the primary pathway. The 0/2-hour route is a
+   deliberately secondary, provider-directed alternative. */
+.pcr-secondary-note{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:16px 22px 0;padding:12px 15px;background:#f8fafb;border:1px solid #e1e9ee;border-left:3px solid #86acbc;border-radius:10px}
+.pcr-secondary-note>div{min-width:0}
+.pcr-secondary-note strong{display:block;color:#3f667d;font-size:11.5px;line-height:1.4}
+.pcr-secondary-note p{color:#6b8594;font-size:10.8px;line-height:1.6;margin:3px 0 0;max-width:920px}
+.pcr-secondary-note button{flex:none;padding:9px 11px;border:1px solid #c7dce3;background:white;color:#356d82;border-radius:8px;font:800 10.5px/1.4 inherit;cursor:pointer;max-width:195px}
+.pcr-secondary-note button:hover{background:#eff7f9;border-color:#a4cdd4}
+.pcr-secondary-note button:focus-visible{outline:3px solid #8cc9c2;outline-offset:2px}
+.pcr-flow-choice-note{display:block;margin-top:7px;font-weight:450;font-size:10.5px;line-height:1.48;color:#72889a}
+.pcr-flow-option.selected .pcr-flow-choice-note{color:#4e8076}
+.pcr-flow-question-header{padding:12px 15px}
+.pcr-flow-option{align-self:stretch;min-height:59px}
+@media(max-width:700px){.pcr-secondary-note{flex-direction:column;align-items:stretch;margin:12px 12px 0}.pcr-secondary-note button{max-width:none;width:100%}}
+@media print{.pcr-secondary-note{display:none}}
