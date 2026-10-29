@@ -57,7 +57,7 @@ function scene(kind,mode){
   '<path d="M556 106L577 176" stroke="#8caebd" stroke-width="9" stroke-linecap="round"/>'+
   '<path d="M578 179Q590 189 578 205Q565 191 578 179Z" fill="#d7b58e"/>'+
   tx(590,335,"PIPETTE INTO SAMPLE WELL",13,"#247989");}
- if(mode==="results")art+=tx(587,204,"RESULTS",22,"#2a718a");
+ if(mode==="results")art+=tx(587,197,isHcg?"CLINITEST hCG":"URINALYSIS",17,"#2a718a")+tx(587,225,"RESULTS",20,"#2a718a");
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
 }
 function render(title,group){
