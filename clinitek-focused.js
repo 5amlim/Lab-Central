@@ -5,7 +5,7 @@
 'use strict';
 const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'&quot;');
 const tx=(x,y,s,size=16,color="#315e75",bold=true,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+(bold?850:550)+'" fill="'+color+'">'+E(s)+'</text>';
-const svg=(body,alt)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 355" role="img" aria-label="'+E(alt)+'">'+body+'</svg>';
+const svg=(body,alt)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 405" role="img" aria-label="'+E(alt)+'">'+body+'</svg>';
 const fig=(heading,art,note)=>'<figure class="cl-focused-figure"><header>'+E(heading)+'</header><div class="cl-focused-art">'+art+'</div><figcaption>'+E(note)+'</figcaption></figure>';
 const strip=(x,y,orientation=0)=>'<g transform="translate('+x+' '+y+') rotate('+orientation+' 0 0)">'+
  '<rect x="-10" y="-103" width="20" height="205" rx="3" fill="#eff5f6" stroke="#94afb9" stroke-width="2"/>'+
@@ -31,36 +31,56 @@ function machine(mode="home",kind="ua"){
  const shapeMode=mode==="table"?selectType:mode==="dispense"?"cassette":
   mode==="select"?"select-"+selectType:mode==="qc"?"qc":
   mode==="results"?"reading":mode==="start"?(kind==="hcg"?"start-cassette":"start-strip"):
-  mode==="dip"?"start-strip":mode==="qc-dip"?"qc":"empty";
+  mode==="dip"?"empty":mode==="qc-dip"?"qc":"empty";
  // Original photographed instrument, scaled to leave space for consumable
  // and table-insert closeups on the right. Screens are simplified diagrams.
  return '<g transform="translate(31 -2) scale(.80)">'+equipment.clinitekDeviceMarkup(shapeMode)+'</g>';
 }
 function tableCloseup(kind,dispense=false){
  const hcg=kind==="hcg";
- const header=hcg?"CASSETTE TABLE INSERT":"STRIP TABLE INSERT";
- const shell='<rect x="501" y="93" width="238" height="238" rx="16" fill="#f4f9fa" stroke="#bed3dc" stroke-width="3"/>'+
- tx(621,121,header,15,"#2a7187")+
- '<path d="M543 158L694 158L719 187V274Q713 288 691 291H550Q534 291 533 271V183Z" fill="#25323e" stroke="#6f8895" stroke-width="4"/>'+
- '<path d="M556 173L676 173L701 198V263Q693 273 680 273H567Q556 271 556 259Z" fill="#111c27" stroke="#526b78" stroke-width="3"/>'+
- '<path d="M564 191H669L686 206V251H564Z" fill="#303e49" stroke="#8ba6b2" stroke-width="2"/>';
+ const header=hcg?"FLIPPED hCG CASSETTE SIDE":"UA STRIP SIDE";
+ const shell='<rect x="495" y="55" width="244" height="325" rx="15" fill="#f4f9fa" stroke="#bed3dc" stroke-width="3"/>'+
+  tx(617,87,header,14,"#2a7187")+
+  '<path d="M556 104H681L702 123V343Q698 358 683 361H559Q545 355 545 341V124Z" fill="#202932" stroke="#576c79" stroke-width="4"/>'+
+  '<path d="M568 116H677L688 132V334Q684 347 675 347H571Q560 344 560 329V129Z" fill="#0f1820" stroke="#415862" stroke-width="3"/>';
  if(!hcg){
+  const colors=['#e5e59f','#b8d0ac','#d5ba90','#c0add1','#e3c489','#a4c9bd','#cfaba3','#aac59e'];
   return shell+
-   // Long thin strip in its own strip-shaped channel, pads face upward.
-   '<path d="M577 223L668 223L682 231L589 231Z" fill="#f8fcfd" stroke="#8facb9" stroke-width="2"/>'+
-   ['#b2c49c','#d9b892','#cab3cf','#9fbcce','#e5ca93','#a4ccb8','#d0abae','#b2b7a8'].map((col,i)=>
-   '<rect x="'+(588+i*10)+'" y="224" width="8" height="6" rx="1" fill="'+col+'"/>').join('')+
-   tx(619,311,"PADS UP · SEAT IN CHANNEL",11,"#4c7b8c");
+   '<path d="M613 127H631V352H613Z" fill="#f9fcfa" stroke="#9fb8c0" stroke-width="2"/>'+
+   colors.map((c,i)=>'<rect x="616" y="'+(138+i*19)+'" width="12" height="16" rx="1.3" fill="'+c+'"/>').join('')+
+   tx(620,371,"STRIP · PADS UP",11,"#4c7b8c");
  }
  return shell+
-  '<path d="M566 206L666 196L695 224L589 240Z" fill="#f6fafb" stroke="#a3beca" stroke-width="3"/>'+
-  '<rect x="604" y="212" width="38" height="13" rx="3" fill="#dceaf0" stroke="#95b2c0"/>'+
-  '<path d="M610 218h26" stroke="#b6cfd9" stroke-width="3"/>'+
-  '<ellipse cx="664" cy="216" rx="8" ry="6" fill="#f0f6f6" stroke="#7e9eae" stroke-width="2"/>'+
-  (dispense?'<path d="M662 140L664 191" stroke="#6c8190" stroke-width="7" stroke-linecap="round"/>'+
-   '<path d="M664 194q-14 18 0 21q12-2 0-21" fill="#ebcd9b" stroke="#cda66d"/>':'')+
-  tx(622,311,"CASSETTE · SAMPLE WELL",11,"#4c7b8c");
+  '<path d="M582 122H662L667 349H579Z" fill="#f6f9f7" stroke="#9fb6c1" stroke-width="2.5"/>'+
+  '<rect x="588" y="136" width="69" height="29" rx="2" fill="#edf2f1"/>'+
+  tx(623,151,"CLINITEST hCG",10,"#4b6574")+
+  '<rect x="602" y="188" width="42" height="67" rx="4" fill="#e7f0f3" stroke="#a2b9c3" stroke-width="2"/>'+
+  '<path d="M612 207H634M612 224H634M612 242H634" stroke="#cad6d8" stroke-width="3"/>'+
+  '<circle cx="624" cy="298" r="15" fill="#edf4f4" stroke="#90a9b5" stroke-width="2.5"/>'+
+  '<circle cx="624" cy="298" r="6" fill="#fffefa"/>'+
+  (dispense?'<path d="M627 179V273" stroke="#5c8c99" stroke-width="5" stroke-linecap="round"/>'+
+   '<path d="M623 269q-13 16 1 23q13-4 0-23" fill="#ecd2a5" stroke="#d1ad68" stroke-width="1.5"/>':'')+
+  tx(619,371,"CASSETTE · SAMPLE WELL",11,"#4c7b8c");
 }
+function flipInsertCloseup(){
+ return '<rect x="493" y="53" width="246" height="327" rx="15" fill="#f4f9fa" stroke="#bed3dc" stroke-width="3"/>'+
+  tx(616,84,"FLIP THE TEST TABLE INSERT",13,"#286f81")+
+  // Reversible black insert shown on both sides, with a curved physical flip cue.
+  '<g transform="translate(0 -5)">'+
+  '<path d="M528 129H610L621 231H522Z" fill="#202a32" stroke="#637784" stroke-width="4"/>'+
+  '<rect x="559" y="144" width="17" height="66" rx="3" fill="#0c151b" stroke="#7f959d" stroke-width="2"/>'+
+  tx(570,249,"STRIP SIDE",12,"#426b7a")+
+  '<path d="M625 139Q675 98 701 145" stroke="#278f88" stroke-width="5" fill="none" stroke-linecap="round"/>'+
+  '<path d="M689 137L704 147L706 131" stroke="#278f88" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+  '<path d="M624 186H716L721 260H622Z" fill="#202a32" stroke="#637784" stroke-width="4"/>'+
+  '<rect x="643" y="199" width="53" height="46" rx="3" fill="#111b23" stroke="#849da5" stroke-width="2"/>'+
+  tx(666,282,"hCG SIDE",12,"#426b7a")+
+  '</g>'+
+  '<rect x="522" y="306" width="188" height="49" rx="8" fill="#e1f3ee" stroke="#89c4b6" stroke-width="2"/>'+
+  tx(616,326,"CASSETTE FACE UP",13,"#217e70")+
+  tx(616,343,"Then place the hCG cassette",10,"#4d7a80",false);
+}
+
 function scene(kind,mode){
  const isHcg=kind==="hcg",testName=isHcg?"CLINITEST hCG CASSETTE":"URINALYSIS DIPSTICK";
  let art=machine(mode,isHcg?"hcg":"ua");
@@ -72,6 +92,7 @@ function scene(kind,mode){
   art+=tx(576,329,isHcg?"hCG CASSETTE":"UA DIPSTICK",15);}
  if(mode==="dip"){art+=cup(499,68)+(isHcg?cassette(596,264):strip(580,173,-23))+
   '<path d="M612 105C645 123 648 161 621 175" fill="none" stroke="#27958b" stroke-width="5"/>';}
+ if(mode==="flip"){art=machine("home","hcg")+flipInsertCloseup();}
  if(mode==="table"){art=machine("table",isHcg?"hcg":"ua")+tableCloseup(isHcg?"hcg":"ua");}
  if(mode==="start")art+=isHcg?tableCloseup("hcg"):tx(600,220,"PRESS START FIRST",17,"#237e80");
  if(mode==="dispense")art=machine("dispense","hcg")+tableCloseup("hcg",true);
@@ -86,6 +107,9 @@ function render(title,group){
  if(/confirm urine|verify urine|confirm specimen|check specimen/.test(t))
   return fig(qc?"Confirm urine control and test materials":"CLINITEK + urine cup + "+(kind==="hcg"?"hCG cassette":"UA strip"),scene(kind,"specimen"),
      qc?"Verify the correct QC material, lot and expiration before testing.":"Verify fresh urine in a clean cup, patient ID and correct test strip or cassette.");
+ if(kind==="hcg"&&/flip.*(table|insert)|orient.*(table|insert)/.test(t))
+  return fig("Flip the test-table insert to the hCG cassette side",scene("hcg","flip"),
+   "Remove the test-table insert and flip it so the cassette recess faces upward. Reinstall it correctly before placing the CLINITEST hCG cassette. Do not put the cassette into the strip channel.");
  if(/select strip test|select cassette test|choose strip|select hcg/.test(t))
   return fig("Select "+(kind==="hcg"?"Cassette Test":"Strip Test")+" on the analyzer",scene(kind,"select"),
      "Select the correct test type and confirm patient ID or QC entry on the analyzer.");
@@ -98,7 +122,7 @@ function render(title,group){
  if(kind==='hcg'&&/dispense urine|dispense qc material|apply.*sample/.test(t))
   return fig(qc?"Dispense approved hCG QC":"Dispense urine into hCG cassette",scene(kind,"dispense"),
    "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
- if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Start the hCG cassette workflow first, then use the kit pipette and approved volume.");
+ if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Confirm the hCG cassette is seated in the flipped insert, select START, then use the kit pipette and approved volume.");
  if(qc&&/run each control/.test(t))
   return fig("Run controls using the urinalysis strip method",scene(kind,"qc-dip"),
    "Use approved control material and the correct QC mode, not a patient urine cup.");
@@ -107,7 +131,7 @@ function render(title,group){
      qc?"Apply controls according to the lot-specific SOP.":"Press START, immerse the reagent pads, then blot the strip as directed by the approved procedure.");
  if(/place.*test table|place.*strip|place cassette/.test(t))
   return fig("Place "+(kind==="hcg"?"cassette":"strip")+" on analyzer test table",scene(kind,"table"),
-    "Use the correct table insert: urinalysis strip with pads facing up in the strip channel, or CLINITEST hCG cassette in its dedicated cassette insert. Keep the urine cup off the table.");
+    "Use the reversible test-table insert with the correct face upward: strip-side for urinalysis (pads up), flipped cassette-side for CLINITEST hCG. Keep the urine cup off the table.");
  if(/start|begin test|analyze/.test(t))return fig("Start the selected test",scene(kind,"start"),"Confirm test selection and start analysis.");
  if(/review|document|print|result/.test(t))
   return fig("Review and document results",scene(kind,"results"),"Verify the patient ID, QC status, and analyzer result before documenting.");
