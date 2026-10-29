@@ -46,3 +46,50 @@
 .pf-storage-three .pf-storage-card .pf-storage-cal-images svg{max-width:115px}
 .pf-storage-three .pf-storage-card p{font-size:12px;line-height:1.6}
 @media(max-width:1050px){.pf-return-storage .pf-storage-grid.pf-storage-three{grid-template-columns:1fr}}
+
+
+/* Main procedure cards are fixed open, across patient and calibration workflows.
+   Next/Previous navigation remains a button, never a collapsible heading. */
+.procedure-flow .guide-card.pf-static-step > .guide-card-head{display:flex;align-items:center;gap:14px;min-height:98px}
+.procedure-flow .guide-card.pf-static-step > .guide-card-head .guide-card-title{flex:1 1 auto;min-width:0}
+.procedure-flow .guide-card.pf-static-step > .guide-card-head .guide-card-header-actions{margin-left:auto;flex-shrink:0}
+.procedure-flow .guide-card.pf-static-step .pf-step-collapse-body{display:block;min-width:0}
+.pf-calibration-guide .pf-workflow-static{border-color:#c5e2e3}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-head{display:flex;align-items:center;gap:14px;padding:15px 18px;min-height:86px;background:#eaf7f7;border-bottom:1px solid #d9ebec;cursor:default}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pf-workflow-label{flex:1 1 auto;min-width:0}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pf-workflow-label strong{font-size:15px;line-height:1.4}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pf-workflow-label small{font-size:12px}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{
+ position:static!important;display:flex!important;flex:none;align-items:center;
+ justify-content:flex-end;gap:9px;margin:0 0 0 auto!important;padding:0!important;
+ width:auto!important;min-width:0;background:transparent!important;border:0!important;
+}
+.pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{min-height:45px;font-size:13px;font-weight:850}
+.pf-calibration-guide .pf-workflow-static .pfux-cal-progress{font-size:12px;font-weight:850;white-space:nowrap}
+.pf-calibration-guide .pf-workflow-static > .pf-workflow-detail{display:block;padding:16px 19px 22px}
+.pf-calibration-guide .pf-material-card{position:relative}
+.pf-calibration-guide .pf-material-card:has(.pf-material-lane-tag) .pf-material-figure{padding-top:29px}
+.pf-calibration-guide .pf-material-lane-tag{
+ position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;
+ justify-content:center;max-width:calc(100% - 24px);font-size:11px;font-weight:900;
+ line-height:1.2;letter-spacing:.035em;padding:7px 10px;border-radius:7px;
+ border:1px solid #9dcfe1;color:#1f6a86;background:#e7f5fc;
+}
+.pf-calibration-guide .pf-cal2-mix-diagram header .pf-cal-one-vial{
+ margin-left:auto!important;text-align:right!important;display:block;font-size:13px;
+ font-weight:900;color:#725791;white-space:normal;
+}
+.pf-calibration-guide .pf-cartridge-pouch > svg{display:block;max-width:850px!important;max-height:350px!important;aspect-ratio:790 / 360;margin:0 auto 5px}
+.pf-calibration-guide .pf-cartridge-pouch figcaption strong{color:#2a637b}
+@media(max-width:1050px){
+ .pf-calibration-guide .pf-workflow-static > .pf-workflow-head{flex-wrap:wrap}
+ .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{width:100%!important;justify-content:flex-start;margin-left:51px!important}
+}
+@media(max-width:700px){
+ .procedure-flow .guide-card.pf-static-step > .guide-card-head{flex-wrap:wrap;padding:15px}
+ .procedure-flow .guide-card.pf-static-step > .guide-card-head .guide-card-header-actions{flex-basis:100%;justify-content:flex-start;margin-left:0}
+ .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{margin:0!important;width:100%!important;flex-wrap:wrap}
+ .pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{flex:1 1 auto}
+ .pf-calibration-guide .pf-cal2-mix-diagram header .pf-cal-one-vial{margin-left:0!important;text-align:left!important}
+}
+@media print{.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{display:none!important}}
