@@ -60,3 +60,20 @@
  .triage-meter-stage svg{max-height:210px}
  .triage-kit-picture{height:110px}
 }
+
+
+/* Four-panel overview gallery needs tighter cartridge previews than the
+   full-width guided procedure, without changing the underlying card size. */
+.triage-device-gallery .device-gallery-step{min-width:0}
+.triage-device-gallery .device-gallery-image{min-width:0}
+.triage-device-gallery .triage-kit-chooser{gap:3px}
+.triage-device-gallery .triage-kit-choice{padding:5px 2px;gap:2px;border-radius:7px}
+.triage-device-gallery .triage-kit-picture{height:105px}
+.triage-device-gallery .triage-kit-choice strong{font-size:9px}
+.triage-device-gallery .triage-kit-choice small{display:none}
+.triage-device-gallery .triage-dispense-layout>svg{max-height:160px}
+.triage-device-gallery .triage-single-cartridge{padding:4px}
+.triage-device-gallery .triage-single-cartridge>div{height:137px}
+.triage-device-gallery .triage-single-cartridge strong{font-size:10px}
+.triage-device-gallery .triage-single-cartridge small{display:none}
+.triage-device-gallery .triage-real-meter{width:100%;max-height:220px}
