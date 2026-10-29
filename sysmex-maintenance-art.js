@@ -17,8 +17,8 @@
    mode==="reagent"?["pocH-pack D / L","Scan reagent barcode","Execute"]:["Main","QC","Result"];
   const selected=mode==="shutdown"?"Shutdown":mode==="transducer"?"Execute":mode==="other"?"Clean waste chamber":mode==="waste"?"Execute":"Scan reagent barcode";
   let m='<ellipse cx="329" cy="429" rx="230" ry="15" fill="#d9e4e9" opacity=".75"/>'+
-    '<path d="M160 60L189 33H492L522 69V382Q518 408 487 416H175Q145 409 145 375Z" fill="#eef2f3" stroke="#9cacb5" stroke-width="5"/>'+
-    '<path d="M492 33L522 69V382L495 404Z" fill="#c8d2d8" stroke="#94a7b1" stroke-width="3"/>'+
+    '<path d="M148 75Q148 45 177 34L190 29H485Q506 29 516 51L531 78V375Q531 410 493 418H180Q146 413 146 379Z" fill="#eef2f3" stroke="#92a8b4" stroke-width="5"/>'+
+    '<path d="M486 31Q509 34 520 63L531 80V375Q531 399 495 413L491 411V77Z" fill="#c4d2d9" stroke="#91a7b4" stroke-width="3"/>'+
     '<path d="M170 63L185 48H471L481 61V230H171Z" fill="#f7f9fa"/>'+
     '<rect x="179" y="72" width="286" height="176" rx="9" fill="#cad7df" stroke="#8ea4b1" stroke-width="5"/>'+
     '<rect x="193" y="86" width="259" height="147" rx="5" fill="#eef7fa"/>'+
@@ -36,14 +36,14 @@
     '<path d="M203 264L278 264" stroke="#277eab" stroke-width="5" stroke-linecap="round"/>'+
     T(240,284,"SYSMEX",18,"#2b7891",900)+
     T(244,298,"pocH-100i",14,"#677984",800)+
-    '<rect x="330" y="259" width="132" height="153" rx="19" fill="#273743" stroke="#a6b5bf" stroke-width="5"/>'+
+    '<rect x="330" y="255" width="132" height="157" rx="19" fill="#293943" stroke="#91a7b4" stroke-width="5"/>'+
     '<rect x="347" y="278" width="102" height="49" rx="9" fill="#182b35"/>'+
     '<rect x="360" y="330" width="77" height="58" rx="8" fill="#1f313d" stroke="#526773" stroke-width="3"/>'+
     '<ellipse cx="399" cy="358" rx="27" ry="15" fill="#0c202c" stroke="#647e8a" stroke-width="3"/>'+
     '<rect x="209" y="329" width="91" height="60" rx="7" fill="#edf1f2" stroke="#c3cdd2" stroke-width="2"/>'+
     '<path d="M218 350H290" stroke="#c1cbd1" stroke-width="3"/>'+
     '<path d="M245 392H286" stroke="#b9c8cf" stroke-width="3"/>'+
-    '<circle cx="493" cy="264" r="8" fill="#7da8b9"/>'+
+    '<circle cx="493" cy="264" r="8" fill="#dcecf3" stroke="#81a3b3" stroke-width="3"/><path d="M163 68Q171 47 192 47H471" fill="none" stroke="#fff" stroke-width="7" opacity=".75"/><path d="M481 41V405" fill="none" stroke="#a8bec8" stroke-width="2"/><rect x="167" y="409" width="31" height="10" rx="3" fill="#647783"/><rect x="465" y="409" width="30" height="10" rx="3" fill="#647783"/><path d="M174 252H325" stroke="#dae4e8" stroke-width="3"/>'+
     T(328,442,"pocH-100i · actual front geometry (schematic)",13,"#678699");
   return m;
  }
@@ -129,7 +129,7 @@
   if(mode==='shutdown')return scene('Shutdown is an analyzer command',media(mode),'On the Main screen, select Shutdown, then Execute. Wait for the completion prompt before switching OFF. No blood tube is involved.');
   if(mode==='transducer')return scene('CELLCLEAN and sample adapter',media(mode),'Use 3 mL of approved CELLCLEAN in a clean sample tube. Place in the sample adapter, close the compartment and choose Execute. Remove after the completed cycle.');
   if(mode==='other')return scene('Select the maintenance task on the instrument',media(mode),'Follow the specific Clean Waste Chamber, Auto Rinse or Clog Removal prompt and its manufacturer procedure. These are separate maintenance tasks.');
-  if(mode==='waste')return scene('Waste bottle, red waste line and float switch',media(mode),'Disconnect and empty the waste bottle only as specified in the approved waste-handling procedure. Refit the float switch and cap, reconnect without kinking tubing, and confirm no leaks.');
+  if(mode==='waste')return scene('Waste bottle, red waste line and float switch',media(mode),'Empty the waste bottle into the designated lab sink, then follow with bleach according to the approved local waste-handling SOP. Refit the float switch and cap, reconnect without kinking tubing, and confirm no leaks.');
   if(mode==='reagent')return scene('pocH-pack D · diluent / pocH-pack L · lyse',media(mode),'D is the larger diluent container; L is the smaller purple-labeled lyse bottle. Transfer the matching spout kit without contaminating the tubing and enter or scan the new reagent barcode when prompted.');
   return '';
  }
