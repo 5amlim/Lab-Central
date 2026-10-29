@@ -581,7 +581,7 @@ function guideDetailNodes(nodes,depth,sec,rootTitle,showInline=true){
 }
 function guideStepParts(entry,sec){
  const text=entry.root.text;
- if(sec&&sec.id==='clinitek'&&/^(Confirm urine specimen|Confirm urine specimen and)/.test(text))return {badge:'Urine',title:text};
+ // Specimen type already appears in the collection reference; avoid duplicate pill badges.
  return {badge:'',title:text};
 }
 function guideStepTitle(parts){
@@ -611,7 +611,10 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
   guideDetailNodes(entry.leading,0,sec,groupId||root.text,!displayedVisual)+
   guideDetailNodes(root.children||[],0,sec,groupId||root.text,!displayedVisual)+
   guideDetailNodes(entry.notes,0,sec,groupId||root.text,!displayedVisual);
- const stepBody=displayedVisual+(content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
+ const pathfastPillWarning=sec?.id==='pathfast'&&groupId==='patient'&&/review reagent-status pills/i.test(root.text);
+ const highlightedContent=pathfastPillWarning?content.replace(/\bpink\b/gi,'<strong class="pfs-pink-emphasis">pink</strong>'):content;
+ const warningLink=pathfastPillWarning?'<div class="pfs-pink-help pf-guide-qc-note"><span><strong class="pfs-pink-emphasis">Pink</strong> means the assay is not available for patient testing until its required CAL/QC is completed and accepted. This is an example, not the actual analyzer status.</span><button type="button" class="pfs-qc-route" data-gotab="cal-qc">Open Calibration + QC →</button></div>':'';
+ const stepBody=displayedVisual+(highlightedContent?(sysmexControl?highlightedContent:'<div class="guide-card-body">'+highlightedContent+'</div>'):'')+warningLink;
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  const navClass=headerNav?' guide-card-has-nav':'';
  const nav=headerNav?'<div class="guide-card-header-actions">'+headerNav+'</div>':'';
