@@ -23,8 +23,15 @@ function setup(node){
  node.parentNode.insertBefore(frame,node);frame.appendChild(node);
  const bottom=document.createElement("div");bottom.className="lc-scroll-cue-bottom";
  bottom.setAttribute("aria-hidden","true");bottom.innerHTML="<span>Scroll for more ↓</span>";
- const right=document.createElement("div");right.className="lc-scroll-cue-right";
- right.setAttribute("aria-hidden","true");right.innerHTML="<span>Scroll →</span>";
+ const right=document.createElement("button");right.className="lc-scroll-cue-right";
+ right.type="button";right.hidden=true;
+ const steps=node.matches(".pfux-stage-track, .guide-stepper");
+ right.setAttribute("aria-label",steps?"Show more procedure steps to the right":"Show more items to the right");
+ right.innerHTML="<span>"+(steps?"More steps":"More")+" <span aria-hidden=\"true\">→</span></span>";
+ right.addEventListener("click",function(){
+  const distance=Math.max(240,Math.round(node.clientWidth*.72));
+  node.scrollBy({left:distance,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+ });
  frame.append(bottom,right);
  let queued=false;
  function update(){
@@ -34,8 +41,11 @@ function setup(node){
     node.scrollHeight>node.clientHeight+12&&node.scrollTop+node.clientHeight<node.scrollHeight-8;
   const moreRight=/(auto|scroll)/.test(style.overflowX)&&node.clientWidth>100&&
     node.scrollWidth>node.clientWidth+12&&node.scrollLeft+node.clientWidth<node.scrollWidth-8;
+  const horizontal=/(auto|scroll)/.test(style.overflowX)&&node.scrollWidth>node.clientWidth+12;
+  frame.classList.toggle("lc-has-horizontal-overflow",horizontal);
   frame.classList.toggle("lc-has-more-below",below);
   frame.classList.toggle("lc-has-more-right",moreRight);
+  right.hidden=!moreRight;
   if((below||moreRight)&&!node.hasAttribute("tabindex"))node.tabIndex=0;
  }
  function schedule(){
