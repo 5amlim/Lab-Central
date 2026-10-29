@@ -13,7 +13,7 @@ const previous=B.stageVisual;
 const legacy="https://manuals.plus/wp-content/uploads/2022/01/BIOFIRE-423745-Pouch-Loading-Station-with-FilmArray-System-fig-";
 const legacyGuide="https://manuals.plus/biofire/423745-pouch-loading-station-with-filmarray-system-manual";
 const spotGuide="https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/BFR0001-7220-BIOFIRE-SPOTFIRE-R-ST-Panel-Instructions-for-Use-EN.pdf";
-const miniGuide="https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/quick-guides/BFR0002-8510-BIOFIRE-SPOTFIRE-R-ST-Panel-Mini-Quick-Guide-EN.pdf";
+const miniGuide="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html"; // Select the U.S. R/ST Mini guide from the current library; older OUS PDF is not a U.S. IFU.
 const docLibrary="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html";
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const link=(url,title)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(title)+'</a>';
@@ -31,7 +31,7 @@ function manufacturer(id,figure,page){
   const href=spotGuide+"#page="+page;
   return '<details class="bf-polished-more bf-ref-pdf"><summary>View official SPOTFIRE diagram · page '+page+'</summary>'+
    '<div class="bf-ref-frame"><iframe loading="lazy" title="Official SPOTFIRE R/ST guide page '+page+'" src="'+esc(href)+'"></iframe></div>'+
-   '<p class="bf-ref-caption">'+link(href,"Open illustrated R/ST page")+' · '+link(miniGuide,"Mini guide")+'. Follow the exact assay and kit in use.</p>'+
+   '<p class="bf-ref-caption">'+link(href,"Open illustrated R/ST page")+' · '+link(miniGuide,"Current Mini documents")+'. Follow the exact assay and kit in use.</p>'+
    '</details>';
  }
  return "";
@@ -41,7 +41,7 @@ function card(id,opts){
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
  const source=id==="torch"?link(legacyGuide,"Original loading-station guide")+' · '+link(docLibrary,"Current GI panel resources"):
-  link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"R/ST Mini quick guide");
+  link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
  '<span class="bf-polished-chip '+(hue==="red"?"":"system")+'">'+esc(opts.tag||"Action")+'</span></div>'+
@@ -137,7 +137,7 @@ function render(id,title){
  });
  if(/review.*result|document.*result|print.*result/.test(t))return c({
   title:"Review completed results",tag:"Reporting",
-  visual:B.analyzer?.(id,"results"),figure:9,page:20,
+  visual:B.analyzer?.(id,"results"),page:20,
   lines:["Confirm completion and verify patient or QC identification.","Check internal control acceptance and the complete result report.","Release or document results only under the approved reporting workflow."],
   note:"Failed, invalid or incomplete results require the assay-specific follow-up process."
  });
