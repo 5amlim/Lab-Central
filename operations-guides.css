@@ -139,12 +139,11 @@
 @media print{.ops-evidence-card{break-inside:avoid}}
 
 
-/* Sendout Log: guide staff from photo step 03 to the example gallery below. */
+/* Photo step 03 connects to its illustration gallery without covering the later steps. */
 .ops-sendout-photo-route{max-width:100%;min-width:0}
 .ops-sendout-first-steps{max-width:950px}
-.ops-sendout-first-steps .ops-flow,.ops-sendout-followup .ops-flow{
- margin:0 0 0 5px;max-width:none;min-width:0;
-}
+.ops-sendout-first-steps .ops-flow,
+.ops-sendout-followup .ops-flow{margin:0 0 0 5px;max-width:none;min-width:0}
 .ops-sendout-first-steps .ops-step:last-child:before{
  content:"";position:absolute;top:31px;bottom:0;left:18px;width:2px;background:#cbdfe7;
 }
@@ -153,41 +152,73 @@
  background:#f7f9fc;font-weight:900;font-size:13px;z-index:1;
 }
 .ops-sendout-followup{
- display:grid;grid-template-columns:minmax(0,950px) 72px;
- column-gap:14px;align-items:stretch;max-width:1040px;
+ display:grid;grid-template-columns:minmax(0,950px) 86px;
+ column-gap:13px;align-items:stretch;max-width:1050px;
 }
 .ops-sendout-photo-arrow{
- align-self:stretch;min-width:0;display:flex;flex-direction:column;
- align-items:center;gap:10px;margin:0 0 18px;
- padding:8px 0;text-decoration:none;color:#258677;
- transition:color .15s;
-}
-.ops-sendout-photo-arrow:hover{color:#126a61}
-.ops-sendout-photo-arrow:focus-visible{
- outline:3px solid #82beb7;outline-offset:3px;border-radius:9px;
+ align-self:stretch;display:flex;flex-direction:column;
+ align-items:center;min-width:0;min-height:0;
+ gap:0;margin:0 0 15px;padding:3px 0 0;
+ color:#258778;text-decoration:none;
 }
 .ops-sendout-photo-arrow-label{
- display:block;max-width:72px;text-align:center;line-height:1.45;
- font-size:9px;letter-spacing:.065em;font-weight:900;
+ display:block;flex:none;max-width:86px;width:100%;
+ border:1px solid #b7d9d2;background:#eaf7f3;
+ border-radius:999px;padding:8px 7px;
+ color:#176f65;text-align:center;
+ font-size:10px;line-height:1.35;font-weight:850;
+ letter-spacing:.015em;
 }
-.ops-sendout-photo-arrow svg{
- display:block;flex:1 1 0;width:72px;min-height:150px;overflow:visible;
+.ops-sendout-arrow-track{
+ position:relative;display:block;flex:1 1 auto;
+ width:2px;min-height:55px;margin:13px auto 8px;
+ background:repeating-linear-gradient(
+  to bottom,#77b4aa 0,#77b4aa 7px,transparent 7px,transparent 13px
+ );
+ border-radius:2px;
 }
-.ops-photo-mobile-down{display:none}
+.ops-sendout-arrow-track:before{
+ content:"";position:absolute;left:50%;top:-4px;
+ transform:translateX(-50%);
+ width:7px;height:7px;border-radius:50%;background:#258778;
+}
+.ops-sendout-arrow-end{
+ display:grid;place-items:center;flex:none;
+ width:32px;height:32px;border:1.5px solid #91c9bf;
+ border-radius:50%;background:#eaf7f3;color:#18796d;
+ font-size:21px;line-height:1;font-weight:750;
+ box-shadow:0 2px 7px #154c4010;
+}
+.ops-sendout-photo-arrow:hover .ops-sendout-photo-arrow-label,
+.ops-sendout-photo-arrow:hover .ops-sendout-arrow-end{
+ background:#dcf1eb;border-color:#54a99b;
+}
+.ops-sendout-photo-arrow:hover .ops-sendout-arrow-end{transform:translateY(2px)}
+.ops-sendout-photo-arrow:focus-visible{
+ outline:3px solid #76b7af;outline-offset:3px;border-radius:12px;
+}
 .ops-sendout-photo-route .ops-evidence{margin-top:14px}
 #ops-sendout-photo-guide{scroll-margin-top:100px}
 @media(max-width:1040px){
- .ops-sendout-followup{grid-template-columns:minmax(0,1fr);gap:0}
+ .ops-sendout-followup{grid-template-columns:minmax(0,1fr)}
  .ops-sendout-photo-arrow{
   justify-self:end;align-self:auto;flex-direction:row;gap:9px;
-  padding:9px 13px;margin:0 0 12px;border:1px solid #b5d9d3;
-  border-radius:9px;background:#edf8f5;color:#1c7168;
+  min-height:39px;margin:0 0 12px;padding:4px 7px 4px 11px;
+  border:1px solid #b7d9d2;border-radius:999px;
+  background:#eaf7f3;
  }
- .ops-sendout-photo-arrow-label{max-width:none;white-space:nowrap;font-size:10px}
- .ops-sendout-photo-arrow svg{display:none}
- .ops-photo-mobile-down{display:inline;font-size:19px;line-height:1}
+ .ops-sendout-photo-arrow-label{
+  width:auto;max-width:none;white-space:nowrap;
+  border:0;padding:0;background:transparent;font-size:11px;
+ }
+ .ops-sendout-arrow-track{display:none}
+ .ops-sendout-arrow-end{
+  width:27px;height:27px;font-size:18px;
+  border:0;box-shadow:none;background:#d5ece6;
+ }
 }
 @media(max-width:720px){
  .ops-sendout-first-steps .ops-step:last-child:before{left:15px}
  .ops-sendout-first-steps .ops-step:last-child:after{left:8px}
 }
+@media print{.ops-sendout-photo-arrow{display:none}}
