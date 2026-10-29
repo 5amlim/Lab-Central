@@ -196,5 +196,25 @@ if(oldStep)A.stepIllustration=function(sec,title,group){
 };
 A.triageMeterSvg=meterSvg;
 A.triageCassetteSvg=cassetteSvg;
+const oldVisualGuide=A.visualGuide?.bind(A);
+if(oldVisualGuide)A.visualGuide=function(sec){
+ if(sec?.id!=="triage")return oldVisualGuide(sec);
+ const steps=[
+  ["Collect EDTA blood",A.mediaSvg("lavender"),"Use the specified EDTA specimen and verify assay-specific stability."],
+  ["Match the cartridge",kitChooser(),"Identify Troponin I, BNP or D-dimer from the magenta assay label and blue, green or yellow stripe."],
+  ["Add the sample",'<div class="triage-dispense-layout">'+pipetteSvg()+selectedMaterial("bnp",true)+'</div>',"Use the supplied transfer pipette and assay-specific sample volume. BNP shown as an example."],
+  ["Insert and run",meterSvg("patient"),"Load the disposable cassette in the lower front port, then follow the patient-test prompts."]
+ ];
+ return '<section class="device-gallery triage-device-gallery" aria-label="Triage MeterPro step-by-step visual reference">'+
+  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>Specimen to MeterPro · visual steps</h2><p>Quidel Triage · select the exact cardiac assay before preparation</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
+  '<div class="device-gallery-grid">'+steps.map((x,i)=>'<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+E(x[0])+'</strong></div><div class="device-gallery-image">'+x[1]+'</div><p>'+E(x[2])+'</p></article>').join("")+'</div>'+
+  '<p class="device-gallery-note">The meter is illustrated from the supplied photo. Always verify the installed assay kit, lot, package insert and actual instrument prompts.</p></section>';
+};
+const oldInline=A.inlineKitVisual?.bind(A);
+if(oldInline)A.inlineKitVisual=function(sec,title,depth,root){
+ if(sec?.id==="triage"&&/code chip|chip.*slot|install new code chip/i.test(title))
+  return '<div class="lab-inline-device">'+meterSvg("chip")+'<small>Match the new reagent lot. Use the actual on-screen code-chip installation prompts.</small></div>';
+ return oldInline(sec,title,depth,root);
+};
 window.LAB_TRIAGE_VISUAL={render:renderStep,meterSvg,cassetteSvg,kitChooser,assays};
 })();
