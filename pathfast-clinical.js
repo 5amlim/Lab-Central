@@ -23,10 +23,10 @@ return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org
    Group related actions instead of stacking six independent cards. */
 let rnStep=0,rnAllSteps=false;
 const rnSteps=[
- {name:"Confirm the pathway",text:"Confirm the PATHFAST hs-Troponin I order and whether the provider selected the approved 0/1-hour or 0/2-hour pathway. Review assay-specific timing before collecting the baseline."},
+ {name:"Confirm the 0/1-hour pathway",text:"Use the 0/1-hour PATHFAST hs-Troponin I pathway as the standard collection workflow. The 0/2-hour pathway is a fallback only if the approved 1-hour collection window is missed and the provider authorizes the switch."},
  {name:"Collect, label and gently invert",text:"Collect lithium-heparin whole blood, document the exact baseline collection date and time, and gently invert 8–10 times immediately. Do not shake or leave the tube unmixed. Keep serial sample types consistent."},
- {name:"Handoff and start the timer",text:"Give the properly labeled tube to the lab tech promptly. Start the 60- or 120-minute timer from the FIRST DRAW, not from the result time. The 0/+15-minute operational allowance requires local medical-leadership approval for the assay-specific algorithm. Never collect early."},
- {name:"Repeat and document",text:"At the approved repeat collection time, use the same specimen type and gently invert immediately. Document the actual draw time. Do not classify an early or out-of-window specimen as the intended timed delta. Notify the provider and follow the approved alternative plan."}
+ {name:"Handoff and start the timer",text:"Give the properly labeled tube to the lab tech promptly. Start the 60-minute timer from the FIRST DRAW, not from the result time. Collect the 1-hour repeat in the approved window. The +15-minute allowance is only valid when authorized under the assay-specific local protocol. Never collect early."},
+ {name:"Repeat and document",text:"At the approved 1-hour repeat time, use the same specimen type, gently invert, and document the actual draw time. If the approved collection window is missed, notify the provider and use the 2-hour pathway only when authorized. Do not treat a late 1-hour sample as an in-window 1-hour delta."}
 ];
 function rnGuide(){
  const count=rnSteps.length,number=rnStep+1;
@@ -79,12 +79,21 @@ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pc
 window.LAB_PATHFAST_EXTRAS.baselinePicker()+
 window.LAB_PATHFAST_EXTRAS.timing()+'</div>'+
 
-'<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span></span></summary><div>'+
-'<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
+'<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span class="pcr-waste-summary-badge">1 TUBE WASTE</span><span></span></summary><div>'+
+'<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. <strong>For an existing IV line, follow the one-full-tube waste instruction below.</strong></p>'+
+'<div class="pcr-line-waste-alert" role="note">'+
+'<svg class="pcr-line-waste-icon" viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="One sample tube marked for discard">'+
+'<rect x="25" y="6" width="48" height="20" rx="6" fill="#b0c4cb" stroke="#728d99" stroke-width="2"/>'+
+'<path d="M29 24h40l-4 62q-16 18-32 0z" fill="#f2fafb" stroke="#9aafb9" stroke-width="3"/>'+
+'<path d="M35 58h28l-2 27q-12 12-24 0z" fill="#c76d7b" opacity=".76"/>'+
+'<path d="M22 39l52 52m0-52L22 91" stroke="#ba4b43" stroke-width="6" stroke-linecap="round"/>'+
+'<text x="49" y="108" fill="#7b4b41" font-size="12" font-family="Arial" font-weight="800" text-anchor="middle">DISCARD</text></svg>'+
+'<div><span>EXISTING IV LINE ONLY</span><strong>WASTE 1 FULL TUBE (5 mL)</strong>'+
+'<p>Before collecting the troponin specimen through an existing IV line, discard one full tube per the local line-draw SOP. Confirm this requirement for the specific access device and current policy. Fresh venipuncture is preferred when feasible.</p></div></div>'+
 '<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
 '<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Inspect the sample appearance for visible clots or fibrin and follow the specimen-acceptability SOP. Verify patient ID, lane, QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
 window.LAB_PATHFAST_EXTRAS.interference()+
-'<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The provider chooses the serial-testing pathway.</p></section>';
+'<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The routine collection pathway is 0/1 hour; the provider must authorize any switch after a missed collection window.</p></section>';
 }
 function referenceRow(title,subtitle,criteria,kind){
  return '<article class="pcr-criteria-row '+kind+'">'+
@@ -98,7 +107,7 @@ function routeBranch(value,note,kind){
 }
 function pathway(){
  return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I · 0/1-hour pathway</h2>'+
- '<p>Use the approved 0/1-hour serial hs-Troponin I pathway as the starting workflow. The 0/2-hour alternative is available when directed by the provider or when the approved 1-hour collection window was missed.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
+ '<p>Use the approved 0/1-hour serial hs-Troponin I pathway for routine testing. Switch to the 0/2-hour fallback only after the approved 1-hour collection window is missed and the provider authorizes the change.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
  '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
  window.LAB_PATHFAST_EXTRAS.flow()+
  '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>Assay thresholds and timed pathways</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
@@ -126,7 +135,7 @@ function pathway(){
   "Or 1-hour total <b>≥90 ng/L</b>: transfer"
  ],"transfer")+
  '</div>'+
- '<div class="pcr-2h-reference"><span class="pcr-eyebrow">0/2-HOUR SERIAL PATHWAY</span><h3>2-hour high-sensitivity troponin I</h3><p>When the provider selects the 0/2-hour option or the one-hour window is missed, collect the repeat at 120 minutes from the baseline within the approved 2-hour collection window. Interpret the actual value and delta against the approved PATHFAST-specific 0/2-hour limits, not one-hour thresholds.</p><div class="pcr-2h-route"><span><b>0 h</b> Baseline hs-Troponin I</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>2 h</b> Timed repeat + assay-specific delta</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>Provider</b> Rule-out / observation / urgent review</span></div></div>'+
+ '<div class="pcr-2h-reference"><span class="pcr-eyebrow">0/2-HOUR SERIAL PATHWAY</span><h3>2-hour high-sensitivity troponin I</h3><p>If the approved 1-hour window is missed and the provider authorizes the 0/2-hour fallback, collect the repeat at 120 minutes from the baseline within the approved 2-hour collection window. Interpret the actual value and delta against the approved PATHFAST-specific 0/2-hour limits, not one-hour thresholds.</p><div class="pcr-2h-route"><span><b>0 h</b> Baseline hs-Troponin I</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>2 h</b> Timed repeat + assay-specific delta</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>Provider</b> Rule-out / observation / urgent review</span></div></div>'+
 '<header class="pcr-reference-subheading pcr-route-heading"><div><span class="pcr-eyebrow">INITIAL RESULT</span><h3>Where the 0-hour result leads</h3></div><span class="pcr-reference-static">Provider assessment</span></header>'+
  '<div class="pcr-simple-map" aria-label="Initial troponin routing overview">'+
  '<div class="pcr-route-start"><span class="pcr-route-start-icon" aria-hidden="true">●</span><div><strong>Chest pain presentation</strong><small>Initial hs-TnI (0 hour) + ECG</small></div></div>'+
