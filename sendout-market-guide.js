@@ -29,13 +29,16 @@ function dropdown(field,label,value,choices){
  return '<div class="lc-select-box"><div class="lc-select-label">'+E(label)+'</div>'+
  '<button type="button" class="lc-select-trigger" data-lc-select="'+field+'" aria-haspopup="true" aria-expanded="'+(open===field)+'">'+
  '<strong>'+E(value)+'</strong>'+chevron+'</button>'+
- (open===field?'<div class="lc-options" role="group" aria-label="'+E(label)+'">'+choices.map(([id,text])=>
- '<button type="button" role="option" aria-selected="'+(field==="market"?id===market:id===site)+'" class="lc-option '+((field==="market"?id===market:id===site)?"chosen":"")+'" data-lc-choice="'+field+'" data-lc-value="'+E(id)+'">'+E(text)+'<span>'+(field==="market"?id===market:id===site?"✓":"")+'</span></button>').join("")+'</div>':"")+'</div>';
+ (open===field?'<div class="lc-options" role="group" aria-label="'+E(label)+'">'+choices.map(([id,text])=>{
+  const chosen=field==="market"?id===market:id===site;
+  return '<button type="button" role="option" aria-selected="'+chosen+'" class="lc-option '+(chosen?"chosen":"")+'" data-lc-choice="'+field+'" data-lc-value="'+E(id)+'">'+E(text)+(chosen?'<span aria-hidden="true">✓</span>':'')+'</button>';
+ }).join("")+'</div>':"")+'</div>';
 }
-function selection(){
- return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>Choose market and clinic</strong><p>The receiving lab, packaging rules, courier and documentation depend on your site.</p></div>'+
+function selection(mode="guide"){
+ const logOnly=mode==="log";
+ return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(logOnly?'Choose market':'Choose market and clinic')+'</strong><p>'+(logOnly?'Select a market to open its approved Sendout Log. Choose the clinic within the Microsoft Form.':'The receiving lab, packaging rules, courier and documentation depend on your site.')+'</p></div>'+
  '<div class="lc-picker-fields">'+dropdown("market","Market",markets[market].name,Object.entries(markets).map(([k,v])=>[k,v.name]))+
- dropdown("site","Clinic location",selectedSite(),markets[market].sites)+'</div></div>';
+ (logOnly?'':dropdown("site","Clinic location",selectedSite(),markets[market].sites))+'</div></div>';
 }
 function labInfo(l){
  const m=labs[l],regional=market==="socal";
@@ -61,9 +64,9 @@ function guide(){
 }
 function log(){
  const f=form(),valid=Boolean(f&&/^https:\/\/forms\.cloud\.microsoft\/r\/[A-Za-z0-9]+$/.test(f.url));
- return '<div class="lc-sendout lc-sendout-log" id="lcSendoutGuide">'+selection()+
- '<div class="lc-log-outcome"><span class="lc-guide-eyebrow">LAB SENDOUT LOG · '+E(markets[market].name)+'</span>'+
- '<h2>'+E(selectedSite())+'</h2><p>After specimen processing, packaging and photo capture, use the approved <strong>'+E(markets[market].name)+'</strong> Microsoft Form. Select the matching clinic within the form.</p>'+
+ return '<div class="lc-sendout lc-sendout-log" id="lcSendoutGuide">'+selection("log")+
+ '<div class="lc-log-outcome"><span class="lc-guide-eyebrow">LAB SENDOUT LOG</span>'+
+ '<h2>'+E(markets[market].name)+'</h2><p>After specimen processing, packaging and photo capture, use the approved <strong>'+E(markets[market].name)+'</strong> Microsoft Form. Select the matching clinic within the form.</p>'+
  (valid?'<a class="lc-open-form" href="'+E(f.url)+'" target="_blank" rel="noopener noreferrer">Open '+E(markets[market].name)+' Sendout Log ↗</a>':'<p>Approved form link is not configured for this market.</p>')+
  '</div></div>';
 }
