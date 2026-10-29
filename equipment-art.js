@@ -334,8 +334,8 @@ function body(shape,a){
  '<linearGradient id="pf-cover-p" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#123a54"/><stop offset=".45" stop-color="#176d88"/><stop offset="1" stop-color="#0c3d56"/></linearGradient>'+
  '<linearGradient id="pf-glass-p" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#b6e7ee" stop-opacity=".62"/><stop offset=".5" stop-color="#a3d4e1" stop-opacity=".12"/><stop offset="1" stop-color="#7fc8da" stop-opacity=".38"/></linearGradient>'+
  '</defs>'+
- '<ellipse cx="368" cy="291" rx="166" ry="12" fill="#dce6ea" opacity=".6"/>'+
- '<path d="M243 265 L237 153 Q238 74 265 64 Q310 50 331 38 Q353 17 389 18 L460 21 Q496 26 514 63 Q535 106 529 251 Q528 276 507 281 H264 Q245 280 243 265Z" fill="url(#pf-case-p)" stroke="#9eb4be" stroke-width="3"/>'+
+ '<ellipse cx="368" cy="335" rx="169" ry="12" fill="#dce6ea" opacity=".6"/>'+
+ '<path d="M243 304 L237 153 Q238 74 265 64 Q310 50 331 38 Q353 17 389 18 L460 21 Q496 26 514 63 Q535 106 530 295 Q529 316 511 322 Q493 329 470 329 H272 Q246 327 243 304Z" fill="url(#pf-case-p)" stroke="#9eb4be" stroke-width="3"/>'+
  '<path d="M250 145 Q246 76 276 70 Q328 63 348 42 Q376 22 422 30" fill="none" stroke="#fff" stroke-width="6" opacity=".8"/>'+
  '<rect x="254" y="154" width="86" height="98" rx="8" fill="#d7e4e8" stroke="#91a7b4" stroke-width="2.4"/>'+
  '<rect x="260" y="161" width="73" height="79" rx="3" fill="#b5d7e1" stroke="#799eb2" stroke-width="2"/>'+
@@ -364,7 +364,12 @@ function body(shape,a){
  '<path d="M396 252 Q420 243 469 251 L467 268 Q431 280 400 267Z" fill="#51b3cb" stroke="#368eac" stroke-width="3"/>'+
  '<path d="M399 264 Q435 277 467 264" stroke="#b7e8f1" stroke-width="3" fill="none"/>'+
  '<path d="M240 240 H223 Q217 240 217 250 V278" fill="none" stroke="#abbcc4" stroke-width="3"/>'+
- '<path d="M200 276 Q219 269 230 277" stroke="#c8d6dd" stroke-width="4" fill="none"/>';
+ '<path d="M200 276 Q219 269 230 277" stroke="#c8d6dd" stroke-width="4" fill="none"/>'+
+ // Extended PATHFAST bottom case, panel seam, and low molded feet.
+ '<path d="M245 278Q248 299 267 301L502 301Q524 300 529 278" fill="none" stroke="#bccbd1" stroke-width="2.4" opacity=".9"/>'+
+ '<path d="M254 304Q259 316 278 317H487Q510 315 518 305" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>'+
+ '<path d="M262 330H285V334H265Z" fill="#596f79" opacity=".7"/>'+
+ '<path d="M477 330H499V334H478Z" fill="#596f79" opacity=".7"/>';
 }else if(shape==="reader"){
  v=rect(192,68,350,197,14,"#edf2f5","#a6b7bf",3)+rect(206,82,329,107,5,"#b4c0c7")+rect(215,96,200,80,3,"#d7e2e8","#7f99a5",2)+rect(427,98,101,73,8,"#d8e4e9")+Array.from({length:5},(_,i)=>circle(451+(i%3)*24,111+Math.floor(i/3)*25,8,"#eaf1f4","#92a8b5")).join("")+rect(217,194,230,59,7,"#f5f8fa","#c3d0d7")+Array.from({length:12},(_,i)=>txt(237+(i%4)*53,209+Math.floor(i/4)*17,i===9?"0":String(i+1),10,"#4c6472",750)).join("")+rect(454,224,66,25,6,"#2d3d46")+txt(300,88,"Triage MeterPro",11,"#fff",790)+txt(476,215,"Quidel",12,"#92a9b6",810);
  }else if(shape==="urine"){
@@ -404,7 +409,7 @@ function render(sec){
  const core=(sec.id==="torch"||sec.id==="spotfire")?"":body(item.shape,a);
  const svg=(sec.id==="torch"||sec.id==="spotfire")&&window.LAB_BIOFIRE_ART?.analyzer
    ?window.LAB_BIOFIRE_ART.analyzer(sec.id,"ready").replace('<svg ','<svg class="equipment-svg" ')
-   :'<svg class="equipment-svg" viewBox="0 0 740 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified illustration of '+String(sec.title).replace(/"/g,"&quot;")+' instrument">'+
+   :'<svg class="equipment-svg" viewBox="'+(sec.id==="pathfast"?"0 0 740 350":"0 0 740 310")+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified illustration of '+String(sec.title).replace(/"/g,"&quot;")+' instrument">'+
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+
  '<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+core+'</svg>';
  return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
@@ -1241,7 +1246,7 @@ function visualGuide(sec){
    }else if(i===1) visual='<div class="device-gallery-image">'+(id==="torch"||id==="spotfire"?(window.LAB_BIOFIRE_ART?.kit?.()||""):kitShape(id,false,"patient"))+'</div>';
    else if(i===2)visual='<div class="device-gallery-image">'+(id==="torch"||id==="spotfire"?(window.LAB_BIOFIRE_ART?.station?.("ready")||""):kitShape(id,true,"patient"))+'</div>';
    else visual='<div class="device-gallery-image device-gallery-analyzer">'+
-     ((id==="torch"||id==="spotfire")?window.LAB_BIOFIRE_ART?.analyzer?.(id):illustratedSvg(body(specs[id].shape,specs[id].accent),id+" device representation","0 0 740 310"))+'</div>';
+     ((id==="torch"||id==="spotfire")?window.LAB_BIOFIRE_ART?.analyzer?.(id):illustratedSvg(body(specs[id].shape,specs[id].accent),id+" device representation",id==="pathfast"?"0 0 740 350":"0 0 740 310"))+'</div>';
    return '<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(step[0])+'</strong></div>'+
    visual+'<p>'+visualEsc(step[1])+'</p></article>';
  }).join('');
