@@ -41,7 +41,7 @@ function biofire(id,title){
   cards=tile(fig("Blue hydration vial",manual(2,"BioFire blue hydration vial in the blue loading-station well"),"Unscrew blue vial while leaving its plastic cover in the station. Insert into the blue hydration port, press and wait.")+
    fig("Verify hydration",B&&B.station?B.station("hydrate"):statusCard("blue","Hydration","Blue port"),"Check that hydration liquid entered the pouch before proceeding."));
  }else if(/sample.*buffer|mix specimen|prepare specimen/.test(t)){
-  cards=tile(fig("Sample and transfer pipette",manual(4,"Sample injection vial and transfer pipette at the red station well"),isTorch?"Mix stool in Cary Blair; transfer the GI-assay volume with the kit pipette.":"Follow SPOTFIRE kit instructions for specimen transfer and volume.")+
+  cards=tile(fig("Sample and transfer pipette",B&&B.pipette?B.pipette(id):statusCard("red","SAMPLE PREP","Match assay-specific pipette"),isTorch?"Mix stool in Cary Blair; transfer the GI-assay volume with the kit pipette.":"Follow SPOTFIRE kit instructions for specimen transfer and volume.")+
    fig("Snap-tab buffer, then dispense",manual(5,"Gloved hand breaking textured tab on narrow sample buffer tube"),"Hold tube upright and snap the textured tab away from hands; do not touch the dispensing tip.")+
    fig("Add buffer to red vial",manual(6,"Gloved hand squeezing sample buffer into the red injection vial"),"Dispense into red vial without generating excessive foam. "+note));
  }else if(/invert.*red|mix red vial|mix the capped/i.test(t)){
@@ -61,7 +61,7 @@ function biofire(id,title){
  }else if(/review and document|results/.test(t)){
   cards=tile(fig("Review the completed run",statusCard("blue","REVIEW RESULTS","Controls passed · verify identity"),"Read internal control status, sample ID and results; handle incomplete/invalid runs per the assay IFU."));
  }else if(/qc|control/.test(t)){
-  cards=tile(fig("Prepare QC in red vial",manual(4,"Example of sample vial preparation with transfer pipette"),"Use the correct QC positive/negative material and the panel-specific IFU; record the control ID.")+
+  cards=tile(fig("Prepare QC in red vial",B&&B.station?B.station("ready"):statusCard("red","QC SAMPLE","Use approved QC materials"),"Use the correct QC positive/negative material and the panel-specific IFU; record the control ID.")+
    fig("Load QC pouch",manual(2,"BioFire pouch ready in loading station"),"Follow the same blue hydration and red sample paths for both QC levels."));
  }
  return cards?'<section class="lc-biofire-stages" aria-label="'+panel+' illustrated step">'+cards+ref+'</section>':"";
