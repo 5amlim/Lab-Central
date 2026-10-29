@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-align-followup-buttons-right-v1" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261029-workflow-tabs-large-roles-v1" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-sendout-photos" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1004,7 +1004,7 @@ function workflowSteps(steps,start=1){
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const unresolved=state.reqResolution==='unresolved';
- let h=`<div class="workflow-head"><div><span class="eyebrow">EXTERNAL LAB REQUISITION</span><h2>Lab order requests</h2><p>Start with how the requisition was received. Both intake routes must end with the document classified as <strong>Lab requisition</strong> in the correct patient chart.</p></div><span class="workflow-role-pill">Front desk · Tech / RN · Provider</span></div>`;
+ let h=`<div class="workflow-head"><div><span class="eyebrow">EXTERNAL LAB REQUISITION</span><h2>Lab order requests</h2><p>Start with how the requisition was received. Both intake routes must end with the document classified as <strong>Lab requisition</strong> in the correct patient chart.</p></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
  h+='<div class="external-workflow-timeline">';
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">How was the requisition received?</h3><p>Select the source to see the required chart and document steps.</p></div></header>
@@ -1023,20 +1023,20 @@ function externalFlow(){
  <p class="requisition-intake-note">Keep patient details in approved clinical systems. The illustrations contain no patient information.</p>
  </section>`;
  h+=workflowSteps([
- ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to the tech or RN for review.']
+ ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to lab personnel or an RN for review.']
  ],2);
- h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Tech or RN reviews the requisition</strong></div></div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Choose a path to display the next steps. No patient information is saved here.</p></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${!missing?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${!missing}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
+ h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Lab personnel or RN reviews the requisition</strong></div></div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Choose a path to display the next steps. No patient information is saved here.</p></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${!missing?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${!missing}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
  if(missing){
- h+=`<div class="branch-result"><div class="branch-action"><span class="branch-action-icon">!</span><div><strong>Contact the ordering provider’s office</strong><p>The tech or RN reviewing the requisition calls the ordering provider’s office to obtain the missing account number and/or test codes.</p></div></div><div class="branch-options branch-followup" role="group" aria-label="Ordering office follow-up"><button type="button" class="branch-choice ${!unresolved?'selected':''}" data-reqresolution="provided" aria-pressed="${!unresolved}">Information obtained</button><button type="button" class="branch-choice ${unresolved?'selected':''}" data-reqresolution="unresolved" aria-pressed="${unresolved}">Office unable to provide</button></div>`;
+ h+=`<div class="branch-result"><div class="branch-action"><span class="branch-action-icon">!</span><div><strong>Contact the ordering provider’s office</strong><p>Lab personnel or the RN reviewing the requisition calls the ordering provider’s office to obtain the missing account number and/or test codes.</p></div></div><div class="branch-options branch-followup" role="group" aria-label="Ordering office follow-up"><button type="button" class="branch-choice ${!unresolved?'selected':''}" data-reqresolution="provided" aria-pressed="${!unresolved}">Information obtained</button><button type="button" class="branch-choice ${unresolved?'selected':''}" data-reqresolution="unresolved" aria-pressed="${unresolved}">Office unable to provide</button></div>`;
  if(unresolved){
- h+=`<div class="escalation-box"><span class="escalation-label">ESCALATION PATH</span><h3>Ask the provider on duty to place the orders</h3><p>The tech or RN asks the <strong>Sollis provider on duty</strong> to place the required orders. The reviewing team then prepares and uploads the lab calculator and passes the completed request back to front desk to schedule.</p></div>`;
+ h+=`<div class="escalation-box"><span class="escalation-label">ESCALATION PATH</span><h3>Ask the provider on duty to place the orders</h3><p>Lab personnel or the RN asks the <strong>Sollis provider on duty</strong> to place the required orders. The reviewing team then prepares and uploads the lab calculator and passes the completed request back to front desk to schedule.</p></div>`;
  }else{h+=`<div class="resolution-note">Once the ordering office supplies the missing information, complete the calculator review and continue to the handoff below.</div>`;}
  h+=`</div>`;
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
  ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB document label.','calculator-upload','Confirm the receiving lab.'],
- ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, the tech or RN returns the completed request to front desk. Front desk schedules the patient.'],
+ ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, lab personnel or the RN returns the completed request to front desk. Front desk schedules the patient.'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
  h+='</div>';
@@ -1046,21 +1046,21 @@ function externalFlow(){
 function collectionProcessingHandoff(){
  const items=[
  ['RN / COLLECTOR','test-tubes','RN draws blood using the Lab Calculator','Use the color Lab Calculator to confirm required tubes, draw volumes, order of draw and labels. Collect other ordered specimen types according to the same verified guide.'],
- ['RN','clipboard-check','Document the draw and hand off samples','Record collection in Athena using the approved .rn workflow and give the labeled specimens, requisition and calculator to the lab tech.'],
- ['LAB TECH','settings','Process specimens','Verify labels, centrifuge, aliquot and prepare specimens using the test directory and calculator temperature/processing instructions.'],
- ['LAB TECH','package','Package the correct transport bags','Keep receiving labs and room-temperature, refrigerated or frozen groups in their proper bags. Separate STAT from routine where required. Place matching paperwork in the outside sleeve.'],
- ['LAB TECH','file-text','Complete the Sendout Log','Photograph specimen containers, sealed bags and requisition. Submit the correct regional secure Microsoft Form, verify submission and put bags in the appropriate pickup or storage bin.']
+ ['RN','clipboard-check','Document the draw and hand off samples','Record collection in Athena using the approved .rn workflow and give the labeled specimens, requisition and calculator to lab personnel.'],
+ ['LAB PERSONNEL','settings','Process specimens','Verify labels, centrifuge, aliquot and prepare specimens using the test directory and calculator temperature/processing instructions.'],
+ ['LAB PERSONNEL','package','Package the correct transport bags','Keep receiving labs and room-temperature, refrigerated or frozen groups in their proper bags. Separate STAT from routine where required. Place matching paperwork in the outside sleeve.'],
+ ['LAB PERSONNEL','file-text','Complete the Sendout Log','Photograph specimen containers, sealed bags and requisition. Submit the correct regional secure Microsoft Form, verify submission and put bags in the appropriate pickup or storage bin.']
  ];
- return '<section class="collection-handoff" aria-label="RN collection and lab tech specimen handoff">'+
- '<div class="collection-handoff-heading"><span>APPOINTMENT DAY · SENDOUT HANDOFF</span><h2>RN collection → Tech processing → Electronic log</h2><p>Follow the correct roles for send-out specimens after the chart and collection plan are ready.</p></div>'+
+ return '<section class="collection-handoff" aria-label="RN collection and lab personnel specimen handoff">'+
+ '<div class="collection-handoff-heading"><span>APPOINTMENT DAY · SENDOUT HANDOFF</span><h2>RN collection → Lab personnel processing → Electronic log</h2><p>Follow the correct roles for send-out specimens after the chart and collection plan are ready.</p></div>'+
  '<div class="collection-handoff-grid">'+items.map((x,i)=>'<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+x[0]+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><p>'+safeHtml(x[3])+'</p></div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 function inhouseFlow(){
- let h=`<div class="workflow-head"><div><span class="eyebrow">IN-HOUSE ORDERS</span><h2>Orders placed by the clinical team</h2><p>Orders placed in Athena by the clinical team. Follow current ordering and collection procedures.</p></div><span class="workflow-role-pill">Provider · Tech / RN</span></div>`;
+ let h=`<div class="workflow-head"><div><span class="eyebrow">IN-HOUSE ORDERS</span><h2>Orders placed by the clinical team</h2><p>Orders placed in Athena by the clinical team. Follow current ordering and collection procedures.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
  h+=workflowSteps([
  ['Provider places the order','The Sollis provider places the appropriate tests in Athena. Confirm the receiving laboratory or in-house test requested.'],
- ['Tech or RN reviews the order','Check the ordered test and specimen requirements. For send-outs, select the correct receiving laboratory in the calculator.'],
+ ['Lab personnel or RN reviews the order','Check the ordered test and specimen requirements. For send-outs, select the correct receiving laboratory in the calculator.'],
  ['Prepare the collection instructions','Use Quest, Cedars or Labcorp calculator as applicable. Verify test codes, draw requirements, handling, temperature and priority against the official directory.'],
  ['Document and complete the handoff','Upload the calculator instructions when sending specimens out. Coordinate scheduling with front desk if the collection requires an appointment. For instrument testing, follow the appropriate instrument procedure and documentation workflow.']
  ]);
