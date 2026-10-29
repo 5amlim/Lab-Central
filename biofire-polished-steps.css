@@ -77,3 +77,12 @@
 .bf-spotfire-display-zoom p{margin:0;padding:8px 12px 12px;color:#658294;font-size:11px;line-height:1.5;text-align:center}
 @media(max-width:700px){.bf-polished-svg .bf-source-image img{max-height:320px}.bf-spotfire-display-zoom{width:100%}}
 @media print{.bf-source-image img{max-height:230px!important}.bf-spotfire-display-zoom{display:none}}
+
+
+/* Manufacturer figure pairs appear side-by-side for the two buffer-handling
+   actions; all other preparation photos show a single clear figure. */
+.bf-photos-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%;align-items:center}
+.bf-photos-pair .bf-source-image{min-width:0;min-height:170px}
+.bf-photos-pair .bf-source-image img{max-height:290px;max-width:100%;object-fit:contain}
+@media(max-width:540px){.bf-photos-pair{grid-template-columns:1fr}.bf-photos-pair .bf-source-image{min-height:135px}.bf-photos-pair .bf-source-image img{max-height:220px}}
+@media print{.bf-photos-pair{grid-template-columns:repeat(2,minmax(0,1fr))}}
