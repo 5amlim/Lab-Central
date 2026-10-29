@@ -356,16 +356,10 @@ function body(shape,a){
  }else if(shape==="urine"){
  v='<g transform="translate(75 0) scale(.73)">'+clinitekDeviceMarkup("empty")+'</g>';
  }else if(shape==="torch"){
- v='<ellipse cx="385" cy="286" rx="235" ry="15" fill="#dae4e9" opacity=".65"/>'+
- '<path d="M182 99 L234 64 L518 64 L583 100 L583 234 L532 272 L197 272 L180 236Z" fill="#e6edef" stroke="#9cabb6" stroke-width="3"/>'+
- '<path d="M181 99 L234 64 L278 64 L278 271 L194 269 L182 235Z" fill="#545a64" stroke="#555d69" stroke-width="3"/>'+
- '<path d="M276 79 H520 L554 103 L554 228 H276Z" fill="#f5f7f7" stroke="#bdcbd0" stroke-width="2"/>'+
- Array.from({length:4},(_,i)=>{const x=286+(i%2)*133,y=91+Math.floor(i/2)*61;return '<rect x="'+x+'" y="'+y+'" width="124" height="54" rx="6" fill="#fcfdfd" stroke="#a2b5c1" stroke-width="2"/><rect x="'+(x+10)+'" y="'+(y+14)+'" width="20" height="27" rx="4" fill="#26323e"/><path d="M'+(x+35)+' '+(y+18)+'h14" stroke="#c54d54" stroke-width="4"/>';}).join('')+
- '<path d="M400 226 L566 210 L604 267 L420 282Z" fill="#e0ebef" stroke="#9bafb9" stroke-width="3"/>'+
- '<path d="M429 229 L556 217 L581 255 L449 268Z" fill="#233746" stroke="#5c7c8e" stroke-width="3"/>'+
- '<path d="M445 234 L554 226 L568 251 L460 258Z" fill="#d6edf1"/>'+
- '<text x="229" y="203" transform="rotate(-90 229 203)" fill="#eff3f5" font-family="Arial" font-size="12" font-weight="800">BIOFIRE</text>'+
- '<text x="509" y="246" fill="#3a7995" font-family="Arial" font-size="11" font-weight="800">TORCH</text>';
+ // Keep the device illustration consistent in any non-primary fallback view.
+ // Nested SVG retains the exact shared two-door TORCH reference shape.
+ const visual=window.LAB_BIOFIRE_ART?.analyzer?.("torch")||"";
+ v=visual.replace("<svg ","<svg x=\"52\" y=\"8\" width=\"630\" height=\"295\" ");
  }else if(shape==="modules"){
  v=rect(194,104,215,166,18,"#eef3f6","#9cadb9",3)+rect(211,119,180,99,10,"#d9e5ea","#b7cbd4",2)+'<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+rect(214,228,179,29,7,"#dae6eb")+txt(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+rect(404,59,120,196,17,"#f3f7f9","#9db3bf",3)+rect(417,81,95,154,6,"#263c4b")+rect(427,94,75,119,3,"#e1edf2")+txt(465,131,"Available",13,"#356b86",850)+circle(464,243,7,"#4a91aa");
  }else if(shape==="sofia"){
@@ -918,17 +912,10 @@ function kitShape(id,filled,context){
   return illustratedSvg(h+'<path d="M97 102 L115 50 H189" fill="none" stroke="#2f91a1" stroke-width="3"/><text x="142" y="43" font-size="11" fill="'+dark+'" font-weight="850">SAMPLE PORT</text>',"Triage lateral flow test device "+(filled?"after liquid sample applied":"before sample transfer"));
  }
  if(id==="torch"||id==="spotfire"){
-  h='<path d="M60 143 L105 58 L232 58 L264 142 L231 182 L68 182Z" fill="#202b34" stroke="#829aa8" stroke-width="3"/>'+
-   '<path d="M77 142 L112 77 H225 L239 140 H77Z" fill="#111b23" stroke="#3c4e59" stroke-width="2"/>'+
-   '<circle cx="116" cy="95" r="13" fill="'+(filled?specimen:"#f6fafb")+'" stroke="#c9535d" stroke-width="4"/>'+
-   '<circle cx="204" cy="95" r="13" fill="'+(filled?"#8fcbe4":"#f5fafc")+'" stroke="#288fb9" stroke-width="4"/>'+
-   '<path d="M83 139 L231 139" stroke="#4b636f" stroke-width="3"/>'+
-   Array.from({length:12},(_,i)=>'<rect x="'+(94+i*10)+'" y="143" width="7" height="25" rx="2" fill="#b9d6df" stroke="#8faab6"/>').join("")+
-   '<path d="M116 95 L78 34 H25" stroke="#bd5263" stroke-width="2.5" fill="none"/>'+
-   '<path d="M204 95 L243 34 H306" stroke="#278db4" stroke-width="2.5" fill="none"/>'+
-   '<text x="25" y="25" font-family="Arial" font-size="11" fill="#b3485a" font-weight="850">RED · SAMPLE</text>'+
-   '<text x="306" y="25" text-anchor="end" font-family="Arial" font-size="11" fill="#287d9e" font-weight="850">BLUE · HYDRATION</text>';
-  return illustratedSvg(h,"Black BioFire pouch with red sample port left and blue hydration port right, "+(filled?"fluids loaded":"wells empty"));
+  // Both panel families use the SAME reference-matched black base and
+  // clear white-capped injection vials, never the old generic trapezoid.
+  const B=window.LAB_BIOFIRE_ART;
+  return B?.station?.(filled?"sample":"ready")||"";
  }
  if(id==="clinitek")return clinitekKit(context==="hcg"?"hcg":"ua",filled);
   if(id==="febridx"){
@@ -1140,10 +1127,10 @@ function visualGuide(sec){
    let visual='';
    if(i===0){
      visual='<div class="device-gallery-specimens">'+med.map(x=>'<div class="device-gallery-media">'+mediaSvg(x[0])+'<small>'+visualEsc(x[1])+'</small></div>').join('')+'</div>';
-   }else if(i===1) visual='<div class="device-gallery-image">'+kitShape(id,false,"patient")+'</div>';
-   else if(i===2)visual='<div class="device-gallery-image">'+kitShape(id,true,"patient")+'</div>';
+   }else if(i===1) visual='<div class="device-gallery-image">'+(id==="torch"||id==="spotfire"?(window.LAB_BIOFIRE_ART?.kit?.()||""):kitShape(id,false,"patient"))+'</div>';
+   else if(i===2)visual='<div class="device-gallery-image">'+(id==="torch"||id==="spotfire"?(window.LAB_BIOFIRE_ART?.station?.("ready")||""):kitShape(id,true,"patient"))+'</div>';
    else visual='<div class="device-gallery-image device-gallery-analyzer">'+
-     illustratedSvg(body(specs[id].shape,specs[id].accent),id+" device representation","0 0 740 310")+'</div>';
+     ((id==="torch"||id==="spotfire")?window.LAB_BIOFIRE_ART?.analyzer?.(id):illustratedSvg(body(specs[id].shape,specs[id].accent),id+" device representation","0 0 740 310"))+'</div>';
    return '<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(step[0])+'</strong></div>'+
    visual+'<p>'+visualEsc(step[1])+'</p></article>';
  }).join('');
