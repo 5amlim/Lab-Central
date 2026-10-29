@@ -850,46 +850,95 @@ function pathfastRackBaseSvg(){
 
 /* Shared PATHFAST analyzer silhouette from the Overview, with two teaching
    states: hood raised/arrow to close, and safe closed-hood running. */
+/* PATHFAST COMPACT analyzer drawing based on the instrument reference:
+   a tall white front housing, small touchscreen on the left, an exposed
+   six-lane chamber on the right and a ROUNDED blue upper hood that hinges up.
+   The open hood is a curved visor, never a rectangular laptop-style flap. */
 function pathfastMachineStateSvg(state){
  const open=state==="hood";
- const analyzer=body("pathfast","#3289a4");
  const t=(x,y,value,size=16,fill="#315e76",weight=850)=>
   '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" fill="'+fill+'" font-weight="'+weight+'">'+value+'</text>';
- const hoodOpen='<path d="M360 65Q375 43 405 42H484Q507 47 512 82V250Q510 274 485 283H370Q353 270 353 235V110Z" fill="#e4eef1" stroke="#a5bcc6" stroke-width="3"/>'+
-  '<path d="M373 109H493V237H373Z" fill="#1e536b" stroke="#548ea3" stroke-width="3"/>'+
-  '<rect x="380" y="125" width="105" height="98" rx="6" fill="#d5e7eb" stroke="#92bcc7" stroke-width="3"/>'+
-  Array.from({length:6},(_,i)=>'<rect x="'+(383+i*17)+'" y="140" width="13" height="68" rx="3" fill="'+(i<2?"#ecf6f8":"#f4f8f9")+'" stroke="#8fa9b1" stroke-width="1.5"/>').join("")+
-  '<path d="M374 241H493V258Q473 276 394 270Z" fill="#2e829b" stroke="#61b1c4" stroke-width="3"/>'+
-  // The blue tinted cover is lifted UP at the back hinge.
-  '<path d="M380 105L402 -25L480 -40L505 85Z" fill="#176a85" stroke="#4babc1" stroke-width="5"/>'+
-  '<path d="M389 95L410 -14L470 -27L493 79Z" fill="#1b536d" stroke="#80cbd5" stroke-width="3"/>'+
-  '<path d="M402 84L418 -4L463 -14L480 71Z" fill="#96d3df" opacity=".43"/>'+
-  '<path d="M382 110H501" stroke="#459ab4" stroke-width="5"/>';
+ const defs='<defs>'+
+  '<linearGradient id="pf-front-case" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#ffffff"/><stop offset=".52" stop-color="#eef4f4"/><stop offset="1" stop-color="#d4e0e3"/></linearGradient>'+
+  '<linearGradient id="pf-hood-blue" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#c3ecf6" stop-opacity=".95"/><stop offset=".43" stop-color="#4da8c8" stop-opacity=".84"/><stop offset="1" stop-color="#1c789c" stop-opacity=".84"/></linearGradient>'+
+  '<linearGradient id="pf-hood-window" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d5f9ff" stop-opacity=".75"/><stop offset=".5" stop-color="#6bbbd2" stop-opacity=".35"/><stop offset="1" stop-color="#3a9cb9" stop-opacity=".68"/></linearGradient>'+
+  '<linearGradient id="pf-chamber" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#536c76"/><stop offset=".46" stop-color="#22333e"/><stop offset="1" stop-color="#101b24"/></linearGradient>'+
+ '</defs>';
+ const whiteBody='<ellipse cx="376" cy="495" rx="244" ry="13" fill="#dae5ea" opacity=".7"/>'+
+  '<path d="M211 457Q205 446 205 426L207 260Q205 175 246 133Q274 99 329 100H462Q517 106 536 171L555 446Q555 478 521 484Q414 498 231 484Q214 482 211 457Z" fill="url(#pf-front-case)" stroke="#9fb5bf" stroke-width="4"/>'+
+  '<path d="M225 251Q217 178 251 143Q272 120 316 116" fill="none" stroke="#fff" stroke-opacity=".94" stroke-width="11" stroke-linecap="round"/>'+
+  '<path d="M211 455Q204 468 220 479L308 479" fill="none" stroke="#bacbd1" stroke-width="3"/>'+
+  // Separate left LCD, as in the instrument photo.
+  '<rect x="236" y="267" width="102" height="103" rx="7" fill="#d0dfe4" stroke="#7899a8" stroke-width="3"/>'+
+  '<rect x="243" y="275" width="88" height="86" rx="2" fill="#c6e3e9" stroke="#8bb4c1" stroke-width="1.5"/>'+
+  '<rect x="246" y="279" width="82" height="19" fill="#4e9fba"/>'+
+  t(287,292,"ASSAY/HOME",9,"#fff",900)+
+  '<path d="M251 309H322M251 317H308M251 325H322" stroke="#82b6c7" stroke-width="3"/>'+
+  '<rect x="249" y="336" width="31" height="13" rx="2" fill="#ebf8fa" stroke="#79afbd"/>'+
+  '<rect x="286" y="336" width="37" height="13" rx="2" fill="#ebf8fa" stroke="#79afbd"/>'+
+  t(287,382,"COMPACT",11,"#53676f",900)+
+  '<circle cx="337" cy="380" r="4.6" fill="#2b9b73"/>'+
+  '<path d="M220 421L344 421L342 480L221 479Z" fill="#f2f6f5" stroke="#b7c8ce" stroke-width="2.5"/>'+
+  '<path d="M223 424L344 423" stroke="#b1c2c7" stroke-width="3"/>';
+ const rails=Array.from({length:6},(_,i)=>{
+  const x=370+i*24;
+  return '<rect x="'+x+'" y="238" width="20" height="161" rx="5" fill="#9eafb5" stroke="#405a64" stroke-width="2"/>'+
+   '<rect x="'+(x+3)+'" y="266" width="14" height="66" rx="3" fill="#273944"/>'+
+   '<path d="M'+(x+10)+' 266V323" stroke="#dce7e8" stroke-width="2" opacity=".55"/>'+
+   '<rect x="'+(x+3)+'" y="367" width="14" height="27" rx="2" fill="#1b2831"/>'+
+   '<rect x="'+(x+2)+'" y="364" width="16" height="4" fill="#bf4d55"/>';
+ }).join("");
+ const chamber='<path d="M344 188Q345 174 361 170H507Q523 178 524 199V430Q524 455 505 461H359Q345 455 345 437Z" fill="#e6eeef" stroke="#a6bdc6" stroke-width="4"/>'+
+  '<rect x="356" y="194" width="158" height="251" rx="14" fill="url(#pf-chamber)" stroke="#668c9a" stroke-width="4"/>'+
+  '<path d="M368 211H502V226H368Z" fill="#7b919a"/>'+
+  Array.from({length:6},(_,i)=>'<circle cx="'+(381+i*22)+'" cy="219" r="5.2" fill="#1c303b" stroke="#a4b6bc" stroke-width="1.2"/>').join("")+
+  '<path d="M369 238H502V245H369Z" fill="#c4d1d5"/>'+rails+
+  '<rect x="364" y="395" width="140" height="40" rx="5" fill="#cfdddf" stroke="#718e9b" stroke-width="3"/>'+
+  '<rect x="371" y="400" width="126" height="23" rx="4" fill="#eff5f4" stroke="#a9c4c9" stroke-width="2"/>'+
+  Array.from({length:6},(_,i)=>'<path d="M'+(378+i*20)+' 403v19" stroke="#97b2b8" stroke-width="2"/>').join("")+
+  '<path d="M371 442H497" stroke="#8babb5" stroke-width="3"/>';
+ // The raised hood follows the curved cylindrical shell in the photo.
+ const hoodRaised='<path d="M347 184L347 103Q350 64 381 52Q435 24 491 52Q529 66 531 103L529 173Q525 194 503 197Q418 206 368 195Q353 192 347 184Z" fill="url(#pf-hood-blue)" stroke="#4b9cba" stroke-width="4"/>'+
+  '<path d="M358 102Q362 75 389 65Q435 42 483 63Q513 74 519 103" fill="none" stroke="#e3faff" opacity=".84" stroke-width="6"/>'+
+  '<path d="M359 112Q428 99 519 113M357 150Q428 129 522 151" fill="none" stroke="#277fa4" stroke-width="3" opacity=".8"/>'+
+  '<path d="M354 166Q433 187 523 165" fill="none" stroke="#b8edf7" stroke-width="4" opacity=".9"/>'+
+  '<path d="M370 183Q437 190 505 183" fill="none" stroke="#266c8e" stroke-width="4"/>'+
+  '<path d="M436 92V181" stroke="#236d91" stroke-width="2.5" opacity=".65"/>'+
+  t(438,71,"P A T H F A S T",10,"#f1ffff",850);
+ const hoodClosed='<path d="M346 184Q346 154 356 135Q371 112 407 105H475Q513 115 527 145L534 424Q534 456 508 464H359Q343 455 343 436Z" fill="url(#pf-hood-window)" stroke="#4298b4" stroke-width="5"/>'+
+  '<path d="M354 180Q352 149 378 132Q433 99 493 133Q515 148 520 176" fill="none" stroke="#dbf6fc" opacity=".8" stroke-width="6"/>'+
+  '<path d="M352 203L354 424Q358 447 377 450" stroke="#8fd5e4" stroke-width="4" fill="none" opacity=".8"/>'+
+  '<path d="M514 182L519 423" stroke="#6ebacf" stroke-width="5" fill="none" opacity=".8"/>'+
+  '<path d="M364 434Q431 451 511 433" stroke="#3c90ae" stroke-width="4" fill="none"/>'+
+  t(435,161,"PATHFAST",11,"#eafbfd",900);
+ const machine=defs+whiteBody+chamber+(open?hoodRaised:hoodClosed);
  if(open){
-  const drawing='<g transform="translate(35 124) scale(1.33)">'+analyzer+hoodOpen+'</g>'+
-  '<path d="M726 88Q777 111 769 185Q765 227 717 249" fill="none" stroke="#1d938c" stroke-width="9" stroke-linecap="round"/>'+
-  '<path d="M717 219L715 252L746 244" fill="none" stroke="#1d938c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>'+
-  '<rect x="650" y="41" width="249" height="53" rx="14" fill="#e3f4ef" stroke="#69b8a9" stroke-width="2"/>'+
-  t(775,73,"CLOSE THE HOOD",20,"#176f68",900)+
-  '<rect x="542" y="347" width="355" height="58" rx="13" fill="#f0f7f8" stroke="#c1dce2" stroke-width="2"/>'+
-  t(720,371,"Confirm rack, tips and waste box",14)+
-  t(720,391,"before closing the cover.",12,"#5b7f8e",730);
-  return illustratedSvg(drawing,"PATHFAST analyzer with raised translucent hood and downward arrow instructing close hood","0 0 950 440");
+  const illustration='<g transform="translate(78 2) scale(1.02)">'+machine+'</g>'+
+   // This points from the raised blue dome to the analyzer opening.
+   '<path d="M714 150Q754 177 749 244Q744 282 705 305" fill="none" stroke="#168d87" stroke-width="9" stroke-linecap="round"/>'+
+   '<path d="M705 275L704 307L734 300" fill="none" stroke="#168d87" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>'+
+   '<rect x="646" y="92" width="252" height="55" rx="13" fill="#e0f3ef" stroke="#5eb3a7" stroke-width="2"/>'+
+   t(772,126,"CLOSE THE HOOD",21,"#15746b",900)+
+   '<rect x="615" y="377" width="290" height="75" rx="13" fill="#f2f8fa" stroke="#c4dde4" stroke-width="2"/>'+
+   t(760,402,"Rack, tips and waste box",14,"#335f71")+
+   t(760,422,"must be seated before",13,"#5f8092",720)+
+   t(760,439,"lowering the hood.",13,"#5f8092",720);
+  return illustratedSvg(illustration,"PATHFAST COMPACT analyzer with the curved blue upper hood raised and the vertical six-lane cartridge chamber exposed; arrow shows lowering the hood","0 0 940 535");
  }
- const drawing='<g transform="translate(-48 82) scale(1.42)">'+analyzer+'</g>'+
- '<circle cx="746" cy="115" r="53" fill="#e9f8ef" stroke="#65bb98" stroke-width="4"/>'+
- '<path d="M719 115l20 20 36-46" fill="none" stroke="#178663" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>'+
- t(745,195,"RUNNING",26,"#177a63",900)+
- '<rect x="625" y="218" width="244" height="70" rx="16" fill="#eaf5f8" stroke="#9ac5d2" stroke-width="3"/>'+
- t(747,252,"17 MINUTES",26,"#286c85",900)+
- t(747,273,"Approximate assay time",12,"#557d8e",730)+
- '<rect x="66" y="345" width="825" height="73" rx="14" fill="#fff0ee" stroke="#d94c4a" stroke-width="4"/>'+
- '<path d="M106 358l27 46h-54Z" fill="#d64745"/>'+
- '<path d="M106 372v17" stroke="white" stroke-width="6" stroke-linecap="round"/>'+
- '<circle cx="106" cy="395" r="3.7" fill="white"/>'+
- t(484,380,"DO NOT OPEN THE HOOD",27,"#ac2d30",900)+
- t(484,405,"WHILE THE ANALYZER IS RUNNING",18,"#b73b3d",900);
- return illustratedSvg(drawing,"PATHFAST analyzer running with closed hood, green checkmark, approximately 17 minute run, warning do not open hood while running","0 0 950 440");
+ const illustration='<g transform="translate(44 0) scale(1)">'+machine+'</g>'+
+  '<circle cx="747" cy="122" r="54" fill="#e4f7ed" stroke="#69bb9c" stroke-width="4"/>'+
+  '<path d="M720 120l19 21 39-48" stroke="#15885f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'+
+  t(750,203,"RUNNING",28,"#177c62",900)+
+  '<rect x="630" y="225" width="242" height="75" rx="14" fill="#e9f6f8" stroke="#99c5d2" stroke-width="3"/>'+
+  t(750,260,"17 MINUTES",27,"#286c85",900)+
+  t(750,283,"Approximate assay time",13,"#5b8393",740)+
+  '<rect x="78" y="438" width="806" height="76" rx="14" fill="#fff0ee" stroke="#d84b4b" stroke-width="4"/>'+
+  '<path d="M116 452l26 45H90Z" fill="#d64745"/>'+
+  '<path d="M116 466v16" stroke="white" stroke-width="6" stroke-linecap="round"/>'+
+  '<circle cx="116" cy="490" r="3.5" fill="white"/>'+
+  t(506,470,"DO NOT OPEN THE HOOD",26,"#ae292a",900)+
+  t(506,498,"WHILE THE ANALYZER IS RUNNING",19,"#b03736",900);
+ return illustratedSvg(illustration,"PATHFAST COMPACT analyzer with closed blue hood and green running confirmation; typical run 17 minutes and do not open the hood while running warning","0 0 940 535");
 }
 function pathfastActionVisual(stage,mode="patient"){
  const qc=mode==="cal";
