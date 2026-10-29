@@ -346,7 +346,7 @@ function homepageEquipmentArt(sec,featured=false){
  if(!sec||!window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id))return '';
  // Piccolo uses its tall full-height guide drawing, never a short landscape crop.
  const markup=sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART.piccoloDeviceSvg
-  ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("ready")
+  ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("drawer")
   :window.LAB_EQUIPMENT_ART.render(sec);
  const matched=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/i);
  if(!matched)return '';
