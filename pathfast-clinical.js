@@ -60,8 +60,8 @@ function routeBranch(value,note,kind){
  '<strong>'+value+'</strong><p>'+note+'</p></article>';
 }
 function pathway(){
- return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I · Approved pathways</h2>'+
- '<p>Provider review for PATHFAST high-sensitivity troponin I (hs-cTnI) 0/1-hour and 0/2-hour pathways. Follow the approved site protocol.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
+ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I · 0/1-hour pathway</h2>'+
+ '<p>Use the approved 0/1-hour serial hs-Troponin I pathway as the starting workflow. The 0/2-hour alternative is available when directed by the provider or when the approved 1-hour collection window was missed.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
  '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
  window.LAB_PATHFAST_EXTRAS.flow()+
  '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>Assay thresholds and timed pathways</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
