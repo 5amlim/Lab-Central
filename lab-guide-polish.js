@@ -89,35 +89,10 @@ function piccoloPatientScreen(){
  return '<div class="lc-pic-screen-flow">'+visual('1 · Select Patient',select,'Select Patient, not Control.')+'<span aria-hidden="true" class="lc-pic-screen-flow-arrow">→</span>'+visual('2 · Enter MRN, then Done',keypad,'Use the correct patient MRN; verify against the label.',true)+'</div>';
 }
 function piccoloRunningSvg(){
- // Silhouette based on the Piccolo Xpress's compact cobalt-blue body, tall
- // rounded black touch bezel, lower front power LED and no exposed keyboard.
- const box='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 770 420" role="img" aria-label="Piccolo Xpress chemistry analyzer with a rounded blue housing and black touchscreen showing analysis in progress, with a green confirmation checkmark">'+
- '<ellipse cx="343" cy="384" rx="235" ry="17" fill="#dce8ef"/>'+
- '<path d="M225 38Q224 15 250 15H460Q488 16 498 42L535 83V331Q533 357 505 364H245Q218 361 218 336Z" fill="#236baa" stroke="#15517e" stroke-width="5"/>'+
- '<path d="M458 18L498 43L534 82V333Q531 355 506 363L497 92Z" fill="#134d80"/>'+
- '<path d="M249 20Q231 20 230 42L224 250Q224 280 246 281H464Q488 281 485 254L475 47Q470 19 443 20Z" fill="#182536" stroke="#101b2c" stroke-width="5"/>'+
- '<rect x="258" y="64" width="188" height="171" rx="9" fill="#d3ebf9" stroke="#658da5" stroke-width="3"/>'+
- '<rect x="261" y="66" width="182" height="34" rx="5" fill="#2d5b90"/>'+
- '<text x="351" y="89" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#fff">piccolo xpress</text>'+
- '<text x="351" y="133" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#346c83">Analyzing</text>'+
- '<rect x="281" y="151" width="143" height="20" rx="9" fill="#b7d8e5"/>'+
- '<rect x="281" y="151" width="90" height="20" rx="9" fill="#248f83"/>'+
- '<text x="351" y="195" text-anchor="middle" font-size="13" font-family="Arial" fill="#507184">Run in progress</text>'+
- '<rect x="260" y="217" width="181" height="20" rx="4" fill="#a9c8db"/>'+
- '<text x="352" y="269" text-anchor="middle" font-size="18" font-family="Arial" font-weight="850" fill="#72bdeb">piccolo</text>'+
- '<text x="401" y="266" font-size="12" font-family="Arial" fill="#fff">xpress</text>'+
- '<path d="M248 283H481V346Q481 365 457 366H269Q248 365 248 347Z" fill="#2369ac"/>'+
- '<path d="M260 292H472" stroke="#4b91c5" stroke-width="3" opacity=".62"/>'+
- '<rect x="272" y="367" width="180" height="11" rx="2" fill="#f5f7f8" stroke="#c1d2da" stroke-width="2"/>'+
- '<circle cx="429" cy="328" r="9" fill="#91e8fc" stroke="#dcfbff" stroke-width="3"/>'+
- '<circle cx="596" cy="146" r="63" fill="#e6f6ee" stroke="#5db995" stroke-width="5"/>'+
- '<path d="M564 146L586 169L626 124" stroke="#168b66" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>'+
- '<text x="594" y="231" text-anchor="middle" font-size="22" font-family="Arial" font-weight="850" fill="#1b806b">RUN STARTED</text>'+
- '<text x="594" y="258" text-anchor="middle" font-size="14" font-family="Arial" fill="#577a8a">Not a results-accepted</text>'+
- '<text x="594" y="276" text-anchor="middle" font-size="14" font-family="Arial" fill="#577a8a">or QC-passed indicator</text>'+
- '</svg>';
- return box;
+ // Use the same reference-matched device illustration as the overview and loading step.
+ return A?.piccoloDeviceSvg ? A.piccoloDeviceSvg("running") : "";
 }
+
 function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
