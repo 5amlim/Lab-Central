@@ -51,7 +51,7 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?link(legacyGuide,"FilmArray RP2 handling figure source")+' · '+link(docLibrary,"Current GI panel resources"):
+ const source=id==="torch"?(opts.figure===1?link(sourcePouchGuide,"SPOTFIRE kit packaging reference"):link(legacyGuide,"FilmArray RP2 handling figure source"))+' · '+link(docLibrary,"Current GI panel resources"):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
