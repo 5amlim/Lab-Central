@@ -52,3 +52,12 @@
 .cl-focused-figure figcaption{color:#577b8d;font-size:13px;line-height:1.55;padding:12px 16px;border-top:1px solid #e8f0f3}
 @media(max-width:650px){.cl-focused-art{padding:7px;min-height:145px}.cl-focused-figure figcaption{font-size:12px}}
 @media print{.cl-focused-figure{break-inside:avoid}}
+
+/* One visual per Sofia 2, Coag-Sense and HemoCue step. */
+.lc-focus-figure{margin:15px 0;border:1px solid #dbe9ee;border-radius:15px;background:#fff;overflow:hidden}
+.lc-focus-figure>header{font-size:13px;line-height:1.45;padding:13px 16px;background:#eff7f9;color:#286b80;font-weight:850;border-bottom:1px solid #e1ecef}
+.lc-focus-art{padding:12px;min-height:185px;display:flex;align-items:center;justify-content:center;background:#f9fcfd}
+.lc-focus-art svg{display:block;max-width:800px;width:100%;max-height:330px;height:auto}
+.lc-focus-figure figcaption{font-size:13px;line-height:1.55;padding:12px 16px;color:#5c7b8b;border-top:1px solid #e9eff2}
+@media(max-width:650px){.lc-focus-art{min-height:130px;padding:7px}.lc-focus-figure figcaption{font-size:12px}}
+@media print{.lc-focus-figure{break-inside:avoid}}
