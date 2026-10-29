@@ -65,23 +65,35 @@ function piccoloInstrument(){
 }
 
 function qcFreezer(){
- let h='<rect x="35" y="37" width="174" height="204" rx="16" fill="#e3f3f8" stroke="#7cacbf" stroke-width="4"/>'+
- '<rect x="47" y="50" width="150" height="178" rx="10" fill="#f6fcfe" stroke="#b7d4df" stroke-width="2"/>'+
- '<path d="M62 99H183M62 171H183" stroke="#b4d3df" stroke-width="3"/>'+
- '<path d="M97 75h52M123 55v42M106 60l34 31M140 60l-34 31" stroke="#4ea3bb" stroke-width="5" stroke-linecap="round"/>'+
- words(122,204,'FREEZER',16,'#277c94')+
- words(122,223,'QC STORAGE',10,'#56889a');
- [{x:263,label:'BRT',cap:'#346a9a'},{x:393,label:'NOD',cap:'#3c988c'}].forEach(function(v){
-  h+='<ellipse cx="'+(v.x+43)+'" cy="247" rx="46" ry="8" fill="#e1eaf0"/>'+
-  '<rect x="'+v.x+'" y="87" width="83" height="158" rx="16" fill="#e9f3f7" stroke="#8ba8b6" stroke-width="3"/>'+
-  '<path d="M'+(v.x+5)+' 165h73v62q-4 13-22 13h-29q-24-2-24-21z" fill="#8a576c" opacity=".6"/>'+
-  '<rect x="'+(v.x-5)+'" y="63" width="93" height="37" rx="10" fill="'+v.cap+'" stroke="#7b939f" stroke-width="3"/>'+
-  '<rect x="'+(v.x+12)+'" y="120" width="59" height="62" rx="4" fill="#fff"/>'+
-  words(v.x+42,145,v.label,17,'#35586c')+
-  words(v.x+42,163,'QC',12,'#67879a');
+ // Each approved Piccolo QC option is a TWO-VIAL set. Show level 1 + level 2
+ // within BRT or NOD, rather than presenting BRT and NOD as one two-vial set.
+ let h='<rect x="24" y="39" width="176" height="198" rx="16" fill="#e3f3f8" stroke="#7cacbf" stroke-width="4"/>'+
+ '<rect x="36" y="51" width="152" height="174" rx="10" fill="#f6fcfe" stroke="#b7d4df" stroke-width="2"/>'+
+ '<path d="M52 100H172M52 168H172" stroke="#b4d3df" stroke-width="3"/>'+
+ '<path d="M85 76h52M111 56v42M94 62l34 30M128 62l-34 30" stroke="#4ea3bb" stroke-width="5" stroke-linecap="round"/>'+
+ words(112,202,"FREEZER",16,"#277c94")+
+ words(112,220,"QC STORAGE",10,"#56889a");
+ const groups=[
+  {label:"BRT",color:"#346a9a",x:230},
+  {label:"NOD",color:"#3c988c",x:398}
+ ];
+ groups.forEach(function(group){
+  h+=words(group.x+66,60,group.label,19,"#356d80")+
+   '<path d="M'+(group.x+15)+' 73H'+(group.x+117)+'" stroke="'+group.color+'" stroke-width="3" stroke-linecap="round"/>';
+  [1,2].forEach(function(level,i){
+   const x=group.x+i*68;
+   h+='<ellipse cx="'+(x+28)+'" cy="239" rx="29" ry="6" fill="#e1eaf0"/>'+
+    '<rect x="'+x+'" y="104" width="57" height="131" rx="13" fill="#e9f3f7" stroke="#8ba8b6" stroke-width="2.5"/>'+
+    '<path d="M'+(x+4)+' 170h49v45q-2 15-18 16h-15q-16-1-16-18z" fill="#8a576c" opacity=".6"/>'+
+    '<rect x="'+(x-3)+'" y="86" width="63" height="28" rx="9" fill="'+group.color+'" stroke="#7b939f" stroke-width="2.5"/>'+
+    '<rect x="'+(x+7)+'" y="139" width="43" height="53" rx="4" fill="#fff"/>'+
+    words(x+28,158,group.label,13,"#35586c")+
+    words(x+28,176,"QC "+level,11,"#67879a")+
+    words(x+28,254,"LEVEL "+level,10,"#4d7689");
+  });
  });
- h+=words(357,278,'BRT OR NOD · APPROVED CONTROL LOT',14,'#467589');
- return svg(h,'Frozen Piccolo QC materials: BRT and NOD control bottles stored in freezer, use the approved lot','0 0 560 300');
+ h+=words(372,287,"SELECT BRT OR NOD · THAW BOTH QC LEVELS",13,"#467589");
+ return svg(h,"Freezer and two approved alternatives for Piccolo controls: BRT level 1 and level 2 or NOD level 1 and level 2; thaw the selected pair before testing","0 0 560 300");
 }
 
 function triageQcControls(){
@@ -181,7 +193,7 @@ function scene(label,media,note,extra){
 function piccoloScene(title,group){
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
  if(/within 60|sample time|collection|blood tube/.test(t))return scene('Lithium-heparin collection',tube('green','lithium'),'Green-top whole blood. Check the approved specimen window and handling instructions.','green-tube-scene');
- if(/grab the controls|brt|nod|freezer/.test(t))return scene('Frozen QC material',qcFreezer(),'BRT or NOD, depending on the approved control lot. Keep controls in the freezer and prepare according to the current insert.','frozen-controls');
+ if(/grab the controls|brt|nod|freezer/.test(t))return scene('Thaw both QC levels',qcFreezer(),'Select the approved BRT or NOD two-vial set (QC 1 and QC 2). Thaw and handle both levels according to the current lot-specific insert before testing.','frozen-controls');
  if(/grab|reagent disc|qc disc|inspect/.test(t))return scene('Check the intact reagent disc',piccoloDisc(false,false),'A built-in sample entry hole is already present. Do not peel, puncture or remove a cover to create it.');
  if(/load|pipett|sample port|fill chamber/.test(t))return scene(q?'Load the QC sample':'Load the blood sample',piccoloDisc(true,true),'Red shows blood in the inner chamber for the patient example. For QC, use the approved control material and volume.');
  if(/insert|drawer|analyz|start/.test(t))return scene('Close the front disc drawer',piccoloInstrument(),'Seat the filled disc and follow the analyzer prompts. Confirm panel and patient or control identification.');
