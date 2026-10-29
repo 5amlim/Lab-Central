@@ -43,3 +43,12 @@
 @media(max-width:900px){.lc-poc-shutdown-grid{grid-template-columns:1fr}.lc-poc-shutdown-grid .lc-poc-art{min-height:170px}.lc-poc-shutdown-grid .lc-poc-art svg{max-height:290px}}
 @media(max-width:650px){.lc-poc-art{padding:8px;min-height:150px}.bf-focused-grid{grid-template-columns:1fr}.lc-page-scroll-cue{height:43px}.bf-focused-card-art{min-height:130px}.lc-poc-figure>figcaption{font-size:12px}}
 @media print{.lc-page-scroll-cue,.lc-scroll-cue-bottom,.lc-scroll-cue-right{display:none!important}.lc-poc-figure,.bf-focused-card{break-inside:avoid}}
+
+/* CLINITEK Status+ use dedicated urine-cup, strip/cassette and screen illustrations. */
+.cl-focused-figure{margin:15px 0;border:1px solid #dbe9ee;border-radius:15px;background:#fff;overflow:hidden}
+.cl-focused-figure>header{font-size:13px;line-height:1.45;padding:13px 16px;background:#eef7f9;color:#246e80;font-weight:850;border-bottom:1px solid #e0edf1}
+.cl-focused-art{background:#f9fcfd;display:flex;align-items:center;justify-content:center;padding:12px;min-height:195px}
+.cl-focused-art svg{display:block;max-width:800px;width:100%;max-height:360px;height:auto;object-fit:contain}
+.cl-focused-figure figcaption{color:#577b8d;font-size:13px;line-height:1.55;padding:12px 16px;border-top:1px solid #e8f0f3}
+@media(max-width:650px){.cl-focused-art{padding:7px;min-height:145px}.cl-focused-figure figcaption{font-size:12px}}
+@media print{.cl-focused-figure{break-inside:avoid}}
