@@ -183,3 +183,16 @@
 .pfs-external-readiness-note span{font-size:12px;line-height:1.6}
 .pfs-external-readiness-note .pfs-qc-route{flex:none}
 @media(max-width:750px){.pfs-external-readiness-note{flex-direction:column;align-items:stretch}.pfs-external-readiness-note .pfs-qc-route{align-self:flex-start}}
+
+
+/* Patient mode teaching example: a single pink assay pill signals CAL/QC required. */
+.pfs-rebuilt .pfs-real-pill.locked{background:linear-gradient(180deg,#ffd5e6,#f39dc4);border:2px solid #cf6c9b;color:#783350;box-shadow:0 0 0 3px #fbe7f0;font-weight:900}
+.pfs-rebuilt .pfs-pink-status-caption{display:flex;align-items:center;gap:8px 11px;flex-wrap:wrap;background:#fff1f7;border-top:1px solid #f2cade;border-bottom:1px solid #f1c4d5;padding:10px 14px;color:#774260;font-size:11px;line-height:1.5}
+.pfs-pink-status-caption .pfs-pink-status-mark{display:inline-block;flex:none;background:#f2a1c4;border:1.5px solid #d4749e;width:15px;height:15px;border-radius:5px}
+.pfs-pink-status-caption strong{font-size:12px;font-weight:900;color:#84294e}
+.pfs-pink-status-caption span:last-child{flex:1 1 230px;color:#764c65}
+.pfs-rebuilt .pfs-external-readiness-note b{color:#8d3155;font-weight:900}
+.pfs-rebuilt .pfs-lane.pfs-lane-tap-example{background:#f5fcf8;box-shadow:inset 0 0 0 2px #9fd8bf}
+.pfs-rebuilt .pfs-lane.pfs-lane-tap-example .pfs-lane-number.pfs-click-target{background:#e3faee!important;border:3px solid #16b96e!important;box-shadow:0 0 0 3px #15b76a22!important;color:#136951}
+.pfs-rebuilt .pfs-lane-tap-example .pfs-lane-number .pfs-target-cue{background:#05774e!important;color:#fff!important;font-size:8px!important;padding:4px 6px!important;white-space:nowrap}
+@media(max-width:680px){.pfs-rebuilt .pfs-pink-status-caption{align-items:flex-start}.pfs-pink-status-caption span:last-child{flex-basis:100%}}
