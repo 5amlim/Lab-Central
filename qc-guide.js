@@ -7,10 +7,11 @@
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const configs={
  sysmex:{brand:"SYSMEX pocH-100i",binder:"pocH Daily Control Log · Maintenance Log binder",steps:[
-  {heading:"Open QC records",screen:"MAIN / MENU",items:["QC","Str. Data","Shutdown"],focus:"QC",tip:"Select MENU, then QC."},
-  {heading:"Choose what to print",screen:"QUALITY CONTROL",items:["Chart","Current","Delete"],focus:"Current",tip:"Print Current for the selected control; Chart is available for QC trends."},
-  {heading:"Print the control record",screen:"QC REPORT",items:["Print","Back"],focus:"Print",tip:"The run can also print automatically after Quit, depending on settings."}
- ],note:"Confirm each Low, Normal and High result is acceptable. File the startup blank-check report separately in the pocH blank-check log; retain new-lot parallel QC printouts in the validation log until the approved transition is complete."},
+  {kind:"mainMenu",heading:"Open QC from Menu",tip:"From the Main screen select Menu, then QC."},
+  {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
+  {heading:"Open the print menu",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the desired QC file displayed, select Print."},
+  {heading:"Print the selected level",screen:"PRINT CONTROL CHART",items:["Chart","Current","Cancel"],focus:"Current",tip:"Select Current for the chosen QC file. Repeat file selection and printing separately for QC1, QC2 and QC3; Chart prints the full chart instead."}
+ ],note:"Print the accepted QC1 (Low), QC2 (Normal) and QC3 (High) control records one by one. File the startup blank-check report separately in the pocH blank-check log; retain new-lot comparison records in the validation log until the approved transition is complete."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
   {heading:"Read the completed run",screen:"ANALYSIS COMPLETE",items:["Results","Print","Home"],focus:"Print",tip:"The analyzer normally prints results automatically at run completion."},
   {heading:"Retrieve if needed",screen:"RECALL",items:["Browse","Search"],focus:"Browse",tip:"Choose the correct Control result, not a patient result."},
@@ -71,6 +72,30 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-state-message"><span class="qc-device-state-indicator" aria-hidden="true"></span>'+
    '<strong>'+esc(item.status)+'</strong><span>'+esc(item.detail)+'</span></div>'+
    '<div class="qc-device-state-note">AUTOMATIC PROCESS · NO TOUCHSCREEN ACTION</div></div>';
+ }else if(item.kind==="qcFiles"){
+  // File labels are teaching aliases for the laboratory's Low, Normal and High QC files.
+  body='<div class="qc-device-screen-label">QUALITY CONTROL · SELECT FILE</div>'+
+   '<div class="qc-device-file-options"><div class="qc-device-file-choice selected"><strong>QC1</strong><span>Low control</span><small>FILE 1</small></div>'+
+   '<div class="qc-device-file-choice"><strong>QC2</strong><span>Normal control</span><small>FILE 2</small></div>'+
+   '<div class="qc-device-file-choice"><strong>QC3</strong><span>High control</span><small>FILE 3</small></div></div>'+
+   '<div class="qc-device-screen-bottom"><span>Choose the correct active file</span><span>One level at a time</span></div>';
+ }else if(item.kind==="qcLot"){
+  body='<div class="qc-device-screen-label">SET QC · SELECT FILE / LOT</div>'+
+   '<div class="qc-device-qcfile-label">QC1 / Low <span>File [1] · repeat for QC2 and QC3</span></div>'+
+   '<div class="qc-device-scan-form"><div><strong>Lot ID</strong><span class="qc-device-barcode" aria-hidden="true"></span><em>Scan lot barcode</em></div>'+
+   '<div><strong>Expire</strong><span class="qc-device-barcode" aria-hidden="true"></span><em>Scan / enter expiry</em></div></div>'+
+   '<div class="qc-device-screen-bottom"><span>Verify package insert</span><span>NEXT →</span></div>';
+ }else if(item.kind==="qcAnalytes"){
+  const rows=["WBC","RBC","HGB","HCT","MCV"];
+  body='<div class="qc-device-screen-label">SET QC · FILE [1] · TARGET / LIMIT</div>'+
+   '<div class="qc-device-parameter-table"><div class="qc-device-param-heading"><b>PARAMETER</b><b>TARGET</b><b>LIMIT</b></div>'+
+   rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-device-barcode" aria-label="Scan target barcode"></span><span class="qc-device-barcode" aria-label="Scan limit barcode"></span></div>').join("")+'</div>'+
+   '<div class="qc-device-screen-bottom"><span>Use the matching lot assay sheet</span><span>NEXT → MORE ANALYTES</span></div>';
+ }else if(item.kind==="qcSave"){
+  body='<div class="qc-device-screen-label">SET QC · CHECK ALL PARAMETERS</div>'+
+   '<div class="qc-device-save-summary"><strong>Review all target and limit entries</strong><p>Use the arrows to review the remaining parameter pages. Do not enter sample values as QC targets.</p>'+
+   '<span class="qc-device-save-highlight">SAVE <b>SELECT</b></span><span>Confirm the save message with OK</span></div>'+
+   '<div class="qc-device-screen-bottom"><span>Then repeat for each active QC file</span><span>TOP</span></div>';
  }else if(item.kind==="mainMenu"){
   // Illustrate the Main screen and its actual navigation target before Str. Data.
   body='<div class="qc-device-mainbar"><span>MAIN · WB</span><strong class="qc-device-menu-highlight">MENU <b>SELECT</b></strong></div>'+
@@ -112,6 +137,15 @@ function sysmexStep(sec,group,title){
   {heading:"Choose today's blank",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored result","Back"],focus:"__BLANK CHECK__",tip:"Select the blank-check record bearing today’s date."},
   {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name in the blank-check section of the Maintenance Log binder."}
  ],"Sysmex pocH-100i",{scroll:true})+'</div>';
+ if(/new qc lot|register a new qc lot|parallel qc|lot-to-lot comparison|lot is expired/.test(t))return '<div class="qc-instrument-walkthrough lc-poc-lot-setup">'+
+ '<div class="lc-poc-lot-intro"><strong>Enter the new QC lot and control ranges</strong><span>Menu → QC → select file → Setup. This illustrates the analyzer workflow, not a working barcode input.</span></div>'+
+ screenGallery([
+  {kind:"qcFiles",heading:"Open QC setup and select file",tip:"Open Menu → QC, choose the correct QC file, then select Setup. Keep the old valid lot records available during the approved comparison."},
+  {kind:"qcLot",heading:"Scan lot ID and expiration",tip:"Scan the lot barcode and enter/verify the expiration date for the selected control level. Confirm both against the manufacturer sheet."},
+  {kind:"qcAnalytes",heading:"Scan each analyte target and limit",tip:"For WBC, RBC, HGB, HCT, MCV and every parameter on the subsequent pages, scan each TARGET and LIMIT barcode on the matching control lot assay sheet. No sample result or made-up range belongs here."},
+  {kind:"qcSave",heading:"Save and repeat for all three levels",tip:"Use the arrows to review the remaining parameter screens, select Save and confirm OK. Repeat the same setup for QC1, QC2 and QC3. Use nonexpired lots for any parallel comparison."}
+ ],"Sysmex pocH-100i",{scroll:true})+
+ '<p class="lc-poc-lot-caution">Only compare the old and new lots when both materials are within their labeled stability and expiration. Follow the approved lot-to-lot acceptance criteria before switching.</p></div>';
  if(/^run (the )?qc/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {heading:"Open QC and check the lot",screen:"MAIN",items:["QC","Result","Shutdown"],focus:"QC",tip:"Select QC, choose the correct Low / Normal / High file and verify the control lot."},
   {heading:"Run the control level",screen:"QC FILE",items:["QC FILE 1 / 2 / 3","Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
@@ -183,7 +217,7 @@ function printStep(id){
  return '<div class="qc-final-doc" aria-label="QC print and binder filing procedure">'+
  '<div class="qc-final-intro"><span class="qc-final-mark">QC</span><div><strong>Finish with the verified QC record</strong><p>Only file accepted results. Document and escalate any out-of-range control according to the current SOP before patient testing.</p></div></div>'+
  '<div class="qc-final-section-label">01 · Get the printout or authorized record</div>'+
- screenGallery(cfg.steps,cfg.brand)+
+ screenGallery(cfg.steps,cfg.brand,{scroll:id==="sysmex"})+
  '<div class="qc-final-section-label">02 · Identify, organize and file</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
