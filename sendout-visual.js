@@ -19,18 +19,23 @@ function tube(){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 230" role="img" aria-label="Two securely capped labeled blue-top specimen tubes"><ellipse cx="130" cy="211" rx="88" ry="9" fill="#dfe8ed"/>'+shapes+'</svg>';
 }
 function bag(){
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 230" role="img" aria-label="Sealed transparent biohazard specimen bag with labeled tube and separate document pocket">'+
- '<path d="M50 24h174v182H50Z" fill="#ebf8fc" fill-opacity=".55" stroke="#8fb7c7" stroke-width="4"/>'+
- '<path d="M43 26h187" stroke="#358fa8" stroke-width="14" stroke-linecap="round"/>'+
- '<path d="M49 29h174" stroke="#bee3ed" stroke-width="3"/>'+
- '<rect x="145" y="67" width="66" height="91" rx="5" fill="#fafbfc" stroke="#8ca8b7" stroke-width="2"/>'+
- '<path d="M153 82h51 M153 92h43 M153 102h47 M153 112h40" stroke="#acc4d0" stroke-width="3"/>'+
- '<path d="M75 57h45v103q-22 24-45 0Z" fill="#f7fdff" stroke="#91b8c8" stroke-width="3"/>'+
- '<rect x="71" y="48" width="53" height="20" rx="4" fill="#397da7"/>'+
- '<path d="M79 113h37v42q-18 15-37 0Z" fill="#c55e73" opacity=".66"/>'+
- '<path d="M111 173l18-30 17 30Z" fill="#da795c"/>'+
- '<circle cx="129" cy="163" r="5" fill="#fff"/>'+
- '<text x="133" y="194" text-anchor="middle" font-size="12" fill="#38788c" font-weight="900">SEALED BAG</text></svg>';
+ const groups=[["RT","#2b8c83","#e7f5f2",13],["FRIDGE","#2c78a4","#e9f4fc",98],["FROZEN","#665db1","#f0edfa",183]];
+ const drawings=groups.map(([label,ink,tint,x])=>
+  '<g transform="translate('+x+',0)">'+
+  '<rect x="2" y="19" width="68" height="30" rx="10" fill="'+tint+'" stroke="'+ink+'" stroke-opacity=".28"/>'+
+  '<text x="36" y="38" text-anchor="middle" font-size="11" font-weight="900" fill="'+ink+'">'+label+'</text>'+
+  '<rect x="0" y="61" width="74" height="125" rx="5" fill="#f0f9fc" fill-opacity=".70" stroke="#88b1c3" stroke-width="3"/>'+
+  '<path d="M-1 65h76" stroke="'+ink+'" stroke-width="8" stroke-linecap="round"/>'+
+  '<rect x="13" y="91" width="23" height="63" rx="5" fill="#fff" stroke="#8eb7c4" stroke-width="2"/>'+
+  '<rect x="11" y="84" width="27" height="12" rx="3" fill="'+ink+'"/>'+
+  '<path d="M16 123h17v27q-9 8-17 0Z" fill="#c76d82" opacity=".7"/>'+
+  '<rect x="43" y="96" width="22" height="47" rx="3" fill="#fff" stroke="#aac4d0" stroke-width="1.5"/>'+
+  '<path d="M47 105h14 M47 113h12 M47 121h14 M47 129h10" stroke="#b6ccd6" stroke-width="2"/>'+
+  '<path d="M19 172h36" stroke="'+ink+'" stroke-width="3" opacity=".60"/>'+
+  '</g>'
+ ).join("");
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 230" role="img" aria-label="Three separate sealed transport bags labeled room temperature, refrigerated and frozen, with specimen and requisition in each bag">'+
+ drawings+'<text x="135" y="214" text-anchor="middle" fill="#446b80" font-size="10" font-weight="900" letter-spacing=".55">SEPARATE TEMPERATURE BAGS</text></svg>';
 }
 function req(){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 230" role="img" aria-label="Example laboratory requisition form with selected tests and matching specimen identifiers">'+
@@ -47,13 +52,18 @@ function card(title,picture,description){
  '<div class="ops-evidence-svg">'+picture+'</div><p>'+description+'</p></article>';
 }
 function examples(){
- return '<section class="ops-evidence"><div class="ops-evidence-heading"><span>PHOTO DOCUMENTATION</span><h2>Photograph the tube, bag and requisition</h2>'+
- '<p>Use clear photographs in the regional Sendout Log to reconcile the correctly labeled specimens, packaging and requisition.</p></div>'+
+ return '<section class="ops-evidence"><div class="ops-evidence-heading"><span>PHOTO DOCUMENTATION</span><h2>Photograph specimens, each bag and the requisition</h2>'+
+ '<p>Use the Lab Calculator printout to organize specimens before taking photos for the secure regional Sendout Log.</p></div>'+
  '<div class="ops-evidence-grid">'+
- card("01 · Specimen tubes",tube(),"Capture all labeled tubes or collection containers, including cap color, quantity and identifiers.")+
- card("02 · Sealed transport bag",bag(),"Show the sealed bag, receiving laboratory and required room-temperature, refrigerated, frozen or STAT grouping.")+
- card("03 · Requisition form",req(),"Capture the complete matching order form in the secure Microsoft Form, including required tests and provider details.")+
- '</div><div class="ops-evidence-note"><span>✓</span><p>Upload Lab Calculator and packaging photos wherever the form requests them. Use separate photographs for multiple bags or temperature groups. Do not upload patient details outside approved systems.</p></div></section>';
+ card("01 · Specimen tubes",tube(),"Photograph all labeled specimen tubes or containers. Make sure the cap color, number of tubes and labels are visible.")+
+ card("02 · Separate transport bags",bag(),"Follow the Lab Calculator printout: <strong>separate bags by temperature</strong> (room temperature, refrigerated and frozen). Keep STAT or special groups separate when indicated. <strong>Take a photo of each sealed bag.</strong>")+
+ card("03 · Requisition form",req(),"Photograph the matching requisition with all ordered tests and provider information visible in the approved secure form.")+
+ '</div>'+
+ '<div class="ops-evidence-details">'+
+ '<div class="ops-evidence-detail"><span class="ops-evidence-detail-icon" aria-hidden="true">10</span><div><strong>Up to 10 photos</strong><p>You can attach up to 10 photos in the Sendout Log. Include each sealed bag separately, along with specimen containers, the requisition and Lab Calculator printout when requested.</p></div></div>'+
+ '<div class="ops-evidence-detail"><span class="ops-evidence-detail-icon" aria-hidden="true">↗</span><div><strong>Document pickup or shipment</strong><p>For <strong>STAT or special pickups</strong>, record the pickup confirmation or reference number. For <strong>special test kits shipped by UPS or FedEx</strong>, record the carrier, tracking number and pickup or drop-off confirmation.</p></div></div>'+
+ '</div>'+
+ '<div class="ops-evidence-note"><span aria-hidden="true">✓</span><p>The Sendout Log covers <strong>routine send-outs, STAT/special pickups and shipped test kits</strong>. Upload patient documents and photos only through approved secure systems.</p></div></section>';
 }
 window.LAB_SENDOUT_VISUAL={formLinks,examples};
 })();
