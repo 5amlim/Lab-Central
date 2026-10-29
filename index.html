@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-calculator-required-callout-v2" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261029-fax-guide-inside-v1" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-sendout-photos" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1017,9 +1017,9 @@ function externalFlow(){
  <span class="req-action-symbol" aria-hidden="true">${svg(fax?'clipboard-check':'file-text')}</span><div>
  ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Review the automatically matched order</h4><p>Confirm that the fax belongs to the correct patient chart.</p><p class="req-reclassify-instruction"><strong>Reclassify</strong> the document as <strong>Clinical Document</strong> with label <strong>LAB REQUISITION</strong>.</p>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the received order</h4><p>Upload the received requisition to the correct patient chart as a clinical document and assign the label <strong>LAB REQUISITION</strong>.</p>`}
  </div></div>
- ${requisitionVersionNotice()}
+ <div class="req-inline-guide">${athenaUploadGuide("requisition",fax)}</div>
  </div>
- ${athenaUploadGuide("requisition",fax)}
+ ${requisitionVersionNotice()}
  <p class="requisition-intake-note">Keep patient details in approved clinical systems. The illustrations contain no patient information.</p>
  </section>`;
  h+=workflowSteps([
