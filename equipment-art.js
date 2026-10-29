@@ -388,9 +388,9 @@ function body(shape,a){
 function render(sec){
  if(!sec||!Object.prototype.hasOwnProperty.call(specs,sec.id))return "";
  const item=specs[sec.id],a=item.accent,label=item.label;
- const core=sec.id==="torch"?"":body(item.shape,a);
- const svg=sec.id==="torch"&&window.LAB_BIOFIRE_ART?.analyzer
-   ?window.LAB_BIOFIRE_ART.analyzer("torch").replace('<svg ','<svg class="equipment-svg" ')
+ const core=(sec.id==="torch"||sec.id==="spotfire")?"":body(item.shape,a);
+ const svg=(sec.id==="torch"||sec.id==="spotfire")&&window.LAB_BIOFIRE_ART?.analyzer
+   ?window.LAB_BIOFIRE_ART.analyzer(sec.id,"ready").replace('<svg ','<svg class="equipment-svg" ')
    :'<svg class="equipment-svg" viewBox="0 0 740 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified illustration of '+String(sec.title).replace(/"/g,"&quot;")+' instrument">'+
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+
  '<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+core+'</svg>';
