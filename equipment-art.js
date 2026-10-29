@@ -100,38 +100,110 @@ function piccoloDeviceSvg(mode){
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+view+'" role="img" aria-label="'+(m==="running"?"Piccolo Xpress analyzer with analysis in progress and successful run-start confirmation":m==="drawer"?"Piccolo Xpress analyzer with lower reagent disc tray extended":"Piccolo Xpress analyzer, front view")+'">'+piccoloDeviceMarkup(m)+check+'</svg>';
 }
 
+
+/* One reference-matched pocH-100i housing throughout Lab Central. The photo
+   supplied for this project shows an off-white, upright CBC analyzer with a
+   left upper touchscreen, lower left service panel, purple right-front sample
+   bay, and a right-side accessory shelf with reagent bottles/tubing.
+   Menu content remains illustrative, never an exact analyzer screenshot. */
+function sysmexDeviceMarkup(mode,showAccessory=true){
+ const m=String(mode||"ready").toLowerCase(),off=m==="switch";
+ const states={
+  ready:["MAIN / WB","Sample ID     #####","WB     QC     Run"],
+  patient:["MAIN / WB","Sample ID     #####","WB  •  Confirm tube"],
+  qc:["QC","Control level 1 / 2 / 3","Review QC status"],
+  running:["MAIN / WB","Analyzing sample","Run in progress"],
+  shutdown:["SHUTDOWN","Shutdown complete","Safe to power off"],
+  switch:["SHUTDOWN","Shutdown complete","Safe to power off"],
+  waste:["MAINTENANCE","Discard waste","Execute / Cancel"],
+  transducer:["MAINTENANCE","Clean transducer","Execute / Cancel"],
+  reagent:["MAINTENANCE","Replace reagent","Check lot / Execute"],
+  other:["MAINTENANCE","Select maintenance","Follow actual prompt"]
+ };
+ const lines=states[m]||states.ready;
+ const t=(x,y,v,size=15,color="#3e6077",weight=750,anchor="middle")=>
+  '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-weight="'+weight+'" fill="'+color+'" font-family="Arial,sans-serif">'+v+'</text>';
+ let h=
+ '<defs>'+
+ '<linearGradient id="sx-cabinet" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fbfcfa"/><stop offset=".52" stop-color="#e7e9e5"/><stop offset="1" stop-color="#cdd1ce"/></linearGradient>'+
+ '<linearGradient id="sx-side" x1="0" x2="1"><stop stop-color="#e9ebe9"/><stop offset="1" stop-color="#b9c2c4"/></linearGradient>'+
+ '<linearGradient id="sx-door" x1="0" x2="1"><stop stop-color="#5e337d" stop-opacity=".92"/><stop offset=".55" stop-color="#8b58a0" stop-opacity=".83"/><stop offset="1" stop-color="#4b226e" stop-opacity=".95"/></linearGradient>'+
+ '<linearGradient id="sx-bottle" x1="0" x2="1"><stop stop-color="#fafafa"/><stop offset=".58" stop-color="#e8ecec"/><stop offset="1" stop-color="#d3dada"/></linearGradient>'+
+ '</defs>'+
+ '<ellipse cx="367" cy="450" rx="'+(showAccessory?294:204)+'" ry="11" fill="#dce7eb"/>'+
+ // Instrument cabinet: broad white face with rounded but not overly domed top.
+ '<path d="M105 37Q105 18 127 16H385Q414 17 420 44L430 408Q430 438 400 440H118Q94 439 94 412L90 74Q90 50 105 37Z" fill="url(#sx-cabinet)" stroke="#9eabb0" stroke-width="4"/>'+
+ '<path d="M389 20Q419 23 422 58L430 405Q430 432 401 438L393 436Z" fill="url(#sx-side)" stroke="#a3b1b8" stroke-width="2"/>'+
+ '<path d="M112 32Q124 23 155 24H366" fill="none" stroke="#fff" stroke-width="7" opacity=".76"/>'+
+ // Angular recessed display bezel and the screen mounted in upper LEFT.
+ '<path d="M133 79L146 67H356L367 81V252L350 264H135L124 251V94Z" fill="#bac4c5" stroke="#a0adaf" stroke-width="3"/>'+
+ '<rect x="139" y="89" width="213" height="164" rx="3" fill="#e7f1f4" stroke="#526b7d" stroke-width="4"/>'+
+ '<rect x="146" y="96" width="199" height="24" rx="2" fill="#b9dfe0"/>'+
+ '<rect x="149" y="124" width="195" height="122" rx="2" fill="#d5e7f2"/>'+
+ t(154,113,"sysmex",11,"#2f8198",900,"start")+
+ t(340,113,m==="running"?"Running":"Not Ready",10,m==="running"?"#178f74":"#57788b",740,"end")+
+ t(246,143,lines[0],13,"#3e6880",900)+
+ '<rect x="167" y="154" width="166" height="33" rx="5" fill="#f4f9fa" stroke="#b3cdd8" stroke-width="2"/>'+
+ t(250,176,lines[1],14,"#47667b",780)+
+ '<rect x="169" y="198" width="51" height="31" rx="5" fill="#e7b3cb" stroke="#b8a1ba"/>'+
+ '<rect x="226" y="198" width="48" height="31" rx="5" fill="#d3eaf2" stroke="#a8c5d5"/>'+
+ '<rect x="280" y="198" width="51" height="31" rx="5" fill="#a6dedc" stroke="#83b6b4"/>'+
+ t(194,218,m==="qc"?"QC":"ID",11,"#4c6982",850)+
+ t(250,218,"WB",11,"#4c6982",850)+
+ t(306,218,m==="running"?"Run":"OK",11,"#2e797b",850)+
+ // Manufacturer wordmark below screen, NOT a fictional upper body logo.
+ t(137,296,"pocH-100i",23,"#596164",780,"start")+
+ '<path d="M160 306q25 13 53 1" fill="none" stroke="#707b7d" stroke-width="5"/>'+
+ // Bottom-left solid panel and separation line.
+ '<path d="M103 321H281V431H117Q103 428 103 410Z" fill="#e9ebe9" stroke="#b8c1c2" stroke-width="2.5"/>'+
+ '<path d="M105 322H281" stroke="#a3afb1" stroke-width="3"/>'+
+ // Tall purple translucent patient sample door, correct position at lower-right front.
+ '<path d="M293 302Q296 286 314 284H385Q403 284 404 303V436H294Z" fill="url(#sx-door)" stroke="#6a4c84" stroke-width="3"/>'+
+ '<path d="M307 312H390V429H308Z" fill="#392058" fill-opacity=".54"/>'+
+ '<rect x="316" y="322" width="64" height="30" rx="5" fill="#7d559a" opacity=".72"/>'+
+ '<path d="M325 366Q348 356 366 368L375 415H321Z" fill="#221739" fill-opacity=".74"/>'+
+ '<rect x="330" y="387" width="35" height="39" rx="6" fill="#c49bcf" fill-opacity=".59"/>'+
+ '<path d="M310 291Q350 282 391 292" fill="none" stroke="#c7a9d5" stroke-width="4" opacity=".38"/>';
+ // Capped tube enters the protected front sample chamber, not the outer bottle.
+ if(m==="patient")h+='<rect x="337" y="372" width="21" height="48" rx="5" fill="#e9f1f4" fill-opacity=".9" stroke="#b6cbd2" stroke-width="1.7"/>'+
+ '<rect x="334" y="364" width="27" height="11" rx="4" fill="#ae86c4"/>';
+ if(m==="running")h+='<rect x="176" y="239" width="128" height="5" rx="2" fill="#c2dce3"/>'+
+ '<rect x="176" y="239" width="76" height="5" rx="2" fill="#2c9a8f"/>';
+ if(off)h+='<rect x="416" y="294" width="24" height="53" rx="5" fill="#242c36" stroke="#101820" stroke-width="3"/>'+
+ '<rect x="421" y="301" width="15" height="39" rx="3" fill="#101923"/>'+
+ '<path d="M422 326l13-6" stroke="#f7fcfe" stroke-width="2.5"/>';
+ if(showAccessory&&!off){
+  // Separate raised right shelf and a white purple-banded reagent bottle,
+  // with smaller rear connections. This mirrors the supplied photograph.
+  h+='<path d="M428 261Q430 251 442 251H630L649 270V424H430Z" fill="#e7eaeb" stroke="#abb8bb" stroke-width="3"/>'+
+   '<path d="M449 259V435H647V422" fill="none" stroke="#fefefe" stroke-width="6"/>'+
+   '<path d="M461 100Q454 81 468 66L485 52" fill="none" stroke="#8cabae" stroke-width="7" stroke-linecap="round"/>'+
+   '<path d="M477 68L492 90L510 120" fill="none" stroke="#ce8e82" stroke-width="4"/>'+
+   '<path d="M501 68L525 60L536 90V144" fill="none" stroke="#b49d8a" stroke-width="4"/>'+
+   '<rect x="479" y="67" width="22" height="32" rx="4" fill="#5a95ab"/>'+
+   '<rect x="526" y="78" width="27" height="28" rx="4" fill="#b94147"/>'+
+   '<path d="M492 131H566Q573 131 573 139V197H490Z" fill="#eef2f2" stroke="#b2c2c6" stroke-width="3"/>'+
+   '<rect x="541" y="169" width="24" height="30" rx="4" fill="#6b3e91"/>'+
+   '<rect x="483" y="203" width="115" height="179" rx="29" fill="url(#sx-bottle)" stroke="#abb8bb" stroke-width="3"/>'+
+   '<rect x="507" y="186" width="62" height="34" rx="9" fill="#eceff0" stroke="#aebfc5" stroke-width="2"/>'+
+   '<rect x="503" y="218" width="73" height="24" rx="5" fill="#f6f8f9"/>'+
+   '<rect x="485" y="270" width="111" height="16" fill="#573778"/>'+
+   '<rect x="494" y="298" width="94" height="66" rx="4" fill="#fff" stroke="#cedadd" stroke-width="2"/>'+
+   '<path d="M508 310H574M508 321H574M508 333H566M508 345H563" stroke="#b5bdc4" stroke-width="2"/>'+
+   t(542,355,"REAGENT",9,"#7b8790",850);
+ }
+ return h;
+}
+function sysmexDeviceSvg(mode,showAccessory=true){
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 0 650 465" role="img" aria-label="Sysmex pocH-100i CBC analyzer with upper left screen, white cabinet, lower purple sample chamber'+(showAccessory?' and right-hand reagent bottle':'')+'">'+sysmexDeviceMarkup(mode,showAccessory)+'</svg>';
+}
+
 function body(shape,a){
  let v="";
  if(shape==="tower"){
- /* Sysmex pocH-100i: off-white compact tall benchtop case, upper-left LCD,
-    purple translucent closed-tube door on right, reagent system adjacent. */
- v='<ellipse cx="380" cy="287" rx="177" ry="10" fill="#ccdae2" opacity=".4"/>'+
- '<path d="M297 41 Q302 29 323 27 H482 Q510 29 522 55 L542 258 Q540 276 522 280 H310 Q293 278 288 257Z" fill="#edf1f2" stroke="#9caebb" stroke-width="3"/>'+
- '<path d="M491 32 Q523 39 537 72 L544 252 Q542 270 524 278 L501 268 L499 51Z" fill="#d9e3e7" stroke="#a0b3bc" stroke-width="2.5"/>'+
- '<path d="M313 35 Q329 29 483 35 L484 276 H308 Q294 270 293 252 L294 66 Q295 46 313 35Z" fill="#fafbfa" stroke="#9eafb9" stroke-width="3"/>'+
- '<path d="M309 52 H469" stroke="#fff" stroke-width="5" stroke-linecap="round"/>'+
- '<path d="M319 73 H420 Q435 73 435 87 V150 Q435 164 423 164 H315 Q308 164 308 153 V86 Q308 75 319 73Z" fill="#8399a4" stroke="#758f9a" stroke-width="2.5"/>'+
- '<rect x="318" y="84" width="108" height="71" rx="6" fill="#d6e7ee"/>'+
- '<rect x="323" y="90" width="98" height="17" rx="2" fill="#cae2eb"/>'+
- '<text x="368" y="102" font-size="8.5" font-weight="800" fill="#416f84" text-anchor="middle">READY · MAIN</text>'+
- '<rect x="325" y="115" width="28" height="21" rx="3" fill="#a46fb3"/><rect x="357" y="115" width="28" height="21" rx="3" fill="#80c4c4"/><rect x="389" y="115" width="28" height="21" rx="3" fill="#39a3d2"/>'+
- '<text x="339" y="129" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">WB</text>'+
- '<text x="371" y="129" text-anchor="middle" fill="#276777" font-size="8" font-weight="800">QC</text>'+
- '<text x="403" y="129" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">RUN</text>'+
- '<text x="319" y="188" font-size="16" font-weight="800" fill="#667982">pocH-100i</text>'+
- '<path d="M326 198l23 5-17 5z" fill="#a7b1b4"/>'+
- '<path d="M429 179 Q435 169 448 169 H477 Q491 169 495 185 L497 263 Q494 273 477 279 H443 Q431 272 427 255Z" fill="#78488e" stroke="#69427f" stroke-width="3"/>'+
- '<path d="M439 182 Q447 178 476 182 L481 265 Q459 272 441 263Z" fill="#ac79bf" opacity=".92"/>'+
- '<rect x="443" y="196" width="37" height="11" rx="4" fill="#74518c"/>'+
- '<path d="M447 219 Q456 209 468 215 L471 256 Q461 270 448 258Z" fill="#3c294a"/>'+
- '<rect x="452" y="221" width="13" height="33" rx="4" fill="#c4bdd2" stroke="#7c7891" stroke-width="2"/>'+
- '<path d="M317 233 H415" stroke="#edf2f4" stroke-width="3"/>'+
- '<rect x="531" y="96" width="64" height="147" rx="13" fill="#eef6f8" stroke="#a0b9c5" stroke-width="3"/>'+
- '<rect x="544" y="81" width="37" height="30" rx="6" fill="#f7f9fa" stroke="#a2bbc8" stroke-width="3"/>'+
- '<path d="M539 148 H588" stroke="#c7d9e1" stroke-width="3"/>'+
- '<rect x="538" y="176" width="51" height="41" rx="6" fill="#b8a1c9" opacity=".65"/>'+
- '<path d="M551 80 Q544 62 527 65 L514 66" stroke="#cfdee5" stroke-width="5" fill="none"/>';
-  }else if(shape==="rotor"){
+ /* Shared reference-based pocH: no alternate cabinet geometry. */
+ v='<g transform="translate(135 -8) scale(.61)">'+sysmexDeviceMarkup("ready",true)+'</g>';
+ }else if(shape==="rotor"){
  /* Reuse the same reference-matched tall, narrow Piccolo art as procedure steps. */
  v='<g transform="translate(176 4) scale(.56)">'+piccoloDeviceMarkup("ready")+'</g>';
  }else if(shape==="pathfast"){
@@ -975,5 +1047,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
+window.LAB_EQUIPMENT_ART={sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide};
 })();
