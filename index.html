@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-fax-reclassification-black-v1" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261029-calculator-required-callout-v2" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-sendout-photos" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -974,7 +974,7 @@ function requisitionVersionNotice(){
 
 function workflowStepExtras(kind){
  if(kind==='calculator-upload'){
-  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><p class="ad-step-note">After generating the Lab Calculator printout, save it as a PDF and upload it to the chart under the <strong>LAB</strong> document label.</p>'+athenaUploadGuide('calculator')+'</div>';
+  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
  }
  if(kind==='appointment-print'){
   return `<details class="color-print-guide">
