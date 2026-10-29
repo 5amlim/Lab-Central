@@ -3,7 +3,7 @@
    Analyzer controls are illustrated as schematic navigation, not pixel-exact screenshots. */
 (function(){
 "use strict";
-const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'"&quot;');
+const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const svg=(s,description,view="0 0 680 350")=>'<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(description)+'" viewBox="'+view+'">'+s+'</svg>';
 const tx=(x,y,value,size=17,color="#345e73",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" fill="'+color+'" text-anchor="'+anchor+'" font-size="'+size+'" font-weight="'+weight+'" font-family="Arial,sans-serif">'+esc(value)+'</text>';
 function figure(title,body,caption){
@@ -43,6 +43,17 @@ function invert(){
  'EDTA lavender top tube gently turned upside-down and upright using curved arrows; blood at the lowest end in both positions');
 }
 function screen(mode){
+ if(mode==="shutdown"||mode==="execute"){
+  const first=mode==="shutdown";
+  const row=(y,label,active)=>'<rect x="111" y="'+y+'" width="453" height="45" rx="7" fill="'+(active?"#dff3ed":"#ffffff")+'" stroke="'+(active?"#19917e":"#c7dce4")+'" stroke-width="'+(active?3:1.5)+'"/>'+tx(130,y+28,label,17,active?"#197e73":"#58798b",active?900:700,"start");
+  return svg('<rect x="69" y="26" width="543" height="291" rx="19" fill="#dbe6ec" stroke="#93adbb" stroke-width="5"/>'+
+   '<rect x="91" y="52" width="502" height="247" rx="11" fill="#f4f9fc" stroke="#a3bdca" stroke-width="3"/>'+
+   '<rect x="94" y="55" width="496" height="46" rx="5" fill="#294f67"/>'+tx(342,85,"Sysmex pocH-100i",20,"#fff",850)+
+   tx(342,127,first?"MAIN MENU":"SHUTDOWN",19,"#315e76",850)+
+   (first?row(149,"QC",false)+row(203,"Shutdown",true):row(153,"Cancel",false)+row(211,"Execute",true))+
+   tx(342,331,first?"SELECT SHUTDOWN":"CONFIRM EXECUTE",15,"#248981",850),
+   first?"pocH main screen with Shutdown menu action highlighted":"pocH shutdown screen with Execute confirmation action highlighted");
+ }
  const mrn=mode==="mrn",start=mode==="run";
  const lines=
  '<rect x="97" y="79" width="482" height="218" rx="9" fill="#f6fbfc" stroke="#a5bcc8" stroke-width="2"/>'+
