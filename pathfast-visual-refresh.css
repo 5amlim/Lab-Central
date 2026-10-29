@@ -1,0 +1,38 @@
+/* October 2026: align PATHFAST maintenance workflow styling with patient testing. */
+.pfux-primary-nav .pfux-route{
+  min-height:103px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px 18px;
+  border-radius:14px;
+  border:1px solid #d6e5ed;
+  box-sizing:border-box;
+}
+.pfux-primary-nav .pfux-route.maintenance{border:1px solid #d6e5ed;background:#fff}
+.pfux-primary-nav .pfux-route.maintenance:hover{background:#f0f8fa;border-color:#84bfc4}
+.pfux-primary-nav .pfux-route.maintenance.active{border-color:#289e98;background:#eaf7f3;box-shadow:inset 0 0 0 1px #289e98}
+.pfux-primary-nav .pfux-route .pfux-route-body{min-width:0}
+.pfux-primary-nav .pfux-route .pfux-route-body strong,
+.pfux-primary-nav .pfux-route.maintenance .pfux-route-body strong{font-size:18px!important;line-height:1.35!important;font-weight:850!important;color:#2b4b61!important;overflow-wrap:break-word}
+.pfux-primary-nav .pfux-route .pfux-route-body small,
+.pfux-primary-nav .pfux-route.maintenance .pfux-route-body small{font-size:13px!important;line-height:1.5!important;font-weight:500!important;color:#66849a!important}
+.pfux-primary-nav .pfux-route .pfux-route-index,
+.pfux-primary-nav .pfux-route.maintenance .pfux-route-index{height:47px!important;width:47px!important;min-width:47px!important;flex:0 0 47px!important;font-size:15px!important;border-radius:10px!important}
+.pfux-primary-nav .pfux-route.maintenance .pfux-route-index{font-size:12px!important}
+.pfux-primary-nav .pfux-route.active.maintenance .pfux-route-index{background:#16879a!important;color:#fff!important}
+.pfux-primary-nav .pfux-route .pfux-route-arrow{margin-left:auto;flex-shrink:0}
+.pfux-cal-stage-nav{margin:12px 0 15px!important;min-width:0}
+.pfux-cal-stage-nav .pfux-stage-track{display:flex;gap:9px;padding:5px 3px 12px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-color:#8bb6c5 #e6f0f5;scrollbar-width:thin}
+.pfux-cal-stage-nav .pfux-stage-button{flex:0 0 200px;min-height:72px;border-radius:12px;padding:13px 12px;background:#fff;border:1px solid #d4e4ed;box-shadow:0 2px 4px rgba(42,73,87,.035)}
+.pfux-cal-stage-nav .pfux-stage-button:hover{border-color:#62b4b1;background:#f2faf9}
+.pfux-cal-stage-nav .pfux-stage-button:focus-visible{outline:3px solid #57b5b0;outline-offset:2px}
+.pfux-cal-stage-nav .pfux-stage-button.is-current{background:#e6f5f1;border:2px solid #158d83;box-shadow:inset 0 0 0 1px #9dddd0}
+.pfux-cal-stage-nav .pfux-stage-button.is-current .pfux-stage-number{background:#14877e;color:#fff}
+.pfux-cal-stage-nav .pfux-stage-name{font-size:12.5px;font-weight:750;line-height:1.35}
+.pfux-cal-scroll-hint{display:flex;align-items:center;gap:7px;justify-content:flex-end;margin:0 0 11px!important;font-size:11px!important;font-weight:750;color:#587d91}
+.pfux-cal-scroll-hint::before{content:"";height:2px;width:32px;background:linear-gradient(90deg,#e5eef4,#4097a5)}
+.pf-calibration-guide .pf-cal2-mix-diagram>svg{display:block;width:min(100%,650px)!important;margin:auto;max-height:290px}
+.pf-calibration-guide .pf-cal2-mix-diagram figcaption{font-size:13px;line-height:1.7;color:#47677e;padding:12px 16px;background:#eef8fb;border-top:1px solid #d5e6ee}
+@media(max-width:760px){.pfux-primary-nav .pfux-route{min-height:81px;padding:12px 11px;gap:9px}.pfux-primary-nav .pfux-route .pfux-route-body strong{font-size:15px!important}.pfux-primary-nav .pfux-route .pfux-route-body small{font-size:11px!important}.pfux-primary-nav .pfux-route .pfux-route-index,.pfux-primary-nav .pfux-route.maintenance .pfux-route-index{height:38px!important;width:38px!important;min-width:38px!important;flex-basis:38px!important;font-size:12px!important}.pfux-cal-stage-nav .pfux-stage-button{flex-basis:171px;min-height:65px;padding:10px}}
+@media print{.pfux-cal-stage-nav,.pfux-cal-scroll-hint{display:none!important}}
