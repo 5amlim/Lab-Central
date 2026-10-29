@@ -114,7 +114,7 @@ const questions=[
  {id:"twoHourResult",title:"Review the 2-hour hs-Troponin I result",opts:[["ruleout","Both values and the 2-hour delta meet approved rule-out criteria","Verify the absolute baseline and repeat concentrations, 2-hour change, actual collection times, ECG and clinical exclusions."],["observe","Observation range or indeterminate result","Continue clinician assessment and any further testing required by the approved protocol."],["rulein","Approved urgent / rule-in criteria met","Immediate provider evaluation using the assay-specific thresholds and ECG / symptoms."],["unknown","Result, delta or threshold not yet verified","Confirm the repeat concentration, exact delta and approved 0/2-hour limits before classification."]]},
  {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window","Document the actual repeat draw time measured from the first collection."],["no","Missed the 1-hour window","Notify the provider. Switch to the approved 0/2-hour pathway if directed."],["pending","Repeat sample not collected yet","Plan the 1-hour draw relative to the baseline collection time."]]},
  {id:"fallbackApproval",title:"After a missed 1-hour window, did the provider authorize the 0/2-hour fallback?",opts:[["yes","Yes, provider informed and authorized 0/2-hour repeat"],["notInformed","No, provider has not been informed"]]},
- {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Delta unavailable"]]},
+ {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"]]},
  {id:"risk",title:"Clinical assessment · ECG and HEART score",opts:[["low","HEART score ≤3, reassuring ECG, no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Clinical assessment incomplete"]]},
  {id:"onset",title:"Time since symptom onset at the initial blood draw",opts:[["late","More than 3 hours"],["early","3 hours or less"],["unknown","Uncertain or unknown"]]},
  {id:"confirmation",title:"Provider verification of approved rule-out criteria",opts:[["yes","All protocol criteria confirmed"],["no","One or more criteria not met"],["pending","Review still in progress"]]}
@@ -213,8 +213,6 @@ function flow(){
      outcome("rulein","1-hour pathway · urgent provider evaluation","The site's draft reference flags a large one-hour delta for urgent evaluation. Confirm the approved limits, ECG and clinical findings.");
     }else if(selected.delta==="middle"){
      outcome("observe","1-hour pathway · observe or consult","A one-hour delta in the intermediate range requires provider review and possibly additional assessment or timed testing.");
-    }else if(selected.delta==="unknown"){
-     outcome("observe","One-hour delta unavailable","Verify both hs-cTnI values and the actual draw times before applying an approved pathway.");
     }else if(selected.delta==="small"){
      providerClose(4,"0/1-hour");
     }
