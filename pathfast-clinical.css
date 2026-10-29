@@ -412,3 +412,27 @@
  }
  .pcr-guide .pcr-accordion>summary{flex-wrap:wrap}
 }
+
+/* PATHFAST fallback show-more action */
+.pcr-guide .pcr-fallback-timing>summary .pcr-fallback-action{
+ display:inline-flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:9px;
+ margin-left:auto;
+ flex:none;
+ color:#994d13;
+ font-weight:850;
+ white-space:nowrap;
+}
+.pcr-guide .pcr-fallback-timing>summary .pcr-fallback-hide{display:none}
+.pcr-guide .pcr-fallback-timing[open]>summary .pcr-fallback-show{display:none}
+.pcr-guide .pcr-fallback-timing[open]>summary .pcr-fallback-hide{display:inline}
+.pcr-guide .pcr-fallback-timing>summary .pcr-fallback-action .pcr-fallback-chevron{
+ margin-left:0;
+}
+@media(max-width:600px){
+ .pcr-guide .pcr-fallback-timing>summary .pcr-fallback-action{
+  margin-left:auto;
+ }
+}
