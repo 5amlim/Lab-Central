@@ -61,3 +61,14 @@
 .lc-focus-figure figcaption{font-size:13px;line-height:1.55;padding:12px 16px;color:#5c7b8b;border-top:1px solid #e9eff2}
 @media(max-width:650px){.lc-focus-art{min-height:130px;padding:7px}.lc-focus-figure figcaption{font-size:12px}}
 @media print{.lc-focus-figure{break-inside:avoid}}
+
+/* Larger, more legible scroll affordances for long pages and horizontal stage bars. */
+.lc-page-scroll-cue{height:65px;padding-bottom:8px}
+.lc-page-scroll-cue>span,.lc-scroll-cue-bottom>span,.lc-scroll-cue-right>span{
+ font-size:12px;font-weight:850;line-height:1.2;border-color:#a6c7d0;box-shadow:0 3px 10px rgba(30,67,80,.13);color:#2e687c
+}
+.lc-page-scroll-cue>span,.lc-scroll-cue-bottom>span{padding:8px 14px}
+.lc-scroll-cue-bottom{height:57px;padding-bottom:5px}
+.lc-scroll-cue-right{width:52px}
+.lc-scroll-cue-right>span{padding:10px 8px}
+@media(max-width:650px){.lc-page-scroll-cue{height:57px;padding-bottom:6px}.lc-page-scroll-cue>span{font-size:11px;padding:7px 12px}}
