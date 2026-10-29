@@ -184,3 +184,20 @@
 .pfux-route.maintenance .pfux-route-body strong{font-size:12.5px}
 @media(max-width:1050px){.pfux-primary-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.pfux-primary-nav{grid-template-columns:1fr}.pfux-route{min-height:65px}}
+
+/* Keep PATHFAST patient step navigation steady across short and long steps. */
+/* Reserve document height below short guided steps so the browser does not
+   clamp the scroll position when moving from a taller illustration to a
+   shorter one. This is empty space below the step, not a resized step card. */
+@media screen {
+  .procedure-flow.pfux-patient .guide-stage:not(.guide-view-all) {
+    min-height: max(820px, calc(100svh + 120px));
+    align-content: start;
+    align-items: start;
+  }
+}
+@media print {
+  .procedure-flow.pfux-patient .guide-stage {
+    min-height: 0 !important;
+  }
+}
