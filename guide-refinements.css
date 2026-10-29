@@ -435,3 +435,213 @@
  .tab-strip.instrument-matched-tabs .tab{flex:0 0 160px;min-width:160px;min-height:75px;font-size:15px;padding:12px}
 }
 @media print{.tab-strip.instrument-matched-tabs{display:none!important}}
+
+
+/* Instrument component system · unified collection, tabs, controls and priority.
+   These rules intentionally live LAST in the stylesheet so all analyzers and
+   point-of-care instruments share the same geometry rather than one-off overrides. */
+:root{
+ --lc-instrument-accent:#16877f;
+ --lc-instrument-selected:#e8f6f2;
+ --lc-instrument-border:#d8e6ed;
+ --lc-instrument-ink:#27455d;
+ --lc-instrument-muted:#6c8597;
+ --lc-instrument-radius:14px;
+ --lc-instrument-control-height:48px;
+ --lc-instrument-thumb:140px;
+}
+/* One visual hierarchy for the reference card; the device art itself remains
+   individually scaled to preserve real instrument proportions. */
+.equipment-overview{
+ border-color:var(--lc-instrument-border);
+ border-radius:17px;
+ gap:20px;
+ padding:20px 22px;
+ margin:10px 0 24px;
+ min-height:258px;
+}
+.equipment-overview .equipment-art{min-height:218px}
+.equipment-overview .equipment-information h2{font-size:20px;line-height:1.3}
+.equipment-overview .equipment-information>p{font-size:11px;letter-spacing:.08em}
+.equipment-overview .equipment-information dl>div{
+ grid-template-columns:112px minmax(0,1fr);
+ gap:16px;
+ align-items:center;
+ padding:12px 0;
+}
+.equipment-overview .equipment-information dt{line-height:1.4;letter-spacing:.06em}
+.equipment-overview .equipment-information dd{font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+/* Every What to collect section shares identical heading, card, picture
+   frame, text alignment and size, including Piccolo, Sysmex and PATHFAST. */
+.device-collection-guide{
+ border:1px solid var(--lc-instrument-border);
+ border-radius:17px;
+ margin:20px 0 25px;
+ padding:20px 22px;
+ background:#fff;
+}
+.device-collection-guide .device-collection-heading{align-items:center;margin-bottom:16px;gap:14px}
+.device-collection-guide .device-collection-kicker{
+ color:#208783;font-size:10px;font-weight:900;letter-spacing:.13em;
+ line-height:1.35;margin-bottom:6px;
+}
+.device-collection-guide .device-collection-heading h3{
+ margin:0 0 6px;color:var(--lc-instrument-ink);
+ font-size:20px;line-height:1.3;font-weight:850;letter-spacing:-.025em
+}
+.device-collection-guide .device-collection-heading p{
+ color:var(--lc-instrument-muted);font-size:12.5px;line-height:1.55;margin:0
+}
+.device-collection-guide .device-collection-list{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
+ gap:12px;
+}
+.device-collection-guide .device-collection-item{
+ min-height:164px;box-sizing:border-box;
+ display:flex;align-items:center;gap:18px;
+ padding:12px 15px;
+ background:#f7fafc;border:1px solid #dce8ef;border-radius:13px;
+}
+.device-collection-guide .device-media-picture{
+ box-sizing:border-box;
+ width:var(--lc-instrument-thumb);
+ height:var(--lc-instrument-thumb);
+ min-width:var(--lc-instrument-thumb);
+ min-height:var(--lc-instrument-thumb);
+ flex:0 0 var(--lc-instrument-thumb);
+ padding:6px;
+ display:grid;place-items:center;
+ overflow:hidden;background:#fff;
+ border:1px solid #dde7ee;border-radius:11px;
+}
+.device-collection-guide .device-media-picture svg{
+ display:block;width:auto;height:auto;
+ max-width:125px;max-height:126px;
+ min-width:0;min-height:0;
+}
+.device-collection-guide .device-collection-item>div:last-child{min-width:0;flex:1}
+.device-collection-guide .device-collection-item strong{
+ font-size:15px;line-height:1.35;font-weight:800;color:#2d526a
+}
+.device-collection-guide .device-collection-item span{
+ font-size:12.5px;line-height:1.55;color:#6b8497;margin-top:6px
+}
+.device-collection-guide .device-collection-caveat{font-size:12px;line-height:1.55}
+/* Identical navigation tiles and ordering across all instruments.
+   Tabs use consistent widths, with horizontal scrolling rather than
+   squeezing titles into truncation or changing sizing by tab count. */
+.tab-strip.instrument-matched-tabs{
+ display:flex;align-items:stretch;gap:10px;
+ margin-top:27px;
+ padding:3px 2px 13px;
+ overflow-x:auto;overflow-y:hidden;
+ scroll-snap-type:x proximity;
+}
+.tab-strip.instrument-matched-tabs .tab{
+ box-sizing:border-box;flex:0 0 212px;min-width:212px;max-width:212px;
+ min-height:98px;height:auto;
+ padding:13px 15px;border:1.5px solid var(--lc-instrument-border);
+ border-radius:13px;background:#fff;color:var(--lc-instrument-ink);
+ display:flex;align-items:center;justify-content:center;
+ text-align:center;font-size:16px;font-weight:850;line-height:1.32;
+ white-space:normal;overflow-wrap:anywhere;
+ scroll-snap-align:start;
+}
+.tab-strip.instrument-matched-tabs .tab.active,
+.tab-strip.instrument-matched-tabs .tab[aria-selected="true"]{
+ border-color:#319b93;background:var(--lc-instrument-selected);
+ color:#126d65;box-shadow:inset 0 0 0 1px #319b93;
+}
+.tab-strip.instrument-matched-tabs .tab:focus-visible{outline:3px solid #6ebfb5;outline-offset:2px}
+.pfux-primary-nav .pfux-route{
+ min-height:98px;border-radius:13px;
+ border-color:var(--lc-instrument-border);
+}
+.pfux-primary-nav .pfux-route-body strong{font-size:16px;line-height:1.3}
+/* Focused step cards have the same number badges, height, and current state
+   whether the instrument uses the generic guide or PATHFAST stage track. */
+.procedure-flow .guide-step-pill,
+.pfux-patient .pfux-stage-button{
+ box-sizing:border-box;flex:0 0 204px;
+ min-width:204px;max-width:204px;min-height:78px;
+ padding:12px 13px;border:1.5px solid var(--lc-instrument-border);
+ border-radius:12px;background:#fff;
+ display:flex;align-items:center;gap:10px;
+ text-align:left;scroll-snap-align:start;
+}
+.procedure-flow .guide-step-pill .guide-pill-number,
+.pfux-patient .pfux-stage-number{
+ width:35px;height:35px;flex:0 0 35px;
+ border-radius:9px;background:#edf3f7;color:#607e91;
+ font-size:12px;font-weight:850;
+ display:grid;place-items:center;
+}
+.procedure-flow .guide-step-pill .guide-pill-label,
+.pfux-patient .pfux-stage-name{
+ display:block;min-width:0;max-width:none;
+ font-size:13.25px;line-height:1.4;
+ font-weight:800;color:#3d6079;
+ white-space:normal;overflow-wrap:anywhere;
+}
+.procedure-flow .guide-step-pill[aria-current="step"],
+.pfux-patient .pfux-stage-button.is-current{
+ border-color:#24998f;background:var(--lc-instrument-selected);
+ box-shadow:inset 0 0 0 1px #52b9b0;color:#126f67;
+}
+.procedure-flow .guide-step-pill[aria-current="step"] .guide-pill-number,
+.pfux-patient .pfux-stage-button.is-current .pfux-stage-number{
+ background:#158980;color:#fff;
+}
+.procedure-flow .guide-step-pill[aria-current="step"] .guide-pill-label,
+.pfux-patient .pfux-stage-button.is-current .pfux-stage-name{color:#136f68}
+.procedure-flow .guide-step-pill:hover,
+.pfux-patient .pfux-stage-button:hover{border-color:#7ebbb6;background:#f3fbf9}
+.procedure-flow .guide-step-pill:focus-visible,
+.pfux-patient .pfux-stage-button:focus-visible{outline:3px solid #75c4bb;outline-offset:2px}
+/* Action buttons remain more prominent than informational cards. */
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button,
+.procedure-flow .guide-mode-switch button,
+.procedure-flow .guide-detail-control,
+.pfux-patient .pfux-view-toggle button{
+ box-sizing:border-box;min-height:var(--lc-instrument-control-height);
+ border-radius:11px;font-family:inherit;font-size:14px;
+ font-weight:850;line-height:1.25;
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{padding:11px 16px}
+.procedure-flow .guide-button.primary,
+.procedure-flow .guide-mode-switch button[aria-pressed="true"]{
+ background:var(--lc-instrument-accent);border-color:#0d7e76;color:#fff;
+}
+.procedure-flow .guide-button:focus-visible,
+.procedure-flow .guide-detail-control:focus-visible,
+.procedure-flow .guide-mode-switch button:focus-visible,
+.pfux-patient .pfux-view-toggle button:focus-visible{outline:3px solid #75c4bb;outline-offset:2px}
+/* The More steps cue sits outside the row and never masks another step. */
+.lc-scroll-cue-frame:has(>.instrument-matched-tabs),
+.lc-scroll-cue-frame:has(>.pfux-stage-track),
+.lc-scroll-cue-frame:has(>.guide-stepper){min-width:0}
+@media(max-width:740px){
+ .equipment-overview{grid-template-columns:1fr;min-height:0;padding:16px}
+ .equipment-overview .equipment-art{min-height:175px}
+ .equipment-overview .equipment-information dl>div{grid-template-columns:100px minmax(0,1fr);gap:12px}
+ .device-collection-guide{padding:16px}
+ .device-collection-guide .device-collection-list{grid-template-columns:1fr}
+ .device-collection-guide .device-collection-item{min-height:140px;gap:13px;padding:10px}
+ .device-collection-guide .device-media-picture{
+  width:116px;height:116px;min-width:116px;min-height:116px;flex-basis:116px;
+ }
+ .device-collection-guide .device-media-picture svg{max-width:103px;max-height:104px}
+ .tab-strip.instrument-matched-tabs .tab{flex-basis:185px;min-width:185px;max-width:185px;min-height:85px;font-size:15px}
+ .procedure-flow .guide-step-pill,.pfux-patient .pfux-stage-button{
+  flex-basis:180px;min-width:180px;max-width:180px;min-height:72px;padding:10px;
+ }
+ .procedure-flow .guide-step-pill .guide-pill-label,.pfux-patient .pfux-stage-name{font-size:12px}
+ .procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{font-size:13px}
+}
+@media print{
+ .device-collection-guide .device-collection-item{break-inside:avoid;min-height:115px}
+ .device-collection-guide .device-media-picture{
+  width:98px;height:98px;min-width:98px;min-height:98px;flex-basis:98px
+ }
+ .device-collection-guide .device-media-picture svg{max-width:88px;max-height:88px}
+}
