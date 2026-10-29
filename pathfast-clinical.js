@@ -88,7 +88,7 @@ window.LAB_PATHFAST_EXTRAS.timing()+'</div>'+
 '<path d="M35 58h28l-2 27q-12 12-24 0z" fill="#c76d7b" opacity=".76"/>'+
 '<path d="M22 39l52 52m0-52L22 91" stroke="#ba4b43" stroke-width="6" stroke-linecap="round"/>'+
 '<text x="49" y="108" fill="#7b4b41" font-size="12" font-family="Arial" font-weight="800" text-anchor="middle">DISCARD</text></svg>'+
-'<div><span>EXISTING IV LINE ONLY</span><strong>WASTE 1 FULL TUBE (5 mL)</strong>'+
+'<div class="pcr-line-waste-body"><div class="pcr-line-waste-head"><span>EXISTING IV LINE ONLY</span><span class="pcr-line-waste-container-badge">SUGGESTED WASTE: RED TOP · SST · 5 cc SYRINGE</span></div><strong>WASTE 1 FULL TUBE (5 mL)</strong>'+
 '<p>Before collecting the troponin specimen through an existing IV line, discard one full tube per the local line-draw SOP. Confirm this requirement for the specific access device and current policy. Fresh venipuncture is preferred when feasible.</p></div></div>'+
 '<p>Hemolysis may be tolerated by PATHFAST, but visible or suspected microclots can compromise results. Use the original suspect lithium-heparin tube for the analytical plasma retest below. A fresh draw may be needed separately for clinical reasons.</p></div></details>'+
 '<div class="pcr-tech-note"><strong>Lab tech processing</strong><p>Gently remix before cartridge loading. Inspect the sample appearance for visible clots or fibrin and follow the specimen-acceptability SOP. Verify patient ID, lane, QC/calibration status and specimen integrity. The one-page guide lists 100 µL per cartridge and approximately 17 minutes per run. Follow the assay IFU.</p></div>'+
