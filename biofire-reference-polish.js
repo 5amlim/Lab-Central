@@ -28,8 +28,14 @@ const link=(url,title)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener no
 const instruction=lines=>'<div class="bf-polished-points">'+lines.map(t=>'<div class="bf-polished-point"><i class="bf-polished-point-dot" aria-hidden="true"></i><span>'+esc(t)+'</span></div>').join("")+'</div>';
 function manufacturer(id,figure,page){
  const isHandling=figure&&figure>0;
+ if(id==="torch"&&figure===1&&page===13){
+  return '<p class="bf-source-hardware-note">The kit packaging illustration is from a SPOTFIRE kit reference. For TORCH GI, confirm the actual GI-specific packaging and approved reagents. '+link(docLibrary,"GI panel resources")+'.</p>';
+ }
  if(id==="torch"&&isHandling){
   return '<p class="bf-source-hardware-note">The handling image is from the <a target="_blank" rel="noopener noreferrer" href="'+esc(legacyGuide)+'">FilmArray RP2 manufacturer manual</a>. Use the GI panel IFU for all GI volumes, buffer opening and specimen preparation.</p>';
+ }
+ if(id==="spotfire"&&page===13){
+  return '<p class="bf-source-hardware-note">SPOTFIRE kit packaging illustration from the manufacturer. Confirm the exact respiratory or sore throat assay kit and its current IFU: '+link(sourcePouchGuide,"Source image")+'.</p>';
  }
  if(id==="spotfire"&&page>=13&&page<=16){
   return '<p class="bf-source-hardware-note">The handling photo is from a FilmArray RP2 reference, while the kit image is from the <a target="_blank" rel="noopener noreferrer" href="'+esc(sourcePouchGuide)+'">SPOTFIRE R kit guide</a>. Follow your approved R/ST or Mini procedure, especially the specimen-first sequence and buffer-opening method.</p>';
@@ -68,11 +74,11 @@ function render(id,title){
  const c=opts=>card(id,opts);
  if(/gather.*(kit|specimen)|kit and specimen/.test(t))return c({
   title:"Check pouch, vials and specimen",tag:"Preparation",
-  visual:gi?B.kit?.():direct("08","kit-packaging","SPOTFIRE sample preparation reagent kit packaging and pouch kit, original manufacturer figure"),figure:1,page:13,
+  visual:direct("08","kit-packaging","BioFire kit packaging reference image showing pouch and sample-preparation materials; verify the specific TORCH GI or SPOTFIRE kit"),figure:1,page:13,
   lines:[gi?"Confirm the ordered GI pouch and its expiration date.":"Confirm the ordered R/ST Regular or Mini pouch and its expiration date.",
   "Check the red sample vial, blue hydration vial, buffer and transfer pipette.",
   gi?"Verify the stool specimen is in the approved Cary Blair transport medium.":"Confirm specimen type and transport medium for the selected Respiratory or Sore Throat menu."],
-  note:"Verify kit letter/identifier matches the selected pouch and the expiry date. R/ST Regular and Mini instructions are not interchangeable."
+  note:gi?"SPOTFIRE packaging is shown as a kit reference. Verify the actual TORCH GI kit, GI pouch, components and expiration before use.":"Verify the SPOTFIRE kit identifier matches the pouch and expiration. R/ST Regular and Mini instructions are not interchangeable."
  });
  if(/seat pouch|insert pouch|set up vials|loading station/.test(t))return c({
   title:"Seat pouch and place both vials",tag:"Loading station",
@@ -82,7 +88,7 @@ function render(id,title){
  });
  if(/hydrat/.test(t))return c({
   title:"Hydrate through the blue port",tag:"BLUE · hydration",hue:"blue",
-  visual:direct("02","hydrate-blue","BioFire blue hydration vial turned and inserted into the blue pouch port"),figure:2,page:14,
+  visual:direct("02","hydrate-blue-clean","BioFire blue hydration vial turned and inserted into the blue pouch port, with stray page text cropped away"),figure:2,page:14,
   lines:["Unscrew the blue vial, leaving its colored cover in the station.","Insert its blunt needle into the BLUE hydration port and press to puncture the seal.","Verify the pouch draws in hydration solution before proceeding."],
   noteTitle:"Check",note:"Do not proceed with a pouch that fails hydration. Follow the panel IFU."
  });
