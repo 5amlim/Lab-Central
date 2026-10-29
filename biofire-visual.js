@@ -319,32 +319,51 @@ function analyzer(id,state){
    "BioFire FilmArray Torch instrument matching photographed wide two-door gray housing, red-trimmed upper modules, left pouch dock, large black lower touchscreen and front USB ports; status overlays are instructional")
    .replace('viewBox="0 0 920 400"','viewBox="95 0 770 400"');
  }
- const body='<ellipse cx="490" cy="350" rx="300" ry="20" fill="#e1e9ed"/>'+
- '<rect x="270" y="105" width="296" height="224" rx="15" fill="#eff4f6" stroke="#8da5b4" stroke-width="5"/>'+
- Array.from({length:4},(_,i)=>'<rect x="287" y="'+(124+i*43)+'" width="170" height="34" rx="5" fill="#fbfcfc" stroke="#a8bec9" stroke-width="2"/><path d="M304 '+(141+i*43)+' h26" stroke="#3f424d" stroke-width="6"/>').join("")+
- '<path d="M480 116 L646 109 L662 321 L480 328Z" fill="#dfe9ef" stroke="#9aafbb" stroke-width="4"/>'+
- '<rect x="502" y="137" width="141" height="156" rx="6" fill="#1f3d50"/>'+
- '<rect x="511" y="153" width="122" height="124" rx="3" fill="#e5f1f4"/>'+
- text(572,184,"SPOTFIRE",13,"#3c7184")+
- text(572,205,state==="selected"?"OPEN MODULE":"AVAILABLE",11,state==="selected"?"#158775":"#49899c")+
- '<rect x="536" y="229" width="71" height="28" rx="5" fill="#b7dce6"/>';
- return svg(body,"BioFire SPOTFIRE analyzer with modular drawer units and upright display");
+ const mode=String(state||"ready").toLowerCase();
+ const statuses={
+  ready:{title:"Available",foot:""},selected:{title:"Module selected",foot:"READY"},
+  running:{title:"Processing",foot:"RUNNING"},
+  results:{title:"Results ready",foot:"REVIEW"},
+  scan:{title:"Scan barcode",foot:"IDENTIFY"},
+  identify:{title:"Sample ID",foot:"VERIFY"},
+  review:{title:"Review details",foot:"CONFIRM"},
+  start:{title:"Start run",foot:"START"}
+ };
+ const status=statuses[mode]||statuses.ready;
+ const line=(x,y,str,size=13,color="#356b86",weight=850)=>{
+   return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" fill="'+color+'" font-weight="'+weight+'">'+esc(str)+'</text>';
+ };
+ // This is the exact silhouette, proportions and main-screen framing used in
+ // the original SPOTFIRE overview in equipment-art.js. Change ONLY the display.
+ const body='<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+
+ '<rect x="194" y="104" width="215" height="166" rx="18" fill="#eef3f6" stroke="#9cadb9" stroke-width="3"/>'+
+ '<rect x="211" y="119" width="180" height="99" rx="10" fill="#d9e5ea" stroke="#b7cbd4" stroke-width="2"/>'+
+ '<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+
+ '<rect x="214" y="228" width="179" height="29" rx="7" fill="#dae6eb"/>'+
+ line(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+
+ '<rect x="404" y="59" width="120" height="196" rx="17" fill="#f3f7f9" stroke="#9db3bf" stroke-width="3"/>'+
+ '<rect x="417" y="81" width="95" height="154" rx="6" fill="#263c4b"/>'+
+ '<rect x="427" y="94" width="75" height="119" rx="3" fill="#e1edf2"/>'+
+ line(465,mode==="ready"?131:119,mode==="ready"?"Available":"SPOTFIRE",mode==="ready"?13:12,"#356b86",850)+
+ (mode==="ready"?"":line(465,142,status.title,Math.min(12,status.title.length>14?9:11),mode==="results"?"#187964":"#387388",820))+
+ (status.foot?'<rect x="440" y="166" width="50" height="28" rx="5" fill="'+(mode==="running"?"#d1efe9":"#b9dde9")+'"/>'+
+ line(465,184,status.foot,9,"#286780",850):"")+
+ '<circle cx="464" cy="243" r="7" fill="#4a91aa"/>';
+ const close=mode==="selected"?'<rect x="218" y="123" width="174" height="91" rx="8" stroke="#2b9888" stroke-width="3" fill="none" stroke-dasharray="7 5"/>':"";
+ return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BioFire SPOTFIRE instrument, same body as Overview, screen showing '+esc(status.title)+'" viewBox="0 0 740 310">'+body+close+'</svg>';
 }
 function ui(id,index){
  const torch=id==="torch";
  if(!torch){
-  const choices=[["Available modules","Select a free module"],["Pouch barcode","Scan barcode"],["Sample ID / assay","Confirm ordered panel"],["Start Run","Start only after checks"]];
-  const chosen=choices[index]||choices[0];
-  return svg('<rect x="197" y="17" width="536" height="363" rx="19" fill="#e8eef1" stroke="#9fb8c5" stroke-width="6"/>'+
-   '<rect x="222" y="45" width="485" height="302" rx="10" fill="#fff" stroke="#afc4d0"/>'+
-   '<rect x="223" y="45" width="484" height="53" rx="7" fill="#274b67"/>'+
-   text(465,76,"BIOFIRE SPOTFIRE · WORKFLOW REFERENCE",17,"#fff")+
-   '<rect x="268" y="143" width="394" height="52" rx="8" fill="#e6f5f1" stroke="#24968d" stroke-width="3"/>'+
-   text(467,176,chosen[0],20,"#226b73")+
-   '<rect x="298" y="228" width="334" height="47" rx="8" fill="#f1f6f8" stroke="#c0d6e0"/>'+
-   text(465,255,chosen[1],16,"#527589")+
-   text(465,317,"Illustrative workflow only · verify actual screen",12,"#688494"),
-   "BioFire SPOTFIRE simplified workflow stage "+(index+1)+"; verify actual software display");
+  // Match the Overview chassis for every on-device workflow. Offer a
+  // magnified view of its own display rather than a different fictional tablet.
+  const modes=["selected","scan","review","start"],mode=modes[index]||"ready";
+  const full=analyzer("spotfire",mode);
+  const zoom=full.replace('viewBox="0 0 740 310"','viewBox="402 53 128 210"');
+  return '<div class="bf-spotfire-screen-sequence">'+full+
+   '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
+   '<div class="bf-spotfire-display-crop">'+zoom+'</div>'+
+   '<p>Illustrative display. Confirm the actual module, pouch, sample ID and prompts.</p></details></div>';
  }
  const stages=[
   {heading:"DASHBOARD",title:"Select an available module",focus:"module"},
