@@ -21,11 +21,19 @@ function defs(){return '<defs>'+
  '<linearGradient id="pfxglass" x1="0" x2=".8" y1="0" y2="1"><stop stop-color="#e9f2f7" stop-opacity=".65"/><stop offset=".55" stop-color="#b9d1db" stop-opacity=".23"/><stop offset="1" stop-color="#a9c8d9" stop-opacity=".6"/></linearGradient>'+
  '<linearGradient id="pfxamber" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d8a16c"/><stop offset=".5" stop-color="#81502c"/><stop offset="1" stop-color="#b97e49"/></linearGradient>'+
  '</defs>';}
-function laneSvg(item,i){
+function laneSvg(item,i,filled=false){
  const x=31+i*145, cx=x+62;
  let codes='';
  for(let j=0;j<9;j++)codes+='<rect x="'+(x+36+j*5)+'" y="171" width="'+(j%3===0?3:1.5)+'" height="'+(j%2?19:24)+'" fill="#d0dbe2"/>';
- return '<g role="group" aria-label="Lane '+(i+1)+' '+item.name+'">'+
+ const sample=filled?
+  '<rect x="'+(x+24)+'" y="276" width="76" height="45" rx="7" fill="'+item.well+'" stroke="'+item.ink+'" stroke-width="2.4"/>'+
+  '<rect x="'+(x+30)+'" y="281" width="64" height="32" rx="5" fill="'+item.tone+'" opacity=".94"/>'+
+  '<text x="'+cx+'" y="302" text-anchor="middle" font-weight="900" font-size="14" fill="'+item.ink+'">'+item.name+'</text>':
+  '<rect x="'+(x+24)+'" y="276" width="76" height="45" rx="7" fill="#f6fbfe" stroke="#9ab6c6" stroke-width="2.4"/>'+
+  '<rect x="'+(x+30)+'" y="281" width="64" height="32" rx="5" fill="#e8f2f6" stroke="#c8dce5" stroke-width="1"/>'+
+  '<path d="M'+(x+34)+' 285 L'+(x+43)+' 285" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>'+
+  '<text x="'+cx+'" y="302" text-anchor="middle" font-weight="800" font-size="11" fill="#7190a2">EMPTY</text>';
+ return '<g role="group" aria-label="Lane '+(i+1)+' '+item.name+', '+(filled?'matching calibrator or QC added':'sample well empty')+'">'+
  '<rect x="'+x+'" y="8" width="123" height="59" rx="10" fill="'+item.tone+'" stroke="'+item.ink+'" stroke-opacity=".35"/>'+
  '<text x="'+cx+'" y="31" text-anchor="middle" font-size="12" font-weight="850" fill="'+item.ink+'">LANE '+(i+1)+'</text>'+
  '<text x="'+cx+'" y="54" text-anchor="middle" font-size="18" font-weight="900" fill="'+item.ink+'">'+item.name+'</text>'+
@@ -38,19 +46,67 @@ function laneSvg(item,i){
  codes+
  '<circle cx="'+cx+'" cy="227" r="17" fill="#141e26" stroke="#899faa" stroke-width="3"/>'+
  '<circle cx="'+cx+'" cy="227" r="7" fill="#455765"/>'+
- '<rect x="'+(x+24)+'" y="276" width="76" height="45" rx="7" fill="'+item.well+'" stroke="'+item.ink+'" stroke-width="2"/>'+
- '<rect x="'+(x+30)+'" y="281" width="64" height="32" rx="5" fill="'+item.tone+'" opacity=".9"/>'+
- '<text x="'+cx+'" y="302" text-anchor="middle" font-weight="900" font-size="14" fill="'+item.ink+'">'+item.name+'</text>'+
+ sample+
  '</g>';
 }
-function rack(){
+/* Small source-vial illustrations directly beneath their own sample wells.
+   Two CAL 2 lane illustrations represent repeat transfers from ONE mixed vial. */
+function laneSourceVial(item,i,group){
+ const x=31+i*145,cx=x+62;
+ const isCal1=i<2,isCal2=i>=2&&i<4,isQc=i>=4;
+ const level=isQc?group?.vials?.[i-4]:null;
+ const code=isQc?(level?.[2]||''):null;
+ const dimer=group?.id==='ddimer';
+ const cap=isQc?(i===4?(dimer?'#09a8ad':'#fafbfc'):'#292d34'):(isCal2?'#ccdbe7':'#e8f0f3');
+ const short=isCal1?'CAL 1':isCal2?'CAL 2':'QC'+(i-3);
+ const lower=isCal1?'LIQUID':isCal2?'MIXED':'Bio-Rad #'+code;
+ const fill=isCal1?'#cce6f0':isCal2?'#b5a8df':'#8a5035';
+ const labelTone=isCal1?'#257296':isCal2?'#6e589c':i===4?'#ad7924':'#16775c';
+ const vial=isCal1?
+  '<g>'+
+   '<rect x="'+(cx-21)+'" y="425" width="42" height="86" rx="10" fill="#e2eef3" stroke="#91abb9" stroke-width="2.2"/>'+
+   '<path d="M'+(cx-18)+' 474H'+(cx+18)+'V501Q'+cx+' 510 '+(cx-18)+' 501Z" fill="'+fill+'"/>'+
+   '<path d="M'+(cx-13)+' 436V481" stroke="#fff" stroke-width="3" opacity=".8"/>'+
+   '<rect x="'+(cx-15)+'" y="414" width="30" height="15" rx="4" fill="'+cap+'" stroke="#8ba5b6" stroke-width="2"/>'+
+   '<path d="M'+(cx+8)+' 416L'+(cx+26)+' 407L'+(cx+34)+' 408" fill="none" stroke="#8ba5b6" stroke-width="5" stroke-linecap="round"/>'+
+   '<rect x="'+(cx-19)+'" y="451" width="38" height="29" rx="4" fill="#fbfeff" stroke="#c8dce5"/>'+
+   '<text x="'+cx+'" y="465" text-anchor="middle" font-size="10.5" font-weight="900" fill="'+labelTone+'">CAL 1</text>'+
+   '<text x="'+cx+'" y="474" text-anchor="middle" font-size="7" fill="#72909f">LIQUID</text>'+
+  '</g>':
+  '<g>'+
+   '<rect x="'+(cx-20)+'" y="424" width="40" height="86" rx="8" fill="'+(isCal2?'#e9f0f7':'#975e44')+'" stroke="'+(isCal2?'#92adb9':'#86523b')+'" stroke-width="2.2"/>'+
+   (isCal2?'<path d="M'+(cx-16)+' 468H'+(cx+16)+'V503H'+(cx-16)+'Z" fill="'+fill+'" opacity=".9"/>':
+   '<path d="M'+(cx-15)+' 482H'+(cx+15)+'V501Q'+cx+' 507 '+(cx-15)+' 501Z" fill="#673b2d" opacity=".85"/>')+
+   '<path d="M'+(cx-13)+' 433V478" stroke="#fff" opacity=".5" stroke-width="2.2"/>'+
+   '<rect x="'+(cx-22)+'" y="410" width="44" height="19" rx="5" fill="'+cap+'" stroke="#93a7b1" stroke-width="2"/>'+
+   Array.from({length:6},(_,j)=>'<path d="M'+(cx-15+j*6)+' 413v13" stroke="'+(isQc&&i===5?'#62646c':'#c6d2d8')+'" stroke-width="1"/>').join('')+
+   '<rect x="'+(cx-20)+'" y="449" width="40" height="33" rx="3" fill="#fafdff" stroke="#d8e4e9" stroke-width=".8"/>'+
+   (isQc?'<rect x="'+(cx-20)+'" y="449" width="40" height="7" fill="'+labelTone+'"/>':'')+
+   '<text x="'+cx+'" y="'+(isQc?468:464)+'" text-anchor="middle" font-size="'+(isQc?11:10.5)+'" font-weight="900" fill="'+labelTone+'">'+short+'</text>'+
+   '<text x="'+cx+'" y="478" text-anchor="middle" font-size="7.4" font-weight="850" fill="#486c81">'+(isQc?'#'+esc(code):'MIXED')+'</text>'+
+  '</g>';
+ return '<g role="group" aria-label="Lane '+(i+1)+' source: '+(isCal1?'CAL 1 liquid':isCal2?'Same single reconstituted CAL 2 vial as the other CAL 2 lane':('Bio-Rad '+esc(level?.[1]||'QC')+' catalog '+esc(code)))+'">'+
+  '<path d="M'+cx+' 400 V348" stroke="'+item.ink+'" stroke-width="2.4" stroke-dasharray="5 5" fill="none" opacity=".78"/>'+
+  '<path d="M'+(cx-7)+' 357 L'+cx+' 348 L'+(cx+7)+' 357" stroke="'+item.ink+'" stroke-width="2.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+  '<path d="M'+cx+' 367 C'+(cx-8)+' 377 '+(cx-9)+' 382 '+(cx-8)+' 387 Q'+cx+' 402 '+(cx+8)+' 387 C'+(cx+10)+' 381 '+(cx+6)+' 373 '+cx+' 367Z" fill="'+item.well+'" stroke="'+item.ink+'" stroke-width="2"/>'+
+  '<path d="M'+(cx-3)+' 377q-4 6-1 11" stroke="#fff" stroke-width="2" opacity=".85" fill="none"/>'+
+  vial+
+  '<text x="'+cx+'" y="528" text-anchor="middle" fill="#42687e" font-weight="800" font-size="11">'+lower+'</text>'+
+ '</g>';
+}
+function rack(filled=false,group=null,showVials=false){
+ const vials=showVials?lanes.map((item,i)=>laneSourceVial(item,i,group)).join(''):'';
+ const height=showVials?548:365;
+ const label=showVials?'SOURCE VIALS BELOW · DROPLETS / ARROWS INDICATE TRANSFER INTO SAMPLE WELLS':filled?'FRONT · MATERIALS ADDED TO SAMPLE WELLS':'FRONT · SAMPLE WELLS EMPTY BEFORE DISPENSING';
  return '<div class="pf-rack-scroll" role="region" tabindex="0" aria-label="Six cartridge loading positions, horizontally scrollable">'+
- '<svg class="pf-rack-svg" viewBox="0 0 940 359" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PATHFAST six-lane rack with color coded sample wells: Cal 1 in lanes 1 and 2, Cal 2 in lanes 3 and 4, QC 1 in lane 5, QC 2 in lane 6">'+
+ '<svg class="pf-rack-svg'+(showVials?' pf-rack-with-vials':'')+'" viewBox="0 0 940 '+height+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+(filled?'PATHFAST six-lane rack after adding matching calibrators and QC materials':'PATHFAST six-lane rack with all six transparent sample wells empty')+(showVials?'; a matching source vial and upward droplet under each lane':'')+'">'+
  defs()+
  '<rect x="17" y="83" width="892" height="255" rx="17" fill="#dbe7ec" stroke="#9cabb6" stroke-width="4"/>'+
  '<rect x="25" y="92" width="876" height="235" rx="13" fill="#cfdae2" stroke="#f9fcfd" stroke-width="2"/>'+
- lanes.map(laneSvg).join("")+
- '<text x="469" y="354" text-anchor="middle" fill="#698091" font-size="11" letter-spacing="1.5" font-weight="850">FRONT · COLOR-CODED SAMPLE WELLS</text></svg></div>';
+ lanes.map((item,i)=>laneSvg(item,i,filled)).join('')+
+ vials+
+ '<text x="469" y="'+(showVials?545:358)+'" text-anchor="middle" fill="#698091" font-size="'+(showVials?11:11)+'" letter-spacing="'+(showVials?.7:1.5)+'" font-weight="850">'+label+'</text></svg></div>'+
+ (showVials?'<p class="pf-rack-transfer-note"><strong>CAL 2 lanes 3 and 4:</strong> Both transfers use the <strong>same single reconstituted vial</strong>, not two separately mixed vials. The two vial icons represent the shared source for each cartridge well.</p>':'');
 }
 function svgCal1(){
  return '<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="CAL 1 liquid bottle with dispensing spout" xmlns="http://www.w3.org/2000/svg">'+defs()+
@@ -327,8 +383,8 @@ function render(){
   const laneList='<div class="pf-qc-lane-list" role="list" aria-label="Six sample-to-lane assignments">'+laneNames.map((name,i)=>
      '<div role="listitem" class="pf-qc-lane-item"><b class="pf-qc-lane-no">'+(i+1)+'</b><strong>'+esc(name)+'</strong><span>'+esc(laneDesc[i])+'</span></div>'
     ).join('')+'</div>';
-  const laneMap='<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK · TOP TO BOTTOM</span><h3>Which material goes in each cartridge?</h3></div></div>'+
-   '<div class="pf-qc-vertical-layout"><div class="pf-rack-box">'+rack()+'</div>'+laneList+'</div>'+
+  const laneMap=(filled=false,withVials=false)=>'<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK · TOP TO BOTTOM</span><h3>'+(withVials?'Transfer the matching vial into each sample well':'Which material goes in each cartridge?')+'</h3></div></div>'+
+   '<div class="pf-qc-vertical-layout"><div class="pf-rack-box">'+rack(filled,group,withVials)+'</div>'+laneList+'</div>'+
    '<p class="pf-workflow-note"><strong>Important:</strong> Both CAL 2 cartridges use the same single reconstituted CAL 2 vial. This is a training layout for two CAL 1, two CAL 2 and two QC levels. Confirm each actual lane assignment on PATHFAST before dispensing. Calibration replicate and QC-lockout settings can change the analyzer-assigned order.</p>';
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · REVIEW 6 LANES</span></div>'+
    '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Select any step below, like the patient testing workflow</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
@@ -351,10 +407,10 @@ function render(){
       '</div>'+cal2MixIllustration()+'<h3 class="pf-material-heading">Bio-Rad QC vials · '+esc(group.qc)+'</h3>'+qcGallery(group)+
       '<div class="pf-qc-prep-emphasis"><strong>Prepare before loading cartridges.</strong><span>Thaw and gently mix each control as its lot-specific insert specifies; check for unsuitable material. Keep CAL 1, the one reconstituted CAL 2 vial, QC 1 and QC 2 separately identified. Do not reconstitute the backup CAL 2 vial.</span></div>');
   h+=step(3,'Seat the cartridges in the upright six-lane rack','Place metal rack in clear loading base and insert six assay cartridges',
-      laneMap+
+      laneMap(false,false)+
       '<p class="pf-workflow-note">Confirm every cartridge matches the selected assay and is fully seated in its assigned vertical channel. At this stage, the clear front sample wells are still empty. Do not put liquids in the round detection wells.</p>');
   h+=step(4,'Dispense each calibrator and Bio-Rad control into its assigned sample well','Check the material by lane before using the transfer pipette',
-      laneMap+
+      laneMap(true,true)+
       '<p class="pf-workflow-note">Dispense from the same reconstituted CAL 2 vial into BOTH CAL 2 cartridges, lanes 3 and 4. Gently mix each material according to the corresponding insert. Fill only each cartridge’s clear front sample well to its assay-specific mark without bubbles or cross-contamination. Use a fresh tip for each transfer; never pipette into the separate round detection well.</p>');
   h+=step(5,'Return the loaded rack, add tips and check the waste-tip box','Confirm all six active lanes and center waste-tip box before closing cover',
       (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('assembled','cal'):'')+
@@ -374,7 +430,7 @@ function render(){
       window.LAB_PATHFAST_SCREEN.item(group.label)+
       '<p class="pf-workflow-note">If the reagent lot is not registered, follow the instrument’s MC ENTRY registration instructions. Do not bypass lot checks.</p>');
   h+=step(10,'Verify actual CAL/QC lane assignments','Match the instrument’s six-lane screen to each prepared cartridge',
-      window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+laneMap+
+      window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+laneMap(true,false)+
       '<p class="pf-workflow-note">Instrument-assigned lanes take precedence over an illustrated example. If the displayed configuration differs, confirm the applicable calibration-replicate and QC-lockout procedure before starting.</p>');
   h+=step(11,'Press START to begin calibration and QC','Verify prepared lanes and confirm the analyzer START prompt',
       window.LAB_PATHFAST_SCREEN.start("cal")+
