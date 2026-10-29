@@ -270,7 +270,7 @@ function stageVisual(id,title){
  else if(/inject sample|load sample mix/.test(t))figs=[figure("Load red sample mixture","Puncture the red sample port with the prepared sample injection vial. Verify sample is drawn into the pouch.",station("sample"))];
  else if(/available module/.test(t))figs=[
    figure("Instrument and available modules","Identify an available module on the actual analyzer before loading the prepared pouch.",analyzer(id)),
-   figure("Confirm module available","Use this same analyzer; confirm the module is available on the actual screen before inserting the pouch.",analyzer(id))
+   figure("Confirm module available","The illustration is the same analyzer with its selected-module screen state. Verify the actual module reports Available.",analyzer(id,"selected"))
  ];
  else if(/scan pouch barcode/.test(t))figs=[figure("Scan pouch barcode","Scan the barcoded pouch and match the panel/lot information displayed.",ui(id,1))];
  else if(/confirm panel|verify sample id/.test(t))figs=[figure("Verify panel and identifiers","Confirm the intended panel, pouch and specimen or QC identifiers before running.",ui(id,2))];
