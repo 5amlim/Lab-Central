@@ -40,9 +40,9 @@ const tests={
   }}
  ],
  sofia:[
-  {title:'Influenza A and B / SARS-CoV-2',complexity:'waived',groups:{'Viruses':A('Influenza A virus|Influenza B virus|Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)')}},
-  {title:'Respiratory syncytial virus',complexity:'waived',groups:{'Virus':A('Respiratory syncytial virus')}},
-  {title:'Group A Streptococcus',complexity:'waived',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}}
+  {title:'Influenza A and B / SARS-CoV-2',complexity:'waived',color:'#1769a8',tint:'#e6f1fa',deep:'#155884',boxColor:'Blue box',groups:{'Viruses':A('Influenza A virus|Influenza B virus|Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)')}},
+  {title:'Respiratory syncytial virus',complexity:'waived',color:'#ef7e16',tint:'#fff1e2',deep:'#a94d06',boxColor:'Orange box',groups:{'Virus':A('Respiratory syncytial virus')}},
+  {title:'Group A Streptococcus',complexity:'waived',color:'#af2447',tint:'#fae9ed',deep:'#8c1737',boxColor:'Red box',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
  poc:[
   {title:'Rapid influenza test',groups:{'Viruses':A('Influenza A virus|Influenza B virus')}},
@@ -73,9 +73,9 @@ function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" a
 function oneCard(c,idx,withDisc){
  const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+esc(item)+'</li>').join('')+'</ul></div>').join('');
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
- return '<details class="ac-card" open style="'+(withDisc?'--ac-strip:'+c.color:'')+'">'+
+ return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
-  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+count+' listed analytes / targets'+(withDisc?' · '+esc(c.short):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
+  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+count+' listed analytes / targets'+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
   '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
