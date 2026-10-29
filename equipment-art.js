@@ -173,24 +173,52 @@ function sysmexDeviceMarkup(mode,showAccessory=true){
  '<rect x="421" y="301" width="15" height="39" rx="3" fill="#101923"/>'+
  '<path d="M422 326l13-6" stroke="#f7fcfe" stroke-width="2.5"/>';
  if(showAccessory&&!off){
-  // Separate raised right shelf and a white purple-banded reagent bottle,
-  // with smaller rear connections. This mirrors the supplied photograph.
-  h+='<path d="M428 261Q430 251 442 251H630L649 270V424H430Z" fill="#e7eaeb" stroke="#abb8bb" stroke-width="3"/>'+
-   '<path d="M449 259V435H647V422" fill="none" stroke="#fefefe" stroke-width="6"/>'+
-   '<path d="M461 100Q454 81 468 66L485 52" fill="none" stroke="#8cabae" stroke-width="7" stroke-linecap="round"/>'+
-   '<path d="M477 68L492 90L510 120" fill="none" stroke="#ce8e82" stroke-width="4"/>'+
-   '<path d="M501 68L525 60L536 90V144" fill="none" stroke="#b49d8a" stroke-width="4"/>'+
-   '<rect x="479" y="67" width="22" height="32" rx="4" fill="#5a95ab"/>'+
-   '<rect x="526" y="78" width="27" height="28" rx="4" fill="#b94147"/>'+
-   '<path d="M492 131H566Q573 131 573 139V197H490Z" fill="#eef2f2" stroke="#b2c2c6" stroke-width="3"/>'+
-   '<rect x="541" y="169" width="24" height="30" rx="4" fill="#6b3e91"/>'+
-   '<rect x="483" y="203" width="115" height="179" rx="29" fill="url(#sx-bottle)" stroke="#abb8bb" stroke-width="3"/>'+
-   '<rect x="507" y="186" width="62" height="34" rx="9" fill="#eceff0" stroke="#aebfc5" stroke-width="2"/>'+
-   '<rect x="503" y="218" width="73" height="24" rx="5" fill="#f6f8f9"/>'+
-   '<rect x="485" y="270" width="111" height="16" fill="#573778"/>'+
-   '<rect x="494" y="298" width="94" height="66" rx="4" fill="#fff" stroke="#cedadd" stroke-width="2"/>'+
-   '<path d="M508 310H574M508 321H574M508 333H566M508 345H563" stroke="#b5bdc4" stroke-width="2"/>'+
-   t(542,355,"REAGENT",9,"#7b8790",850);
+  // Photo-matched accessory assembly: blue and red rear connectors, clear
+  // smoothly routed tubes, purple top fitting, and a WHITE reagent bottle
+  // with its deep PURPLE band. Do not color the bottle body purple or depict
+  // loose lines that end in mid-air.
+  h+=
+  '<defs><linearGradient id="sx-bottle-photo" x1="0" y1="0" x2="1" y2="0">'+
+  '<stop stop-color="#e2e7e7"/><stop offset=".26" stop-color="#fff"/>'+
+  '<stop offset=".72" stop-color="#f9fbfa"/><stop offset="1" stop-color="#d9e0e0"/>'+
+  '</linearGradient></defs>'+
+  // Equipment shelf remains physically attached to the analyzer base.
+  '<path d="M425 272H444Q451 252 471 252H607L642 279V431H425Z" fill="#edf0ef" stroke="#b4c0c1" stroke-width="3"/>'+
+  '<path d="M443 272V427H641" fill="none" stroke="#fff" stroke-width="5" opacity=".75"/>'+
+  '<path d="M443 428H642" stroke="#c4cdce" stroke-width="4"/>'+
+  // Reagent/vial tubing is organized BEHIND the bottles.
+  // Translucent BLUE line descends into its actual blue-coded fitting.
+  '<path d="M423 161C427 141 439 120 455 107C463 99 474 90 486 84" fill="none" stroke="#c6d5d9" stroke-width="10" stroke-linecap="round"/>'+
+  '<path d="M423 161C427 141 439 120 455 107C463 99 474 90 486 84" fill="none" stroke="#729bab" stroke-width="4" stroke-linecap="round"/>'+
+  // RED line curves into the red-coded fitting without crossing the blue line.
+  '<path d="M510 91C520 65 542 62 551 92" fill="none" stroke="#c2d1d0" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M510 91C520 65 542 62 551 92" fill="none" stroke="#ba6e72" stroke-width="4" stroke-linecap="round"/>'+
+  // Small white secondary reservoir and both top connectors.
+  '<rect x="471" y="115" width="111" height="116" rx="20" fill="url(#sx-bottle-photo)" stroke="#b5c5c7" stroke-width="3"/>'+
+  '<path d="M485 139H572" stroke="#fff" stroke-width="5" opacity=".75"/>'+
+  '<rect x="480" y="91" width="34" height="35" rx="6" fill="#e9f0f1" stroke="#b0c0c4" stroke-width="2"/>'+
+  '<rect x="483" y="77" width="28" height="27" rx="5" fill="#3f8fa9" stroke="#3c7a94" stroke-width="2"/>'+
+  '<rect x="487" y="80" width="19" height="6" rx="2" fill="#84bdd0" opacity=".66"/>'+
+  '<path d="M498 104V122" stroke="#88abb7" stroke-width="4"/>'+
+  '<rect x="541" y="95" width="35" height="35" rx="6" fill="#e8eff0" stroke="#b4c1c5" stroke-width="2"/>'+
+  '<rect x="542" y="84" width="33" height="28" rx="5" fill="#b9434c" stroke="#9b3943" stroke-width="2"/>'+
+  '<rect x="545" y="87" width="23" height="6" rx="2" fill="#e28b91" opacity=".6"/>'+
+  '<path d="M558 112V132" stroke="#cc858b" stroke-width="4"/>'+
+  // Behind the foreground bottle: correct purple connector and tubing.
+  '<path d="M554 132C559 148 559 158 556 181" fill="none" stroke="#c2ced1" stroke-width="9" stroke-linecap="round"/>'+
+  '<path d="M554 132C559 148 559 158 556 181" fill="none" stroke="#9c8ba4" stroke-width="3.5" stroke-linecap="round"/>'+
+  // Larger reagent bottle: WHITE plastic with a DEEP PURPLE label band.
+  '<path d="M515 212H574Q586 212 595 226L609 251V367Q606 390 580 394H502Q481 390 479 371V250L493 226Q500 214 515 212Z" fill="url(#sx-bottle-photo)" stroke="#abbcbe" stroke-width="3"/>'+
+  '<path d="M503 222Q495 241 493 264V370" fill="none" stroke="#fff" stroke-width="5" opacity=".72"/>'+
+  '<rect x="516" y="194" width="69" height="34" rx="9" fill="#edf1f1" stroke="#b4c5c9" stroke-width="2.5"/>'+
+  '<rect x="531" y="183" width="41" height="25" rx="6" fill="#703d92" stroke="#593177" stroke-width="2"/>'+
+  '<path d="M537 188H565" stroke="#b093c5" stroke-width="3" opacity=".7"/>'+
+  // Bottle's photographed purple band is one unbroken horizontal stripe.
+  '<path d="M483 282H604V303H483Z" fill="#57337b"/>'+
+  '<path d="M487 283H600" stroke="#a88bc0" stroke-width="2" opacity=".66"/>'+
+  '<rect x="500" y="316" width="91" height="59" rx="6" fill="#fdfdfc" stroke="#d5dddf" stroke-width="2"/>'+
+  '<path d="M514 329H578M514 340H578M514 351H565M514 361H572" fill="none" stroke="#b6c0c6" stroke-width="2.2" stroke-linecap="round"/>'+
+  t(545,373,"REAGENT",9,"#829097",720);
  }
  return h;
 }
