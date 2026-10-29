@@ -635,9 +635,9 @@ function pathfastActionVisual(stage,mode="patient"){
  stage==="tips"?pathfastTipRackSvg(mode):
  stage==="results"?pathfastResultsSvg(mode):
  pathfastCartridgeSvg(false);
- const tag=stage==="base"?"REMOVE METAL RACK · PLACE IN CLEAR BASE":
+ const tag=stage==="base"?"EMPTY METAL SAMPLE RACK":
  stage==="dispense"?"PIPETTE INTO THE CLEAR SAMPLE WELL":
- stage==="rack-empty"?"CARTRIDGES SEATED · SAMPLE WELLS STILL EMPTY":
+ stage==="rack-empty"?"SAMPLE RACK LOADED WITH CARTRIDGES":
  stage==="rack"?"ACTUAL RACK LAYOUT · CARTRIDGES INSERTED":
  stage==="tips"?"SIX LANE TIP POSITIONS":
  stage==="results"?"RESULT AND STATUS VERIFICATION":"CHECK THE UNUSED REAGENT CARTRIDGE";
