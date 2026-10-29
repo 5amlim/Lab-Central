@@ -8,6 +8,7 @@
   display:block;width:auto;max-width:145px;max-height:165px;height:165px
 }
 /* Also enlarge the Piccolo lithium-heparin thumbnail. */
+.device-collection-item:has(svg[aria-label*="Green-top"]) .device-media-picture{min-width:170px;width:170px;min-height:180px;padding:8px;display:grid;place-items:center;background:#fff;border:1px solid #e1eaf0;border-radius:12px}
 .device-collection-guide .device-media-picture svg[aria-label*="Green-top"]{
   width:auto;max-height:165px;height:165px;max-width:145px
 }
@@ -31,7 +32,7 @@
 .guide-card-body{overflow:visible}
 .guide-card-body .guide-line{align-items:flex-start}
 .guide-step-pill{min-width:0}
-.guide-step-pill .guide-pill-label{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.guide-step-pill .guide-pill-label{display:block;min-width:0;overflow:visible;text-overflow:clip;white-space:normal}
 /* Page headers and content are not limited to artificially short text. */
 .instrument-procedure-heading h2{overflow-wrap:anywhere}
 @media(max-width:1100px){
