@@ -92,7 +92,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-workflow-timeline-v2" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261029-athena-order-names-v3" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261028-piccolo-overflow" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261028-sendout-photos" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -219,17 +219,42 @@ window.LAB_GUIDE_VIDEOS = {
 // Entries are displayed on the instrument's Order sets tab and in the directory.
 window.LAB_ORDER_SETS = {
   sysmex: [],
-  piccolo: [],
-  pathfast: [{name:'PATHFAST D-Dimer',note:'Athena order reference'},{name:'PATHFAST hs-Troponin',note:'Use matching 0-, 1- or 2-hour order per provider-selected pathway'},{name:'PATHFAST pro-BNP',note:'Athena NT-proBNP order reference'}],
-  triage: [],
-  clinitek: [],
+  piccolo: [
+    {name:'Piccolo Comprehensive Metabolic Panel',kind:'poc',emphasis:'Piccolo'},
+    {name:'Piccolo Basic Metabolic Panel',kind:'poc',emphasis:'Piccolo'},
+    {name:'Piccolo MetLac 12',kind:'poc',emphasis:'Piccolo'},
+    {name:'Piccolo MetLyte Plus CRP',kind:'poc',emphasis:'Piccolo'},
+    {name:'Piccolo Liver Panel Plus',kind:'poc',emphasis:'Piccolo'},
+    {name:'Piccolo Lipid Panel',kind:'poc',emphasis:'Piccolo'}
+  ],
+  pathfast: [
+    {name:'PATHFAST D-Dimer (1)',kind:'set',emphasis:'PATHFAST'},
+    {name:'PATHFAST pro-BNP (1)',kind:'set',emphasis:'PATHFAST'},
+    {name:'PATHFAST hs-Troponin 1 Hour (1)',kind:'set',emphasis:'PATHFAST'},
+    {name:'PATHFAST hs-Troponin 2 Hour (1)',kind:'set',emphasis:'PATHFAST'},
+    {name:'PATHFAST hs-Troponin 3 Hour (1)',kind:'set',emphasis:'PATHFAST'},
+    {name:'PATHFAST hs-Troponin Zero Hour (1)',kind:'set',emphasis:'PATHFAST'}
+  ],
+  triage: [
+    {name:'D-dimer, quant, plasma',kind:'poc',emphasis:'D-dimer'},
+    {name:'BNP (B-type natriuretic peptide), blood',kind:'poc',emphasis:'BNP'},
+    {name:'troponin I, serum or plasma',kind:'poc',emphasis:'troponin I'}
+  ],
+  clinitek: [
+    {name:'beta-HCG, qualitative, urine',kind:'poc'},
+    {name:'urinalysis, dipstick, auto',kind:'poc',emphasis:'urinalysis'}
+  ],
   torch: [],
   spotfire: [],
   febridx: [],
   "drug-screen": [],
   coagsense: [],
   poc: [],
-  sofia: [],
+  sofia: [
+    {name:'Sofia - Flu/Covid (2)',kind:'set',emphasis:'Sofia'},
+    {name:'Sofia - RSV Test (2)',kind:'set',emphasis:'Sofia'},
+    {name:'Sofia - Strep Test (2)',kind:'set',emphasis:'Sofia'}
+  ],
   hemocue: []
 };
 
@@ -1027,14 +1052,37 @@ function renderOrders(tab='external'){
  el('mainContent').innerHTML=h;
 }
 function orderSetsFor(sec){const sets=window.LAB_ORDER_SETS?.[sec.id];return Array.isArray(sets)?sets.filter(x=>x&&x.name):[];}
+function athenaOrderName(x){
+ const emphasis=typeof x.emphasis==='string'&&x.name.startsWith(x.emphasis)?x.emphasis:'';
+ return emphasis?'<strong>'+safeHtml(emphasis)+'</strong>'+safeHtml(x.name.slice(emphasis.length)):safeHtml(x.name);
+}
 function orderSetsPanel(sec){
  const sets=orderSetsFor(sec);
- let h=`<div class="tab-header"><div><h2 class="tab-heading">${safeHtml(sec.title)} · Athena order sets</h2><p class="tab-description">Athena order sets and ordering references.</p></div></div>`;
- if(!sets.length){h+=`<div class="order-empty"><div class="order-empty-icon">${svg('file-text')}</div><strong>No order sets listed</strong><p>Approved Athena order sets will appear here when available.</p><span class="order-awaiting">NOT LISTED</span></div>`;}
- else{h+=`<div class="order-list">${sets.map(x=>`<div class="order-entry"><span class="order-entry-icon">${svg('file-text')}</span><div><strong>${safeHtml(x.name)}</strong>${x.note?`<p>${safeHtml(x.note)}</p>`:''}${x.image&&/^(assets\/order-sets\/[a-z0-9_./%-]+\.(?:png|jpg|jpeg|webp))$/i.test(x.image)&&!x.image.includes('..')?`<img class="order-set-screenshot" src="${safeHtml(x.image)}" loading="lazy" alt="${safeHtml(x.name)} Athena order set screenshot">`:''}</div><span class="order-available">ORDER SET</span></div>`).join('')}</div>`;}
+ let h=`<div class="tab-header"><div><h2 class="tab-heading">${safeHtml(sec.title)} · Athena orders</h2><p class="tab-description">Exact Athena display names from the supplied ordering screenshots. Point of Care Tests are separate from Order Sets.</p></div></div>`;
+ if(!sets.length){
+  h+=`<div class="order-empty"><div class="order-empty-icon">${svg('file-text')}</div><strong>No Athena orders listed</strong><p>No verified Athena order names have been provided for this instrument.</p><span class="order-awaiting">NOT LISTED</span></div>`;
+ }else{
+  const groups=[['poc','Point Of Care Tests'],['set','Order Sets']];
+  h+='<div class="athena-order-groups">';
+  for(const [kind,label] of groups){
+   const entries=sets.filter(x=>(x.kind||'set')===kind);
+   if(!entries.length)continue;
+   h+='<section class="athena-order-group" aria-label="'+safeHtml(label)+'">'+
+    '<h3 class="athena-order-group-title">'+safeHtml(label)+' <span>('+entries.length+')</span></h3>'+
+    '<div class="athena-order-rows">'+entries.map(x=>
+     '<div class="athena-order-row"><span class="athena-order-name">'+athenaOrderName(x)+'</span>'+
+      (x.note?'<small>'+safeHtml(x.note)+'</small>':'')+
+      '</div>'
+    ).join('')+'</div></section>';
+  }
+  h+='</div>';
+  if(sec.id==='pathfast')h+='<p class="athena-order-protocol-note">These are Athena order names, not pathway instructions. Follow the approved 0/1-hour troponin pathway by default; switch to 0/2 hours only after a missed window and provider authorization. The 3-hour order name does not independently authorize a 3-hour pathway.</p>';
+  h+='<p class="athena-order-source-note">Confirm the selected entry in Athena before placing the order. This reference does not place orders or open Athena previews.</p>';
+ }
  h+=`<div class="tool-bottom-link"><span>Find another instrument</span><button type="button" data-go="order-sets">Open order set directory <span>→</span></button></div>`;
  return h;
 }
+
 function renderOrderSetDirectory(){
  el('currentCrumb').textContent='Instrument order sets';
  const inst=all.filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
