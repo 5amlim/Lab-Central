@@ -314,12 +314,12 @@ function render(){
    '<div class="pf-qc-vertical-layout"><div class="pf-rack-box">'+rack()+'</div>'+laneList+'</div>'+
    '<p class="pf-workflow-note"><strong>Important:</strong> Both CAL 2 cartridges use the same single reconstituted CAL 2 vial. This is a training layout for two CAL 1, two CAL 2 and two QC levels. Confirm each actual lane assignment on PATHFAST before dispensing. Calibration replicate and QC-lockout settings can change the analyzer-assigned order.</p>';
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · REVIEW 6 LANES</span></div>'+
-   '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Start with materials and cartridges, then use the screen</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
-   (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
-    'Gather kits and QC','Prepare CAL and Bio-Rad controls','Place cartridges in rack','Dispense into assigned sample wells','Rack, tips and waste box',
-    'Close analyzer hood','Log in and check status','Back to operation menu','Select CAL/QC and assay','Verify lane assignments',
-    'Press START','Confirm 17-min run','Review CAL and QC results','Print, file and return materials'
-   ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="'+(currentStep===i+1?'active':'')+'"><b>'+String(i+1).padStart(2,'0')+'</b>'+label+'</button>').join('')+'</div>':'')+
+   '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Select any step below, like the patient testing workflow</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
+   '<nav class="pfux-stage-nav pfux-cal-stage-nav" aria-label="PATHFAST calibration and quality control steps"><div class="pfux-stage-track" role="group" aria-label="Select a calibration step">'+[
+    'Gather kits and QC','Prepare CAL + QC','Load six cartridges','Dispense materials','Rack, tips and waste box',
+    'Close analyzer hood','Log in and check status','Back to operation menu','Select CAL / QC and assay','Verify six lanes',
+    'Press START','Confirm 17-min run','Review CAL and QC','Print, file and freeze'
+   ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="pfux-stage-button'+(currentStep===i+1?' is-current':i+1<currentStep?' is-previous':'')+'" aria-label="Step '+(i+1)+' of '+total+': '+esc(label)+'" '+(currentStep===i+1?'aria-current="step"':'')+'><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+esc(label)+'</span></button>').join('')+'</div></nav>'+
    '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/total*100)+'%"></span></div>';
   h+=step(1,'Gather assay cartridges, calibrators and Bio-Rad controls','Confirm the exact QC levels and vials for '+x,
       '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching six-cartridge assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
