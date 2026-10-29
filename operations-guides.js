@@ -103,7 +103,7 @@ return h+'</section>';
 function sendout(){
  var h=heading('SEND-OUTS / LAB TECH DOCUMENTATION','Lab Sendout Log','After specimens reach the laboratory, process and package each send-out using the Lab Calculator, capture the required photos, and submit the regional electronic log.');
  h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
- h+=window.LAB_SENDOUT_VISUAL.formLinks();
+ h+=window.LAB_SENDOUT_MARKETS.render("log");
  h+='<h2 class="ops-section-heading">Lab tech workflow</h2>';
  h+=steps([
  ['Lab tech','Process specimens according to the Lab Calculator','Confirm the ordered tests and receiving laboratory. Verify specimen labels, required tubes, processing, centrifugation/aliquots, stability, and collection/transport volumes against the approved directory.'],
