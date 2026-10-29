@@ -153,7 +153,7 @@
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
 <link rel="stylesheet" href="assay-catalog.css?v=20261029-search-targets-v2" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
-<link rel="stylesheet" href="home-device-cards.css?v=20261029-instrument-art-v1" media="all">
+<link rel="stylesheet" href="home-device-cards.css?v=20261029-piccolo-febridx-fit-v2" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
 </head>
 <body>
@@ -464,11 +464,13 @@ function homepageEquipmentArt(sec,featured=false){
  // Piccolo uses its tall full-height guide drawing, never a short landscape crop.
  const markup=sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART.piccoloDeviceSvg
   ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("drawer")
+  :sec.id==='febridx'&&window.LAB_EQUIPMENT_ART.febridxDeviceSvg
+  ?window.LAB_EQUIPMENT_ART.febridxDeviceSvg("ready")
   :window.LAB_EQUIPMENT_ART.render(sec);
  const matched=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/i);
  if(!matched)return '';
  let graphic=matched[0].replace(/class="[^"]*"/,'class="home-device-svg"');
- if(!['sofia','torch','piccolo','triage'].includes(sec.id)){
+ if(!['sofia','torch','piccolo','febridx','triage'].includes(sec.id)){
   const crop=sec.id==='pathfast'?'178 8 392 334':'170 12 400 284';
   graphic=graphic.replace(/viewBox="[^"]*"/,'viewBox="'+crop+'"');
  }
