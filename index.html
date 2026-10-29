@@ -151,7 +151,7 @@
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
-<link rel="stylesheet" href="assay-catalog.css?v=20261029-sofia-kit-colors-v2" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261029-triage-cartridge-colors-v3" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261029-instrument-art-v1" media="all">
 </head>
@@ -260,7 +260,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261029-curated-figures-v2"></script>
 <script src="biofire-reference-polish.js?v=20261029-hydration-trim-shared-kit-v6"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
-<script src="assay-catalog.js?v=20261029-sofia-kit-colors-v2"></script>
+<script src="assay-catalog.js?v=20261029-triage-cartridge-colors-v3"></script>
+<script src="triage-meterpro-visual.js?v=20261029-reference-v1"></script>
 <script>
 (()=>{
 'use strict';
@@ -342,11 +343,14 @@ function isMatch(s,q){return [s.title,s.subtitle,s.sourceTitle,s.category,s.samp
 // Reuse the instrument guide illustrations in compact cards without altering card dimensions.
 function homepageEquipmentArt(sec,featured=false){
  if(!sec||!window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id))return '';
- const markup=window.LAB_EQUIPMENT_ART.render(sec);
+ // Piccolo uses its tall full-height guide drawing, never a short landscape crop.
+ const markup=sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART.piccoloDeviceSvg
+  ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("ready")
+  :window.LAB_EQUIPMENT_ART.render(sec);
  const matched=markup.match(/<svg\b[^>]*>[\s\S]*?<\/svg>/i);
  if(!matched)return '';
  let graphic=matched[0].replace(/class="[^"]*"/,'class="home-device-svg"');
- if(sec.id!=='sofia'&&sec.id!=='torch'){
+ if(!['sofia','torch','piccolo','triage'].includes(sec.id)){
   const crop=sec.id==='pathfast'?'178 8 392 334':'170 12 400 284';
   graphic=graphic.replace(/viewBox="[^"]*"/,'viewBox="'+crop+'"');
  }
@@ -646,13 +650,14 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const clinitekFocus=sec&&sec.id==='clinitek'&&window.LAB_CLINITEK_FOCUSED?.render?window.LAB_CLINITEK_FOCUSED.render(root.text,groupId):'';
  const sysmexFocus=sec&&sec.id==='sysmex'&&window.LAB_SYSMEX_FOCUSED?.render?window.LAB_SYSMEX_FOCUSED.render(root.text,groupId):'';
  const primaryVisual=visualizer?visualizer(index):'';
+ const triageVisual=sec?.id==='triage'&&window.LAB_TRIAGE_VISUAL?.render?window.LAB_TRIAGE_VISUAL.render(root.text,groupId):'';
  const qcScreenVisual=sec&&window.LAB_QC_GUIDE?.qcClickStep?window.LAB_QC_GUIDE.qcClickStep(sec,groupId,root.text):'';
  const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
  const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
  const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
  const instrumentFocus=sec&&window.LAB_INSTRUMENT_FOCUS?.render?window.LAB_INSTRUMENT_FOCUS.render(sec,root.text,groupId):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
- const priorityVisual=clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
+ const priorityVisual=triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
  const informational=sec&&sec.id==='hemocue'&&/^(turnaround-time|available-locations|order-set)$/.test(groupId);
  const fallbackVisual=!priorityVisual&&!informational&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const displayedVisual=priorityVisual||fallbackVisual;
