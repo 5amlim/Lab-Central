@@ -58,3 +58,22 @@
 .bf-polished-top .bf-polished-chip{max-width:100%}
 @media(max-width:740px){.bf-ref-frame{display:none}.bf-polished-inner{grid-template-columns:1fr}.bf-polished-media{min-height:140px}.bf-polished-instruction{padding:13px 14px}.bf-ref-figure>.bf-photo img{max-height:250px}}
 @media print{.bf-ref-pdf,.bf-ref-figure{display:none}.bf-ref-small{display:block}}
+
+
+/* Direct manufacturer pouch photos, no newly drawn replacement at these stages. */
+.bf-polished-svg .bf-source-image{display:grid;place-items:center;min-width:0;max-width:100%;height:100%;cursor:zoom-in;background:#fff;border-radius:9px;overflow:hidden;padding:9px}
+.bf-polished-svg .bf-source-image img{display:block;max-width:100%;max-height:410px;width:auto;height:auto;object-fit:contain}
+.bf-polished-svg .bf-source-image:hover{outline:2px solid #8ac0ca;outline-offset:-2px}
+.bf-source-hardware-note{font-size:11px;line-height:1.65;color:#647f90;margin:13px 0 0;padding:10px 12px;border:1px solid #e2ecef;background:#f8fbfc;border-radius:8px}
+.bf-source-hardware-note strong{color:#3a697c}
+.bf-source-hardware-note a{color:#22768c;text-decoration:underline;text-underline-offset:2px}
+.bf-spotfire-screen-sequence{display:grid;justify-items:center;width:100%;gap:10px;min-width:0}
+.bf-spotfire-screen-sequence>svg{width:100%;max-width:740px;height:auto;display:block}
+.bf-spotfire-display-zoom{width:min(100%,400px);border:1px solid #cfe0e8;border-radius:9px;background:#f7fbfc;overflow:hidden}
+.bf-spotfire-display-zoom>summary{display:flex;align-items:center;justify-content:center;padding:9px 12px;font-size:12px;font-weight:800;color:#246a81;cursor:zoom-in}
+.bf-spotfire-display-zoom[open]>summary{border-bottom:1px solid #dce9ee;background:#eaf5f7}
+.bf-spotfire-display-crop{display:grid;place-items:center;background:#f7fbfc;padding:8px 12px}
+.bf-spotfire-display-crop svg{max-width:100%;width:min(260px,100%);height:auto;display:block}
+.bf-spotfire-display-zoom p{margin:0;padding:8px 12px 12px;color:#658294;font-size:11px;line-height:1.5;text-align:center}
+@media(max-width:700px){.bf-polished-svg .bf-source-image img{max-height:320px}.bf-spotfire-display-zoom{width:100%}}
+@media print{.bf-source-image img{max-height:230px!important}.bf-spotfire-display-zoom{display:none}}
