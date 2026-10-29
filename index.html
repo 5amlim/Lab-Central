@@ -431,12 +431,25 @@ function buildGroups(section){
     const end=next<0?blocks.length:next;
     const instruction=blocks.findIndex((b,j)=>j>i&&j<end&&b.level===2);
     if(instruction>=0)blocks[instruction]={...blocks[instruction],text:'On the home screen select Analyze to open the drawer. Insert the filled disc, select Close and confirm the disc is seated.'};
-    blocks.splice(end,0,{type:'list',level:1,text:'Select Patient and enter MRN'},
-     {type:'list',level:2,text:'Select Patient (not Control), enter the correct patient MRN or approved sample ID, then select Done. The analyzer accepts up to 14 characters and begins processing after verifying disc type.'});
+    blocks.splice(end,0,
+     {type:'list',level:1,text:'Select Patient and enter MRN'},
+     {type:'list',level:2,text:'Select Patient (not Control), enter the correct patient MRN or approved sample ID, then select Done. The analyzer accepts up to 14 characters and begins processing after verifying disc type.'},
+     {type:'list',level:1,text:'Confirm analysis is running'},
+     {type:'list',level:2,text:'Confirm that the Piccolo Xpress has started processing the disc. Keep the analyzer undisturbed, then review the completed results and internal QC before releasing or documenting results.'});
    }
   }
  }
  if(section.id==='sysmex'){
+  const sample=groups.find(g=>/^running.samp/i.test(g.id)||/^Running Samples/i.test(g.title));
+  if(sample&&!sample.blocks.some(b=>b.level===1&&/Confirm analysis started/i.test(b.text))){
+   const items=sample.blocks;const last=items.findIndex(b=>b.level===1&&/^Click Run$/i.test(b.text));
+   if(last>=0){
+    const later=items.findIndex((b,j)=>j>last&&b.level===1);
+    const pos=later<0?items.length:later;
+    items.splice(pos,0,{type:'list',level:1,text:'Confirm analysis started'},
+     {type:'list',level:2,text:'Check that the pocH-100i is analyzing the patient sample and the ID is correct. A successful start is not the same as accepted results. Review the completed test and any instrument flags before reporting.'});
+   }
+  }
   const daily=groups.find(g=>g.title==='Daily QC');
   if(daily){
    for(const extra of groups.filter(g=>/^Each new vial is to|^If we run out of a certain lot/i.test(g.title))){
