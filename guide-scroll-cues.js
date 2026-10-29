@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options";
+const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
