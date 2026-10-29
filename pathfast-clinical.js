@@ -19,8 +19,51 @@ return '<svg class="pcr-tube-svg" viewBox="0 0 420 250" xmlns="http://www.w3.org
 '<text x="329" y="241" font-size="11" font-weight="850" text-anchor="middle" fill="#237f6c">Gently invert 8–10×</text>'+
 '</svg>';
 }
-function card(n,role,title,body){
-return '<article class="pcr-step"><span class="pcr-step-index">'+String(n).padStart(2,"0")+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></article>';
+/* Nurse collection uses the same numbered, previous/next guided control as instrument procedures.
+   Group related actions instead of stacking six independent cards. */
+let rnStep=0,rnAllSteps=false;
+const rnSteps=[
+ {name:"Confirm the pathway",text:"Confirm the PATHFAST hs-Troponin I order and whether the provider selected the approved 0/1-hour or 0/2-hour pathway. Review assay-specific timing before collecting the baseline."},
+ {name:"Collect, label and gently invert",text:"Collect lithium-heparin whole blood, document the exact baseline collection date and time, and gently invert 8–10 times immediately. Do not shake or leave the tube unmixed. Keep serial sample types consistent."},
+ {name:"Handoff and start the timer",text:"Give the properly labeled tube to the lab tech promptly. Start the 60- or 120-minute timer from the FIRST DRAW, not from the result time. The 0/+15-minute operational allowance requires local medical-leadership approval for the assay-specific algorithm. Never collect early."},
+ {name:"Repeat and document",text:"At the approved repeat collection time, use the same specimen type and gently invert immediately. Document the actual draw time. Do not classify an early or out-of-window specimen as the intended timed delta. Notify the provider and follow the approved alternative plan."}
+];
+function rnGuide(){
+ const count=rnSteps.length,number=rnStep+1;
+ const buttons=rnSteps.map((step,i)=>'<button type="button" class="guide-step-pill" data-pcr-rn-step="'+i+'" aria-label="Go to RN collection step '+(i+1)+': '+step.name+'" '+(!rnAllSteps&&i===rnStep?'aria-current="step"':'')+'><span class="guide-pill-number">'+String(i+1).padStart(2,"0")+'</span><span class="guide-pill-label">'+step.name+'</span></button>').join('');
+ const articles=rnSteps.map((step,i)=>'<article class="pcr-step pcr-rn-step" '+(!rnAllSteps&&i!==rnStep?'hidden ':'')+'aria-label="RN collection step '+(i+1)+' of '+count+'"><span class="pcr-step-index">'+String(i+1).padStart(2,"0")+'</span><div><h3>'+step.name+'</h3><p>'+step.text+'</p></div></article>').join('');
+ let h='<section class="pcr-rn-guide procedure-flow" aria-label="RN collection step-by-step procedure">'+
+ '<div class="guide-toolbar"><div class="guide-toolbar-info"><span class="guide-toolbar-dot" aria-hidden="true"></span><span>'+count+' steps · '+(rnAllSteps?'Complete procedure':'Focused step view')+'</span></div>'+
+ '<div class="guide-mode-switch" role="group" aria-label="RN workflow display mode"><button type="button" data-pcr-rn-mode="guided" aria-pressed="'+(!rnAllSteps)+'">Guided view</button><button type="button" data-pcr-rn-mode="all" aria-pressed="'+rnAllSteps+'">All steps</button></div></div>'+
+ '<div class="guide-stepper" role="group" aria-label="Go directly to an RN collection step">'+buttons+'</div>';
+ if(!rnAllSteps)h+='<div class="guide-progress" role="progressbar" aria-label="RN steps viewed" aria-valuemin="0" aria-valuemax="'+count+'" aria-valuenow="'+number+'"><span style="width:'+(number/count*100)+'%"></span></div>';
+ h+='<div class="pcr-rn-step-content">'+articles+'</div>';
+ if(!rnAllSteps){
+  h+='<div class="guide-bottom"><span class="guide-step-count">'+number+' / '+count+' main steps</span><div class="guide-transport">'+
+  '<button type="button" class="guide-button" data-pcr-rn-step="'+(rnStep-1)+'" '+(rnStep===0?'disabled ':'')+'aria-label="Previous RN collection step">← Previous</button>'+
+  (rnStep<count-1?'<button type="button" class="guide-button primary" data-pcr-rn-step="'+(rnStep+1)+'" aria-label="Next RN collection step">Next step →</button>':
+  '<button type="button" class="guide-button primary" data-pcr-rn-mode="all">View all steps ↗</button>')+
+  '</div></div>';
+ }
+ return h+'</section>';
+}
+if(typeof document!=="undefined"&&typeof document.addEventListener==="function"){
+ document.addEventListener("click",function(ev){
+  const button=ev.target.closest("[data-pcr-rn-step],[data-pcr-rn-mode]");
+  if(!button||!button.closest(".pcr-rn-guide"))return;
+  if(button.disabled)return;
+  if(button.hasAttribute("data-pcr-rn-step")){
+   const next=Number(button.getAttribute("data-pcr-rn-step"));
+   if(!Number.isInteger(next)||next<0||next>=rnSteps.length)return;
+   rnStep=next;rnAllSteps=false;
+  }else{
+   const mode=button.getAttribute("data-pcr-rn-mode");
+   if(mode!=="all"&&mode!=="guided")return;
+   rnAllSteps=mode==="all";
+  }
+  const old=document.querySelector(".pcr-rn-guide");
+  if(old){old.outerHTML=rnGuide();const fresh=document.querySelector(".pcr-rn-guide");if(fresh&&typeof fresh.scrollIntoView==="function")fresh.scrollIntoView({behavior:"smooth",block:"start"});}
+ });
 }
 function collection(){
 return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / NURSING COLLECTION</span>'+
@@ -31,16 +74,10 @@ return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pc
 '<div><span>03</span><strong>Label the actual collection time</strong><p>Document identifiers, date and draw time. The clock starts at the first draw, not when the test starts or finishes.</p></div>'+
 '</div></div>'+
 '<div class="pcr-warning"><strong>Microclots can cause inaccurate results</strong><p>Send promptly, avoid heat, and gently remix before testing. Unexpected elevations possibly affected by microclots or fibrin must be reviewed with the provider. Use the same-tube plasma interference check below before assuming the result is false. The PATHFAST Quick Guide specifies testing within 4 hours of collection.</p></div>'+
-'<h3 class="pcr-section-title">RN collection workflow</h3><div class="pcr-steps">'+
-card(1,"RN","Confirm the order and provider-selected pathway","Check the PATHFAST hs-Troponin I order. Confirm whether the provider chose the 0/1-hour or 0/2-hour protocol.")+
-card(2,"RN","Collect and label the baseline sample","Use a lithium-heparin green-top tube and document the exact 0-hour collection date and time.")+
-card(3,"RN","Invert immediately","Gently invert 8–10 times. Do not shake or let the tube stand unmixed.")+
-card(4,"RN → Lab tech","Deliver the sample promptly","Hand the properly labeled specimen to the tech; avoid unnecessary delay or heat.")+
-card(5,"RN","Start timer from the first draw","Set 60 minutes for the 0/1-hour protocol or 120 minutes for the 0/2-hour protocol. The requested operational window is target time through 15 minutes later, never early. Medical leadership must approve 0/+15-minute timing for the local assay-specific algorithm before clinical use. Do not time from result availability.")+
-card(6,"RN","Collect and document the repeat","Use the same specimen type and invert immediately. Record actual draw time. A repeat collected earlier than 60 or 120 minutes must not be counted as the corresponding timed delta sample. For samples outside the authorized site window, notify the provider and document the true collection time.")+
-'</div><h3 class="pcr-section-title">Serial collection clock</h3>'+
+'<h3 class="pcr-section-title">RN collection workflow</h3>'+rnGuide()+
+'<h3 class="pcr-section-title">Serial collection clock</h3><div class="pcr-timing-panel">'+
 window.LAB_PATHFAST_EXTRAS.baselinePicker()+
-window.LAB_PATHFAST_EXTRAS.timing()+
+window.LAB_PATHFAST_EXTRAS.timing()+'</div>'+
 
 '<details class="pcr-accordion"><summary>Collection from existing IV lines and other precautions <span></span></summary><div>'+
 '<p>Prefer fresh venipuncture for repeat troponins when feasible and follow approved line-draw policy. The PATHFAST competency guidance references a one-full-tube (5 mL) discard from an existing line. Confirm this requirement for the actual access device and current site policy before use.</p>'+
