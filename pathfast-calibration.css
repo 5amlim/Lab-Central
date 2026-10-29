@@ -262,3 +262,23 @@
 @media(max-width:1060px){.pf-qc-vertical-layout{grid-template-columns:1fr}.pf-qc-lane-list{grid-template-columns:repeat(2,minmax(0,1fr))}.pf-qc-lane-item{grid-template-columns:28px 63px minmax(0,1fr)}}
 @media(max-width:700px){.pf-cal-prep-row{grid-template-columns:1fr}.pf-qc-lane-list{grid-template-columns:1fr}.pf-qc-prep-emphasis{flex-direction:column;gap:4px}.pf-workflow-detail .pf-qc-vials{grid-template-columns:1fr}}
 @media print{.pf-qc-vertical-layout{display:block}.pf-qc-lane-list{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}.pf-qc-vertical-layout .pf-rack-svg{min-width:0}}
+
+/* Final CAL/QC storage return stage, shared by all three PATHFAST assays. */
+.pf-return-storage{margin:20px 0 4px;padding:18px;border:1px solid #d3e5ec;border-radius:15px;background:#fafdff;color:#345e74}
+.pf-storage-intro{margin:0 0 14px}.pf-storage-intro strong{display:block;color:#247f94;font-size:1rem;letter-spacing:.025em}.pf-storage-intro p{margin:6px 0 0;line-height:1.55}
+.pf-storage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.pf-storage-card{min-width:0;border:1px solid #d4e3eb;border-radius:13px;padding:15px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.pf-storage-card header{display:grid;grid-template-columns:13px 1fr;align-items:center;gap:4px 10px}
+.pf-storage-card header strong{font-size:1rem;color:#284f66}.pf-storage-card header small{grid-column:2;color:#59798a}
+.pf-storage-dot{height:12px;width:12px;border-radius:50%;background:#a9d8fa}.pf-storage-dot.qc{background:#a8e1c5}
+.pf-storage-visual{display:flex;gap:14px;align-items:center;justify-content:space-between;min-height:130px;border-radius:11px;background:#f3f9fb;padding:12px}
+.pf-storage-svg{display:block;width:140px;max-width:45%;height:auto;flex-shrink:0}
+.pf-storage-cal-images{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.pf-storage-cal-images svg{display:block;width:47%;height:115px;max-width:125px}
+.pf-storage-qc-images{display:flex;gap:10px;align-items:flex-end}
+.pf-storage-vial{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.74rem;color:#516f81}
+.pf-storage-vial span{display:block;width:36px;height:57px;background:linear-gradient(180deg,#e6f6fb 0 60%,#d7e8ed 60%);border:2px solid #93b6c4;border-radius:7px 7px 9px 9px;position:relative}
+.pf-storage-vial span:before{content:"";position:absolute;top:-9px;left:-2px;width:36px;height:12px;background:var(--cap);border:2px solid #88aab7;border-radius:4px}
+.pf-storage-vial small{font-size:.7rem;color:#638295}
+.pf-storage-card p{margin:0;line-height:1.55;color:#496b7d}.pf-return-storage>.pf-workflow-note{margin:14px 0 0}
+@media(max-width:760px){.pf-storage-grid{grid-template-columns:1fr}.pf-storage-visual{gap:8px}.pf-storage-svg{width:115px}.pf-storage-card{padding:12px}}
