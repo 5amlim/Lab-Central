@@ -97,20 +97,20 @@ function interference(){
 }
 const questions=[
  {id:"baseline",title:"Initial PATHFAST hs-Troponin I result",opts:[["low","Below 4 ng/L"],["middle","4 to below 90 ng/L"],["high","90 ng/L or above"]]},
- {id:"pathway",title:"Approved PATHFAST hs-Troponin I pathway",opts:[["one","0/1-hour serial pathway"],["two","0/2-hour serial pathway"],["review","Provider has not selected a pathway"]]},
- {id:"twoHourTiming",title:"2-hour repeat collection status",opts:[["yes","Collected within the locally approved 2-hour window"],["pending","2-hour draw not yet collected"],["late","Missed the approved 2-hour window"]]},
- {id:"twoHourResult",title:"Interpret the 2-hour hs-Troponin I result",opts:[["ruleout","Baseline + 2-hour value and delta meet approved 0/2-hour rule-out limits"],["observe","Results fall in observation range or remain indeterminate"],["rulein","Meets the approved assay-specific urgent or rule-in criteria"],["unknown","Repeat result, delta, or threshold verification pending"]]},
- {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window"],["no","Missed the 1-hour window"],["pending","Repeat sample not collected yet"]]},
+ {id:"pathway",title:"Provider-selected serial pathway",opts:[["one","0/1-hour serial pathway"],["two","0/2-hour serial pathway"],["review","Provider has not selected a pathway"]]},
+ {id:"twoHourTiming",title:"2-hour repeat collection status",opts:[["yes","Collected within the approved 2-hour window","Document the actual collection time and confirm it meets the approved timing criteria."],["pending","2-hour draw not yet collected","Schedule the repeat for 2 hours after the baseline collection time."],["late","Missed the approved 2-hour window","Notify the provider. Do not apply an out-of-window 0/2-hour delta."]]},
+ {id:"twoHourResult",title:"Review the 2-hour hs-Troponin I result",opts:[["ruleout","Both values and the 2-hour delta meet approved rule-out criteria","Verify the absolute baseline and repeat concentrations, 2-hour change, actual collection times, ECG and clinical exclusions."],["observe","Observation range or indeterminate result","Continue clinician assessment and any further testing required by the approved protocol."],["rulein","Approved urgent / rule-in criteria met","Immediate provider evaluation using the assay-specific thresholds and ECG / symptoms."],["unknown","Result, delta or threshold not yet verified","Confirm the repeat concentration, exact delta and approved 0/2-hour limits before classification."]]},
+ {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window","Document the actual repeat draw time measured from the first collection."],["no","Missed the 1-hour window","Notify the provider. Switch to the approved 0/2-hour pathway if directed."],["pending","Repeat sample not collected yet","Plan the 1-hour draw relative to the baseline collection time."]]},
  {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"],["unknown","Delta unavailable"]]},
  {id:"risk",title:"Clinical assessment · ECG and HEART score",opts:[["low","HEART score ≤3, reassuring ECG, no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Clinical assessment incomplete"]]},
  {id:"onset",title:"Time since symptom onset at the initial blood draw",opts:[["late","More than 3 hours"],["early","3 hours or less"],["unknown","Uncertain or unknown"]]},
  {id:"confirmation",title:"Provider verification of approved rule-out criteria",opts:[["yes","All protocol criteria confirmed"],["no","One or more criteria not met"],["pending","Review still in progress"]]}
 ];
-let selected={};
+let selected={pathway:"one"};
 function ruleoutCriteria(){
  const items=[
   ["ECG","No new ischemic changes; review the full clinical presentation."],
-  ["Clinical risk","HEART score and other risk findings satisfy the locally approved pathway."],
+  ["Clinical risk","HEART score and other risk findings satisfy the approved pathway."],
   ["Baseline value","Initial PATHFAST hs-cTnI meets the approved assay-specific threshold."],
   ["Repeat result","Actual repeat hs-cTnI concentration and its delta meet the applicable cutoff."],
   ["Timing","Confirm draw times; check symptom onset (≥3 h for single-draw rule-out, if authorized)."],
@@ -125,8 +125,8 @@ function ruleoutCriteria(){
 function question(q,index){
  return '<div class="pcr-flow-question"><div class="pcr-flow-question-header"><span class="pcr-flow-number">'+index+'</span><strong>'+esc(q.title)+'</strong></div>'+
  (q.id==="confirmation"?ruleoutCriteria():"")+
- '<div class="pcr-flow-options" role="group" aria-label="'+esc(q.title)+'">'+q.opts.map(([value,label])=>
- '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+esc(label)+(selected[q.id]===value?' ✓':'')+'</button>').join('')+'</div></div>';
+ '<div class="pcr-flow-options" role="group" aria-label="'+esc(q.title)+'">'+q.opts.map(([value,label,description])=>
+ '<button type="button" class="pcr-flow-option '+(selected[q.id]===value?'selected':'')+'" data-pcr-choice="'+q.id+'" data-pcr-value="'+value+'" aria-pressed="'+(selected[q.id]===value)+'">'+esc(label)+(description?'<small class="pcr-flow-choice-note">'+esc(description)+'</small>':'')+(selected[q.id]===value?' ✓':'')+'</button>').join('')+'</div></div>';
 }
 function zoneOutcome(zone,title,explanation,nextAction){
  const zones=[
@@ -145,10 +145,10 @@ function zoneOutcome(zone,title,explanation,nextAction){
 function flow(){
  const q=id=>questions.find(x=>x.id===id);
  let h='<section class="pcr-flow-explorer" aria-label="PATHFAST hs-Troponin I approved pathway decision flow">'+
- '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PATHFAST hs-cTnI · PROVIDER DECISION SUPPORT</span><h3>Approved pathways · 0/1 h and 0/2 h</h3>'+
- '<p>Follow the medical-director-approved assay-specific hs-Troponin I pathway. Select the initial result, the planned serial draw and the actual repeat collection status.</p></div>'+
+ '<div class="pcr-flow-head"><div><span class="pcr-eyebrow">PATHFAST hs-cTnI · PROVIDER DECISION SUPPORT</span><h3>0/1-hour hs-Troponin I pathway</h3>'+
+ '<p>Start with the standard 0/1-hour pathway. Confirm actual blood draw times, both hs-Troponin I results, the 1-hour change (delta), ECG and clinical findings before making any decision.</p></div>'+
  '<button type="button" data-pcr-reset class="pcr-flow-reset">↻ Reset pathway</button></div>'+
- '<div class="pcr-flow-spine">'+question(q("baseline"),1);
+ '<div class="pcr-secondary-note" role="note"><div><strong>0/2-hour alternative</strong><p>Use the approved 0/2-hour pathway only when selected by the provider or when the 1-hour window was missed and the provider authorizes the change. It requires its own 2-hour sample and delta limits.</p></div><button type="button" data-pcr-secondary="'+(selected.pathway==="two"?"one":"two")+'">'+(selected.pathway==="two"?"Use 0/1-hour pathway":"Provider selected 0/2-hour")+'</button></div>'+ '<div class="pcr-flow-spine">'+question(q("baseline"),1);
  function outcome(zone,title,explanation,next){h+=zoneOutcome(zone,title,explanation,next);}
  function providerClose(number,mode){
   h+=question(q("risk"),number);
@@ -177,19 +177,18 @@ function flow(){
  if(selected.baseline==="high"){
   outcome("rulein","Urgent provider evaluation","The site's reference flags a baseline PATHFAST hs-Troponin I at or above 90 ng/L for urgent review. Troponin elevation alone is not an MI diagnosis.");
  }else if(selected.baseline){
-  h+=question(q("pathway"),2);
   if(selected.pathway==="review"){
-   outcome("observe","Choose an approved serial pathway","The provider must select a locally authorized 0/1-hour or 0/2-hour hs-Troponin I pathway before applying serial delta criteria.");
+   outcome("observe","Choose an approved serial pathway","The provider must select an approved serial pathway before applying concentration or delta thresholds.");
   }else if(selected.pathway==="two"){
-   twoHourBranch(3,"Planned 0/2-hour serial pathway. The 2-hour delta thresholds are different from 1-hour thresholds.");
+   twoHourBranch(2,"Provider-selected 0/2-hour pathway. Collect the repeat relative to the baseline draw; apply only its approved thresholds.");
   }else if(selected.pathway==="one"){
-   h+=question(q("timing"),3);
+   h+=question(q("timing"),2);
    if(selected.timing==="no"){
-    twoHourBranch(4,"The 1-hour collection window was missed. Notify the provider and collect the repeat at 2 hours from the original draw if that pathway is approved.");
+    twoHourBranch(3,"The 1-hour collection window was missed. Notify the provider and collect at 2 hours from the original draw only if that alternative is approved.");
    }else if(selected.timing==="pending"){
     outcome("observe","One-hour sample pending","Coordinate the 60-minute draw with the RN. If the approved window is missed, select that option to enter the 0/2-hour branch.");
    }else if(selected.timing==="yes"){
-    h+=question(q("delta"),4);
+    h+=question(q("delta"),3);
     if(selected.delta==="large"){
      outcome("rulein","1-hour pathway · urgent provider evaluation","The site's draft reference flags a large one-hour delta for urgent evaluation. Confirm the approved limits, ECG and clinical findings.");
     }else if(selected.delta==="middle"){
@@ -197,12 +196,12 @@ function flow(){
     }else if(selected.delta==="unknown"){
      outcome("observe","One-hour delta unavailable","Verify both hs-cTnI values and the actual draw times before applying an approved pathway.");
     }else if(selected.delta==="small"){
-     providerClose(5,"0/1-hour");
+     providerClose(4,"0/1-hour");
     }
    }
   }
  }
- h+='</div><div class="pcr-flow-foot"><span class="pcr-flow-foot-icon">i</span><span>Clinical review only. The approved 0/1-hour and 0/2-hour PATHFAST hs-cTnI algorithms require their own assay-specific concentration and delta limits. Follow current local authorization for serial collection windows and record the actual time.</span></div></section>';
+ h+='</div><div class="pcr-flow-foot"><span class="pcr-flow-foot-icon">i</span><span>Clinical review only. The approved 0/1-hour and 0/2-hour PATHFAST hs-cTnI algorithms require their own assay-specific concentration and delta limits. Use the approved collection window, record actual draw times and notify the provider of missed windows.</span></div></section>';
  return h;
 }
 
@@ -219,7 +218,9 @@ if(typeof document!=='undefined'&&typeof document.addEventListener==='function')
    const next={};for(const key of ["baseline","pathway","timing","twoHourTiming","twoHourResult","delta","risk","onset","confirmation"]){if(key===id)break;if(selected[key])next[key]=selected[key];}
    next[id]=value;selected=next;refresh();return;
   }
-  if(ev.target.closest('[data-pcr-reset]')){selected={};refresh();}
+  const alternative=ev.target.closest('[data-pcr-secondary]');
+  if(alternative){selected={pathway:alternative.getAttribute('data-pcr-secondary')==='two'?'two':'one',baseline:selected.baseline};refresh();return;}
+  if(ev.target.closest('[data-pcr-reset]')){selected={pathway:"one"};refresh();}
  });
 }
 if(typeof document!=="undefined" && typeof document.addEventListener==="function"){
@@ -250,5 +251,5 @@ if(typeof document!=="undefined" && typeof document.addEventListener==="function
   if(current)current.outerHTML=timing();
  });
 }
-window.LAB_PATHFAST_EXTRAS={timing,baselinePicker,interference,flow,reset:function(){selected={};},_getSelected:()=>({...selected})};
+window.LAB_PATHFAST_EXTRAS={timing,baselinePicker,interference,flow,reset:function(){selected={pathway:'one'};},_getSelected:()=>({...selected})};
 })();
