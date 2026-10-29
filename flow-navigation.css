@@ -254,7 +254,7 @@
 
 
 /* Contextual, collapsible Athena document walkthrough. Sanitized UI sketches only. */
-.ad-step-note{margin:10px 0 0;color:#58758a;line-height:1.65;font-size:12px}
+.ad-step-note{margin:10px 0 0;color:#111111;line-height:1.65;font-size:12px}
 .ad-guide{width:100%;border:1px solid #cbdfe8;background:#fff;border-radius:12px;overflow:hidden;margin-top:12px}
 .ad-guide>summary{list-style:none;display:flex;gap:12px;align-items:center;min-height:65px;padding:14px 16px;cursor:pointer;color:#2c5d7e}
 .ad-guide>summary::-webkit-details-marker{display:none}
