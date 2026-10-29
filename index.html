@@ -248,7 +248,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-visual-corrections-20261029.js?v=3"></script>
 <script src="lab-guide-polish.js?v=20261029-piccolo-modern-v4"></script>
 <script src="sysmex-focused.js?v=20261029-patient-v2"></script>
-<script src="clinitek-focused.js?v=20261029-cassette-qc-v4"></script>
+<script src="clinitek-focused.js?v=20261029-cassette-qc-v5"></script>
+<script src="instrument-focused.js?v=20261029-step-specific-v1"></script>
 <script src="biofire-step-refinement.js?v=20261029-matched-kit-v4"></script>
 <script src="sendout-market-guide.js?v=20261029-region-select-v1"></script>
 <script>
@@ -542,9 +543,11 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const qcPrintVisual=sec&&/^Print and file the QC records$/.test(root.text)&&window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep(sec.id):'';
  const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
  const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
+ const instrumentFocus=sec&&window.LAB_INSTRUMENT_FOCUS?.render?window.LAB_INSTRUMENT_FOCUS.render(sec,root.text,groupId):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
- const priorityVisual=clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||workflowVisual;
- const fallbackVisual=!priorityVisual&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
+ const priorityVisual=clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
+ const informational=sec&&sec.id==='hemocue'&&/^(turnaround-time|available-locations|order-set)$/.test(groupId);
+ const fallbackVisual=!priorityVisual&&!informational&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const displayedVisual=priorityVisual||fallbackVisual;
  const content=sysmexControl&&window.LAB_QC_GUIDE?.controlNotes?window.LAB_QC_GUIDE.controlNotes():
   guideDetailNodes(entry.leading,0,sec,groupId||root.text,!displayedVisual)+
