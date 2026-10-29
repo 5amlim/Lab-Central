@@ -315,7 +315,7 @@ function clinitekDeviceMarkup(mode="empty"){
  return art;
 }
 function clinitekDeviceSvg(mode="empty"){
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(mode==="strip"?"urinalysis strip seated in the black strip test-table insert":mode==="cassette"?"CLINITEST hCG cassette seated in the distinct cassette table insert":"black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 0 500 470" role="img" aria-label="Siemens CLINITEK Status+ front view with wide touchscreen and '+(/strip/.test(mode)?"urinalysis strip seated lengthwise on the strip-side test table":/cassette/.test(mode)?"CLINITEST hCG cassette on the flipped reversible test-table insert":"empty black pull-out test table")+'">'+clinitekDeviceMarkup(mode)+'</svg>';
 }
 
 function body(shape,a){
@@ -368,7 +368,7 @@ function body(shape,a){
 }else if(shape==="reader"){
  v=rect(192,68,350,197,14,"#edf2f5","#a6b7bf",3)+rect(206,82,329,107,5,"#b4c0c7")+rect(215,96,200,80,3,"#d7e2e8","#7f99a5",2)+rect(427,98,101,73,8,"#d8e4e9")+Array.from({length:5},(_,i)=>circle(451+(i%3)*24,111+Math.floor(i/3)*25,8,"#eaf1f4","#92a8b5")).join("")+rect(217,194,230,59,7,"#f5f8fa","#c3d0d7")+Array.from({length:12},(_,i)=>txt(237+(i%4)*53,209+Math.floor(i/4)*17,i===9?"0":String(i+1),10,"#4c6472",750)).join("")+rect(454,224,66,25,6,"#2d3d46")+txt(300,88,"Triage MeterPro",11,"#fff",790)+txt(476,215,"Quidel",12,"#92a9b6",810);
  }else if(shape==="urine"){
- v='<g transform="translate(75 0) scale(.73)">'+clinitekDeviceMarkup("empty")+'</g>';
+ v='<g transform="translate(115 0) scale(.66)">'+clinitekDeviceMarkup("empty")+'</g>';
  }else if(shape==="torch"){
  // Keep the device illustration consistent in any non-primary fallback view.
  // Nested SVG retains the exact shared two-door TORCH reference shape.
