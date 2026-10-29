@@ -3,7 +3,7 @@
    Applies to symbols on analyzer printouts, not clinical interpretation of analyte values. */
 (function(){
 "use strict";
-const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'"&quot;');
+const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,'&quot;');
 const symbols=[
  {symbol:"*",name:"Outside reference range",meaning:"An analyte is outside its printed reference interval. A rounded value at a boundary can still be marked out of range.",action:"Review the value, units and reference interval. Escalate according to the approved reporting and critical-result procedure."},
  {symbol:"<",name:"Below measurement range",meaning:"The result is below the analyzer's dynamic range. It is not an exact measured concentration.",action:"Review the associated error report if available. Do not treat the displayed boundary as an exact result."},
