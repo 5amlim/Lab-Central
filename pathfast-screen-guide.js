@@ -20,9 +20,14 @@ function nav(focus){
 }
 
 function foot(text){return '<div class="pfs-footer"><span>◀ BACK</span><span>'+e(text||"ASSAY")+'</span></div>';}
-function pills(){
+function pills(mode){
+ const example=mode==="patient";
  return '<div class="pfs-screen-meta">REAGENT / CALIBRATION / QC STATUS</div>'+
- '<div class="pfs-status-pills">'+assays.map(function(a){return '<span class="pfs-real-pill available">'+e(a)+'</span>';}).join('')+'</div>';
+ '<div class="pfs-status-pills">'+assays.map(function(a,i){
+  const notReady=example&&i===0;
+  return '<span class="pfs-real-pill '+(notReady?'locked':'available')+'"'+(notReady?' aria-label="'+e(a)+': pink, calibration and quality control required"':'')+'>'+e(a)+'</span>';
+ }).join('')+'</div>'+
+ (example?'<div class="pfs-pink-status-caption"><span class="pfs-pink-status-mark" aria-hidden="true"></span><strong>Example: pink hs-Troponin I = NOT READY</strong><span>Run calibration and quality control before patient testing. Do not test patients using a pink / locked assay.</span></div>':'');
 }
 function login(mode){
  return frame("LOG-IN",mode==="patient"?"Step 6 · Operator access":"Step 7 · Operator access",
@@ -35,10 +40,10 @@ function login(mode){
 
 function home(analyte,mode,focus){
  const back=focus==="back";
- const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills()+
+ const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills(mode)+
  '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
  const note=mode==="patient"?'<div class="pfs-external-readiness-note"><div><strong>Verify assay readiness on the actual analyzer.</strong>'+
- '<span>The gray pills are examples only. If an assay is locked or unavailable, stop testing and complete required calibration and QC.</span></div>'+
+ '<span><b>Pink = NOT READY.</b> Required calibration and QC must be run and accepted before patient testing. Pink hs-Troponin I is a training example, not the current status of the actual analyzer. Check the selected assay on the instrument.</span></div>'+
  '<button type="button" class="pfs-qc-route" data-gotab="cal-qc">Calibration + QC →</button></div>':'';
  return frame("ASSAY/HOME",back?"Step 8 · Select BACK":"Step 7 · Check assay status",body,
   back?"ASSAY/HOME":"REAGENT STATUS")+note;
@@ -60,12 +65,12 @@ function item(analyte){
 
 function lanes(mode,analyte){
  const cal=mode!=="patient",a=analyte||"hs-Troponin I",labs=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:Array(6).fill("SAMPLE");
- return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 10 · Review CAL/QC lanes":"Step 10 · Open SAMPLE INFO. and choose lane",
- nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active '+(!cal?'pfs-click-target':'')+'">SAMPLE INFO.'+(!cal?cue("1 · TAP"):'')+'</span></div>'+
- '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("2 · EXAMPLE"):'')+'</span>'+
+ return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 10 · Review CAL/QC lanes":"Step 10 · Tap the occupied lane directly",
+ nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active">SAMPLE INFO.</span></div>'+
+ '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane '+(!cal&&i===0?'pfs-lane-tap-example':'')+'"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("TAP LANE"):'')+'</span>'+
  '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):"PATIENT")+'</span><strong>'+(cal?e(x):"SID: —")+'</strong></div>';}).join('')+'</div>'+
- (!cal?'<div class="pfs-screen-alert">Lane 1 is an example only. Select the lane matching the occupied rack position.</div>':'')+
- foot(cal?"CAL/QC → START":"SAMPLE INFO. → SID → OK"));
+ (!cal?'<div class="pfs-screen-alert">Tap the occupied lane number directly. Lane 1 is a training example only. Do not tap SAMPLE INFO.; verify the selected lane matches the patient cartridge before entering SID.</div>':'')+
+ foot(cal?"CAL/QC → START":"TAP LANE → SID → OK"));
 }
 function sid(){
  return frame("SAMPLE INFO.","Step 11 · Enter and confirm SID",nav()+
