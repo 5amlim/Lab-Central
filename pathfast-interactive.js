@@ -63,7 +63,7 @@ function timing(){
   '<div class="pcr-primary-timing-label">STANDARD PATHWAY · 0/1 HOUR</div>'+
   row('0/1 HOUR','60',one,one15,'60–75 min from baseline','Default repeat. Set the 60-minute draw timer from the first collection.','')+
   '</div>'+
-  '<details class="pcr-fallback-timing"><summary><span>Missed the 1-hour window?</span><strong>View provider-authorized 0/2-hour fallback</strong><span class="pcr-fallback-chevron lab-shared-chevron" aria-hidden="true"></span></summary>'+
+  '<details class="pcr-fallback-timing"><summary><span>Missed the 1-hour window?</span><strong>View provider-authorized 0/2-hour fallback</strong><span class="pcr-fallback-action"><span class="pcr-fallback-show">Show more</span><span class="pcr-fallback-hide">Show less</span><span class="pcr-fallback-chevron lab-shared-chevron" aria-hidden="true"></span></span></summary>'+
   row('0/2 HOUR','120',two,two15,'120–135 min from baseline','Only if the approved 1-hour window was missed. Notify the provider and obtain authorization before changing pathways.','alt')+
   '</details>'+
   '<div class="pcr-timing-footnote"><strong>Outside the authorized window?</strong> Record the actual collection time, notify the provider, and follow the approved alternative plan. Do not classify the sample as an in-window timed delta.</div>'+
