@@ -656,3 +656,103 @@
 .cl-qc-photo span{font-size:11px;line-height:1.35;color:#557b8b;font-weight:800;text-align:center;letter-spacing:.05em}
 @media(max-width:700px){.cl-qc-material-layout{grid-template-columns:minmax(0,1fr);gap:8px}.cl-qc-analyzer>svg{max-height:210px}.cl-qc-photo img{max-height:250px}}
 @media print{.cl-qc-material-layout{grid-template-columns:minmax(0,1fr) minmax(140px,.55fr)}.cl-qc-photo img{max-height:225px}}
+
+
+/* LAB CENTRAL / shared instrument design rules.
+   The same hierarchy, thumbnail box, navigation size, focus and spacing
+   applies to Sysmex, Piccolo, Siemens, PATHFAST, TORCH, SPOTFIRE, etc. */
+.tab-strip.instrument-matched-tabs{gap:10px;align-items:stretch;margin-top:26px;padding:4px 2px 13px}
+.tab-strip.instrument-matched-tabs .tab{
+ flex:1 0 164px;min-width:164px;min-height:90px;
+ display:flex;align-items:center;justify-content:center;text-align:center;
+ padding:16px 14px;font-size:16px;font-weight:850;line-height:1.35;
+ overflow-wrap:break-word;word-break:normal;hyphens:auto;
+ white-space:normal;border-radius:12px;
+}
+.tab-strip.instrument-matched-tabs .tab.active{background:#e8f6f3;border-color:#15968c;color:#116e68}
+.instrument-overview-links{display:flex;gap:12px;flex-wrap:wrap;align-items:stretch;margin:20px 0 0}
+.instrument-overview-links .mini-feature{
+ margin:0;flex:0 1 320px;min-width:250px;min-height:94px;
+ border-radius:14px;display:flex;align-items:center;gap:14px;
+ padding:16px 18px;background:#fff;border:1px solid #d9e5ed;
+ box-shadow:0 2px 6px rgba(33,71,93,.035);
+}
+.instrument-overview-links .mini-feature:hover{background:#f0f9f8;border-color:#72b5ab}
+.instrument-overview-links .mini-feature:focus-visible{outline:3px solid #4ca9a0;outline-offset:3px}
+.device-collection-guide{
+ margin:22px 0 26px;padding:20px 22px;border:1px solid #d7e5ec;
+ border-radius:16px;background:#fff;
+}
+.device-collection-heading{margin-bottom:15px}
+.device-collection-heading h3{font-size:19px;font-weight:850;line-height:1.25;margin:0 0 5px}
+.device-collection-kicker{font-size:10px;letter-spacing:.13em;color:#167e84}
+.device-collection-heading p{font-size:12.5px;color:#748d9d;line-height:1.5}
+.device-collection-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr));gap:12px}
+.device-collection-item,.pfux-patient .device-collection-item,
+.device-collection-item:has(svg[aria-label*="Green-top"]){
+ display:grid;grid-template-columns:136px minmax(0,1fr);align-items:center;
+ min-width:0;min-height:166px;gap:18px;padding:13px 15px;
+ border:1px solid #dce9ef;border-radius:13px;background:#f8fbfc;
+}
+.device-collection-item .device-media-picture,
+.pfux-patient .device-collection-item .device-media-picture,
+.device-collection-item:has(svg[aria-label*="Green-top"]) .device-media-picture{
+ display:grid;place-items:center;box-sizing:border-box;
+ width:136px;height:140px;min-width:136px;min-height:140px;
+ max-width:136px;max-height:140px;margin:0;padding:6px;
+ border:1px solid #e1eaf0;border-radius:11px;background:#fff;
+ overflow:hidden;
+}
+.device-collection-guide .device-media-picture svg,
+.pfux-patient .device-collection-item .device-media-picture svg,
+.device-collection-guide .device-media-picture svg[aria-label*="Green-top"]{
+ width:100%;height:100%;max-width:100%;max-height:100%;
+ display:block;object-fit:contain;
+}
+.device-collection-item>div:last-child{min-width:0}
+.device-collection-item strong{font-size:14px;line-height:1.35;font-weight:830;color:#2b5168}
+.device-collection-item span{font-size:12px;line-height:1.5;color:#6d879a;margin-top:5px}
+.procedure-flow .guide-step-pill{
+ box-sizing:border-box;min-width:190px;max-width:230px;flex:1 0 190px;
+ min-height:82px;padding:12px 14px;gap:12px;align-items:center;
+ border-radius:12px;
+}
+.procedure-flow .guide-step-pill .guide-pill-number{
+ width:35px;height:35px;min-width:35px;font-size:13px;border-radius:9px
+}
+.procedure-flow .guide-step-pill .guide-pill-label{
+ display:block;min-width:0;overflow:visible;white-space:normal;text-overflow:clip;
+ font-size:14px;line-height:1.34;font-weight:800;
+}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button,
+.procedure-flow .guide-bottom .guide-transport .guide-button{
+ min-height:49px;padding:12px 18px;font-size:15px!important;
+ font-weight:850;border-radius:11px;
+}
+.procedure-flow .guide-toolbar-actions .guide-detail-control,
+.procedure-flow .guide-mode-switch button{
+ min-height:47px;padding:11px 16px;font-size:15px;font-weight:830;border-radius:10px
+}
+.pfux-stage-nav .pfux-stage-button{
+ flex:0 0 205px;min-height:82px;padding:12px 14px;border-radius:12px;
+}
+.pfux-stage-nav .pfux-stage-name{font-size:14px;line-height:1.34;font-weight:800}
+.lc-scroll-cue-right{min-height:27px;padding:0 11px;border-radius:999px}
+@media(max-width:700px){
+ .tab-strip.instrument-matched-tabs .tab{flex-basis:154px;min-width:154px;min-height:76px;font-size:14px;padding:11px}
+ .device-collection-guide{padding:16px}
+ .device-collection-item,.pfux-patient .device-collection-item,
+ .device-collection-item:has(svg[aria-label*="Green-top"]){
+  grid-template-columns:92px minmax(0,1fr);gap:13px;min-height:122px;padding:10px;
+ }
+ .device-collection-item .device-media-picture,
+ .pfux-patient .device-collection-item .device-media-picture,
+ .device-collection-item:has(svg[aria-label*="Green-top"]) .device-media-picture{
+  width:92px;height:104px;min-width:92px;min-height:104px;max-width:92px;max-height:104px;
+ }
+ .procedure-flow .guide-step-pill{min-width:174px;flex-basis:174px;min-height:75px;padding:10px}
+ .procedure-flow .guide-step-pill .guide-pill-label{font-size:12.5px}
+ .pfux-stage-nav .pfux-stage-button{flex-basis:184px;min-height:75px}
+ .pfux-stage-nav .pfux-stage-name{font-size:12.5px}
+ .instrument-overview-links .mini-feature{flex:1 1 100%;min-width:0}
+}
