@@ -13,6 +13,35 @@ const photo=(n,alt)=>'<a class="bf-focused-photo" href="'+src(n)+'" target="_bla
  '<img loading="lazy" src="'+src(n)+'" alt="'+esc(alt)+'"></a>';
 const card=(heading,visual,desc)=>'<figure class="bf-focused-card"><div class="bf-focused-card-head">'+esc(heading)+'</div><div class="bf-focused-card-art">'+visual+'</div><figcaption>'+esc(desc)+'</figcaption></figure>';
 const block=(items,foot="")=>'<section class="bf-focused" aria-label="BIOFIRE illustrated step"><div class="bf-focused-grid">'+items.join("")+'</div>'+foot+'</section>';
+const illustration=(markup,label)=>'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 290" role="img" aria-label="'+esc(label)+'">'+markup+'</svg>';
+function twistSketch(){
+ const body='<rect x="35" y="25" width="480" height="235" rx="18" fill="#f4fafc" stroke="#d9e7ec" stroke-width="2"/>'+
+ '<path d="M230 86L313 86L295 210Q286 235 270 237Q249 232 245 207Z" fill="#f5fcfd" stroke="#9ab8c5" stroke-width="5"/>'+
+ '<path d="M248 160H295L287 205Q276 225 264 215Q255 211 251 200Z" fill="#c0dce6" opacity=".75"/>'+
+ '<rect x="238" y="69" width="65" height="22" rx="7" fill="#cbdce5" stroke="#9cbbc7" stroke-width="3"/>'+
+ '<path d="M262 68L273 41L294 41L303 66Z" fill="#e8f1f4" stroke="#88acbc" stroke-width="3"/>'+
+ '<g transform="translate(310 18) rotate(25)"><path d="M0 11L10 3L32 3L38 12L29 24L10 24Z" fill="#edf5f7" stroke="#8badbc" stroke-width="3"/></g>'+
+ '<path d="M322 49C367 57 380 84 355 115" fill="none" stroke="#188c86" stroke-width="6" stroke-linecap="round"/>'+
+ '<path d="M338 109L354 119L363 98" fill="none" stroke="#188c86" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'+
+ '<text x="285" y="268" text-anchor="middle" font-size="20" fill="#236d7d" font-weight="850" font-family="Arial">TWIST OFF TIP TAB</text>';
+ return illustration(body,"SPOTFIRE sample buffer ampoule: twist the plastic tab off its tip, do not pinch a side tab");
+}
+function specimenSketch(gi){
+ const vol=gi?"2nd LINE · 0.2 mL":"FIXED-VOLUME PIPETTE";
+ const body='<rect x="32" y="22" width="486" height="245" rx="17" fill="#f6fbfc" stroke="#d7e8ed" stroke-width="2"/>'+
+ '<rect x="330" y="92" width="83" height="129" rx="14" fill="#f4fafc" stroke="#8cabb8" stroke-width="4"/>'+
+ '<path d="M339 155H404V199Q397 212 373 213Q344 211 339 196Z" fill="#d9a8b0" opacity=".75"/>'+
+ '<rect x="326" y="72" width="91" height="31" rx="7" fill="#c14b60" stroke="#8da4b0" stroke-width="3"/>'+
+ '<rect x="345" y="133" width="54" height="40" rx="3" fill="#fff" stroke="#d6e5eb"/>'+
+ '<text x="372" y="156" text-anchor="middle" fill="#a13e51" font-size="12" font-weight="850" font-family="Arial">SAMPLE</text>'+
+ '<g transform="rotate(28 196 102)"><rect x="166" y="25" width="28" height="113" rx="12" fill="#ebf6fa" stroke="#8baeba" stroke-width="4"/>'+
+ '<path d="M171 80H189V126H171Z" fill="#cc5970" opacity=".7"/>'+
+ '<path d="M180 140V170" stroke="#8baebb" stroke-width="7" stroke-linecap="round"/>'+
+ '<path d="M180 154V170" stroke="#a54e63" stroke-width="3" stroke-linecap="round"/></g>'+
+ '<path d="M251 183L318 167" stroke="#238e88" stroke-width="5" stroke-linecap="round" stroke-dasharray="8 7"/>'+
+ '<text x="268" y="254" text-anchor="middle" fill="#2b7383" font-size="18" font-weight="850" font-family="Arial">'+vol+'</text>';
+ return illustration(body,"Transfer the "+(gi?"mixed Cary Blair GI specimen using the second line":"SPOTFIRE specimen using the fixed-volume pipette")+" into the red sample injection vial");
+}
 const provenance='<p class="bf-focused-note">The numbered handling illustrations are from the linked BIOFIRE quick guide. They demonstrate vial technique, not the specimen volume for TORCH GI or SPOTFIRE. Follow the ordered assay kit instructions for specimen volume and transport medium.</p>';
 function stage(id,title){
  if(id!=="torch"&&id!=="spotfire")return before?before(id,title):"";
@@ -29,13 +58,13 @@ function stage(id,title){
  if(/open buffer|prepare red sample|sample buffer|prepare.*specimen/.test(t)){
   const order=gi?"TORCH GI: BUFFER FIRST, THEN STOOL":"SPOTFIRE: SPECIMEN FIRST, THEN BUFFER";
   const first=gi?
-   card("3b · Snap the buffer tube",photo(5,"BIOFIRE Figure 3b: gloved hand pinching the textured snap tab"),"Hold the tip upward and pinch the textured tab until the seal snaps. Do not touch the tip.") :
-   card("1 · Transfer specimen",B.pipette?B.pipette("spotfire"):photo(4,"Transfer pipette and red vial"),"Add the assay-approved specimen volume into the red vial using the supplied pipette.");
+   card("Open GI buffer · correct tab type",photo(5,"BIOFIRE Figure 3b: a textured side-tab ampoule being pinched open"),"Twist off the plastic tip tab, or pinch the textured side tab if that is the supplied design. The picture shows the pinch variant.") :
+   card("1 · Transfer specimen",specimenSketch(false),"Use the fixed-volume SPOTFIRE pipette to add the specimen to the red vial first.");
   const second=gi?
    card("3c · Add buffer to red vial",photo(6,"BIOFIRE Figure 3c: squeezing buffer tube into red sample vial"),"Slow, firm squeeze, then a second squeeze. Avoid foam.") :
-   card("3b · Snap the buffer tube",photo(5,"BIOFIRE Figure 3b: gloved hand pinching the textured snap tab"),"Pinch the textured tab to open. Keep the tube tip clean.");
+   card("2 · TWIST OFF buffer tip",twistSketch(),"Twist the tab off the tip of the SPOTFIRE buffer tube. Do not use the FilmArray pinch-tab method.");
   const third=gi?
-   card("Add GI stool specimen",B.pipette?B.pipette("torch"):photo(4,"FilmArray GI specimen pipette and red vial"),"Mix the stool in Cary Blair, draw to the second line (0.2 mL), and add to the red vial.") :
+   card("Add GI stool specimen",specimenSketch(true),"Mix stool in Cary Blair, draw to the second pipette line (0.2 mL), then add it to the red vial.") :
    card("3c · Add buffer to red vial",photo(6,"BIOFIRE Figure 3c: buffer into the red sample vial"),"Squeeze the full supplied buffer into the red vial without excessive foam.");
   return '<section class="bf-focused" aria-label="Panel-specific sample preparation"><div class="bf-focused-order">'+order+'</div><div class="bf-focused-grid">'+[first,second,third].join("")+'</div>'+provenance+'</section>';
  }
