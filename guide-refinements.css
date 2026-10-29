@@ -259,3 +259,14 @@
  .pfux-stage-nav .pfux-stage-name{font-size:12.5px}
 }
 @media print{.procedure-flow .guide-bottom .guide-transport{display:none!important}}
+
+/* Keep the separate PATHFAST CAL/QC wizard's Previous/Next buttons at the
+   same size and contrast as the shared instrument procedure navigation. */
+.pf-calibration-guide .pfux-cal-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:20px 0 26px}
+.pf-calibration-guide .pfux-cal-navigation button{display:inline-flex;justify-content:center;align-items:center;min-height:56px;padding:14px 22px;font-family:inherit;font-size:17px!important;font-weight:850;line-height:1.25;border:1.5px solid #9bbfcd;border-radius:12px;background:#fff;color:#265f79;box-shadow:0 3px 9px rgba(27,87,101,.13);cursor:pointer}
+.pf-calibration-guide .pfux-cal-navigation button.primary{background:#138b80;border-color:#0d7f74;color:#fff;box-shadow:0 5px 13px rgba(19,132,121,.25)}
+.pf-calibration-guide .pfux-cal-navigation button:hover:not(:disabled){background:#dff4ef;border-color:#269e98;color:#136c67}
+.pf-calibration-guide .pfux-cal-navigation button.primary:hover:not(:disabled){background:#0c7269;color:#fff}
+.pf-calibration-guide .pfux-cal-navigation button:disabled{opacity:.4;cursor:not-allowed}
+.pf-calibration-guide .pfux-cal-navigation span{font-size:14px;font-weight:800;color:#637f91;white-space:nowrap}
+@media(max-width:700px){.pf-calibration-guide .pfux-cal-navigation button{min-height:49px;padding:11px 14px;font-size:15px!important}.pf-calibration-guide .pfux-cal-navigation{gap:8px}.pf-calibration-guide .pfux-cal-navigation span{font-size:12px}}
