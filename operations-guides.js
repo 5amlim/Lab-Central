@@ -116,10 +116,10 @@ function sendout(){
  h+='<div class="ops-sendout-photo-route">';
  h+='<div class="ops-sendout-first-steps">'+steps(sendoutSteps.slice(0,2))+'</div>';
  h+='<div class="ops-sendout-followup">'+steps(sendoutSteps.slice(2),3)+
- '<a class="ops-sendout-photo-arrow" href="#ops-sendout-photo-guide" aria-label="Jump to photo examples for the Sendout Log">'+
- '<span class="ops-sendout-photo-arrow-label">PHOTO EXAMPLES</span>'+
- '<svg viewBox="0 0 72 400" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 H37 Q53 14 53 30 V370" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 360 L53 380 L63 360" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
- '<span class="ops-photo-mobile-down" aria-hidden="true">↓</span></a></div>';
+ '<a class="ops-sendout-photo-arrow" href="#ops-sendout-photo-guide" aria-label="Jump to illustrated photo examples for the Sendout Log">'+
+ '<span class="ops-sendout-photo-arrow-label">Photo examples</span>'+
+ '<span class="ops-sendout-arrow-track" aria-hidden="true"></span>'+
+ '<span class="ops-sendout-arrow-end" aria-hidden="true">↓</span></a></div>';
  h+=window.LAB_SENDOUT_VISUAL.examples();
  h+='</div>';
  h+=accordion('What needs to be photographed?', 'Photograph all labeled specimens, each separately sealed transport bag, and the matching requisition. You may attach up to 10 photos in the Sendout Log, including the Lab Calculator printout when requested. Separate temperature and STAT/special bags according to the Lab Calculator printout, and photograph each bag individually.',true);
