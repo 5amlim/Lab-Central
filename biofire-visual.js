@@ -352,18 +352,19 @@ function analyzer(id,state){
  const close=mode==="selected"?'<rect x="218" y="123" width="174" height="91" rx="8" stroke="#2b9888" stroke-width="3" fill="none" stroke-dasharray="7 5"/>':"";
  return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BioFire SPOTFIRE instrument, same body as Overview, screen showing '+esc(status.title)+'" viewBox="0 0 740 310">'+body+close+'</svg>';
 }
+function spotfireScreenWithZoom(mode){
+ const full=analyzer("spotfire",mode);
+ const zoom=full.replace('viewBox="0 0 740 310"','viewBox="402 53 128 210"');
+ return '<div class="bf-spotfire-screen-sequence">'+full+
+  '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
+  '<div class="bf-spotfire-display-crop">'+zoom+'</div>'+
+  '<p>Illustrative display. Confirm the actual module, pouch, sample ID and prompts.</p></details></div>';
+}
 function ui(id,index){
  const torch=id==="torch";
  if(!torch){
-  // Match the Overview chassis for every on-device workflow. Offer a
-  // magnified view of its own display rather than a different fictional tablet.
   const modes=["selected","scan","review","start"],mode=modes[index]||"ready";
-  const full=analyzer("spotfire",mode);
-  const zoom=full.replace('viewBox="0 0 740 310"','viewBox="402 53 128 210"');
-  return '<div class="bf-spotfire-screen-sequence">'+full+
-   '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
-   '<div class="bf-spotfire-display-crop">'+zoom+'</div>'+
-   '<p>Illustrative display. Confirm the actual module, pouch, sample ID and prompts.</p></details></div>';
+  return spotfireScreenWithZoom(mode);
  }
  const stages=[
   {heading:"DASHBOARD",title:"Select an available module",focus:"module"},
@@ -443,5 +444,5 @@ function stageVisual(id,title){
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
-window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,ui,pipette,invert};
+window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,spotfireScreenWithZoom,ui,pipette,invert};
 })();
