@@ -59,7 +59,7 @@ function biofire(id,title){
   cards=tile(fig("Insert prepared pouch in module",B&&B.analyzer?B.analyzer(id,"selected"):statusCard("blue","LOAD MODULE","Insert pouch"),"Use the selected available module and follow the actual drawer/loading prompts.")+
    fig("Start the run",B&&B.ui?B.ui(id,3):statusCard("blue","START RUN","Confirm identifiers"),"Start only after verifying identifiers, pouch and module."));
  }else if(/review and document|results/.test(t)){
-  cards=tile(fig("Review the completed run",statusCard("blue","REVIEW RESULTS","Controls passed · verify identity"),"Read internal control status, sample ID and results; handle incomplete/invalid runs per the assay IFU."));
+  cards=tile(fig("Review the completed run",B&&B.analyzer?B.analyzer(id,"results"):statusCard("blue","REVIEW RESULTS","Verify internal controls and identity"),"Read internal control status, sample ID and results; handle incomplete/invalid runs per the assay IFU."));
  }else if(/qc|control/.test(t)){
   cards=tile(fig("Prepare QC in red vial",B&&B.station?B.station("ready"):statusCard("red","QC SAMPLE","Use approved QC materials"),"Use the correct QC positive/negative material and the panel-specific IFU; record the control ID.")+
    fig("Load QC pouch",manual(2,"BioFire pouch ready in loading station"),"Follow the same blue hydration and red sample paths for both QC levels."));
