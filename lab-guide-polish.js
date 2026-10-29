@@ -72,16 +72,16 @@ if(B){
 function piccolo(title,group){
  if(!A)return "";
  const t=String(title).toLowerCase(),q=/qc|control/i.test(group)||/qc|control/i.test(t);
- const empty=A.piccoloDiscSvg(false),filled=A.piccoloDiscSvg(true);
+ const empty=A.piccoloDiscSvg(false),filled=A.piccoloDiscSvg(true),qcDisc=filled.replace(/#b63d4a|#ce5b64|#b63a48/g,'#739fae').replace(/with blood in the chamber/g,'with approved QC control in the chamber').replace('Sample loaded','QC control loaded');
  const old=A.piccoloVisual("grab the reagent disc");
  const reference=(old.match(/<img[^>]+>/)||[])[0]||empty;
  const tool=A.piccoloPipetteSvg();
  const instrument=(A.piccoloVisual("insert the filled disc").match(/<svg[\s\S]*?<\/svg>/)||[])[0]||"";
  if(/within 60|sample time|collection|blood tube/.test(t)){
-  return fig("Lithium-heparin whole blood",A.specimenGuide?A.specimenGuide("piccolo"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
+  return fig("Lithium-heparin whole blood",A.mediaSvg?A.mediaSvg("green"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
  }
  if(/grab the controls|brt|nod|freezer/.test(t)){
-  return fig("Prepare the approved BRT or NOD control",statusCard("blue","QC CONTROL","Use lot-specific instructions"),"Use the freezer-stored approved control. For QC, the sample chamber is filled with control material, not patient blood.","lc-piccolo-single");
+  return fig("Prepare the approved BRT or NOD control",(A.stepIllustration({id:'piccolo',category:'Analyzers'},'grab the controls','monthly-qc').match(/<svg[\s\S]*?<\/svg>/)||[])[0]||statusCard("blue","QC CONTROL","Use lot-specific instructions"),"Use the freezer-stored approved control. For QC, the sample chamber is filled with control material, not patient blood.","lc-piccolo-single");
  }
  if(/grab|reagent disc|qc disc|inspect/.test(t)){
   return fig("Inspect the intact reagent disc",reference,"The sample entry port is built into the disc. Do not peel or create an opening. Remove only one disc at a time.","lc-piccolo-single");
@@ -90,11 +90,11 @@ function piccolo(title,group){
   return '<section class="lc-piccolo-prep" aria-label="Two stages of sample loading">'+
    '<div class="lc-prep-heading"><strong>Load the disc '+(q?"with approved QC material":"with blood")+'</strong><p>Fit a fresh disposable tip to the gray 100 µL transfer device. Transfer the approved volume slowly, avoiding bubbles.</p></div>'+
    tile(fig("1 · Before loading",empty,"Sample port and chamber are empty. Use the permanent port near the central hub.")+
-   fig("2 · After loading",q?empty:filled,q?"Fill the same chamber with approved QC material. Red blood is not used for this control example.":"Red indicates blood in the chamber after dispensing; verify the molded fill marks."))+
+   fig("2 · After loading",q?qcDisc:filled,q?"QC fill state is shown in blue-gray to distinguish control material from patient blood. Confirm the required control level and volume.":"Red indicates blood in the chamber after dispensing; verify the molded fill marks."))+
    '<details class="lc-piccolo-tool"><summary>Show gray pipette and disposable tip</summary>'+tool+'</details></section>';
  }
  if(/insert|drawer|analyz|start|click/.test(t)){
-  return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?empty:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Seat the prepared disc level in the open drawer, close it, then select Analyze and verify patient or control details.","lc-piccolo-insert");
+  return fig("Insert the filled disc into Piccolo Xpress",'<div class="lc-insert-flow"><div class="lc-insert-disc">'+(q?qcDisc:filled)+'<strong>Prepared disc</strong></div><div class="lc-insert-arrow" aria-hidden="true">➜</div><div class="lc-insert-machine">'+instrument+'<strong>Piccolo Xpress front drawer</strong></div></div>',"Seat the prepared disc level in the open drawer, close it, then select Analyze and verify patient or control details.","lc-piccolo-insert");
  }
  if(/print|result|log/.test(t))return fig("Document the QC or patient result",statusCard("blue","REVIEW RESULTS","Print / file as required"),"Check accepted QC and instrument status before releasing results.","lc-piccolo-single");
  return fig("Confirm analyzer and workflow",instrument,"Use the actual Piccolo prompts and current approved IFU.","lc-piccolo-single");
