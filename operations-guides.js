@@ -5,7 +5,7 @@ var formURL=String(window.LAB_SENDOUT_FORM_URL||"").trim();
 var formReady=/^https:\/\/[^\s<>"']+$/i.test(formURL)&&!/^https:\/\/(?:forms\.office\.com|forms\.microsoft\.com)\/?$/i.test(formURL);
 function heading(k,t,d){return '<section class="ops-page"><div class="ops-kicker">'+k+'</div><h1>'+t+'</h1><p class="ops-lead">'+d+'</p>';}
 function notice(t,type){return '<div class="ops-info '+(type||'')+'"><span class="ops-info-icon" aria-hidden="true">'+(type==="amber"?"!":"i")+'</span><div>'+t+'</div></div>';}
-function steps(items){return '<div class="ops-flow">'+items.map(function(s,i){return '<div class="ops-step"><span class="ops-step-index">'+String(i+1).padStart(2,"0")+'</span><div class="ops-step-body">'+(s[0]?'<span class="ops-role">'+s[0]+'</span>':'')+'<strong>'+s[1]+'</strong><p>'+s[2]+'</p></div></div>';}).join("")+'</div>';}
+function steps(items,start=1){return '<div class="ops-flow">'+items.map(function(s,i){return '<div class="ops-step"><span class="ops-step-index">'+String(i+start).padStart(2,"0")+'</span><div class="ops-step-body">'+(s[0]?'<span class="ops-role">'+s[0]+'</span>':'')+'<strong>'+s[1]+'</strong><p>'+s[2]+'</p></div></div>';}).join("")+'</div>';}
 function list(items,ordered){var tag=ordered?"ol":"ul";return '<'+tag+'>'+items.map(function(x){return '<li>'+x+'</li>';}).join("")+'</'+tag+'>';}
 function card(title,body,color,tag){return '<article class="ops-card '+(color||"teal")+'">'+(tag?'<div class="ops-card-label">'+tag+'</div>':'')+'<h3>'+title+'</h3>'+body+'</article>';}
 function accordion(title,body,opened){return '<details class="ops-accordion" '+(opened?"open":"")+'><summary>'+title+'</summary><div class="ops-accordion-content">'+body+'</div></details>';}
@@ -105,15 +105,23 @@ function sendout(){
  h+='<div class="ops-action-row">'+action('calculators','Open Lab Calculators','blue')+action('sendout','Receiving lab guidance')+'</div>';
  h+=window.LAB_SENDOUT_MARKETS.render("log");
  h+='<h2 class="ops-section-heading">Lab personnel workflow</h2>';
- h+=steps([
- ['Lab personnel','Process specimens according to the Lab Calculator','Confirm the ordered tests and receiving laboratory. Verify labels, tube requirements, centrifugation/aliquots, volume and handling against the approved directory. For special test kits, follow the kit-specific instructions.'],
- ['Lab personnel','Separate and label transport bags','Follow the Lab Calculator printout to separate specimens into room-temperature, refrigerated and frozen bags. Also separate by receiving lab, routine versus STAT, or special handling where indicated. Seal each bag with the matching paperwork in its document sleeve.'],
- ['Lab personnel','Photograph each bag separately','Photograph labeled specimens, <strong>each sealed transport bag</strong>, and the matching requisition. The Sendout Log supports <strong>up to 10 photos</strong>. Include the Lab Calculator printout if requested.'],
- ['Lab personnel','Complete the regional Sendout Log','Select the market, then choose the clinic within its secure Microsoft Form. Record the receiving lab, specimen and bag details, plus any STAT or special pickup confirmation/reference. For special kits shipped by UPS or FedEx, include the carrier and tracking number. Attach the photos.'],
- ['Lab personnel','Submit the form and verify the entry','Check that the requisition, specimens, temperature groups and documentation match. Verify the entry was submitted successfully and that pickup/shipping details are complete where applicable.'],
- ['Lab personnel','Place the bags or kits in the approved handoff area','Place routine specimens in the correct receiving-lab bin, lockbox, refrigerator or freezer. For STAT/special pickups or UPS/FedEx test kits, follow the assigned courier handoff or drop-off process, and retain the confirmation/tracking reference.']
- ]);
+ const sendoutSteps=[
+ ['Lab personnel','Process specimens according to the Lab Calculator','Confirm the receiving lab and ordered tests. Check tube labels, specimen volumes, processing and transport requirements against the approved test directory. Follow kit-specific instructions for special tests.'],
+ ['Lab personnel','Separate and label transport bags','Follow the Lab Calculator printout: place room-temperature, refrigerated and frozen specimens in separate bags. Separate STAT or special-handling specimens when required. Put the matching requisition in each bag\'s document sleeve and seal the bag.'],
+ ['Lab personnel','Photograph each bag separately','Take clear photos of the labeled tubes or containers, every sealed transport bag and the matching requisition. Photograph each bag separately. The regional Sendout Log accepts up to 10 photos. Include the Lab Calculator printout if the form requests it.'],
+ ['Lab personnel','Complete the regional Sendout Log','Select your market, then choose the clinic in the secure Microsoft Form. Enter the receiving lab, specimen and bag details. For STAT or special pickups, record the pickup confirmation. For UPS/FedEx test kits, enter the carrier and tracking number. Attach your photos.'],
+ ['Lab personnel','Submit the form and verify the entry','Check that the requisition, specimens, temperature groups and documentation match. Submit the form and confirm it was received. Verify any applicable pickup or shipping details.'],
+ ['Lab personnel','Place the bags or kits in the approved handoff area','Place routine specimens in the correct receiving-lab bin, lockbox, refrigerator or freezer. For STAT/special pickups or UPS/FedEx kits, use the approved courier handoff or drop-off procedure and retain the confirmation or tracking reference.']
+ ];
+ h+='<div class="ops-sendout-photo-route">';
+ h+='<div class="ops-sendout-first-steps">'+steps(sendoutSteps.slice(0,2))+'</div>';
+ h+='<div class="ops-sendout-followup">'+steps(sendoutSteps.slice(2),3)+
+ '<a class="ops-sendout-photo-arrow" href="#ops-sendout-photo-guide" aria-label="Jump to photo examples for the Sendout Log">'+
+ '<span class="ops-sendout-photo-arrow-label">PHOTO EXAMPLES</span>'+
+ '<svg viewBox="0 0 72 400" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 H37 Q53 14 53 30 V370" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 360 L53 380 L63 360" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+ '<span class="ops-photo-mobile-down" aria-hidden="true">↓</span></a></div>';
  h+=window.LAB_SENDOUT_VISUAL.examples();
+ h+='</div>';
  h+=accordion('What needs to be photographed?', 'Photograph all labeled specimens, each separately sealed transport bag, and the matching requisition. You may attach up to 10 photos in the Sendout Log, including the Lab Calculator printout when requested. Separate temperature and STAT/special bags according to the Lab Calculator printout, and photograph each bag individually.',true);
  h+=accordion('How do I group and store multiple bags?', 'Follow the Lab Calculator printout: separate specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT or special handling when required. Use the designated secure pickup, storage or temperature-controlled area and follow the receiving lab directory.');
  h+=accordion('Does the log include special courier pickups and shipped kits?', 'Yes. Complete the regional Sendout Log for routine send-outs, STAT or special pickups, and special test kits shipped using UPS or FedEx. Enter pickup confirmation or reference information when applicable, or carrier and tracking number for shipped kits. Use the approved handoff process and secure documentation.');
