@@ -196,12 +196,22 @@ function repaintPanel(){
 function render(){
  const group=selectedGroup();
  const x=group?esc(group.label):"";
+ function calHeaderNavigation(){
+  return '<div class="pfux-cal-navigation pfux-cal-header-nav" role="group" aria-label="Calibration step navigation">'+
+   '<button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button>'+
+   '<span class="pfux-cal-progress">'+currentStep+' / 11</span>'+
+   '<button type="button" class="primary" '+(currentStep===11?'data-pf-toggle-all':'data-pf-next')+'>'+
+     (currentStep===11?'View all steps ↗':'Next step →')+'</button></div>';
+ }
  function step(n,title,desc,inner){
   if(!showAllSteps&&n!==currentStep)return '';
-  return '<details class="pf-workflow-step" '+(!showAllSteps||n===currentStep?'open':'')+'>'+
+  const guided=!showAllSteps&&n===currentStep;
+  // Keep the controls outside the native summary to avoid toggling its details.
+  return '<details class="pf-workflow-step'+(guided?' pf-workflow-has-nav':'')+'" '+(!showAllSteps||n===currentStep?'open':'')+'>'+
     '<summary><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
     '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
     '<span class="pf-workflow-chev"></span></summary>'+
+    (guided?calHeaderNavigation():'')+
     '<div class="pf-workflow-detail">'+(inner||"")+'</div></details>';
  }
  let h='<section class="pf-calibration-guide">'+
@@ -270,7 +280,7 @@ function render(){
   h+=step(11,'Print, file and return CAL/QC materials to storage','Document both control levels and return each material to the correct temperature',
       (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Print and retain the accepted calibration and QC results in the approved binder.</p>')+
       '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>'+returnMaterials(group));
-  if(!showAllSteps)h+='<div class="pfux-cal-navigation"><button type="button" data-pf-prev '+(currentStep===1?'disabled':'')+'>← Previous</button><span>'+currentStep+' / 11</span><button type="button" class="primary" '+(currentStep===11?'data-pf-toggle-all':'data-pf-next')+'>'+(currentStep===11?'View all steps ↗':'Next step →')+'</button></div>';
+
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
