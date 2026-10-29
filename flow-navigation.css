@@ -449,6 +449,8 @@
 .workflow-main .req-route-kicker{margin-bottom:4px;color:#2b8784;font-size:9.5px;letter-spacing:.1em}
 .workflow-main .requisition-source-instructions h4{font-size:13.5px;line-height:1.4;margin:0 0 3px;font-weight:820;color:#24536a}
 .workflow-main .requisition-source-instructions p{margin:0;font-size:12px;line-height:1.55;color:#557083}
+.workflow-main .requisition-source-instructions p.req-reclassify-instruction{margin-top:7px;color:#111111}
+
 .workflow-main .ad-guide{margin-top:10px;border-color:#d9e5ed;border-radius:10px;background:#fff}
 .workflow-main .ad-guide>summary{
   min-height:50px;padding:9px 12px;gap:11px;color:#2a6886;
