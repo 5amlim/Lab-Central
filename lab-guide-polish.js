@@ -111,7 +111,7 @@ function piccolo(title,group){
   return fig("Lithium-heparin whole blood",A.mediaSvg?A.mediaSvg("green"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
  }
  if(/grab the controls|brt|nod|freezer/.test(t)){
-  return fig("Prepare the approved BRT or NOD control",(A.stepIllustration({id:'piccolo',category:'Analyzers'},'grab the controls','monthly-qc').match(/<svg[\s\S]*?<\/svg>/)||[])[0]||statusCard("blue","QC CONTROL","Use lot-specific instructions"),"Use the freezer-stored approved control. For QC, the sample chamber is filled with control material, not patient blood.","lc-piccolo-single");
+  return fig("Thaw the approved BRT or NOD control set",(A.stepIllustration({id:'piccolo',category:'Analyzers'},'grab the controls','monthly-qc').match(/<svg[\s\S]*?<\/svg>/)||[])[0]||statusCard("blue","QC CONTROL","Use lot-specific instructions"),"Thaw both QC levels (1 and 2) from the selected BRT or NOD set per the lot-specific insert. Use control material, not patient blood, in the disc sample chamber.","lc-piccolo-single");
  }
  if(/grab|reagent disc|qc disc|inspect/.test(t)){
   return fig("Inspect the intact reagent disc",empty,"The sample entry port is built into the disc. Do not peel or create an opening. Remove only one disc at a time.","lc-piccolo-single");
