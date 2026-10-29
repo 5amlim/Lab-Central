@@ -104,7 +104,7 @@
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-stage-track-v2" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261028-two-hour-reference" media="all">
-  <link rel="stylesheet" href="pathfast-interactive.css?v=20261028-primary-one-hour-v5" media="all">
+  <link rel="stylesheet" href="pathfast-interactive.css?v=20261029-twohour-cards-v1" media="all">
   <link rel="stylesheet" href="equipment-art.css?v=20261028-torch-v2" media="all">
 <style id="lab-central-shared-chevron-style">
 
@@ -149,7 +149,7 @@
 <link rel="stylesheet" href="step-illustrations.css?v=20261028-illustrations-v1" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-accuracy-v3">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-site-steps-v1">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261029-audited-v6">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261029-larger-scroll-v1">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -237,16 +237,16 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="operations-guides.js?v=20261028-tech-log-six-steps"></script>
 <script src="pathfast-calibration.js?v=20261029-biorad-materials-first-v2"></script>
 <script src="pathfast-screen-guide.js?v=20261029-three-panels-v1"></script>
-<script src="pathfast-interactive.js?v=20261028-one-hour-default-v4"></script>
+<script src="pathfast-interactive.js?v=20261029-twohour-cards-v1"></script>
 <script src="pathfast-clinical.js?v=20261028-one-hour-title-v5"></script>
-<script src="equipment-art.js?v=20261028-pathfast-straight-rack-v4"></script>
-<script src="step-illustrations.js?v=20261029-specimen-guard-v4"></script>
+<script src="equipment-art.js?v=20261029-rack-labels-v1"></script>
+<script src="step-illustrations.js?v=20261029-curved-disc-v1"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-maint-v2"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
 <script src="qc-guide.js?v=20261028-biofire-qc-steps-v3"></script>
 <script src="biofire-visual.js?v=20261029-spotfire-original-device-v7"></script>
 <script src="lab-visual-corrections-20261029.js?v=3"></script>
-<script src="lab-guide-polish.js?v=20261029-audited-v6"></script>
+<script src="lab-guide-polish.js?v=20261029-curved-disc-v1"></script>
 <script src="sysmex-focused.js?v=20261029-patient-v2"></script>
 <script src="clinitek-focused.js?v=20261029-audited-v6"></script>
 <script src="instrument-focused.js?v=20261029-step-specific-v1"></script>
@@ -1029,7 +1029,7 @@ document.addEventListener('click',e=>{
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
-  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});const stageTrack=document.querySelector('.pfux-stage-track');const activeStage=stageTrack?.querySelector('[aria-current="step"]');if(stageTrack&&activeStage)stageTrack.scrollTo({left:Math.max(0,activeStage.offsetLeft-stageTrack.offsetLeft-stageTrack.clientWidth/2+activeStage.clientWidth/2),behavior:'smooth'});}
+  if(Number.isSafeInteger(next)&&next>=0){state.guideStep=next;state.guideMode='guided';render();const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});const stageTrack=document.querySelector('.pfux-stage-track');const activeStage=stageTrack?.querySelector('[aria-current="step"]');if(stageTrack&&activeStage)stageTrack.scrollTo({left:Math.max(0,stageTrack.scrollLeft+activeStage.getBoundingClientRect().left-stageTrack.getBoundingClientRect().left-stageTrack.clientWidth/2+activeStage.clientWidth/2),behavior:'smooth'});}
   return;
  }
  const detailsButton=e.target.closest('[data-guide-details]');
@@ -1099,6 +1099,6 @@ render();
 })();
 
 </script>
-<script src="guide-scroll-cues.js?v=20261029-cue-v1"></script>
+<script src="guide-scroll-cues.js?v=20261029-stage-cue-v1"></script>
 </body>
 </html>
