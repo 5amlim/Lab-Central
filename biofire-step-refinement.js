@@ -69,12 +69,12 @@ function stage(id,title){
    card("3c · Add buffer to red vial",photo(6,"BIOFIRE Figure 3c: squeezing buffer tube into red sample vial"),"Slow, firm squeeze, then a second squeeze. Avoid foam.") :
    card("2 · TWIST OFF buffer tip",twistSketch(),"Twist the tab off the tip of the SPOTFIRE buffer tube. Do not use the FilmArray pinch-tab method.");
   const third=gi?
-   card("Add GI stool specimen",specimenSketch(true),"Mix stool in Cary Blair, draw to the second pipette line (0.2 mL), then add it to the red vial.") :
-   card("3c · Add buffer to red vial",photo(6,"BIOFIRE Figure 3c: buffer into the red sample vial"),"Squeeze the full supplied buffer into the red vial without excessive foam.");
+   card("Add GI stool specimen to the clear red injection vial",B.pipette?B.pipette("torch"):specimenSketch(true),"Mix stool in Cary Blair, draw to the second pipette line (0.2 mL), then add it to the clear red sample injection vial after buffer.") :
+   card("Add buffer to the clear red injection vial",B.pipette?B.pipette("spotfire"):photo(6,"Buffer into BioFire red sample vial"),"Add specimen first, then squeeze the supplied buffer into the clear red sample injection vial without excessive foam.");
   return '<section class="bf-focused" aria-label="Panel-specific sample preparation"><div class="bf-focused-order">'+order+'</div><div class="bf-focused-grid">'+[first,second,third].join("")+'</div>'+reference(id)+'</section>';
  }
  if(/invert|cap red vial|gently mix/.test(t)){
-  return block([card("3d · Close and gently invert 3 times",photo(7,"BIOFIRE Figure 3d: red vial capped and inverted 3 times"),"Tightly cap the red sample vial, gently invert three times, then return it to the red well. Do not shake.")],reference(id));
+  return block([card("Close and gently invert 3 times",B.invert?B.invert():"","Tightly cap the white-capped clear red sample injection vial, gently invert three times, then return it to the red well. Do not shake.")],reference(id));
  }
  if(/load mixture|inject sample|red sample port/.test(t)){
   return block([card("Use the red SAMPLE port",B.station?B.station("sample"):photo(8,"Red sample vial entering the pouch sample port"),"Unscrew the red vial, wait five seconds before lifting, insert into the red pouch port and press until sample is drawn in.")]);
