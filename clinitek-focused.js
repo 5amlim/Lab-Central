@@ -40,8 +40,9 @@ function machine(mode="home"){
 }
 function scene(kind,mode){
  const isHcg=kind==="hcg",testName=isHcg?"CLINITEST hCG CASSETTE":"URINALYSIS DIPSTICK";
- let art=machine(mode==="select"?(isHcg?"cassette":"strip"):mode==="qc"?"qc":mode==="start"?"start":mode==="results"?"results":"home");
+ let art=machine(mode==="select"?(isHcg?"cassette":"strip"):mode==="qc"?"qc":mode==="dip"?"start":mode==="start"?"start":mode==="results"?"results":"home");
  if(mode==="specimen"){art+=cup(512,75);art+=isHcg?cassette(590,301):strip(486,238,80);}
+ if(mode==="qc-material"){art+='<g><rect x="532" y="123" width="91" height="147" rx="13" fill="#e9f5f8" stroke="#96b4c1" stroke-width="4"/><rect x="526" y="106" width="103" height="34" rx="7" fill="#639bad"/><rect x="541" y="173" width="73" height="46" rx="6" fill="#fff" stroke="#c4d7df"/></g>'+tx(577,194,"QC CONTROL",12,"#2d7483")+tx(583,318,"APPROVED QC LOT",14,"#487d8c");}
  if(mode==="strip"){art+=isHcg?cassette(590,200):strip(570,188,0);
   art+=tx(576,329,isHcg?"hCG CASSETTE":"UA DIPSTICK",15);}
  if(mode==="dip"){art+=cup(499,68)+(isHcg?cassette(596,264):strip(580,173,-23))+
@@ -68,6 +69,7 @@ function render(title,group){
  if(/select strip test|select cassette test|choose strip|select hcg/.test(t))
   return fig("Select "+(kind==="hcg"?"Cassette Test":"Strip Test")+" on the analyzer",scene(kind,"select"),
      "Select the correct test type and confirm patient ID or QC entry on the analyzer.");
+ if(qc&&/prepare.*control|quality control/.test(t))return fig("Prepare approved QC controls",scene(kind,"qc-material"),"Confirm the correct QC material, level, lot, and expiry. Use the approved assay-specific procedure.");
  if(/prepare the ua|prepare the strip|prepare hcg|prepare and place|prepare urinalysis controls|prepare control/.test(t))
   return fig("Prepare "+(kind==="hcg"?"CLINITEST hCG cassette":"UA dipstick"),scene(kind,"strip"),
      "Check expiration and remove one compatible unused "+(kind==="hcg"?"cassette":"reagent strip")+".");
@@ -76,6 +78,7 @@ function render(title,group){
  if(isHcg&&/dispense urine|dispense qc material|apply.*sample/.test(t))
   return fig(qc?"Dispense approved hCG QC":"Dispense urine into hCG cassette",scene(kind,"dispense"),
    "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
+ if(isHcg&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Start the hCG cassette workflow first, then use the kit pipette and approved volume.");
  if(/press start|dip and blot|dip.*strip|run each control/.test(t))
   return fig("Press START, dip and blot",scene(kind,"dip"),
      qc?"Apply controls according to the lot-specific SOP.":"Press START, immerse the reagent pads, then blot the strip as directed by the approved procedure.");
