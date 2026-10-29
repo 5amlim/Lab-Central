@@ -222,13 +222,13 @@ function renderStep(title,group){
  }
  // Separate details for actual pipette aspiration, chamber inspection, and dispensing.
  if(/dispense|add.*into.*well/.test(t))return pip("dispense");
- if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
  if(/slowly release|aspirate|draw.*pipette/.test(t))return pip("draw");
+ if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
  if(/place.*tip into|position.*tip over/.test(t))return pip(/place.*tip into/.test(t)?"dip":"position");
  if(/squeeze.*(large|upper)|open.*first cartridge and squeeze|open.*cartridge and squeeze/.test(t))return pip("bulb");
  if(/remove and discard.*pipette|wait for full absorption|let.*absorb/.test(t))return pip("absorb");
- if(/new cartridge and use a new pipette|new cassette and pipette|fresh assay cartridges and transfer pipettes|two fresh assay cartridges/.test(t))
-  return show(title,kitChooser(),"Each QC level needs a NEW single-use cartridge and its own kit-supplied transfer pipette.");
+ if(/new cartridge and use a new pipette|new cassette and pipette|fresh assay cartridges and transfer pipettes|two fresh assay cartridges|new cassette and use a new pipette/.test(t))
+  return show(title,'<div class="triage-materials-prep"><div>'+pipetteSvg("empty","qc")+'</div><div>'+kitChooser()+'</div></div>',"Each QC level needs a NEW single-use cartridge and its own kit-supplied transfer pipette.");
  if(/open and label|open a fresh|prepare a new cassette|open.*cartridge/.test(t))
   return show(title,selectedMaterial("troponin",false),"Illustrated Troponin I cassette. Use the actual selected assay and check its expiration and assigned specimen well.");
  if(/match the assay|identify.*new assay box|which assay reagent lot|cartridge.*lot|choose.*cassette|identify.*test kit|kit.*temperature|bring kit/.test(t))
