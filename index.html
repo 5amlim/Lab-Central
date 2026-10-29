@@ -100,9 +100,9 @@
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
   <link rel="stylesheet" href="reference-refresh.css?v=20261028-reference-restructure" media="all">
-  <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-storage-return-v1" media="all">
+  <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-qc-photo-v1" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-qc-link-v4" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261029-stage-track-v2" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261029-qc-nav-v1" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-compact-rn-v2" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261029-twohour-cards-v1" media="all">
@@ -236,7 +236,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261028-regional-photo-guide"></script>
 <script src="quality-reference.js?v=20261028-triage-clean"></script>
 <script src="operations-guides.js?v=20261028-tech-log-six-steps"></script>
-<script src="pathfast-calibration.js?v=20261029-hood-running-v4"></script>
+<script src="pathfast-calibration.js?v=20261029-qc-photo-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-qc-link-v5"></script>
 <script src="pathfast-interactive.js?v=20261029-compact-timing-v2"></script>
 <script src="pathfast-clinical.js?v=20261029-guided-rn-v2"></script>
@@ -1066,10 +1066,10 @@ function sectionRender(sec,tab){
   const workflows=[
    {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'01'},
    {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'02'},
-   {id:'chest-pain',title:'Chest pain pathway',subtitle:'hs-Troponin I · approved pathways',index:'03'}
+   {id:'chest-pain',title:'Chest pain pathway',subtitle:'hs-Troponin I · approved pathways',index:'03'},
+   {id:'cal-qc',title:'Calibration + QC',subtitle:'Every 28 days · run when required by IFU/SOP',index:'28D'}
   ];
-  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
-  h+=`<div class="pfux-maintenance-section" aria-label="PATHFAST scheduled maintenance"><button type="button" class="pfux-maintenance-link ${tab==='cal-qc'?'active':''}" data-gotab="${tab==='cal-qc'?'overview':'cal-qc'}" aria-expanded="${tab==='cal-qc'}" ${tab==='cal-qc'?'aria-current="page"':''} aria-label="${tab==='cal-qc'?'Collapse':'Open'} Calibration and QC"><span class="pfux-maintenance-icon" aria-hidden="true">${svg('settings')}</span><span class="pfux-maintenance-copy"><strong>Calibration + QC</strong><small>Scheduled every 28 days · Also perform when required by the current IFU or SOP</small></span><span class="pfux-maintenance-frequency">${tab==='cal-qc'?'CLOSE DETAILS':'28-DAY MAINTENANCE'}</span></button></div>`;
+  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''} ${x.id==='cal-qc'?'maintenance':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else h+=`<div class="tab-strip${['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':''}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}" aria-label="${safeHtml(x.fullTitle||x.title)}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;

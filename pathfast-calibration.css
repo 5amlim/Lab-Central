@@ -282,3 +282,30 @@
 .pf-storage-vial small{font-size:.7rem;color:#638295}
 .pf-storage-card p{margin:0;line-height:1.55;color:#496b7d}.pf-return-storage>.pf-workflow-note{margin:14px 0 0}
 @media(max-width:760px){.pf-storage-grid{grid-template-columns:1fr}.pf-storage-visual{gap:8px}.pf-storage-svg{width:115px}.pf-storage-card{padding:12px}}
+
+
+/* PATHFAST photo-matched Bio-Rad QC vials and high-visibility CAL/QC labels */
+.pf-calibration-guide .pf-qc-vials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch;margin:12px 0}
+.pf-calibration-guide .pf-qc-vial{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:visible;border:1px solid #d5e5ec;border-radius:14px;background:linear-gradient(180deg,#f6fafd,#fff);padding:17px 16px 18px;isolation:isolate}
+.pf-calibration-guide .pf-qc-vial:has(.pf-qc-image-control:hover),.pf-calibration-guide .pf-qc-vial:focus-within{z-index:25;border-color:#80b3c8}
+.pf-calibration-guide .pf-qc-slot{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:34px;padding:6px 13px;border-radius:9px;background:#e0f3ed;border:1px solid #a9deca;color:#126956;font-size:14px;font-weight:900;letter-spacing:.025em;line-height:1.2}
+.pf-calibration-guide .pf-qc-bottle-wrap{width:100%;height:191px;display:grid;place-items:center}
+.pf-calibration-guide .pf-qc-vial .pf-qc-bottle-art{max-width:182px;width:100%;height:188px;display:block}
+.pf-calibration-guide .pf-qc-level{display:block;font-size:16px;font-weight:900;color:#254d67;margin:4px 0 7px;line-height:1.25;text-align:center}
+.pf-calibration-guide .pf-qc-vial small{display:block;color:#637e91;font-size:11px;line-height:1.5;text-align:center}
+.pf-qc-image-control{position:relative;margin-top:auto;padding-top:13px}
+.pf-qc-photo-trigger{border:1.5px solid #9cc7d2;border-radius:9px;padding:8px 14px;background:#eff8fa;color:#17647d;font-weight:850;font-size:12px;cursor:pointer}
+.pf-qc-photo-trigger:hover,.pf-qc-photo-trigger:focus-visible{border-color:#268fa8;background:#dff3f6;outline:2px solid #abd9e2;outline-offset:2px}
+.pf-qc-photo-popover{visibility:hidden;opacity:0;position:absolute;z-index:30;left:50%;bottom:calc(100% + 9px);transform:translate(-50%,5px);width:min(250px,82vw);padding:11px;pointer-events:none;border:1px solid #cddfe7;border-radius:14px;background:white;box-shadow:0 16px 40px #153b5530;transition:opacity .15s,transform .15s,visibility .15s}
+.pf-qc-image-control:hover .pf-qc-photo-popover,.pf-qc-image-control:focus-within .pf-qc-photo-popover{visibility:visible;opacity:1;transform:translate(-50%,0)}
+.pf-qc-photo-popover img{display:block;width:100%;max-height:220px;object-fit:contain;border-radius:8px;background:#fff}
+.pf-qc-photo-popover span{display:block;margin:5px 0 0;text-align:center;font-size:11px;font-weight:850;color:#38596d}
+.pf-calibration-guide .pf-material-tag{font-size:12px;font-weight:900;color:#27677e}
+.pf-calibration-guide .pf-qc-lane-item{grid-template-columns:35px minmax(65px,85px) minmax(0,1fr);min-height:60px;gap:10px}
+.pf-calibration-guide .pf-qc-lane-item strong{font-size:15px;font-weight:900;white-space:nowrap}
+.pf-calibration-guide .pf-qc-lane-item:nth-child(5) strong{color:#976416}
+.pf-calibration-guide .pf-qc-lane-item:nth-child(6) strong{color:#176a53}
+.pf-calibration-guide .pf-qc-lane-no{width:35px;height:35px;font-size:15px}
+.pf-calibration-guide .pf-analyte-row .pf-state-pill{font-size:13px;font-weight:900;min-height:39px;padding:10px 14px}
+@media(max-width:700px){.pf-calibration-guide .pf-qc-vials{grid-template-columns:1fr}.pf-calibration-guide .pf-qc-vial{padding:14px}.pf-calibration-guide .pf-qc-slot{font-size:13px}.pf-calibration-guide .pf-qc-lane-item{grid-template-columns:32px 75px minmax(0,1fr)}}
+@media print{.pf-qc-image-control{display:none}.pf-qc-photo-popover{display:none!important}}

@@ -174,3 +174,13 @@
 .pfux-patient-toolbar+.pfux-stage-nav{margin-top:0}
 @media(max-width:680px){.pfux-stage-track{gap:7px}.pfux-stage-button{flex-basis:172px;min-height:65px;padding:10px}.pfux-stage-name{font-size:11.5px}}
 @media print{.pfux-stage-nav{display:none!important}}
+
+
+/* Equal-status navigation: CAL + QC is a fourth PATHFAST workflow button. */
+.pfux-primary-nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pfux-route[data-gotab="cal-qc"],.pfux-route.maintenance{border-top:3px solid #4794aa}
+.pfux-route.maintenance .pfux-route-index{background:#e2f0f5;color:#266b84;font-size:11px}
+.pfux-route.maintenance.active .pfux-route-index{background:#207d93;color:#fff}
+.pfux-route.maintenance .pfux-route-body strong{font-size:12.5px}
+@media(max-width:1050px){.pfux-primary-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.pfux-primary-nav{grid-template-columns:1fr}.pfux-route{min-height:65px}}

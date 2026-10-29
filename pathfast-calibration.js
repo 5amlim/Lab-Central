@@ -11,8 +11,8 @@ const lanes=[
  {name:"QC 2",tone:"#e3f5ec",ink:"#19755e",well:"#a8e1c5"}
 ];
 const groups=[
-{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Cardiac Markers Plus LT",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
-{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Cardiac Markers Plus LT",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","146","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","148","LEVEL 3"]]},
+{id:"troponin",label:"hs-Troponin I",analytes:["hs-Troponin I"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1261-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","181","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","183","LEVEL 3"]]},
+{id:"ntprobnp",label:"NT-proBNP",analytes:["NT-proBNP"],qc:"Bio-Rad Liquichek Cardiac Markers Plus",catalog:"PF1061-KUS",vials:[["QC 1 · LANE 5","CONTROL LEVEL 1","181","LEVEL 1"],["QC 2 · LANE 6","CONTROL LEVEL 3","183","LEVEL 3"]]},
 {id:"ddimer",label:"D-dimer",analytes:["D-dimer"],qc:"Bio-Rad Liquichek D-dimer",catalog:"PF1051-KUS",vials:[["QC 1 · LANE 5","LEVEL LOW","27100","LOW"],["QC 2 · LANE 6","LEVEL 1","27101","LEVEL 1"]]}
 ];
 function esc(x){return String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
@@ -108,20 +108,51 @@ function status(group){
    '<div class="pf-state-box"><span class="pf-state-pill ready">'+esc(a)+'</span><div><b>Gray · ready</b><small>Calibration and QC accepted</small></div></div></div></div>';
  }).join("")+'</div>';
 }
+
+/* Bottle artwork follows the cap, glass, Liquichek label and level on the photographed vials.
+   Photos are local to this repository; both hover and keyboard focus reveal them. */
+function qcVialArt(group,v,index){
+ const d=group.id==="ddimer", low=d&&index===0;
+ const cap=low?"#0ab4b4":index===1&&!d?"#26262b":"#f7f8f9";
+ const edge=low?"#06918f":index===1&&!d?"#202127":"#d4d8dc";
+ const stripe=d?"#5da8d1":index===1?"#b877ab":"#d65a5f";
+ const number=low?"L":index===0?"1":d?"1":"3";
+ const family=d?"D-dimer Control":"Cardiac Markers Plus";
+ return '<svg class="pf-qc-bottle-art" viewBox="0 0 180 188" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(group.qc)+' '+esc(v[1])+' vial, '+(low?"teal":index===1&&!d?"black":"white")+' cap">'+
+ '<ellipse cx="90" cy="176" rx="49" ry="7" fill="#cad7de" opacity=".7"/>'+
+ '<rect x="54" y="22" width="72" height="45" rx="19" fill="'+cap+'" stroke="'+edge+'" stroke-width="2"/>'+
+ Array.from({length:15},(_,n)=>'<path d="M'+(57+n*4.6)+' 34v25" stroke="'+(low?"#50cccc":index===1&&!d?"#56565b":"#dadfe3")+'" stroke-width=".8" opacity=".8"/>').join('')+
+ '<ellipse cx="90" cy="26" rx="24" ry="8.5" fill="#a1a8b7" stroke="#858d99" stroke-width="1.2"/>'+
+ '<path d="M61 64C61 72 52 80 52 90V151Q52 168 67 168H113Q128 168 128 151V90C128 80 119 72 119 64Z" fill="#79492e" stroke="#64432f" stroke-width="2"/>'+
+ '<path d="M59 83C57 116 57 144 60 156" stroke="#e9c096" stroke-width="6" opacity=".45" stroke-linecap="round"/>'+
+ '<path d="M119 86v67" stroke="#322d2b" stroke-width="6" opacity=".22"/>'+
+ '<rect x="54" y="98" width="72" height="53" rx="4" fill="#fcfcfc" stroke="#e8e9eb"/>'+
+ '<rect x="54" y="98" width="72" height="10" fill="'+stripe+'"/>'+
+ '<text x="90" y="106" font-size="6.6" font-weight="900" text-anchor="middle" fill="#fff">Liquichek™</text>'+
+ '<rect x="57" y="111" width="17" height="8" rx="2" fill="#5c997d"/><text x="65.5" y="116.7" font-size="5" font-weight="800" text-anchor="middle" fill="#fff">BIO-RAD</text>'+
+ '<text x="63" y="144" font-size="29" font-weight="900" fill="'+(d?"#267eb7":"#a14a79")+'">'+number+'</text>'+
+ '<text x="96" y="126" font-size="7" font-weight="800" text-anchor="middle" fill="#37617a">'+(d?"D-DIMER":"CARDIAC")+'</text>'+
+ '<text x="96" y="137" font-size="6.6" font-weight="750" text-anchor="middle" fill="#37617a">'+(d?"CONTROL":"MARKERS")+'</text>'+
+ '<text x="96" y="146" font-size="6.8" font-weight="850" text-anchor="middle" fill="#37617a">#'+esc(v[2])+'</text></svg>';
+}
 function qcGallery(group){
- const color=group.id==='ddimer'?'#785e9d':'#ac4756';
- const images=group.vials.map(function(v){
- const picture='<svg viewBox="0 0 160 161" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bio-Rad '+esc(v[1])+' catalog '+v[2]+'">'+
- '<ellipse cx="80" cy="145" rx="43" ry="6" fill="#d3dde4"/><rect x="53" y="10" width="54" height="34" rx="7" fill="#e0e7ec" stroke="#8aa1ad" stroke-width="2"/>'+
- '<rect x="56" y="40" width="48" height="97" rx="8" fill="#9d6d50" stroke="#825940" stroke-width="2"/><rect x="60" y="66" width="40" height="56" rx="3" fill="#fffaf7"/>'+
- '<rect x="60" y="66" width="40" height="11" rx="2" fill="'+color+'"/><text x="80" y="87" text-anchor="middle" font-weight="850" font-size="10" fill="#8a555a">Bio-Rad</text>'+
- '<text x="80" y="99" text-anchor="middle" font-weight="900" font-size="8" fill="#253a4d">'+esc(v[3])+'</text>'+
- '<text x="80" y="113" text-anchor="middle" font-weight="800" font-size="8" fill="#4f697b">#'+v[2]+'</text></svg>';
- return '<article class="pf-qc-vial"><span class="pf-qc-slot">'+esc(v[0])+'</span>'+picture+'<strong>'+esc(v[1])+'</strong><small>'+esc(group.qc)+' · Catalog #'+v[2]+'</small></article>';
- }).join('');
+ const photos=group.id==="ddimer"?["d-dimer-low.jpg","d-dimer-level-1.jpg"]:["cardiac-level-1.jpg","cardiac-level-3.jpg"];
+ const cards=group.vials.map(function(v,i){
+  const src="assets/pathfast-qc/"+photos[i];
+  const title=group.label+" "+v[1]+" #"+v[2];
+  return '<article class="pf-qc-vial '+(group.id==="ddimer"?"pf-qc-dimer":"pf-qc-cardiac")+'">'+
+    '<span class="pf-qc-slot">'+esc(v[0])+'</span>'+
+    '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,v,i)+'</div>'+
+    '<strong class="pf-qc-level">'+esc(v[3])+'</strong>'+
+    '<small>'+esc(group.qc)+' · Catalog #'+esc(v[2])+'</small>'+
+    '<div class="pf-qc-image-control">'+
+     '<button type="button" class="pf-qc-photo-trigger" aria-label="View actual vial photo: '+esc(title)+'">⌕ View vial photo</button>'+
+     '<div class="pf-qc-photo-popover" role="tooltip"><img src="'+src+'" alt="Actual Bio-Rad '+esc(title)+' control vial photo" loading="lazy" width="210" height="210"/><span>'+esc(v[1])+' · #'+esc(v[2])+'</span></div>'+
+    '</div></article>';
+ }).join("");
  return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad QC materials are stored in the freezer. Thaw and handle per the current lot-specific insert.</span></div>'+
- '<div class="pf-qc-vials">'+images+'</div>'+
- '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+'). QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Use the corresponding lot-specific QC ranges.</p></div>';
+  '<div class="pf-qc-vials">'+cards+'</div>'+
+  '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+'). QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Confirm manufacturer compatibility and use lot-specific QC ranges for the installed assay.</p></div>';
 }
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+status(group)+
