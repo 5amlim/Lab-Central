@@ -80,23 +80,39 @@ function kit(){
  text(500,336,"POUCH IN LOADING STATION",14,"#356c83");
  return svg(h,"BioFire test kit: two separate injection vials and a single pouch held in the dark loading station. Red vial is left, blue vial is right");
 }
-function pipette(){
+/* Panel-specific sample volume and sequence must match the assay IFU.
+   FilmArray GI: buffer first, then 0.2 mL stool in Cary Blair.
+   SpotFire R: specimen with fixed-volume pipette, then buffer. */
+function sampleBufferTube(x,y){
+ return '<g transform="translate('+x+' '+y+')">'+
+ '<path d="M20 24H63L60 111Q58 125 48 129H35Q26 125 24 111Z" fill="#f6fbfd" stroke="#91adb9" stroke-width="3"/>'+
+ '<path d="M27 79H57L55 114Q43 123 30 114Z" fill="#dfc39e" opacity=".87"/>'+
+ '<path d="M28 46H57V75H28Z" fill="#fff" stroke="#dae9ef"/>'+
+ text(42,58,"SAMPLE",9,"#446c80")+text(42,69,"BUFFER",9,"#446c80")+
+ '<path d="M20 25L17 15L29 7H54L66 16L62 26Z" fill="#e3eef2" stroke="#8aa8b9" stroke-width="3"/>'+
+ '<path d="M61 18L77 3L85 11L68 30Z" fill="#b1c9d3" stroke="#7f9eab" stroke-width="3"/>'+
+ '<path d="M76 4L85 11" stroke="#fff" stroke-width="3"/>'+
+ '<path d="M44 125L45 150" stroke="#8aabb8" stroke-width="6"/>'+
+ '<path d="M44 147L45 165" stroke="#dbc09a" stroke-width="3"/>'+
+ '</g>';
+}
+function pipette(id){
+ const spotfire=id==="spotfire";
  const first='<rect x="26" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
-  text(235,64,"1 · ADD SAMPLE BUFFER",18,"#286e85")+
-  vial(282,"red","Open red vial","open",102)+
-  '<g transform="translate(123 87)"><path d="M14 12Q8 6 14 1L53 1Q60 4 57 14L51 117Q44 130 23 119Z" fill="#eff8fa" stroke="#96b2c1" stroke-width="3"/>'+
-  '<path d="M22 77H49L45 117Q31 127 23 116Z" fill="#dec5a0" opacity=".85"/>'+
-  '<path d="M31 120L47 143" stroke="#9db3be" stroke-width="7"/><path d="M44 138L65 167" stroke="#d1aa8a" stroke-width="4"/>'+
-  '</g>'+
-  '<path d="M211 213L267 239" fill="none" stroke="#3b9a9a" stroke-width="4" stroke-dasharray="7 5"/>'+
-  text(230,348,"Buffer ampoule · slow squeeze, then second squeeze",12,"#607f91");
+ text(237,64,spotfire?"1 · ADD SPECIMEN":"1 · ADD SAMPLE BUFFER",18,"#286e85")+
+ vial(274,"red","Red injection vial","open",104)+
+ (spotfire?pipetteShape(139,86):sampleBufferTube(123,83))+
+ '<path d="M215 226L267 233" stroke="#3198a2" stroke-width="3" stroke-dasharray="7 4"/>'+
+ text(235,343,spotfire?"Fixed-volume transfer pipette (R panel)":"Pinch the textured snap tab · squeeze twice",12,"#5e7d8d");
  const second='<rect x="467" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
-  text(679,64,"2 · ADD SPECIMEN",18,"#286e85")+
-  vial(593,"red","Open red vial","open",102)+
-  pipetteShape(732,90)+
-  '<path d="M720 229L656 252" fill="none" stroke="#b95261" stroke-width="4" stroke-dasharray="7 5"/>'+
-  text(679,348,"Cary Blair specimen · second pipette mark (0.2 mL)",12,"#607f91");
- return svg(first+second,"FilmArray GI panel first dispenses sample buffer from ampoule into open red injection vial, then transfers 0.2 mL well-mixed Cary Blair stool using pipette; vial is uncapped for filling");
+ text(679,64,spotfire?"2 · ADD SAMPLE BUFFER":"2 · ADD SPECIMEN",18,"#286e85")+
+ vial(595,"red","Red injection vial","open",104)+
+ (spotfire?sampleBufferTube(757,83):pipetteShape(736,88))+
+ '<path d="M732 232L656 250" stroke="#ba5664" stroke-width="3" stroke-dasharray="7 4"/>'+
+ text(680,343,spotfire?"Open snap tab; squeeze entire buffer":"GI specimen in Cary Blair · 2nd mark (0.2 mL)",12,"#5e7d8d");
+ return svg(first+second,spotfire?
+ "SPOTFIRE R panel: transfer fixed volume of specimen into red vial first, then snap open sample buffer tube and squeeze full amount into same vial":
+ "FilmArray GI: hold sample buffer tube tip up and snap textured plastic tab, dispense buffer first into red vial and add 0.2 mL well-mixed Cary Blair specimen");
 }
 function invert(){
  const left=vial(146,"red","Capped vial","normal",75);
@@ -245,16 +261,16 @@ function figure(title,desc,picture){
 function stageVisual(id,title){
  if(id!=="torch"&&id!=="spotfire")return "";
  const t=String(title).toLowerCase(),torch=id==="torch";let figs=[];
- if(/load the controls into the red vial|prepare qc sample/i.test(t))figs=[figure("Add approved QC material to red vial","Follow the QC kit instructions for the appropriate material and buffer.",pipette()),figure("Mix the capped red QC vial","Gently invert the securely capped red vial 3 times before loading the pouch.",invert())];
+ if(/load the controls into the red vial|prepare qc sample/i.test(t))figs=[figure("Add approved QC material to red vial","Follow the QC kit instructions for the appropriate material and buffer.",pipette(id)),figure("Mix the capped red QC vial","Gently invert the securely capped red vial 3 times before loading the pouch.",invert())];
  else if(/gather|retrieve|materials/.test(t))figs=[figure("Test kit and both injection vials","Hydration is blue, sample is red. Follow the assay-specific reagent kit.",kit())];
  else if(/loading station|prepare pouch/.test(t))figs=[figure("Prepare pouch loading station","Set the red sample vial in the left well and blue hydration vial in the right well, as viewed from the illustrated operator position.",station("ready"))];
  else if(/hydrate/.test(t))figs=[figure("Hydrate through blue port","Remove the blue vial from its cover and puncture the designated blue hydration port. Confirm the pouch hydrates.",station("hydrate"))];
  else if(/invert.*red|mix red vial|mix the capped/i.test(t))figs=[figure("Important · mix the red vial","Cap the sample injection vial securely and gently invert it 3 times. Return it to the red well before loading the pouch.",invert())];
- else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Add sample buffer, then specimen to red vial","For GI: add buffer first, then well-mixed Cary Blair stool to the second pipette line (0.2 mL). Cap tightly. Mix next with 3 gentle inversions.",pipette())];
+ else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure(torch?"Prepare GI buffer and specimen":"Prepare specimen and buffer",torch?"GI: dispense buffer first, then 0.2 mL well-mixed Cary Blair specimen.":"SPOTFIRE R: transfer specimen with the supplied fixed-volume pipette first, then add all sample buffer. Confirm the specific panel IFU.",pipette(id))];
  else if(/inject sample|load sample mix/.test(t))figs=[figure("Load red sample mixture","Puncture the red sample port with the prepared sample injection vial. Verify sample is drawn into the pouch.",station("sample"))];
  else if(/available module/.test(t))figs=[
    figure("Instrument and available modules","Identify an available module on the actual analyzer before loading the prepared pouch.",analyzer(id)),
-   figure("Open available module","Select an available module from the analyzer interface.",ui(id,0))
+   figure("Confirm module available","Use this same analyzer; confirm the module is available on the actual screen before inserting the pouch.",analyzer(id))
  ];
  else if(/scan pouch barcode/.test(t))figs=[figure("Scan pouch barcode","Scan the barcoded pouch and match the panel/lot information displayed.",ui(id,1))];
  else if(/confirm panel|verify sample id/.test(t))figs=[figure("Verify panel and identifiers","Confirm the intended panel, pouch and specimen or QC identifiers before running.",ui(id,2))];
