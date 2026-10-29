@@ -18,7 +18,7 @@ function vial(x,color,material,mode,y=62){
  '<ellipse cx="40" cy="195" rx="38" ry="6" fill="#deebf1"/>'+
  '<rect x="16" y="34" width="48" height="154" rx="12" fill="#f5fbfd" stroke="#8eafbe" stroke-width="3"/>'+
  '<path d="M21 110H59V167Q52 182 40 182Q26 181 21 167Z" fill="'+fluid+'" opacity=".83"/>'+
- '<rect x="9" y="12" width="62" height="35" rx="11" fill="'+cap+'" stroke="#6b91a3" stroke-width="3"/>'+
+ (mode==="open"?'<ellipse cx="40" cy="37" rx="26" ry="8" fill="#e7f4f8" stroke="#82a8b6" stroke-width="3"/><ellipse cx="40" cy="37" rx="17" ry="4" fill="#446b7b"/>':'<rect x="9" y="12" width="62" height="35" rx="11" fill="'+cap+'" stroke="#6b91a3" stroke-width="3"/>')+
  '<path d="M15 20H65" stroke="#fff" stroke-width="3" opacity=".68"/>'+
  '<rect x="23" y="75" width="34" height="44" rx="4" fill="#fff" stroke="#d6e4e9"/>'+
  text(40,94,blue?"HYDR.":"SAMPLE",8.2,"#375d71")+text(40,108,"INJECTION",7.1,"#57798a")+
@@ -81,22 +81,22 @@ function kit(){
  return svg(h,"BioFire test kit: two separate injection vials and a single pouch held in the dark loading station. Red vial is left, blue vial is right");
 }
 function pipette(){
- let h='<rect x="22" y="34" width="412" height="323" rx="18" fill="#f7fbfd" stroke="#dce9f0" stroke-width="2"/>'+
- '<rect x="461" y="34" width="436" height="323" rx="18" fill="#f7fbfd" stroke="#dce9f0" stroke-width="2"/>'+
- text(221,66,"TRANSFER SPECIMEN",18,"#2e6e86")+
- text(679,66,"ADD SAMPLE BUFFER",18,"#2e6e86")+
- vial(174,"red","Red vial","normal",104)+
- pipetteShape(260,82)+
- '<path d="M279 231L240 252" stroke="#b84859" stroke-width="3" stroke-dasharray="6 4"/>'+
- vial(635,"red","Red vial","normal",104)+
- '<g transform="translate(548 94)"><rect x="0" y="0" width="55" height="132" rx="14" fill="#f0f9fb" stroke="#9eb8c4" stroke-width="3"/>'+
- '<path d="M6 80H49V120Q28 129 6 120Z" fill="#debfa5"/>'+
- '<path d="M27 -8V0M27 132V157" stroke="#91a5ad" stroke-width="5"/>'+
- '<path d="M27 158L27 178" stroke="#dcbba0" stroke-width="5"/></g>'+
- '<path d="M609 257L662 268" stroke="#b94e61" stroke-width="3" stroke-dasharray="6 4"/>'+
- text(221,339,"Assay-specific transport specimen",13,"#648297")+
- text(679,339,"Squeeze ampoule · avoid foam",13,"#648297");
- return svg(h,"Separate illustration of BioFire specimen transfer pipette and sample buffer ampoule dispensing into red injection vial");
+ const first='<rect x="26" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
+  text(235,64,"1 · ADD SAMPLE BUFFER",18,"#286e85")+
+  vial(282,"red","Open red vial","open",102)+
+  '<g transform="translate(123 87)"><path d="M14 12Q8 6 14 1L53 1Q60 4 57 14L51 117Q44 130 23 119Z" fill="#eff8fa" stroke="#96b2c1" stroke-width="3"/>'+
+  '<path d="M22 77H49L45 117Q31 127 23 116Z" fill="#dec5a0" opacity=".85"/>'+
+  '<path d="M31 120L47 143" stroke="#9db3be" stroke-width="7"/><path d="M44 138L65 167" stroke="#d1aa8a" stroke-width="4"/>'+
+  '</g>'+
+  '<path d="M211 213L267 239" fill="none" stroke="#3b9a9a" stroke-width="4" stroke-dasharray="7 5"/>'+
+  text(230,348,"Buffer ampoule · slow squeeze, then second squeeze",12,"#607f91");
+ const second='<rect x="467" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
+  text(679,64,"2 · ADD SPECIMEN",18,"#286e85")+
+  vial(593,"red","Open red vial","open",102)+
+  pipetteShape(732,90)+
+  '<path d="M720 229L656 252" fill="none" stroke="#b95261" stroke-width="4" stroke-dasharray="7 5"/>'+
+  text(679,348,"Cary Blair specimen · second pipette mark (0.2 mL)",12,"#607f91");
+ return svg(first+second,"FilmArray GI panel first dispenses sample buffer from ampoule into open red injection vial, then transfers 0.2 mL well-mixed Cary Blair stool using pipette; vial is uncapped for filling");
 }
 function invert(){
  const left=vial(146,"red","Capped vial","normal",75);
@@ -250,7 +250,7 @@ function stageVisual(id,title){
  else if(/loading station|prepare pouch/.test(t))figs=[figure("Prepare pouch loading station","Set the red sample vial in the left well and blue hydration vial in the right well, as viewed from the illustrated operator position.",station("ready"))];
  else if(/hydrate/.test(t))figs=[figure("Hydrate through blue port","Remove the blue vial from its cover and puncture the designated blue hydration port. Confirm the pouch hydrates.",station("hydrate"))];
  else if(/invert.*red|mix red vial|mix the capped/i.test(t))figs=[figure("Important · mix the red vial","Cap the sample injection vial securely and gently invert it 3 times. Return it to the red well before loading the pouch.",invert())];
- else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Add specimen and buffer to red vial","Add the assay-specific specimen and sample buffer, then close the vial tightly. The next step is 3 gentle inversions.",pipette())];
+ else if(/sample.*buffer|mix specimen|prepare specimen/.test(t))figs=[figure("Add sample buffer, then specimen to red vial","For GI: add buffer first, then well-mixed Cary Blair stool to the second pipette line (0.2 mL). Cap tightly. Mix next with 3 gentle inversions.",pipette())];
  else if(/inject sample|load sample mix/.test(t))figs=[figure("Load red sample mixture","Puncture the red sample port with the prepared sample injection vial. Verify sample is drawn into the pouch.",station("sample"))];
  else if(/available module/.test(t))figs=[
    figure("Instrument and available modules","Identify an available module on the actual analyzer before loading the prepared pouch.",analyzer(id)),
