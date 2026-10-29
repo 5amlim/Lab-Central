@@ -8,6 +8,56 @@ cue.hidden=true;
 cue.innerHTML="<button type=\"button\" aria-label=\"Scroll down for more guide content\">Scroll for more <span aria-hidden=\"true\">↓</span></button>";
 document.body.appendChild(cue);
 cue.querySelector('button').addEventListener('click',function(){window.scrollBy({top:Math.max(300,Math.round(window.innerHeight*.7)),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+/* Preserve scroll positions of interactive lists across guide rerenders.
+   Keys are scoped to the active guide; instrument tabs share their position
+   across tabs for the same analyzer. Nothing is stored across browser sessions. */
+const scrollSelectors=[
+ ".pfux-stage-track",".guide-stepper",".pf-rack-scroll",".pf-qc-lane-list",
+ ".pfux-jump-options",".qc-screen-gallery--scroll",
+ ".tab-strip.instrument-matched-tabs",".tab-strip.order-workflow-tabs"
+];
+const remembered=new Map();
+const selectorFor=node=>scrollSelectors.find(selector=>node.matches(selector));
+function scrollKey(node){
+ const selector=selectorFor(node);
+ if(!selector)return "";
+ const route=decodeURIComponent(location.hash||"#home").replace(/^#/,"");
+ const page=route.split("/")[0];
+ const scope=selector.includes("tab-strip")?page:route;
+ const index=Array.from(document.querySelectorAll(selector)).indexOf(node);
+ return scope+"::"+selector+"::"+Math.max(0,index);
+}
+function remember(node){
+ const key=scrollKey(node);
+ if(key)remembered.set(key,{left:node.scrollLeft,top:node.scrollTop});
+}
+function ensureCurrentVisible(node){
+ const current=node.querySelector('[aria-current="step"],[aria-selected="true"]');
+ if(!current||node.scrollWidth<=node.clientWidth+2)return;
+ const track=node.getBoundingClientRect(),item=current.getBoundingClientRect();
+ const left=item.left-track.left,right=item.right-track.right;
+ if(left<9)node.scrollLeft+=left-12;
+ else if(right>-9)node.scrollLeft+=right+12;
+}
+function restore(node){
+ const key=scrollKey(node),saved=remembered.get(key);
+ if(saved){
+  node.scrollLeft=Math.min(saved.left,Math.max(0,node.scrollWidth-node.clientWidth));
+  node.scrollTop=Math.min(saved.top,Math.max(0,node.scrollHeight-node.clientHeight));
+ }
+ ensureCurrentVisible(node);
+ remember(node);
+}
+document.addEventListener("click",function(e){
+ const clicked=e.target.closest(targets);
+ if(clicked)remember(clicked);
+},true);
+document.addEventListener("keydown",function(e){
+ if(e.key==="Enter"||e.key===" ") {
+  const clicked=e.target.closest(targets);
+  if(clicked)remember(clicked);
+ }
+},true);
 const initialized=new WeakSet();
 function updatePage(){
  const main=document.getElementById("mainContent");
@@ -52,8 +102,9 @@ function setup(node){
  function schedule(){
   if(queued)return;queued=true;requestAnimationFrame(update);
  }
- node.addEventListener("scroll",schedule,{passive:true});
+ node.addEventListener("scroll",function(){remember(node);schedule();},{passive:true});
  window.addEventListener("resize",schedule,{passive:true});
+ requestAnimationFrame(function(){if(node.isConnected){restore(node);schedule();}});
  if(typeof ResizeObserver!=="undefined"){
   const observer=new ResizeObserver(schedule);
   observer.observe(node);
