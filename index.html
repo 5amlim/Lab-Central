@@ -681,7 +681,7 @@ function renderGuidedProcedure(group,sec){
  const isQcWorkflow=Boolean(window.LAB_QC_GUIDE?.isQcGroup(sec,group));
  const procedureBlocks=isQcWorkflow?group.blocks.filter(b=>!(b.type==='list'&&b.level===1&&/^(Put printouts?\b|Record the QC in the QC binder\b)/i.test(b.text))):group.blocks;
  const steps=guideStepData(makeTree(procedureBlocks));
- if(isQcWorkflow)steps.push({root:{kind:'step',text:'Print and file the QC records',children:[]},leading:[],notes:[]});
+ if(isQcWorkflow&&!(sec.id==='triage'&&steps.some(item=>/\bprint\b|\bfile\b/i.test(item.root?.text||''))))steps.push({root:{kind:'step',text:'Print and file the QC records',children:[]},leading:[],notes:[]});
  const total=steps.length;
  const current=Math.max(0,Math.min(state.guideStep,total-1));
  state.guideStep=current;
