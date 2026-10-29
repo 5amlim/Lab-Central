@@ -63,9 +63,9 @@ function svgCal1(){
  '<text x="105" y="84" text-anchor="middle" fill="#1f698a" font-size="12" font-weight="900">CAL 1</text>'+
  '<text x="105" y="99" text-anchor="middle" fill="#688a9f" font-size="9">LIQUID</text></svg>';
 }
-function svgCal2(){
+function svgCal2(count=2){
  let body='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two glass CAL 2 vials containing lyophilized powder" xmlns="http://www.w3.org/2000/svg">'+defs();
- for(let i=0;i<2;i++){const x=38+i*92;body+='<g><ellipse cx="'+(x+30)+'" cy="134" rx="29" ry="5" fill="#dce4e8"/>'+
+ for(let i=0;i<count;i++){const x=(count===1?84:38+i*92);body+='<g><ellipse cx="'+(x+30)+'" cy="134" rx="29" ry="5" fill="#dce4e8"/>'+
  '<rect x="'+(x+6)+'" y="13" width="47" height="23" rx="5" fill="#d6e3ec" stroke="#8ba4b4" stroke-width="2"/>'+
  '<rect x="'+(x+10)+'" y="36" width="39" height="92" rx="8" fill="url(#pfxglass)" stroke="#8da4b1" stroke-width="2"/>'+
  '<rect x="'+(x+13)+'" y="58" width="33" height="41" rx="3" fill="#f5f7f9" stroke="#b8cad4"/>'+
@@ -73,9 +73,9 @@ function svgCal2(){
  '<path d="M'+(x+15)+' 113 Q'+(x+30)+' 104 '+(x+46)+' 113 L'+(x+46)+' 121 L'+(x+15)+' 121Z" fill="#e8dcf2" stroke="#b8aad1"/></g>'}
  return body+'</svg>';
 }
-function svgDiluent(){
+function svgDiluent(count=2){
  let out='<svg class="pf-material-svg" viewBox="0 0 210 146" role="img" aria-label="Two blue liquid buffer diluent vials for CAL 2 reconstitution" xmlns="http://www.w3.org/2000/svg">'+defs();
- for(let i=0;i<2;i++){const x=40+i*90;out+='<ellipse cx="'+(x+28)+'" cy="134" rx="27" ry="6" fill="#dce5eb"/>'+
+ for(let i=0;i<count;i++){const x=(count===1?82:40+i*90);out+='<ellipse cx="'+(x+28)+'" cy="134" rx="27" ry="6" fill="#dce5eb"/>'+
  '<rect x="'+(x+6)+'" y="18" width="44" height="26" rx="5" fill="#438cc8" stroke="#286fa7" stroke-width="2"/>'+
  '<rect x="'+(x+10)+'" y="44" width="36" height="82" rx="7" fill="url(#pfxglass)" stroke="#90b3c8" stroke-width="2"/>'+
  '<rect x="'+(x+12)+'" y="76" width="32" height="45" rx="4" fill="#86c7ef" opacity=".78"/>'+
@@ -96,7 +96,7 @@ function cal2MixIllustration(){
     '<rect x="24" y="45" width="31" height="24" rx="2" fill="#fff" opacity=".95"/>'+
     '<text x="40" y="60" font-size="9" font-weight="900" text-anchor="middle" fill="#536b95">'+label+'</text></g>';
  }
- const pair=["A","B"].map((key,i)=>'<g transform="translate('+(i*445)+',0)">'+
+ const pair=["ONE VIAL"].map((key,i)=>'<g transform="translate('+(i*445)+',0)">'+
   '<rect x="4" y="3" width="430" height="177" rx="12" fill="#f8fafc" stroke="#d0dfe8" stroke-width="2"/>'+
   '<rect x="4" y="3" width="430" height="30" rx="12" fill="#edf3fa"/>'+
   '<text x="18" y="23" font-size="14" font-weight="900" fill="#375774">CAL 2 · VIAL '+key+'</text>'+
@@ -106,9 +106,9 @@ function cal2MixIllustration(){
   '<text x="65" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#6c6692">Powder</text>'+
   '<text x="195" y="164" font-size="11" font-weight="800" text-anchor="middle" fill="#267da6">Blue diluent</text>'+
   '<text x="368" y="164" font-size="11" font-weight="850" text-anchor="middle" fill="#546d98">Reconstituted</text></g>').join('');
- return '<figure class="pf-cal2-mix-diagram"><header><strong>CAL 2 reconstitution</strong><span>Two separate preparations, A and B</span></header>'+
-  '<svg role="img" aria-label="CAL 2 powder vial A plus its own blue diluent makes CAL 2 A. Separately, powder vial B plus its own blue diluent makes CAL 2 B." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 890 190">'+pair+'</svg>'+
-  '<figcaption>Add the matching blue diluent to each CAL 2 powder vial separately. Use the current assay IFU for exact volumes, mixing and stability.</figcaption></figure>';
+ return '<figure class="pf-cal2-mix-diagram"><header><strong>CAL 2 reconstitution</strong><span>Prepare 1 vial only · reserve the unopened second vial</span></header>'+
+  '<svg role="img" aria-label="Reconstitute a single CAL 2 powder vial with one matching blue diluent for both duplicate CAL 2 calibration cartridges." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 445 190">'+pair+'</svg>'+
+  '<figcaption><strong>One prepared vial supplies BOTH CAL 2 cartridges (lanes 3 and 4).</strong> Reconstitute only one CAL 2 powder vial with one matching diluent. After use, cap, label and promptly freeze remaining prepared material when allowed by the selected assay IFU. Keep the second powder and diluent unopened.</figcaption></figure>';
 }
 function cartridgePack(group){
  const label=esc(group.label);
@@ -207,12 +207,12 @@ function qcGallery(group){
 }
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+cartridgePack(group)+status(group)+
- '<div class="pf-freezer" style="background:#edf7f2;border-color:#d6e8dd;color:#366a56"><span>◷</span><span>PATHFAST reagent kits and calibrators: <strong>refrigerated at 2–8°C</strong>. Bio-Rad QC vials: <strong>frozen at −20 to −70°C</strong>. Confirm current lot-specific instructions.</span></div>'+
+ '<div class="pf-freezer" style="background:#edf7f2;border-color:#d6e8dd;color:#366a56"><span>◷</span><span>Unopened reagent kits and CAL 1: <strong>2–8°C refrigerator</strong>. After use, promptly freeze permitted remaining <strong>reconstituted CAL 2</strong> (typically −20°C or colder). Follow assay-specific stability limits. Bio-Rad QC storage follows its own lot insert.</span></div>'+
  '<h3 class="pf-material-heading">Calibration materials <small>Included in the refrigerated reagent box</small></h3>'+
  '<div class="pf-material-grid">'+
  material('CAL 1','LIQUID · SPOUT BOTTLE','Ready-to-use liquid CAL 1. Load into lanes 1 and 2.',svgCal1(),'cal1')+
- material('CAL 2','2 GLASS VIALS','Both vials contain lyophilized powder. Reconstitute with matching diluent before loading lanes 3 and 4.',svgCal2(),'cal2')+
- material('Blue liquid diluent','2 BUFFER VIALS','Combine the supplied blue liquid diluent with each CAL 2 powder vial using the assay-specific mixing directions and volume.',svgDiluent(),'diluent')+
+ material('CAL 2','2 GLASS VIALS IN BOX','Reconstitute just one vial at a time, then use the same prepared vial for duplicate CAL 2 cartridges. Freeze the remaining prepared material per selected assay IFU.',svgCal2(1),'cal2')+
+ material('Blue liquid diluent','2 BUFFER VIALS IN BOX','Use one matching diluent with the single CAL 2 powder vial. Keep the second vial and diluent unopened.',svgDiluent(1),'diluent')+
  '</div>'+
  cal2MixIllustration()+
  '<h3 class="pf-material-heading">Bio-Rad quality controls <small>QC 1 and QC 2</small></h3>'+qcGallery(group)+'</div>';
@@ -220,7 +220,7 @@ function panelContent(group){
 const workflow=[
  ['Check the analyte status','Verify assay readiness on the actual analyzer and do not test patients if calibration or QC is due or rejected.'],
  ['Confirm reagent lot and enter CAL/QC','If new lot, scan the kit MC ENTRY card as instructed. For existing lot, confirm reagent lot and select CAL/QC for the applicable assay.'],
- ['Prepare calibrators and controls','Use CAL 1 from the reagent box, reconstitute the two CAL 2 powder vials with their matching blue diluents, and select the correct Bio-Rad cardiac or D-dimer QC materials.'],
+ ['Prepare calibrators and controls','Use CAL 1 from the reagent box, reconstitute only one CAL 2 powder vial with one matching blue diluent for both CAL 2 duplicate cartridges, and select the correct Bio-Rad cardiac or D-dimer QC materials.'],
  ['Load the six-lane rack','CAL 1, CAL 1, CAL 2, CAL 2, QC 1, QC 2. Use sample preparation and volumes from the approved assay insert.'],
  ['Run the six cartridges','Slide cartridges into the rack until they click, insert rack and tips, close the cover and follow the analyzer START prompts.'],
  ['Review results and ready state','Accept calibration and both control levels using the current lot-specific criteria. Verify actual analyzer readiness before patient testing.']
@@ -242,13 +242,13 @@ function storageSymbol(type){
 }
 function returnMaterials(group){
  const header='<div class="pf-storage-intro"><strong>03 · Return materials to their specified storage</strong><p>After the accepted CAL/QC results are printed and filed, return the materials for '+esc(group.label)+' to the correct temperature-controlled locations. Use current open-vial and reconstituted-material stability limits.</p></div>';
- const cal='<article class="pf-storage-card"><header><span class="pf-storage-dot cal"></span><strong>CAL 1 and CAL 2</strong><small>Refrigerated reagent-kit materials</small></header>'+
- '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+svgCal2()+'</div>'+storageSymbol("cal")+'</div>'+
- '<p>Return eligible remaining calibrator materials to <b>2–8°C refrigeration</b>, not to the QC freezer. Dispose of used or unstable reconstituted portions according to the assay insert.</p></article>';
+ const cal='<article class="pf-storage-card"><header><span class="pf-storage-dot cal"></span><strong>CAL 1 and reconstituted CAL 2</strong><small>CAL 1: refrigerator · prepared CAL 2: freezer</small></header>'+
+ '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgCal1()+svgCal2(1)+'</div>'+storageSymbol("qc")+'</div>'+
+ '<p>Return CAL 1 and unopened reagents to <b>2–8°C refrigeration</b>. Promptly freeze the single reconstituted CAL 2 vial at <b>−20°C or colder</b> when the selected assay IFU permits. Label with preparation date/time, lot and expiration, and honor assay-specific stability and freeze-thaw requirements.</p></article>';
  const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC 1 and QC 2 · manufacturer-specified freezer</small></header>'+
  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC '+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
  '<p>Return the two Bio-Rad QC levels to the designated <b>−20°C to −70°C freezer</b> only if permitted by the current lot-specific insert and open-vial stability instructions. Secure caps and close the freezer.</p></article>';
- return '<section class="pf-return-storage" aria-label="Return calibration and QC material to appropriate cold storage">'+header+'<div class="pf-storage-grid">'+cal+qc+'</div><p class="pf-workflow-note"><strong>All three assays:</strong> Apply this same storage check after hs-Troponin I, NT-proBNP and D-dimer CAL/QC. Never assume the calibrators share the QC freezer requirement.</p></section>';
+ return '<section class="pf-return-storage" aria-label="Return calibration and QC material to appropriate cold storage">'+header+'<div class="pf-storage-grid">'+cal+qc+'</div><p class="pf-workflow-note"><strong>All three assays:</strong> Apply this same storage check after hs-Troponin I, NT-proBNP and D-dimer CAL/QC. Follow the selected assay’s CAL 2 frozen-stability limits and the separate Bio-Rad QC storage instructions.</p></section>';
 }
 
 let selectedPanel=null;
@@ -306,13 +306,13 @@ function render(){
  }else{
   const total=14;
   const laneNames=['CAL 1','CAL 1','CAL 2','CAL 2','QC 1','QC 2'];
-  const laneDesc=['CAL 1 liquid','CAL 1 liquid','Reconstituted CAL 2 (vial A)','Reconstituted CAL 2 (vial B)',group.vials[0][1]+' · Bio-Rad #'+group.vials[0][2],group.vials[1][1]+' · Bio-Rad #'+group.vials[1][2]];
+  const laneDesc=['CAL 1 liquid','CAL 1 liquid','CAL 2 from the one reconstituted vial','CAL 2 from the SAME reconstituted vial',group.vials[0][1]+' · Bio-Rad #'+group.vials[0][2],group.vials[1][1]+' · Bio-Rad #'+group.vials[1][2]];
   const laneList='<div class="pf-qc-lane-list" role="list" aria-label="Six sample-to-lane assignments">'+laneNames.map((name,i)=>
      '<div role="listitem" class="pf-qc-lane-item"><b class="pf-qc-lane-no">'+(i+1)+'</b><strong>'+esc(name)+'</strong><span>'+esc(laneDesc[i])+'</span></div>'
     ).join('')+'</div>';
   const laneMap='<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK · TOP TO BOTTOM</span><h3>Which material goes in each cartridge?</h3></div></div>'+
    '<div class="pf-qc-vertical-layout"><div class="pf-rack-box">'+rack()+'</div>'+laneList+'</div>'+
-   '<p class="pf-workflow-note"><strong>Important:</strong> This is a training layout for two CAL 1, two CAL 2 and two QC levels. Confirm each actual lane assignment on PATHFAST before dispensing. Calibration replicate and QC-lockout settings can change the analyzer-assigned order.</p>';
+   '<p class="pf-workflow-note"><strong>Important:</strong> Both CAL 2 cartridges use the same single reconstituted CAL 2 vial. This is a training layout for two CAL 1, two CAL 2 and two QC levels. Confirm each actual lane assignment on PATHFAST before dispensing. Calibration replicate and QC-lockout settings can change the analyzer-assigned order.</p>';
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · REVIEW 6 LANES</span></div>'+
    '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Start with materials and cartridges, then use the screen</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-browse aria-expanded="'+stepMenuOpen+'">Jump to step <span></span></button><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
    (stepMenuOpen?'<div class="pfux-cal-step-menu" role="group" aria-label="Choose calibration step">'+[
@@ -325,19 +325,19 @@ function render(){
       '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching six-cartridge assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
       panelContent(group)+
       '<p class="pf-workflow-note">Bio-Rad control material: use the current lot-specific insert for frozen storage, thawing, mixing, open-vial stability and acceptable ranges. For BNP/NT-proBNP controls, check the latest revised insert. Do not assume all control products use the same preparation.</p>');
-  h+=step(2,'Prepare CAL 1, both CAL 2 vials and the two QC controls','Separate the reagent-kit materials from the Bio-Rad controls',
+  h+=step(2,'Prepare CAL 1, one CAL 2 vial and the two QC controls','Use one CAL 2 powder vial and one matching diluent; reserve the unopened set',
       '<div class="pf-cal-prep-row">'+
       material('CAL 1 · ready-to-use','REFRIGERATED KIT','Use CAL 1 as supplied; assign to lanes 1 and 2.',svgCal1(),'cal1')+
-      material('Two CAL 2 powder vials','REFRIGERATED KIT','Reconstitute each vial separately with its matching blue liquid diluent using the approved assay insert.',svgCal2(),'cal2')+
-      material('Two blue diluents','REFRIGERATED KIT','Use one matching diluent vial per CAL 2 powder vial; confirm required volume and stability.',svgDiluent(),'diluent')+
+      material('One CAL 2 powder vial','REFRIGERATED KIT · USE 1 OF 2','Reconstitute one powder vial only. Use this same preparation for the two CAL 2 cartridge wells in lanes 3 and 4.',svgCal2(1),'cal2')+
+      material('One blue diluent','REFRIGERATED KIT · USE 1 OF 2','Use one matching diluent bottle with one CAL 2 powder vial. Keep the other diluent and powder vial unopened.',svgDiluent(1),'diluent')+
       '</div>'+cal2MixIllustration()+'<h3 class="pf-material-heading">Bio-Rad QC vials · '+esc(group.qc)+'</h3>'+qcGallery(group)+
-      '<div class="pf-qc-prep-emphasis"><strong>Prepare before loading cartridges.</strong><span>Thaw and gently mix each control as its lot-specific insert specifies; check for unsuitable material. Keep CAL 1, CAL 2 A, CAL 2 B, QC 1 and QC 2 separated and identified.</span></div>');
+      '<div class="pf-qc-prep-emphasis"><strong>Prepare before loading cartridges.</strong><span>Thaw and gently mix each control as its lot-specific insert specifies; check for unsuitable material. Keep CAL 1, the one reconstituted CAL 2 vial, QC 1 and QC 2 separately identified. Do not reconstitute the backup CAL 2 vial.</span></div>');
   h+=step(3,'Seat the cartridges in the upright six-lane rack','Place metal rack in clear loading base and insert six assay cartridges',
       laneMap+
       '<p class="pf-workflow-note">Confirm every cartridge matches the selected assay and is fully seated in its assigned vertical channel. At this stage, the clear front sample wells are still empty. Do not put liquids in the round detection wells.</p>');
   h+=step(4,'Dispense each calibrator and Bio-Rad control into its assigned sample well','Check the material by lane before using the transfer pipette',
       laneMap+
-      '<p class="pf-workflow-note">Gently mix each material according to the corresponding insert. Fill only each cartridge’s clear front sample well to its assay-specific mark without bubbles or cross-contamination. Use a fresh tip for each transfer; never pipette into the separate round detection well.</p>');
+      '<p class="pf-workflow-note">Dispense from the same reconstituted CAL 2 vial into BOTH CAL 2 cartridges, lanes 3 and 4. Gently mix each material according to the corresponding insert. Fill only each cartridge’s clear front sample well to its assay-specific mark without bubbles or cross-contamination. Use a fresh tip for each transfer; never pipette into the separate round detection well.</p>');
   h+=step(5,'Return the loaded rack, add tips and check the waste-tip box','Confirm all six active lanes and center waste-tip box before closing cover',
       (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('assembled','cal'):'')+
       '<div class="pf-qc-prep-emphasis"><strong>Before closing:</strong><span>Confirm the rack is fully seated, a new disposable tip is installed in each active position, and the central waste-tip box is correctly seated and not full. Compare lane IDs to the instrument screen later.</span></div>');
