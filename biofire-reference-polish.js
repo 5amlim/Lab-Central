@@ -13,6 +13,7 @@ const previous=B.stageVisual;
 const legacy="https://manuals.plus/wp-content/uploads/2022/01/BIOFIRE-423745-Pouch-Loading-Station-with-FilmArray-System-fig-";
 const legacyGuide="https://manuals.plus/biofire/423745-pouch-loading-station-with-filmarray-system-manual";
 const spotGuide="https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/BFR0001-7220-BIOFIRE-SPOTFIRE-R-ST-Panel-Instructions-for-Use-EN.pdf";
+const sourcePouchGuide="https://biofiredefense.com/content/BIOFIRE-SPOTFIRE-Support/SPOTFIRE-Product-Labeling/BioFire-BioThreat-Instructions-SPOTFIRE-DFA2-PRT-0283.pdf";
 const miniGuide="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html"; // Select the U.S. R/ST Mini guide from the current library; older OUS PDF is not a U.S. IFU.
 const docLibrary="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html";
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -29,7 +30,18 @@ function manufacturer(id,figure,page){
  }
  if(id==="spotfire"&&page){
   const href=spotGuide+"#page="+page;
-  return '<details class="bf-polished-more bf-ref-pdf"><summary>View official SPOTFIRE diagram · page '+page+'</summary>'+
+  // The user's BioThreat document depicts the same physical loading-station
+  // hardware but is environmental research only, NOT the clinical R/ST IFU.
+  const hardwarePages={13:10,14:10,15:11,16:12};
+  const originalPage=hardwarePages[page];
+  if(originalPage){
+   const original=sourcePouchGuide+"#page="+originalPage;
+   return '<details class="bf-polished-more bf-ref-pdf bf-ref-hardware"><summary>See original BioFire cartridge diagram · PDF page '+originalPage+'</summary>'+
+    '<div class="bf-ref-frame"><iframe loading="lazy" title="BioFire BioThreat document cartridge handling diagram; non-diagnostic hardware reference" src="'+esc(original)+'"></iframe></div>'+
+    '<p class="bf-ref-caption"><strong>Hardware illustration only.</strong> This source is the BioThreat environmental-surveillance manual and is not approved for patient testing. '+
+    link(original,"View original diagram")+' · '+link(href,"Clinical R/ST IFU")+' · '+link(miniGuide,"Current Mini documents")+'.</p></details>';
+  }
+  return '<details class="bf-polished-more bf-ref-pdf"><summary>View official SPOTFIRE R/ST illustration · page '+page+'</summary>'+
    '<div class="bf-ref-frame"><iframe loading="lazy" title="Official SPOTFIRE R/ST guide page '+page+'" src="'+esc(href)+'"></iframe></div>'+
    '<p class="bf-ref-caption">'+link(href,"Open illustrated R/ST page")+' · '+link(miniGuide,"Current Mini documents")+'. Follow the exact assay and kit in use.</p>'+
    '</details>';
@@ -46,7 +58,7 @@ function card(id,opts){
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
  '<span class="bf-polished-chip '+(hue==="red"?"":"system")+'">'+esc(opts.tag||"Action")+'</span></div>'+
  '<div class="bf-polished-inner"><div class="bf-polished-media"><div class="bf-polished-svg">'+visual+'</div>'+
- '<span class="bf-polished-credit">Instructional illustration · use the current assay insert for exact handling</span></div>'+
+ '<span class="bf-polished-credit">Cartridge and loading-station drawing based on manufacturer hardware figures · consult the approved clinical IFU</span></div>'+
  '<div class="bf-polished-instruction"><h4>'+esc(opts.title)+'</h4>'+instruction(lines)+details+reference+
  '<p class="bf-ref-small">Reference: '+source+'</p></div></div></section>';
 }
@@ -63,7 +75,7 @@ function render(id,title){
  const c=opts=>card(id,opts);
  if(/gather.*(kit|specimen)|kit and specimen/.test(t))return c({
   title:"Check pouch, vials and specimen",tag:"Preparation",
-  visual:B.kit?.(),figure:1,page:13,
+  visual:B.pouchCartridge?.("pouch")||B.kit?.(),figure:1,page:13,
   lines:[gi?"Confirm the ordered GI pouch and its expiration date.":"Confirm the ordered R/ST Regular or Mini pouch and its expiration date.",
   "Check the red sample vial, blue hydration vial, buffer and transfer pipette.",
   gi?"Verify the stool specimen is in the approved Cary Blair transport medium.":"Confirm specimen type and transport medium for the selected Respiratory or Sore Throat menu."],
@@ -71,13 +83,13 @@ function render(id,title){
  });
  if(/seat pouch|insert pouch|set up vials|loading station/.test(t))return c({
   title:"Seat pouch and place both vials",tag:"Loading station",
-  visual:B.station?.("ready"),figure:2,page:14,
+  visual:B.pouchCartridge?.("seat")||B.station?.("ready"),figure:2,page:14,
   lines:["Place the pouch flat in the black loading station.","Seat the RED sample vial in the left red well.","Seat the BLUE hydration vial in the right blue well."],
   note:"Keep the pouch barcode accessible and the red/blue injection paths separate."
  });
  if(/hydrat/.test(t))return c({
   title:"Hydrate through the blue port",tag:"BLUE · hydration",hue:"blue",
-  visual:B.station?.("hydrate"),figure:2,page:14,
+  visual:B.pouchCartridge?.("hydrate")||B.station?.("hydrate"),figure:2,page:14,
   lines:["Unscrew the blue vial, leaving its colored cover in the station.","Insert its blunt needle into the BLUE hydration port and press to puncture the seal.","Verify the pouch draws in hydration solution before proceeding."],
   noteTitle:"Check",note:"Do not proceed with a pouch that fails hydration. Follow the panel IFU."
  });
@@ -113,7 +125,7 @@ function render(id,title){
  });
  if(/load prepared sample|load mixture|red sample port|inject sample/.test(t))return c({
   title:"Load sample through the red port",tag:"RED · sample port",hue:"red",
-  visual:B.station?.("sample"),figure:8,page:16,
+  visual:B.pouchCartridge?.("sample")||B.station?.("sample"),figure:8,page:16,
   lines:["Unscrew the red vial and pause 5 seconds before lifting it; leave the red cover in the station.","Insert the blunt needle into the red pouch port and press to puncture the seal.","Verify that the mixture has been drawn into the pouch."],
   note:"Keep the blunt needle free of contamination. Discard a pouch if sample transfer fails, per the assay IFU."
  });
