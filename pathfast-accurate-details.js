@@ -68,9 +68,7 @@
  art.specimenGuide=function(sec){
   let html=specimen(sec);
   if(sec&&['pathfast','piccolo'].includes(sec.id)){
-    html=html.replace(/(<svg[^>]*viewBox=")0 0 550 285"/,'$180 30 160 248"');
-    /* Explicit attribute replacement avoids changing non-tube art or paragraph text. */
-    html=html.replace('viewBox="$180 30 160 248"','viewBox="80 30 160 248"');
+    html=html.replace('viewBox="0 0 550 285"','viewBox="80 30 160 248"');
   }
   return html;
  };
