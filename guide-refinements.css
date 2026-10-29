@@ -198,3 +198,23 @@
  .pxr-printout-key>div{grid-template-columns:1fr;gap:3px}
 }
 @media print{.pxr-flag-card,.pxr-indices-grid>div,.pxr-printout{break-inside:avoid}}
+
+/* PATHFAST uses the same clear active/inactive control language as every other instrument. */
+.pfux-patient-toolbar .pfux-view-toggle{
+ gap:4px;padding:4px;border:1px solid #bfd7df;border-radius:11px;background:#e8f2f5
+}
+.pfux-patient-toolbar .pfux-view-toggle button{
+ min-height:40px;padding:9px 13px;font-size:12px;font-weight:850;
+ border:1px solid transparent;border-radius:8px;background:#fff;color:#2a6681;
+ box-shadow:0 1px 3px rgba(26,68,90,.09)
+}
+.pfux-patient-toolbar .pfux-view-toggle button.active{
+ background:#1b6c88;border-color:#155974;color:#fff;
+ box-shadow:0 3px 8px rgba(23,77,102,.22)
+}
+.pfux-patient-toolbar .pfux-view-toggle button:not(.active):hover{
+ border-color:#239e92;background:#e6f7f1;color:#146c65
+}
+.pfux-patient-toolbar .pfux-view-toggle button:focus-visible{
+ outline:3px solid #4ab4aa;outline-offset:3px
+}
