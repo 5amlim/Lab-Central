@@ -220,11 +220,11 @@ function renderStep(title,group){
   return show(title,qcElectronicSvg(),"Daily electronic QC does not require any blood, liquid controls or disposable patient cassette.");
  }
  // Separate details for actual pipette aspiration, chamber inspection, and dispensing.
- if(/squeeze.*(large|upper)|open.*first cartridge and squeeze|open.*cartridge and squeeze/.test(t))return pip("bulb");
- if(/place.*tip into|position.*tip over/.test(t))return pip(/place.*tip into/.test(t)?"dip":"position");
- if(/slowly release|aspirate|draw.*pipette/.test(t))return pip("draw");
- if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
  if(/dispense|add.*into.*well/.test(t))return pip("dispense");
+ if(/check the filled barrel|verify.*overflow/.test(t))return pip("inspect");
+ if(/slowly release|aspirate|draw.*pipette/.test(t))return pip("draw");
+ if(/place.*tip into|position.*tip over/.test(t))return pip(/place.*tip into/.test(t)?"dip":"position");
+ if(/squeeze.*(large|upper)|open.*first cartridge and squeeze|open.*cartridge and squeeze/.test(t))return pip("bulb");
  if(/remove and discard.*pipette|wait for full absorption|let.*absorb/.test(t))return pip("absorb");
  if(/new cartridge and use a new pipette|new cassette and pipette|fresh assay cartridges and transfer pipettes|two fresh assay cartridges/.test(t))
   return show(title,kitChooser(),"Each QC level needs a NEW single-use cartridge and its own kit-supplied transfer pipette.");
