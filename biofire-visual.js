@@ -131,7 +131,7 @@ function invert(){
  text(461,334,"Close red vial tightly first · do not shake",15,"#577f90"),
  "BioFire red sample injection vial capped and gently inverted three times to mix specimen with buffer");
 }
-function analyzer(id){
+function analyzer(id,state){
  const torch=id==="torch";
  let body='<ellipse cx="490" cy="350" rx="300" ry="20" fill="#e1e9ed"/>';
  if(torch){
@@ -178,7 +178,7 @@ function analyzer(id){
  '<path d="M480 116 L646 109 L662 321 L480 328Z" fill="#dfe9ef" stroke="#9aafbb" stroke-width="4"/>'+
  '<rect x="502" y="137" width="141" height="156" rx="6" fill="#1f3d50"/>'+
  '<rect x="511" y="153" width="122" height="124" rx="3" fill="#e5f1f4"/>'+
- text(572,184,"SPOTFIRE",13,"#3c7184")+text(572,205,"AVAILABLE",11,"#49899c")+
+ text(572,184,"SPOTFIRE",13,"#3c7184")+text(572,205,state==="selected"?"OPEN MODULE":"AVAILABLE",11,state==="selected"?"#158775":"#49899c")+
  '<rect x="536" y="229" width="71" height="28" rx="5" fill="#b7dce6"/>';
  }
  const illustration=svg(body,"BioFire "+(torch?"FilmArray TORCH modular instrument with front loading modules and sloped touchscreen":"SPOTFIRE system with modular drawer units and upright display"));
