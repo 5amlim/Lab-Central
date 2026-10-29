@@ -608,8 +608,9 @@ function clinitekVisualGuide(sec){
   const cards=steps.map((st,i)=>{
    let visual;
    if(i===0)visual=mediaSvg("urine");
-   else if(i===steps.length-1)visual=illustratedSvg(body("urine",specs.clinitek.accent),"CLINITEK Status+ device","0 0 740 310");
-   else visual=clinitekKit(type,i>=2);
+   else if(i===1)visual=clinitekKit(type,false);
+   else if(i===steps.length-1)visual=clinitekDeviceSvg("reading");
+   else visual=clinitekDeviceSvg(type==="hcg"?"cassette":"strip");
    return '<article class="device-gallery-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(st[0])+'</strong></div>'+
    '<div class="device-gallery-image">'+visual+'</div><p>'+visualEsc(st[1])+'</p></article>';
   }).join('');
