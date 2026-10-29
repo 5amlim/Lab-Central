@@ -118,6 +118,66 @@ function pipetteShape(x,y){
  '<path d="M2 42H19M2 63H19M2 82H19" stroke="#799dab" stroke-width="2.5"/>'+
  '</g>';
 }
+/* Pouch/cartridge close-ups based on the physical hardware shown in the
+ * linked BioFire BioThreat SPOTFIRE IFU (pages 8-10). Original SVG, not a
+ * reproduction of the manufacturer's copyrighted page art. The BioThreat
+ * environmental sample protocol is NOT a clinical R/ST procedure. */
+function pouchCartridge(mode="pouch"){
+ const m=String(mode||"pouch").toLowerCase(),assembled=m!=="pouch";
+ const blue=m==="hydrate",red=m==="sample",loaded=m==="loaded";
+ const font=(x,y,s,size=14,color="#416476",weight=800,anchor="middle")=>
+  '<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-weight="'+weight+'" font-family="Arial,sans-serif">'+esc(s)+'</text>';
+ const labels='<rect x="127" y="140" width="130" height="94" rx="5" fill="#fdfdfd" stroke="#b1bbc0" stroke-width="2"/>'+
+  '<rect x="140" y="153" width="98" height="9" rx="2" fill="#e6edf0"/>'+
+  Array.from({length:19},(_,i)=>'<rect x="'+(142+i*4.4)+'" y="169" width="'+(i%4===0?2.5:1.3)+'" height="36" fill="#455962"/>').join("")+
+  font(190,222,"POUCH LABEL",10,"#5c7482",750);
+ const wells=Array.from({length:17},(_,i)=>{
+  const x=290+i*24;
+  return '<rect x="'+x+'" y="168" width="19" height="57" rx="3" fill="#f8faf8" stroke="#9baeb3" stroke-width="2"/>'+
+   '<path d="M'+(x+3)+' 190h13v22h-13Z" fill="#d8e0dd"/>'+
+   '<path d="M'+(x+4)+' 181v8" stroke="#b7c7c9" stroke-width="2"/>';
+ }).join("");
+ const pouch='<g><path d="M99 119L777 117L801 252H85Z" fill="#e8f0ec" fill-opacity=".76" stroke="#a5b5b6" stroke-width="3"/>'+
+ '<path d="M101 127H786L785 243H95Z" fill="#f3f6f3" stroke="#c9d2d1" stroke-width="2"/>'+
+ labels+
+ '<rect x="273" y="139" width="437" height="101" rx="7" fill="#e4e8e5" stroke="#9dabb0" stroke-width="3"/>'+
+ '<rect x="281" y="152" width="420" height="83" rx="6" fill="#bfc8c8" fill-opacity=".55" stroke="#aab8b9"/>'+
+ wells+
+ '<rect x="719" y="148" width="45" height="80" rx="7" fill="#29333c" stroke="#9dadb5" stroke-width="3"/>'+
+ Array.from({length:4},(_,i)=>'<circle cx="'+(727+i%2*24)+'" cy="'+(165+Math.floor(i/2)*29)+'" r="7" fill="#c0ced1"/>').join("")+
+ '<rect x="282" y="231" width="87" height="9" rx="3" fill="#d34c56"/>'+
+ '<rect x="623" y="231" width="88" height="9" rx="3" fill="#3289bc"/>'+
+ font(325,256,"SAMPLE PORT",12,"#a63746",850)+
+ font(665,256,"HYDRATION PORT",12,"#267ab0",850)+'</g>';
+ const station='<path d="M91 93L125 63H764L817 99L839 271L784 312H101L65 270Z" fill="#25292d" stroke="#535e64" stroke-width="5"/>'+
+ '<path d="M116 94H770L802 259H97Z" fill="#3e4448" stroke="#747d82" stroke-width="3"/>'+
+ '<path d="M86 258H814L785 316H108Z" fill="#1d252a" stroke="#6d777d" stroke-width="3"/>'+
+ '<ellipse cx="242" cy="125" rx="35" ry="17" fill="#ba3b4a" stroke="#de737a" stroke-width="4"/>'+
+ '<ellipse cx="681" cy="125" rx="35" ry="17" fill="#236e9e" stroke="#4794c7" stroke-width="4"/>'+
+ '<path d="M142 307H759" stroke="#74858a" stroke-width="4"/>';
+ const markers=assembled?'<path d="M239 85V113m-10 -10l10 11 10-11" stroke="#d0525e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'+
+  '<path d="M682 85V113m-10 -10l10 11 10-11" stroke="#3d9bc8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>':'';
+ const needle=(x,tint)=>'<g transform="translate('+x+' 0)">'+
+ '<rect x="-20" y="23" width="40" height="91" rx="13" fill="#f5fafb" stroke="#98aeb7" stroke-width="3"/>'+
+ '<path d="M-16 76H16V98H-16Z" fill="'+tint+'" opacity=".3"/>'+
+ '<rect x="-22" y="10" width="44" height="23" rx="7" fill="#f9fbfa" stroke="#aabcc0" stroke-width="2"/>'+
+ '<path d="M0 113v26" stroke="#7e9ba8" stroke-width="5"/>'+
+ '</g>';
+ const vialArt=assembled?(blue?needle(681,"#3b93bd"):red?needle(239,"#c6545f"):
+  needle(239,"#c6545f")+needle(681,"#3b93bd")):"";
+ const action=blue?'<path d="M728 60q48 35 0 95l-18 -7m18 7l-2 -22" stroke="#2b92bd" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':
+ red?'<path d="M293 60q48 35 0 95l-18 -7m18 7l-2 -22" stroke="#c54c60" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':'';
+ const step=assembled?'<g transform="translate(0 48) scale(1 .8)">'+pouch+'</g>':pouch;
+ return svg('<ellipse cx="450" cy="341" rx="375" ry="12" fill="#e4ecef"/>'+
+  (assembled?station:'')+step+markers+vialArt+action+
+  (blue||red?font(465,375,blue?"BLUE HYDRATION PORT":"RED SAMPLE PORT",17,blue?"#267eaa":"#ac4557",850):
+  font(465,375,loaded?"PREPARED POUCH":"SEALED POUCH · RIGID REAGENT CASSETTE",15,"#486b79",850)),
+  "Original schematic of BioFire pouch cartridge, barcode label, reagent wells and red sample/blue hydration ports"+
+   (assembled?"; cartridge inserted into black loading station":"")+
+   (blue?"; hydration vial entering blue port":red?"; sample vial entering red port":"")+
+   ". Physical orientation reference only; use the approved assay-specific IFU.");
+}
+
 function kit(){
  const scene=stationBase()+
  vial(208,"red","Red sample vial","normal",29)+
@@ -364,5 +424,5 @@ function stageVisual(id,title){
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
-window.LAB_BIOFIRE_ART={stageVisual,station,kit,analyzer,ui,pipette,invert};
+window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,ui,pipette,invert};
 })();
