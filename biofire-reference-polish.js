@@ -17,6 +17,11 @@ const sourcePouchGuide="https://biofiredefense.com/content/BIOFIRE-SPOTFIRE-Supp
 const miniGuide="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html"; // Select the U.S. R/ST Mini guide from the current library; older OUS PDF is not a U.S. IFU.
 const docLibrary="https://www.biomerieux.com/us/en/service-and-support/support/biofire-system-documents.html";
 const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+// Actual manufacturer figures cropped from the supplied PDF and published as
+// local static assets by the source-extraction workflow. Clicking zooms to the
+// unchanged original illustration. BioThreat is hardware-only, not clinical IFU.
+const photo=(file,alt)=>'<a class="bf-source-image" href="assets/biofire/'+esc(file)+'" target="_blank" rel="noopener" title="Open full-size manufacturer illustration">'+
+ '<img src="assets/biofire/'+esc(file)+'" alt="'+esc(alt)+'" loading="lazy" decoding="async"></a>';
 const link=(url,title)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(title)+'</a>';
 const instruction=lines=>'<div class="bf-polished-points">'+lines.map(t=>'<div class="bf-polished-point"><i class="bf-polished-point-dot" aria-hidden="true"></i><span>'+esc(t)+'</span></div>').join("")+'</div>';
 function manufacturer(id,figure,page){
@@ -36,10 +41,10 @@ function manufacturer(id,figure,page){
   const originalPage=hardwarePages[page];
   if(originalPage){
    const original=sourcePouchGuide+"#page="+originalPage;
-   return '<details class="bf-polished-more bf-ref-pdf bf-ref-hardware"><summary>See original BioFire cartridge diagram · PDF page '+originalPage+'</summary>'+
-    '<div class="bf-ref-frame"><iframe loading="lazy" title="BioFire BioThreat document cartridge handling diagram; non-diagnostic hardware reference" src="'+esc(original)+'"></iframe></div>'+
-    '<p class="bf-ref-caption"><strong>Hardware illustration only.</strong> This source is the BioThreat environmental-surveillance manual and is not approved for patient testing. '+
-    link(original,"View original diagram")+' · '+link(href,"Clinical R/ST IFU")+' · '+link(miniGuide,"Current Mini documents")+'.</p></details>';
+   return '<p class="bf-source-hardware-note"><strong>Manufacturer hardware image:</strong> '+
+    link(original,"Original BioFire figure · PDF page "+originalPage)+
+    '. BioThreat images show physical handling only, not the diagnostic R/ST procedure. '+
+    link(href,"Clinical R/ST instructions")+'.</p>';
   }
   return '<details class="bf-polished-more bf-ref-pdf"><summary>View official SPOTFIRE R/ST illustration · page '+page+'</summary>'+
    '<div class="bf-ref-frame"><iframe loading="lazy" title="Official SPOTFIRE R/ST guide page '+page+'" src="'+esc(href)+'"></iframe></div>'+
@@ -58,7 +63,7 @@ function card(id,opts){
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
  '<span class="bf-polished-chip '+(hue==="red"?"":"system")+'">'+esc(opts.tag||"Action")+'</span></div>'+
  '<div class="bf-polished-inner"><div class="bf-polished-media"><div class="bf-polished-svg">'+visual+'</div>'+
- '<span class="bf-polished-credit">Cartridge and loading-station drawing based on manufacturer hardware figures · consult the approved clinical IFU</span></div>'+
+ '<span class="bf-polished-credit">Illustration/reference only · current clinical assay instructions govern</span></div>'+
  '<div class="bf-polished-instruction"><h4>'+esc(opts.title)+'</h4>'+instruction(lines)+details+reference+
  '<p class="bf-ref-small">Reference: '+source+'</p></div></div></section>';
 }
@@ -75,7 +80,7 @@ function render(id,title){
  const c=opts=>card(id,opts);
  if(/gather.*(kit|specimen)|kit and specimen/.test(t))return c({
   title:"Check pouch, vials and specimen",tag:"Preparation",
-  visual:B.pouchCartridge?.("pouch")||B.kit?.(),figure:1,page:13,
+  visual:gi?B.kit?.():photo("spotfire-seat-pouch.png","Actual BioFire pouch and loading station with red sample and blue hydration positions"),figure:1,page:13,
   lines:[gi?"Confirm the ordered GI pouch and its expiration date.":"Confirm the ordered R/ST Regular or Mini pouch and its expiration date.",
   "Check the red sample vial, blue hydration vial, buffer and transfer pipette.",
   gi?"Verify the stool specimen is in the approved Cary Blair transport medium.":"Confirm specimen type and transport medium for the selected Respiratory or Sore Throat menu."],
@@ -83,13 +88,13 @@ function render(id,title){
  });
  if(/seat pouch|insert pouch|set up vials|loading station/.test(t))return c({
   title:"Seat pouch and place both vials",tag:"Loading station",
-  visual:B.pouchCartridge?.("seat")||B.station?.("ready"),figure:2,page:14,
+  visual:gi?B.station?.("ready"):photo("spotfire-seat-pouch.png","Manufacturer figure: seat the pouch in the loading station and align red and blue positions"),figure:2,page:14,
   lines:["Place the pouch flat in the black loading station.","Seat the RED sample vial in the left red well.","Seat the BLUE hydration vial in the right blue well."],
   note:"Keep the pouch barcode accessible and the red/blue injection paths separate."
  });
  if(/hydrat/.test(t))return c({
   title:"Hydrate through the blue port",tag:"BLUE · hydration",hue:"blue",
-  visual:B.pouchCartridge?.("hydrate")||B.station?.("hydrate"),figure:2,page:14,
+  visual:gi?B.station?.("hydrate"):photo("spotfire-hydrate-pouch.png","Manufacturer figure: blue hydration vial pressed into pouch hydration port"),figure:2,page:14,
   lines:["Unscrew the blue vial, leaving its colored cover in the station.","Insert its blunt needle into the BLUE hydration port and press to puncture the seal.","Verify the pouch draws in hydration solution before proceeding."],
   noteTitle:"Check",note:"Do not proceed with a pouch that fails hydration. Follow the panel IFU."
  });
@@ -113,19 +118,19 @@ function render(id,title){
  });
  if(/add spotfire buffer|spotfire buffer/.test(t))return c({
   title:"Add the full SPOTFIRE buffer",tag:"RED · sample prep",hue:"red",
-  visual:prepOnly("spotfire","second"),page:15,
+  visual:photo("spotfire-buffer-ampoule.png","Manufacturer illustration of opening the buffer ampoule and dispensing into red injection vial"),page:15,
   lines:["TWIST the tab off the SPOTFIRE sample-buffer ampoule tip.","Squeeze the entire supplied buffer volume into the red sample vial.","Close the vial securely. Avoid touching the open tip or creating foam."],
   note:"Do not substitute the TORCH GI textured side-tab technique unless the actual supplied kit directs it."
  });
  if(/invert|gently mix|cap red/.test(t))return c({
   title:"Cap and gently invert 3 times",tag:"Mix gently",hue:"red",
-  visual:B.invert?.(),figure:7,page:15,
+  visual:gi?B.invert?.():photo("spotfire-mix-vial.png","Manufacturer illustration: gently invert the closed red sample vial three times"),figure:7,page:15,
   lines:["Tightly close the red sample injection vial.","Gently invert it three times. Do not shake.","Return the closed vial to the red station well."],
   note:"The vial shown is the sample injection vial, not the specimen collection tube."
  });
  if(/load prepared sample|load mixture|red sample port|inject sample/.test(t))return c({
   title:"Load sample through the red port",tag:"RED · sample port",hue:"red",
-  visual:B.pouchCartridge?.("sample")||B.station?.("sample"),figure:8,page:16,
+  visual:gi?B.station?.("sample"):photo("spotfire-red-port-wait.png","Manufacturer figure: red vial at sample port and five-second wait"),figure:8,page:16,
   lines:["Unscrew the red vial and pause 5 seconds before lifting it; leave the red cover in the station.","Insert the blunt needle into the red pouch port and press to puncture the seal.","Verify that the mixture has been drawn into the pouch."],
   note:"Keep the blunt needle free of contamination. Discard a pouch if sample transfer fails, per the assay IFU."
  });
