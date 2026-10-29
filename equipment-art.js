@@ -578,66 +578,49 @@ function pathfastResultsSvg(mode="patient"){
 /* Rack and transparent loading base based on the submitted reference photo:
    an acrylic six-channel station with long parallel metal cartridge rails,
    round rear holders, numbered lanes and transparent end wells. */
+
+/* Straight-on rack orientation, replacing the skewed perspective drawing.
+   Six genuinely parallel cartridge channels, front sample wells, black foil
+   reagent strips, metal outer rack and clear loading base. */
 function pathfastRealRackSvg(mode="patient",sampleLoaded=false){
- const isCal=mode==="cal";
- const occupied=isCal?6:mode==="setup"?0:2;
- const numberSvg=Array.from({length:6},(_,i)=>{
-  const x=289+i*93;
-  return '<g>'+
-   '<ellipse cx="'+(x+25)+'" cy="142" rx="25" ry="15" fill="#62717c" stroke="#e9f5f7" stroke-width="5" opacity=".95"/>'+
-   '<ellipse cx="'+(x+25)+'" cy="140" rx="17" ry="9" fill="#233443" opacity=".85"/>'+
-   '<ellipse cx="'+(x+25)+'" cy="106" rx="28" ry="15" fill="#eff9fc" fill-opacity=".34" stroke="#9bb3c1" stroke-width="4"/>'+
-   '<text x="'+(x+25)+'" y="188" text-anchor="middle" font-family="Arial" font-size="20" font-weight="900" fill="#66727d">'+(i+1)+'</text>'+
+ const isCal=mode==="cal",occupied=mode==="setup"?0:isCal?6:2;
+ const labels=isCal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:["1","2","3","4","5","6"];
+ const channels=Array.from({length:6},(_,i)=>{
+  const y=68+i*49,full=i<occupied;
+  const rail='<rect x="110" y="'+(y-3)+'" width="762" height="46" rx="7" fill="#dbe5ea" stroke="#829ca9" stroke-width="2.5"/>'+
+   '<rect x="120" y="'+(y+3)+'" width="739" height="34" rx="4" fill="#f8fcfd" stroke="#b3c8d0"/>'+
+   '<path d="M118 '+(y+5)+'H861 M118 '+(y+38)+'H861" stroke="#8ea9b7" stroke-width="3"/>';
+  const cart=full?
+   '<rect x="160" y="'+(y+5)+'" width="671" height="31" rx="3" fill="#151e29" stroke="#586a76" stroke-width="2"/>'+
+   '<rect x="181" y="'+(y+8)+'" width="588" height="24" rx="2" fill="#2a3139"/>'+
+   '<rect x="193" y="'+(y+11)+'" width="540" height="18" rx="2" fill="#12191f"/>'+
+   Array.from({length:13},(_,j)=>'<rect x="'+(346+j*25)+'" y="'+(y+13)+'" width="15" height="14" rx="2" fill="#89939e" opacity="'+(j%3===0?".95":".58")+'"/>').join('')+
+   '<rect x="195" y="'+(y+7)+'" width="35" height="27" rx="1" fill="#dc4e48"/>'+
+   '<text x="213" y="'+(y+25)+'" font-size="9" font-weight="800" fill="#fff" text-anchor="middle">LOT</text>'+
+   '<circle cx="768" cy="'+(y+20)+'" r="10" fill="#0b1219" stroke="#6d8190" stroke-width="2"/>'+
+   '<rect x="134" y="'+(y+4)+'" width="36" height="34" rx="5" fill="#effaff" fill-opacity=".86" stroke="#95b5c5" stroke-width="2"/>'+
+   '<path d="M139 '+(y+19)+'H166V'+(y+32)+'H139Z" fill="'+(sampleLoaded?(isCal?"#7397b7":"#af3c4c"):"#e4f0f7")+'" opacity="'+(sampleLoaded?".9":".45")+'"/>'+
+   '<rect x="138" y="'+(y+8)+'" width="27" height="8" rx="2" fill="#f8ffff" opacity=".65"/>'
+  :'';
+  return '<g>'+rail+cart+
+   '<rect x="80" y="'+(y+7)+'" width="27" height="27" rx="7" fill="'+(full?"#d9ecee":"#edf3f6")+'" stroke="#bdced8"/>'+
+   '<text x="94" y="'+(y+25)+'" text-anchor="middle" font-family="Arial" font-size="13" font-weight="900" fill="#4b7184">'+(i+1)+'</text>'+
+   (isCal?'<text x="892" y="'+(y+25)+'" text-anchor="middle" font-family="Arial" font-size="12" font-weight="850" fill="#477487">'+labels[i]+'</text>':'')+
    '</g>';
  }).join("");
- const slots=Array.from({length:6},(_,i)=>{
-  const bx=282+i*96,fx=109+i*124,loaded=i<occupied;
-  const metal='<path d="M'+bx+' 193 L'+(bx+68)+' 197 L'+(fx+84)+' 350 L'+fx+' 350Z" fill="#b8c0c5" stroke="#778e9a" stroke-width="3"/>'+
-   '<path d="M'+(bx+5)+' 198 L'+(bx+61)+' 201 L'+(fx+74)+' 346 L'+(fx+8)+' 346Z" fill="#ecf0f2" stroke="#a5b4be" stroke-width="2"/>'+
-   '<path d="M'+(fx+8)+' 347 L'+(fx+24)+' 347 L'+(bx+22)+' 206 L'+(bx+11)+' 205Z" fill="#fff" opacity=".92"/>';
-  const cartridge=loaded?
-   '<path d="M'+(bx+22)+' 204 L'+(bx+54)+' 205 L'+(fx+56)+' 331 L'+(fx+12)+' 331Z" fill="#1a2028" stroke="#556775" stroke-width="2"/>'+
-   '<path d="M'+(bx+25)+' 207 L'+(bx+50)+' 208 L'+(fx+46)+' 307 L'+(fx+20)+' 307Z" fill="#252c34"/>'+
-   '<path d="M'+(fx+14)+' 312 L'+(fx+56)+' 312 L'+(fx+60)+' 327 L'+(fx+12)+' 327Z" fill="#dd564b"/>'+
-   '<path d="M'+(fx+16)+' 312 L'+(fx+53)+' 312" stroke="#ffd6c9" stroke-width="3"/>'+
-   '<path d="M'+(fx+9)+' 330 L'+(fx+58)+' 330 L'+(fx+67)+' 354 L'+(fx+5)+' 354Z" fill="#d8eef4" stroke="#8eacba" stroke-width="3"/>'+
-   (sampleLoaded?'<path d="M'+(fx+14)+' 336 L'+(fx+55)+' 336 L'+(fx+59)+' 348 L'+(fx+11)+' 348Z" fill="'+(isCal?"#739abf":"#b64152")+'" opacity=".75"/>':'')
-   :'';
-  return '<g>'+metal+cartridge+
-   '<path d="M'+(fx-1)+' 350 L'+(fx+81)+' 350" stroke="#fff" stroke-width="3" opacity=".85"/>'+
-   '<text x="'+(fx+39)+'" y="383" text-anchor="middle" font-family="Arial" font-size="16" font-weight="900" fill="#748e9b">'+(i+1)+'</text>'+
-   '</g>';
- }).join("");
- const base='<defs>'+
-  '<linearGradient id="pf-real-metal" x1="0" x2="1" y1="0" y2="0"><stop stop-color="#f1f4f6"/><stop offset=".38" stop-color="#9daeb8"/><stop offset=".72" stop-color="#edf1f3"/><stop offset="1" stop-color="#899aa5"/></linearGradient>'+
-  '</defs>'+
-  '<ellipse cx="493" cy="396" rx="440" ry="17" fill="#dce6ec" opacity=".6"/>'+
-  '<path d="M243 157 L855 172 L921 357 L90 357Z" fill="#f2fafc" fill-opacity=".24" stroke="#b7cfd8" stroke-width="4"/>'+
-  '<path d="M88 350 H923 L940 389 H58Z" fill="#c9e5ed" fill-opacity=".33" stroke="#a7c4d0" stroke-width="3"/>'+
-  '<path d="M75 352 L917 352" stroke="#e9f9fe" stroke-width="10" opacity=".78"/>'+
-  slots+
-  '<path d="M247 96 L841 110 L878 133 L255 116Z" fill="#f0f7f9" fill-opacity=".62" stroke="#a1bac7" stroke-width="3"/>'+
-  '<path d="M257 112 L880 127 L879 190 L259 177Z" fill="#d6eaf0" fill-opacity=".20" stroke="#a9c5d1" stroke-width="4"/>'+
-  numberSvg+
-  '<path d="M255 190 L255 118 M875 194 L875 127" stroke="#f4fcff" stroke-width="8" opacity=".6"/>'+
-  '<path d="M88 352 L244 156 L264 156 L125 351Z" fill="#b9dbe5" fill-opacity=".22" stroke="#a5c4d0" stroke-width="2"/>'+
-  '<path d="M86 363 L919 363" stroke="#f8ffff" stroke-width="5" opacity=".85"/>';
- const tube=mode==="setup"?
-  '<g><ellipse cx="310" cy="160" rx="21" ry="11" fill="#c3dce4" opacity=".7"/>'+
-  '<rect x="294" y="23" width="33" height="137" rx="11" fill="#eff8f9" fill-opacity=".77" stroke="#8caab9" stroke-width="2.6"/>'+
-  '<path d="M299 102 H323 V145 Q310 154 299 145Z" fill="#ad4652" opacity=".57"/>'+
-  '<rect x="291" y="9" width="40" height="41" rx="12" fill="#198456" stroke="#106e48" stroke-width="3"/>'+
-  Array.from({length:7},(_,i)=>'<path d="M'+(297+i*5)+' 12v32" stroke="#37aa77" stroke-width="1.5"/>').join("")+
-  '<ellipse cx="311" cy="12" rx="13" ry="7" fill="#1b684d"/><ellipse cx="311" cy="12" rx="6.5" ry="3.3" fill="#314a45"/>'+
-  '<rect x="296" y="70" width="29" height="36" rx="3" fill="#fff"/>'+
-  '<path d="M303 74v27 M310 74v27 M319 74v27" stroke="#c1d4da" stroke-width="2"/>'+
-  '</g>':'';
- const note=mode==="setup"?"CLEAR LOADING BASE • 6 METAL LANES":isCal?"6 CARTRIDGES IN CORRECT ASSIGNED LANES":"EXAMPLE • CARTRIDGES IN LANES 1 AND 2";
- return illustratedSvg(base+tube+
-  '<rect x="292" y="412" width="430" height="31" rx="9" fill="#eaf5f7" stroke="#cfdee6"/>'+
-  '<text x="505" y="433" font-size="17" font-family="Arial" font-weight="900" fill="#356f87" text-anchor="middle">'+note+'</text>',
-  "PATHFAST acrylic loading base with six long metal cartridge rails, numbered lanes, transparent rear sample tube holders"+(occupied?", "+occupied+" inserted long reagent cartridges":"")+"; matching supplied photograph",
-  "0 0 1000 450");
+ const caption=mode==="setup"?"EMPTY METAL RACK · 6 PARALLEL LANES":
+   isCal?"SIX ASSIGNED CAL / QC CARTRIDGES":"EXAMPLE · CARTRIDGES IN LANES 1 AND 2";
+ const base='<ellipse cx="497" cy="390" rx="425" ry="12" fill="#dbe7ed" opacity=".64"/>'+
+ '<rect x="61" y="45" width="845" height="335" rx="18" fill="#e9f9fe" fill-opacity=".40" stroke="#a9c9d7" stroke-width="4"/>'+
+ '<rect x="71" y="55" width="825" height="314" rx="10" fill="#e6f5fa" fill-opacity=".16" stroke="#c1d9e1" stroke-width="2"/>'+
+ '<path d="M76 57H895 M76 368H895" stroke="#fff" stroke-width="6" opacity=".85"/>'+
+ '<rect x="100" y="63" width="12" height="292" rx="4" fill="#b7cbd4" stroke="#9bb1ba"/>'+
+ '<rect x="862" y="63" width="13" height="292" rx="4" fill="#b7cbd4" stroke="#9bb1ba"/>';
+ return illustratedSvg(base+channels+
+ '<rect x="241" y="405" width="507" height="35" rx="9" fill="#eaf4f7" stroke="#cadee8"/>'+
+ '<text x="494" y="428" font-family="Arial" text-anchor="middle" font-size="17" font-weight="900" fill="#316f85">'+caption+'</text>',
+ "Straight top view of PATHFAST six-parallel-lane metal reagent cartridge rack supported in clear loading base, "+occupied+" cartridges present"+(sampleLoaded?", red specimen visible in front transparent sample wells":", front sample wells empty"),
+ "0 0 980 450");
 }
 function pathfastRackBaseSvg(){
  return pathfastRealRackSvg("setup",false);
