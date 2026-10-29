@@ -164,3 +164,47 @@
 .pcr-2h-arrow{text-align:center;color:#6695a5}
 @media(max-width:740px){.pcr-2h-route{grid-template-columns:1fr;gap:6px}.pcr-2h-arrow{transform:rotate(90deg)}.pcr-2h-reference{padding:12px}}
 @media print{.pcr-2h-reference{break-inside:avoid}}
+
+/* RN workflow uses the same functional guided-stage navigation as other instrument guides. */
+.pcr-rn-guide{min-width:0;margin:10px 0 20px;scroll-margin-top:116px}
+.pcr-rn-guide .guide-toolbar{margin-bottom:9px}
+.pcr-rn-guide .guide-stepper{margin-bottom:0}
+.pcr-rn-guide .guide-step-pill{flex:1 0 172px;min-width:172px;max-width:none}
+.pcr-rn-guide .guide-mode-switch button{font-weight:850}
+.pcr-rn-step-content{border:1px solid #dae7ed;background:#f8fbfc;border-radius:13px;padding:12px 16px;margin-top:14px;min-height:110px}
+.pcr-rn-step{margin:0}
+.pcr-rn-step[hidden]{display:none!important}
+.pcr-rn-step>div{box-shadow:none}
+.pcr-rn-step h3{font-size:15px;margin:2px 0 8px}
+.pcr-rn-step p{font-size:12.5px;line-height:1.65;color:#547487}
+.pcr-rn-step-content .pcr-rn-step+.pcr-rn-step{margin-top:10px}
+.pcr-rn-guide .guide-bottom{padding:14px 1px 0}
+.pcr-rn-guide .guide-transport button{cursor:pointer}
+.pcr-rn-guide .guide-button.primary{background:#128b80;color:#fff;border-color:#128b80}
+.pcr-rn-guide .guide-button.primary:hover{background:#0b736b;color:#fff}
+@media(max-width:680px){.pcr-rn-guide .guide-step-pill{flex:0 0 185px}.pcr-rn-step-content{padding:10px}.pcr-rn-step h3{font-size:13px}.pcr-rn-step p{font-size:12px}}
+
+/* Single compact serial-timing panel replaces separate nested warning and window cards. */
+.pcr-timing-panel{border:1px solid #cddfe4;background:#fff;border-radius:15px;overflow:hidden;margin:0 0 18px}
+.pcr-guide .pcr-timing-panel .pcr-timing-start{display:grid;grid-template-columns:58px minmax(0,1fr) minmax(185px,245px);gap:14px;max-width:none;margin:0;padding:16px 19px;background:#f0f9f6;border:0;border-radius:0;border-bottom:1px solid #d8e9e6}
+.pcr-timing-compact{margin:0}
+.pcr-timing-summary{padding:12px 18px;border-bottom:1px solid #e2ebef}
+.pcr-timing-summary strong{font-size:13px;color:#245b70}
+.pcr-timing-summary p{font-size:12px;line-height:1.6;color:#617e8c;margin:4px 0 0}
+.pcr-timing-rows{display:grid}
+.pcr-timing-row{display:grid;grid-template-columns:135px 155px minmax(0,1fr);column-gap:17px;row-gap:6px;padding:15px 19px;align-items:center}
+.pcr-timing-row+.pcr-timing-row{border-top:1px solid #e2ebf0}
+.pcr-timing-row.secondary{background:#fafcfe}
+.pcr-timing-path{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.pcr-timing-path>strong{font-size:13px;color:#335b71}
+.pcr-timing-value{min-width:0;display:grid;gap:4px}
+.pcr-timing-value>span{font-size:10px;letter-spacing:.08em;color:#638292;font-weight:900}
+.pcr-timing-value>strong{color:#18786d;font-size:18px;line-height:1.3;overflow-wrap:anywhere}
+.pcr-timing-row.secondary .pcr-timing-value>strong{color:#326f98}
+.pcr-timing-value>small{font-size:11px;line-height:1.4;color:#688495}
+.pcr-timing-extra{grid-column:2 / -1;border-left:3px solid #d7a051;padding-left:10px;font-size:11.5px;line-height:1.55;color:#8a663a;margin:0}
+.pcr-timing-footnote{padding:12px 19px;background:#fff7ee;border-top:1px solid #ebdec8;color:#8a5c38;font-size:12px;line-height:1.6}
+.pcr-timing-footnote strong{color:#a15d34}
+@media(max-width:780px){.pcr-guide .pcr-timing-panel .pcr-timing-start{grid-template-columns:52px minmax(0,1fr)}.pcr-guide .pcr-timing-panel .pcr-time-input-label{grid-column:1/-1}.pcr-timing-row{grid-template-columns:118px minmax(0,1fr);gap:12px}.pcr-timing-row .pcr-timing-value:last-of-type{grid-column:1 / -1}.pcr-timing-extra{grid-column:1/-1}}
+@media(max-width:480px){.pcr-timing-row{padding:12px;grid-template-columns:1fr 1fr}.pcr-timing-value>strong{font-size:15px}.pcr-timing-summary,.pcr-timing-footnote{padding:11px 13px}.pcr-guide .pcr-timing-panel .pcr-timing-start{padding:12px}}
+@media print{.pcr-rn-step[hidden]{display:flex!important}.pcr-rn-guide .guide-toolbar,.pcr-rn-guide .guide-stepper,.pcr-rn-guide .guide-bottom{display:none!important}.pcr-timing-row{break-inside:avoid}}
