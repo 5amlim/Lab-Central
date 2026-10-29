@@ -22,7 +22,7 @@ function menu(title,choices,active){
 function coagsense(title,group){
  const t=title.toLowerCase(),qc=/qc/.test(String(group).toLowerCase()),id="coagsense";
  if(/turn on|power button/.test(t))return figure("Power on Coag-Sense",device(id),"Press and hold the instrument power button.");
- if(/press test/.test(t))return figure("Select Test",menu("COAG-SENSE",["Test","Results","Settings"],"Test"),"Use the actual display to open patient test mode.");
+ if(/press test/.test(t))return figure("Select Test",A.coagSenseDeviceSvg?.("test")||device(id),"Tap the large blue Test tile on the actual Coag-Sense home screen. Control, Results and Settings are below it.");
  if(/strip lot/.test(t))return figure("Confirm test-strip lot",menu("STRIP LOT",["Lot confirmed","Enter new lot"],"Lot confirmed"),"Match the lot in the instrument with the strip box.");
  if(/test strip|grab a test/.test(t))return figure("Prepare one test strip",material(id,false),"Open one in-date strip and seat it using the manufacturer's orientation.");
  if(/collect the sample/.test(t))return figure("Fingerstick and capillary transfer",A.mediaSvg?.("finger")||material(id,false),"Use the approved lancet and capillary transfer tube. Do not substitute a lavender or green blood tube.");
@@ -31,7 +31,7 @@ function coagsense(title,group){
   return figure(qc?"Apply control to the strip":"Transfer fingerstick sample to the strip",kit,
    qc?"Use approved QC material in the strip sample well.":"Position the transfer tip at the illuminated sample well, then dispense as instructed. Verify the meter prompt.");
  }
- if(/testing please wait|sample is detected|test.*complete/.test(t))return figure("Testing in progress",menu("COAG-SENSE",["Testing Please Wait","Do not disturb"],"Testing Please Wait"),"Wait for the analyzer result and confirmation signal.");
+ if(/testing please wait|sample is detected|test.*complete/.test(t))return figure("Testing in progress",A.coagSenseDeviceSvg?.("running")||device(id),"Illustrated testing screen. Follow the actual meter prompts and wait for the analyzer result and confirmation signal.");
  if(/perform the qc|perform qc/.test(t))return figure("Run authorized QC",material(id,false,true),"Use control material, not fingerstick blood, in the approved QC procedure.");
  if(/record the qc|log results|qc binder/.test(t))return figure("Document result",menu("COAG-SENSE",["Result ready","Verify and record"],"Verify and record"),"Verify patient or QC identification and record in the designated system or QC binder.");
  if(/on the box/.test(t))return figure("Label the reagent box",menu("QC RECORD",["Received date","QC date","Operator initials"],"QC date"),"Record receive date and QC completion per local policy.");
