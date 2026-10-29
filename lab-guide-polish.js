@@ -86,7 +86,7 @@ function piccolo(title,group){
  if(/grab|reagent disc|qc disc|inspect/.test(t)){
   return fig("Inspect the intact reagent disc",reference,"The sample entry port is built into the disc. Do not peel or create an opening. Remove only one disc at a time.","lc-piccolo-single");
  }
- if(/load|pipett|sample port|fill chamber|dispense/.test(t)){
+ if((/load|pipett|sample port|fill chamber|dispense/.test(t))&&!/load the disc|insert.*disc|load.*disc.*start/.test(t)){
   return '<section class="lc-piccolo-prep" aria-label="Two stages of sample loading">'+
    '<div class="lc-prep-heading"><strong>Load the disc '+(q?"with approved QC material":"with blood")+'</strong><p>Fit a fresh disposable tip to the gray 100 µL transfer device. Transfer the approved volume slowly, avoiding bubbles.</p></div>'+
    tile(fig("1 · Before loading",empty,"Sample port and chamber are empty. Use the permanent port near the central hub.")+
