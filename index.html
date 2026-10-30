@@ -1256,14 +1256,14 @@ function sollisPatientChoices(){
    '<span class="sollis-route-check" aria-hidden="true">'+(inClinic?'✓':'')+'</span></button>'+
   '<button type="button" class="sollis-route-choice '+(!inClinic?'is-selected':'')+'" data-sollis-patient="schedule" aria-pressed="'+!inClinic+'">'+
    '<span class="sollis-route-icon" aria-hidden="true">'+svg('clipboard-check')+'</span>'+
-   '<span class="sollis-route-text"><strong>Patient not in clinic</strong><small>Route to front desk for scheduling</small></span>'+
+   '<span class="sollis-route-text"><strong>Patient not in clinic</strong><small>Ask front desk to schedule as needed</small></span>'+
    '<span class="sollis-route-check" aria-hidden="true">'+(!inClinic?'✓':'')+'</span></button></div>'+
   '<div class="sollis-route-result '+(!inClinic?'is-scheduling':'')+'" aria-live="polite">'+
-   '<div class="sollis-route-result-head"><strong>'+(inClinic?'Proceed with collection and processing':'Route for a collection appointment')+'</strong>'+
-    workflowOwnerTag(inClinic?'Lab Personnel / RN':'Front Desk Coordinator')+'</div>'+
+   '<div class="sollis-route-result-head"><strong>'+(inClinic?'Proceed with collection and processing':'Request scheduling as needed')+'</strong>'+
+    (inClinic?workflowOwnerTag('Lab Personnel / RN'):'<span class="sollis-route-owners">'+workflowOwnerTag('Lab Personnel / RN')+workflowOwnerTag('Front Desk Coordinator')+'</span>')+'</div>'+
    '<p>'+(inClinic
-    ?'RN collects and documents specimens using the Lab Calculator. Lab personnel verifies, processes, separates transport bags according to temperature and priority, and completes the Sendout Log. Follow the detailed handoff steps below.'
-    :'Lab personnel or the RN sends the reviewed order and LAB FLOWSHEET to the Front Desk Coordinator, who schedules the patient and routes any outstanding Navigator tasks. Follow the collection and processing steps below when the patient returns.')+
+    ?'RN collects specimens according to the Lab Calculator and documents the collection in Athena using the approved .rn workflow. Lab personnel processes, separates transport bags by receiving lab, temperature and priority, and completes the Sendout Log. Follow the detailed handoff steps below.'
+     :'Lab personnel or the RN asks the Front Desk Coordinator to schedule a collection appointment as needed and provides the reviewed order and LAB FLOWSHEET. Front desk handles scheduling and any outstanding Navigator tasks. When the patient returns, the RN collects using the calculator and documents the collection in Athena.')+
    '</p></div>';
 }
 function workflowStepExtras(kind){
@@ -1347,8 +1347,8 @@ function externalFlow(){
 }
 function collectionProcessingHandoff(immediate=false){
  const items=[
- ['RN / COLLECTOR','test-tubes','RN draws blood using the Lab Calculator','Use the color Lab Calculator to confirm required tubes, draw volumes, order of draw and labels. Collect other ordered specimen types according to the same verified guide.'],
- ['RN','clipboard-check','Document the draw and hand off samples','Record collection in Athena using the approved .rn workflow and give the labeled specimens, requisition and calculator to lab personnel.'],
+ ['RN / COLLECTOR','test-tubes','Collect specimens using the Lab Calculator','RN follows the color Lab Calculator for required tubes, volumes, order of draw, labeling and other ordered specimen types.'],
+ ['RN','clipboard-check','Document collection and hand off specimens','RN documents the collection in Athena using the approved .rn workflow, then hands off the labeled specimens, requisition and Lab Calculator to lab personnel.'],
  ['LAB PERSONNEL','settings','Process specimens','Verify labels, centrifuge, aliquot and prepare specimens using the test directory and calculator temperature/processing instructions.'],
  ['LAB PERSONNEL','package','Package the correct transport bags','Keep receiving labs and room-temperature, refrigerated or frozen groups in their proper bags. Separate STAT from routine where required. Place matching paperwork in the outside sleeve.'],
  ['LAB PERSONNEL','file-text','Complete the Sendout Log','Photograph specimen containers, sealed bags and requisition. Submit the correct regional secure Microsoft Form, verify submission and put bags in the appropriate pickup or storage bin.']
