@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-intake-route-organization-v14" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sollis-required-upload-v15" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1223,7 +1223,7 @@ function athenaMock(type,label,file){
  if(type==='save')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document · '+safeHtml(label)+'</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-row">◯ Data Entry Completed</div><div class="ad-target ad-row">✓ Save <em>FINAL STEP</em></div><p>Confirm the document label is saved in the correct patient chart.</p></div></div>';
  return '';
 }
-function athenaUploadGuide(kind,faxOnly=false,updated=false){
+function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false){
  const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB FLOWSHEET';
  const file=requisition?'Outside requisition.pdf':'Lab Calculator.pdf';
  const steps=faxOnly?[
@@ -1238,7 +1238,7 @@ function athenaUploadGuide(kind,faxOnly=false,updated=false){
   ['Apply the document label','Select the highlighted document label.','label'],
   ['Save and verify','Click Save to commit the document label, then confirm it appears correctly in the patient chart.','save']
  ];
- return '<details class="ad-guide" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(updated&&requisition?'How to upload the updated requisition':faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
+ return '<details class="ad-guide'+(buttonStyle?' sollis-upload-guide':'')+'" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(updated&&requisition?'How to upload the updated requisition':faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
  steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaMock(x[2],label,file)+'</article>';}).join('')+
  '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Use this for the outside lab order.':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
@@ -1269,6 +1269,7 @@ function sollisPatientChoices(){
 function workflowStepExtras(kind){
  if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN, according to the market workflow</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p class="navigator-routing-note">'+(state.reqSource==='message'?'Use the Navigator task created automatically for email or text. Do not create a duplicate.':'Create and route a Navigator task for the faxed requisition, unless a task already exists. Do not create a duplicate.')+'</p></div></div>';
  if(kind==='sollis-patient')return sollisPatientChoices();
+ if(kind==='sollis-calculator-upload')return '<div class="workflow-step-extra sollis-step-upload"><div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><div><strong>Required even when the patient is already in clinic.</strong> Save the Lab Calculator as a PDF and upload it to the patient chart as a <strong>Clinical Document</strong> labeled <strong>LAB FLOWSHEET</strong>.</div></div>'+athenaUploadGuide('calculator',false,false,true)+'</div>';
  if(kind==='calculator-upload'){
   return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
  }
@@ -1398,7 +1399,7 @@ function inhouseFlow(){
  ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','','','Provider'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
  ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory.','','','Lab Personnel / RN'],
- ['Upload the Lab Calculator','Save the calculator PDF to the patient chart as a Clinical Document labeled LAB FLOWSHEET. Keep the collection instructions accessible to the RN and lab personnel.','','','Lab Personnel / RN'],
+ ['Upload the Lab Calculator','Upload the finalized Lab Calculator to the patient chart before specimen collection.','sollis-calculator-upload','','Lab Personnel / RN'],
  ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','Lab Personnel / RN']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
