@@ -1301,10 +1301,14 @@ function workflowSteps(steps,start=1){
  const stepIcon=title=>/calculat|upload/i.test(title)?'file-text':/schedule|appointment/i.test(title)?'clipboard-check':/print/i.test(title)?'file-text':'clipboard-check';
  return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step${step[2]==='sollis-patient'?' sollis-patient-branch':''}"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div><p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
 }
+function orderWorkflowTabs(tab){
+ return `<div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Sendout order workflow"><button type="button" role="tab" aria-selected="${tab==='external'}" class="tab ${tab==='external'?'active':''}" data-workflowtab="external">External requisition</button><button type="button" role="tab" aria-selected="${tab==='in-house'}" class="tab ${tab==='in-house'?'active':''}" data-workflowtab="in-house">Ordered at Sollis</button></div>`;
+}
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const unresolved=state.reqResolution==='unresolved';
  let h=`<div class="workflow-head"><div><span class="eyebrow">EXTERNAL SENDOUT REQUISITION</span><h2>External sendout requests</h2><p>Start with how the requisition was received. Both intake routes must end with the document classified as <strong>Lab requisition</strong> in the correct patient chart.</p></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
+ h+=orderWorkflowTabs('external');
  h+='<div class="external-workflow-timeline">';
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">How was the requisition received?</h3><p>Select the source to see the required chart and document steps.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
@@ -1360,6 +1364,7 @@ function collectionProcessingHandoff(immediate=false){
 }
 function inhouseFlow(){
  let h=`<div class="workflow-head"><div><span class="eyebrow">SOLLIS-PLACED SENDOUT ORDERS</span><h2>Sendout orders placed by Sollis</h2><p>For tests ordered in Athena by the Sollis clinical team and sent to an outside laboratory.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
+ h+=orderWorkflowTabs('in-house');
  h+=workflowSteps([
  ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','','','Provider'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
@@ -1375,7 +1380,7 @@ function inhouseFlow(){
 function renderOrders(tab='external'){
  tab=tab==='in-house'?'in-house':'external';el('currentCrumb').textContent='Sendout lab workflows';
  let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to outside laboratories such as Quest, Labcorp or Cedars. Select the workflow based on where the sendout order originated. External requisitions include a missing-information escalation path.');
- h+=`<div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Sendout order workflow"><button type="button" role="tab" aria-selected="${tab==='external'}" class="tab ${tab==='external'?'active':''}" data-workflowtab="external">External requisition</button><button type="button" role="tab" aria-selected="${tab==='in-house'}" class="tab ${tab==='in-house'?'active':''}" data-workflowtab="in-house">Ordered at Sollis</button></div><div class="workflow-main">${tab==='external'?externalFlow():inhouseFlow()}</div>`;
+ h+=`<div class="workflow-main">${tab==='external'?externalFlow():inhouseFlow()}</div>`;
  h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
 }
