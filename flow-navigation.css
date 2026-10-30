@@ -2076,3 +2076,6 @@
 }
 .workflow-main .requisition-source-instructions>.workflow-steps-caption{margin:0 0 10px}
 .workflow-main .calculator-chart-upload>.workflow-steps-caption{margin:0 0 9px}
+
+/* Emphasize required identifiers during walk-in requisition review. */
+.workflow-main .walkin-review-highlight{background:#e2f3ed;color:#146b60;border-radius:4px;padding:1px 4px;font-weight:800}
