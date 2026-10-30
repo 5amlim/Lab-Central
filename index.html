@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-external-handoff-step4-v24" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-requisition-button-right-v25" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1278,7 +1278,7 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
     '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
    (includeCalculatorLink
-    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>Pass the completed requisition and LAB FLOWSHEET to the Front Desk Coordinator. Communicate any fasting, dietary or other preparation requirements for the patient.</small></span></div>'
+    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>Pass the completed requisition and LAB FLOWSHEET to the Front Desk Coordinator. Communicate any fasting, dietary or other preparation requirements for the patient.</small></span><span class="sollis-upload-handoff-badge">REQUIRED HANDOFF</span></div>'
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
   (includeCalculatorLink?'<div class="calculator-chart-actions">'+launch+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
