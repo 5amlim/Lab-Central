@@ -58,7 +58,9 @@ const tests={
   {title:'McKesson 14-panel urine drug screen (current guide)',complexity:'waived',groups:{'Drug classes and compounds':A('Amphetamine|Barbiturates|Benzodiazepines|Buprenorphine|Cocaine metabolite|3,4-Methylenedioxymethamphetamine (MDMA)|Methadone|Methamphetamine|Morphine / opiates|Oxycodone|Phencyclidine|Propoxyphene|Tetrahydrocannabinol (THC) metabolite|Tricyclic antidepressants')},note:'This is the existing 14-panel workflow. Confirm the selected site kit, its labeling, and cutoff values before use.'}
  ],
  sysmex:[{title:'Three-part complete blood count',complexity:'moderate',groups:{'Blood cell measurements':A('White blood cell count|Red blood cell count|Hemoglobin|Hematocrit|Mean corpuscular volume|Mean corpuscular hemoglobin|Mean corpuscular hemoglobin concentration|Red blood cell distribution width|Platelet count|Mean platelet volume'),'Three-part white cell differential':A('Lymphocytes|Mixed cells (monocytes / eosinophils / basophils)|Granulocytes (predominantly neutrophils)')}}],
- febridx:[{title:'FebriDx inflammatory marker test',complexity:'moderate',groups:{'Host-response markers':A('Myxovirus resistance protein A|C-reactive protein')}}]
+ febridx:[{title:'FebriDx inflammatory marker test',complexity:'moderate',groups:{'Host-response markers':A('Myxovirus resistance protein A|C-reactive protein')}}],
+ hemocue:[{title:'Hemoglobin',groups:{'Measured analyte':A('Hemoglobin')}}],
+ coagsense:[{title:'Prothrombin time / INR',groups:{'Coagulation results':A('Prothrombin time|International normalized ratio')}}]
 };
 const references={
  piccolo:'https://www.abaxis.com/reagent-panels/',
