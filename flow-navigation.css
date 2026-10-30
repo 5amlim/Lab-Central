@@ -770,3 +770,16 @@
  .athena-order-group{break-inside:avoid}
  .athena-order-group-title{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+
+/* Athena Lab Calculator document label illustration.
+   Mirrors the label picker in DATAENTRY while omitting patient details. */
+.ad-mock-flowsheet .ad-mock-data{min-height:235px}
+.ad-mock-flowsheet .ad-flowsheet-label-name{display:block;margin:12px 0 6px;color:#53536b;font-weight:750;font-size:10px}
+.ad-mock-flowsheet .ad-flowsheet-selected{border:1px solid #bfc8d1;border-radius:4px;background:#e8eff5;color:#455367;padding:8px 9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ad-mock-flowsheet .ad-flowsheet-picker{border:1px solid #c9d5de;border-radius:5px;background:#e4edf3;box-shadow:0 2px 5px #394e6019;margin-top:0;padding:7px}
+.ad-mock-flowsheet .ad-flowsheet-search{border:1px solid #c9d4dc;background:white;border-radius:4px;color:#525f6b;padding:7px 9px;margin:0 0 8px;font-size:10px}
+.ad-mock-flowsheet .ad-flowsheet-group{font-size:9px;font-weight:750;color:#665486;padding:4px 5px 6px}
+.ad-mock-flowsheet .ad-flowsheet-option{padding:7px 8px;margin:2px 0;color:#343c47;font-size:10px;font-weight:650}
+.ad-mock-flowsheet .ad-flowsheet-option.ad-target{padding:6px 7px}
+.ad-mock-flowsheet .ad-flowsheet-footnote{display:block;color:#687b8c;font-size:9px;line-height:1.45;margin-top:7px}
