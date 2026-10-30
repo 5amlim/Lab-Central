@@ -325,7 +325,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261029-curated-figures-v2"></script>
 <script src="biofire-reference-polish.js?v=20261029-hydration-trim-shared-kit-v6"></script>
 <script src="sendout-market-guide.js?v=20261029-regional-shipping-scope-v3"></script>
-<script src="assay-catalog.js?v=20261029-target-search-v1"></script>
+<script src="assay-catalog.js?v=20261030-abbreviation-targets-v2"></script>
 <script src="triage-meterpro-visual.js?v=20261029-overflow-higher-v3"></script>
 <script>
 (()=>{
@@ -407,13 +407,13 @@ function showNav(){
 // Index the assay catalogs as well as guide text, so staff can search by
 // individual analyte, panel, clinical test category, abbreviation, or device.
 const guideSearchTags={
- sysmex:'hematology blood count cbc wbc rbc hgb hb hct platelets differential',
- piccolo:'chemistry metabolic electrolytes renal kidney hepatic liver lipids cholesterol glucose bun alt ast alp ggt ck crp triglycerides tg hdl sodium na potassium k chloride cl calcium ca carbon dioxide co2',
+ sysmex:'hematology blood count cbc wbc rbc hgb hb hct mcv mch mchc rdw plt mpv platelets differential',
+ piccolo:'chemistry metabolic electrolytes renal kidney hepatic liver lft lipids cholesterol glucose bun alt ast alp ggt ck crp triglycerides tg hdl sodium na potassium k chloride cl calcium ca carbon dioxide co2 gfr egfr',
  pathfast:'cardiac heart chest pain acute coronary syndrome acs hs-tni hstni hs-ctni hscTnI troponin heart failure ntprobnp nt-probnp coagulation fibrinolysis ddimer',
  triage:'cardiac heart chest pain troponin bnp heart failure d-dimer ddimer coagulation fibrinolysis',
  clinitek:'urinalysis urine ua urine dipstick pregnancy hcg leukocyte esterase',
- torch:'microbiology gastrointestinal gi stool diarrhea infectious infection pathogen pathogens pcr bacteria viruses parasites',
- spotfire:'microbiology respiratory sore throat pharyngitis infectious infection pathogen pathogens pcr flu covid rsv strep',
+ torch:'microbiology gastrointestinal gi stool diarrhea infectious infection pathogen pathogens pcr bacteria viruses parasites cdiff c diff epec etec eaec stec eiec',
+ spotfire:'microbiology respiratory sore throat pharyngitis infectious infection pathogen pathogens pcr flu covid rsv strep hmpv hrv rvp rpp',
  febridx:'inflammation inflammatory host response infection viral bacterial crp c-reactive protein mxa',
  coagsense:'coagulation clotting prothrombin time pt inr warfarin',
  poc:'rapid point of care flu covid rsv strep mono hiv pregnancy',
@@ -445,27 +445,115 @@ function isMatch(s,q){
  return terms.every(t=>t.length<=2?index.words.has(t):index.value.includes(t))||searchPanelMatches(q,[s]).length>0;
 }
 // Index each measured analyte and detected pathogen within its panel.
+// Common clinical search shorthand. Each alias is tied to an assay-reported
+// analyte or pathogen; never treat an abbreviation as an additional test.
 const labTargetAliases={
- sodium:'na',potassium:'k',chloride:'cl',calcium:'ca',
- 'blood urea nitrogen':'bun',glucose:'glu',creatinine:'creat',
- 'total carbon dioxide':'co2 tco2','c-reactive protein':'crp',
- 'creatine kinase':'ck','alanine aminotransferase':'alt',
- 'aspartate aminotransferase':'ast','alkaline phosphatase':'alp',
- 'high sensitivity cardiac troponin i':'hs-ctni hs-tni troponin',
- 'cardiac troponin i':'tni troponin',
- 'n terminal pro b type natriuretic peptide':'nt-probnp ntprobnp',
- 'b type natriuretic peptide':'bnp','d dimer':'ddimer',
- 'severe acute respiratory syndrome coronavirus 2 sars cov 2':'covid covid19 covid-19',
+ // Chemistry: measured analytes and explicitly listed calculated outputs.
+ 'estimated glomerular filtration rate':'gfr egfr e gfr estimated gfr',
+ albumin:'alb', 'alkaline phosphatase':'alp alk phos alkphos',
+ 'alanine aminotransferase':'alt sgpt',
+ 'aspartate aminotransferase':'ast sgot',
+ 'blood urea nitrogen':'bun',
+ calcium:'ca', chloride:'cl', creatinine:'cr crea creat',
+ glucose:'glu', potassium:'k', sodium:'na',
+ 'total bilirubin':'tbili t bili total bili bilirubin total',
+ 'total carbon dioxide':'co2 tco2 total co2 bicarbonate',
+ 'total protein':'tp total prot',
+ 'c reactive protein':'crp', 'creatine kinase':'ck cpk',
+ lactate:'lac lactic acid', magnesium:'mg', phosphorus:'phos phosphate',
+ amylase:'amy', 'gamma glutamyl transferase':'ggt gamma gt',
+ 'total cholesterol':'tc chol cholesterol', 'high density lipoprotein cholesterol':'hdl hdl c hdlc',
+ triglycerides:'tg trig trigs',
+ 'cholesterol to high density lipoprotein ratio':'tc hdl cholesterol hdl ratio chol hdl ratio',
+ 'non high density lipoprotein cholesterol':'non hdl nonhdl non hdl c',
+ 'very low density lipoprotein cholesterol':'vldl vldl c',
+ // Hematology. Do not alias ANC, which the listed three-part CBC does not report.
+ 'white blood cell count':'wbc leukocytes white count',
+ 'red blood cell count':'rbc red count',
+ hemoglobin:'hgb hb haemoglobin',
+ hematocrit:'hct pcv',
+ 'mean corpuscular volume':'mcv',
+ 'mean corpuscular hemoglobin':'mch',
+ 'mean corpuscular hemoglobin concentration':'mchc',
+ 'red blood cell distribution width':'rdw',
+ 'platelet count':'plt platelets', 'mean platelet volume':'mpv',
+ lymphocytes:'lym lymph', 'mixed cells monocytes eosinophils basophils':'mid mixed',
+ 'granulocytes predominantly neutrophils':'gran grans',
+ // Cardiac / coagulation.
+ 'high sensitivity cardiac troponin i':'hstni hs tni hs ctni hsctni high sensitivity troponin i trop',
+ 'cardiac troponin i':'tni ctni trop',
+ 'n terminal pro b type natriuretic peptide':'ntprobnp nt probnp pro bnp probnp',
+ 'b type natriuretic peptide':'bnp',
+ 'd dimer':'ddimer d dimer',
+ 'prothrombin time':'pt protime', 'international normalized ratio':'inr',
+ // UA / pregnancy.
+ 'specific gravity':'sg urine sg usg',
+ 'leukocyte esterase':'le leu',
+ urobilinogen:'uro urob', ketones:'ket',
+ 'human chorionic gonadotropin':'hcg bhcg beta hcg upt pregnancy',
+ // FebriDx host response.
+ 'myxovirus resistance protein a':'mxa mx a',
+ // Respiratory viruses and bacteria.
+ 'severe acute respiratory syndrome coronavirus 2 sars cov 2':'covid covid19 covid 19 sarscov2 sars cov 2',
+ 'influenza a virus':'flu a flua influenza a',
+ 'influenza a virus including a h1 2009 and a h3 subtyping':'flu a flua influenza a',
+ 'influenza b virus':'flu b flub influenza b',
  'respiratory syncytial virus':'rsv',
- 'influenza a virus':'flu a','influenza b virus':'flu b',
- 'streptococcus pyogenes group a streptococcus':'strep throat',
- hemoglobin:'hgb hb',hematocrit:'hct','platelet count':'plt',
- 'white blood cell count':'wbc','red blood cell count':'rbc'
+ 'human metapneumovirus':'hmpv h mpv metapneumovirus',
+ 'human rhinovirus enterovirus':'hrv ev hrv ev rhinovirus enterovirus',
+ 'human rhinovirus':'hrv rhinovirus',
+ 'parainfluenza viruses':'piv parainfluenza',
+ adenovirus:'adeno adv',
+ 'adenovirus f40 41':'adeno adeno 40 41 adenovirus',
+ 'streptococcus pyogenes group a streptococcus':'gas strep strep a group a strep',
+ 'bordetella pertussis':'b pertussis whooping cough',
+ 'bordetella parapertussis':'b parapertussis',
+ 'chlamydia pneumoniae':'c pneumoniae',
+ 'mycoplasma pneumoniae':'m pneumoniae',
+ // Gastrointestinal pathogens.
+ 'clostridioides difficile toxin a b':'c diff cdiff c difficile clostridium difficile',
+ 'enteroaggregative escherichia coli':'eaec e coli',
+ 'enteropathogenic escherichia coli':'epec e coli',
+ 'enterotoxigenic escherichia coli heat labile heat stable toxin':'etec e coli',
+ 'shiga toxin producing escherichia coli stx1 stx2':'stec ehec e coli shiga toxin',
+ 'escherichia coli o157':'ecoli o157 e coli o157',
+ 'shigella enteroinvasive escherichia coli':'eiec shigella e coli',
+ 'norovirus genogroups i ii':'noro norovirus',
+ 'rotavirus a':'rota rotavirus',
+ 'cryptosporidium species':'crypto cryptosporidium',
+ 'giardia lamblia':'giardia giardia intestinalis'
+};
+// Panel shorthand is kept separate from target aliases so UA and LFT do not
+// falsely imply that any single constituent analyte is a standalone order.
+const labPanelSearchAliases={
+ piccolo:{
+  'Comprehensive Metabolic Panel':'cmp',
+  'Basic Metabolic Panel':'bmp',
+  'MetLyte Plus C-Reactive Protein':'metlyte crp',
+  'MetLac 12':'metlac lac',
+  'Liver Panel Plus':'lft lfts liver function tests',
+  'Lipid Panel':'lipids'
+ },
+ pathfast:{
+  'High-sensitivity cardiac troponin I':'hstni hs tni hsctni hs ctni',
+  'N-terminal pro-B-type natriuretic peptide':'ntprobnp nt probnp',
+  'D-dimer':'ddimer'
+ },
+ clinitek:{'Urinalysis reagent strip':'ua u a urine dipstick','Urine pregnancy (human chorionic gonadotropin)':'upt bhcg hcg'},
+ torch:{'Gastrointestinal Pathogen Panel':'gi pcr gipanel gi panel'},
+ spotfire:{'Full respiratory panel':'rpp rvp respiratory pcr','Mini respiratory panel':'mini rpp mini rvp','Mini sore throat panel':'pharyngitis panel'},
+ sofia:{'Group A Streptococcus':'gas strep a'},
+ sysmex:{'Three-part complete blood count':'cbc'},
+ coagsense:{'Prothrombin time / INR':'pt inr protime'},
+ hemocue:{'Hemoglobin':'hgb hb'},
+ febridx:{'FebriDx inflammatory marker test':'mxa crp'}
 };
 function labTargetText(name){return name+' '+(labTargetAliases[normalizeGuideSearch(name)]||'')}
 function labWordMatch(text,terms){
  const value=normalizeGuideSearch(text),tokens=new Set(value.split(/\s+/));
- return terms.every(t=>t.length<=2?tokens.has(t):value.includes(t));
+ // Two- and three-character abbreviations must be whole tokens. For example,
+ // "cr" should find creatinine, not CRP; "bnp" must not match NT-proBNP.
+ return terms.every(t=>t.length<=3?tokens.has(t):value.includes(t));
 }
 function searchPanelMatches(query,sections=all){
  const terms=normalizeGuideSearch(query).split(/\s+/).filter(Boolean);
@@ -475,7 +563,8 @@ function searchPanelMatches(query,sections=all){
   for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
-   const content=[section.title,section.subtitle,panel.title,panel.short,
+   const content=[section.title,panel.title,panel.short,
+    labPanelSearchAliases[section.id]?.[panel.title]||'',
     ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name))].join(' ');
    if(!labWordMatch(content,terms))continue;
    const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name),[term])));
@@ -599,6 +688,12 @@ const labPanelAthenaNames={
     "FebriDx inflammatory marker test": [
       "FebriDx (Ages 12-64) (2)"
     ]
+  },
+  "hemocue": {
+    "Hemoglobin": ["hemoglobin (Hb), blood"]
+  },
+  "coagsense": {
+    "Prothrombin time / INR": ["PT/INR (IH) (1)"]
   }
 };
 function searchPanelAthenaOrders(section,panel){
