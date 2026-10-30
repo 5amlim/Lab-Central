@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-provider-tag-v2" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sollis-patient-paths-v3" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -346,7 +346,7 @@ const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);
 let favs=[];let localVideos={};
 try{favs=JSON.parse(localStorage.getItem('labGuideFavorites')||'[]')||[];localVideos=JSON.parse(localStorage.getItem('labGuideVideoOverrides')||'{}')||{}}catch(_){favs=[];localVideos={}}
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'fax',reqBranch:'complete',reqResolution:'provided',sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -1247,7 +1247,27 @@ function requisitionVersionNotice(){
  return '<div class="req-version-guidance" role="note"><span class="req-version-symbol" aria-hidden="true">!</span><div><strong>Multiple or updated requisitions?</strong><p>Confirm which requisition is current and applicable. Remove superseded or non-applicable versions from the active workflow only in accordance with the approved medical-record retention/correction policy. Do not leave conflicting versions presented as active orders.</p></div></div>';
 }
 
+function sollisPatientChoices(){
+ const inClinic=state.sollisPatientPath!=='schedule';
+ return '<div class="sollis-route-choices" role="group" aria-label="Is the patient currently in clinic?">'+
+  '<button type="button" class="sollis-route-choice '+(inClinic?'is-selected':'')+'" data-sollis-patient="clinic" aria-pressed="'+inClinic+'">'+
+   '<span class="sollis-route-icon" aria-hidden="true">'+svg('test-tubes')+'</span>'+
+   '<span class="sollis-route-text"><strong>Patient in clinic</strong><small>Collect and process now</small></span>'+
+   '<span class="sollis-route-check" aria-hidden="true">'+(inClinic?'✓':'')+'</span></button>'+
+  '<button type="button" class="sollis-route-choice '+(!inClinic?'is-selected':'')+'" data-sollis-patient="schedule" aria-pressed="'+!inClinic+'">'+
+   '<span class="sollis-route-icon" aria-hidden="true">'+svg('clipboard-check')+'</span>'+
+   '<span class="sollis-route-text"><strong>Patient not in clinic</strong><small>Route to front desk for scheduling</small></span>'+
+   '<span class="sollis-route-check" aria-hidden="true">'+(!inClinic?'✓':'')+'</span></button></div>'+
+  '<div class="sollis-route-result '+(!inClinic?'is-scheduling':'')+'" aria-live="polite">'+
+   '<div class="sollis-route-result-head"><strong>'+(inClinic?'Proceed with collection and processing':'Route for a collection appointment')+'</strong>'+
+    workflowOwnerTag(inClinic?'Lab Personnel / RN':'Front Desk Coordinator')+'</div>'+
+   '<p>'+(inClinic
+    ?'RN collects and documents specimens using the Lab Calculator. Lab personnel verifies, processes, separates transport bags according to temperature and priority, and completes the Sendout Log. Follow the detailed handoff steps below.'
+    :'Lab personnel or the RN sends the reviewed order and LAB FLOWSHEET to the Front Desk Coordinator, who schedules the patient and routes any outstanding Navigator tasks. Follow the collection and processing steps below when the patient returns.')+
+   '</p></div>';
+}
 function workflowStepExtras(kind){
+ if(kind==='sollis-patient')return sollisPatientChoices();
  if(kind==='calculator-upload'){
   return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
  }
@@ -1279,7 +1299,7 @@ function workflowOwnerTag(role){
 }
 function workflowSteps(steps,start=1){
  const stepIcon=title=>/calculat|upload/i.test(title)?'file-text':/schedule|appointment/i.test(title)?'clipboard-check':/print/i.test(title)?'file-text':'clipboard-check';
- return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div><p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
+ return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step${step[2]==='sollis-patient'?' sollis-patient-branch':''}"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div><p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
 }
 function externalFlow(){
  const fax=state.reqSource!=='message';
@@ -1325,7 +1345,7 @@ function externalFlow(){
  h+=collectionProcessingHandoff();
  return h;
 }
-function collectionProcessingHandoff(){
+function collectionProcessingHandoff(immediate=false){
  const items=[
  ['RN / COLLECTOR','test-tubes','RN draws blood using the Lab Calculator','Use the color Lab Calculator to confirm required tubes, draw volumes, order of draw and labels. Collect other ordered specimen types according to the same verified guide.'],
  ['RN','clipboard-check','Document the draw and hand off samples','Record collection in Athena using the approved .rn workflow and give the labeled specimens, requisition and calculator to lab personnel.'],
@@ -1334,7 +1354,7 @@ function collectionProcessingHandoff(){
  ['LAB PERSONNEL','file-text','Complete the Sendout Log','Photograph specimen containers, sealed bags and requisition. Submit the correct regional secure Microsoft Form, verify submission and put bags in the appropriate pickup or storage bin.']
  ];
  return '<section class="collection-handoff" aria-label="RN collection and lab personnel specimen handoff">'+
- '<div class="collection-handoff-heading"><span>APPOINTMENT DAY · SENDOUT HANDOFF</span><h2>RN collection → Lab personnel processing → Electronic log</h2><p>Follow the correct roles for send-out specimens after the chart and collection plan are ready.</p></div>'+
+ '<div class="collection-handoff-heading"><span>'+(immediate?'IN CLINIC NOW · SENDOUT HANDOFF':'APPOINTMENT DAY · SENDOUT HANDOFF')+'</span><h2>RN collection → Lab personnel processing → Electronic log</h2><p>'+(immediate?'Patient already in clinic: continue with collection, processing, packing, and the Sendout Log now.':'Follow the correct roles for send-out specimens after the chart and collection plan are ready.')+'</p></div>'+
  '<div class="collection-handoff-grid">'+items.map((x,i)=>'<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+x[0]+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><p>'+safeHtml(x[3])+'</p></div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
@@ -1344,11 +1364,11 @@ function inhouseFlow(){
  ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','','','Provider'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
  ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory.','','','Lab Personnel / RN'],
- ['Upload the Lab Calculator','Upload the calculator PDF to the patient chart as a Clinical Document labeled LAB FLOWSHEET, then send the completed request to the Front Desk Coordinator for scheduling.','','','Lab Personnel / RN'],
- ['Schedule collection','Once the order and Lab Calculator have been reviewed and uploaded, the Front Desk Coordinator schedules the collection appointment and routes any remaining Navigator tasks to the appropriate personnel.','','','Front Desk Coordinator']
+ ['Upload the Lab Calculator','Save the calculator PDF to the patient chart as a Clinical Document labeled LAB FLOWSHEET. Keep the collection instructions accessible to the RN and lab personnel.','','','Lab Personnel / RN'],
+ ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','Lab Personnel / RN']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
- h+=collectionProcessingHandoff();
+ h+=collectionProcessingHandoff(state.sollisPatientPath==='clinic');
  h+=`<p class="source-footnote">Follow the approved collection and send-out procedure. External requisition escalation and Navigator tasks are documented separately.</p>`;
  return h;
 }
@@ -1700,6 +1720,19 @@ document.addEventListener('click',e=>{
  }
  const nav=e.target.closest('[data-go]');if(nav){navigate(nav.dataset.go,nav.dataset.targetTab||'overview');return}
  const workflowTab=e.target.closest('[data-workflowtab]');if(workflowTab){navigate('orders',workflowTab.dataset.workflowtab);return}
+ const patientRoute=e.target.closest('[data-sollis-patient]');if(patientRoute){
+  const next=patientRoute.dataset.sollisPatient==='schedule'?'schedule':'clinic';
+  if(state.sollisPatientPath===next)return;
+  const before=patientRoute.closest('.sollis-patient-branch');
+  const top=before?.getBoundingClientRect().top;
+  state.sollisPatientPath=next;
+  render();
+  const after=document.querySelector('.sollis-patient-branch');
+  if(after&&top!=null)window.scrollBy(0,after.getBoundingClientRect().top-top);
+  const selected=after?.querySelector('[data-sollis-patient="'+next+'"]');
+  if(selected)selected.focus({preventScroll:true});
+  return;
+ }
  const reqSource=e.target.closest('[data-reqsource]');if(reqSource){state.reqSource=reqSource.dataset.reqsource;render();return}
  const branch=e.target.closest('[data-reqbranch]');if(branch){state.reqBranch=branch.dataset.reqbranch;state.reqResolution='provided';render();return}
  const resolution=e.target.closest('[data-reqresolution]');if(resolution){state.reqResolution=resolution.dataset.reqresolution;render();return}
