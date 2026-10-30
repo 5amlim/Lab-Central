@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-role-tags-sendout-v1" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-provider-tag-v2" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1017,8 +1017,8 @@ function workflowStepExtras(kind){
  return '';
 }
 function workflowOwnerTag(role){
- if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN')return '';
- const ownerClass=role==='Front Desk Coordinator'?'workflow-owner-tag--front':'workflow-owner-tag--lab';
+ if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN'&&role!=='Provider')return '';
+ const ownerClass=role==='Front Desk Coordinator'?'workflow-owner-tag--front':role==='Provider'?'workflow-owner-tag--provider':'workflow-owner-tag--lab';
  return '<span class="workflow-owner-tag '+ownerClass+'" aria-label="Responsible: '+safeHtml(role)+'">'+safeHtml(role)+'</span>';
 }
 function workflowSteps(steps,start=1){
@@ -1085,7 +1085,7 @@ function collectionProcessingHandoff(){
 function inhouseFlow(){
  let h=`<div class="workflow-head"><div><span class="eyebrow">SOLLIS-PLACED SENDOUT ORDERS</span><h2>Sendout orders placed by Sollis</h2><p>For tests ordered in Athena by the Sollis clinical team and sent to an outside laboratory.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
  h+=workflowSteps([
- ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.'],
+ ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','','','Provider'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
  ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory.','','','Lab Personnel / RN'],
  ['Upload the Lab Calculator','Upload the calculator PDF to the patient chart as a Clinical Document labeled LAB FLOWSHEET, then send the completed request to the Front Desk Coordinator for scheduling.','','','Lab Personnel / RN'],
