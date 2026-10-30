@@ -1296,7 +1296,7 @@ function sollisPatientChoices(){
    '<span class="sollis-route-check" aria-hidden="true">'+(!inClinic?'✓':'')+'</span></button></div>'+
   '<div class="sollis-route-result '+(!inClinic?'is-scheduling':'')+'" aria-live="polite">'+
    '<div class="sollis-route-result-head"><strong>'+(inClinic?'Proceed with collection and processing':'Request scheduling as needed')+'</strong>'+
-    (inClinic?workflowOwnerTag('Lab Personnel / RN'):'<span class="sollis-route-owners">'+workflowOwnerTag('Lab Personnel / RN')+workflowOwnerTag('Front Desk Coordinator')+'</span>')+'</div>'+
+    (inClinic?workflowOwnerTag('RN'):'<span class="sollis-route-owners">'+workflowOwnerTag('Lab Personnel / RN')+workflowOwnerTag('Front Desk Coordinator')+'</span>')+'</div>'+
    '<p>'+(inClinic
     ?'RN collects specimens according to the Lab Calculator and documents the collection in Athena using the approved .rn workflow. Lab personnel processes, separates transport bags by receiving lab, temperature and priority, and completes the Sendout Log. Follow the detailed handoff steps below.'
      :'Lab personnel or the RN asks the Front Desk Coordinator to schedule a collection appointment as needed and provides the reviewed order and LAB FLOWSHEET. Front desk handles scheduling and any outstanding Navigator tasks. When the patient returns, the RN collects using the calculator and documents the collection in Athena.')+
@@ -1483,7 +1483,7 @@ function inhouseFlow(){
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
  ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory as needed.','','','Lab Personnel / RN'],
  ['Upload the Lab Calculator','File the finalized Lab Calculator in Athena before specimen collection.','sollis-calculator-upload','','Lab Personnel / RN'],
- ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','Lab Personnel / RN']
+ ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','RN']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
  h+=collectionProcessingHandoff(state.sollisPatientPath==='clinic');
