@@ -2042,3 +2042,10 @@
  text-transform:uppercase;
 }
 .workflow-main .workflow-choice-caption + .order-workflow-tabs{margin-top:0}
+
+/* Walk-in requisition review checklist. */
+.workflow-main .walkin-review-checklist{margin:14px 0;padding:16px 18px;border:1px solid #d7e6ed;border-radius:12px;background:#f7fafc;color:#355c71}
+.workflow-main .walkin-review-checklist>strong{display:block;margin-bottom:10px;color:#235b75;font-size:13px;font-weight:800}
+.workflow-main .walkin-review-checklist ul{margin:0;padding-left:20px;display:grid;gap:8px}
+.workflow-main .walkin-review-checklist li{font-size:12.5px;line-height:1.6}
+.workflow-main .walkin-review-checklist li::marker{color:#238b89}
