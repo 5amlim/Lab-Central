@@ -2079,3 +2079,88 @@
 
 /* Emphasize required identifiers during walk-in requisition review. */
 .workflow-main .walkin-review-highlight{background:#e2f3ed;color:#146b60;border-radius:4px;padding:1px 4px;font-weight:800}
+
+/* Cohesive, compact numbered workflow cards. */
+.workflow-main .requisition-source-instructions{
+ padding:18px 18px 16px;
+ background:#f7faf9;
+}
+.workflow-main .requisition-source-instructions>.workflow-steps-caption{
+ margin:0 0 11px 1px;
+}
+.workflow-main .req-intake-actions{
+ gap:10px;
+ padding:0;
+}
+.workflow-main .req-intake-action{
+ border:1px solid #d9e7e4;
+ background:#fff;
+ border-radius:12px;
+ padding:16px;
+ min-height:112px;
+ gap:12px;
+ align-items:flex-start;
+ box-shadow:0 1px 2px rgba(30,80,80,.025);
+}
+.workflow-main .req-intake-route{
+ grid-column:1/-1;
+ min-height:84px;
+ padding:15px 16px;
+ background:#edf6f3;
+}
+.workflow-main .req-intake-action-num{
+ width:31px;height:31px;border-radius:9px;font-size:13px;
+}
+.workflow-main .req-intake-action strong{font-size:13.5px;margin-bottom:4px}
+.workflow-main .req-intake-action p{font-size:12.5px!important;line-height:1.55!important}
+.workflow-main .requisition-source-instructions .req-inline-guide{
+ padding:12px 0 0!important;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide>.ad-guide>summary{
+ min-height:60px;
+}
+.workflow-main .calculator-chart-upload{
+ gap:10px;
+}
+.workflow-main .calculator-chart-upload>.workflow-steps-caption{
+ margin:0 0 0 1px;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-panel{
+ border:0;background:transparent;overflow:visible;
+}
+.workflow-main .sollis-step-upload .sollis-upload-steps{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:10px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-steps>li{
+ align-items:flex-start;
+ min-height:120px;
+ padding:16px;
+ border:1px solid #d9e7e9!important;
+ border-radius:12px;
+ background:#f9fbfc;
+ gap:12px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-num{
+ width:31px;height:31px;flex:0 0 31px;border-radius:9px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-copy{
+ gap:5px;align-self:flex-start;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-copy strong{
+ font-size:13.5px;line-height:1.4;
+}
+.workflow-main .sollis-step-upload .sollis-upload-handoff{
+ margin-top:10px;
+ border:1px solid #d1e5e4;
+ border-radius:12px;
+ background:#edf6f5;
+ padding:15px 16px;
+}
+@media(max-width:760px){
+ .workflow-main .req-intake-actions{grid-template-columns:1fr}
+ .workflow-main .req-intake-route{grid-column:1}
+ .workflow-main .sollis-step-upload .sollis-upload-steps{grid-template-columns:1fr}
+ .workflow-main .sollis-step-upload .sollis-upload-steps>li{min-height:0}
+}
