@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-unified-routing-guide-v27" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-refinement-v28" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -359,6 +359,7 @@ const iconMap={
  'test-tubes':'<path d="M4 3h7M6 3v14a3 3 0 0 0 6 0V3M15 3h6M17 3v14a3 3 0 0 0 4 2.8"/>',
  'heart':'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
  'clipboard-check':'<rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4V2h6v2M9 13l2 2 4-4"/>',
+ 'mail':'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/>',
  'thermometer-sun':'<path d="M10 14V5a3 3 0 0 0-6 0v9a5 5 0 1 0 6 0ZM7 10v8M18 3v3M18 18v3M12 12h3M21 12h2M14 5l2 2M21 5l-2 2"/>',
  'droplet':'<path d="M12 2s7 8.2 7 13a7 7 0 1 1-14 0c0-4.8 7-13 7-13Z"/>',
  'truck':'<path d="M3 5h11v12H3zM14 9h4l3 3v5h-7M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>',
@@ -1203,15 +1204,35 @@ function renderCalculators(){
  h+=calculatorCards();
  h+=`<section class="calc-overview-guide" aria-labelledby="calculator-usage-heading">
   <div class="section-head calc-overview-head"><div><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>From test lookup to collection, STAT routing and the final printout.</p></div><span class="calc-guide-count">8 steps</span></div>
-  <div class="calc-guide-grid">
-    <article class="calc-guide-card"><span class="calc-guide-step">01</span><div><h3>Choose the receiving lab</h3><p>Open Quest, Cedars or Labcorp. Use <strong>Select Lab</strong> to switch between them. Each lab has its own test directory and specimen requirements.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">02</span><div><h3>Search by code, name or shorthand</h3><p>Enter a test code, full name or abbreviation such as <strong>CBC, GFR or STI</strong> in Search tests. Search can also match clinical categories. Confirm the exact test before adding it.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">03</span><div><h3>Browse categories and filters</h3><p>In Quest or Labcorp, open <strong>Filters → Clinical category</strong> (e.g., hematology, GI, thyroid or allergy). Narrow results by specimen, container, temperature, fasting and other filters. Cedars offers <strong>Group by</strong> and specimen/container filters.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">04</span><div><h3>Add one test or an entire requisition</h3><p>Select a test from search or use <strong>Add Tests</strong> for multiple orders. Enter one code or name per line, choose <strong>Review matches</strong>, confirm each match, then <strong>Add best matches</strong>.</p></div></article>
-    <article class="calc-guide-card calc-guide-card-stat"><span class="calc-guide-step">05</span><div><h3>Check STAT options for your market</h3><p>For Quest, select the <strong>STAT receiving lab</strong> in SoCal, NorCal, New York or Florida, then <strong>Show STAT tests</strong>. Labcorp has <strong>STAT routing info</strong> by receiving area. Mark a test STAT only when its code and receiving location are eligible; verify current availability.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">06</span><div><h3>Review collection and processing</h3><p>Check required tubes, minimum volumes, order of draw, handling and centrifugation. The collection summary estimates tube counts and may combine compatible serum/plasma requirements. Review any fasting, light-protection or special-container warnings.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">07</span><div><h3>Check transport bags and priority</h3><p>Use the summary to separate specimens by <strong>receiving lab, room temperature, refrigerated or frozen</strong> transport, and <strong>STAT versus routine</strong>. Check individual submission containers and any special handling instructions.</p></div></article>
-    <article class="calc-guide-card"><span class="calc-guide-step">08</span><div><h3>Print, save and upload</h3><p>Review the final collection plan, then select <strong>Print</strong> or <strong>Save as PDF</strong>. Upload the PDF to the patient chart in Athena as a <strong>Clinical Document</strong> labeled <strong>LAB FLOWSHEET</strong>.</p></div></article>
+  <div class="calc-guide-phases">
+    <section class="calc-guide-phase" aria-label="Find the right tests">
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">FIND</span><strong>Find the right tests</strong><span class="calc-guide-phase-descriptor">Choose the lab and locate the requested tests</span></div>
+      <div class="calc-guide-grid">
+        <article class="calc-guide-card"><span class="calc-guide-step">01</span><div><h3>Choose the receiving lab</h3><p>Open Quest, Cedars or Labcorp. Use <strong>Select Lab</strong> to switch between them. Each lab has its own test directory and specimen requirements.</p></div></article>
+        <article class="calc-guide-card"><span class="calc-guide-step">02</span><div><h3>Search by code, name or shorthand</h3><p>Enter a test code, full name or abbreviation such as <strong>CBC, GFR or STI</strong> in Search tests. Search can also match clinical categories. Confirm the exact test before adding it.</p></div></article>
+      </div>
+    </section>
+    <section class="calc-guide-phase" aria-label="Build the collection plan">
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">ORGANIZE</span><strong>Build the collection plan</strong><span class="calc-guide-phase-descriptor">Narrow the catalog and add the order</span></div>
+      <div class="calc-guide-grid">
+        <article class="calc-guide-card"><span class="calc-guide-step">03</span><div><h3>Browse categories and filters</h3><p>In Quest or Labcorp, open <strong>Filters → Clinical category</strong> (e.g., hematology, GI, thyroid or allergy). Narrow results by specimen, container, temperature, fasting and other filters. Cedars offers <strong>Group by</strong> and specimen/container filters.</p></div></article>
+        <article class="calc-guide-card"><span class="calc-guide-step">04</span><div><h3>Add one test or an entire requisition</h3><p>Select a test from search or use <strong>Add Tests</strong> for multiple orders. Enter one code or name per line, choose <strong>Review matches</strong>, confirm each match, then <strong>Add best matches</strong>.</p></div></article>
+      </div>
+    </section>
+    <section class="calc-guide-phase" aria-label="Confirm requirements">
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">VERIFY</span><strong>Confirm requirements</strong><span class="calc-guide-phase-descriptor">Review STAT eligibility and specimen handling</span></div>
+      <div class="calc-guide-grid">
+        <article class="calc-guide-card calc-guide-card-stat"><span class="calc-guide-step">05</span><div><h3>Check STAT options for your market</h3><p>For Quest, select the <strong>STAT receiving lab</strong> in SoCal, NorCal, New York or Florida, then <strong>Show STAT tests</strong>. Labcorp has <strong>STAT routing info</strong> by receiving area. Mark a test STAT only when its code and receiving location are eligible; verify current availability.</p></div></article>
+        <article class="calc-guide-card"><span class="calc-guide-step">06</span><div><h3>Review collection and processing</h3><p>Check required tubes, minimum volumes, order of draw, handling and centrifugation. The collection summary estimates tube counts and may combine compatible serum/plasma requirements. Review any fasting, light-protection or special-container warnings.</p></div></article>
+      </div>
+    </section>
+    <section class="calc-guide-phase" aria-label="Prepare for send-out">
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">FINALIZE</span><strong>Prepare for send-out</strong><span class="calc-guide-phase-descriptor">Organize transport and save the flowsheet</span></div>
+      <div class="calc-guide-grid">
+        <article class="calc-guide-card"><span class="calc-guide-step">07</span><div><h3>Check transport bags and priority</h3><p>Use the summary to separate specimens by <strong>receiving lab, room temperature, refrigerated or frozen</strong> transport, and <strong>STAT versus routine</strong>. Check individual submission containers and any special handling instructions.</p></div></article>
+        <article class="calc-guide-card"><span class="calc-guide-step">08</span><div><h3>Print, save and upload</h3><p>Review the final collection plan, then select <strong>Print</strong> or <strong>Save as PDF</strong>. Upload the PDF to the patient chart in Athena as a <strong>Clinical Document</strong> labeled <strong>LAB FLOWSHEET</strong>.</p></div></article>
+      </div>
+    </section>
   </div>
   <div class="calc-extra-heading"><h3>Additional tools</h3><p>Use these when a test needs more review.</p></div>
   <div class="calc-extra-grid">
@@ -1283,7 +1304,7 @@ function sollisPatientChoices(){
 }
 function calculatorChartUploadPanel(includeCalculatorLink=false){
  const launch=includeCalculatorLink
-  ?'<button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>'
+  ?'<button type="button" class="workflow-step-action calculator-open-secondary" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>'
   :'';
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
@@ -1345,7 +1366,7 @@ function externalFlow(){
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">Receive, classify and route the requisition</h3><p>Select how it arrived, then complete all three actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
  <div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
- <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Use the existing Navigator task</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('mail')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Use the existing Navigator task</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
  <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Verify the matched fax in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
