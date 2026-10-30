@@ -1296,7 +1296,7 @@ function sollisPatientChoices(){
    '<span class="sollis-route-check" aria-hidden="true">'+(!inClinic?'✓':'')+'</span></button></div>'+
   '<div class="sollis-route-result '+(!inClinic?'is-scheduling':'')+'" aria-live="polite">'+
    '<div class="sollis-route-result-head"><strong>'+(inClinic?'Proceed with collection and processing':'Request scheduling as needed')+'</strong>'+
-    (inClinic?workflowOwnerTag('RN'):'<span class="sollis-route-owners">'+workflowOwnerTag('Lab Personnel / RN')+workflowOwnerTag('Front Desk Coordinator')+'</span>')+'</div>'+
+    (inClinic?workflowOwnerTag('RN / Lab Personnel'):'<span class="sollis-route-owners">'+workflowOwnerTag('Lab Personnel / RN')+workflowOwnerTag('Front Desk Coordinator')+'</span>')+'</div>'+
    '<p>'+(inClinic
     ?'RN collects specimens according to the Lab Calculator and documents the collection in Athena using the approved .rn workflow. Lab personnel processes, separates transport bags by receiving lab, temperature and priority, and completes the Sendout Log. Follow the detailed handoff steps below.'
      :'Lab personnel or the RN asks the Front Desk Coordinator to schedule a collection appointment as needed and provides the reviewed order and LAB FLOWSHEET. Front desk handles scheduling and any outstanding Navigator tasks. When the patient returns, the RN collects using the calculator and documents the collection in Athena.')+
