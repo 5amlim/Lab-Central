@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-tabs-below-intro-v5" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-step-marker-colors-v6" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1267,7 +1267,7 @@ function sollisPatientChoices(){
    '</p></div>';
 }
 function workflowStepExtras(kind){
- if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign or tag the reviewers</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p><strong>Assign the Navigator task to lab personnel, or tag lab personnel and the RN</strong>, according to the market workflow.</p></div></div>';
+ if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p><strong>Assign the Navigator task to the lab team or RN</strong>, according to the market workflow.</p></div></div>';
  if(kind==='sollis-patient')return sollisPatientChoices();
  if(kind==='calculator-upload'){
   return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
