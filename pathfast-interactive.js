@@ -49,22 +49,22 @@ function baselinePicker(){
 }
 function timing(){
  const base=displayTime(baselineMinutes);
- const one=displayTime(baselineMinutes+60),one15=displayTime(baselineMinutes+75);
- const two=displayTime(baselineMinutes+120),two15=displayTime(baselineMinutes+135);
- const row=(name,minutes,target,windowEnd,windowText,extra,alt)=>'<div class="pcr-timing-row'+(alt?' secondary':'')+'">'+
+ const oneEarly=displayTime(baselineMinutes+50),one=displayTime(baselineMinutes+60),one15=displayTime(baselineMinutes+75);
+ const twoEarly=displayTime(baselineMinutes+110),two=displayTime(baselineMinutes+120),two15=displayTime(baselineMinutes+135);
+ const row=(name,minutes,target,windowStart,windowEnd,windowText,extra,alt)=>'<div class="pcr-timing-row'+(alt?' secondary':'')+'">'+
   '<div class="pcr-timing-path"><span class="pcr-time-badge'+(alt?' alt':'')+'">'+name+'</span><strong>'+minutes+' minutes</strong></div>'+
   '<div class="pcr-timing-value"><span>TARGET DRAW</span><strong>'+target+'</strong></div>'+
-  '<div class="pcr-timing-value"><span>COLLECTION WINDOW</span><strong>'+target+'–'+windowEnd+'</strong><small>'+windowText+'</small></div>'+
+  '<div class="pcr-timing-value"><span>COLLECTION WINDOW</span><strong>'+windowStart+'–'+windowEnd+'</strong><small>'+windowText+'</small></div>'+
   (extra?'<p class="pcr-timing-extra">'+extra+'</p>':'')+'</div>';
  return '<div id="pcr-serial-timing" class="pcr-timing-compact">'+
   '<div class="pcr-timing-summary"><strong>Repeat collection from the first draw ('+base+')</strong>'+
-  '<p>Never draw early. The +15-minute allowance must be approved locally for assay-specific delta interpretation.</p></div>'+
+  '<p>Collection may begin up to 10 minutes before the target and extend up to 15 minutes after, per the approved local protocol. Do not draw earlier than the displayed window.</p></div>'+
   '<div class="pcr-timing-rows">'+
   '<div class="pcr-primary-timing-label">STANDARD PATHWAY · 0/1 HOUR</div>'+
-  row('0/1 HOUR','60',one,one15,'60–75 min from baseline','Default repeat. Set the 60-minute draw timer from the first collection.','')+
+  row('0/1 HOUR','60',one,oneEarly,one15,'50–75 min from baseline','Target 60 minutes. Earliest collection is 50 minutes after the first draw; latest is 75 minutes, per approved local protocol.','')+
   '</div>'+
   '<details class="pcr-fallback-timing"><summary><span>Missed the 1-hour window?</span><strong>View provider-authorized 0/2-hour fallback</strong><span class="pcr-fallback-action"><span class="pcr-fallback-show">Show more</span><span class="pcr-fallback-hide">Show less</span><span class="pcr-fallback-chevron lab-shared-chevron" aria-hidden="true"></span></span></summary>'+
-  row('0/2 HOUR','120',two,two15,'120–135 min from baseline','Only if the approved 1-hour window was missed. Notify the provider and obtain authorization before changing pathways.','alt')+
+  row('0/2 HOUR','120',two,twoEarly,two15,'110–135 min from baseline','Target 120 minutes. Use only if the 1-hour window was missed and the provider authorizes 0/2 hours; confirm the same −10/+15-minute allowance is approved locally.','alt')+
   '</details>'+
   '<div class="pcr-timing-footnote"><strong>Outside the authorized window?</strong> Record the actual collection time, notify the provider, and follow the approved alternative plan. Do not classify the sample as an in-window timed delta.</div>'+
   '</div>';
@@ -110,9 +110,9 @@ function interference(){
 }
 const questions=[
  {id:"baseline",title:"Initial PATHFAST hs-Troponin I result",opts:[["low","Below 4 ng/L"],["middle","4 to below 90 ng/L"],["high","90 ng/L or above"]]},
- {id:"twoHourTiming",title:"2-hour repeat collection status",opts:[["yes","Collected within the approved 2-hour window","Document the actual collection time and confirm it meets the approved timing criteria."],["pending","2-hour draw not yet collected","Schedule the repeat for 2 hours after the baseline collection time."],["late","Missed the approved 2-hour window","Notify the provider. Do not apply an out-of-window 0/2-hour delta."]]},
+ {id:"twoHourTiming",title:"2-hour repeat collection status",opts:[["yes","Collected within the approved 2-hour window","Document the actual collection time and confirm it meets the approved timing criteria."],["pending","2-hour draw not yet collected","Target 120 minutes after the baseline; approved collection window may allow 110–135 minutes."],["late","Missed the approved 2-hour window","Notify the provider. Do not apply an out-of-window 0/2-hour delta."]]},
  {id:"twoHourResult",title:"Review the 2-hour hs-Troponin I result",opts:[["ruleout","Both values and the 2-hour delta meet approved rule-out criteria","Verify the absolute baseline and repeat concentrations, 2-hour change, actual collection times, ECG and clinical exclusions."],["observe","Observation range or indeterminate result","Continue clinician assessment and any further testing required by the approved protocol."],["rulein","Approved urgent / rule-in criteria met","Immediate provider evaluation using the assay-specific thresholds and ECG / symptoms."],["unknown","Result, delta or threshold not yet verified","Confirm the repeat concentration, exact delta and approved 0/2-hour limits before classification."]]},
- {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window","Document the actual repeat draw time measured from the first collection."],["no","Missed the 1-hour window","Notify the provider. Switch to the approved 0/2-hour pathway if directed."],["pending","Repeat sample not collected yet","Plan the 1-hour draw relative to the baseline collection time."]]},
+ {id:"timing",title:"1-hour repeat collection status",opts:[["yes","Collected within the approved 1-hour window","Document the actual repeat draw time measured from the first collection."],["no","Missed the 1-hour window","Notify the provider. Switch to the approved 0/2-hour pathway if directed."],["pending","Repeat sample not collected yet","Target 60 minutes from baseline; the approved window is 50–75 minutes."]]},
  {id:"fallbackApproval",title:"After a missed 1-hour window, did the provider authorize the 0/2-hour fallback?",opts:[["yes","Yes, provider informed and authorized 0/2-hour repeat"],["notInformed","No, provider has not been informed"]]},
  {id:"delta",title:"Change in PATHFAST hs-Troponin I at 1 hour",opts:[["small","Less than 3 ng/L"],["middle","3 to below 20 ng/L"],["large","20 ng/L or greater"]]},
  {id:"risk",title:"Clinical assessment · ECG and HEART score",opts:[["low","HEART score ≤3, reassuring ECG, no concerning findings"],["concerning","Concerning ECG, HEART score >3, symptoms, or other concern"],["unknown","Clinical assessment incomplete"]]},
@@ -185,7 +185,7 @@ function flow(){
   h+='<div class="pcr-flow-transition"><span class="pcr-transition-icon">2h</span><div><strong>0/2-hour hs-Troponin I pathway</strong><p>'+esc(reason||"Missed one-hour window. Use the baseline draw time to schedule a provider-approved repeat.")+'</p></div></div>';
   h+=question(q("twoHourTiming"),number);
   if(selected.twoHourTiming==="late")return outcome("observe","2-hour collection window missed","Record the actual collection time and notify the provider. Do not apply a 0/2-hour delta cutoff outside its authorized timing window.");
-  if(selected.twoHourTiming==="pending")return outcome("observe","2-hour sample pending","Collect at 120 minutes from the original baseline, or within an explicitly approved timing allowance. Record the actual collection time.");
+  if(selected.twoHourTiming==="pending")return outcome("observe","2-hour sample pending","Target 120 minutes from the original baseline. Collect within 110–135 minutes only if the local protocol approves that allowance. Record the actual collection time.");
   if(selected.twoHourTiming!=="yes")return;
   h+=question(q("twoHourResult"),number+1);
   if(selected.twoHourResult==="rulein")return outcome("rulein","0/2-hour pathway · urgent provider assessment","The provider has identified assay-specific criteria requiring urgent evaluation. Review both measurements, ECG and clinical features.");
