@@ -1987,3 +1987,40 @@
   justify-content:center;
   text-align:center;
 }
+
+/* Walk-in Athena walkthroughs: stable selection cards with full-width content beneath. */
+.workflow-main .walkin-athena-guides{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ align-items:start;
+ gap:12px 14px;
+}
+.workflow-main .walkin-guide-slot{min-width:0;grid-row:1}
+.workflow-main .walkin-guide-trigger{
+ display:flex;align-items:center;gap:12px;
+ width:100%;height:78px;min-height:78px;padding:14px 16px;
+ border:1px solid #d1e3ed;border-radius:12px;
+ color:#285e7e;background:#fff;text-align:left;cursor:pointer;
+ transition:border-color .16s,background-color .16s,box-shadow .16s;
+}
+.workflow-main .walkin-guide-trigger:hover{background:#f1f8fa;border-color:#9ccbd4}
+.workflow-main .walkin-guide-trigger.is-active{
+ background:#e5f5f1;border-color:#168b80;
+ box-shadow:inset 0 0 0 1px #168b80;
+}
+.workflow-main .walkin-guide-trigger.is-active .ad-guide-icon{background:#ccebe3;color:#08766d}
+.workflow-main .walkin-guide-trigger .ad-guide-label{flex:1;min-width:0}
+.workflow-main .walkin-guide-trigger .ad-chevron{flex:0 0 20px;transform:rotate(0deg)}
+.workflow-main .walkin-guide-trigger[aria-expanded="true"] .ad-chevron{transform:rotate(180deg)}
+.workflow-main .walkin-guide-panel{
+ grid-column:1/-1;grid-row:2;
+ min-width:0;border:1px solid #cbdfe8;border-radius:12px;
+ background:#f9fcfd;overflow:hidden;
+}
+.workflow-main .walkin-guide-panel[hidden]{display:none!important}
+.workflow-main .walkin-guide-panel .ad-guide-body{border-top:0}
+@media(max-width:650px){
+ .workflow-main .walkin-athena-guides{grid-template-columns:1fr}
+ .workflow-main .walkin-guide-slot{grid-row:auto}
+ .workflow-main .walkin-guide-panel{grid-row:3}
+}
