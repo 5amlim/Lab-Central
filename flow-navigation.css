@@ -865,3 +865,10 @@
  .workflow-main .sollis-route-choices{grid-template-columns:1fr}
  .workflow-main .sollis-route-choice,.workflow-main .sollis-route-result{break-inside:avoid}
 }
+
+/* Sendout workflow selector belongs below each workflow's introduction card. */
+.workflow-main .workflow-head{margin-bottom:14px}
+.workflow-main .order-workflow-tabs{margin:0 0 23px}
+@media(max-width:650px){
+ .workflow-main .order-workflow-tabs{margin:0 0 17px}
+}
