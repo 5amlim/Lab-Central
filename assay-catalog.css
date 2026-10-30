@@ -103,6 +103,7 @@
 .lab-panel-athena{margin:0 17px 13px;padding:12px 13px;border:1px solid #d8e5ec;border-radius:10px;background:#f7fafc}
 .lab-panel-athena-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .lab-panel-athena-head>strong{font-size:10px;font-weight:850;letter-spacing:.045em;color:#41627a}
+.lab-panel-athena .athena-accent{color:#7a5cc9;font-weight:850}
 .lab-panel-athena-open{display:inline-flex;align-items:center;gap:5px;color:#176b77;background:none;border:0;padding:3px 0;font-size:10.5px;font-weight:800;text-align:left}
 .lab-panel-athena-open:hover{text-decoration:underline;text-underline-offset:2px}
 .lab-panel-athena-orders{display:flex;flex-direction:column;gap:5px;list-style:none;margin:0;padding:0}
