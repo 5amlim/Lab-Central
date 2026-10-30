@@ -1335,3 +1335,25 @@
     display:none;
   }
 }
+
+/* Shared upload layout for both requisition pathways. */
+.workflow-main .calculator-chart-upload{
+ width:100%;
+ align-items:stretch;
+}
+.workflow-main .calculator-chart-upload>.workflow-step-action{
+ align-self:flex-start;
+ margin:0 0 2px;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-panel,
+.workflow-main .calculator-chart-upload .sollis-upload-guide{
+ width:100%;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-guide{
+ margin-top:0;
+}
+@media(max-width:650px){
+ .workflow-main .calculator-chart-upload>.workflow-step-action{
+  align-self:stretch;
+ }
+}
