@@ -1211,3 +1211,75 @@
  color:#1e7767;font-size:11px;font-weight:800;line-height:1.35;
  text-align:center;
 }
+
+
+/* Sollis sendout: concise upload requirements instead of a paragraph callout. */
+.workflow-main .sollis-step-upload{
+  display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-top:14px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-panel{
+  width:100%;min-width:0;border:1px solid #dbe5eb;border-radius:12px;
+  background:#f9fbfc;overflow:hidden;
+}
+.workflow-main .sollis-step-upload .sollis-upload-steps{
+  list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  padding:0;margin:0;
+}
+.workflow-main .sollis-step-upload .sollis-upload-steps>li{
+  display:flex;align-items:center;gap:11px;padding:16px 17px;min-width:0;
+}
+.workflow-main .sollis-step-upload .sollis-upload-steps>li+li{
+  border-left:1px solid #dbe5eb;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-num{
+  display:grid;place-items:center;flex:none;width:30px;height:30px;
+  border-radius:9px;background:#e7f1f8;color:#287a9e;
+  font-size:13px;font-weight:850;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-copy{
+  min-width:0;display:flex;flex-direction:column;gap:3px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-copy strong{
+  color:#24485f;font-size:13.5px;font-weight:800;line-height:1.35;
+}
+.workflow-main .sollis-step-upload .sollis-upload-step-copy small{
+  color:#557385;font-size:12px;line-height:1.45;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required{
+  width:100%;display:flex;align-items:center;gap:9px;
+  padding:10px 16px;border:0;border-top:1px solid #d3e8df;
+  border-left:0;border-radius:0;background:#eef8f3;
+  color:#28695b;font-size:12.5px;line-height:1.5;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required-icon{
+  flex:none;width:22px;height:22px;border-radius:7px;
+  background:#d7f0e6;color:#167761;font-size:13px;font-weight:900;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required strong{
+  color:#166555;font-weight:850;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide{
+  width:100%;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide>summary{
+  width:auto;max-width:100%;
+}
+@media(max-width:880px){
+  .workflow-main .sollis-step-upload .sollis-upload-steps{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .workflow-main .sollis-step-upload .sollis-upload-steps>li{
+    padding:12px 14px;
+  }
+  .workflow-main .sollis-step-upload .sollis-upload-steps>li+li{
+    border-left:0;border-top:1px solid #e1e9ed;
+  }
+}
+@media(max-width:650px){
+  .workflow-main .sollis-step-upload .sollis-upload-required{
+    padding:10px 12px;
+  }
+}
+@media print{
+  .workflow-main .sollis-step-upload .sollis-upload-panel{break-inside:avoid}
+}
