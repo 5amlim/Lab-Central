@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-handoff-tags-v18" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-shared-calculator-upload-v19" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1266,10 +1266,11 @@ function sollisPatientChoices(){
      :'Lab personnel or the RN asks the Front Desk Coordinator to schedule a collection appointment as needed and provides the reviewed order and LAB FLOWSHEET. Front desk handles scheduling and any outstanding Navigator tasks. When the patient returns, the RN collects using the calculator and documents the collection in Athena.')+
    '</p></div>';
 }
-function workflowStepExtras(kind){
- if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN, according to the market workflow</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p class="navigator-routing-note">'+(state.reqSource==='message'?'Use the Navigator task created automatically for email or text. Do not create a duplicate.':'Create and route a Navigator task for the faxed requisition, unless a task already exists. Do not create a duplicate.')+'</p></div></div>';
- if(kind==='sollis-patient')return sollisPatientChoices();
- if(kind==='sollis-calculator-upload')return '<div class="workflow-step-extra sollis-step-upload">'+
+function calculatorChartUploadPanel(includeCalculatorLink=false){
+ const launch=includeCalculatorLink
+  ?'<button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>'
+  :'';
+ return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+launch+
   '<div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">1</span><span class="sollis-upload-step-copy"><strong>Save as PDF</strong><small>Finalized Lab Calculator</small></span></li>'+
@@ -1279,9 +1280,12 @@ function workflowStepExtras(kind){
    '<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>'+
   '</div>'+
   athenaUploadGuide('calculator',false,false,true)+'</div>';
- if(kind==='calculator-upload'){
-  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
- }
+}
+function workflowStepExtras(kind){
+ if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN, according to the market workflow</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p class="navigator-routing-note">'+(state.reqSource==='message'?'Use the Navigator task created automatically for email or text. Do not create a duplicate.':'Create and route a Navigator task for the faxed requisition, unless a task already exists. Do not create a duplicate.')+'</p></div></div>';
+ if(kind==='sollis-patient')return sollisPatientChoices();
+ if(kind==='sollis-calculator-upload')return calculatorChartUploadPanel(false);
+ if(kind==='calculator-upload')return calculatorChartUploadPanel(true);
  if(kind==='appointment-print'){
   return `<details class="color-print-guide">
     <summary><span class="color-print-summary-icon" aria-hidden="true">${svg('file-text')}</span><span class="color-print-summary-label"><strong>How to print the Lab Calculator in color</strong><small>Athena Print = black and white · View Original Image = color</small></span><span class="color-print-chevron" aria-hidden="true"></span></summary>
