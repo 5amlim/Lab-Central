@@ -984,3 +984,31 @@
  .workflow-main .collection-handoff-grid{grid-template-columns:minmax(0,1fr);gap:11px}
  .workflow-main .collection-handoff-card{padding:14px}
 }
+
+/* Step 02: one explicit front desk handoff, in upload/classify/assign order. */
+.workflow-main .navigator-routing-steps{
+ list-style:none;counter-reset:handoff-sequence;display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:10px 0 9px;
+ padding:0;
+}
+.workflow-main .navigator-routing-steps li{
+ counter-increment:handoff-sequence;position:relative;min-width:0;
+ padding:11px 11px 11px 43px;border:1px solid #c7e1f0;
+ border-radius:9px;background:#fff;color:#42647b;
+ font-size:12px;line-height:1.55;
+}
+.workflow-main .navigator-routing-steps li::before{
+ content:counter(handoff-sequence);position:absolute;top:11px;left:10px;
+ width:24px;height:24px;display:grid;place-items:center;
+ border-radius:7px;background:#d9edf9;color:#246e98;
+ font-size:12px;font-weight:850;
+}
+.workflow-main .navigator-routing-steps li strong,
+.workflow-main .navigator-routing-steps li b{color:#1f587c;font-weight:800}
+.workflow-main .navigator-routing-callout .navigator-routing-body .navigator-routing-note{
+ margin:0;padding:0!important;color:#53758a;font-size:11.5px;
+ line-height:1.55;
+}
+@media(max-width:950px){
+ .workflow-main .navigator-routing-steps{grid-template-columns:1fr;gap:7px}
+}
