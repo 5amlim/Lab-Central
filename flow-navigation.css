@@ -800,6 +800,9 @@
 .workflow-main .workflow-owner-tag--lab{
  color:#16786f;background:#e8f6f2;border-color:#b9ddd3;
 }
+.workflow-main .workflow-owner-tag--provider{
+ color:#6d5490;background:#f0ebf8;border-color:#d9c9e9;
+}
 .workflow-main .workflow-step-heading{
  display:flex;align-items:flex-start;justify-content:space-between;
  flex-wrap:wrap;column-gap:15px;row-gap:8px;margin-bottom:7px;
