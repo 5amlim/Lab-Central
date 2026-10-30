@@ -2049,3 +2049,21 @@
 .workflow-main .walkin-review-checklist ul{margin:0;padding-left:20px;display:grid;gap:8px}
 .workflow-main .walkin-review-checklist li{font-size:12.5px;line-height:1.6}
 .workflow-main .walkin-review-checklist li::marker{color:#238b89}
+
+/* Keep the choice cue directly above the first decision button. */
+@media(min-width:651px){
+ .workflow-main .branch-panel .branch-choice-group{
+  display:flex;flex-direction:column;align-items:flex-start;
+  width:max-content;max-width:calc(100% - 26px);margin-left:auto;
+ }
+ .workflow-main .branch-panel .branch-choice-group>.workflow-choice-caption{
+  margin:8px 0 5px;
+ }
+ .workflow-main .branch-panel .branch-choice-group>.branch-options{
+  justify-content:flex-start;margin:0 0 11px;
+ }
+}
+@media(max-width:650px){
+ .workflow-main .branch-panel .branch-choice-group{width:100%}
+ .workflow-main .branch-panel .branch-choice-group>.branch-options{margin-top:5px}
+}
