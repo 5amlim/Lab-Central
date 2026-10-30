@@ -1283,3 +1283,55 @@
 @media print{
   .workflow-main .sollis-step-upload .sollis-upload-panel{break-inside:avoid}
 }
+
+/* Unified Lab Calculator pills: bottom-right in collection, processing and bag cards. */
+.workflow-main .collection-handoff-card .collection-handoff-copy{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  align-self:stretch;
+  min-width:0;
+}
+.workflow-main .collection-handoff-card .collection-handoff-tag{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  align-self:flex-end;
+  gap:7px;
+  width:max-content;
+  max-width:100%;
+  min-height:38px;
+  margin-top:auto;
+  padding:9px 12px;
+  border:1px solid #b9ded1;
+  border-radius:999px;
+  background:#e7f5ef;
+  color:#217968;
+  font-family:inherit;
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.3;
+  text-align:center;
+  white-space:normal;
+}
+.workflow-main .collection-handoff-card .collection-handoff-list{
+  margin-bottom:18px;
+}
+.workflow-main .collection-handoff-card .collection-handoff-tag svg{
+  flex:none;width:15px;height:15px;
+}
+.workflow-main .collection-handoff-card button.collection-handoff-tag{
+  cursor:pointer;
+}
+.workflow-main .collection-handoff-card button.collection-handoff-tag:hover{
+  background:#d7efe4;border-color:#8bc9b3;
+}
+.workflow-main .collection-handoff-card button.collection-handoff-tag:focus-visible{
+  outline:3px solid #8ac4d4;outline-offset:3px;
+}
+@media print{
+  .workflow-main .collection-handoff-card button.collection-handoff-tag{
+    display:none;
+  }
+}
