@@ -169,7 +169,7 @@
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
-<link rel="stylesheet" href="assay-catalog.css?v=20261030-search-athena-orders-v1" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261030-purple-athena-accent-v2" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261029-piccolo-febridx-fit-v2" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
@@ -734,8 +734,8 @@ function searchPanelCard({section,panel,targets,hits}){
  const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
  const orders=searchPanelAthenaOrders(section,panel);
  const athena=orders.length?'<div class="lab-panel-athena">'+
-  '<div class="lab-panel-athena-head"><strong>ATHENA ORDER FOR THIS PANEL</strong>'+
-  '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View Athena orders <span aria-hidden="true">→</span></button></div>'+
+  '<div class="lab-panel-athena-head"><strong><span class="athena-accent">ATHENA</span> ORDER FOR THIS PANEL</strong>'+
+  '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View <span class="athena-accent">Athena</span> orders <span aria-hidden="true">→</span></button></div>'+
   '<ul class="lab-panel-athena-orders">'+orders.map(order=>
    '<li class="lab-panel-athena-order"><span class="lab-panel-athena-kind '+((order.kind||'set')==='poc'?'lab-panel-athena-kind--poc':'')+'">'+((order.kind||'set')==='poc'?'POC Test':'Order Set')+'</span>'+
     '<span class="lab-panel-athena-name">'+safeHtml(order.name)+(order.note?' <small>· '+safeHtml(order.note)+'</small>':'')+'</span></li>'
