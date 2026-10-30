@@ -828,3 +828,39 @@
 @media print{
  .workflow-main .workflow-owner-tag{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
+
+
+/* Sollis order: patient onsite versus scheduling decision (step 05). */
+.workflow-main .sollis-patient-branch .workflow-step-content>p{margin-bottom:13px}
+.workflow-main .sollis-route-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-left:36px}
+.workflow-main .sollis-route-choice{
+ display:flex;align-items:center;gap:10px;text-align:left;min-width:0;
+ padding:12px 13px;min-height:63px;border-radius:11px;
+ border:1.5px solid #d5e2e9;background:#f8fbfd;
+ color:#36576d;transition:border-color .15s,background .15s,box-shadow .15s;
+}
+.workflow-main .sollis-route-choice:hover{border-color:#87b9c1;background:#f1f8f9}
+.workflow-main .sollis-route-choice.is-selected{border-color:#168f88;background:#e9f6f2;box-shadow:0 0 0 1px #168f8820}
+.workflow-main .sollis-route-choice .sollis-route-icon{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#e9f1f7;color:#527c92}
+.workflow-main .sollis-route-choice.is-selected .sollis-route-icon{background:#d4eee7;color:#0b7870}
+.workflow-main .sollis-route-choice .sollis-route-icon svg{width:17px;height:17px}
+.workflow-main .sollis-route-choice .sollis-route-text{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.workflow-main .sollis-route-choice .sollis-route-text strong{font-size:13px;line-height:1.35;font-weight:820;color:#23475e}
+.workflow-main .sollis-route-choice .sollis-route-text small{font-size:11px;line-height:1.4;color:#627c90}
+.workflow-main .sollis-route-check{display:grid;place-items:center;flex:none;width:18px;height:18px;border:1px solid #cbd8e0;border-radius:50%;font-size:12px;color:transparent;background:white}
+.workflow-main .sollis-route-choice.is-selected .sollis-route-check{background:#168f88;color:#fff;border-color:#168f88}
+.workflow-main .sollis-route-result{margin:12px 0 0 36px;padding:13px 15px;border-radius:11px;background:#f2faf7;border:1px solid #cbe6dd;min-width:0}
+.workflow-main .sollis-route-result.is-scheduling{background:#f4f8fd;border-color:#d6e4f1}
+.workflow-main .sollis-route-result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;column-gap:14px;row-gap:8px}
+.workflow-main .sollis-route-result-head strong{font-size:13px;font-weight:850;color:#245967}
+.workflow-main .sollis-route-result>p{margin:7px 0 0!important;padding:0!important;font-size:12px;line-height:1.6}
+@media(max-width:650px){
+ .workflow-main .sollis-route-choices{grid-template-columns:1fr;padding-left:0}
+ .workflow-main .sollis-route-result{margin-left:0}
+ .workflow-main .sollis-route-choice{min-height:60px}
+}
+@media print{
+ .workflow-main .sollis-route-choice:not(.is-selected){display:none}
+ .workflow-main .sollis-route-choices{grid-template-columns:1fr}
+ .workflow-main .sollis-route-choice,.workflow-main .sollis-route-result{break-inside:avoid}
+}
