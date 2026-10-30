@@ -853,6 +853,7 @@
 .workflow-main .sollis-route-result.is-scheduling{background:#f4f8fd;border-color:#d6e4f1}
 .workflow-main .sollis-route-result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;column-gap:14px;row-gap:8px}
 .workflow-main .sollis-route-result-head strong{font-size:13px;font-weight:850;color:#245967}
+.workflow-main .sollis-route-owners{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px;margin-left:auto}
 .workflow-main .sollis-route-result>p{margin:7px 0 0!important;padding:0!important;font-size:12px;line-height:1.6}
 @media(max-width:650px){
  .workflow-main .sollis-route-choices{grid-template-columns:1fr;padding-left:0}
