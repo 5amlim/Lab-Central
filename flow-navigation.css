@@ -1500,3 +1500,31 @@
  font-weight:850;
  letter-spacing:.055em;
 }
+
+
+/* External request only: fourth upload action hands off to front desk. */
+.workflow-main .calculator-chart-upload .sollis-upload-handoff {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-width:0;
+  padding:14px 17px;
+  border-top:1px solid #dbe5eb;
+  background:#f5fafb;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-handoff .sollis-upload-step-num {
+  background:#e2f2ef;
+  color:#187b70;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-handoff .sollis-upload-step-copy strong {
+  color:#215b64;
+}
+.workflow-main .calculator-chart-upload .sollis-upload-handoff .sollis-upload-step-copy small {
+  color:#536f7b;
+}
+@media(max-width:650px){
+  .workflow-main .calculator-chart-upload .sollis-upload-handoff{
+    padding:12px 14px;
+    align-items:flex-start;
+  }
+}
