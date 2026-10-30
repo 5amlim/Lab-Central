@@ -61,7 +61,7 @@ function examples(){
  '</div>'+
  '<div class="ops-evidence-details">'+
  '<div class="ops-evidence-detail"><span class="ops-evidence-detail-icon" aria-hidden="true">10</span><div><strong>Up to 10 photos</strong><p>You can attach up to 10 photos in the Sendout Log. Include each sealed bag separately, along with specimen containers, the requisition and Lab Calculator printout when requested.</p></div></div>'+
- '<div class="ops-evidence-detail"><span class="ops-evidence-detail-icon" aria-hidden="true">↗</span><div><strong>Document pickup or shipment</strong><p>For <strong>STAT or special pickups</strong>, record the pickup confirmation or reference number. For <strong>special test kits shipped by UPS or FedEx</strong>, record the carrier, tracking number and pickup or drop-off confirmation.</p></div></div>'+
+ '<div class="ops-evidence-detail"><span class="ops-evidence-detail-icon" aria-hidden="true">↗</span><div><strong>Document pickup or shipment</strong><p>In the regional Sendout Log form, use the <strong>Confirmation Number</strong> field. For <strong>STAT or special pickups</strong>, enter the pickup confirmation or reference number. For <strong>special test kits shipped by UPS or FedEx</strong>, enter the carrier, tracking number and pickup or drop-off confirmation.</p></div></div>'+
  '</div>'+
  '<div class="ops-evidence-note"><span aria-hidden="true">✓</span><p>The Sendout Log covers <strong>routine send-outs, STAT/special pickups and shipped test kits</strong>. Upload patient documents and photos only through approved secure systems.</p></div></section>';
 }
