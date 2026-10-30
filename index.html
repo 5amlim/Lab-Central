@@ -423,7 +423,7 @@ const guideSearchTags={
 };
 const normalizeGuideSearch=value=>String(value??'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 // Protect short codes from matching the middle of unrelated words.
-const labExactAbbreviationTerms=new Set(('gfr egfr hstni hsctni ntprobnp probnp ddimer '
+const labExactAbbreviationTerms=new Set(('gfr egfr hstni hsctni ntprobnp probnp ddimer trop '
  +'mchc mcV mdma crp cpk tbili tco2 nonhdl vldl hdlc covid19 sarscov2 '
  +'hmpv hrv flua flub eaec epec etec stec ehec eiec o157 cdiff '
  +'rpp rvp gipanel bhcg hgb wbc rbc hct plt mcv mch rdw mpv bnp mxa '
@@ -469,7 +469,7 @@ const labTargetAliases={
  calcium:'ca', chloride:'cl', creatinine:'cr crea creat',
  glucose:'glu', potassium:'k', sodium:'na',
  'total bilirubin':'tbili t bili total bili bilirubin total',
- 'total carbon dioxide':'co2 tco2 total co2 bicarbonate',
+ 'total carbon dioxide':'co2 tco2 total co2 bicarbonate bicarb hco3',
  'total protein':'tp total prot',
  'c reactive protein':'crp', 'creatine kinase':'ck cpk',
  lactate:'lac lactic acid', magnesium:'mg', phosphorus:'phos phosphate',
@@ -503,6 +503,9 @@ const labTargetAliases={
  'leukocyte esterase':'le leu',
  urobilinogen:'uro urob', ketones:'ket',
  'human chorionic gonadotropin':'hcg bhcg beta hcg upt pregnancy',
+ 'human immunodeficiency virus type 1 p24 antigen':'hiv hiv1 hiv 1 p24',
+ 'human immunodeficiency virus type 1 antibodies':'hiv hiv1 hiv 1 hiv1 ab',
+ 'human immunodeficiency virus type 2 antibodies':'hiv hiv2 hiv 2 hiv2 ab',
  // FebriDx host response.
  'myxovirus resistance protein a':'mxa mx a',
  // Respiratory viruses and bacteria.
@@ -533,7 +536,13 @@ const labTargetAliases={
  'norovirus genogroups i ii':'noro norovirus',
  'rotavirus a':'rota rotavirus',
  'cryptosporidium species':'crypto cryptosporidium',
- 'giardia lamblia':'giardia giardia intestinalis'
+ 'giardia lamblia':'giardia giardia intestinalis',
+ // Common abbreviations on multi-drug screening cups.
+ amphetamine:'amp', barbiturates:'bar', benzodiazepines:'bzo bzd',
+ buprenorphine:'bup', 'cocaine metabolite':'coc', methadone:'mtd',
+ methamphetamine:'mamp meth', 'morphine opiates':'opi mop',
+ oxycodone:'oxy', phencyclidine:'pcp', propoxyphene:'ppx',
+ 'tricyclic antidepressants':'tca'
 };
 // Panel shorthand is kept separate from target aliases so UA and LFT do not
 // falsely imply that any single constituent analyte is a standalone order.
