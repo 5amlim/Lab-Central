@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-full-guide-v26" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-unified-routing-guide-v27" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1357,7 +1357,7 @@ function externalFlow(){
  <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Open task and upload</strong><p>Open the existing Navigator task and upload the requisition to the correct patient chart.</p></div></div>
  <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Classify and save</strong><p>Select <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save.</p></div></div>
  `}
- <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">3</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Route Navigator task for review</strong><span class="req-intake-route-badge">REQUIRED HANDOFF</span></div><p>${fax?'Create and route a Navigator task to the lab team or RN according to the market workflow, unless one already exists. Do not create a duplicate.':'Assign the existing Navigator task to the lab team or RN according to the market workflow. Do not create a duplicate.'}</p></div></div>
+ <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">3</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Route Navigator task for review</strong><span class="req-intake-route-badge">REQUIRED HANDOFF</span></div><p>${fax?'Create and route a Navigator task to the lab team or RN according to the market workflow, unless one already exists. Do not create a duplicate task.':'Assign the existing Navigator task to the lab team or RN according to the market workflow. Do not create a duplicate task.'}</p></div></div>
  </div>
  <div class="req-inline-guide">${athenaUploadGuide("requisition",fax)}</div>
  </div>
