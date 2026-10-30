@@ -169,7 +169,7 @@
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261029-visible-cue-v14">
-<link rel="stylesheet" href="assay-catalog.css?v=20261029-search-targets-v2" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261030-search-athena-orders-v1" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261029-piccolo-febridx-fit-v2" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
@@ -484,10 +484,144 @@ function searchPanelMatches(query,sections=all){
  }
  return matches;
 }
+
+/* Match panel-level target results to exact, supplied Athena order names.
+   Never infer an order merely because it shares a pathogen or keyword.
+   Entries not found in LAB_ORDER_SETS are excluded until verified. */
+const labPanelAthenaNames={
+  "piccolo": {
+    "Comprehensive Metabolic Panel": [
+      "Piccolo Comprehensive Metabolic Panel"
+    ],
+    "Basic Metabolic Panel": [
+      "Piccolo Basic Metabolic Panel"
+    ],
+    "MetLyte Plus C-Reactive Protein": [
+      "Piccolo MetLyte Plus CRP"
+    ],
+    "MetLac 12": [
+      "Piccolo MetLac 12"
+    ],
+    "Liver Panel Plus": [
+      "Piccolo Liver Panel Plus"
+    ],
+    "Lipid Panel": [
+      "Piccolo Lipid Panel"
+    ]
+  },
+  "pathfast": {
+    "High-sensitivity cardiac troponin I": [
+      "PATHFAST hs-Troponin Zero Hour (1)",
+      "PATHFAST hs-Troponin 1 Hour (1)",
+      "PATHFAST hs-Troponin 2 Hour (1)"
+    ],
+    "N-terminal pro-B-type natriuretic peptide": [
+      "PATHFAST pro-BNP (1)"
+    ],
+    "D-dimer": [
+      "PATHFAST D-Dimer (1)"
+    ]
+  },
+  "triage": {
+    "Cardiac troponin I": [
+      "troponin I, serum or plasma"
+    ],
+    "D-dimer": [
+      "D-dimer, quant, plasma"
+    ],
+    "B-type natriuretic peptide": [
+      "BNP (B-type natriuretic peptide), blood"
+    ]
+  },
+  "clinitek": {
+    "Urinalysis reagent strip": [
+      "urinalysis, dipstick, auto"
+    ],
+    "Urine pregnancy (human chorionic gonadotropin)": [
+      "beta-HCG, qualitative, urine"
+    ]
+  },
+  "spotfire": {
+    "Full respiratory panel": [
+      "Spotfire FULL Respiratory Panel ($500) (2)"
+    ],
+    "Mini respiratory panel": [
+      "Spotfire MINI Respiratory Panel ($190) (2)"
+    ],
+    "Mini sore throat panel": [
+      "Spotfire Mini Pharyngitis Panel ($190) (2)"
+    ]
+  },
+  "torch": {
+    "Gastrointestinal Pathogen Panel": [
+      "gastrointestinal pathogens DNA + RNA panel, NAA+non-probe, stool"
+    ]
+  },
+  "sofia": {
+    "Influenza A and B / SARS-CoV-2": [
+      "Sofia - Flu/Covid (2)"
+    ],
+    "Respiratory syncytial virus": [
+      "Sofia - RSV Test (2)"
+    ],
+    "Group A Streptococcus": [
+      "Sofia - Strep Test (2)"
+    ]
+  },
+  "poc": {
+    "Rapid SARS-CoV-2 test": [
+      "COVID-19 Antigen (IH) (1)"
+    ],
+    "Rapid respiratory syncytial virus test": [
+      "RSV (IH) (1)"
+    ],
+    "Rapid group A Streptococcus test": [
+      "Strep Throat screen (IH) (1)"
+    ],
+    "Human immunodeficiency virus antigen / antibody test": [
+      "HIV (1+2) Ab, rapid, unspecified specimen"
+    ],
+    "Infectious mononucleosis rapid test": [
+      "mononucleosis, heterophile Ab, blood"
+    ]
+  },
+  "drug-screen": {
+    "McKesson 14-panel urine drug screen (current guide)": [
+      "Drug Screen Urine (IH) (2)"
+    ]
+  },
+  "sysmex": {
+    "Three-part complete blood count": [
+      "CBC"
+    ]
+  },
+  "febridx": {
+    "FebriDx inflammatory marker test": [
+      "FebriDx (Ages 12-64) (2)"
+    ]
+  }
+};
+function searchPanelAthenaOrders(section,panel){
+ const names=labPanelAthenaNames[section.id]?.[panel.title]||[];
+ const verified=window.LAB_ORDER_SETS?.[section.id]||[];
+ return names.map(name=>verified.find(order=>order.name===name)).filter(Boolean);
+}
+
 function searchPanelCard({section,panel,targets,hits}){
  const names=[...new Set(hits.map(t=>t.name))];
  const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+safeHtml(n)+'</span>').join('');
  const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
+ const orders=searchPanelAthenaOrders(section,panel);
+ const athena=orders.length?'<div class="lab-panel-athena">'+
+  '<div class="lab-panel-athena-head"><strong>ATHENA ORDER FOR THIS PANEL</strong>'+
+  '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View Athena orders <span aria-hidden="true">→</span></button></div>'+
+  '<ul class="lab-panel-athena-orders">'+orders.map(order=>
+   '<li class="lab-panel-athena-order"><span class="lab-panel-athena-kind '+((order.kind||'set')==='poc'?'lab-panel-athena-kind--poc':'')+'">'+((order.kind||'set')==='poc'?'POC Test':'Order Set')+'</span>'+
+    '<span class="lab-panel-athena-name">'+safeHtml(order.name)+(order.note?' <small>· '+safeHtml(order.note)+'</small>':'')+'</span></li>'
+  ).join('')+'</ul>'+
+  (section.id==='pathfast'&&panel.title==='High-sensitivity cardiac troponin I'?'<p class="lab-panel-athena-note">Follow the approved 0/1-hour pathway, or 0/2 hours when indicated. Timepoint order names are not separate pathways.</p>':
+   '<p class="lab-panel-athena-note">This orders the panel, not the individual matching target. Confirm the current Athena selection.</p>')+
+  '</div>':'';
  const groups=Object.entries(panel.groups||{}).map(([group,arr])=>
   '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
   arr.map(n=>'<span>'+safeHtml(n)+'</span>').join('')+'</p></div>').join('');
@@ -496,6 +630,7 @@ function searchPanelCard({section,panel,targets,hits}){
   (panel.short?'<span class="lab-panel-abbrev">'+safeHtml(panel.short)+'</span>':'')+
   '</div><button type="button" class="lab-panel-open" data-go="'+safeHtml(section.id)+'">Open guide <span aria-hidden="true">→</span></button></div>'+
   (names.length?'<div class="lab-panel-target-hits"><strong>Matching analytes / pathogens</strong>'+chips+more+'</div>':'')+
+  athena+
   '<details class="lab-panel-all-targets"><summary>See all '+targets.length+' analytes / pathogens in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
   '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
 }
@@ -548,7 +683,7 @@ function renderHome(mode='home'){
   const panelResults=searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter));
   if(panelResults.length){
    h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelResults.length} panels</span></div>`;
-   h+=`<p class="lab-panel-search-description">Find which instrument panels contain the searched analyte or pathogen. Expand a panel to see its full test menu.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}</div>`;
+   h+=`<p class="lab-panel-search-description">Find panels containing the searched analyte or pathogen, with the corresponding verified Athena order where available. Panel orders may include additional targets.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}</div>`;
   }
  }
  h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:`<div class="empty-state" style="margin-top:17px">No matching guides. Try searching a different term or choose another category.</div>`;
