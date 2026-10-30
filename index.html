@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sollis-guide-right-v22" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-reminder-badge-v23" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1399,7 +1399,7 @@ function collectionProcessingHandoff(immediate=false){
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
   '<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
   x[3].map(point=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+'</li>').join('')+
-  '</ul>'+(i===3?'<span class="collection-handoff-tag collection-handoff-required-badge">'+svg('file-text')+'<span>Required: use Lab Calculator printout</span></span>':([0,2].includes(i)?'<button type="button" class="collection-handoff-tag collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':''))+'</div></article>').join('')+'</div>'+
+  '</ul>'+(i===3?'<span class="collection-handoff-tag collection-handoff-required-badge" role="note"><span class="collection-handoff-required-kicker">REQUIRED</span><span>Use Lab Calculator printout</span></span>':([0,2].includes(i)?'<button type="button" class="collection-handoff-tag collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':''))+'</div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 
