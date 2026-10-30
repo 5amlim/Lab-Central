@@ -893,3 +893,32 @@
 .workflow-main .external-workflow-timeline .completion-steps .workflow-step:nth-child(2){
   border-left-color:#327fa5;
 }
+
+/* Optional illustrated Athena upload steps for an updated requisition. */
+.workflow-main .updated-req-guide{margin-top:12px}
+.workflow-main .updated-req-guide .ad-guide{
+ margin:0;border:1px solid #bbded0;border-radius:11px;background:#fff;
+ box-shadow:0 2px 8px rgba(28,108,83,.045);
+}
+.workflow-main .updated-req-guide .ad-guide>summary{
+ min-height:64px;padding:12px 14px;gap:11px;background:#fff;
+}
+.workflow-main .updated-req-guide .ad-guide>summary:hover,
+.workflow-main .updated-req-guide .ad-guide[open]>summary{background:#f0faf6}
+.workflow-main .updated-req-guide .ad-guide-icon{background:#e1f3ec;color:#207b65;width:34px;height:34px}
+.workflow-main .updated-req-guide .ad-guide-label strong{
+ color:#216953;font-size:13px;line-height:1.4;font-weight:800;
+}
+.workflow-main .updated-req-guide .ad-guide-label small{color:#6c8c80;font-size:11px}
+.workflow-main .updated-req-guide .ad-guide-body{
+ background:#f8fcfa;border-top:1px solid #d5e9e0;
+}
+.resolution-note.resolution-note-upload .updated-req-guide .ad-guide-intro{
+ margin:0 0 13px;font-size:11px;line-height:1.6;color:#59776d;
+}
+.resolution-note.resolution-note-upload .updated-req-guide .ad-guide-card-head p{
+ margin:5px 0 0;font-size:11px;line-height:1.6;color:#678498;
+}
+@media(max-width:650px){
+ .workflow-main .updated-req-guide .ad-guide>summary{padding:11px;min-height:58px}
+}
