@@ -1783,3 +1783,82 @@
     margin-left:0;
   }
 }
+
+
+/* All three specimen handling reminder tags share a quiet, noninteractive style. */
+.workflow-main .collection-handoff-card .collection-handoff-required-badge{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  align-self:flex-end;
+  flex:0 0 auto;
+  gap:7px;
+  width:max-content;
+  max-width:100%;
+  min-height:32px;
+  margin-top:auto;
+  padding:7px 10px;
+  border:1px solid #d7e6df;
+  border-radius:8px;
+  background:#f4f8f6;
+  color:#516d65;
+  font-size:10.8px;
+  line-height:1.4;
+  font-weight:650;
+  text-align:left;
+  white-space:normal;
+  box-shadow:none;
+  cursor:default;
+  user-select:text;
+}
+.workflow-main .collection-handoff-card .collection-handoff-required-kicker{
+  flex:none;
+  color:#287b6d;
+  font-size:9px;
+  letter-spacing:.065em;
+  font-weight:850;
+}
+.workflow-main .collection-handoff-card .collection-handoff-required-badge:hover{
+  border-color:#d7e6df;
+  background:#f4f8f6;
+  color:#516d65;
+  box-shadow:none;
+}
+
+/* Shared first action link in external and Sollis-ordered upload panels. */
+.workflow-main .sollis-upload-step-copy .sollis-upload-inline-link{
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  gap:5px;
+  margin-top:5px;
+  padding:0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  color:#207d78;
+  font-size:11.5px;
+  line-height:1.5;
+  font-weight:750;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.workflow-main .sollis-upload-step-copy .sollis-upload-inline-link:hover{
+  color:#155c58;
+  text-decoration-thickness:2px;
+}
+.workflow-main .sollis-upload-step-copy .sollis-upload-inline-link:focus-visible{
+  outline:2px solid #58a6ac;
+  outline-offset:4px;
+  border-radius:2px;
+}
+
+/* Once the inline link is in action 1, keep the walkthrough alone at the right. */
+.workflow-main .calculator-chart-upload .calculator-chart-actions{
+  justify-content:flex-end;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide{
+  margin-left:auto;
+}
