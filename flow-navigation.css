@@ -1357,3 +1357,41 @@
   align-self:stretch;
  }
 }
+
+/* Intake step 01: the third action completes the front-desk handoff. */
+.workflow-main .req-intake-actions>.req-intake-route{
+ grid-column:1 / -1;
+ display:flex;align-items:flex-start;gap:11px;
+ padding:13px 14px;
+ border-color:#b8d9ee;
+ border-left:4px solid #2f86ae;
+ background:#eef7fc;
+}
+.workflow-main .req-intake-route>.req-intake-action-num{
+ background:#d9edf9;color:#246d95;
+}
+.workflow-main .req-intake-route-content{
+ flex:1;min-width:0;
+}
+.workflow-main .req-intake-route-header{
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+ gap:6px 12px;margin-bottom:5px;
+}
+.workflow-main .req-intake-route-header strong{
+ margin:0;color:#205f84;font-size:13px;
+}
+.workflow-main .req-intake-route-badge{
+ display:inline-flex;align-items:center;justify-content:center;
+ padding:5px 10px;border-radius:999px;
+ background:#d9edf9;color:#246d95;
+ font-size:10px;font-weight:850;letter-spacing:.05em;
+ white-space:normal;
+}
+.workflow-main .req-intake-route-content p{
+ margin:0!important;color:#517387!important;
+ font-size:12px!important;line-height:1.55!important;
+}
+@media(max-width:750px){
+ .workflow-main .req-intake-actions>.req-intake-route{grid-column:1;padding:12px}
+ .workflow-main .req-intake-route-header{align-items:flex-start}
+}
