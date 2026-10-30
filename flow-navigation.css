@@ -872,3 +872,24 @@
 @media(max-width:650px){
  .workflow-main .order-workflow-tabs{margin:0 0 17px}
 }
+
+
+/* Match numbered sendout timeline markers to each step's role and card accent. */
+.workflow-main .external-workflow-timeline .req-intake-number{
+  background:#e2f4f1!important;border-color:#a8d8d3!important;color:#14756e!important;
+}
+.workflow-main .external-workflow-timeline > .workflow-steps .workflow-step-number{
+  background:#eaf3fb!important;border-color:#bcdcf1!important;color:#256f9a!important;
+}
+.workflow-main .external-workflow-timeline .branch-number{
+  background:#f0e9f8!important;border-color:#cdb9e5!important;color:#74519b!important;
+}
+.workflow-main .external-workflow-timeline .completion-steps .workflow-step-number{
+  background:#e5f5ed!important;border-color:#aedec8!important;color:#236f55!important;
+}
+.workflow-main .external-workflow-timeline .completion-steps .workflow-step:nth-child(2) .workflow-step-number{
+  background:#eaf3fb!important;border-color:#bcdcf1!important;color:#256f9a!important;
+}
+.workflow-main .external-workflow-timeline .completion-steps .workflow-step:nth-child(2){
+  border-left-color:#327fa5;
+}
