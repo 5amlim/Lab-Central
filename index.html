@@ -1345,7 +1345,7 @@ function workflowStepExtras(kind){
  return '';
 }
 function workflowOwnerTag(role){
- if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN'&&role!=='RN'&&role!=='Provider')return '';
+ if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN'&&role!=='RN / Lab Personnel'&&role!=='RN'&&role!=='Provider')return '';
  const ownerClass=role==='Front Desk Coordinator'?'workflow-owner-tag--front':role==='Provider'?'workflow-owner-tag--provider':'workflow-owner-tag--lab';
  return '<span class="workflow-owner-tag '+ownerClass+'" aria-label="Responsible: '+safeHtml(role)+'">'+safeHtml(role)+'</span>';
 }
@@ -1468,8 +1468,8 @@ function walkinFlow(){
  let h='<div class="workflow-head walkin-workflow-head"><div><span class="eyebrow">EXTERNAL REQUISITION · WALK IN</span><h2>External requisition (walk in)</h2><p><strong>Patients should be encouraged to schedule external lab visits in advance.</strong> For walk-ins already in clinic, the RN reviews the outside requisition, prepares the collection plan and uploads both documents before drawing specimens. Lab personnel then process and log the sendout.</p><div class="workflow-doc-labels" aria-label="Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">RN · Lab personnel</span></div>';
  h+=orderWorkflowTabs('walk-in');
  h+=workflowSteps([
-  ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab personnel'],
-  ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab personnel']
+  ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab Personnel'],
+  ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab Personnel']
  ],1);
  h+=collectionProcessingHandoff(true,3);
  h+='<p class="source-footnote">Walk-in requests proceed directly to collection after review and document upload. Follow the current receiving laboratory directory and approved collection, shipping and documentation procedures.</p>';
