@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-upload-layout-v17" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-handoff-tags-v18" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1324,8 +1324,8 @@ function externalFlow(){
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">Receive and classify the requisition</h3><p>Select how it arrived, then complete the two chart actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
  <div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
- <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Verify the matched fax in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
  <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Use the existing Navigator task</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Verify the matched fax in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
  <div class="req-intake-actions">
@@ -1397,7 +1397,7 @@ function collectionProcessingHandoff(immediate=false){
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
   '<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
   x[3].map(point=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+'</li>').join('')+
-  '</ul>'+(i===3?'<span class="collection-handoff-required-badge">Required: use Lab Calculator printout</span>':([0,2].includes(i)?'<button type="button" class="collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':''))+'</div></article>').join('')+'</div>'+
+  '</ul>'+(i===3?'<span class="collection-handoff-tag collection-handoff-required-badge">'+svg('file-text')+'<span>Required: use Lab Calculator printout</span></span>':([0,2].includes(i)?'<button type="button" class="collection-handoff-tag collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':''))+'</div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 
