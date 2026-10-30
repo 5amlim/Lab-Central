@@ -783,3 +783,45 @@
 .ad-mock-flowsheet .ad-flowsheet-option{padding:7px 8px;margin:2px 0;color:#343c47;font-size:10px;font-weight:650}
 .ad-mock-flowsheet .ad-flowsheet-option.ad-target{padding:6px 7px}
 .ad-mock-flowsheet .ad-flowsheet-footnote{display:block;color:#687b8c;font-size:9px;line-height:1.45;margin-top:7px}
+
+
+/* Sendout workflow: responsibility tags follow the person assigned to each step. */
+.workflow-main .workflow-owner-tag{
+ display:inline-flex;align-items:center;justify-content:center;flex:none;
+ max-width:100%;min-height:27px;padding:5px 10px;
+ border:1px solid #c8dce8;border-radius:999px;
+ color:#326780;background:#edf5fa;
+ font-size:10.5px;font-weight:800;line-height:1.2;letter-spacing:.005em;
+ white-space:nowrap;text-align:center;
+}
+.workflow-main .workflow-owner-tag--front{
+ color:#37698b;background:#eaf3fb;border-color:#c9dceb;
+}
+.workflow-main .workflow-owner-tag--lab{
+ color:#16786f;background:#e8f6f2;border-color:#b9ddd3;
+}
+.workflow-main .workflow-step-heading{
+ display:flex;align-items:flex-start;justify-content:space-between;
+ flex-wrap:wrap;column-gap:15px;row-gap:8px;margin-bottom:7px;
+}
+.workflow-main .workflow-step-heading h3{
+ flex:1 1 240px;min-width:0;margin:0;
+}
+.workflow-main .workflow-step-heading .workflow-owner-tag{
+ margin-left:auto;align-self:center;
+}
+.workflow-main .requisition-intake-header>div{flex:1;min-width:0}
+.workflow-main .requisition-intake-header .workflow-owner-tag{margin-left:auto;align-self:flex-start}
+.workflow-main .branch-title{display:flex;align-items:center;gap:12px}
+.workflow-main .branch-title>div{flex:1;min-width:0}
+.workflow-main .branch-title .workflow-owner-tag{margin-left:auto}
+@media(max-width:650px){
+ .workflow-main .requisition-intake-header,
+ .workflow-main .branch-title{flex-wrap:wrap}
+ .workflow-main .requisition-intake-header .workflow-owner-tag,
+ .workflow-main .branch-title .workflow-owner-tag{margin-left:auto}
+ .workflow-main .workflow-step-heading h3{flex-basis:190px}
+}
+@media print{
+ .workflow-main .workflow-owner-tag{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+}
