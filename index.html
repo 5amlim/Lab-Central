@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-badges-v12" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-document-label-guide-v13" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1308,7 +1308,7 @@ function orderWorkflowTabs(tab){
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const complete=state.reqBranch==='complete';const unresolved=state.reqResolution==='unresolved';
- let h=`<div class="workflow-head"><div><span class="eyebrow">EXTERNAL SENDOUT REQUISITION</span><h2>External sendout requests</h2><p>Start with how the requisition was received. Both intake routes must end with the document classified as <strong>Lab requisition</strong> in the correct patient chart.</p></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
+ let h=`<div class="workflow-head"><div><span class="eyebrow">EXTERNAL SENDOUT REQUISITION</span><h2>External sendout requests</h2><p>Start with how the requisition was received. Upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
  h+=orderWorkflowTabs('external');
  h+='<div class="external-workflow-timeline">';
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
