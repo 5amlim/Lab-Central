@@ -1943,3 +1943,26 @@
  .workflow-main .walkin-upload-action,
  .workflow-main .walkin-document-reminder{break-inside:avoid}
 }
+
+/* Inline Sendout Log guide link within the final handoff card. */
+.workflow-main .collection-handoff-inline-guide{
+  display:inline;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#18796e;
+  font:inherit;
+  font-weight:750;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.workflow-main .collection-handoff-inline-guide:hover{
+  color:#115b54;
+  text-decoration-thickness:2px;
+}
+.workflow-main .collection-handoff-inline-guide:focus-visible{
+  outline:2px solid #58a6ac;
+  outline-offset:3px;
+  border-radius:2px;
+}
