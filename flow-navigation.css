@@ -1395,3 +1395,58 @@
  .workflow-main .req-intake-actions>.req-intake-route{grid-column:1;padding:12px}
  .workflow-main .req-intake-route-header{align-items:flex-start}
 }
+
+
+/* External requisitions: bottom-right calculator and Athena help actions share a row. */
+.workflow-main .calculator-chart-upload .calculator-chart-actions{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ justify-content:flex-end;
+ gap:12px;
+ width:100%;
+ min-width:0;
+ margin-top:2px;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.workflow-step-action{
+ margin:0;
+ min-height:55px;
+ align-self:auto;
+ flex:0 0 auto;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide{
+ margin:0;
+ width:max-content;
+ max-width:100%;
+ flex:0 1 auto;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide>summary{
+ display:flex;
+ align-items:center;
+ min-height:55px;
+ max-width:100%;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide[open]{
+ flex:1 0 100%;
+ width:100%;
+ order:2;
+}
+.workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide[open]>summary{
+ width:max-content;
+ max-width:100%;
+ margin-left:auto;
+}
+@media(max-width:760px){
+ .workflow-main .calculator-chart-upload .calculator-chart-actions{
+  flex-direction:column;
+  align-items:stretch;
+ }
+ .workflow-main .calculator-chart-upload .calculator-chart-actions>.workflow-step-action,
+ .workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide{
+  width:100%;
+  flex:0 0 auto;
+ }
+ .workflow-main .calculator-chart-upload .calculator-chart-actions>.sollis-upload-guide>summary{
+  width:100%;
+ }
+}
