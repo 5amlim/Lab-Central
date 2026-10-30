@@ -1119,3 +1119,54 @@
  .workflow-main .requisition-source-instructions .req-inline-guide{padding:0 10px 11px!important}
  .workflow-main .navigator-routing-callout .navigator-routing-badge{margin-left:0}
 }
+
+
+/* Sollis-ordered sendout Step 04: prominent required upload with a button-like how-to. */
+.workflow-main .sollis-step-upload{
+ display:flex;flex-direction:column;align-items:flex-start;gap:11px;
+ margin-top:13px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required{
+ display:flex;align-items:flex-start;gap:9px;
+ width:100%;padding:12px 14px;border:1px solid #b9dfd2;
+ border-left:4px solid #228a79;border-radius:10px;background:#f0faf6;
+ color:#245a51;font-size:12.5px;line-height:1.6;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required-icon{
+ flex:none;display:grid;place-items:center;width:24px;height:24px;
+ border-radius:7px;background:#d5f0e5;color:#196d5d;font-weight:900;
+}
+.workflow-main .sollis-step-upload .sollis-upload-required strong{
+ color:#155b4e;font-weight:850;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide{
+ margin:0;border:0;background:transparent;border-radius:0;overflow:visible;
+ box-shadow:none;width:100%;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide>summary{
+ display:inline-flex;width:auto;max-width:100%;min-height:49px;
+ padding:9px 13px;border:1px solid #aacfc8;border-radius:10px;
+ background:#e4f4ee;color:#176b61;gap:10px;
+ box-shadow:0 2px 5px rgba(16,95,82,.07);
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide>summary:hover,
+.workflow-main .sollis-step-upload .sollis-upload-guide[open]>summary{
+ background:#d7eee5;border-color:#69b7a5;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide .ad-guide-icon{
+ width:30px;height:30px;background:#cbeddf;color:#167866;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide .ad-guide-label strong{
+ font-size:12.5px;color:#196b5e;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide .ad-guide-label small{
+ color:#527c73;font-size:10.5px;
+}
+.workflow-main .sollis-step-upload .sollis-upload-guide .ad-guide-body{
+ margin-top:10px;border:1px solid #d3e7e0;border-radius:11px;
+ background:#f9fdfb;
+}
+@media(max-width:650px){
+ .workflow-main .sollis-step-upload .sollis-upload-required{padding:11px}
+ .workflow-main .sollis-step-upload .sollis-upload-guide>summary{width:100%}
+}
