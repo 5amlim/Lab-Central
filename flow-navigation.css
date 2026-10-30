@@ -2067,3 +2067,12 @@
  .workflow-main .branch-panel .branch-choice-group{width:100%}
  .workflow-main .branch-panel .branch-choice-group>.branch-options{margin-top:5px}
 }
+
+/* Numbered workflow sequences use the same quiet cue as choices. */
+.workflow-main .workflow-steps-caption{
+ display:block;width:max-content;margin:0 0 9px;
+ font-size:10px;letter-spacing:.115em;line-height:1.4;
+ font-weight:800;text-transform:uppercase;color:#467f87;
+}
+.workflow-main .requisition-source-instructions>.workflow-steps-caption{margin:0 0 10px}
+.workflow-main .calculator-chart-upload>.workflow-steps-caption{margin:0 0 9px}
