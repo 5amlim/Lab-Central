@@ -66,7 +66,7 @@ function log(){
  const f=form(),valid=Boolean(f&&/^https:\/\/forms\.cloud\.microsoft\/r\/[A-Za-z0-9]+$/.test(f.url));
  return '<div class="lc-sendout lc-sendout-log" id="lcSendoutGuide">'+selection("log")+
  '<div class="lc-log-outcome"><span class="lc-guide-eyebrow">LAB SENDOUT LOG</span>'+
- '<h2>'+E(markets[market].name)+'</h2><p>Use the <strong>'+E(markets[market].name)+'</strong> Sendout Log for routine specimens, STAT or special pickups, and special test kits shipped by UPS or FedEx. Choose the clinic within the form and record any pickup confirmation or shipment tracking information.</p>'+
+ '<h2>'+E(markets[market].name)+'</h2><p>Use the <strong>'+E(markets[market].name)+'</strong> Sendout Log for routine specimens, STAT or special pickups, and special test kits shipped by UPS or FedEx. Choose the clinic within the form. Enter any pickup confirmation, carrier and shipment tracking details under <strong>Confirmation Number</strong>.</p>'+
  (valid?'<a class="lc-open-form" href="'+E(f.url)+'" target="_blank" rel="noopener noreferrer">Open '+E(markets[market].name)+' Sendout Log ↗</a>':'<p>Approved form link is not configured for this market.</p>')+
  '</div></div>';
 }
