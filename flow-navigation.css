@@ -2033,3 +2033,12 @@
   align-self:center;
   margin-top:auto;
 }
+
+/* Quiet, consistent prompt for mutually exclusive workflow decisions. */
+.workflow-main .workflow-choice-caption{
+ display:block;width:max-content;max-width:100%;
+ margin:13px 0 8px;color:#467f87;
+ font-size:10px;font-weight:800;letter-spacing:.115em;line-height:1.4;
+ text-transform:uppercase;
+}
+.workflow-main .workflow-choice-caption + .order-workflow-tabs{margin-top:0}
