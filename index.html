@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-requisition-button-right-v25" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-full-guide-v26" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1201,11 +1201,26 @@ function renderCalculators(){
  el('currentCrumb').textContent='Lab calculators';
  let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators','Enter your test codes, add all requested tests, then print or save the calculator as a PDF.');
  h+=calculatorCards();
- h+=`<div class="section-head"><h2 class="section-title">How to use the calculator</h2></div><div class="flow-step-grid">${[
- ['01','Enter the test codes','Open the appropriate lab calculator. In Add Tests, enter the test code or name from the requisition.'],
- ['02','Add multiple tests','Enter one code or test name per line. Select Review matches, verify each match, then choose Add best matches. You can also select tests individually from search.'],
- ['03','Print or save as PDF','Review the selected tests and collection summary. Click Print to print the calculator or choose Save as PDF in the print dialog.']
- ].map(x=>`<article class="flow-step"><span class="flow-number">${x[0]}</span><strong>${safeHtml(x[1])}</strong><p>${safeHtml(x[2])}</p></article>`).join('')}</div>`;
+ h+=`<section class="calc-overview-guide" aria-labelledby="calculator-usage-heading">
+  <div class="section-head calc-overview-head"><div><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>From test lookup to collection, STAT routing and the final printout.</p></div><span class="calc-guide-count">8 steps</span></div>
+  <div class="calc-guide-grid">
+    <article class="calc-guide-card"><span class="calc-guide-step">01</span><div><h3>Choose the receiving lab</h3><p>Open Quest, Cedars or Labcorp. Use <strong>Select Lab</strong> to switch between them. Each lab has its own test directory and specimen requirements.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">02</span><div><h3>Search by code, name or shorthand</h3><p>Enter a test code, full name or abbreviation such as <strong>CBC, GFR or STI</strong> in Search tests. Search can also match clinical categories. Confirm the exact test before adding it.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">03</span><div><h3>Browse categories and filters</h3><p>In Quest or Labcorp, open <strong>Filters → Clinical category</strong> (e.g., hematology, GI, thyroid or allergy). Narrow results by specimen, container, temperature, fasting and other filters. Cedars offers <strong>Group by</strong> and specimen/container filters.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">04</span><div><h3>Add one test or an entire requisition</h3><p>Select a test from search or use <strong>Add Tests</strong> for multiple orders. Enter one code or name per line, choose <strong>Review matches</strong>, confirm each match, then <strong>Add best matches</strong>.</p></div></article>
+    <article class="calc-guide-card calc-guide-card-stat"><span class="calc-guide-step">05</span><div><h3>Check STAT options for your market</h3><p>For Quest, select the <strong>STAT receiving lab</strong> in SoCal, NorCal, New York or Florida, then <strong>Show STAT tests</strong>. Labcorp has <strong>STAT routing info</strong> by receiving area. Mark a test STAT only when its code and receiving location are eligible; verify current availability.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">06</span><div><h3>Review collection and processing</h3><p>Check required tubes, minimum volumes, order of draw, handling and centrifugation. The collection summary estimates tube counts and may combine compatible serum/plasma requirements. Review any fasting, light-protection or special-container warnings.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">07</span><div><h3>Check transport bags and priority</h3><p>Use the summary to separate specimens by <strong>receiving lab, room temperature, refrigerated or frozen</strong> transport, and <strong>STAT versus routine</strong>. Check individual submission containers and any special handling instructions.</p></div></article>
+    <article class="calc-guide-card"><span class="calc-guide-step">08</span><div><h3>Print, save and upload</h3><p>Review the final collection plan, then select <strong>Print</strong> or <strong>Save as PDF</strong>. Upload the PDF to the patient chart in Athena as a <strong>Clinical Document</strong> labeled <strong>LAB FLOWSHEET</strong>.</p></div></article>
+  </div>
+  <div class="calc-extra-heading"><h3>Additional tools</h3><p>Use these when a test needs more review.</p></div>
+  <div class="calc-extra-grid">
+    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('search')}</span><div><strong>Missing or restricted tests</strong><p>Check the <strong>Do not perform</strong> list. If a Quest or Labcorp test is missing, verify details in the official directory before using <strong>Add missing test</strong>. Cedars manual entries are disabled.</p></div></div>
+    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('filter')}</span><div><strong>Clinical and specimen filters</strong><p>Category browsing is a search aid, not a substitute for the correct order code. Some tests have multiple categories or additional collection restrictions.</p></div></div>
+    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('file-text')}</span><div><strong>Lab-specific references</strong><p>Cedars includes a separate illustrated <strong>container guide</strong>. Labcorp also offers Quest-to-Labcorp comparisons, but suggested matches must be verified before ordering.</p></div></div>
+  </div>
+  <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory. Never enter patient identifiers in the calculator.</p>
+</section>`;
  h+=`<div class="tool-bottom-link"><span>Need the full intake, upload and scheduling instructions?</span><button type="button" data-go="orders">Open sendout order workflows <span>→</span></button></div>`;
  h+=`<div class="calculator-sendout-guide"><span class="calculator-sendout-icon">${svg('package')}</span><div><strong>Ready to send specimens?</strong><p>RN collects using the calculator. Lab tech processes, packages and submits the electronic log.</p></div><button type="button" data-go="sendout-log">Sendout Log instructions →</button></div>`;
  h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
