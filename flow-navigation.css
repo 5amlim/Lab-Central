@@ -1358,17 +1358,16 @@
  }
 }
 
-/* Intake step 01: the third action completes the front-desk handoff. */
+/* Intake step 01: route as action 3, with the same card style as actions 1 and 2. */
 .workflow-main .req-intake-actions>.req-intake-route{
  grid-column:1 / -1;
  display:flex;align-items:flex-start;gap:11px;
  padding:13px 14px;
- border-color:#b8d9ee;
- border-left:4px solid #2f86ae;
- background:#eef7fc;
+ border:1px solid #d5e8e2;
+ background:#fff;
 }
 .workflow-main .req-intake-route>.req-intake-action-num{
- background:#d9edf9;color:#246d95;
+ background:#dff3ed;color:#187e73;
 }
 .workflow-main .req-intake-route-content{
  flex:1;min-width:0;
@@ -1378,7 +1377,7 @@
  gap:6px 12px;margin-bottom:5px;
 }
 .workflow-main .req-intake-route-header strong{
- margin:0;color:#205f84;font-size:13px;
+ margin:0;color:#1e655f;font-size:13px;
 }
 .workflow-main .req-intake-route-badge{
  display:inline-flex;align-items:center;justify-content:center;
@@ -1388,8 +1387,8 @@
  white-space:normal;
 }
 .workflow-main .req-intake-route-content p{
- margin:0!important;color:#517387!important;
- font-size:12px!important;line-height:1.55!important;
+ margin:0!important;color:#546e77!important;
+ font-size:12px!important;line-height:1.6!important;
 }
 @media(max-width:750px){
  .workflow-main .req-intake-actions>.req-intake-route{grid-column:1;padding:12px}
@@ -1530,7 +1529,7 @@
 }
 
 
-/* The requisition upload walkthrough is a right-aligned disclosure, not a full-width button. */
+/* Requisition upload walkthrough: right-aligned, sized like the Lab Calculator guide button. */
 .workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide{
   width:100%;
   max-width:100%;
@@ -1545,16 +1544,26 @@
 .workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide > summary{
   display:flex;
   align-items:center;
-  gap:11px;
+  gap:12px;
   width:max-content;
+  min-width:min(100%,400px);
   max-width:100%;
-  min-height:56px;
+  min-height:64px;
   margin-left:auto;
-  padding:10px 14px;
+  padding:12px 16px;
   border:1px solid #cbdfe8;
   border-radius:10px;
   background:#fff;
-  box-shadow:0 1px 4px rgba(38,87,115,.05);
+  box-shadow:0 2px 5px rgba(38,87,115,.07);
+}
+.workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide > summary .ad-guide-icon{
+  width:34px;height:34px;flex:none;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide > summary .ad-guide-label strong{
+  font-size:13.5px;line-height:1.4;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide > summary .ad-guide-label small{
+  font-size:11.5px;line-height:1.4;
 }
 .workflow-main .requisition-source-instructions .req-inline-guide > .ad-guide > summary:hover{
   background:#f2f9fc;
