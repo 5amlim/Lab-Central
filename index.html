@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-aligned-choice-label-v38" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-step-cues-v39" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1304,7 +1304,7 @@ function sollisPatientChoices(){
 }
 function calculatorChartUploadPanel(includeCalculatorLink=false){
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
-  '<div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
+  '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">1</span><span class="sollis-upload-step-copy"><strong>Prepare Lab Calculator and save as PDF</strong><small>Verify test codes and specimen requirements.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">2</span><span class="sollis-upload-step-copy"><strong>Upload to Athena</strong><small>Clinical Document</small></span></li>'+
@@ -1372,6 +1372,7 @@ function externalFlow(){
  <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Verify the matched fax in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
+ <div class="workflow-steps-caption">STEPS</div>
  <div class="req-intake-actions">
  ${fax?`
  <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Verify the fax</strong><p>Confirm the requisition is matched to the correct patient chart.</p></div></div>
