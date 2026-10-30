@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-centered-required-badges-v33" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-walkin-guide-panels-v34" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1444,6 +1444,14 @@ function collectionProcessingHandoff(immediate=false,startNumber=1){
 }
 
 
+function walkinAthenaGuideTabs(){
+ const guides=[['requisition','How to upload the lab requisition'],['calculator','How to upload the Lab Calculator']];
+ return guides.map(function(entry){
+  const raw=athenaUploadGuide(entry[0],false,false,false);
+  const body=raw.slice(raw.indexOf('<div class="ad-guide-body">'),raw.lastIndexOf('</details>'));
+  return '<div class="walkin-guide-slot"><button type="button" class="walkin-guide-trigger" data-walkin-guide="'+entry[0]+'" aria-expanded="false" aria-controls="walkin-guide-'+entry[0]+'"><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+entry[1]+'</strong><small>View 5 illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></button></div><div id="walkin-guide-'+entry[0]+'" class="walkin-guide-panel" data-walkin-panel="'+entry[0]+'" hidden>'+body+'</div>';
+ }).join('');
+}
 function walkinDocumentPanel(){
  return '<div class="walkin-document-panel">'+
   '<div class="walkin-upload-grid" aria-label="Required documents for walk-in patients">'+
@@ -1452,7 +1460,7 @@ function walkinDocumentPanel(){
    '<div class="walkin-upload-action"><span class="walkin-upload-number">3</span><div><strong>Upload the calculator PDF</strong><p>Save to the same chart as a <b>Clinical Document</b> labeled <b>LAB FLOWSHEET</b>.</p></div></div>'+
   '</div>'+
   '<div class="walkin-document-reminder" role="note"><span aria-hidden="true">✓</span><span>Confirm both documents are saved in the correct patient chart before collection. Print the requisition and Lab Calculator for collection and lab handoff as needed.</span></div>'+
-  '<div class="walkin-athena-guides">'+athenaUploadGuide('requisition',false,false,false)+athenaUploadGuide('calculator',false,false,true)+'</div>'+
+  '<div class="walkin-athena-guides">'+walkinAthenaGuideTabs()+'</div>'+
  '</div>';
 }
 function walkinFlow(){
@@ -1793,6 +1801,22 @@ function saveEditor(clear=false){
  closeEditor();render();
 }
 document.addEventListener('click',e=>{
+ const walkinGuide=e.target.closest('[data-walkin-guide]');
+ if(walkinGuide){
+  const wrapper=walkinGuide.closest('.walkin-athena-guides');
+  const kind=walkinGuide.dataset.walkinGuide;
+  const opening=walkinGuide.getAttribute('aria-expanded')!=='true';
+  wrapper.querySelectorAll('[data-walkin-guide]').forEach(button=>{
+   const active=opening&&button.dataset.walkinGuide===kind;
+   button.setAttribute('aria-expanded',String(active));
+   button.classList.toggle('is-active',active);
+  });
+  wrapper.querySelectorAll('[data-walkin-panel]').forEach(panel=>{
+   panel.hidden=!(opening&&panel.dataset.walkinPanel===kind);
+  });
+  return;
+ }
+
  const videoOpen=e.target.closest('[data-pf-play-video]');
  if(videoOpen){openCalibrationVideo();return;}
  if(e.target.closest('[data-pf-close-video]')){closeCalibrationVideo();return;}
