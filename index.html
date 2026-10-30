@@ -422,9 +422,21 @@ const guideSearchTags={
  'drug-screen':'toxicology drug screen urine drugs'
 };
 const normalizeGuideSearch=value=>String(value??'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+// Protect short codes from matching the middle of unrelated words.
+const labExactAbbreviationTerms=new Set(('gfr egfr hstni hsctni ntprobnp probnp ddimer '
+ +'mchc mcV mdma crp cpk tbili tco2 nonhdl vldl hdlc covid19 sarscov2 '
+ +'hmpv hrv flua flub eaec epec etec stec ehec eiec o157 cdiff '
+ +'rpp rvp gipanel bhcg hgb wbc rbc hct plt mcv mch rdw mpv bnp mxa '
+ +'lft cbc hdl alp alt ast bun ggt sgpt sgot').toLowerCase().split(/\s+/));
+function normalizeLabQuery(value){
+ return normalizeGuideSearch(value).replace(/\bnt pro bnp\b/g,'ntprobnp').replace(/\bpro bnp\b/g,'probnp');
+}
+function matchesLabTerms(value,tokens,terms){
+ return terms.every(t=>t.length<=3||labExactAbbreviationTerms.has(t)?tokens.has(t):value.includes(t));
+}
 const guideSearchIndex=new Map();
 function isMatch(s,q){
- const terms=normalizeGuideSearch(q).split(/\s+/).filter(Boolean);
+ const terms=normalizeLabQuery(q).split(/\s+/).filter(Boolean);
  if(!terms.length)return true;
  let index=guideSearchIndex.get(s.id);
  if(!index){
@@ -442,7 +454,7 @@ function isMatch(s,q){
  }
  // Require all query words, but don't allow short test codes (e.g. PT, CK)
  // to match letters inside unrelated words.
- return terms.every(t=>t.length<=2?index.words.has(t):index.value.includes(t))||searchPanelMatches(q,[s]).length>0;
+ return matchesLabTerms(index.value,index.words,terms)||searchPanelMatches(q,[s]).length>0;
 }
 // Index each measured analyte and detected pathogen within its panel.
 // Common clinical search shorthand. Each alias is tied to an assay-reported
@@ -482,7 +494,7 @@ const labTargetAliases={
  // Cardiac / coagulation.
  'high sensitivity cardiac troponin i':'hstni hs tni hs ctni hsctni high sensitivity troponin i trop',
  'cardiac troponin i':'tni ctni trop',
- 'n terminal pro b type natriuretic peptide':'ntprobnp nt probnp pro bnp probnp',
+ 'n terminal pro b type natriuretic peptide':'ntprobnp nt probnp probnp',
  'b type natriuretic peptide':'bnp',
  'd dimer':'ddimer d dimer',
  'prothrombin time':'pt protime', 'international normalized ratio':'inr',
@@ -553,10 +565,10 @@ function labWordMatch(text,terms){
  const value=normalizeGuideSearch(text),tokens=new Set(value.split(/\s+/));
  // Two- and three-character abbreviations must be whole tokens. For example,
  // "cr" should find creatinine, not CRP; "bnp" must not match NT-proBNP.
- return terms.every(t=>t.length<=3?tokens.has(t):value.includes(t));
+ return matchesLabTerms(value,tokens,terms);
 }
 function searchPanelMatches(query,sections=all){
- const terms=normalizeGuideSearch(query).split(/\s+/).filter(Boolean);
+ const terms=normalizeLabQuery(query).split(/\s+/).filter(Boolean);
  if(!terms.length)return [];
  const matches=[];
  for(const section of sections){
