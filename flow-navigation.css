@@ -2024,3 +2024,12 @@
  .workflow-main .walkin-guide-slot{grid-row:auto}
  .workflow-main .walkin-guide-panel{grid-row:3}
 }
+
+/* Center required notes against the full card, not its indented text column. */
+.workflow-main .collection-handoff-card{position:relative}
+.workflow-main .collection-handoff-card .collection-handoff-required-badge{
+  position:relative;
+  left:calc(-1 * (38px + 13px) / 2);
+  align-self:center;
+  margin-top:auto;
+}
