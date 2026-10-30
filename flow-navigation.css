@@ -1021,3 +1021,22 @@
 .workflow-main .collection-handoff-calculator:focus-visible{
  outline:3px solid #8ac4d4;outline-offset:3px;
 }
+
+/* Document labels in the external requisition workflow header. */
+.workflow-main .workflow-doc-labels{
+ display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+ margin-top:13px;
+}
+.workflow-main .workflow-doc-label{
+ display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px;
+ padding:8px 11px;border:1px solid #d4e4e9;border-radius:9px;
+ background:#fff;color:#536e81;font-size:11.5px;line-height:1.45;
+}
+.workflow-main .workflow-doc-label strong{
+ color:#236878;background:#eaf6f4;border-radius:5px;
+ padding:3px 6px;font-size:11px;font-weight:850;letter-spacing:.015em;
+}
+@media(max-width:650px){
+ .workflow-main .workflow-doc-labels{align-items:stretch;flex-direction:column}
+ .workflow-main .workflow-doc-label{justify-content:space-between}
+}
