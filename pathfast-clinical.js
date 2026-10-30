@@ -25,8 +25,8 @@ let rnStep=0,rnAllSteps=false;
 const rnSteps=[
  {name:"Confirm the 0/1-hour pathway",text:"Use the 0/1-hour PATHFAST hs-Troponin I pathway as the standard collection workflow. The 0/2-hour pathway is a fallback only if the approved 1-hour collection window is missed and the provider authorizes the switch."},
  {name:"Collect, label and gently invert",text:"Collect lithium-heparin whole blood, document the exact baseline collection date and time, and gently invert 8–10 times immediately. Do not shake or leave the tube unmixed. Keep serial sample types consistent."},
- {name:"Handoff and start the timer",text:"Give the properly labeled tube to the lab tech promptly. Start the 60-minute timer from the FIRST DRAW, not from the result time. Collect the 1-hour repeat in the approved window. The +15-minute allowance is only valid when authorized under the assay-specific local protocol. Never collect early."},
- {name:"Repeat and document",text:"At the approved 1-hour repeat time, use the same specimen type, gently invert, and document the actual draw time. If the approved collection window is missed, notify the provider and use the 2-hour pathway only when authorized. Do not treat a late 1-hour sample as an in-window 1-hour delta."}
+ {name:"Handoff and start the timer",text:"Give the properly labeled tube to the lab tech promptly. Start the 60-minute timer from the FIRST DRAW, not from the result time. Collect the 1-hour repeat within 50–75 minutes of the first draw (10 minutes early to 15 minutes late), as permitted by the approved local protocol. The 60-minute target remains preferred. Do not collect before 50 minutes."},
+ {name:"Repeat and document",text:"At the approved 1-hour repeat time, use the same specimen type, gently invert, and document the actual draw time. If the 50–75-minute collection window is missed, notify the provider and use the 2-hour pathway only when authorized. Do not treat a late 1-hour sample as an in-window 1-hour delta."}
 ];
 function rnGuide(){
  const count=rnSteps.length,number=rnStep+1;
