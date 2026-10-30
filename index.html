@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sendout-handoff-label-qr-v11" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-badges-v12" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1354,7 +1354,7 @@ function externalFlow(){
 function collectionProcessingHandoff(immediate=false){
  const items=[
   ['RN / COLLECTOR','test-tubes','Collect specimens',[
-   ['Use the Lab Calculator','for required tubes, volumes and order of draw.'],
+   ['Follow the Lab Calculator','for tubes, volumes and order of draw.'],
    ['Label every tube','with patient identifiers, collection date, time, and collector initials.'],
    ['Collect','all other ordered specimen types.']
   ]],
@@ -1364,10 +1364,10 @@ function collectionProcessingHandoff(immediate=false){
   ]],
   ['LAB PERSONNEL','settings','Process specimens',[
    ['Verify labels','against the requisition.'],
-   ['Centrifuge and aliquot','per the Lab Calculator and test directory.']
+   ['Follow the Lab Calculator','for centrifugation, aliquoting and specimen handling; verify against the test directory.']
   ]],
   ['LAB PERSONNEL','package','Prepare transport bags',[
-   ['Separate specimens','by receiving lab, temperature and STAT versus routine priority.'],
+   ['Follow the Lab Calculator printout','to separate bags by receiving lab, transport temperature, and STAT versus routine priority.'],
    ['Include paperwork','in the appropriate bag document sleeve.']
   ]],
   ['LAB PERSONNEL','file-text','Confirm billing paperwork',[
@@ -1385,7 +1385,7 @@ function collectionProcessingHandoff(immediate=false){
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
   '<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
   x[3].map(point=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+'</li>').join('')+
-  '</ul></div></article>').join('')+'</div>'+
+  '</ul>'+([0,2,3].includes(i)?'<button type="button" class="collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':'')+'</div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 
