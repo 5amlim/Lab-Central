@@ -1980,3 +1980,10 @@
   outline-offset:3px;
   border-radius:2px;
 }
+
+/* Center the required calculator printout note in each handoff card. */
+.workflow-main .collection-handoff-card .collection-handoff-required-badge{
+  align-self:center;
+  justify-content:center;
+  text-align:center;
+}
