@@ -963,20 +963,6 @@
 .workflow-main .collection-handoff-card:nth-child(n+3) .collection-handoff-list li strong{
  color:#196c65;
 }
-.workflow-main .collection-handoff-card:nth-child(5){
- border-top-color:#bf8a38;background:#fffaf0;border-color:#eadac0;
- border-top:3px solid #bf8a38;
-}
-.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-icon{
- background:#f8e9cf;color:#986b24;
-}
-.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-copy h3,
-.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-list li strong{
- color:#815a1d;
-}
-.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-list li::before{
- background:#b47c2b;
-}
 @media(max-width:1000px){
  .workflow-main .collection-handoff-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
