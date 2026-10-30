@@ -922,3 +922,65 @@
 @media(max-width:650px){
  .workflow-main .updated-req-guide .ad-guide>summary{padding:11px;min-height:58px}
 }
+
+
+/* Scannable sendout handoff checklist: three balanced columns with clear action bullets. */
+.workflow-main .collection-handoff-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;
+}
+.workflow-main .collection-handoff-card{
+ display:flex;align-items:flex-start;gap:13px;min-width:0;
+ padding:17px 16px 18px;border-radius:13px;background:#f8fbfd;
+}
+.workflow-main .collection-handoff-icon{
+ width:38px;height:38px;border-radius:10px;
+}
+.workflow-main .collection-handoff-copy{flex:1;min-width:0}
+.workflow-main .collection-handoff-copy small{
+ font-size:10px;letter-spacing:.09em;line-height:1.4;
+}
+.workflow-main .collection-handoff-copy h3{
+ margin:6px 0 12px;font-size:14px;line-height:1.4;font-weight:800;color:#254f67;
+}
+.workflow-main .collection-handoff-copy h3 span{font-size:13px}
+.workflow-main .collection-handoff-list{
+ list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;
+}
+.workflow-main .collection-handoff-list li{
+ position:relative;padding-left:15px;font-size:12.5px;
+ line-height:1.58;color:#526b7a;overflow-wrap:break-word;
+}
+.workflow-main .collection-handoff-list li::before{
+ content:"";position:absolute;left:1px;top:.58em;width:6px;height:6px;
+ border-radius:50%;background:#2c85a7;
+}
+.workflow-main .collection-handoff-card:nth-child(n+3) .collection-handoff-list li::before{
+ background:#198d7a;
+}
+.workflow-main .collection-handoff-list li strong{
+ color:#2b536a;font-weight:800;
+}
+.workflow-main .collection-handoff-card:nth-child(n+3) .collection-handoff-list li strong{
+ color:#196c65;
+}
+.workflow-main .collection-handoff-card:nth-child(5){
+ border-top-color:#bf8a38;background:#fffaf0;border-color:#eadac0;
+ border-top:3px solid #bf8a38;
+}
+.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-icon{
+ background:#f8e9cf;color:#986b24;
+}
+.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-copy h3,
+.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-list li strong{
+ color:#815a1d;
+}
+.workflow-main .collection-handoff-card:nth-child(5) .collection-handoff-list li::before{
+ background:#b47c2b;
+}
+@media(max-width:1000px){
+ .workflow-main .collection-handoff-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .workflow-main .collection-handoff-grid{grid-template-columns:minmax(0,1fr);gap:11px}
+ .workflow-main .collection-handoff-card{padding:14px}
+}
