@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261029-workflow-tabs-large-roles-v1" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-lab-flowsheet-label-v1" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -962,12 +962,13 @@ function athenaMock(type,label,file){
  if(type==='file')return '<div class="ad-mock">'+top+'<div class="ad-mock-upload"><header>Add Document</header><strong>Upload files from computer or network</strong><p>Step 1: Select Document Class</p><div class="ad-field">Select document class <span class="lab-shared-chevron" aria-hidden="true"></span></div><p>Step 2: Select a file</p><div class="ad-file"><span class="ad-target">Select File</span><small>'+safeHtml(file)+'</small></div><div class="ad-target ad-add">Add Document <em>SELECT</em></div></div></div>';
  if(type==='existing')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Incoming fax · Patient chart</header><div class="ad-preview">Existing faxed requisition</div><p>Verify the document is matched to the correct patient chart.</p></div></div>';
  if(type==='classify')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Document in DATAENTRY</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-target ad-row">◉ Reclassify document <em>SELECT</em></div><div class="ad-target ad-row">Clinical Document <em>CHOOSE</em></div><div class="ad-save">Save</div></div></div>';
+ if(type==='label'&&label==='LAB FLOWSHEET')return '<div class="ad-mock ad-mock-flowsheet">'+top+'<div class="ad-mock-data"><header>Clinical Document in DATAENTRY</header><span class="ad-flowsheet-label-name">Document Label</span><div class="ad-flowsheet-selected">Select a document label <span aria-hidden="true">⌄</span></div><div class="ad-flowsheet-picker"><div class="ad-flowsheet-search">⌕ lab</div><div class="ad-flowsheet-group">All labels</div><div class="ad-flowsheet-option">LAB CARD</div><div class="ad-flowsheet-option">LAB CONSENT</div><div class="ad-flowsheet-option ad-target">LAB FLOWSHEET <em>SELECT</em></div><div class="ad-flowsheet-option">LAB REQUISITION</div></div><span class="ad-flowsheet-footnote">Choose LAB FLOWSHEET, not LAB REQUISITION or LAB*.</span></div></div>';
  if(type==='label')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document</header><p>Document Label</p><div class="ad-label-search">Search all document labels</div><div class="ad-target ad-row">'+safeHtml(label)+' <em>SELECT</em></div></div></div>';
  if(type==='save')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document · '+safeHtml(label)+'</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-row">◯ Data Entry Completed</div><div class="ad-target ad-row">✓ Save <em>FINAL STEP</em></div><p>Confirm the document label is saved in the correct patient chart.</p></div></div>';
  return '';
 }
 function athenaUploadGuide(kind,faxOnly=false){
- const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB*';
+ const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB FLOWSHEET';
  const file=requisition?'Outside requisition.pdf':'Lab Calculator.pdf';
  const steps=faxOnly?[
   ['Open and verify the fax','Confirm the automatically matched requisition is in the correct chart.','existing'],
@@ -992,7 +993,7 @@ function requisitionVersionNotice(){
 
 function workflowStepExtras(kind){
  if(kind==='calculator-upload'){
-  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
+  return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
  }
  if(kind==='appointment-print'){
   return `<details class="color-print-guide">
@@ -1027,21 +1028,23 @@ function externalFlow(){
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">How was the requisition received?</h3><p>Select the source to see the required chart and document steps.</p></div></header>
  <div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
- <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Automatically matched and classified</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
- <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Manual document upload</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Matched to chart; verify document label</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('clipboard-check')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Navigator task created automatically</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
  <div class="req-main-action">
  <span class="req-action-symbol" aria-hidden="true">${svg(fax?'clipboard-check':'file-text')}</span><div>
- ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Review the automatically matched order</h4><p>Confirm that the fax belongs to the correct patient chart.</p><p class="req-reclassify-instruction"><strong>Reclassify</strong> the document as <strong>Clinical Document</strong> with label <strong>LAB REQUISITION</strong>.</p>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Upload the received order</h4><p>Upload the received requisition to the correct patient chart as a clinical document and assign the label <strong>LAB REQUISITION</strong>.</p>`}
+ ${fax?`<div class="req-route-kicker">FAXED REQUISITION</div><h4>Review the automatically matched order</h4><p>Confirm that the fax belongs to the correct patient chart.</p><p class="req-reclassify-instruction"><strong>Reclassify</strong> the document as <strong>Clinical Document</strong> with label <strong>LAB REQUISITION</strong>.</p>`:`<div class="req-route-kicker">EMAIL / TEXT REQUISITION</div><h4>Navigator task created automatically</h4><p>When the requisition arrives by email or text, a <strong>Navigator task is created automatically</strong>. Front desk opens the task, uploads the requisition to the correct patient chart as a <strong>Clinical Document</strong>, and selects <strong>LAB REQUISITION</strong> as its document label.</p>`}
  </div></div>
  <div class="req-inline-guide">${athenaUploadGuide("requisition",fax)}</div>
  </div>
  ${requisitionVersionNotice()}
  <p class="requisition-intake-note">Keep patient details in approved clinical systems. The illustrations contain no patient information.</p>
  </section>`;
- h+=workflowSteps([
- ['Front desk creates a Navigator task','Once the lab requisition is in the correct chart and classified as Lab requisition, front desk creates a Navigator task and routes it to lab personnel or an RN for review.']
+ h+=workflowSteps(fax?[
+ ['Front desk creates and routes a Navigator task','After confirming the fax is in the correct chart and labeled LAB REQUISITION, front desk creates a Navigator task. Assign it to lab personnel, or tag lab personnel and the RN, according to the market workflow.']
+ ]:[
+ ['Front desk assigns or tags the reviewer','Use the automatically created Navigator task. Once the requisition is uploaded and labeled LAB REQUISITION, front desk assigns it to lab personnel or tags lab personnel and the RN, according to the market workflow. Do not create a duplicate task.']
  ],2);
  h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Lab personnel or RN reviews the requisition</strong></div></div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Choose a path to display the next steps. No patient information is saved here.</p></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${!missing?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${!missing}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
  if(missing){
@@ -1053,7 +1056,7 @@ function externalFlow(){
  }else{h+=`<div class="branch-result"><div class="resolution-note">Proceed with the requisition and matching test codes. Confirm the specimen and handling requirements in the appropriate calculator.</div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB document label.','calculator-upload','Confirm the receiving lab.'],
+ ['Prepare and upload the Lab Calculator','Use the appropriate calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout, save the PDF and upload it to the patient chart under the LAB FLOWSHEET document label.','calculator-upload','Confirm the receiving lab.'],
  ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, lab personnel or the RN returns the completed request to front desk. Front desk schedules the patient.'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print']
  ],4)}</div>`;
@@ -1080,7 +1083,7 @@ function inhouseFlow(){
  ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.'],
  ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory.'],
- ['Document and complete the handoff','Upload the calculator instructions to the chart, coordinate collection with front desk when an appointment is needed, then follow the sendout collection, packaging and logging steps below.']
+ ['Document and complete the handoff','Upload the calculator PDF to the chart as a Clinical Document labeled LAB FLOWSHEET, coordinate collection with front desk when an appointment is needed, then follow the sendout collection, packaging and logging steps below.']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order-set reference space</small></span><span>→</span></button></div>`;
  h+=collectionProcessingHandoff();
