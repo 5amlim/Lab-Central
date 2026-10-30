@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sendout-handoff-checklist-v9" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-requisition-handoff-v10" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1267,7 +1267,7 @@ function sollisPatientChoices(){
    '</p></div>';
 }
 function workflowStepExtras(kind){
- if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p><strong>Assign the Navigator task to the lab team or RN</strong>, according to the market workflow.</p></div></div>';
+ if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Complete in this order</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><ol class="navigator-routing-steps"><li><strong>Upload</strong> the requisition to the correct chart, or verify the fax is already matched.</li><li><strong>Classify</strong> as <b>Clinical Document</b> labeled <b>LAB REQUISITION</b>.</li><li><strong>Assign</strong> the Navigator task to the <b>lab team or RN</b>, according to the market workflow.</li></ol><p class="navigator-routing-note">Use the existing Navigator task when one was created automatically. Do not create a duplicate.</p></div></div>';
  if(kind==='sollis-patient')return sollisPatientChoices();
  if(kind==='calculator-upload'){
   return '<div class="workflow-step-extra"><button type="button" class="workflow-step-action" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button><div class="calculator-upload-required" role="note"><span class="calculator-upload-required-icon" aria-hidden="true">!</span><div class="calculator-upload-required-copy"><strong class="calculator-upload-required-title">Required next step</strong><span class="calculator-upload-required-instruction">After generating the Lab Calculator printout, <strong>save it as a PDF</strong> and <strong>upload it to the chart</strong> under the <strong>LAB FLOWSHEET</strong> document label.</span></div></div>'+athenaUploadGuide('calculator')+'</div>';
@@ -1300,7 +1300,7 @@ function workflowOwnerTag(role){
 }
 function workflowSteps(steps,start=1){
  const stepIcon=title=>/calculat|upload/i.test(title)?'file-text':/schedule|appointment/i.test(title)?'clipboard-check':/print/i.test(title)?'file-text':'clipboard-check';
- return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step${step[2]==='sollis-patient'?' sollis-patient-branch':''}"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div><p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
+ return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step${step[2]==='sollis-patient'?' sollis-patient-branch':''}"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div>${(step[1]||step[3])?`<p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>`:""}${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
 }
 function orderWorkflowTabs(tab){
  return `<div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Sendout order workflow"><button type="button" role="tab" aria-selected="${tab==='external'}" class="tab ${tab==='external'?'active':''}" data-workflowtab="external">External requisition</button><button type="button" role="tab" aria-selected="${tab==='in-house'}" class="tab ${tab==='in-house'?'active':''}" data-workflowtab="in-house">Ordered at Sollis</button></div>`;
@@ -1328,9 +1328,9 @@ function externalFlow(){
  <p class="requisition-intake-note">Keep patient details in approved clinical systems. The illustrations contain no patient information.</p>
  </section>`;
  h+=workflowSteps(fax?[
- ['Front desk creates and routes a Navigator task','After confirming the fax is in the correct chart and labeled LAB REQUISITION, front desk creates a Navigator task.','navigator-routing','','Front Desk Coordinator']
+ ['Front desk completes the requisition handoff','','navigator-routing','','Front Desk Coordinator']
  ]:[
- ['Front desk assigns or tags the reviewer','Use the automatically created Navigator task after the requisition is uploaded and labeled LAB REQUISITION. Do not create a duplicate task.','navigator-routing','','Front Desk Coordinator']
+ ['Front desk completes the requisition handoff','','navigator-routing','','Front Desk Coordinator']
  ],2);
  h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Lab personnel or RN reviews the requisition</strong></div>${workflowOwnerTag('Lab Personnel / RN')}</div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Confirm the patient's name and date of birth match the requisition and patient chart, then choose a path to continue.</p></div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${complete?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${complete}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div>`;
  if(missing){
@@ -1370,8 +1370,8 @@ function collectionProcessingHandoff(immediate=false){
    ['Include paperwork','in the appropriate bag document sleeve.']
   ]],
   ['LAB PERSONNEL','file-text','Confirm billing paperwork',[
-   ['Attach required billing details','with the requisition for the receiving lab.'],
-   ['Use insurance information','when available; otherwise follow approved billing instructions.']
+   ['Check the requisition','for insurance information.'],
+   ['If insurance is not listed','attach the patient facesheet with the requisition for the receiving lab.']
   ]],
   ['LAB PERSONNEL','clipboard-check','Complete the Sendout Log',[
    ['Photograph','specimen containers, sealed bags and requisition.'],
