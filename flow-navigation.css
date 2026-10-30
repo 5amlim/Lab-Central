@@ -1450,3 +1450,20 @@
   width:100%;
  }
 }
+
+/* Align solo upload walkthrough button right without narrowing expanded guide. */
+.workflow-main .calculator-chart-upload > .sollis-upload-guide {
+  width:100%;
+}
+.workflow-main .calculator-chart-upload > .sollis-upload-guide > summary {
+  display:flex;
+  width:max-content;
+  max-width:100%;
+  margin-left:auto;
+}
+@media(max-width:650px) {
+  .workflow-main .calculator-chart-upload > .sollis-upload-guide > summary {
+    width:100%;
+    margin-left:0;
+  }
+}
