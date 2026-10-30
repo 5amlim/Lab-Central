@@ -1368,18 +1368,18 @@ function externalFlow(){
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">Receive, classify and route the requisition</h3><p>Select how it arrived, then complete all three actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
  <div class="workflow-choice-caption">CHOOSE ONE</div><div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
- <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('mail')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Use the existing Navigator task</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
- <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Verify the matched fax in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('mail')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Manually upload and classify in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
+ <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Automatically uploaded; reclassification required</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
  </div>
  <div class="requisition-source-instructions" aria-live="polite">
  <div class="workflow-steps-caption">STEPS</div>
  <div class="req-intake-actions">
  ${fax?`
- <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Verify the fax</strong><p>Confirm the requisition is matched to the correct patient chart.</p></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Classify and save</strong><p>Reclassify as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Verify the auto-uploaded fax</strong><p>Faxed requisitions are automatically uploaded to Athena and initially auto-classified. Confirm the fax is in the correct patient chart and review its document classification.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Reclassify and save</strong><p>Change the automatically assigned classification to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
  `:`
- <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Open task and upload</strong><p>Open the existing Navigator task and upload the requisition to the correct patient chart.</p></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Classify and save</strong><p>Select <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Manually upload the requisition</strong><p>Open the existing Navigator task, then manually upload the emailed or texted requisition to the correct Athena patient chart. It is not automatically uploaded.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
  `}
  <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">3</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Route Navigator task for review</strong><span class="req-intake-route-badge">REQUIRED HANDOFF</span></div><p>${fax?'Create and route a Navigator task to the lab team or RN according to the market workflow, unless one already exists. Do not create a duplicate task.':'Assign the existing Navigator task to the lab team or RN according to the market workflow. Do not create a duplicate task.'}</p></div></div>
  </div>
