@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-calculator-refinement-v28" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-required-printout-link-step1-v29" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1303,13 +1303,10 @@ function sollisPatientChoices(){
    '</p></div>';
 }
 function calculatorChartUploadPanel(includeCalculatorLink=false){
- const launch=includeCalculatorLink
-  ?'<button type="button" class="workflow-step-action calculator-open-secondary" data-go="calculators">Open lab calculators <span aria-hidden="true">→</span></button>'
-  :'';
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">1</span><span class="sollis-upload-step-copy"><strong>Prepare Lab Calculator and save as PDF</strong><small>Verify test codes and specimen requirements</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">1</span><span class="sollis-upload-step-copy"><strong>Prepare Lab Calculator and save as PDF</strong><small>Verify test codes and specimen requirements.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">2</span><span class="sollis-upload-step-copy"><strong>Upload to Athena</strong><small>Clinical Document</small></span></li>'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
@@ -1317,7 +1314,7 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
     ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>After uploading the Lab Calculator to Athena with the correct LAB FLOWSHEET label, return the completed request to the Front Desk Coordinator for scheduling. Include any fasting, dietary or other patient preparation requirements.</small></span><span class="sollis-upload-handoff-badge">REQUIRED HANDOFF</span></div>'
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
-  (includeCalculatorLink?'<div class="calculator-chart-actions">'+launch+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
+  (includeCalculatorLink?'<div class="calculator-chart-actions">'+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
 }
 function workflowStepExtras(kind){
  if(kind==='navigator-routing')return '<div class="navigator-routing-callout" role="note"><span class="navigator-routing-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div class="navigator-routing-body"><div class="navigator-routing-head"><strong>Assign to the lab team or RN, according to the market workflow</strong><span class="navigator-routing-badge">REQUIRED HANDOFF</span></div><p class="navigator-routing-note">'+(state.reqSource==='message'?'Use the Navigator task created automatically for email or text. Do not create a duplicate.':'Create and route a Navigator task for the faxed requisition, unless a task already exists. Do not create a duplicate.')+'</p></div></div>';
@@ -1437,7 +1434,7 @@ function collectionProcessingHandoff(immediate=false){
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
   '<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+1).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
   x[3].map(point=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+'</li>').join('')+
-  '</ul>'+(i===3?'<span class="collection-handoff-tag collection-handoff-required-badge" role="note"><span class="collection-handoff-required-kicker">REQUIRED</span><span>Use Lab Calculator printout</span></span>':([0,2].includes(i)?'<button type="button" class="collection-handoff-tag collection-handoff-calculator" data-go="calculators" aria-label="Open Lab Calculator for '+safeHtml(x[2])+'">'+svg('file-text')+'<span>Use Lab Calculator ↗</span></button>':''))+'</div></article>').join('')+'</div>'+
+  '</ul>'+([0,2,3].includes(i)?'<span class="collection-handoff-tag collection-handoff-required-badge" role="note" aria-label="Required: use Lab Calculator printout"><span class="collection-handoff-required-kicker">REQUIRED</span><span>Use Lab Calculator printout</span></span>':'')+'</div></article>').join('')+'</div>'+
  '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
 }
 
