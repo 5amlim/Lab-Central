@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-reminder-badge-v23" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-external-handoff-step4-v24" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1277,7 +1277,9 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
     '<li><span class="sollis-upload-step-num" aria-hidden="true">2</span><span class="sollis-upload-step-copy"><strong>Upload to Athena</strong><small>Clinical Document</small></span></li>'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
-   '<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>'+
+   (includeCalculatorLink
+    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>Pass the completed requisition and LAB FLOWSHEET to the Front Desk Coordinator. Communicate any fasting, dietary or other preparation requirements for the patient.</small></span></div>'
+    :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
   (includeCalculatorLink?'<div class="calculator-chart-actions">'+launch+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
 }
@@ -1357,7 +1359,7 @@ function externalFlow(){
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
  ['Prepare and upload the Lab Calculator','Use the appropriate Lab Calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
- ['Schedule the patient','Once the lab requisition has been reviewed and the Lab Calculator has been uploaded, lab personnel or the RN returns the completed request to front desk. The Front Desk Coordinator schedules the patient.','','','Front Desk Coordinator'],
+ ['Schedule the patient','The Front Desk Coordinator schedules the patient after receiving the completed request and communicates any fasting, dietary or other preparation instructions provided by lab personnel or the RN.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
  ],3)}</div>`;
  h+='</div>';
