@@ -434,7 +434,10 @@ function normalizeLabQuery(value){
  return normalizeGuideSearch(value).replace(/\bnt pro bnp\b/g,'ntprobnp').replace(/\bpro bnp\b/g,'probnp');
 }
 function matchesLabTerms(value,tokens,terms){
- return terms.every(t=>t.length<=2||labExactAbbreviationTerms.has(t)?tokens.has(t):value.includes(t));
+ // Match full abbreviations exactly and ordinary searches from word beginnings.
+ // Avoid "nor" inside buprenorphine or "etec" inside detection.
+ return terms.every(t=>t.length<=2||labExactAbbreviationTerms.has(t)
+  ?tokens.has(t):Array.from(tokens).some(word=>word.startsWith(t)));
 }
 const guideSearchIndex=new Map();
 function isMatch(s,q){
