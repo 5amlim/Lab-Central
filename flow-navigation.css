@@ -1040,3 +1040,82 @@
  .workflow-main .workflow-doc-labels{align-items:stretch;flex-direction:column}
  .workflow-main .workflow-doc-label{justify-content:space-between}
 }
+
+/* External requisition: source-specific intake and one distinct routing step. */
+.workflow-main .requisition-intake .requisition-intake-header{margin-bottom:16px}
+.workflow-main .requisition-intake .requisition-source-options{gap:12px}
+.workflow-main .requisition-source-instructions{
+ margin-top:12px;padding:0;border-radius:11px;
+ border-color:#d2e9e1;background:#f8fcfa;overflow:hidden;
+}
+.workflow-main .req-intake-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;padding:13px 14px 12px;
+}
+.workflow-main .req-intake-action{
+ display:flex;gap:11px;align-items:flex-start;min-width:0;
+ background:#fff;border:1px solid #d5e8e2;border-radius:10px;
+ padding:13px 14px;
+}
+.workflow-main .req-intake-action-num{
+ width:27px;height:27px;flex:none;display:grid;place-items:center;
+ border-radius:8px;background:#dff3ed;color:#187e73;
+ font-size:12px;font-weight:850;
+}
+.workflow-main .req-intake-action strong{
+ display:block;color:#1e655f;font-size:13px;line-height:1.4;margin:0 0 5px;
+}
+.workflow-main .req-intake-action p{
+ margin:0!important;padding:0!important;font-size:12px!important;
+ line-height:1.6!important;color:#546e77!important;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide{
+ padding:0 14px 13px!important;
+}
+.workflow-main .requisition-source-instructions .req-inline-guide>.ad-guide{margin:0}
+.workflow-main .req-version-details{
+ border:1px solid #e9d9b8;border-radius:10px;
+ margin-top:12px;background:#fffbf4;overflow:hidden;
+}
+.workflow-main .req-version-details>summary{
+ display:flex;align-items:center;gap:9px;cursor:pointer;
+ padding:12px 14px;list-style:none;color:#865b1c;
+}
+.workflow-main .req-version-details>summary::-webkit-details-marker{display:none}
+.workflow-main .req-version-details>summary:hover{background:#fff6e7}
+.workflow-main .req-version-details .req-version-title{
+ font-weight:820;font-size:12.5px;flex:1;
+}
+.workflow-main .req-version-details .req-version-icon{
+ flex:none;display:grid;place-items:center;width:25px;height:25px;
+ border-radius:7px;background:#f8e7c8;color:#93631b;font-weight:900;
+}
+.workflow-main .req-version-details .req-version-copy{
+ margin:0;padding:0 15px 14px 48px;
+ font-size:11.5px;line-height:1.65;color:#796348;
+}
+.workflow-main .req-version-details .lab-shared-chevron{margin-left:auto}
+.workflow-main .req-version-details[open] .lab-shared-chevron{transform:rotate(180deg)!important}
+.workflow-main .navigator-routing-callout{
+ margin-top:0;padding:13px 15px;align-items:center;
+ border-left-width:4px;box-shadow:none;
+}
+.workflow-main .navigator-routing-callout .navigator-routing-body{
+ flex:1;min-width:0;
+}
+.workflow-main .navigator-routing-callout .navigator-routing-head{
+ margin:0;display:flex;gap:8px 15px;flex-wrap:wrap;align-items:center;
+}
+.workflow-main .navigator-routing-callout .navigator-routing-head>strong{
+ color:#215b80;font-size:14px;
+}
+.workflow-main .navigator-routing-callout .navigator-routing-badge{margin-left:auto}
+.workflow-main .navigator-routing-callout .navigator-routing-note{
+ font-size:11.75px;color:#55768a;line-height:1.55;
+ margin:6px 0 0!important;padding:0!important;
+}
+@media(max-width:750px){
+ .workflow-main .req-intake-actions{grid-template-columns:minmax(0,1fr);gap:8px;padding:10px}
+ .workflow-main .requisition-source-instructions .req-inline-guide{padding:0 10px 11px!important}
+ .workflow-main .navigator-routing-callout .navigator-routing-badge{margin-left:0}
+}
