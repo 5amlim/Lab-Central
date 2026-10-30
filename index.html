@@ -110,7 +110,7 @@
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261030-walkin-workflow-v30" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261030-sendout-inline-guide-v31" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261029-photo-label-centered-v5" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
@@ -1430,7 +1430,7 @@ function collectionProcessingHandoff(immediate=false,startNumber=1){
   ]],
   ['LAB PERSONNEL','clipboard-check','Complete the Sendout Log',[
    ['Photograph','specimen containers, sealed bags and requisition.'],
-   ['Scan the QR code','to open the correct regional Microsoft Form, then submit and confirm submission.'],
+   ['Scan the QR code','to open the correct regional Microsoft Form, then submit.'],
    ['Place bags','in the designated pickup or storage bin.']
   ]]
  ];
@@ -1438,9 +1438,9 @@ function collectionProcessingHandoff(immediate=false,startNumber=1){
  '<div class="collection-handoff-heading"><span>'+(immediate?'IN CLINIC NOW · SENDOUT HANDOFF':'APPOINTMENT DAY · SENDOUT HANDOFF')+'</span><h2>RN collection → Lab personnel processing → Electronic log</h2><p>'+(immediate?'Patient already in clinic: continue with collection, processing, packing, billing paperwork and the Sendout Log now.':'Follow the role-based checklist after the chart and collection plan are ready.')+'</p></div>'+
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
   '<article class="collection-handoff-card"><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+startNumber).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
-  x[3].map(point=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+'</li>').join('')+
+  x[3].map((point,j)=>'<li><strong>'+safeHtml(point[0])+'</strong> '+safeHtml(point[1])+(i===5&&j===1?' <a class="collection-handoff-inline-guide" href="#sendout-log">See Sendout Log instructions <span aria-hidden="true">↗</span></a>':'')+'</li>').join('')+
   '</ul>'+([0,2,3].includes(i)?'<span class="collection-handoff-tag collection-handoff-required-badge" role="note" aria-label="Required: use Lab Calculator printout"><span class="collection-handoff-required-kicker">REQUIRED</span><span>Use Lab Calculator printout</span></span>':'')+'</div></article>').join('')+'</div>'+
- '<div class="collection-handoff-footer"><div><strong>Need the specimen photo and Microsoft Form steps?</strong><p>Open the illustrated Sendout Log instructions and choose the approved form for your region.</p></div><button type="button" class="collection-handoff-open" data-go="sendout-log">How to log a send-out <span aria-hidden="true">→</span></button></div></section>';
+ '</section>';
 }
 
 
