@@ -1278,7 +1278,7 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
     '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
    (includeCalculatorLink
-    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>Pass the completed requisition and LAB FLOWSHEET to the Front Desk Coordinator. Communicate any fasting, dietary or other preparation requirements for the patient.</small></span><span class="sollis-upload-handoff-badge">REQUIRED HANDOFF</span></div>'
+    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>After uploading the Lab Calculator to Athena with the correct LAB FLOWSHEET label, return the completed request to the Front Desk Coordinator for scheduling. Include any fasting, dietary or other patient preparation requirements.</small></span><span class="sollis-upload-handoff-badge">REQUIRED HANDOFF</span></div>'
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
   (includeCalculatorLink?'<div class="calculator-chart-actions">'+launch+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
