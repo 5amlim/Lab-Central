@@ -349,10 +349,10 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
 <script src="quality-reference.js?v=20261029-api-enrollment-links-v2"></script>
 <script src="operations-guides.js?v=20261029-photo-arrow-refined-v4"></script>
-<script src="pathfast-calibration.js?v=20261029-restored-pouch-box-note-v11"></script>
+<script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
 <script src="pathfast-interactive.js?v=20261030-early-ten-minute-window-v1"></script>
-<script src="pathfast-clinical.js?v=20261030-pathway-color-accents-notes-v1"></script>
+<script src="pathfast-clinical.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="equipment-art.js?v=20261029-febridx-device-v20"></script>
 <script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-sysmex-reference-v4"></script>
@@ -1991,6 +1991,7 @@ el('closeSidebar').addEventListener('click',()=>{el('sidebar').classList.remove(
 el('sidebarScrim').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 let guidePrintRestore=null;
 let labPrintMode=null;
+let specialFullPrintRestore=null;
 function procedurePrintGroup(){
  const route=sectionFromHash();
  const sec=all.find(x=>x.id===route.id);
@@ -2145,9 +2146,25 @@ function ensureCompactPrint(){
  return true;
 }
 function prepareGuidePrint(){
- if(labPrintMode==='compact')return;
+ if(labPrintMode==='compact'||specialFullPrintRestore)return;
  const route=sectionFromHash();
  const sec=all.find(x=>x.id===route.id);
+ if(sec?.id==='pathfast'&&route.tab==='cal-qc'&&window.LAB_PATHFAST_UI?.hasSelectedPanel?.()){
+  const target=document.querySelector('.pf-calibration-guide');
+  if(target){
+   specialFullPrintRestore={selector:'.pf-calibration-guide',html:target.outerHTML};
+   target.outerHTML=window.LAB_PATHFAST_UI.renderAllForPrint();
+  }
+  return;
+ }
+ if(sec?.id==='pathfast'&&route.tab==='rn-collection'&&window.LAB_PATHFAST_CLINICAL?.collectionAllForPrint){
+  const target=document.querySelector('.pcr-guide');
+  if(target){
+   specialFullPrintRestore={selector:'.pcr-guide',html:target.outerHTML};
+   target.outerHTML=window.LAB_PATHFAST_CLINICAL.collectionAllForPrint();
+  }
+  return;
+ }
  if(sec&&buildGroups(sec).some(x=>x.id===route.tab)&&state.guideMode!=='all'){
   guidePrintRestore=state.guideMode;
   state.guideMode='all';
@@ -2178,6 +2195,11 @@ window.addEventListener('beforeprint',prepareGuidePrint);
 window.addEventListener('afterprint',()=>{
  removeCompactPrint();
  labPrintMode=null;
+ if(specialFullPrintRestore){
+  const target=document.querySelector(specialFullPrintRestore.selector);
+  if(target)target.outerHTML=specialFullPrintRestore.html;
+  specialFullPrintRestore=null;
+ }
  if(guidePrintRestore!==null){
   state.guideMode=guidePrintRestore;
   guidePrintRestore=null;
