@@ -174,12 +174,12 @@ var steps=[
  },
  {
   "phase": "ITEMS",
-  "title": "Add this item and continue",
-  "action": "CLICK ADD & CONTINUE",
+  "title": "Choose whether more items are needed",
+  "action": "MORE ITEMS? ADD & CONTINUE",
   "scene": "add-continue",
-  "body": "Click <strong>Add &amp; Continue</strong> to add the item while staying on the inventory search screen.",
-  "note": "Use this when you have more items to add.",
-  "kind": "required",
+  "body": "If you have <strong>more items to add</strong>, click <strong>Add &amp; Continue</strong> to save this item and stay in search. <strong>If this is the last item</strong>, use <strong>Add &amp; Go to Line Items</strong> instead (see Step 20).",
+  "note": "Choose one of the two Add actions for each item. Do not click both for the same row.",
+  "kind": "branch",
   "id": "step-18"
  },
  {
@@ -187,7 +187,7 @@ var steps=[
   "title": "Repeat for each additional item",
   "action": "REPEAT SEARCH → SELECT → QTY",
   "scene": "continue",
-  "body": "For another supply, enter its SKU or inventory #, press Enter, verify the match, check the row and enter quantity. Repeat until all required supplies have been added.",
+  "body": "Only if more items remain, search for the next SKU or inventory #, press Enter, verify the match, select the row and enter its quantity. Use <strong>Add &amp; Continue</strong> again until you reach the final item.",
   "note": "Repeat steps 13 to 18 for every additional item.",
   "kind": "repeat",
   "id": "step-19"
@@ -197,7 +197,7 @@ var steps=[
   "title": "Finish adding items",
   "action": "ADD & GO TO LINE ITEMS",
   "scene": "add-to-lines",
-  "body": "For your final item, use <strong>Add &amp; Go to Line Items</strong>. If you already used Add &amp; Continue, open the <strong>Line Items</strong> tab to review everything.",
+  "body": "For the final item, select <strong>Add &amp; Go to Line Items</strong>. If you already used <strong>Add &amp; Continue</strong> on the final item, simply click the <strong>Line Items</strong> tab. <strong>Do not add that same item again.</strong>",
   "note": "Do not leave the order without verifying the complete list.",
   "kind": "required",
   "id": "step-20"
@@ -314,6 +314,7 @@ var steps=[
  }
 ];
 var mode='guided',index=0;
+
 function tag(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function mark(v){return '<span class="ev-focus">'+v+'</span>';}
 function field(label,value,active){return '<div class="ev-field '+(active?'ev-field-active':'')+'"><span>'+label+'</span><strong>'+value+'</strong><i aria-hidden="true">⌄</i></div>';}
@@ -444,7 +445,7 @@ function visual(which){
 }
 function renderStep(s,i){
  return '<article class="ev-step" data-ev-card="'+i+'" '+(mode==='guided'&&index!==i?'hidden':'')+'>'+
- '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag ev-kind-'+s.kind+'">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span></div>'+
+ '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag ev-kind-'+s.kind+'">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',branch:'CHOOSE ONE',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span></div>'+
  '<p class="ev-step-description">'+s.body+'</p><div class="ev-illustration"><div class="ev-illustration-title"><span class="ev-illustration-dot"></span> ENVI SCREEN REFERENCE <small>Illustrated, not a live screen</small></div>'+visual(s.scene)+'</div>'+
  '<div class="ev-next-action"><span class="ev-action-icon">➜</span><strong>'+tag(s.action)+'</strong></div>'+
  '<div class="ev-card-note"><span class="ev-note-symbol">i</span><span>'+s.note+'</span></div></article>';
