@@ -230,13 +230,20 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="sop-print.css?v=20261031-internal-sop-layout-v2" media="all">
 <script src="sop-print.js?v=20261031-sendout-seven-steps-v3"></script>
 <style id="lab-central-athena-icon-theme">
-/* Athena requisition icon: purple, consistent across the sidebar and portal cards. */
-.nav-link[data-go="order-sets"] .nav-icon.athena-nav-icon {
-  width:24px;height:24px;margin:-3px;border-radius:7px;
+/* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
+.nav-section .nav-link[data-go="order-sets"] .nav-icon.athena-nav-icon {
+  width:30px;height:29px;min-width:30px;margin:0;border-radius:8px;
   background:#f3ecff;color:#7c4dcc;
 }
-.nav-link[data-go="order-sets"].active .nav-icon.athena-nav-icon {
+.nav-section .nav-link[data-go="order-sets"]:hover {
+  background:#f3ecff;color:#6f3fc7;
+}
+.nav-section .nav-link[data-go="order-sets"]:hover .nav-icon.athena-nav-icon,
+.nav-section .nav-link[data-go="order-sets"].active .nav-icon.athena-nav-icon {
   background:#eadfff;color:#6f3fc7;
+}
+.nav-section .nav-link[data-go="order-sets"].active {
+  background:#f3ecff;color:#6f3fc7;box-shadow:inset 3px 0 #7c4dcc;
 }
 .home-tool-icon.athena {background:#f3ecff;color:#7c4dcc}
 .athena-sendout-workflow-link .athena-sendout-link-symbol,
