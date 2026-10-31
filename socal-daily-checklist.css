@@ -390,11 +390,13 @@
 .dqc-template-intro{margin:0 0 16px;padding:11px 14px;background:#f2f8f8;border-left:3px solid #93c8c0;color:#547584;font-size:11.5px;line-height:1.6}
 .dqc-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
 .dqc-template-card{display:flex;flex-direction:column;gap:6px;min-width:0;background:#fff;border:1px solid #dbe7ed;border-radius:13px;padding:16px 17px}
-.dqc-template-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.dqc-template-category{display:inline-flex;border:1px solid #cae6df;background:#eef8f5;border-radius:999px;padding:4px 9px;color:#31796f;font-size:9.5px;font-weight:800}
-.dqc-template-card h3{font-size:13px;font-weight:830;line-height:1.45;color:#2d5266;margin:4px 0 0}
+
+.dqc-template-category{display:inline-flex;align-items:center;flex:none;white-space:nowrap;border:1px solid #cae6df;background:#eef8f5;border-radius:999px;padding:4px 9px;color:#31796f;font-size:9.5px;font-weight:800}
+.dqc-template-card h3{font-size:13px;font-weight:830;line-height:1.45;color:#2d5266;margin:0}
 .dqc-template-card p{font-size:11.5px;line-height:1.6;color:#6c8596;flex:1;margin:0 0 10px}
-.dqc-template-action{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;text-decoration:none;font-size:11px;font-weight:820;color:#207f82;border-radius:4px}
+.dqc-template-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:auto}
+.dqc-template-footer .dqc-template-category{margin-left:auto}
+.dqc-template-action{display:inline-flex;align-items:center;gap:6px;align-self:center;text-decoration:none;font-size:11px;font-weight:820;color:#207f82;border-radius:4px}
 .dqc-template-action:hover{text-decoration:underline}
 .dqc-template-action:focus-visible{outline:2px solid #207f82;outline-offset:3px}
 @media(max-width:1050px){
@@ -407,3 +409,6 @@
  .dqc-template-card{break-inside:avoid;padding:10px}
  .dqc-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Binder labels for logs that are filed only when an event occurs. */
+.dqc-task-badge.is-as-needed{color:#417767;background:#eff7f3;border-color:#d4e5dc}
