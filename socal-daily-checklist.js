@@ -9,9 +9,9 @@ const socalTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Read, record and assess current/min/max where applicable. Escalate excursions, quarantine affected material as directed, and document corrective action.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Verify required freezer checks and out-of-range alarms. Do not assume thawed reagents or controls are usable without review.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record the room conditions and compare them with all active instrument/reagent allowable operating ranges. Report excursions.',role:'Lab personnel / RN'},
- {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
- {id:'sysmex',group:'Instrument QC & readiness',title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Authorized lab personnel'},
- {id:'triage',group:'Instrument QC & readiness',title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Authorized lab personnel'},
+ {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
+ {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Authorized lab personnel'},
+ {id:'triage',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Authorized lab personnel'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
  {id:'navigator',group:'Tasks & handoff',title:'Check and resolve Navigator tasks',desc:'Review open specimen follow-ups, rejected tests, provider communications and lab-related Navigator tasks. Close only resolved items and hand off outstanding issues.',role:'Lab personnel / RN'}
 ];
@@ -78,7 +78,12 @@ function card(group,index,tasks){
  return '<section class="dqc-section" aria-labelledby="dqc-group-'+index+'">'+
   '<header class="dqc-section-head"><span class="dqc-section-number">'+String(index+1).padStart(2,'0')+'</span><h3 id="dqc-group-'+index+'">'+safe(group)+'</h3><span class="dqc-section-count">'+rows.length+' checks</span></header>'+
   '<div class="dqc-items">'+rows.map(function(t){
-    return '<article class="dqc-item"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
+    const badges=Array.isArray(t.badges)&&t.badges.length
+      ?'<div class="dqc-task-badges" aria-label="Task requirements">'+t.badges.map(function(badge){
+        return '<span class="dqc-task-badge '+(badge==='QC'?'is-qc':'is-print')+'">'+safe(badge)+'</span>';
+       }).join('')+'</div>'
+      :'';
+    return '<article class="dqc-item"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4>'+badges+'<p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
   }).join('')+'</div></section>';
 }
 function binderCard(item){
