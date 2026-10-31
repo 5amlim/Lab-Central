@@ -10,13 +10,13 @@ function step(title,body,role,num){
 function bullet(...items){return '<ul class="lc-sop-bullets">'+items.map(x=>'<li>'+x+'</li>').join('')+'</ul>';}
 function note(title,text,urgent){return '<aside class="lc-sop-note'+(urgent?' lc-sop-urgent':'')+'"><strong>'+E(title)+'</strong><p>'+text+'</p></aside>';}
 function fork(question,choices){
- return '<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>'+E(question)+'</strong><span>FOLLOW THE APPLICABLE PATH</span></div><div class="lc-sop-branches">'+choices.map(c=>'<div class="lc-sop-branch"><span class="lc-sop-branch-label">'+E(c[0])+'</span><div>'+c[1]+'</div></div>').join('')+'</div></div>';
+ return '<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>'+E(question)+'</strong><span>SELECT ONE PATH</span></div><div class="lc-sop-branches">'+choices.map(c=>'<div class="lc-sop-branch"><span class="lc-sop-branch-label">'+E(c[0])+'</span><div>'+c[1]+'</div></div>').join('')+'</div></div>';
 }
 function header(title,subtitle,scope,owner){
- return '<header class="lc-sop-header"><div class="lc-sop-eyebrow">LAB CENTRAL <span> / </span> PRINTABLE WORKFLOW REFERENCE</div><h1>'+E(title)+'</h1><p>'+E(subtitle)+'</p><div class="lc-sop-meta"><span><b>Applies to</b> '+E(scope)+'</span><span><b>Roles</b> '+E(owner)+'</span><span><b>Format</b> Complete SOP-style workflow</span></div></header>';
+ return '<header class="lc-sop-header"><div class="lc-sop-eyebrow">LAB CENTRAL <span> / </span> LAB OPERATIONS</div><h1>'+E(title)+'</h1><p>'+E(subtitle)+'</p><div class="lc-sop-meta"><span><b>Applies to</b> '+E(scope)+'</span><span><b>Roles</b> '+E(owner)+'</span><span><b>Document</b> Procedure reference</span></div></header>';
 }
 function finish(extra){
- return (extra||'')+'<footer class="lc-sop-footer">Staff workflow reference. Confirm the current approved Sollis SOP, Athena configuration, test directory, assay IFU and local receiving-laboratory requirements before use. Decisions must follow the applicable branch. No patient details are included.</footer>';
+ return (extra||'')+'<footer class="lc-sop-footer">Internal lab operations reference. Follow the current approved SOP, manufacturer instructions, receiving-lab requirements, and site-specific procedures. For decisions, complete only the applicable pathway.</footer>';
 }
 function handoff(start){
  const steps=[
