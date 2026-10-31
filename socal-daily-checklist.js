@@ -9,7 +9,7 @@ const socalTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Read, record and assess current/min/max where applicable. Escalate excursions, quarantine affected material as directed, and document corrective action.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Verify required freezer checks and out-of-range alarms. Do not assume thawed reagents or controls are usable without review.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record the room conditions and compare them with all active instrument/reagent allowable operating ranges. Report excursions.',role:'Lab personnel / RN'},
- {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'},note:'QC frequency varies by market. Perform Clinitek QC daily when required by the market-specific SOP; otherwise follow the applicable QC schedule, including new-bottle requirements.',title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
+ {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens Clinitek cleaning and readiness',desc:'Inspect and clean the test table and correct strip/cassette insert per SOP. Confirm controls are current under the SoCal monthly and event-triggered QC schedule; routine daily UA/hCG external QC is not required in SoCal.',role:'Trained lab personnel / RN'},
  {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'},title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Trained lab personnel / RN'},
  {id:'triage',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'},title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Trained lab personnel / RN'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
@@ -31,9 +31,9 @@ const sharedTasks=[
    The equipment/binder inventory must be verified locally before SOP use. */
 const socalBinder=[
  {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
- {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel'},
- {title:'Triage daily electronic QC records',desc:'File the daily electronic QC Device results and corrective actions when required. Keep scheduled 30-day liquid QC records in the Monthly Checklist binder.',role:'Trained lab personnel / RN'},
- {title:'Clinitek UA and hCG QC records',desc:'File UA strip and hCG control results when required by the market SOP, including new-bottle or new-lot QC and applicable printouts.',role:'Trained lab personnel / RN'},
+ {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel',badges:['Printouts Needed']},
+ {title:'Triage daily electronic QC records',desc:'File the daily electronic QC Device printout and corrective actions when required. Keep scheduled 30-day liquid QC records in the Monthly Checklist binder.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
+
  {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
  {title:'Maintenance and exceptions',desc:'File required instrument maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
 ];
@@ -44,15 +44,15 @@ const monthlyQcTasks=[
  {id:'pathfast-28d',group:'Recurring QC & calibration',title:'PATHFAST calibration and QC',frequency:'Every 28 days',desc:'Complete calibration and both QC levels for the active PATHFAST assays before the instrument lockout. Verify acceptable results and document any failure or repeat.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'pathfast',tab:'cal-qc'}},
  {id:'piccolo-30d',group:'Recurring QC & calibration',title:'Piccolo Xpress external QC',frequency:'Every 30 days / panel SOP',desc:'Run the required control levels for panels in use according to the clinic panel schedule; also complete new-lot or new-shipment checks as specified.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'piccolo',tab:'monthly-qc'}},
  {id:'triage-30d',group:'Recurring QC & calibration',title:'Quidel Triage liquid QC',frequency:'Every 30 days',desc:'Run required liquid QC for each active assay lot. This is separate from the daily electronic QC Device and any new-box or new-lot checks.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'liquid-qc-every-30-days'}},
- {id:'clinitek-monthly',group:'Recurring QC & calibration',title:'Siemens Clinitek UA / hCG QC',frequency:'Monthly where required',desc:'Complete urine dipstick and hCG external QC on the market-approved schedule. Some markets require daily QC instead; also follow new-bottle and new-lot rules.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'}},
+ {id:'clinitek-monthly',group:'Recurring QC & calibration',title:'Siemens Clinitek UA / hCG QC',frequency:'Monthly where required',desc:'Complete urine dipstick and hCG external QC on the approved market schedule and for applicable new-bottle or new-lot events.',note:'Daily UA/hCG QC is required in some markets. SoCal follows the approved monthly and event-triggered QC schedule.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'}},
  {id:'sofia-cal-30d',group:'Recurring QC & calibration',title:'Sofia 2 optical calibration check',frequency:'Every 30 days',desc:'Run the optical calibration check with the dedicated calibration cassette. Separately perform assay external QC for new shipments or lots and when required by the IFU.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sofia',tab:'calibration-scan-ma'}}
 ];
 const monthlyBinder=[
- {title:'PATHFAST calibration and QC printouts',desc:'File the 28-day calibration and QC printouts for active assays, with date, operator, lot and corrective action.',role:'Authorized trained personnel'},
- {title:'Piccolo Xpress QC printouts',desc:'File panel-specific control printouts for 30-day or SOP-required runs, including applicable new-lot and new-shipment checks.',role:'Authorized trained personnel'},
- {title:'Quidel Triage liquid QC printouts',desc:'File 30-day liquid QC records for each active assay lot, separate from daily electronic QC documentation.',role:'Trained lab personnel / RN'},
+ {title:'PATHFAST calibration and QC printouts',desc:'File the 28-day calibration and QC printouts for active assays, with date, operator, lot and corrective action.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
+ {title:'Piccolo Xpress QC printouts',desc:'File panel-specific control printouts for 30-day or SOP-required runs, including applicable new-lot and new-shipment checks.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
+ {title:'Quidel Triage liquid QC printouts',desc:'File 30-day liquid QC records for each active assay lot, separate from daily electronic QC documentation.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
  {title:'Sofia 2 calibration check records',desc:'File 30-day optical calibration documentation and additional external QC records when new lots or shipments require them.',role:'Trained lab personnel / RN'},
- {title:'Clinitek UA and hCG QC documentation',desc:'File market-required QC and new-bottle/lot results. Follow daily QC rules in markets that require them.',role:'Trained lab personnel / RN'},
+ {title:'Clinitek UA and hCG QC documentation',desc:'File market-required QC and new-bottle/lot results. Follow daily QC rules in markets that require them.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
  {title:'QC exceptions and corrective actions',desc:'File failed controls, repeated runs, instrument lockouts and resolution, with instrument printouts or approved records.',role:'Trained lab personnel / RN'}
 ];
 const sharedBinder=[
@@ -126,7 +126,8 @@ function monthlyCard(t){
  return '<section class="dqc-monthly-card"><div class="dqc-monthly-frequency">'+safe(t.frequency)+'</div>'+taskItem(t)+'</section>';
 }
 function binderCard(item){
- return '<article class="dqc-binder-item"><div class="dqc-binder-main"><h3>'+safe(item.title)+'</h3><p>'+safe(item.desc)+'</p></div><span class="dqc-role">'+safe(item.role)+'</span></article>';
+ const badge=item.badges&&item.badges.includes('Printouts Needed')?'<div class="dqc-binder-task-badges"><span class="dqc-task-badge is-print">Printouts Needed</span></div>':'';
+ return '<article class="dqc-binder-item"><div class="dqc-binder-main"><h3>'+safe(item.title)+'</h3><p>'+safe(item.desc)+'</p>'+badge+'</div><span class="dqc-role">'+safe(item.role)+'</span></article>';
 }
 function renderDailySections(market,dailyQcTasks){
  return '<nav class="dqc-view-switch" role="tablist" aria-label="Lab checklist sections">'+
@@ -136,7 +137,7 @@ function renderDailySections(market,dailyQcTasks){
  '<section id="dqc-panel-daily" role="tabpanel" class="dqc-workstream" aria-labelledby="dqc-tab-daily"'+(selectedView==='daily'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('checklist')+'</span><div><h2 id="dqc-daily-title">Daily Task Checklist</h2><p>Opening checks, QC readiness and unresolved lab handoffs</p></div></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></header>'+
  '<div class="dqc-sections">'+groupOrder.map(function(group,i){return card(group,i,market.tasks)}).join('')+'</div></section>'+
  '<section id="dqc-panel-daily-qc" role="tabpanel" class="dqc-workstream dqc-daily-qc-workstream" aria-labelledby="dqc-tab-daily-qc"'+(selectedView==='daily-qc'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('qc')+'</span><div><h2>Daily QC</h2><p>Instrument QC and readiness tasks, based on the approved market schedule</p></div></div><span class="dqc-check-count">'+dailyQcTasks.length+' checks</span></header>'+
- '<p class="dqc-cadence-note">Perform only the checks applicable to instruments and tests installed at this clinic. External QC may be due daily, with a new lot or shipment, or on another approved schedule. A readiness check does not replace required external QC.</p>'+
+ '<p class="dqc-cadence-note">Perform only the checks applicable to instruments and tests installed at this clinic. External QC may be due daily, with a new lot or shipment, or on another approved schedule. A readiness check does not replace required external QC.'+(market.id==='socal'?' <strong>SoCal:</strong> UA/hCG external QC is not a routine daily requirement; follow the monthly and event-triggered schedule.':'')+'</p>'+
  '<div class="dqc-daily-qc-grid">'+dailyQcTasks.map(taskItem).join('')+'</div></section>'+
  '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
  '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
@@ -159,7 +160,7 @@ function render(page='daily'){
  currentPage=page==='monthly'?'monthly':'daily';
  const market=markets.find(m=>m.id===selectedMarket)||markets[0];
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
- const dailyQcTasks=market.tasks.filter(t=>t.group==='Instrument QC & readiness');
+ const dailyQcTasks=market.tasks.filter(t=>t.group==='Instrument QC & readiness' && !(market.id==='socal' && t.id==='clinitek'));
  const monthlyTasks=market.monthly||[];
  return '<section class="dqc-page" aria-label="'+(currentPage==='monthly'?'Lab Monthly Checklist':'Lab Daily Checklist')+' reference">'+
  '<header class="dqc-hero"><div><span class="dqc-eyebrow">'+(currentPage==='monthly'?'LAB OPERATIONS / RECURRING LAB QC':'LAB OPERATIONS / DAILY LAB TASKS')+'</span><h1>'+(currentPage==='monthly'?'Lab Monthly Checklist':'Lab Daily Checklist')+'</h1><p>'+(currentPage==='monthly'?'Recurring QC/calibration tasks and monthly binder documentation by clinic.':'Daily readiness tasks, QC and binder documentation by clinic.')+'</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
