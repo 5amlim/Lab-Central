@@ -261,3 +261,41 @@
 .qc-poch-physical-labels{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
 .qc-poch-physical-labels span{background:#e5f4f1;border:1px solid #aacfc7;color:#287f76;border-radius:6px;padding:8px 9px;font-size:10px;font-weight:800}
 .qc-poch-status>span{padding:5px 10px;background:#e6f2f9;border-radius:20px;color:#527d94;font-size:10px;font-weight:800}
+
+/* Informational horizontal-scroll hint, instead of in-card More buttons on pocH maintenance screens. */
+.qc-screen-gallery--scroll.qc-screen-gallery--cue-only>.qc-screen-reference{
+ padding-bottom:17px;
+}
+.qc-gallery-scroll-hint{
+ display:flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:9px;
+ margin:-3px 4px 12px;
+ color:#407f88;
+ font-size:11.5px;
+ line-height:1.35;
+ font-weight:750;
+ letter-spacing:.025em;
+ pointer-events:none;
+}
+.qc-gallery-scroll-hint-line{
+ display:block;
+ width:34px;
+ height:2px;
+ border-radius:2px;
+ background:linear-gradient(90deg,transparent,#7eb9b9);
+}
+.qc-gallery-scroll-hint-arrow{
+ font-size:21px;
+ line-height:1;
+ font-weight:800;
+ color:#218985;
+}
+@media(max-width:650px){
+ .qc-gallery-scroll-hint{font-size:11px;gap:7px;margin:0 2px 11px}
+ .qc-gallery-scroll-hint-line{width:19px}
+}
+@media print{
+ .qc-gallery-scroll-hint{display:none!important}
+}
