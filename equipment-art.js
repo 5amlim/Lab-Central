@@ -785,15 +785,37 @@ function febridxCollectionGuide(){
  '</section>';
 }
 
+/* Keep one shared collection card and testing-window note in both overview
+   and patient-testing views. Exact limits are included only where established. */
+const collectionTestWindows={
+ sysmex:"Run EDTA whole-blood samples within 8 hours of collection when stored at room temperature.",
+ piccolo:"Run whole blood within 60 minutes of collection. If delayed, separate and handle plasma under the approved SOP.",
+ pathfast:"Test promptly after collection and mixing. Follow each assay's IFU for whole-blood/plasma stability and document serial draw times.",
+ triage:"Follow the specimen stability window in the selected Triage assay IFU; handling differs by cardiac assay.",
+ clinitek:"For urine reagent strips, aim to test within 2 hours of collection. Check the separate hCG cassette IFU for its specimen handling limit.",
+ torch:"Follow the current BioFire GI panel IFU's testing window and temperature requirements for stool in Cary Blair.",
+ spotfire:"Follow the selected respiratory or throat assay IFU's testing window and transport temperature requirements.",
+ febridx:"Begin the test immediately after the fingerstick collection and follow the IFU's transfer and result-read timing.",
+ "drug-screen":"Follow the approved urine drug-screen cup IFU's specimen stability and read-time requirements.",
+ coagsense:"Apply the freshly collected fingerstick blood to the test strip immediately after filling the transfer tube.",
+ poc:"Follow the selected test kit IFU's specimen stability limit; collection-to-test timing varies by assay.",
+ sofia:"Follow the selected Sofia 2 assay IFU's specimen stability window. Cassette development and reading have separate time limits.",
+ hemocue:"Measure as soon as possible, no later than 10 minutes after filling the microcuvette."
+};
+function collectionTestWindow(sec){
+ if(sec.archived||!collectionTestWindows[sec.id])return "";
+ return '<p class="device-collection-test-window" role="note"><strong>Test within</strong><span>'+visualEsc(collectionTestWindows[sec.id])+'</span></p>';
+}
 function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
- if(sec.id==="febridx")return febridxCollectionGuide();
+ if(sec.id==="febridx")return febridxCollectionGuide().replace(/<\/section>$/,collectionTestWindow(sec)+"</section>");
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
  '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
+ collectionTestWindow(sec)+
  '</section>';
 }
 
