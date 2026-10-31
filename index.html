@@ -477,6 +477,11 @@ function showNav(){
  out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Athena Order Sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
+  // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
+  if(cat==='Point of care'){
+   const otherIndex=list.findIndex(s=>s.id==='poc');
+   if(otherIndex>=0)list.push(...list.splice(otherIndex,1));
+  }
   if(!list.length)continue;
   const isArchive=cat==='Archived';
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
