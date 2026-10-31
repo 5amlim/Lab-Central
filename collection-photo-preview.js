@@ -8,7 +8,7 @@
   return window.LAB_CONTAINER_REFERENCE?.items?.find(x=>x.id===id)||null;
  }
  function reference(id){
-  if(id==="pathfast-green")return {src:window.LAB_PATHFAST_COLLECTION_PHOTO||"",name:"PATHFAST · Green-top lithium-heparin tube",note:"Staff reference photo (specimen label obscured)"};
+  if(id==="pathfast-green")return {src:window.LAB_CONTAINER_REFERENCE?.photoForId?.("green-lithium")||window.LAB_PATHFAST_COLLECTION_PHOTO||"",name:"PATHFAST · Green-top lithium-heparin tube",note:"Lab Container Gallery photo · Example label showing required date, time and initials"};
   const item=galleryItem(id),src=window.LAB_CONTAINER_REFERENCE?.photoForId?.(id)||"";
   return item&&src?{src,name:item.name,note:"Lab Container Gallery reference photo"}:null;
  }
@@ -19,6 +19,11 @@
   tip.hidden=true;
   tip.setAttribute("role","tooltip");
   tip.innerHTML='<div class="device-collection-photo-frame"><img alt=""><span class="device-collection-photo-error" hidden>Photo unavailable. See Lab Container Gallery.</span></div><strong></strong><small></small>';
+  const example=document.createElement("span");
+  example.className="device-collection-photo-label";
+  example.innerHTML="<strong>Collection label</strong>Date: MM/DD/YYYY<br>Time: HH:MM<br>Initials: XX";
+  example.hidden=true;
+  tip.querySelector(".device-collection-photo-frame").appendChild(example);
   document.body.appendChild(tip);
   const img=tip.querySelector("img"),fallback=tip.querySelector(".device-collection-photo-error");
   img.addEventListener("error",()=>{img.hidden=true;fallback.hidden=false;});
@@ -49,6 +54,7 @@
   target.setAttribute("aria-expanded",String(pinned));
   const img=bubble.querySelector("img"),fallback=bubble.querySelector(".device-collection-photo-error");
   fallback.hidden=true;img.hidden=false;
+  bubble.querySelector(".device-collection-photo-label").hidden=target.dataset.collectionPhoto!=="pathfast-green";
   if(img.getAttribute("src")!==info.src)img.src=info.src;
   img.alt="Photo of "+info.name;
   bubble.querySelector("strong").textContent=info.name;
