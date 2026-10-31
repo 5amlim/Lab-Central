@@ -1,10 +1,11 @@
 /* Lab Central remaining sidebar icons.
    Each symbol is composed for the same 24px, 1.65px round-stroke system
-   used by the analyzer icons. Preserve branded Lab Calculator favicon,
-   Piccolo flask and PATHFAST heart-pulse as established identifiers. */
+   used by the analyzer icons. Keep the Lab Calculator favicon on its own pages, while the sidebar uses
+   a matching lab/calculator symbol. Preserve Piccolo and PATHFAST icons. */
 (function(){
 'use strict';
 window.LAB_CENTRAL_SIDEBAR_ICONS=Object.freeze({
+  "calculators": "<path d=\"M3 3h7M4.2 3v9.1l-1.1 3a2 2 0 0 0 1.9 2.7h4.2a2 2 0 0 0 1.9-2.7l-1.1-3V3M4.5 12h5.1\"/><rect x=\"13\" y=\"4\" width=\"8\" height=\"16\" rx=\"1.6\"/><path d=\"M15 8h4M15 12h1M18.3 12h.7M15 16h1M18.3 16h.7\"/>",
   "home": "<path d=\"m3 11 9-7 9 7v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20Z\"/><path d=\"M9 21.5v-7h6v7M9.5 11h5M12 8.5v5\"/>",
   "favorites": "<path d=\"m12 2.8 2.85 5.77 6.37.92-4.61 4.49 1.09 6.35L12 17.33l-5.7 3 1.09-6.35-4.61-4.49 6.37-.92L12 2.8Z\"/><path d=\"m9.4 12.5 1.7 1.7 3.6-3.7\"/>",
   "orders": "<path d=\"M6.5 2.5h8l4 4V21H6.5a2 2 0 0 1-2-2V4.5a2 2 0 0 1 2-2Z\"/><path d=\"M14.5 2.5v4h4M8 10.5h6M8 13.7h4\"/><path d=\"m12.9 17.4 2 2 4-4\"/>",
