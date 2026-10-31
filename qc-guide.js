@@ -168,10 +168,11 @@ function qcClickStep(sec,groupId,title){
  if(!sec||!title)return "";
  const t=String(title).toLowerCase();
  let scenes=null;
- if(sec.id==="piccolo"&&/click analyze/.test(t))scenes=[
-  {heading:"Open analysis",screen:"HOME",items:["Analyze","Recall","Settings"],focus:"Analyze",tip:"Select Analyze, then close the drawer when prompted."},
-  {heading:"Choose control mode",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control rather than Patient."},
-  {kind:"manualLevel",heading:"Manually enter the level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter to confirm. The level is typed, not selected from a list."}];
+ if(sec.id==="piccolo"&&/^(run qc|click analyze)/.test(t))scenes=[
+  {heading:"Open Analyze",screen:"HOME",items:["Analyze","Recall","Settings"],focus:"Analyze",tip:"Select Analyze. Do not close the drawer yet."},
+  {heading:"Select Control",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control before closing the drawer."},
+  {kind:"manualLevel",heading:"Enter QC level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter."},
+  {kind:"status",heading:"Close to start QC",screen:"QC RUNNING",status:"Analysis in progress",detail:"QC run started",tip:"After confirming the level, select Close. The drawer closes and the QC run starts automatically."}];
  else if(sec.id==="triage"&&/select run test|click run test/.test(t))scenes=[
   {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
   {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
