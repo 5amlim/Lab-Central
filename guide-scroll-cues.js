@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs";
+const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
@@ -14,7 +14,7 @@ cue.querySelector('button').addEventListener('click',function(){window.scrollBy(
 const scrollSelectors=[
  ".pfux-stage-track",".guide-stepper",".pf-rack-scroll",".pf-qc-lane-list",
  ".pfux-jump-options",".qc-screen-gallery--scroll",
- ".tab-strip.instrument-matched-tabs",".tab-strip.order-workflow-tabs"
+ ".tab-strip.instrument-matched-tabs",".pfux-primary-nav",".tab-strip.order-workflow-tabs"
 ];
 const remembered=new Map();
 const selectorFor=node=>scrollSelectors.find(selector=>node.matches(selector));
@@ -23,7 +23,7 @@ function scrollKey(node){
  if(!selector)return "";
  const route=decodeURIComponent(location.hash||"#home").replace(/^#/,"");
  const page=route.split("/")[0];
- const scope=selector.includes("tab-strip")?page:route;
+ const scope=(selector.includes("tab-strip")||selector===".pfux-primary-nav")?page:route;
  const index=Array.from(document.querySelectorAll(selector)).indexOf(node);
  return scope+"::"+selector+"::"+Math.max(0,index);
 }
@@ -32,7 +32,7 @@ function remember(node){
  if(key)remembered.set(key,{left:node.scrollLeft,top:node.scrollTop});
 }
 function ensureCurrentVisible(node){
- const current=node.querySelector('[aria-current="step"],[aria-selected="true"]');
+ const current=node.querySelector('[aria-current="step"],[aria-current="page"],[aria-selected="true"]');
  if(!current||node.scrollWidth<=node.clientWidth+2)return;
  const track=node.getBoundingClientRect(),item=current.getBoundingClientRect();
  const left=item.left-track.left,right=item.right-track.right;
@@ -76,7 +76,7 @@ function setup(node){
  const right=document.createElement("button");right.className="lc-scroll-cue-right";
  right.type="button";right.hidden=true;
  const steps=node.matches(".pfux-stage-track, .guide-stepper");
- const tabs=node.matches(".tab-strip.instrument-matched-tabs");
+ const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav");
  right.setAttribute("aria-label",steps?"Show more procedure steps to the right":tabs?"Show more instrument sections to the right":"Show more items to the right");
  right.innerHTML="<span>"+(steps?"More steps":tabs?"More sections":"More")+" <span aria-hidden=\"true\">→</span></span>";
  right.addEventListener("click",function(){
