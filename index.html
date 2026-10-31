@@ -213,6 +213,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261031-clinitek-appearance-running-v2"">
 <link rel="stylesheet" href="assay-catalog.css?v=20261031-printout-abbrev-v1" media="all">
+<link rel="stylesheet" href="result-interpretation-guides.css?v=20261031-results-v1" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261031-whole-analyzer-fit-v3" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261031-triage-accurate-screen-actions-v2" media="all">
@@ -369,6 +370,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-visual-corrections-20261029.js?v=4"></script>
 <script src="lab-guide-polish.js?v=20261031-piccolo-qc-screens-restored-v4"></script>
 <script src="piccolo-results.js?v=20261031-manufacturer-receipt-layout-v3"></script>
+<script src="result-interpretation-guides.js?v=20261031-results-v1"></script>
 <script src="sysmex-focused.js?v=20261029-sysmex-reference-v6"></script>
 <script src="clinitek-focused.js?v=20261031-clinitek-appearance-running-v2""></script>
 <script src="instrument-focused.js?v=20261029-coagsense-display-v2"></script>
@@ -1950,7 +1952,7 @@ function sectionRender(sec,tab){
   {id:'collection',title:'Collection notes'},
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
- ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -2004,6 +2006,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
  else if(sec.id==='piccolo'&&tab==='result-interpretation')h+=window.LAB_PICCOLO_RESULTS.render();
+ else if(['sysmex','pathfast','clinitek'].includes(sec.id)&&tab==='result-interpretation')h+=window.LAB_RESULT_INTERPRETATION.render(sec.id);
  else if(sec.id==='clinitek'&&tab==='combined-qc'){
   const selected=groups.find(x=>x.id===state.clinitekQc)||groups.find(x=>x.id==='ua-qc');
   h+=window.LAB_ASSAY_CATALOG.qcMenu(selected.id)+renderGuidedProcedure(selected,sec);
