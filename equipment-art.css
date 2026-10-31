@@ -62,3 +62,18 @@
  .equipment-overview.piccolo-overview .equipment-svg.piccolo-main-svg{height:245px;max-height:245px}
  .equipment-overview.piccolo-overview .equipment-art{min-height:250px}
 }
+
+/* Updated SpotFire front view: reference-matched white base and raised screen. */
+.equipment-overview.spotfire-overview .equipment-art{min-height:310px;background:radial-gradient(ellipse at center,#f0f5f8 0%,#fff 80%)}
+.equipment-overview.spotfire-overview .equipment-svg{
+  width:100%;max-width:460px;height:auto;max-height:310px;
+  object-fit:contain;filter:drop-shadow(0 3px 5px rgba(36,55,68,.06))
+}
+@media(max-width:740px){
+ .equipment-overview.spotfire-overview .equipment-art{min-height:260px}
+ .equipment-overview.spotfire-overview .equipment-svg{max-height:255px}
+}
+@media print{
+ .equipment-overview.spotfire-overview .equipment-art{min-height:185px}
+ .equipment-overview.spotfire-overview .equipment-svg{max-height:190px}
+}
