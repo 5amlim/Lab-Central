@@ -59,7 +59,7 @@ function screen(mode){
   return s+nav;
  }
  // True Sofia 2 Run Test display: ID fields on the right, development options beneath.
- s+=txt(16,47,mode==="mode"?"Choose Development Mode":"Run Test",18,"#eef4f7");
+ s+=txt(16,47,mode==="mode"?"Choose Run Mode":"Run Test",18,"#eef4f7");
  s+=rect(17,59,127,112,8,"#142a34","#284958",1.2)+txt(80,99,"▤",31,"#51a0b1",800,"middle")+txt(80,125,"BARCODE",12,"#bdd9df",700,"middle");
  [["User ID","Operator"],["Patient ID","MRN ######"],["Order Number","Optional"]].forEach((a,i)=>{
   const y=51+i*36;s+=txt(159,y+9,a[0],10,"#dbe2e5")+rect(229,y-7,103,26,2,mode==="entry"&&i===1?"#cde9e8":"#dadfe2",mode==="entry"&&i===1?"#37b1ac":"#7d8a90",1)+txt(235,y+10,a[1],11,"#3e4c54",600);
