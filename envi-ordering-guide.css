@@ -263,3 +263,31 @@
  .envi-guide .ev-step{break-inside:avoid;page-break-inside:avoid}
  .envi-guide .ev-mini-target{outline:2px solid #b77d3f!important}
 }
+
+/* Screen magnifier. Staff can inspect the illustrated UI without changing steps. */
+.envi-guide .ev-illustration-title{flex-wrap:wrap}
+.envi-guide .ev-zoom-trigger{border:1px solid #bfd8e9;background:#fff;color:#276b99;border-radius:7px;padding:6px 10px;font-size:10px;line-height:1.2;font-weight:850;letter-spacing:0;cursor:pointer;white-space:nowrap}
+.envi-guide .ev-zoom-trigger:hover{background:#edf7ff;border-color:#77b5df}
+.envi-guide .ev-zoom-trigger:focus-visible{outline:3px solid #73bbed;outline-offset:2px}
+.envi-guide .ev-required-tag.ev-kind-branch{background:#eaf5fb;color:#276c99;border-color:#bdddec}
+.envi-guide .ev-screen-zoom{position:fixed;inset:0;margin:auto;border:1px solid #d5e3ed;border-radius:17px;padding:0;width:min(1120px,94vw);max-width:1120px;max-height:92vh;background:#fff;box-shadow:0 20px 70px rgba(20,51,72,.3);overflow:auto}
+.envi-guide .ev-screen-zoom::backdrop{background:rgba(22,49,71,.66)}
+.envi-guide .ev-screen-zoom-header{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:17px 21px;border-bottom:1px solid #dbe8f0;background:#f5f9fc}
+.envi-guide .ev-screen-zoom-header>div{display:flex;flex-direction:column;gap:5px}
+.envi-guide .ev-screen-zoom-header small{font-size:10px;color:#5b8fad;letter-spacing:.1em;font-weight:850}
+.envi-guide .ev-screen-zoom-header strong{font-size:18px;color:#294f65}
+.envi-guide .ev-screen-zoom-header button{font-size:12px;padding:9px 13px;background:#fff;border:1px solid #b9d0df;color:#3e667c;border-radius:8px;font-weight:850;cursor:pointer;white-space:nowrap}
+.envi-guide .ev-screen-zoom-header button:hover{background:#ebf5fa}
+.envi-guide .ev-screen-zoom-content{padding:15px;background:#eef3f7;min-height:270px}
+.envi-guide .ev-screen-zoom-content .ev-mini-screen{min-height:500px;border:1px solid #ccdce6;border-radius:12px;overflow:hidden;box-shadow:0 5px 22px rgba(31,71,103,.07)}
+.envi-guide .ev-screen-zoom-content .ev-mini-screen-content{min-height:430px}
+.envi-guide .ev-screen-zoom-content .ev-mini-form{max-width:510px}
+.envi-guide .ev-screen-zoom-content .ev-mini-form .ev-field{min-height:48px}
+.envi-guide .ev-screen-zoom-content .ev-mini-form .ev-field strong{font-size:13px}
+.envi-guide .ev-screen-zoom-content .ev-mini-result-title span{font-size:12px}
+.envi-guide .ev-screen-zoom-content .ev-mini-result-title strong{font-size:14px}
+.envi-guide .ev-screen-zoom-content .ev-mini-result{min-height:90px}
+.envi-guide .ev-screen-zoom-content .ev-handoff-picture{min-height:360px}
+.envi-guide .ev-screen-zoom-foot{font-size:11px;color:#728a9b;margin:0;padding:10px 18px 14px;line-height:1.5}
+@media(max-width:650px){.envi-guide .ev-illustration-title small{margin-left:0}.envi-guide .ev-zoom-trigger{margin-left:auto}.envi-guide .ev-screen-zoom{width:98vw;max-height:95vh}.envi-guide .ev-screen-zoom-header{padding:12px}.envi-guide .ev-screen-zoom-header strong{font-size:15px}.envi-guide .ev-screen-zoom-content{padding:6px}.envi-guide .ev-screen-zoom-content .ev-mini-screen{min-height:330px}.envi-guide .ev-screen-zoom-content .ev-mini-screen-content{min-height:270px}.envi-guide .ev-screen-zoom-content .ev-mini-result-title span{font-size:10px}}
+@media print{.envi-guide .ev-zoom-trigger,.envi-guide .ev-screen-zoom{display:none!important}}
