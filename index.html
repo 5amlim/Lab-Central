@@ -846,7 +846,7 @@ function homepageEquipmentArt(sec,featured=false){
  // Standalone device SVGs have no class; always attach the card sizing class
  // to the root SVG rather than accidentally replacing a nested component class.
  let graphic=matched[0].replace(/<svg\b([^>]*)>/i,(_tag,attrs)=>'<svg class="home-device-svg"'+attrs.replace(/\sclass="[^"]*"/i,'')+'>');
- if(!['sofia','torch','piccolo','febridx','triage'].includes(sec.id)){
+ if(!['sofia','torch','piccolo','febridx','triage','sysmex','spotfire'].includes(sec.id)){
   const crop=sec.id==='pathfast'?'178 8 392 334':'170 12 400 284';
   graphic=graphic.replace(/viewBox="[^"]*"/,'viewBox="'+crop+'"');
  }
