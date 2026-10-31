@@ -214,11 +214,16 @@ function render(id,title){
   lines:["Scan the pouch barcode.","Confirm the requested panel, sample ID and specimen type before starting."],
   note:"For SPOTFIRE, verify the Respiratory vs Sore Throat menu matches the order."
  });
- if(/load pouch and start run|start assay|start run|load.*module/.test(t))return c({
+ if(/load pouch and start run|start assay|start run|load.*module/.test(t))return gi?c({
   title:"Load pouch and start test",tag:"Start run",
-  visual:gi?B.analyzer?.(id,"selected"):B.spotfireScreenWithZoom?.("selected"),page:17,
-  lines:["Insert the prepared pouch into the selected module.","Recheck sample ID and panel, then follow the analyzer START prompts."],
+  visual:B.analyzer?.(id,"selected"),page:17,
+  lines:["Insert the prepared pouch into the selected TORCH module.","Follow the actual TORCH software prompts and confirm analysis has started."],
   note:"A started run is not the same as a completed, valid result."
+ }):c({
+  title:"Review information, then insert pouch",tag:"AUTOMATIC START",
+  visual:B.spotfireScreenWithZoom?.("insert"),page:17,
+  lines:["Review the sample ID, selected sample type and panel on the Review Information, Then Insert Pouch screen.","When the selected module LED blinks blue, insert the prepared pouch into that module. The module draws it into the chamber.","The run starts automatically on insertion. The LED turns solid green and the Home screen shows the module running."],
+  note:"There is no separate START button at this step. Do not load the pouch before verifying the displayed information; a started run is not a completed result."
  });
  if(/review.*result|document.*result|print.*result/.test(t))return c({
   title:"Review completed results",tag:"Reporting",
