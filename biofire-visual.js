@@ -321,40 +321,96 @@ function analyzer(id,state){
  }
  const mode=String(state||"ready").toLowerCase();
  const statuses={
-  ready:{title:"Available",foot:""},selected:{title:"Module selected",foot:"READY"},
-  running:{title:"Processing",foot:"RUNNING"},
-  results:{title:"Results ready",foot:"REVIEW"},
-  scan:{title:"Scan barcode",foot:"IDENTIFY"},
-  identify:{title:"Sample ID",foot:"VERIFY"},
-  review:{title:"Review details",foot:"CONFIRM"},
-  start:{title:"Start run",foot:"START"}
+  ready:{title:"Available",detail:"",action:"›"},
+  selected:{title:"Module selected",detail:"Ready for new run",action:"›"},
+  scan:{title:"Scan pouch barcode",detail:"Identify the pouch",action:"›"},
+  identify:{title:"Confirm sample ID",detail:"Verify identifiers",action:"›"},
+  review:{title:"Review run details",detail:"Confirm the pouch",action:"›"},
+  start:{title:"Start run",detail:"Ready to begin",action:"›"},
+  running:{title:"Processing",detail:"Run in progress",action:""},
+  results:{title:"Results ready",detail:"Review results",action:"›"}
  };
  const status=statuses[mode]||statuses.ready;
- const line=(x,y,str,size=13,color="#356b86",weight=850)=>{
-   return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" fill="'+color+'" font-weight="'+weight+'">'+esc(str)+'</text>';
- };
- // This is the exact silhouette, proportions and main-screen framing used in
- // the original SPOTFIRE overview in equipment-art.js. Change ONLY the display.
- const body='<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+
- '<rect x="194" y="104" width="215" height="166" rx="18" fill="#eef3f6" stroke="#9cadb9" stroke-width="3"/>'+
- '<rect x="211" y="119" width="180" height="99" rx="10" fill="#d9e5ea" stroke="#b7cbd4" stroke-width="2"/>'+
- '<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+
- '<rect x="214" y="228" width="179" height="29" rx="7" fill="#dae6eb"/>'+
- line(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+
- '<rect x="404" y="59" width="120" height="196" rx="17" fill="#f3f7f9" stroke="#9db3bf" stroke-width="3"/>'+
- '<rect x="417" y="81" width="95" height="154" rx="6" fill="#263c4b"/>'+
- '<rect x="427" y="94" width="75" height="119" rx="3" fill="#e1edf2"/>'+
- line(465,mode==="ready"?131:119,mode==="ready"?"Available":"SPOTFIRE",mode==="ready"?13:12,"#356b86",850)+
- (mode==="ready"?"":line(465,142,status.title,Math.min(12,status.title.length>14?9:11),mode==="results"?"#187964":"#387388",820))+
- (status.foot?'<rect x="440" y="166" width="50" height="28" rx="5" fill="'+(mode==="running"?"#d1efe9":"#b9dde9")+'"/>'+
- line(465,184,status.foot,9,"#286780",850):"")+
- '<circle cx="464" cy="243" r="7" fill="#4a91aa"/>';
- const close=mode==="selected"?'<rect x="218" y="123" width="174" height="91" rx="8" stroke="#2b9888" stroke-width="3" fill="none" stroke-dasharray="7 5"/>':"";
- return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BioFire SPOTFIRE instrument, same body as Overview, screen showing '+esc(status.title)+'" viewBox="0 0 740 310">'+body+close+'</svg>';
+ // One accurate front-view chassis for both Overview and procedure-screen states.
+ // Photo reference: white left analyzer / red L-shaped bay, blue front badge,
+ // dark underside vent, right-hand hinged portrait touchscreen.
+ // Screen content is an illustrative operator-training state, not a live capture.
+ const parts=[
+ '<defs>'+
+ '<linearGradient id="sf-case" x1="0" y1="0" x2="1" y2=".15"><stop stop-color="#e5e5e7"/><stop offset=".23" stop-color="#fff"/><stop offset=".78" stop-color="#f4f4f6"/><stop offset="1" stop-color="#c7c7cb"/></linearGradient>'+
+ '<linearGradient id="sf-side" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#c2c2c8"/><stop offset=".45" stop-color="#e0e0e5"/><stop offset="1" stop-color="#bdbfc6"/></linearGradient>'+
+ '<linearGradient id="sf-glass" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#e0e0e0"/><stop offset="1" stop-color="#c8c8c8"/></linearGradient>'+
+ '<linearGradient id="sf-dark" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#343138"/><stop offset="1" stop-color="#151115"/></linearGradient>'+
+ '<linearGradient id="sf-port" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050508"/><stop offset=".5" stop-color="#291418"/><stop offset="1" stop-color="#110608"/></linearGradient>'+
+ '<linearGradient id="sf-bezel" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#fbfbfc"/><stop offset=".7" stop-color="#fff"/><stop offset="1" stop-color="#e3e3e5"/></linearGradient>'+
+ '<linearGradient id="sf-front" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fefefe"/><stop offset="1" stop-color="#dedee2"/></linearGradient>'+
+ '</defs>',
+ '<ellipse cx="352" cy="410" rx="154" ry="11" fill="#dbe4e8" opacity=".32"/>',
+ // REAR RIGHT support of the tall freestanding display.
+ '<path d="M358 248L395 245L398 391Q385 400 361 392Z" fill="url(#sf-side)" stroke="#b0afb6" stroke-width="1.5"/>',
+ '<path d="M382 288L420 289L415 299H389Z" fill="#dd4b4a" stroke="#9f3133" stroke-width="1.5"/>',
+ // White analyzer, with visible upper top and right side surfaces.
+ '<path d="M205 206L222 188Q226 184 243 184H361Q389 185 397 208V385Q397 406 379 411H218Q201 406 201 385V221Q201 213 205 206Z" fill="url(#sf-case)" stroke="#c5c5cb" stroke-width="2"/>',
+ '<path d="M205 207L224 190Q228 188 242 188H371Q388 190 396 207L384 219H209Z" fill="#f5f5f7" stroke="#d0d0d4" stroke-width="1.2"/>',
+ '<path d="M375 219H395V382Q394 397 382 402H374Z" fill="url(#sf-side)" opacity=".65"/>',
+ '<path d="M203 217Q210 218 223 218H377V305H204Z" fill="#f6f6f8" stroke="#d4d4d8" stroke-width="1.6"/>',
+ // Left upper dark cartridge bay, set within a deep gray frame.
+ '<rect x="216" y="217" width="155" height="85" rx="10" fill="#d5d4d8" stroke="#c4c3c9" stroke-width="1.5"/>',
+ '<rect x="223" y="221" width="144" height="78" rx="8" fill="url(#sf-dark)" stroke="#8c8991" stroke-width="2"/>',
+ '<path d="M230 227H360" stroke="#f6f5f5" stroke-width="2" opacity=".5"/>',
+ // Reference-matched red-edged, black recessed, L-shaped cartridge module.
+ '<path d="M266 231H297V285H286V247H267Z" fill="#e25d55" stroke="#a73b37" stroke-width="2.6" stroke-linejoin="round"/>',
+ '<path d="M269 235H292V282H289V244H269Z" fill="#070608" stroke="#34151a" stroke-width="3" stroke-linejoin="round"/>',
+ '<path d="M274 230H294" stroke="#ff9d86" opacity=".65" stroke-width="1.7"/>',
+ // Lower fascia: USB, vents, logo, power indicator, and curved vent opening.
+ '<path d="M204 306H375V385Q375 403 361 403H219Q205 402 204 384Z" fill="url(#sf-front)" stroke="#d4d4d9" stroke-width="1.3"/>',
+ '<path d="M204 305H375" stroke="#aaa9b0" stroke-width="2.2"/>',
+ '<rect x="243" y="312" width="24" height="13" rx="2" fill="#24262e" stroke="#7b8088" stroke-width="1.2"/>',
+ '<rect x="247" y="314" width="15" height="5" rx="1" fill="#080a0e"/><rect x="249" y="321" width="11" height="2" fill="#8a9098"/>',
+ '<rect x="307" y="314" width="20" height="5" rx="2.5" fill="#ccd0d4" stroke="#8e949b" stroke-width="1"/>',
+ '<circle cx="321" cy="324" r="4" fill="#dce0e4" stroke="#a0a5ad" stroke-width="1"/>',
+ '<circle cx="286" cy="351" r="16" fill="#22346c" stroke="#c3c9d0" stroke-width="1.3"/>',
+ '<text x="286" y="349" fill="#eff5ff" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.7" font-weight="850" letter-spacing=".2">BIOFIRE</text>',
+ '<text x="286" y="355" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif" font-size="3.7">SPOTFIRE</text>',
+ '<text x="286" y="375" fill="#2d5180" font-family="Arial,sans-serif" text-anchor="middle" font-size="7.7" font-weight="850">BIOFIRE SPOTFIRE</text>',
+ '<path d="M241 388Q286 382 331 388L343 395Q289 403 229 396Z" fill="#292a33" stroke="#a0a1a7" stroke-width="1.5"/>',
+ ...Array.from({length:20},(_,i)=>'<path d="M'+(238+i*4.7)+' 390v5" stroke="#818992" opacity=".64" stroke-width=".9"/>'),
+ '<path d="M206 394Q286 416 372 394" fill="none" stroke="#e0e1e2" stroke-width="2.5"/>',
+ // Elevated portrait display, slightly wider than analyzer bay. White frame.
+ '<path d="M327 81Q326 70 338 70H480Q491 70 491 81L502 274Q503 287 492 288H339Q329 287 328 276Z" fill="#c6c6cb" opacity=".3" transform="translate(2 4)"/>',
+ '<path d="M327 81Q326 70 338 70H480Q491 70 491 81L502 274Q503 287 492 288H339Q329 287 328 276Z" fill="url(#sf-bezel)" stroke="#c9c9d0" stroke-width="2"/>',
+ '<path d="M335 86Q335 79 344 79H480Q484 79 485 85" fill="none" stroke="#fff" stroke-width="2.2"/>',
+ '<path d="M396 77H425" stroke="#65666a" stroke-width="1.7" stroke-linecap="round"/>',
+ // Screen: short black nav bar and pale honeycomb dashboard.
+ '<path d="M345 92H475L482 260H348Z" fill="#d8d8d8" stroke="#aaaab0" stroke-width="1.1"/>',
+ '<path d="M345 92H475L476 108H346Z" fill="#383a3d"/>',
+ '<path d="M349 109H476L482 258H350Z" fill="url(#sf-glass)"/>',
+ '<g fill="none" stroke="#c5c5c5" stroke-width=".8" opacity=".47">',
+ ...Array.from({length:56},(_,i)=>{const row=Math.floor(i/8),col=i%8,x=369+col*14+(row%2?7:0),y=122+row*17;return '<path d="M'+x+' '+(y-6)+'l5 -3l5 3v6l-5 3l-5 -3Z"/>';}),
+ '</g>',
+ '<g fill="#f7f7f7" font-family="Arial,sans-serif" font-size="11" text-anchor="middle">',
+ '<path d="M357 101l4 -4l4 4h-1v4h-6v-4Z" fill="#fff"/>',
+ '</g>',
+ ...[378,405,434,461].map(x=>'<path d="M'+x+' 98v8" stroke="#77797a" stroke-width=".8"/>'),
+ '<rect x="379" y="98" width="6" height="7" rx=".6" fill="#fafafa" stroke="#9a9b9c" stroke-width=".5"/>',
+ '<path d="M408 100h7v5h-7zM408 100l3 -2h4" stroke="#f7f7f7" fill="none" stroke-width=".8"/>',
+ '<path d="M434 100l2 1l2 -1M436 98v6" stroke="#f7f7f7" fill="none" stroke-width=".8"/>',
+ '<circle cx="463" cy="102" r="2.5" fill="none" stroke="#eee" stroke-width="1"/>',
+ // Actual-looking centered white status card; status changes by step.
+ '<rect x="351" y="162" width="126" height="46" rx="2" fill="#fff" stroke="#d0d0d0" stroke-width=".9"/>',
+ '<rect x="351" y="162" width="5" height="46" fill="#4b9acb"/>',
+ '<text x="363" y="184" fill="#15191d" font-family="Arial,Helvetica,sans-serif" font-size="'+(status.title.length>15?9:10.5)+'" font-weight="850">'+esc(status.title)+'</text>',
+ status.detail?'<text x="363" y="197" fill="#64717e" font-family="Arial,sans-serif" font-size="6.7">'+esc(status.detail)+'</text>':'',
+ status.action?'<circle cx="466" cy="183" r="6" fill="#fff" stroke="#90bad5" stroke-width="1"/><path d="M464 180l4 3l-4 3" fill="none" stroke="#2c8fc1" stroke-width="1.1" stroke-linejoin="round"/>':'',
+ '<path d="M333 284H495" stroke="#d1d1d7" stroke-width="2"/>'
+ ];
+ if(mode==="selected")parts.push('<rect x="347" y="160" width="132" height="50" rx="4" stroke="#18948b" stroke-width="2.5" fill="none" stroke-dasharray="5 3"/>');
+ if(mode==="running")parts.push('<path d="M357 224H469" stroke="#e3e8ec" stroke-width="5" stroke-linecap="round"/><path d="M357 224H425" stroke="#399789" stroke-width="5" stroke-linecap="round"/>');
+ return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BioFire SPOTFIRE front-view analyzer with white cartridge housing, red L-shaped pouch bay, lower vents, elevated right-hand touchscreen showing '+esc(status.title)+'" viewBox="145 40 430 420">'+parts.join('')+'</svg>';
 }
 function spotfireScreenWithZoom(mode){
  const full=analyzer("spotfire",mode);
- const zoom=full.replace('viewBox="0 0 740 310"','viewBox="402 53 128 210"');
+ const zoom=full.replace('viewBox="145 40 430 420"','viewBox="322 64 186 232"');
  return '<div class="bf-spotfire-screen-sequence">'+full+
   '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
   '<div class="bf-spotfire-display-crop">'+zoom+'</div>'+
