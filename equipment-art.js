@@ -1165,6 +1165,8 @@ function febridxDeviceMarkup(stage="ready"){
  '<text x="237" y="584" font-size="13" fill="#b9c3c9">T</text><text x="237" y="610" font-size="13" fill="#b9c3c9">C</text>',
  '<rect x="197" y="648" width="32" height="65" rx="4" fill="#e4ecef" stroke="#a0b0b6"/><rect x="201" y="653" width="24" height="55" rx="3" fill="#00afd2"/>'
  ];
+ const spots={collection:[211,126],transfer:[211,460],buffer:[211,679],read:[211,582]};
+ if(spots[stage]){const p=spots[stage];parts.push('<ellipse cx="'+p[0]+'" cy="'+p[1]+'" rx="43" ry="48" fill="none" stroke="#138a80" stroke-width="4" stroke-dasharray="8 6"/>');}
  return parts.join('');
 }
 function febridxDeviceSvg(stage="ready"){
