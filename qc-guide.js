@@ -13,9 +13,11 @@ const configs={
   {heading:"Print the selected level",screen:"PRINT CONTROL CHART",items:["Chart","Current","Cancel"],focus:"Current",tip:"Select Current for the chosen QC file. Repeat file selection and printing separately for QC1, QC2 and QC3; Chart prints the full chart instead."}
  ],note:"Print the accepted QC1 (Low), QC2 (Normal) and QC3 (High) control records one by one. File the startup blank-check report separately in the pocH blank-check log; retain new-lot comparison records in the validation log until the approved transition is complete."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
-  {heading:"Find the QC result",screen:"RECALL",items:["Browse","Search"],focus:"Browse",tip:"Only if a reprint is needed: recall the correct Control result, not a patient result."},
-  {heading:"Reprint if needed",screen:"CONTROL RESULT",items:["Print","Transmit","Back"],focus:"Print",tip:"Select Print only when another copy of the QC report is needed."}
- ],note:"The Piccolo automatically prints the QC result when analysis finishes. Verify both control levels are acceptable before filing in the monthly QC log. Use Recall only when a reprint is needed."},
+  {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
+  {kind:"piccoloResultsList",heading:"Choose the QC result",screen:"All Results Sorted by Date",tip:"Select the correct C (Control) result by date and ID, not a P (Patient) result."},
+  {kind:"piccoloViewResult",heading:"Open result and Print",screen:"View Result",tip:"Check the correct control level and date, then tap Print on the result preview."},
+  {kind:"piccoloSelectReport",heading:"Choose Results to reprint",screen:"Select Report",tip:"Leave Print checked and select Results. iQC is a separate internal QC report."}
+ ],note:"The analyzer prints control results automatically. Reprint only when needed. Review and file acceptable results for both QC levels in the Monthly QC Log."},
  triage:{brand:"Triage MeterPro",binder:"Triage Daily or Monthly QC Log · Maintenance binder",steps:[
   {heading:"Recall the run",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RECALL RESULTS",tip:"For a just-finished run, the meter's printer key can print the displayed result."},
   {heading:"Choose the QC report",screen:"RECALL RESULTS",items:["QC RESULTS","PRINT ALL RESULTS","PATIENT RESULTS"],focus:"PRINT ALL RESULTS",tip:"Select QC Device Results or QC Sample Results as appropriate."},
@@ -63,7 +65,7 @@ function isQcGroup(sec,group){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
- const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|Running)$/.test(item.kind||"");
+ const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const header=isPiccoloScene
   ?'<div class="qc-device-screen-top qc-px-screen-top"><strong>'+esc(item.screen)+'</strong></div>'
   :'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
@@ -90,6 +92,26 @@ function screenPanel(item,brand,number){
  }else if(item.kind==="piccoloRunning"){
   body='<div class="qc-px-running-body"><div class="qc-px-running-disc" aria-hidden="true">◉</div>'+
    '<strong>Analyzing sample...</strong><small>QC run in progress</small></div>';
+ }else if(item.kind==="piccoloRecall"){
+  body='<div class="qc-px-recall-menu">'+["Last Disc","Search","Browse","Transmit Date Range","Transmit All"].map(v=>
+   '<div class="qc-px-amber-choice'+(v==="Browse"?' qc-px-amber-selected':'')+'">'+esc(v)+'</div>').join("")+
+   '</div><div class="qc-px-blue-footer"><span>Home</span></div>';
+ }else if(item.kind==="piccoloResultsList"){
+  const records=[["C","30 Oct","QC-LEVEL-1"],["C","30 Oct","QC-LEVEL-2"],["E","29 Oct","EXAMPLE-ERR"],["P","29 Oct","SAMPLE-001"]];
+  body='<div class="qc-px-results-table">'+records.map((row,i)=>
+   '<div class="qc-px-results-row'+(i===0?' qc-px-results-selected':'')+'"><b>'+esc(row[0])+'</b><span>'+esc(row[1])+'</span><span>'+esc(row[2])+'</span></div>').join("")+
+   '</div><div class="qc-px-arrow-row"><span>△</span><span>▽</span></div>'+
+   '<div class="qc-px-blue-footer"><span>Back</span><span>Home</span></div>';
+ }else if(item.kind==="piccoloViewResult"){
+  const report=["piccolo xpress","Control Result","30 Oct 2026  10:24","Sample Type: Control","Control ID: QC-LEVEL-1","Disc Lot: EXAMPLE","QC OK"].join("\n");
+  body='<div class="qc-px-preview"><pre>'+esc(report)+'</pre></div>'+
+   '<div class="qc-px-arrow-row"><span>△</span><span>▽</span></div>'+
+   '<div class="qc-px-blue-footer"><span>Back</span><span>Home</span><span class="qc-px-print-focus">Print</span></div>';
+ }else if(item.kind==="piccoloSelectReport"){
+  body='<div class="qc-px-report-options">'+["All","Results","iQC","Error Report"].map(v=>
+   '<div class="qc-px-amber-choice'+(v==="Results"?' qc-px-amber-selected':'')+'">'+esc(v)+'</div>').join("")+
+   '</div><div class="qc-px-report-method"><span class="qc-px-checked">☑ Print</span><span>☐ Xmit</span></div>'+
+   '<div class="qc-px-blue-footer"><span>Back</span><span>Home</span></div>';
  }else if(item.kind==="status"){
   // Startup is a passive system display, not a set of selectable actions.
   body='<div class="qc-device-state"><div class="qc-device-state-title">'+esc(item.screen)+'</div>'+
@@ -270,7 +292,8 @@ function printStep(id){
  '<div class="qc-piccolo-auto-print"><strong>Prints automatically</strong><p>Piccolo prints the QC result when the run completes. Review the result and keep the printout for the Monthly QC Log. No manual Print selection is needed for the normal workflow.</p></div>'+
  '<div class="qc-final-section-label">If needed · Reprint a QC result</div>':
  '<div class="qc-final-section-label">01 · Get the printout or authorized record</div>')+
- screenGallery(cfg.steps,cfg.brand,{scroll:id==="sysmex",disclaimer:piccolo?"Use Recall only if the automatic QC printout is missing or another copy is needed.":null})+
+ (piccolo?'<p class="qc-px-scroll-cue">Scroll right to view all reprint screens <span aria-hidden="true">→</span></p>':'')+
+ screenGallery(cfg.steps,cfg.brand,{scroll:id==="sysmex"||piccolo,piccolo:piccolo,disclaimer:piccolo?"If needed: Recall → Last Disc or Browse → Control result → Print → Results. Screen labels can vary by software version.":null})+
  '<div class="qc-final-section-label">02 · Verify and file the QC result</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
