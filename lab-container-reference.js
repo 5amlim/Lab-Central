@@ -79,43 +79,6 @@ function svg(item){
   if(opts.highVolume)v+=T(130,144,'7.5 mL',7.4,'#8295a0',600);
   return v;
  }
- function pinkCrossmatch(){
-  // BD 6 mL crossmatch tube: pink Hemogard cap with ridged sleeve;
-  // white full-height label prominently marking crossmatch/K2EDTA.
-  const x=108,w=44;
-  let z=P('M'+x+' 31H'+(x+w)+'V117Q'+(x+w)+' 138 130 138Q'+x+' 138 '+x+' 117Z',
-   glass,'#8b9fab',1.5)+
-   R(x-4,8,w+8,25,'#cd81a8',5,'#8f6684',1.3)+
-   R(x-1,10,w+2,4,'#e8b4ce',2);
-  for(let i=0;i<8;i++)z+=L(109+i*5,15,109+i*5,29,'#edd4e4',.85);
-  z+=R(x+3,52,w-6,65,'#fff',2,'#c8d7e0')+
-   R(x+3,52,5,65,'#d39dbb',1)+
-   T(132,68,'K2 EDTA',8,'#354d5b')+
-   T(132,81,'CROSS',7.9,'#354d5b')+
-   T(132,90,'MATCH',7.9,'#354d5b')+
-   L(112,98,148,98,'#b7c6d2',1)+
-   barcode(117,102,27)+
-   L(112,36,112,116,'#fff',1.6);
-  return z;
- }
- function yellowACD(){
-  // ACD A/B evacuated glass tube uses a conventional yellow rubber stopper,
-  // not a plastic Hemogard with vertical full-height ribs.
-  const x=108,w=44;
-  let z=P('M'+x+' 31H'+(x+w)+'V117Q'+(x+w)+' 138 130 138Q'+x+' 138 '+x+' 117Z',
-   glass,'#91a7b2',1.5)+
-   R(x-1,9,w+2,22,'#e0b827',4,'#a18b35',1.5)+
-   R(x+3,10,w-6,5,'#f8e492',3)+
-   ELL(130,30,22,3,'#b69a2c')+
-   R(x+4,53,w-8,63,'#fff',2,'#c9d9e1')+
-   R(x+4,53,5,63,'#f2d76c',1)+
-   T(132,71,'ACD',10,'#405664')+
-   T(132,83,'A or B',7.5,'#60727e')+
-   T(132,94,'YELLOW',6.7,'#647c88')+
-   barcode(117,99,25)+
-   L(112,36,112,117,'#fff',1.7);
-  return z;
- }
  function urineTube(col,title,preservative=false){
   const x=103,w=54,y=9;
   let v=preservative
@@ -146,45 +109,44 @@ function svg(item){
    [0,1,2,3].map((_,i)=>L(147,116+i*5,151,116+i*5,'#8ea2ad',.9)).join('');
  }
  function labcorpFrozenTube(){
-  // Horizontal orientation mirrors the supplied purple-cap Labcorp tube photo:
-  // slim clear sleeve, internal purple insert, translucent lower edge and
-  // deeply ribbed purple threaded screw cap on the right.
-  const x=21,y=61;
-  let z=P('M21 66L199 46Q203 46 205 51L211 89Q212 94 207 95L30 119Q25 119 24 114Z',
-    glass,'#849daa',1.5);
-  z+=P('M36 74L195 56L200 87L39 108Z','#aa90dc','none',0)+
-    P('M41 78L191 61L194 69L42 88Z','#c1b0e9','none',0)+
-    R(92,69,61,17,'#9c88ca',3,'none',0)+
-    T(122,80,'LABCORP',6.5,'#ffffff',600)+
-    L(38,75,197,57,'#e8e9f9',2)+
-    L(31,113,203,90,'#fff',2)+
-    P('M200 47L218 43Q222 42 224 47L231 85Q232 91 227 92L209 96Z','#75339a','#59306e',1.8);
-  // Thin cap ribs run in the short axis at a shallow angle.
-  for(let i=0;i<9;i++){
-    const px=205+i*2.55;
-    z+=L(px,49-i*.38,px+6,89-i*.38,'#b78ad1',.9);
-  }
-  z+=P('M200 48L222 44','#d8a7e2','#d8a7e2',1.4);
+  // Upright clear Labcorp specimen tube with purple threaded cap and
+  // integrated lavender inner insert, based on the supplied reference.
+  const x=109,w=42;
+  let z=P('M109 38H151V120Q151 138 130 138Q109 138 109 120Z',
+   glass,'#8da5b5',1.55)+
+   P('M116 45H144V117Q144 129 130 130Q116 129 116 117Z',
+   '#c9b9e9','#9f8abc',.75)+
+   P('M120 47H140V118Q140 125 130 127Q120 125 120 118Z',
+   '#b49cdb','none',0)+
+   R(119,65,22,40,'#b7a2dd',2,'#9c87c4',.65)+
+   T(130,80,'FROZEN',6.8,'#544171')+
+   T(130,89,'SPECIMEN',5.6,'#604a7c',600)+
+   L(113,44,113,118,'#fff',2)+
+   ELL(130,132,15,3,'#e8eff6');
+  z+=R(104,14,52,26,'#754195',5,'#593273',1.5)+
+   R(107,15,46,4,'#a97dc1',3);
+  for(let i=0;i<10;i++)z+=L(109+i*4.5,22,109+i*4.5,36,'#b28fc6',.8);
+  z+=R(109,39,42,3,'#805a97',1);
   return z;
  }
  function amberPhotoTube(){
-  // Brown screw top on the left, narrow photoprotective body to the right,
-  // rounded closed end and white graduations match the provided photo.
-  let z=P('M52 66L216 92Q230 95 232 103Q236 114 222 117L54 88Z',
-      amber,'#986332',1.6);
-  z+=P('M66 71L215 96Q226 98 229 104L64 79Z','#b17847','none',0)+
-    P('M67 84L218 111','#f0c28d','#f0c28d',1.1)+
-    P('M42 65L61 68L64 90L42 88Q35 86 35 79Z','#985521','#6f3d1b',1.6);
-  for(let i=0;i<7;i++){
-    let px=40+i*3.0;
-    z+=L(px,67+(i*.42),px,85+(i*.42),'#c69057',1.2);
+  // Upright brown graduated light-protection tube, not a horizontal vial.
+  let z=P('M108 38H152V119Q152 139 130 139Q108 139 108 119Z',
+   '#985e33','#824925',1.6)+
+   P('M112 41H118V121Q118 131 124 134Q114 133 112 121Z',
+   '#ce9762','none',0)+
+   P('M143 41H148V119Q148 129 143 133Z','#763e21','none',0)+
+   L(115,46,115,112,'#f1c296',1.4)+
+   R(117,54,27,13,'#edd9bf',1,'#bd956d',.65)+
+   T(130,63,'LIGHT',7.5,'#69462c');
+  for(let i=0;i<6;i++){
+    const y=77+i*9;
+    z+=L(143-(i%2===0?11:7),y,144,y,'#f3dbc2',1.3);
   }
-  // Graduation marks, deliberately without invented numerical calibration.
-  for(let i=0;i<7;i++){
-   const xx=93+i*19;
-   z+=L(xx,79+(xx-65)*.15,xx-2.5,91+(xx-65)*.15,'#f7e7d1',i%2===0?1.7:1.1);
-  }
-  z+=P('M53 68L214 95','#edd5b3','#edd5b3',1.5);
+  z+=R(103,14,54,26,'#8d532f',5,'#693b23',1.5)+
+   R(106,15,48,4,'#c59765',3);
+  for(let i=0;i<10;i++)z+=L(108+i*4.8,22,108+i*4.8,36,'#be8956',.85);
+  z+=R(110,39,40,3,'#885a35',1);
   return z;
  }
  function cultureUrine(){
@@ -397,8 +359,6 @@ function svg(item){
  else if(kind==='conical')out=conical();
  else if(item.id==='ua-yellow')out=urineTube('#f0ce38','UA',true);
  else if(item.id==='urine-gray')out=cultureUrine();
- else if(item.id==='pink-edta')out=pinkCrossmatch();
- else if(item.id==='acd-yellow')out=yellowACD();
  else if(item.id==='gold-sst')out=vacutainer(c,'SST','GEL', {gel:true,stripe:'#c79d28'});
  else if(item.id==='tiger-sst')out=vacutainer('#c95840','SST','GEL', {gel:true,pattern:'tiger',highVolume:true,stripe:'#d2a62f'});
  else if(item.id==='royalblue-edta')out=vacutainer('#2850a2','TRACE','EDTA',{stripe:'#9d75b4'});
