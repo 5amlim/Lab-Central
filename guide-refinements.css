@@ -835,3 +835,44 @@
   .guide-card:has(.cl-focused-figure)>.guide-card-body{padding:12px 13px 16px}
   .guide-card:has(.cl-focused-figure)>.guide-card-body .guide-line{font-size:13.5px;padding:10px 5px}
 }
+
+/* PATHFAST-only wider overflow navigation. Keep the smaller supporting links unchanged. */
+.pfux-primary-nav{
+ display:flex;grid-template-columns:none;align-items:stretch;gap:12px;
+ width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;
+ scroll-snap-type:x proximity;scrollbar-width:thin;overscroll-behavior-x:contain;
+ padding:10px 2px 13px;
+}
+.pfux-primary-nav .pfux-route{
+ box-sizing:border-box;flex:0 0 290px;min-width:290px;max-width:290px;
+ scroll-snap-align:start;align-self:stretch;
+}
+.lc-scroll-cue-frame:has(>.pfux-primary-nav){
+ position:sticky;top:40px;z-index:16;
+ background:rgba(247,250,252,.98);
+}
+.lc-scroll-cue-frame>.pfux-primary-nav{position:relative;top:auto;margin-top:0;z-index:auto}
+@media(max-width:650px){
+ .pfux-primary-nav .pfux-route{
+  flex-basis:min(290px,82vw);min-width:min(290px,82vw);max-width:min(290px,82vw);
+ }
+}
+/* The same collection note appears with the same specimen card in testing. */
+.device-collection-guide .device-collection-test-window{
+ display:flex;align-items:flex-start;gap:12px;
+ margin:16px 0 0;padding:13px 15px;border:1px solid #cde3df;
+ border-radius:11px;background:#f3faf8;color:#385f68;
+ font-size:13px;line-height:1.55;
+}
+.device-collection-test-window strong{
+ flex:none;color:#176e69;font-size:11px;line-height:1.6;
+ font-weight:850;text-transform:uppercase;letter-spacing:.07em;
+}
+.device-collection-test-window span{min-width:0}
+@media(max-width:650px){
+ .device-collection-guide .device-collection-test-window{flex-direction:column;gap:4px;padding:11px 13px}
+}
+@media print{
+ .pfux-primary-nav{display:none!important}
+ .device-collection-guide .device-collection-test-window{break-inside:avoid}
+}
