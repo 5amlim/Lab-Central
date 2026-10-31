@@ -20,6 +20,7 @@ window.LAB_CENTRAL_SIDEBAR_ICONS=Object.freeze({
   "supplies": "<path d=\"m3 7 9-4 9 4-9 4-9-4ZM3 7v10l9 4 9-4V7M12 11v10\"/><path d=\"M14.8 14.5h4.2M16.9 12.4v4.2\"/>",
   "visby": "<rect x=\"4\" y=\"3\" width=\"16\" height=\"18\" rx=\"3\"/><rect x=\"7\" y=\"6\" width=\"10\" height=\"6\" rx=\"1.3\"/><circle cx=\"12\" cy=\"16.5\" r=\"2\"/><path d=\"M9 9h6\"/>",
   "idnow": "<path d=\"M4 7h16v12H4zM6 5h12v2M7.5 10h9v5h-9zM8 19v2h8v-2\"/><circle cx=\"18\" cy=\"17\" r=\".7\"/><path d=\"M9.5 12.5h4.5\"/>",
+  "lab-monthly-checklist": "<rect x=\"3.5\" y=\"5\" width=\"17\" height=\"16\" rx=\"2\"/><path d=\"M7.5 3v4M16.5 3v4M3.5 10h17M8 14h2M13 14h3M8 17.4h2M13 17.4h3\"/>",
   "socal-daily": "<rect x=\"5\" y=\"3.5\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M9 3.5v-1h6v1M8 9l1.4 1.4L12 7.6M14 9h2.4M8 15l1.4 1.4L12 13.6M14 15h2.4\"/>",
   "envi-ordering": "<path d=\"m3 7 9-4 9 4-9 4-9-4ZM3 7v10l9 4 9-4V7M12 11v10\"/><path d=\"m14.6 15.6 1.6 1.5 3.3-3.7\"/>",
   "specimen-dropoff": "<path d=\"M4 13v7h16v-7M4 16h16\"/><path d=\"M12 3v12M8.5 11.5 12 15l3.5-3.5\"/><path d=\"M7 7h10\"/>",
