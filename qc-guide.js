@@ -191,9 +191,9 @@ function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
  const cards=list.map((x,i)=>{
   const html=screenPanel(x,brand,i+1);
-  return scroll&&i<list.length-1
-   ?html.replace('</p></div>','</p><button class="qc-gallery-more" type="button" aria-label="Show screen '+String(i+2)+'">More <span aria-hidden="true">→</span></button></div>')
-   :html;
+  if(!scroll||i===list.length-1)return html;
+  const closing=html.lastIndexOf('</p></div>');
+  return closing<0?html:html.slice(0,closing)+'</p><button class="qc-gallery-more" type="button" aria-label="Show screen '+String(i+2)+'">More <span aria-hidden="true">→</span></button></div>'+html.slice(closing+10);
  }).join("");
  return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
   (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
@@ -208,7 +208,7 @@ if(!window.__labQcGalleryMoreBound){
   const card=button.closest('.qc-screen-reference'),next=card?.nextElementSibling;
   if(next?.classList?.contains('qc-screen-reference')){
    const gallery=card.parentElement;
-   gallery.scrollTo({left:next.offsetLeft-gallery.offsetLeft,behavior:'smooth'});
+   gallery.scrollBy({left:next.getBoundingClientRect().left-card.getBoundingClientRect().left,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
    next.setAttribute('tabindex','-1');
    next.focus({preventScroll:true});
   }
