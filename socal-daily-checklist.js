@@ -160,7 +160,7 @@ function render(page='daily'){
  currentPage=page==='monthly'?'monthly':'daily';
  const market=markets.find(m=>m.id===selectedMarket)||markets[0];
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
- const dailyQcTasks=market.tasks.filter(t=>t.group==='Instrument QC & readiness' && !(market.id==='socal' && t.id==='clinitek'));
+ const dailyQcTasks=market.tasks.filter(t=>t.group==='Instrument QC & readiness' && t.id!=='rapid' && !(market.id==='socal' && t.id==='clinitek'));
  const monthlyTasks=market.monthly||[];
  return '<section class="dqc-page" aria-label="'+(currentPage==='monthly'?'Lab Monthly Checklist':'Lab Daily Checklist')+' reference">'+
  '<header class="dqc-hero"><div><span class="dqc-eyebrow">'+(currentPage==='monthly'?'LAB OPERATIONS / RECURRING LAB QC':'LAB OPERATIONS / DAILY LAB TASKS')+'</span><h1>'+(currentPage==='monthly'?'Lab Monthly Checklist':'Lab Daily Checklist')+'</h1><p>'+(currentPage==='monthly'?'Recurring QC/calibration tasks and monthly binder documentation by clinic.':'Daily readiness tasks, QC and binder documentation by clinic.')+'</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
