@@ -13,10 +13,9 @@ const configs={
   {heading:"Print the selected level",screen:"PRINT CONTROL CHART",items:["Chart","Current","Cancel"],focus:"Current",tip:"Select Current for the chosen QC file. Repeat file selection and printing separately for QC1, QC2 and QC3; Chart prints the full chart instead."}
  ],note:"Print the accepted QC1 (Low), QC2 (Normal) and QC3 (High) control records one by one. File the startup blank-check report separately in the pocH blank-check log; retain new-lot comparison records in the validation log until the approved transition is complete."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
-  {heading:"Read the completed run",screen:"ANALYSIS COMPLETE",items:["Results","Print","Home"],focus:"Print",tip:"The analyzer normally prints results automatically at run completion."},
-  {heading:"Retrieve if needed",screen:"RECALL",items:["Browse","Search"],focus:"Browse",tip:"Choose the correct Control result, not a patient result."},
-  {heading:"Request another printout",screen:"CONTROL RESULT",items:["Print","Transmit","Back"],focus:"Print",tip:"Select the Results report or required QC report per configuration."}
- ],note:"Use the control run for the correct disc/panel, lot and level. If print settings differ, follow the approved analyzer Recall workflow."},
+  {heading:"Find the QC result",screen:"RECALL",items:["Browse","Search"],focus:"Browse",tip:"Only if a reprint is needed: recall the correct Control result, not a patient result."},
+  {heading:"Reprint if needed",screen:"CONTROL RESULT",items:["Print","Transmit","Back"],focus:"Print",tip:"Select Print only when another copy of the QC report is needed."}
+ ],note:"The Piccolo automatically prints the QC result when analysis finishes. Verify both control levels are acceptable before filing in the monthly QC log. Use Recall only when a reprint is needed."},
  triage:{brand:"Triage MeterPro",binder:"Triage Daily or Monthly QC Log · Maintenance binder",steps:[
   {heading:"Recall the run",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RECALL RESULTS",tip:"For a just-finished run, the meter's printer key can print the displayed result."},
   {heading:"Choose the QC report",screen:"RECALL RESULTS",items:["QC RESULTS","PRINT ALL RESULTS","PATIENT RESULTS"],focus:"PRINT ALL RESULTS",tip:"Select QC Device Results or QC Sample Results as appropriate."},
@@ -91,6 +90,10 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-parameter-table"><div class="qc-device-param-heading"><b>PARAMETER</b><b>TARGET</b><b>LIMIT</b></div>'+
    rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-device-barcode" aria-label="Scan target barcode"></span><span class="qc-device-barcode" aria-label="Scan limit barcode"></span></div>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Use the matching lot assay sheet</span><span>NEXT → MORE ANALYTES</span></div>';
+ }else if(item.kind==="singleAction"){
+  // Piccolo Home has Analyze as its only text action.
+  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div>'+
+   '<div class="qc-piccolo-single-action"><span class="qc-device-option targeted">Analyze <b>SELECT</b></span></div>';
  }else if(item.kind==="manualLevel"){
   // Piccolo QC uses a typed numeric control level, not a menu of level choices.
   body='<div class="qc-device-screen-label">CONTROL · ENTER LEVEL</div>'+
@@ -124,7 +127,7 @@ function screenGallery(list,brand,options={}){
  return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+'"'+
   (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
   list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
-  '<p class="qc-illustration-disclaimer">Confirm the correct menu, assay, lot and QC level on the analyzer before printing.</p>';
+  '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p>';
 }
 function sysmexStep(sec,group,title){
  if(sec.id!=="sysmex"||group!=="daily-qc")return "";
@@ -169,7 +172,7 @@ function qcClickStep(sec,groupId,title){
  const t=String(title).toLowerCase();
  let scenes=null;
  if(sec.id==="piccolo"&&/^(run qc|click analyze)/.test(t))scenes=[
-  {heading:"Open Analyze",screen:"HOME",items:["Analyze","Recall","Settings"],focus:"Analyze",tip:"Select Analyze. Do not close the drawer yet."},
+  {kind:"singleAction",heading:"Select Analyze",screen:"HOME",tip:"Select Analyze. Keep the drawer open until the control mode and level are entered."},
   {heading:"Select Control",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control before closing the drawer."},
   {kind:"manualLevel",heading:"Enter QC level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter."},
   {kind:"status",heading:"Close to start QC",screen:"QC RUNNING",status:"Analysis in progress",detail:"QC run started",tip:"After confirming the level, select Close. The drawer closes and the QC run starts automatically."}];
@@ -191,7 +194,7 @@ function qcClickStep(sec,groupId,title){
   {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
   {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
  if(!scenes)return "";
- return '<div class="qc-instrument-walkthrough">'+screenGallery(scenes,getConfig(sec.id).brand)+'</div>';
+ return '<div class="qc-instrument-walkthrough">'+screenGallery(scenes,getConfig(sec.id).brand,{disclaimer:sec.id==="piccolo"?"Verify the correct control level before selecting Close to begin the QC run.":null})+'</div>';
 }
 function binderSvg(){
  return '<svg class="qc-binder-art" viewBox="0 0 490 280" role="img" aria-label="Illustration of printed QC report being placed into a labeled ring binder">'+
@@ -224,11 +227,16 @@ function controlNotes(){
 }
 function printStep(id){
  const cfg=getConfig(id);
+ const piccolo=id==="piccolo";
  return '<div class="qc-final-doc" aria-label="QC print and binder filing procedure">'+
  '<div class="qc-final-intro"><span class="qc-final-mark">QC</span><div><strong>Finish with the verified QC record</strong><p>Only file accepted results. Document and escalate any out-of-range control according to the current SOP before patient testing.</p></div></div>'+
- '<div class="qc-final-section-label">01 · Get the printout or authorized record</div>'+
- screenGallery(cfg.steps,cfg.brand,{scroll:id==="sysmex"})+
- '<div class="qc-final-section-label">02 · Identify, organize and file</div>'+
+ (piccolo?
+ '<div class="qc-final-section-label">01 · Check the automatic QC printout</div>'+
+ '<div class="qc-piccolo-auto-print"><strong>Prints automatically</strong><p>Piccolo prints the QC result when the run completes. Review the result and keep the printout for the Monthly QC Log. No manual Print selection is needed for the normal workflow.</p></div>'+
+ '<div class="qc-final-section-label">If needed · Reprint a QC result</div>':
+ '<div class="qc-final-section-label">01 · Get the printout or authorized record</div>')+
+ screenGallery(cfg.steps,cfg.brand,{scroll:id==="sysmex",disclaimer:piccolo?"Use Recall only if the automatic QC printout is missing or another copy is needed.":null})+
+ '<div class="qc-final-section-label">02 · Verify and file the QC result</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
  '<p>'+esc(cfg.note)+'</p></div></div></div>';
