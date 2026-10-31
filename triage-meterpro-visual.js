@@ -34,18 +34,47 @@ function meterBody(mode="home"){
  T(132,197,"Triage® MeterPro",20,"#d6e9ef",650,"start")+
  R(129,209,280,212,2,"#5a6468","#a7b1b7",2.5)+
  R(139,218,259,194,1,"url(#tri-screen)");
- const captions={
-  home:[],
-  patient:["RUN TEST","PATIENT SAMPLE","Enter MRN"],
-  qc:["RUN TEST","QC DEVICE","Insert QC device"],
-  qcsample:["RUN TEST","QC SAMPLE","Confirm control lot"],
-  chip:["INSTALL NEW CODE CHIP","Follow meter prompt","Use matching lot chip"],
-  reading:["TEST IN PROGRESS","Do not remove device"],
-  result:["RESULT READY","Verify ID / controls"]
+ // Illustrated from Quidel MeterPro UM v5.04.021, pp. 46-49.
+ // No synthetic patient values or laboratory results are displayed.
+ const screens={
+  main:{rows:["RUN TEST","RECALL RESULTS","INSTALL NEW CODE CHIP"],selected:0,footer:["SELECT WITH v OR ^ AND PRESS ENTER","PRESS EXIT TO EJECT DEVICE"]},
+  "testmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:0,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  "qcmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:1,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  "qcsamplemenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:2,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  "userid":{heading:"USER ID",rows:["ENTER / SCAN USER ID","____________"],footer:["PRESS ENTER TO CONTINUE","IF PROMPTED BY THE METER"]},
+  "patientid":{heading:"PATIENT ID",rows:["ENTER / SCAN PATIENT ID","____________"],footer:["CHECK AGAINST PATIENT CHART","PRESS ENTER TO CONTINUE"]},
+  "confirmid":{heading:"CONFIRM PATIENT ID",rows:["PATIENT ID: ########","CORRECT PATIENT ID"],footer:["PRESS ENTER TO CONFIRM","OR SELECT CORRECT PATIENT ID"]},
+  "qc-lot":{heading:"QC SAMPLE LOT",rows:["ENTER 4-DIGIT LOT","____"],footer:["MATCH NUMBER ON CONTROL VIAL","PRESS ENTER TO CONTINUE"]},
+  "insert":{heading:"PATIENT SAMPLE",rows:["INSERT PREPARED","TEST DEVICE"],footer:["WAIT FOR DEVICE TO ENGAGE","PRESS ENTER TO START"]},
+  "insert-qc":{heading:"QC SAMPLE",rows:["INSERT PREPARED","QC TEST DEVICE"],footer:["USE CORRECT CONTROL LEVEL","PRESS ENTER TO START"]},
+  "sampletype":{heading:"SELECT SAMPLE TYPE",rows:["BLOOD SAMPLE","PLASMA SAMPLE"],selected:0,footer:["SELECT WITH v OR ^","PRESS ENTER TO CONTINUE"]},
+  "analytes":{heading:"SELECT TESTS",rows:["CARDIAC","1  CKMB  |  2  MYO","3  TNI"],footer:["0-9 TO SELECT/DESELECT","PRESS ENTER TO CONTINUE"]},
+  "reading":{heading:"TEST IN PROGRESS",rows:["SCANNING TEST DEVICE","PLEASE WAIT"],footer:["DO NOT PUSH OR PULL DEVICE","WAIT FOR METER RESULTS"]},
+  "result":{heading:"RESULTS",rows:["PATIENT ID: ########","RESULT: SEE METER","QC: VERIFY BEFORE REPORT"],footer:["PRESS PRINT FOR PAPER COPY","RETURN TO MAIN TO EJECT"]},
+  "qcresult":{heading:"QC RESULTS",rows:["CHECK CONTROL RESULT","REVIEW ACCEPTANCE"],footer:["PRESS PRINT FOR PAPER COPY","RETURN TO MAIN TO EJECT"]},
+  "chip":{heading:"INSTALL NEW CODE CHIP",rows:["USE MATCHING REAGENT","CODE CHIP"],footer:["FOLLOW THE METER PROMPTS","CHECK REAGENT LOT"]},
+  // Older callers retain their specific nonpatient screen meanings.
+  "patient":{heading:"PATIENT SAMPLE",rows:["CONFIRM THE TEST MODE","AND PATIENT ID"],footer:["FOLLOW THE METER PROMPTS","CHECK THE ASSAY INSERT"]},
+  "qc":{heading:"QC DEVICE",rows:["RUN ELECTRONIC QC"],footer:["NO LIQUID CONTROL","USE REUSABLE QC DEVICE"]},
+  "qcsample":{heading:"QC SAMPLE",rows:["CHECK CONTROL LEVEL","AND 4-DIGIT LOT"],footer:["FOLLOW THE METER PROMPTS","USE A NEW TEST DEVICE"]}
  };
- if(mode!=="home"){
-  const rows=captions[mode]||captions.patient;
-  h+=rows.map((v,i)=>T(152,260+i*34,v,i===0?13:15,"#263b3b",700,"start")).join("");
+ const conf=screens[typeof mode==="string"?mode:""]||null;
+ if(conf){
+  h+=R(140,218,257,194,1,"#a7adac");
+  // Compact gray monochrome LCD with Quidel's dark selected-option row.
+  if(conf.heading)h+=T(151,245,conf.heading,13,"#1b3238",800,"start");
+  const items=conf.rows||[];
+  const lineY=conf.heading?268:258;
+  const space=items.length>3?27:30;
+  items.forEach((v,i)=>{
+   const y=lineY+i*space;
+   const sel=conf.selected===i;
+   if(sel)h+=R(147,y-19,239,25,1,"#263136");
+   const font=v.length>25?12:v.length>19?13:15;
+   h+=T(155,y,v,font,sel?"#f1f6f5":"#20363b",sel?850:700,"start");
+  });
+  h+=P("M149 356H388","none","#6b7778",1);
+  (conf.footer||[]).forEach((v,i)=>h+=T(152,375+i*17,v,v.length>28?10.5:11.5,"#20363b",600,"start"));
  }
  // Print and Feed buttons.
  [[501,"Print"],[586,"Feed"]].forEach(([x,l],i)=>{
