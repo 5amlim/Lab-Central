@@ -58,7 +58,7 @@ function piccoloDeviceMarkup(mode){
  // Tray and the royal-blue lower cabinet remain visible under the upper black facade.
  '<path d="M246 311Q231 312 231 329V469Q232 486 252 486H443Q463 485 463 465V329Q463 312 447 311Z" fill="url(#lcpx-blue)" stroke="#1d5686" stroke-width="3"/>'+
  '<path d="M245 333Q267 348 285 349H446" fill="none" stroke="#5da8d4" stroke-width="3" opacity=".58"/>'+
- '<path d="M239 468H456V489H239Z" fill="#eef4f6" stroke="#c0cbd1" stroke-width="2"/>'+
+ '<path d="M239 468H456V489H239Z" fill="url(#lcpx-blue)" stroke="#1d5686" stroke-width="2"/>'+
  // Tall near-vertical black front, rounded top and bottom, flush with the top of the blue base.
  '<path d="M255 16H439Q462 16 463 45V318Q463 336 444 337H252Q231 336 231 317V46Q231 16 255 16Z" fill="url(#lcpx-black)" stroke="#1b527c" stroke-width="3"/>'+
  '<path d="M258 20H440Q456 20 458 44" fill="none" stroke="#5b768f" stroke-width="2" opacity=".5"/>'+
@@ -409,7 +409,7 @@ function body(shape,a){
  v='<g transform="translate(135 -8) scale(.61)">'+sysmexDeviceMarkup("ready",true)+'</g>';
  }else if(shape==="rotor"){
  /* Reuse the same reference-matched tall, narrow Piccolo art as procedure steps. */
- v='<g transform="translate(176 4) scale(.56)">'+piccoloDeviceMarkup("ready")+'</g>';
+ v='<g transform="translate(176 4) scale(.56)">'+piccoloDeviceMarkup("running")+'</g>';
  }else if(shape==="pathfast"){
  // Curved white PATHFAST compact analyzer, left touchscreen/printer, large
  // teal-blue transparent right chamber and central blue handle.
