@@ -393,6 +393,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-container-reference.js?v=20261031-gallery-api-v16"></script>
 <script src="collection-photo-preview.js?v=20261031-pathfast-gallery-label-v2"></script>
 <script src="analyzer-icons.js?v=20261031-cohesive-analyzer-v1"></script>
+<script src="sidebar-icons.js?v=20261031-complete-sidebar-v1"></script>
 <script>
 (()=>{
 'use strict';
@@ -447,7 +448,8 @@ const iconMap={
  'book':'<path d="M4 3h15v18H6a2 2 0 0 1-2-2V3Zm0 16a2 2 0 0 1 2-2h13"/>'
 };
 function svg(n){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(iconMap[n]||iconMap.book)+'</svg>'}
-function sectionSvg(s){const custom=window.LAB_CENTRAL_ANALYZER_ICONS?.[s.id];return custom?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+custom+'</svg>':svg(s.icon)}
+function navIconSvg(id,fallback){const custom=window.LAB_CENTRAL_ANALYZER_ICONS?.[id]||window.LAB_CENTRAL_SIDEBAR_ICONS?.[id];return custom?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+custom+'</svg>':svg(fallback||"book")}
+function sectionSvg(s){return navIconSvg(s.id,s.icon)}
 const titleCount=(x)=>x.length;
 const urlFor=(id,tab='overview')=>id==='home'?'#home':'#'+id+(tab&&tab!=='overview'?'/'+encodeURIComponent(tab):'');
 function navigate(id,tab='overview'){
@@ -473,10 +475,10 @@ function sectionFromHash(){
 function showNav(){
  const nav=el('sidebarNav');const r=sectionFromHash();
  const search=state.search.toLowerCase().trim();
- let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${svg('book')}</span>Overview</button>`;
- if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">☆</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
+ let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${navIconSvg('home','book')}</span>Overview</button>`;
+ if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${svg('clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${svg('file-text')}</span>Athena Order Sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
@@ -489,11 +491,11 @@ function showNav(){
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
   out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
   for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${sectionSvg(s)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
-  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${svg('clipboard-check')}</span>Lab Daily Checklist</button>`;
-  if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${svg('package')}</span>Envi Ordering</button>`;
-  if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${svg('clipboard-check')}</span>Specimen drop-off</button>`;
-  if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='lab-container-gallery'?'active':''}" data-go="lab-container-gallery"><span class="nav-icon">${svg('test-tube-2')}</span>Lab Container Gallery</button>`;
-  if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='sendout-log'?'active':''}" data-go="sendout-log"><span class="nav-icon">${svg('file-text')}</span>Lab Sendout Log</button>`;
+  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${navIconSvg('socal-daily','clipboard-check')}</span>Lab Daily Checklist</button>`;
+  if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${navIconSvg('envi-ordering','package')}</span>Envi Ordering</button>`;
+  if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${navIconSvg('specimen-dropoff','clipboard-check')}</span>Specimen drop-off</button>`;
+  if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='lab-container-gallery'?'active':''}" data-go="lab-container-gallery"><span class="nav-icon">${navIconSvg('lab-container-gallery','test-tube-2')}</span>Lab Container Gallery</button>`;
+  if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='sendout-log'?'active':''}" data-go="sendout-log"><span class="nav-icon">${navIconSvg('sendout-log','file-text')}</span>Lab Sendout Log</button>`;
   out+=isArchive?'</div></details>':'</div>';
  }
  nav.innerHTML=out;
