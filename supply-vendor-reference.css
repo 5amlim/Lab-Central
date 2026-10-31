@@ -28,3 +28,8 @@
 @media(max-width:750px){.svendor-content{grid-template-columns:1fr}.svendor-head{flex-wrap:wrap;padding:18px}.svendor-badge{margin-left:62px}.svendor-primary{padding:18px}.svendor-secondary{padding:17px}}
 @media(max-width:450px){.svendor-head{gap:11px}.svendor-emblem{height:41px;width:41px}.svendor-badge{margin-left:0}.svendor-content{padding:12px;gap:10px}.svendor-primary h3{font-size:17px}.svendor-primary p{font-size:12px}.svendor-foot{padding:12px}}
 @media print{.svendor{box-shadow:none;break-inside:avoid}.svendor-portal{background:#fff;color:#245879!important;border-color:#a7bbca}.svendor-head{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* Regional qualification is visible before opening the Cedars tab. */
+.supply-vendor-tabs .tab[data-gotab="cedars"]{display:inline-flex;align-items:center;gap:7px}
+.supply-vendor-tabs .tab[data-gotab="cedars"]:after{content:"SoCal";display:inline-flex;align-items:center;border:1px solid #bfe3d7;background:#e5f5ef;color:#297c6e;border-radius:6px;padding:3px 6px;font-size:9px;font-weight:850;letter-spacing:.025em;line-height:1.2}
+@media print{.supply-vendor-tabs .tab[data-gotab="cedars"]:after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
