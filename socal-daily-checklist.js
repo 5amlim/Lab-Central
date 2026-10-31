@@ -32,12 +32,17 @@ const sharedTasks=[
 /* Tasks stay market-scoped; clinic selection provides a dedicated view for each site.
    The equipment/binder inventory must be verified locally before SOP use. */
 const socalBinder=[
- {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
- {title:'Sysmex QC printouts and dedicated logs',desc:'If installed, complete the pocH-100i Control Log and Start-up Blank Check Log. File all three EIGHTCHECK QC printouts and the blank/background-check printout with their matching logs; include dates, operator initials and corrective actions.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
- {title:'Triage daily electronic QC records',desc:'File the daily electronic QC Device printout and corrective actions when required. Keep scheduled 30-day liquid QC records in the Monthly Checklist binder.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
-
- {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
- {title:'Maintenance and exceptions',desc:'File required instrument maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
+ {"id":"temperature","title":"Daily Temperature and Humidity Log","desc":"Record and file required room, refrigerator, freezer and humidity readings. Document any excursion and corrective action.","role":"Lab personnel / RN","template":"temperature"},
+ {"id":"cleaning","title":"Daily Cleaning and Disinfection Log","desc":"Record required work-surface cleaning, disinfection and operator initials. Note any missed tasks or corrective action.","role":"Lab personnel / RN","template":"cleaning"},
+ {"id":"sysmex-control","title":"pocH-100i Three-Level Control Log","desc":"If installed, record acceptable EIGHTCHECK Low, Normal and High QC results. File the three matching QC printouts with this log.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},
+ {"id":"sysmex-blank","title":"pocH-100i Start-up Blank Check Log","desc":"If installed, record the daily blank/background check and file its separate printout with this log.","role":"Trained lab personnel / RN","template":"sysmex-blank","badges":["Printouts Needed"]},
+ {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Document required shutdown, cleaning and instrument maintenance on the approved schedule, including any corrective action.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
+ {"id":"triage-daily","title":"Triage MeterPro Daily QC Log","desc":"If installed, document the daily electronic QC Device result when required and file its QC printout. Keep liquid QC in the monthly binder.","role":"Trained lab personnel / RN","template":"triage-daily","badges":["Printouts Needed"]},
+ {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
+ {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"},
+ {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"Record applicable rapid-test kit controls and new-lot or shipment QC for the tests in use.","role":"Trained lab personnel / RN","template":"waived-qc"},
+ {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"Document FebriDx external controls when required, including new box or lot QC and any failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc"},
+ {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed QC, specimen or instrument issues and other exceptions with the corrective action and resolution.","role":"Lab personnel / RN","template":"remedial"}
 ];
 // Reference cadences sourced from the instrument QC overview. Only applicable
 // when the instrument is installed and the clinic's approved SOP requires it.
@@ -50,24 +55,34 @@ const monthlyQcTasks=[
  {id:'sofia-cal-30d',group:'Recurring QC & calibration',title:'Sofia 2 optical calibration check',frequency:'Every 30 days',desc:'Run the optical calibration check with the dedicated calibration cassette. Document the calibration result in the approved QC log. Separately perform and document assay external QC for new shipments or lots when required by the IFU.',role:'Trained lab personnel / RN',badges:['QC'],qcGuide:{instrument:'sofia',tab:'calibration-scan-ma'}}
 ];
 const monthlyBinder=[
- {title:'PATHFAST calibration and QC printouts',desc:'File the 28-day calibration and QC printouts for active assays, with date, operator, lot and corrective action.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
- {title:'Piccolo Xpress QC printouts',desc:'File panel-specific control printouts for 30-day or SOP-required runs, including applicable new-lot and new-shipment checks.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
- {title:'Quidel Triage liquid QC printouts',desc:'File 30-day liquid QC records for each active assay lot, separate from daily electronic QC documentation.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
- {title:'Sofia 2 calibration check records',desc:'Record the 30-day optical calibration result in the approved signed QC log, including date, operator and outcome. Include new-lot or new-shipment QC documentation when required.',role:'Trained lab personnel / RN'},
- {title:'Clinitek UA and hCG QC documentation',desc:'File market-required QC and new-bottle/lot results. Follow daily QC rules in markets that require them.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
- {title:'QC exceptions and corrective actions',desc:'File failed controls, repeated runs, instrument lockouts and resolution, with instrument printouts or approved records.',role:'Trained lab personnel / RN'}
+ {"id":"pathfast-qc","title":"PATHFAST Calibration and QC Printouts","desc":"File the calibration and accepted control printouts for the active assays every 28 days, with required identifiers and corrective actions.","role":"Trained lab personnel / RN","badges":["Printouts Needed"]},
+ {"id":"pathfast-maint","title":"PATHFAST Operational and Maintenance Log","desc":"Record scheduled instrument operational checks and maintenance, and document any problems or corrective actions.","role":"Trained lab personnel / RN","template":"pathfast-maint"},
+ {"id":"piccolo-qc","title":"Piccolo Xpress Quality Control Sheet","desc":"Record required low- and high-level panel controls and file the matching analyzer QC printouts.","role":"Trained lab personnel / RN","template":"piccolo-qc","badges":["Printouts Needed"]},
+ {"id":"triage-liquid","title":"Triage MeterPro Liquid QC Control Log","desc":"Record scheduled liquid controls for active assay lots and file corresponding QC printouts, separate from daily electronic QC.","role":"Trained lab personnel / RN","template":"triage-liquid","badges":["Printouts Needed"]},
+ {"id":"sofia-cal","title":"Sofia 2 Calibration Check Log","desc":"Record the 30-day optical calibration check result, date and operator. Sofia 2 does not require a printout.","role":"Trained lab personnel / RN","template":"sofia-cal"},
+ {"id":"sofia-qc","title":"Sofia 2 Quality Control Log","desc":"Document positive and negative external QC for new shipments, new lots or other approved triggers. No printout is required.","role":"Trained lab personnel / RN","template":"sofia-qc"},
+ {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"SoCal: record monthly UA strip QC and required new-bottle/new-lot controls. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
+ {"id":"clinitek-hcg","title":"Siemens hCG Pregnancy Control Log","desc":"SoCal: record monthly hCG controls and required new-lot or other event-based QC. File any applicable printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-hcg","badges":["Printouts Needed"]},
+ {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed monthly QC, calibration issues, corrective actions and final resolution, as applicable.","role":"Lab personnel / RN","template":"remedial"}
 ];
 const sharedBinder=[
- {title:'Environmental and cleaning logs',desc:'File temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
- {title:'Sysmex QC printouts and dedicated logs',desc:'If installed, complete the pocH-100i Control Log and Start-up Blank Check Log. File all three EIGHTCHECK QC printouts and the blank/background-check printout with the logs, including required identifiers and corrective actions.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
- {title:'Triage daily electronic QC records',desc:'If installed, file electronic QC Device printouts and relevant corrective action. Keep scheduled liquid QC in the monthly binder.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
- {title:'Clinitek daily UA and hCG QC records',desc:'File daily UA strip and hCG external QC printouts, plus applicable new-bottle and new-lot control results.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
- {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, control and new-lot or shipment verification records.',role:'Authorized personnel'},
- {title:'Maintenance and exceptions',desc:'File required maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
+ {"id":"temperature","title":"Daily Temperature and Humidity Log","desc":"Record and file required room, refrigerator, freezer and humidity readings. Document any excursion and corrective action.","role":"Lab personnel / RN","template":"temperature"},
+ {"id":"cleaning","title":"Daily Cleaning and Disinfection Log","desc":"Record required work-surface cleaning, disinfection and operator initials. Note any missed tasks or corrective action.","role":"Lab personnel / RN","template":"cleaning"},
+ {"id":"sysmex-control","title":"pocH-100i Three-Level Control Log","desc":"If installed, record acceptable EIGHTCHECK Low, Normal and High QC results. File the three matching QC printouts with this log.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},
+ {"id":"sysmex-blank","title":"pocH-100i Start-up Blank Check Log","desc":"If installed, record the daily blank/background check and file its separate printout with this log.","role":"Trained lab personnel / RN","template":"sysmex-blank","badges":["Printouts Needed"]},
+ {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Document required shutdown, cleaning and instrument maintenance on the approved schedule, including any corrective action.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
+ {"id":"triage-daily","title":"Triage MeterPro Daily QC Log","desc":"If installed, document the daily electronic QC Device result when required and file its QC printout. Keep liquid QC in the monthly binder.","role":"Trained lab personnel / RN","template":"triage-daily","badges":["Printouts Needed"]},
+ {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
+ {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"Record daily UA strip control results and new-bottle or new-lot checks as required. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
+ {"id":"clinitek-hcg","title":"Siemens hCG Pregnancy Control Log","desc":"Record daily hCG positive and negative control results and event-triggered QC. File any applicable printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-hcg","badges":["Printouts Needed"]},
+ {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"},
+ {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"Record applicable rapid-test kit controls and new-lot or shipment QC for the tests in use.","role":"Trained lab personnel / RN","template":"waived-qc"},
+ {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"Document FebriDx external controls when required, including new box or lot QC and any failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc"},
+ {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed QC, specimen or instrument issues and other exceptions with the corrective action and resolution.","role":"Lab personnel / RN","template":"remedial"}
 ];
 // Non-SoCal markets document Clinitek QC daily, so it does not appear as a separate monthly task.
 const otherMarketsMonthlyQcTasks=monthlyQcTasks.filter(t=>t.id!=='clinitek-monthly');
-const otherMarketsMonthlyBinder=monthlyBinder.filter(t=>t.title!=='Clinitek UA and hCG QC documentation');
+const otherMarketsMonthlyBinder=monthlyBinder.filter(t=>t.id!=='clinitek-ua'&&t.id!=='clinitek-hcg');
 const markets=[
  {id:'socal',name:'Southern California',short:'SoCal',tasks:socalTasks,monthly:monthlyQcTasks,binder:socalBinder,clinics:[
   {id:'bh',name:'Beverly Hills'},
