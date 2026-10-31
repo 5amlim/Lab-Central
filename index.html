@@ -944,6 +944,25 @@ function buildGroups(section){
   }
   return groups;
  }
+ if(section.id==='febridx'){
+  // Approved U.S. INDICAID FebriDx 2026 IFU PM-548.0. Keep patient testing distinct from source notes.
+  const pair=(title,detail)=>[{type:'list',level:1,text:title},{type:'list',level:2,text:detail}];
+  const patient=[
+   ...pair('Confirm patient eligibility, order and single-use test','Confirm the provider order and identifiers. Per current U.S. IFU: age 12–64, acute respiratory symptoms for fewer than 7 days and within 3 days of fever onset. Use fresh fingerstick blood only; never venous blood, serum or plasma. Verify sealed pouch, expiry and 4–25°C storage.'),
+   ...pair('Prepare the finger and lancet','Wash hands, wear gloves and prepare gauze, alcohol, timer and bandage. Massage a finger from base to tip, clean and dry it. Twist the protective lancet tab 90 degrees and pull it off only when ready.'),
+   ...pair('Lance finger and wipe away first drop','Firmly press the integrated lancet against the finger. Wipe away the first blood drop with clean gauze, then massage from base to tip to form a large hanging drop.'),
+   ...pair('Fill the integrated blood collection tube completely','Touch the collection tube to the hanging drop without touching the skin. Fill the tube completely. If still underfilled after massaging, discard and restart with a new device and finger; incomplete filling may produce erroneous results.'),
+   ...pair('Rotate tube to transfer blood to the test strip','Set the device flat. Rotate the fully filled collection tube until it contacts the test strip. Confirm that the sample transfers. If not, press tube down; if needed, reverse the tube and repeat the collection/transfer sequence within 2 minutes per the IFU. Discard and retest if unsuccessful.'),
+   ...pair('Press buffer release button and confirm flow','Only after blood transfers completely, firmly press the buffer button until it clicks. If no flow enters the result window within 30 seconds, press again until an audible click. If blood still does not flow, discard and retest using a new device and finger.'),
+   ...pair('Time the test and verify both windows','Read no earlier than 10 minutes and never after 1 hour. The result window must be clear of blood and the blood clearance window must be pink/red. If either condition has not been met by 30 minutes, discard and repeat with a new device and finger.'),
+   ...pair('Read control and interpret CRP / MxA pattern','A blue control line is REQUIRED. No blue control means INVALID: do not report. With blue control: grey/black CRP alone indicates bacterial pattern; red MxA, both lines, or no test line indicates non-bacterial pattern. Faint or incomplete lines still count as present. Review the Result interpretation tab.'),
+   ...pair('Record, notify and dispose safely','Document the exact valid result, patient identifiers, test lot and time in the approved chart/POC workflow; notify the ordering provider as required. Dispose of the used single-use device as sharps/biohazard per local SOP.')
+  ];
+  return [
+   {id:'patient-testing',title:'Patient testing',blocks:patient},
+   {id:'reference-notes',title:'References & SOP',blocks:[{type:'text',text:'FebriDx Guide.docx'}]}
+  ];
+ }
  if(section.id==='api'){
   const from=section.blocks;
   const start=from.findIndex(b=>/^Running API samples$/i.test(b.text));
@@ -1186,6 +1205,17 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  // Main step cards do not collapse; navigation is handled by explicit step buttons.
  if(isPathfast)return '<article class="guide-card pf-static-step'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header><div class="pf-step-collapse-body">'+stepBody+'</div></article>';
  return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+'</article>';
+}
+function renderFebridxReferences(){
+ const ifu='https://phasescientificamericas.com/wp-content/uploads/2026/08/PM-548.0_INDICAID_IFU.pdf';
+ const qri='https://phasescientificamericas.com/wp-content/uploads/2026/10/PM-549.0-INDICAID-QRI.pdf';
+ return '<section class="fbr-static-reference" aria-label="FebriDx reference documents">'+
+  '<header class="fbr-ref-intro"><span>FEBRIDX · REFERENCE MATERIAL</span><h2>References &amp; SOP</h2><p>Read the current approved instructions before testing. These are reference documents, not sequential procedure steps.</p></header>'+
+  '<div class="fbr-ref-grid">'+
+   '<article class="fbr-ref-card"><span class="fbr-ref-label">MANUFACTURER</span><h3>U.S. Instructions for Use</h3><p>INDICAID FebriDx · PM-548.0 (2026). Intended use, full procedure, invalid-result criteria and quality controls.</p><a href="'+ifu+'" target="_blank" rel="noopener noreferrer">View complete IFU ↗</a></article>'+
+   '<article class="fbr-ref-card"><span class="fbr-ref-label">QUICK REFERENCE</span><h3>Illustrated test guide</h3><p>INDICAID FebriDx · PM-549.0 (2026). Visual guide for fingerstick collection, transfer, buffer and interpretation.</p><a href="'+qri+'" target="_blank" rel="noopener noreferrer">View quick reference ↗</a></article>'+
+   '<article class="fbr-ref-card"><span class="fbr-ref-label">SITE DOCUMENT</span><h3>Local training &amp; SOP</h3><p>Refer to FebriDx Guide.docx and the current approved local QC documentation. Confirm that the site document matches the stocked product and current IFU.</p></article>'+
+  '</div><p class="fbr-ref-foot">Use the most recent IFU for the exact kit supplied at your site. The reference guide does not replace approved competency or QC requirements.</p></section>';
 }
 function renderClinitekReferenceCards(group){
  // References are documents to consult, not an ordered patient-testing workflow.
@@ -1969,12 +1999,19 @@ function sectionRender(sec,tab){
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
  ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id)?[{id:'troubleshooting',title:'Troubleshooting'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ // For every active analyzer or POC menu, patient testing is the second tab after Overview.
+ // Device-specific tests (e.g. Clinitek UA/hCG) retain their other sub-tabs unchanged.
+ if(instrumentCategories.includes(sec.category)&&!sec.archived){
+  const patientIndex=tabs.findIndex(t=>/^(patient-testing|patient|ua-strip|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))$/.test(t.id)||/^(?:Patient testing|Running (?:Patient )?Samples|Running tests)(?:\b|\s|$)/i.test(t.fullTitle||t.title));
+  if(patientIndex>1)tabs.splice(1,0,tabs.splice(patientIndex,1)[0]);
+ }
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
  if(sec.id==='clinitek'&&(tab==='running-samples-urine'||tab==='running-samples'))tab='ua-strip';
  if(sec.id==='clinitek'&&(tab==='ua-qc'||tab==='hcg-qc')){state.clinitekQc=tab;tab='combined-qc';}
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
+ if(sec.id==='febridx'&&tab==='general')tab='reference-notes';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
  // Show the same CLIA badge style as assay cards, based on the actual tests in this guide.
@@ -2038,6 +2075,7 @@ function sectionRender(sec,tab){
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
  else if(sec.id==='clinitek'&&tab==='references')h+=renderClinitekReferenceCards(groups.find(g=>g.id==='references'));
+ else if(sec.id==='febridx'&&tab==='reference-notes')h+=renderFebridxReferences();
  else{
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
