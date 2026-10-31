@@ -110,16 +110,14 @@ function specimenScene(type){
  let s="";
  if(type==="swab"){
   s+=boxText(441,52,322,"COLLECTION SWAB","Use only the swab/site allowed for this assay");
-  s+='<path d="M492 124 L699 200" stroke="#b7c8cd" stroke-width="11" stroke-linecap="round"/>'+
-    '<path d="M481 117 Q459 112 457 125 Q456 144 478 147 L500 133Z" fill="#fff" stroke="#a0b5be" stroke-width="2"/>';
+  s+=A.sofiaSwabMarkup(482,137,18,1);
   s+=boxText(441,260,322,"TEST-SPECIFIC KIT","Swab type and collection site may differ");
  }else if(type==="extract"){
   s+=boxText(441,50,322,"EXTRACTION TUBE","Use manufacturer reagent and timing");
   s+='<rect x="539" y="114" width="83" height="168" rx="12" fill="#e2edf2" stroke="#8fb3c4" stroke-width="4"/>'+
   '<rect x="545" y="205" width="71" height="70" rx="7" fill="#c5e3e5"/>'+
   '<rect x="534" y="105" width="94" height="20" rx="7" fill="#d8e8ef" stroke="#8aadb9" stroke-width="2"/>'+
-  '<path d="M510 93 L574 209" stroke="#a5b9c3" stroke-width="10" stroke-linecap="round"/>'+
-  '<ellipse cx="510" cy="93" rx="14" ry="23" transform="rotate(-27 510 93)" fill="#fff" stroke="#97adb8" stroke-width="2"/>'+
+  A.sofiaSwabMarkup(579,225,-90,.64)+
   txt(666,166,"Gently mix",16,"#3a7c8e",750);
  }else if(type==="pipette"){
   s+=boxText(433,39,340,"PREPARED EXTRACT","Transfer only the specified volume");
