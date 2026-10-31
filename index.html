@@ -977,10 +977,10 @@ function buildGroups(section){
   }
   const daily=groups.find(g=>g.title==='Daily QC');
   if(daily){
-   for(const extra of groups.filter(g=>/^Each new vial is to|^If we run out of a certain lot/i.test(g.title))){
+   for(const extra of groups.filter(g=>/^Each new vial is to|^Replace QC vials|^If we run out of a certain lot/i.test(g.title))){
     daily.blocks.push({type:'list',level:1,text:extra.title},...extra.blocks);
    }
-   for(let i=groups.length-1;i>=0;i--)if(/^Each new vial is to|^If we run out of a certain lot/i.test(groups[i].title))groups.splice(i,1);
+   for(let i=groups.length-1;i>=0;i--)if(/^Each new vial is to|^Replace QC vials|^If we run out of a certain lot/i.test(groups[i].title))groups.splice(i,1);
   }
  }
  const used=new Set();for(let i=0;i<groups.length;i++){
