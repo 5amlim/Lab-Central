@@ -32,7 +32,7 @@ const sharedTasks=[
 const socalBinder=[
  {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
  {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel'},
- {title:'Triage QC records',desc:'File daily electronic QC Device and scheduled liquid QC printouts, with lot, date, operator and corrective action when applicable.',role:'Trained lab personnel / RN'},
+ {title:'Triage daily electronic QC records',desc:'File the daily electronic QC Device results and corrective actions when required. Keep scheduled 30-day liquid QC records in the Monthly Checklist binder.',role:'Trained lab personnel / RN'},
  {title:'Clinitek UA and hCG QC records',desc:'File UA strip and hCG control results when required by the market SOP, including new-bottle or new-lot QC and applicable printouts.',role:'Trained lab personnel / RN'},
  {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
  {title:'Maintenance and exceptions',desc:'File required instrument maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
@@ -140,7 +140,7 @@ function renderDailySections(market,dailyQcTasks){
  '<div class="dqc-daily-qc-grid">'+dailyQcTasks.map(taskItem).join('')+'</div></section>'+
  '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
  '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
- '<p class="dqc-binder-note">Only file records for procedures and instruments used at this clinic, when required or due. Include instrument QC and calibration printouts alongside approved documentation. Consult the approved site binder index and SOP.</p></section>';
+ '<p class="dqc-binder-note">File daily QC records, cleaning logs and event-based controls required by the clinic SOP. For recurring 28-day or 30-day QC and calibration printouts, use the separate Lab Monthly Checklist binder. Consult the approved site binder index.</p></section>';
 }
 function renderMonthlySections(market,monthlyTasks){
  const v=selectedMonthlyView;
