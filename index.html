@@ -220,6 +220,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <script src="athena-ordering-guide.js?v=20261030-faithful-minimal-anonymous-v6"></script>
 <link rel="stylesheet" href="envi-ordering-guide.css?v=20261031-control-focus-v5" media="all">
 <link rel="stylesheet" href="tube-reference.css?v=20261031-tube-summary-v1" media="all">
+<link rel="stylesheet" href="lab-container-reference.css?v=20261031-library-v1" media="all">
 <link rel="stylesheet" href="supply-vendor-reference.css?v=20261031-vendor-cards-v1" media="all">
 <script src="envi-ordering-guide.js?v=20261031-control-focus-v5"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261031-internal-sop-layout-v2" media="all">
@@ -378,11 +379,17 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-market-guide.js?v=20261029-regional-shipping-scope-v3"></script>
 <script src="assay-catalog.js?v=20261030-abbreviation-targets-v2"></script>
 <script src="triage-meterpro-visual.js?v=20261031-triage-accurate-screen-actions-v2"></script>
+<script src="lab-container-art.js?v=20261031"></script>
+<script src="lab-container-photos.js?v=20261031"></script>
+<script src="lab-container-photo-updates.js?v=20261031"></script>
+<script src="lab-container-reference.js?v=20261031-library-v1"></script>
 <script>
 (()=>{
 'use strict';
 const DATA=window.LAB_GUIDE_DATA||{sections:[],videoSlots:[],tubes:[]};
 const all=DATA.sections;
+const labContainers=all.find(s=>s.id==='tubes');
+if(labContainers){labContainers.title='Lab Container Reference';labContainers.subtitle='Illustrated Quest, Labcorp and Cedars specimen containers';}
 const homeCollectionSection=all.find(s=>s.id==='outside');
 if(homeCollectionSection){homeCollectionSection.title='Home stool & urine collection';homeCollectionSection.subtitle='Take-home kits & patient guidance';homeCollectionSection.category='Home collection';}
 const categories=['Analyzers','Point of care','Home collection','Send-outs','Quality & compliance','Operations','Archived'];
@@ -1236,7 +1243,7 @@ const sources={
  calver:[{name:'CMS / CLIA guidance',desc:'Calibration and verification reference',url:'https://www.cms.gov/Regulations-and-Guidance/Legislation/CLIA/Downloads/6065bk.pdf'}],
  supplies:[{name:'LabcorpLink',desc:'Supply order portal',url:'https://link.labcorp.com/landing'}]
 };
-function tubeGallery(){return `<div class="tab-header"><div><h2 class="tab-heading">Collection and transport containers</h2><p class="tab-description">Tube images from the original cheat sheet. Confirm current test-specific requirements in the receiving lab's directory.</p></div></div><div class="tube-grid">${DATA.tubes.map(t=>`<article class="tube-card"><div class="tube-photo">${t.photos.map(p=>`<img src="${safeHtml(window.LAB_TUBE_IMAGES?.[p]||'assets/'+p)}" alt="${safeHtml(t.name)}" loading="lazy">`).join('')}</div><div class="tube-content"><strong>${safeHtml(t.name)}</strong><p>${safeHtml(t.description).slice(0,150)}</p><details><summary>Handling notes</summary><p>${safeHtml(t.instructions)}</p></details></div></article>`).join('')}</div>`}
+function tubeGallery(){return window.LAB_CONTAINER_REFERENCE.render();}
 function resources(sec){const items=sources[sec.id]||[];return `<div class="tab-header"><div><h2 class="tab-heading">Reference resources</h2><p class="tab-description">Manufacturer references and laboratory resources. Use the current approved SOP for testing.</p></div></div>${items.length?`<div class="resources">${items.map(x=>`<a class="resource-link" href="${safeHtml(x.url)}" target="_blank" rel="noopener noreferrer"><div><strong>${safeHtml(x.name)}</strong><p>${safeHtml(x.desc)}</p></div><span class="resource-arrow">↗</span></a>`).join('')}</div>`:'<p class="empty-placeholder">Follow the current approved SOP and manufacturer IFU.</p>'}`}
 
 function toolHeader(eyebrow,title,description){
@@ -1698,7 +1705,7 @@ function sectionOverview(sec,groups){
  }
  h+=`<div class="tab-header"><div><h2 class="tab-heading">Choose a workflow</h2><p class="tab-description">Open a guide below or use the procedure tabs above.</p></div></div>`;
  if(instrumentCategories.includes(sec.category)&&!sec.archived)h+=`<button class="mini-feature" type="button" data-gotab="order-sets"><span class="feature-small-icon">${svg('file-text')}</span><span><strong>Athena order sets</strong><small>${orderSetsFor(sec).length?orderSetsFor(sec).length+' verified entries':'Order set reference'}</small></span><span class="arrow">↗</span></button>`;
- if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>See tube photos</strong><small>Seven containers with handling notes</small></span><span class="arrow">↗</span></button>`;
+ if(sec.id==='tubes')h+=`<button class="mini-feature" type="button" data-gotab="gallery"><span class="feature-small-icon">${svg('test-tube-2')}</span><span><strong>Lab Container Reference</strong><small>Quest, Labcorp and Cedars · drawings and photo previews</small></span><span class="arrow">↗</span></button>`;
  h+=`<div class="grid-cards">${groups.map(g=>`<button type="button" class="item-card" data-gotab="${safeHtml(g.id)}"><div class="card-head"><span class="card-icon">${svg(sec.icon)}</span><span class="card-category">${sec.id==='supplies'?'VENDOR':sec.id==='sendout'?'RECEIVING LAB':sec.category==='Quality & compliance'?'REFERENCE':'WORKFLOW'}</span></div><strong>${safeHtml(g.title)}</strong><p>${sec.id==='supplies'?safeHtml(supplyVendorTeaser(g.id)):sec.id==='sendout'?'Packaging and pickup instructions':sec.category==='Quality & compliance'?'Requirements and reference notes':'Procedure and reference details'}</p><span class="card-trailing">Open instructions &nbsp;›</span></button>`).join('')}</div>`;
  if(sec.id==='febridx'||sec.id==='outside')h+='<p class="source-footnote">For detailed procedures, refer to the current approved instrument SOP.</p>';
  return h;
@@ -1716,8 +1723,8 @@ const operationalGuideMeta={
   ['Verify','Current test directory and site pickup schedule']
  ],
  tubes:[
-  ['Reference','Quest collection and transport'],
-  ['Handling','Refrigerated and frozen specimen bags'],
+  ['Reference','Quest · Labcorp · Cedars specimen containers'],
+  ['Browse','Blood, urine, stool, transport, swabs and cultures'],
   ['Verify','Current test-specific container and storage requirements']
  ],
  calver:[
@@ -1899,7 +1906,7 @@ function sectionRender(sec,tab){
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
