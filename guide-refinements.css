@@ -964,3 +964,31 @@
  .device-collection-guide .device-collection-frame{break-inside:avoid}
  .device-collection-guide .device-collection-stability{break-inside:avoid}
 }
+
+/* Inline primary references for assay-specific specimen stability. */
+.device-collection-guide .device-collection-stability-sources{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:6px 12px;
+ margin-top:6px;
+ max-width:100%;
+}
+.device-collection-guide .device-collection-stability-sources a{
+ font-size:10.5px;
+ line-height:1.45;
+ font-weight:750;
+ color:#337e88;
+ text-decoration:none;
+ text-underline-offset:3px;
+ overflow-wrap:anywhere;
+}
+.device-collection-guide .device-collection-stability-sources a:hover{
+ text-decoration:underline;
+}
+.device-collection-guide .device-collection-stability-sources a:focus-visible{
+ outline:2px solid #5ea7aa;outline-offset:3px;
+}
+@media print{
+ .device-collection-guide .device-collection-stability-sources{display:none}
+}
