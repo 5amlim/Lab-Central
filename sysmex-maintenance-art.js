@@ -21,32 +21,23 @@
  T(300,443,"SYSMEX pocH-100i · illustrated front view",13,"#648093");
 }
 function cellclean(){
- // Photo reference: white CELL CLEAN AUTO carton, Sysmex REF CF-579-595, 4 mL × 20.
- // This is a packaging-identification example, NOT a pocH-compatible reagent recommendation.
- const barcode=Array.from({length:25},(_,i)=>
-  '<rect x="'+(735+i*3.3)+'" y="324" width="'+(i%4===0?2.6:i%3===0?1.8:1)+'" height="'+(i%5===0?35:30)+'" fill="#2f3539"/>').join("");
- return '<ellipse cx="791" cy="406" rx="152" ry="12" fill="#e0e9ed"/>'+
-  '<path d="M657 131Q657 120 666 119H753Q769 120 773 107Q781 92 793 94Q805 96 816 111L830 118H914V380Q912 391 898 391H669Q656 391 656 378Z" fill="#fafbfa" stroke="#cad2d4" stroke-width="4"/>'+
-  '<path d="M667 134H905" stroke="#e8eceb" stroke-width="3"/>'+
-  '<path d="M656 154H911" stroke="#f0f2f1" stroke-width="2"/>'+
-  '<g fill="#161b1e"><path d="M801 157l17-13 15 5-15 13Z"/><path d="M818 162l13-12 17 7-14 12Z"/></g>'+
-  T(866,177,"sysmex",22,"#181c20",900)+
-  '<rect x="675" y="193" width="219" height="75" fill="#fff" stroke="#202529" stroke-width="3"/>'+
-  '<rect x="683" y="201" width="42" height="59" fill="#1b2024"/>'+
-  T(704,237,"CL",31,"#fff",850)+
-  T(737,223,"CELLCLEAN",15,"#141a1f",900,"start")+
-  T(737,241,"AUTO",17,"#141a1f",900,"start")+
-  '<path d="M730 247H887" stroke="#23282b" stroke-width="1.4"/>'+
-  T(740,258,"SYSMEX CLEANER",9,"#333c42",650,"start")+
-  '<rect x="675" y="277" width="35" height="15" fill="#fff" stroke="#3e474b" stroke-width="1.3"/>'+
-  T(692,288,"REF",10,"#263038",850)+
-  T(717,288,"CF-579-595",12,"#22292d",800,"start")+
-  T(898,291,"4 mL × 20",13,"#252c30",800,"end")+
-  T(685,320,"IVD",12,"#232a2f",800,"start")+
-  T(684,358,"CE",14,"#232a2f",750,"start")+
-  barcode+
-  T(776,375,"CELL CLEAN AUTO",9,"#58636a",650)+
-  T(792,444,"CELL CLEAN AUTO · pictured carton",12,"#647b87",650);
+ // The user-supplied CELL CLEAN AUTO product is a factory-filled 4mL vial, not a bottle or carton.
+ // For pocH-100i the documented cleaning step still calls for 3mL in an approved sample tube.
+ return '<ellipse cx="785" cy="414" rx="172" ry="12" fill="#dce8ec"/>'+
+  '<rect x="644" y="149" width="281" height="115" rx="14" fill="#f5f8f8" stroke="#d1dee2" stroke-width="2"/>'+
+  '<rect x="666" y="173" width="235" height="38" rx="17" fill="#fbfcfc" stroke="#aec0c9" stroke-width="3"/>'+
+  '<path d="M893 176H919Q927 176 927 182V201Q927 207 919 207H893Z" fill="#f6f8f8" stroke="#aec0c9" stroke-width="2"/>'+
+  '<rect x="708" y="178" width="175" height="29" rx="2" fill="#fff" stroke="#b9c8cc"/>'+
+  '<rect x="708" y="178" width="30" height="29" fill="#242d31"/>'+
+  T(723,198,"CL",19,"#fff",900)+T(745,188,"CELLCLEAN AUTO",13,"#232a2e",900,"start")+
+  T(745,201,"Sysmex · 4 mL",10,"#50616b",700,"start")+
+  T(789,286,"Factory-filled 4 mL vial (photo reference)",11,"#637f8c",700)+
+  '<rect x="744" y="324" width="99" height="78" rx="13" fill="#d9eaf0" stroke="#8aa9b8" stroke-width="3"/>'+
+  '<rect x="772" y="293" width="45" height="89" rx="11" fill="#f7fbfd" stroke="#80a3b6" stroke-width="4"/>'+
+  '<path d="M777 351H811V370H777Z" fill="#e5f1e5" opacity=".9"/>'+
+  '<ellipse cx="795" cy="293" rx="22" ry="6" fill="#fff" stroke="#80a3b6" stroke-width="3"/>'+
+  T(795,333,"3 mL",14,"#27718a",900)+
+  T(795,437,"Approved sample tube in adapter",12,"#587e8d",750);
 }
  function waste(){
    return '<ellipse cx="789" cy="418" rx="135" ry="13" fill="#dce7ec"/>'+
@@ -65,23 +56,26 @@ function cellclean(){
      T(817,440,"Outlet tubing connects to analyzer rear",12,"#557b91");
  }
  function packs(){
-   let m='<ellipse cx="760" cy="422" rx="205" ry="12" fill="#dae6ed"/>'+
-    '<path d="M579 175L613 148H743L763 169V407H579Z" fill="#b8946e" stroke="#8f775b" stroke-width="4"/>'+
-    '<path d="M743 148L768 166V400L744 407Z" fill="#a68a6d" stroke="#8f755e" stroke-width="2"/>'+
-    '<rect x="598" y="222" width="143" height="100" rx="4" fill="#d2b599" stroke="#a78765"/>'+
-    '<rect x="606" y="240" width="130" height="48" fill="#5c96ba"/>'+
-    T(670,260,"pocH-pack D",15,"#fff",900)+
-    T(670,278,"DILUENT · 2 L",11,"#fff",750)+
-    '<path d="M602 150H735" stroke="#efe6d3" stroke-width="8"/>'+
-    '<rect x="811" y="200" width="112" height="207" rx="17" fill="#e9f3f5" stroke="#a0b9c4" stroke-width="4"/>'+
-    '<rect x="829" y="176" width="75" height="42" rx="12" fill="#f4f7f8" stroke="#a9b6bf" stroke-width="3"/>'+
-    '<rect x="823" y="253" width="87" height="96" rx="3" fill="#fff" stroke="#d3e1e6"/>'+
-    '<rect x="823" y="264" width="87" height="24" fill="#7c5b9b"/>'+
-    T(866,280,"pocH-pack L",12,"#fff",850)+
-    T(866,311,"LYSE",17,"#635584",900)+
-    T(866,335,"250 mL",12,"#5c7486")+
-    T(671,440,"DILUENT",12,"#6b7f8d")+T(869,440,"LYSING REAGENT",12,"#6b7f8d");
-   return m;
+  // Reference products: pocH-pack D is a 2L rectangular translucent bottle (PPD-300A),
+  // while pocH-pack L is a 250mL translucent bottle with purple-label band (PPL-200A).
+  const barcode=Array.from({length:17},(_,i)=>'<path d="M'+(691+i*4)+' 206v35" stroke="#354852" stroke-width="'+(i%4===0?2.6:1.3)+'"/>').join("");
+  return '<ellipse cx="760" cy="424" rx="215" ry="13" fill="#dce8eb"/>'+
+   '<path d="M588 175Q587 162 603 157L625 142H647V118H697V142H741Q769 144 773 170V395Q773 414 750 414H613Q586 413 586 391Z" fill="#e6eff1" stroke="#a8bdc6" stroke-width="4"/>'+
+   '<path d="M597 182Q597 168 615 165H744Q759 167 761 182V392H597Z" fill="#f0f5f5" opacity=".8"/>'+
+   '<rect x="642" y="109" width="56" height="23" rx="4" fill="#e9f5fb" stroke="#96aec0" stroke-width="3"/>'+
+   '<rect x="643" y="101" width="54" height="13" rx="4" fill="#3f97c5"/>'+
+   '<rect x="609" y="186" width="144" height="125" rx="2" fill="#fff" stroke="#c9d8de"/>'+
+   '<rect x="609" y="186" width="144" height="25" fill="#5484a4"/>'+
+   T(681,203,"pocH-pack D",16,"#fff",850)+
+   T(681,261,"DILUENT",16,"#476b80",900)+T(681,287,"2 L · PPD-300A",12,"#557887",800)+barcode+
+   T(680,438,"D · DILUENT · 2 L",12,"#5b7d8d",800)+
+   '<path d="M821 290Q820 279 831 277H840V257H889V277H899Q910 281 910 291V394Q910 411 894 412H834Q820 412 820 395Z" fill="#f0f6f6" stroke="#a2b8c1" stroke-width="3.5"/>'+
+   '<rect x="839" y="251" width="53" height="15" rx="4" fill="#7e5e9d" stroke="#a2b8c1" stroke-width="2"/>'+
+   '<rect x="829" y="314" width="75" height="72" fill="#fff" stroke="#d1dfe4"/>'+
+   '<rect x="829" y="314" width="75" height="20" fill="#7b5b99"/>'+
+   T(866,328,"pocH-pack L",10,"#fff",850)+T(866,349,"LYSE",16,"#72558d",900)+
+   T(866,368,"250 mL",12,"#5f7888",800)+
+   T(868,438,"L · LYSE · 250 mL",12,"#5b7d8d",800);
  }
  function scanner(){
    return '<path d="M628 77L704 77L714 125L681 142L663 189L627 177L650 129L627 103Z" fill="#333e48" stroke="#8298a7" stroke-width="4"/>'+
