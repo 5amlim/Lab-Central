@@ -6,11 +6,11 @@
 "use strict";
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const configs={
- sysmex:{brand:"SYSMEX pocH-100i",binder:"pocH Daily Control Log · Maintenance Log binder",steps:[
+ sysmex:{brand:"SYSMEX pocH-100i",binder:"pocH-100i Control Log and Start-up Blank Check Log · Daily QC binder",steps:[
   {kind:"mainMenu",heading:"Open QC from Menu",tip:"From the Main screen select Menu, then QC."},
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
   {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print, then choose Current on the confirmation prompt (not Chart). Repeat separately for any missing QC1, QC2 or QC3 records."}
- ],note:"Print the accepted QC1 (Low), QC2 (Normal) and QC3 (High) control records one by one. File the startup blank-check report separately in the pocH blank-check log; retain new-lot comparison records in the validation log until the approved transition is complete."},
+ ],note:"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the completed pocH-100i Control Log. Complete the Start-up Blank Check Log and file its blank-check printout with it. Retain new-lot comparison records in the approved validation log."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
   {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
   {kind:"piccoloResultsList",heading:"Choose the QC result",screen:"All Results Sorted by Date",tip:"Select the correct C (Control) result by date and ID, not a P (Patient) result."},
