@@ -129,3 +129,59 @@
   right:4px;bottom:7px;width:43%;height:calc(100% - 16px);max-height:120px;
  }
 }
+
+
+/* Directory icon watermarks for entries without an equipment illustration.
+   Reuse the same source SVG as the small icon to maintain a cohesive visual
+   language. Keep the existing white cards, blue top borders, and dimensions. */
+.grid-cards .item-card.has-symbol-art{
+ position:relative;isolation:isolate;overflow:hidden;
+ height:147px;min-height:147px;max-height:147px;
+}
+.grid-cards .item-card.has-symbol-art .card-head,
+.grid-cards .item-card.has-symbol-art > strong,
+.grid-cards .item-card.has-symbol-art > p,
+.grid-cards .item-card.has-symbol-art .card-trailing{
+ position:relative;z-index:2;
+}
+.grid-cards .item-card.has-symbol-art > strong,
+.grid-cards .item-card.has-symbol-art > p{
+ max-width:73%;overflow-wrap:break-word;
+}
+.grid-cards .item-card.has-symbol-art .card-category{
+ background:#ffffffdd;border-radius:5px;padding:2px 4px;
+}
+.grid-cards .item-card.has-symbol-art .card-symbol-art{
+ position:absolute;z-index:1;pointer-events:none;
+ display:flex;align-items:center;justify-content:center;
+ width:43%;height:105px;right:4px;bottom:5px;
+ opacity:.14;
+ color:#367cad;
+ -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 35%,#000 100%);
+ mask-image:linear-gradient(90deg,transparent 0%,#000 35%,#000 100%);
+}
+.grid-cards .item-card.has-symbol-art .card-symbol-art svg{
+ display:block;width:min(100%,106px);height:96px;
+ overflow:visible;stroke:currentColor;stroke-width:1.3;
+ stroke-linecap:round;stroke-linejoin:round;
+ transform:rotate(-7deg);
+}
+.grid-cards .item-card.has-symbol-art:hover .card-symbol-art{opacity:.2}
+@media(max-width:780px){
+ .grid-cards .item-card.has-symbol-art .card-symbol-art{
+  right:2px;width:40%;height:96px;bottom:8px;
+ }
+ .grid-cards .item-card.has-symbol-art > strong,
+ .grid-cards .item-card.has-symbol-art > p{max-width:73%}
+}
+@media(max-width:560px){
+ .grid-cards .item-card.has-symbol-art .card-symbol-art{
+  right:3px;width:39%;height:90px;bottom:9px;
+ }
+ .grid-cards .item-card.has-symbol-art .card-symbol-art svg{
+  width:min(100%,91px);height:86px;
+ }
+}
+@media print{
+ .grid-cards .item-card.has-symbol-art{break-inside:avoid}
+}
