@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Training &amp; Competency Forms | Lab Central</title>
+<style>
+:root{--ink:#244b5d;--muted:#6b8594;--line:#b9cbd2;--accent:#2a857d}
+*{box-sizing:border-box}
+body{background:#f1f6f8;font:13px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink);margin:0}
+.pagebar{background:#fff;border-bottom:1px solid #dae7ea;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 24px}
+.pagebar>strong{font-size:14px}.pagebar a,.pagebar button{font:inherit;font-size:11px;font-weight:800;color:#246e73;border-radius:8px;border:1px solid #cbdfe2;background:#fff;padding:8px 14px;text-decoration:none;cursor:pointer}
+.pagebar button{background:#24857d;color:white;border-color:#24857d}
+.sheet{max-width:920px;margin:25px auto;background:#fff;border:1px solid #d9e5e9;box-shadow:0 10px 26px #224b6212;border-radius:14px;padding:30px 35px}
+.topline{font-size:10px;text-transform:uppercase;font-weight:900;letter-spacing:.17em;color:var(--accent)}
+h1{font-size:23px;line-height:1.25;letter-spacing:-.025em;margin:7px 0 6px;color:#234a5b}
+.intro{font-size:11px;color:#6c8797;margin:0 0 16px;line-height:1.65}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin:20px 0}
+.field{display:flex;align-items:flex-end;gap:7px;min-height:30px;font-size:11px;color:#476979;font-weight:750}
+.field .write{flex:1;min-height:23px;border-bottom:1px solid var(--line);outline:none;font-weight:450;min-width:0;padding:1px 4px}
+.field .write:focus{outline:2px solid #87c9bc;background:#fcf9ea}
+.section{margin:16px 0}
+h2{font-size:13px;color:#265b66;margin:18px 0 8px}
+.note{font-size:10px;line-height:1.6;color:#718b98;background:#f1f8f7;border-left:3px solid #95cbc1;padding:9px 11px;margin:10px 0}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px;margin:9px 0 14px}
+th,td{border:1px solid #b1c5cd;padding:6px;vertical-align:top;text-align:left}
+th{background:#edf5f5;color:#355866;font-size:10px}
+td[contenteditable]{outline-offset:-2px;height:32px}
+tr{break-inside:avoid}
+td:first-child{font-weight:750}
+.sigrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:18px 0 0}
+.sig{border-bottom:1px solid var(--line);min-height:35px;outline:none;font-size:11px}
+.siglabel{font-size:9px;color:#748a95;margin-top:4px}
+.formhint{font-size:10px;color:#81959e;margin-top:13px}
+.choice{display:inline-block;border:1px solid #a6bcc6;padding:2px 5px;margin-right:7px}
+@media(max-width:680px){.sheet{padding:19px;margin:12px}.fields,.sigrow{grid-template-columns:1fr}.pagebar{flex-wrap:wrap;padding:12px}.pagebar div{display:flex;gap:6px}}
+@page{size:letter portrait;margin:.45in}
+@media print{body{background:white;font-family:Arial,sans-serif}.pagebar{display:none}.sheet{padding:0;margin:0;border:0;box-shadow:none;max-width:none}.topline{color:#000}h1{font-size:18pt}.fields{margin:12px 0}.section{break-inside:avoid}th{background:#f0f0f0!important;print-color-adjust:exact}td{padding:5px}.note{background:#fff;color:#222}h2{margin-top:13px}}
+</style>
+</head>
+<body>
+<header class="pagebar"><strong>Lab Central / Training &amp; Competency</strong><div><a href="index.html#training-competency">Return to guide</a> <button type="button" id="print">Print / Save PDF</button></div></header>
+<main class="sheet" id="sheet"></main>
+<script>
+'use strict';
+const params=new URLSearchParams(location.search);
+const mode=params.get('form')==='training'?'training':'competency';
+const fields=(list)=>'<div class="fields">'+list.map(t=>'<label class="field">'+t+'<span class="write" role="textbox" aria-label="'+t+'" contenteditable="true" spellcheck="false"></span></label>').join('')+'</div>';
+const table=(heads,rows)=>'<table><thead><tr>'+heads.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((val,i)=>'<td'+(i===0?'':' contenteditable="true" spellcheck="false"')+'>'+val+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+const sig=(labels)=>'<div class="sigrow">'+labels.map(x=>'<div><div class="sig" role="textbox" aria-label="'+x+'" contenteditable="true"></div><div class="siglabel">'+x+'</div></div>').join('')+'</div>';
+const methods=[
+ ['1. Direct observation of patient testing',''],
+ ['2. Monitoring test result recording and reporting',''],
+ ['3. Review of QC, PT, worksheets and maintenance records',''],
+ ['4. Direct observation of maintenance and function checks',''],
+ ['5. Testing previously analyzed, blind or PT specimens',''],
+ ['6. Problem-solving assessment','']
+];
+let output='<div class="topline">Quality &amp; Compliance / '+(mode==='training'?'Initial training':'Competency assessment')+'</div>'+
+ '<h1>'+(mode==='training'?'Initial Training Record':'Laboratory Competency Assessment Record')+'</h1>'+
+ '<p class="intro">Blank reference form for the approved personnel file. One form per staff member and test system or assay, as directed by the site program. Keep separate training and competency records.</p>'+
+ fields(['Staff member / ID','Clinic / market','Position / role','Test system / assay','Complexity (waived / moderate / high)','Training or assessment date']) ;
+if(mode==='training'){
+ output+='<h2>Instruction and demonstration</h2>'+
+ '<p class="note">Initial training is completed before independent patient testing. Review the approved SOP, specimen requirements, QC, maintenance, troubleshooting, result recording and escalation process.</p>'+
+ table(['Training topic','Trainer demonstration / trainee practice','Completed date / initials'],[
+ ['Procedure and SOP review','',''],['Specimen requirements and patient identification','',''],['Instrument / kit setup and operation','',''],['QC / calibration and acceptable results','',''],['Result review, reporting and documentation','',''],['Maintenance, safety, error handling and corrective action','',''],['Supervised practice and successful demonstration','','']
+ ])+
+ fields(['Trainer / qualifications','Supervised testing completion date','Authorization to test granted by','Date independent testing may begin'])+
+ '<div class="section"><h2>Final determination</h2><p><span class="choice">☐ Training complete</span><span class="choice">☐ More training required</span><span class="choice">☐ Authorization documented</span></p></div>'+
+ sig(['Trainee signature / date','Trainer or authorized reviewer signature / date']);
+}else{
+ output+=fields(['First date of patient testing for this test system','Assessment period (6-month / 12-month / annual / new method)'])+
+ '<h2>Six required competency methods for nonwaived testing</h2>'+
+ '<p class="note">Record the evidence, evaluation date, result and any remedial action for each applicable method. Use an approved qualified assessor. For waived testing, follow the approved local competency policy; CLIA does not impose this six-element schedule for waived-only tests.</p>'+
+ table(['Assessment method','Evidence / document or observation','Date','Result / action'],methods.map(x=>[x[0],'','','']))+
+ '<h2>Assessment summary and disposition</h2>'+
+ '<p><span class="choice">☐ Competent</span><span class="choice">☐ Remediation needed</span><span class="choice">☐ Reassessment complete</span></p>'+
+ fields(['Corrective action / retraining date','Final determination date','Assessor name / qualifications','Assessment record or evidence location'])+
+ sig(['Testing personnel acknowledgment / date','Qualified assessor signature / date']);
+}
+output+='<p class="formhint">Reference aid only. Follow your laboratory director, technical consultant/supervisor, approved SOP, accreditor and applicable local requirements. A signed training form does not replace a competency assessment.</p>';
+document.getElementById('sheet').innerHTML=output;
+document.title=(mode==='training'?'Initial Training Record':'Competency Assessment Record')+' | Lab Central';
+document.getElementById('print').addEventListener('click',()=>window.print());
+</script>
+</body>
+</html>
