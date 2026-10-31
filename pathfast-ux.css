@@ -201,3 +201,8 @@
     min-height: 0 !important;
   }
 }
+
+/* Five clear PATHFAST navigation destinations: Overview, Patient, RN, Chest pain, CAL/QC.
+   The card numbers are navigation order, not an instruction to delay RN collection. */
+@media(min-width:1260px){.pfux-primary-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(min-width:1051px) and (max-width:1259px){.pfux-primary-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
