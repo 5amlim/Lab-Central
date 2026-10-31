@@ -212,7 +212,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261031-clinitek-appearance-running-v2"">
-<link rel="stylesheet" href="assay-catalog.css?v=20261030-purple-athena-accent-v2" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261031-printout-abbrev-v1" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261031-whole-analyzer-fit-v3" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261031-triage-accurate-screen-actions-v2" media="all">
@@ -377,7 +377,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261031-spotfire-auto-start-v3"></script>
 <script src="biofire-reference-polish.js?v=20261031-spotfire-auto-start-v2""></script>
 <script src="sendout-market-guide.js?v=20261029-regional-shipping-scope-v3"></script>
-<script src="assay-catalog.js?v=20261030-abbreviation-targets-v2"></script>
+<script src="assay-catalog.js?v=20261031-printout-abbrev-v1"></script>
 <script src="triage-meterpro-visual.js?v=20261031-triage-accurate-screen-actions-v2"></script>
 <script src="lab-container-art.js?v=20261031"></script>
 <script src="lab-container-photos.js?v=20261031"></script>
@@ -525,7 +525,7 @@ function isMatch(s,q){
   const assays=window.LAB_ASSAY_CATALOG?.tests?.[s.id]||[];
   const assayFields=assays.flatMap(test=>[
    test.title,test.short,
-   ...Object.entries(test.groups||{}).flatMap(([category,names])=>[category,...names])
+   ...Object.entries(test.groups||{}).flatMap(([category,names])=>[category,...names,...names.map(name=>window.LAB_ASSAY_CATALOG?.shortLabel?.(s.id,name)||'')])
   ]);
   const value=normalizeGuideSearch([
    s.title,s.subtitle,s.sourceTitle,s.category,s.sample,s.qc,
@@ -651,7 +651,7 @@ const labPanelSearchAliases={
  hemocue:{'Hemoglobin':'hgb hb'},
  febridx:{'FebriDx inflammatory marker test':'mxa crp'}
 };
-function labTargetText(name){return name+' '+(labTargetAliases[normalizeGuideSearch(name)]||'')}
+function labTargetText(name,sectionId){return name+' '+(labTargetAliases[normalizeGuideSearch(name)]||'')+' '+(window.LAB_ASSAY_CATALOG?.shortLabel?.(sectionId,name)||'')}
 function labWordMatch(text,terms){
  const value=normalizeGuideSearch(text),tokens=new Set(value.split(/\s+/));
  // Known abbreviations must be whole tokens; other three-character prefixes
@@ -668,9 +668,9 @@ function searchPanelMatches(query,sections=all){
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
    const content=[section.title,panel.title,panel.short,
     labPanelSearchAliases[section.id]?.[panel.title]||'',
-    ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name))].join(' ');
+    ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name,section.id))].join(' ');
    if(!labWordMatch(content,terms))continue;
-   const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name),[term])));
+   const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name,section.id),[term])));
    matches.push({section,panel,targets,hits});
   }
  }
@@ -807,7 +807,7 @@ function searchPanelAthenaOrders(section,panel){
 
 function searchPanelCard({section,panel,targets,hits}){
  const names=[...new Set(hits.map(t=>t.name))];
- const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+safeHtml(n)+'</span>').join('');
+ const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+(window.LAB_ASSAY_CATALOG?.formatTarget?.(section.id,n)||safeHtml(n))+'</span>').join('');
  const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
  const orders=searchPanelAthenaOrders(section,panel);
  const athena=orders.length?'<div class="lab-panel-athena">'+
@@ -822,7 +822,7 @@ function searchPanelCard({section,panel,targets,hits}){
   '</div>':'';
  const groups=Object.entries(panel.groups||{}).map(([group,arr])=>
   '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
-  arr.map(n=>'<span>'+safeHtml(n)+'</span>').join('')+'</p></div>').join('');
+  arr.map(n=>'<span>'+(window.LAB_ASSAY_CATALOG?.formatTarget?.(section.id,n)||safeHtml(n))+'</span>').join('')+'</p></div>').join('');
  return '<article class="lab-panel-search-result"><div class="lab-panel-search-top"><div>'+
   '<small>'+safeHtml(section.title)+'</small><h3>'+safeHtml(panel.title)+'</h3>'+
   (panel.short?'<span class="lab-panel-abbrev">'+safeHtml(panel.short)+'</span>':'')+
