@@ -1409,10 +1409,10 @@ function sysmexVisualGuide(sec){
 /* FebriDx four-stage training illustrations reuse the same reference-based device. */
 function febridxVisualGuide(sec){
  const steps=[
-  ["Collect fingerstick capillary blood","collection","Identify the green protective lancet tab and the small integrated collection tube on the left. Follow the current FebriDx IFU for filling."],
-  ["Identify all device components","ready","Locate the integrated collection tube, oval blood transfer zone, buffer release button and blue result window."],
-  ["Transfer sample and release buffer","transfer","Use the oval blood transfer zone and activate the buffer release button in the manufacturer-approved sequence."],
-  ["Develop and read result","read","Read the blue result window at the IFU-specified time. The drawing intentionally shows no interpreted test result."]
+  ["Collect fingerstick capillary blood","collection","Identify the green collection stem above the arched protective cover. Follow the current FebriDx IFU for filling."],
+  ["Identify all device components","ready","Locate the upper collection stem, central oval transfer zone, blue activation button and vertical T/C result window."],
+  ["Transfer sample and release buffer","transfer","Use the central transfer area and lower blue activation button in the manufacturer-approved sequence."],
+  ["Develop and read result","read","Read the vertical result window at the IFU-specified time. The illustrated colored bands are not a result interpretation."]
  ];
  const cards=steps.map(([title,stage,note],i)=>{
   const images='<div class="device-gallery-image febridx-step-picture">'+febridxDeviceSvg(stage)+'</div>'+
@@ -1420,7 +1420,7 @@ function febridxVisualGuide(sec){
   return '<article class="device-gallery-step febridx-device-step"><div class="device-gallery-step-head"><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+visualEsc(title)+'</strong></div>'+images+'<p>'+visualEsc(note)+'</p></article>';
  }).join("");
  return '<section class="device-gallery febridx-visual-gallery" aria-label="FebriDx step-by-step device reference">'+
-  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>FebriDx · sample testing</h2><p>Collection tube → Blood transfer zone → Buffer release → Result window</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
+  '<div class="device-gallery-heading"><div><span>VISUAL TRAINING REFERENCE</span><h2>FebriDx · sample testing</h2><p>Collection stem → Transfer area → Blue activation → Vertical result window</p></div><span class="device-gallery-count">4 STEPS</span></div>'+
   '<div class="device-gallery-grid">'+cards+'</div>'+
   '<p class="device-gallery-note">Device illustration follows the supplied component reference. For collection volume, activation timing, and results interpretation follow the current approved manufacturer IFU and local SOP.</p></section>';
 }
