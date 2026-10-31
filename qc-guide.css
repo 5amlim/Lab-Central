@@ -131,3 +131,12 @@
 .qc-piccolo-entry-confirm{display:flex;justify-content:space-between;align-items:center;border:1px solid #a6c9c8;background:#e5f3ee;color:#176d63;padding:7px 10px;font-weight:850;font-size:10px;border-radius:5px}
 .qc-piccolo-entry-confirm b{font-size:8px;color:#fff;background:#258d82;padding:4px 6px;border-radius:3px;letter-spacing:.06em}
 @media print{.qc-piccolo-entry-field,.qc-piccolo-entry-confirm{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Piccolo QC: the Home display only has Analyze. */
+.qc-piccolo-single-action{padding:13px 12px 30px;min-height:125px;display:flex;align-items:flex-start}
+.qc-piccolo-single-action .qc-device-option{width:100%;min-height:40px;font-size:12px;padding:8px 11px}
+.qc-piccolo-single-action .qc-device-option.targeted{padding:7px 10px}
+.qc-piccolo-auto-print{padding:13px 15px;margin:4px 0 16px;border:1px solid #c8dfd8;border-left:4px solid #278b81;border-radius:8px;background:#f0f8f5;color:#345c59}
+.qc-piccolo-auto-print strong{display:block;color:#216b62;font-size:13px;margin-bottom:4px}
+.qc-piccolo-auto-print p{margin:0;font-size:12px;line-height:1.6;color:#456c67}
+@media print{.qc-piccolo-auto-print,.qc-piccolo-single-action .qc-device-option{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
