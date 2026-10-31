@@ -752,6 +752,9 @@ const labPanelAthenaNames={
     "Full respiratory panel": [
       "Spotfire FULL Respiratory Panel ($500) (2)"
     ],
+    "Full sore throat panel": [
+      "Spotfire Full Sore Throat Panel (NY ONLY $500) (2)"
+    ],
     "Mini respiratory panel": [
       "Spotfire MINI Respiratory Panel ($190) (2)"
     ],
@@ -825,6 +828,15 @@ function searchPanelCard({section,panel,targets,hits}){
  const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+(window.LAB_ASSAY_CATALOG?.formatPanelTarget?.(section.id,panel,n)||safeHtml(n))+'</span>').join('');
  const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
  const orders=searchPanelAthenaOrders(section,panel);
+ // R and ST are different specimen-selected menus on the same Full or Mini pouch.
+ // Keep all valid target matches, but clarify why a target such as RSV appears in each.
+ const spotfireMenu=section.id==='spotfire'
+  ?(panel.spotfireMini?'Mini R/ST pouch':'Full R/ST pouch')+' · '+
+   (panel.spotfireMark==='ST'?'Sore throat menu · Throat swab':
+    'Respiratory menu · '+(panel.spotfireMini?'Nasal/NP swab':'NP swab'))
+  :'';
+ const spotfireContext=spotfireMenu?'<div class="lab-panel-menu-context">'+safeHtml(spotfireMenu)+
+  (panel.marketNote?'<span class="lab-panel-market-tag">'+safeHtml(panel.marketNote)+'</span>':'')+'</div>':'';
  const athena=orders.length?'<div class="lab-panel-athena">'+
   '<div class="lab-panel-athena-head"><strong><span class="athena-accent">ATHENA</span> ORDER FOR THIS PANEL</strong>'+
   '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View <span class="athena-accent">Athena</span> orders <span aria-hidden="true">→</span></button></div>'+
@@ -841,6 +853,7 @@ function searchPanelCard({section,panel,targets,hits}){
  return '<article class="lab-panel-search-result"><div class="lab-panel-search-top"><div>'+
   '<small>'+safeHtml(section.title)+'</small><h3>'+safeHtml(panel.title)+'</h3>'+
   (panel.short?'<span class="lab-panel-abbrev">'+safeHtml(panel.short)+'</span>':'')+
+  spotfireContext+
   '</div><button type="button" class="lab-panel-open" data-go="'+safeHtml(section.id)+'">Open guide <span aria-hidden="true">→</span></button></div>'+
   (names.length?'<div class="lab-panel-target-hits"><strong>Matching analytes / pathogens</strong>'+chips+more+'</div>':'')+
   athena+
