@@ -20,69 +20,200 @@ function photo(item){
 }
 function photoSource(item){return item.external || (item.photo.startsWith('cedars:')?'https://5amlim.github.io/Lab-Calculator/cedars-container-guide.html':photoFallback[item.labs[0]]);}
 function svg(item){
- const c=COLORS[item.color]||'#b1bcc3';
- const lab=E(item.label.length>12?item.label.slice(0,12):item.label);
- const top='<svg class="lcr-svg" viewBox="0 0 260 150" role="img" aria-label="Illustration of '+E(item.name)+'" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="glass-'+E(item.id)+'" x1="0" x2="1"><stop stop-color="#f7fbfc"/><stop offset=".48" stop-color="#e5eff3"/><stop offset="1" stop-color="#fbfdff"/></linearGradient></defs>';
- const glass='url(#glass-'+E(item.id)+')';
- const txt=(x,y,s,size=9)=>'<text x="'+x+'" y="'+y+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="700" fill="#405b6a">'+E(s)+'</text>';
- const tube=(x,y,w,h,cap,label,fill='#b4c2c8',tiger=false)=>{
-  const end=y+h;
-  let v='<path d="M'+x+' '+(y+15)+'H'+(x+w)+'V'+(end-15)+'Q'+(x+w)+' '+end+' '+(x+w/2)+' '+end+'Q'+x+' '+end+' '+x+' '+(end-15)+'Z" fill="'+glass+'" stroke="#8aa2ae" stroke-width="1.5"/>'+
-  '<path d="M'+(x+3)+' '+(end-42)+'H'+(x+w-3)+'V'+(end-16)+'Q'+(x+w-3)+' '+(end-3)+' '+(x+w/2)+' '+(end-3)+'Q'+(x+3)+' '+(end-3)+' '+(x+3)+' '+(end-16)+'Z" fill="'+fill+'" opacity=".67"/>'+
-  '<rect x="'+(x-2)+'" y="'+y+'" width="'+(w+4)+'" height="22" rx="4" fill="'+cap+'" stroke="#718b9b" stroke-width="1"/>';
-  if(tiger)v+='<path d="M'+x+' '+(y+2)+' l10 0 l-9 18 h-4ZM'+(x+16)+' '+(y+2)+' l10 0 l-9 18 h-6Z" fill="#30363a"/>';
-  for(let j=3;j<w;j+=5)v+='<path d="M'+(x+j)+' '+(y+4)+'v14" stroke="#ffffff" opacity=".34" stroke-width="1"/>';
-  v+='<rect x="'+(x+4)+'" y="'+(y+37)+'" width="'+(w-8)+'" height="35" rx="2" fill="#fff" stroke="#d4e0e4"/>'+
-  txt(x+w/2,y+55,label,w>36?10:8)+
-  '<path d="M'+(x+5)+' '+(y+24)+'v'+(h-43)+'" stroke="#fff" stroke-width="2" opacity=".8"/>';
-  return v;
+ // Device-specific, scale-conscious SVG reference silhouettes. These are illustrations,
+ // not substitutes for the product label or the receiving lab's collection instructions.
+ const id=E(item.id),c=COLORS[item.color]||'#9caeba',kind=item.kind;
+ const S=(v)=>E(v), R=(x,y,w,h,fill,rx=0,stroke='none',sw=1)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'"/>';
+ const P=(d,fill,stroke='none',sw=1)=>'<path d="'+d+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'" stroke-linejoin="round"/>';
+ const L=(x,y,x2,y2,color='#8da4af',width=1)=>'<path d="M'+x+' '+y+'L'+x2+' '+y2+'" stroke="'+color+'" stroke-width="'+width+'" stroke-linecap="round"/>';
+ const T=(x,y,word,size=9,color='#405967',weight=700)=>'<text x="'+x+'" y="'+y+'" font-family="Arial,Helvetica,sans-serif" font-size="'+size+'" font-weight="'+weight+'" fill="'+color+'" text-anchor="middle">'+S(word)+'</text>';
+ const ELL=(cx,cy,rx,ry,fill,stroke='none')=>'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="'+fill+'" stroke="'+stroke+'"/>';
+ const glass='url(#lcr-glass-'+id+')',amber='url(#lcr-amber-'+id+')';
+ const barcode=(x,y,w=24)=>{
+  let z='';let px=x;
+  for(const width of [1,2,1,1,3,1,2,1,1,2,2,1,1,3,1,2]){
+   if(px+width>x+w)break;
+   z+=R(px,y,width,12,'#738b97',0,'none',0);px+=width+1;
+  }return z;
  };
- const vial=(x,cap,label)=>'<rect x="'+x+'" y="42" width="42" height="94" rx="8" fill="'+glass+'" stroke="#819ba5" stroke-width="1.5"/>'+
- '<rect x="'+(x-3)+'" y="33" width="48" height="23" rx="6" fill="'+cap+'" stroke="#76909d" stroke-width="1.3"/>'+
- '<rect x="'+(x+4)+'" y="70" width="34" height="38" rx="3" fill="#fff" stroke="#d7e2e6"/>'+txt(x+21,89,label,9)+
- '<rect x="'+(x+4)+'" y="117" width="34" height="14" rx="3" fill="#d6bf9f" opacity=".5"/>';
- let out='';
- if(item.kind==='three'){
-  out=vial(39,'#e0c434','C&S')+vial(107,'#df91ac','10%')+vial(175,'#e4e8eb','CLEAN');
- }else if(item.kind==='stool'){
-  out=vial(107,c,lab);
- }else if(item.kind==='bloodpair'||item.kind==='bloodbottle'){
-  const bottle=(x,cap,label)=>'<path d="M'+(x+17)+' 39v13q-19 14-19 24v42q0 12 12 12h42q12 0 12-12V76q0-10-19-24V39Z" fill="'+glass+'" stroke="#859da9" stroke-width="1.5"/>'+
-   '<rect x="'+(x+15)+'" y="19" width="34" height="24" rx="4" fill="'+cap+'" stroke="#7c93a0"/>'+
-   '<rect x="'+(x+6)+'" y="86" width="53" height="27" rx="3" fill="#fff" stroke="#d5e0e5"/>'+txt(x+32,103,label,10)+
-   '<rect x="'+(x+4)+'" y="115" width="57" height="11" rx="2" fill="#c9aa9c" opacity=".55"/>';
-  out=item.kind==='bloodpair'?bottle(52,'#b47baf','ANA')+bottle(148,'#3687aa','AERO'):bottle(99,c,lab);
- }else if(item.kind==='cup'){
-  out='<path d="M75 49h110l-10 77q-1 9-14 9h-61q-13 0-14-9Z" fill="'+glass+'" stroke="#8ba3ae" stroke-width="2"/>'+
-  '<rect x="68" y="39" width="124" height="19" rx="6" fill="'+c+'" stroke="#859ba5"/>'+
-  '<rect x="94" y="79" width="73" height="30" rx="4" fill="#fff" stroke="#d5e0e5"/>'+txt(130,97,lab,12);
- }else if(item.kind==='jug'){
-  out='<path d="M84 40h90q8 0 8 9v72q0 10-10 10H84q-7 0-7-8V48q0-8 7-8Z" fill="'+glass+'" stroke="#8ba3b1" stroke-width="2"/>'+
-  '<path d="M177 55h19v32h-19" fill="none" stroke="#8ba3b1" stroke-width="9"/>'+
-  '<rect x="90" y="27" width="70" height="17" rx="4" fill="'+c+'"/>'+
-  '<rect x="94" y="76" width="76" height="35" rx="4" fill="#fff" stroke="#d6e0e4"/>'+txt(131,96,'24 HOUR',13);
- }else if(item.kind==='urisponge'){
-  out=tube(88,15,37,120,'#e7cc41','URI','#eff7e2')+
-  '<path d="M173 42v77" stroke="#d5b233" stroke-width="5" stroke-linecap="round"/>'+
-  '<rect x="162" y="112" width="22" height="22" rx="5" fill="#efe5b8" stroke="#b5aa77"/>'+
-  '<rect x="153" y="27" width="40" height="20" rx="6" fill="#e5c72e"/>';
- }else if(item.kind==='swab'){
-  out=tube(94,19,36,117,c,lab,'#e6edf0')+
-  '<path d="M165 37v88" stroke="#94acb5" stroke-width="2.8"/>'+
-  '<ellipse cx="165" cy="32" rx="6" ry="13" fill="#f8fbfc" stroke="#b5c4cb"/>';
- }else if(item.kind==='conical'||item.kind==='micro'){
-  let x=108,tip=item.kind==='micro'?114:137;
-  out='<path d="M99 42h63v'+(tip-19)+'l-31 18q-3 2-5 0l-27-18Z" fill="'+glass+'" stroke="#8ba3b1" stroke-width="1.5"/>'+
-  '<rect x="95" y="26" width="71" height="22" rx="5" fill="'+c+'" stroke="#829ba5"/>'+
-  '<rect x="107" y="67" width="47" height="28" rx="4" fill="#fff" stroke="#d5e0e5"/>'+txt(131,85,lab,10);
- }else{
-  let fill=item.category==='Blood tubes'?'#a54e57':'#d6b484';
-  if(item.color==='gold'||item.color==='tiger')fill='#e4d29a';
-  out=tube(107,12,46,124,c,lab,fill,item.kind==='tiger');
-  if(item.color==='royalred')out+='<rect x="106" y="30" width="48" height="4" fill="#ce5d54"/>';
+ const ribs=(x,y,w,h)=>{let z='';for(let k=x+5;k<x+w-3;k+=6)z+=L(k,y+4,k,y+h-4,'#fff',.8);return z;};
+ const cap=(x,y,w,h,color,variant='solid')=>{
+  let z=R(x,y,w,h,color,4,'#728b96',1.3)+R(x+2,y+2,w-4,3,'#fff',2,'none',0)+ribs(x,y,w,h);
+  if(variant==='tiger'){
+   z+=R(x,y,w,h,'url(#lcr-tiger-'+id+')',4,'#71838f',1.2)+ribs(x,y,w,h);
+  }else if(variant==='swirl'){
+   z+=P('M'+x+' '+(y+4)+'l10 -3 16 '+(h-3)+'h-9Z','#c7333e')+
+      P('M'+(x+28)+' '+(y+1)+'h9l'+(w-25)+' '+(h-3)+'h-9Z','#bb2439');
+  }
+  return z+R(x+3,y+h-1,w-6,3,'#6e8794',1);
+ };
+ const paper=(x,y,w,h,title,sub,accent,small=false)=>{
+  const sz=small?7:8.5;
+  return R(x,y,w,h,'#fff',2,'#c8d7df',.9)+R(x+2,y+3,4,h-6,accent,1)+
+    T(x+w/2+1,y+13,title,sz,'#415c6d')+
+    (sub?T(x+w/2+1,y+25,sub,6.1,'#66808e',600):'')+
+    barcode(x+w/2-13,y+h-15,26);
+ };
+ function vacutainer(col,title,sub,opts={}){
+  const x=109,y=7,w=42,bottom=137;
+  let v=P('M'+x+' 29H'+(x+w)+'V117Q'+(x+w)+' '+bottom+' '+(x+w/2)+' '+bottom+'Q'+x+' '+bottom+' '+x+' 117Z',
+       glass,'#86a0ad',1.6);
+  v+=R(x+3,109,w-6,10,opts.gel?'#e4ce86':'#e3edf0',2,'none',0);
+  if(opts.gel)v+=ELL(x+w/2,122,w/2-5,4,'#dcc67a');
+  v+=L(x+4,36,x+4,120,'#fff',2);
+  v+=cap(x-4,y,w+8,25,col,opts.pattern||'solid');
+  v+=paper(x+4,53,w-8,52,title,sub,opts.stripe||col,true);
+  if(opts.highVolume)v+=T(130,144,'7.5 mL',7.4,'#8295a0',600);
+  return v;
  }
- return top+'<ellipse cx="130" cy="144" rx="82" ry="3" fill="#dce6eb" opacity=".5"/>'+out+'</svg>';
+ function urineTube(col,title,preservative=false){
+  const x=103,w=54,y=9;
+  let v=P('M'+x+' 33H'+(x+w)+'V109L138 139Q130 145 122 139L'+x+' 109Z',glass,'#8ca4b0',1.6);
+  v+=P('M107 108H153L132 132Q130 134 128 132Z','#f2de9f');
+  v+=cap(x-3,y,w+6,25,col,preservative?'swirl':'solid');
+  v+=R(111,55,38,45,'#fff',2,'#cad9e1')+
+      T(130,69,title,8.1)+T(130,80,preservative?'PRESERVED':'CULTURE',6.8,'#748793')+
+      L(108,108,152,108,'#be6f56',1.7)+T(130,105,'FILL',6,'#a36f62');
+  return v;
+ }
+ function cryo(){
+  let z=R(103,57,54,74,glass,7,'#8ba4b0',1.5)+
+    R(102,29,56,34,c,6,'#657f8c',1.6)+ribs(102,29,56,34)+
+    R(110,76,40,36,'#fff',2,'#d4dfe5')+T(130,90,'FROZEN',8)+T(130,101,'PLASMA',6)+
+    R(112,113,36,6,'#d8d1e6',1);
+  return z;
+ }
+ function microtainer(){
+  const isAmber=item.id==='microtainer-sst';
+  return R(106,36,48,93,isAmber?amber:glass,6,'#8ba0a9',1.5)+
+    R(100,22,60,24,c,3,'#738995',1.4)+ribs(100,22,60,24)+
+    R(108,69,44,43,isAmber?'#d7b878':'#fff',2,'#c6d6dc')+
+    T(130,82,'BD',7.5)+T(130,94,'MICRO',9.5)+T(130,105,item.label,8)+
+    L(110,52,110,127,'#fff',1.9);
+ }
+ function stoolVial(x,topColor,title,subtitle,w=47){
+  const center=x+w/2;
+  let v=R(x,43,w,91,glass,6,'#8ca5af',1.6)+
+    R(x-4,22,w+8,26,topColor,5,'#8b9aa2',1.2)+ribs(x-4,22,w+8,26)+
+    R(x+4,68,w-8,51,'#fff',2,'#cbd7dc')+
+    R(x+5,91,w-10,4,'#c85150',1)+
+    T(center,79,'Para-Pak',7.5,'#334a57')+
+    T(center,90,title,7.7,'#455e6c')+
+    T(center,108,subtitle,6,'#627d89',600)+
+    L(x+8,59,x+w-8,59,'#b9cad1',1.1)+
+    L(x+5,124,x+w-5,124,'#c2d0d7',1);
+  return v;
+ }
+ function bactec(x,capColor,label,bandColor='#bdd2e0',size=63){
+  const center=x+size/2,bodyY=64,shoulder=61;
+  let z=P('M'+(center-12)+' 39V48C'+(center-17)+' 54 '+(x+1)+' 61 '+x+' 75V122Q'+x+' 134 '+(x+12)+' 134H'+(x+size-12)+'Q'+(x+size)+' 134 '+(x+size)+' 122V75C'+(x+size-1)+' 61 '+(center+17)+' 54 '+(center+12)+' 48V39Z',glass,'#8fa4ad',1.6)+
+    R(center-17,19,34,22,capColor,4,'#7e9199',1.4)+
+    R(center-14,15,28,8,'#f1f4f5',4,'#82939b',1.1)+
+    R(x+4,83,size-8,37,'#fff',2,'#d1dfe4')+
+    R(x+5,106,size-10,13,bandColor,1)+
+    T(center,95,'BD BACTEC',8.3,'#3e5868')+
+    T(center,115,label,8,bandColor==='#8d315e'?'#fff':'#315466')+
+    barcode(center-18,96,36)+
+    ELL(center,127,size/2-7,5,'#b9a78c')+
+    L(x+7,75,x+7,128,'#fff',2);
+  return z;
+ }
+ function swabTransport(){
+  const cobas=item.id==='cobas-swab',utm=item.id==='utm'||item.id==='cedars-utm';
+  const x=91;
+  let z=P('M'+x+' 38H132V123Q132 138 111.5 138Q'+x+' 138 '+x+' 123Z',glass,'#90a6b0',1.6)+
+    cap(x-3,15,47,27,c)+
+    R(95,71,33,44,'#fff',2,'#d4e0e5')+
+    T(111.5,84,cobas?'cobas':utm?'UTM':item.id==='aptima-swab'?'APTIMA':'eSwab',7.6)+
+    T(111.5,95,cobas?'PCR':utm?'VIRAL':item.id==='aptima-swab'?'NAAT':'AMIES',7)+
+    L(97,52,97,126,'#fff',2);
+  z+=L(170,44,170,129,utm?'#84a5bd':'#9bafb8',3)+
+    ELL(170,35,6.5,13,utm?'#fbf5f0':'#fff','#a9b9be')+
+    T(170,145,'SWAB',7,'#8299a8',600);
+  if(cobas)z+=R(86,11,54,5,'#f1d234',2);
+  return z;
+ }
+ function cobasUrine(){
+  let z=swabTransport();
+  // Urine cobas uses a transfer pipette, not a swab.
+  z=z.slice(0,z.indexOf(L(170,44,170,129)));
+  return z+ELL(179,41,9,14,'#edf5f8','#a9bdc6')+
+    P('M174 52H184L182 110L179 135L176 110Z','#f3f9fa','#a9bdc6',1.2)+
+    L(179,55,179,123,'#fff',1.5)+T(179,145,'PIPETTE',7,'#8198a8',600);
+ }
+ function uriSponge(){
+  let v=R(51,38,61,98,glass,5,'#91a9b4',1.5)+R(57,73,49,42,'#fff',2,'#cfdee3')+
+    T(81,87,'Copan',9)+T(81,101,'UriSponge',7.2,'#486a87')+
+    L(57,43,57,128,'#fff',2);
+  // Yellow screw cap, stem and two separate cylindrical absorbent sponges.
+  v+=R(165,106,49,23,'#f4cf2d',5,'#bc9e27',1.2)+ribs(165,106,49,23)+
+    R(187,46,5,60,'#f0c52d',2)+
+    R(178,24,10,38,'#e6d6aa',3,'#c5b88c',1)+
+    R(190,24,10,38,'#e6d6aa',3,'#c5b88c',1)+
+    ELL(183,24,5,3,'#f5e5c4')+ELL(195,24,5,3,'#f5e5c4')+
+    T(188,144,'INTEGRATED CAP',6.7,'#8197a5',600);
+  return v;
+ }
+ function conical(){
+  return P('M108 44H152V112L134 138Q130 142 126 138L108 112Z',glass,'#829eaa',1.7)+
+    cap(105,20,50,25,c)+
+    R(112,67,36,34,'#fff',2,'#cbdce2')+
+    T(130,81,'STERILE',7.5)+T(130,92,'50 mL',8.5)+
+    [0,1,2,3,4].map((_,i)=>L(113,103+i*5,122+(i%2)*4,103+i*5,'#879eaa',1)).join('');
+ }
+ function cup(){
+  return P('M69 52H191L179 125Q178 138 164 138H96Q82 138 81 125Z',glass,'#8fa5ae',1.6)+
+    R(65,39,130,19,c,6,'#91a0a8',1.4)+
+    [0,1,2,3,4,5,6,7,8,9].map((_,i)=>L(72+i*13,43,72+i*13,55,'#fff',1)).join('')+
+    R(91,83,80,37,'#fff',3,'#d3e0e5')+
+    T(131,100,item.label,11)+T(131,111,'SPECIMEN',7,'#6b8594');
+ }
+ function jug(){
+  return P('M80 48Q80 43 87 43H173Q180 43 180 50V123Q180 134 169 134H91Q80 134 80 123Z',glass,'#91a8b1',1.8)+
+    P('M180 58H201Q209 58 209 67V96Q209 104 200 104H180V91H196V72H180Z',glass,'#91a8b1',1.7)+
+    R(93,26,69,24,c,4,'#859ba5',1.4)+ribs(93,26,69,24)+
+    R(97,77,67,40,'#fff',3,'#d3dee5')+T(130,96,item.label,12)+T(130,108,'URINE',7);
+ }
+ function affirm(){
+  return R(25,58,103,54,'#e4f1f6',5,'#abc4cc',1.4)+
+    R(32,67,89,36,'#fff',2,'#c8dfe8')+T(75,83,'BD AFFIRM',10)+T(75,94,'ATTS',8)+
+    P('M170 37H207V125Q207 135 188.5 135Q170 135 170 125Z',glass,'#91a8b2',1.5)+
+    cap(166,21,45,22,'#f5f4ef')+
+    R(175,71,27,37,'#fff',2,'#cddce2')+T(188,92,'ATTS',7);
+ }
+ let out='';
+ if(kind==='bloodpair')out=bactec(42,'#8763a8','ANA','#bcabd2',61)+bactec(158,'#448ab8','AERO','#b4dbed',61);
+ else if(kind==='bloodbottle')out=bactec(97,item.id==='cedars-fungal'?'#7e2a4b':c,item.id==='cedars-fungal'?'MYCO/F':item.label,item.id==='cedars-fungal'?'#8d315e':'#deb3c2',66);
+ else if(kind==='three')out=stoolVial(31,'#ed9c36','C&S','CULTURE')+stoolVial(107,'#d68ea9','10%','FORMALIN')+stoolVial(183,'#e8eaec','CLEAN','NO MEDIA');
+ else if(kind==='stool'){
+  const isTotal=item.id==='totalfix';
+  const title=isTotal?'TOTAL-FIX':item.id==='stool-cary'||item.id==='stool-pcr'?'C&S':item.id==='para-formalin'?'10%':item.id==='para-pva'?'PVA':item.label;
+  const sub=isTotal?'O&P':item.id==='stool-clean'?'NO MEDIA':item.id==='para-formalin'?'FORMALIN':'TRANSPORT';
+  out=stoolVial(101,c,title,sub,58);
+ }else if(kind==='cup')out=cup();
+ else if(kind==='jug')out=jug();
+ else if(kind==='urisponge')out=uriSponge();
+ else if(kind==='swab')out=item.id==='cobas-urine'?cobasUrine():item.id==='affirm'||item.id==='cedars-affirm'?affirm():swabTransport();
+ else if(kind==='micro')out=item.id==='frozen-transfer'?cryo():microtainer();
+ else if(kind==='conical')out=conical();
+ else if(item.id==='ua-yellow')out=urineTube('#f0ce38','UA',true);
+ else if(item.id==='urine-gray')out=urineTube('#9ba3ad','URINE CULTURE');
+ else if(item.id==='gold-sst')out=vacutainer(c,'SST','GEL', {gel:true,stripe:'#c79d28'});
+ else if(item.id==='tiger-sst')out=vacutainer('#c95840','SST','GEL', {gel:true,pattern:'tiger',highVolume:true,stripe:'#d2a62f'});
+ else if(item.id==='royalblue-edta')out=vacutainer('#2850a2','TRACE','EDTA',{stripe:'#9d75b4'});
+ else if(item.id==='royalblue-serum')out=vacutainer('#2850a2','TRACE','SERUM',{stripe:'#d14a58'});
+ else if(item.id==='serum-transfer'||item.id==='plasma-transfer')out=conical();
+ else if(item.id==='amber-protect')out=vacutainer('#a87438','LIGHT','PROTECT',{stripe:'#a87438'});
+ else if(item.id==='acidwash-urine')out=cup();
+ else if(item.category==='Blood tubes')out=vacutainer(c,item.label.length>9?item.label.slice(0,9):item.label,
+    item.id==='gray-fluoride'?'NaF / K-OX':item.id==='lightblue-citrate'?'Na CITRATE':item.id==='green-lithium'?'LITHIUM':item.id==='sodium-heparin'?'SODIUM':item.id==='acd-yellow'?'ACD':'COLLECTION',
+    {stripe:c});
+ else out=conical();
+ const svgTop='<svg class="lcr-svg" viewBox="0 0 260 150" role="img" aria-label="Illustration of '+E(item.name)+'" xmlns="http://www.w3.org/2000/svg">'+
+  '<defs><linearGradient id="lcr-glass-'+id+'" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".94"/><stop offset=".26" stop-color="#dce8ed" stop-opacity=".71"/><stop offset=".72" stop-color="#fafdff"/><stop offset="1" stop-color="#d3e0e7" stop-opacity=".8"/></linearGradient>'+
+  '<linearGradient id="lcr-amber-'+id+'" x1="0" x2="1"><stop stop-color="#eec76c"/><stop offset=".56" stop-color="#b77239"/><stop offset="1" stop-color="#e8a85b"/></linearGradient>'+
+  '<pattern id="lcr-tiger-'+id+'" width="23" height="23" patternUnits="userSpaceOnUse" patternTransform="rotate(27)"><rect width="23" height="23" fill="#c85442"/><rect width="11" height="23" fill="#34373b"/></pattern></defs>';
+ return svgTop+ELL(130,143,83,3,'#e4edf1')+out+T(130,148,'NOT TO SCALE',6.4,'#9baab3',600)+'</svg>';
 }
 function belongs(x){return (selectedLab==='all'||x.labs.includes(selectedLab))&&(selectedCat==='all'||x.category===selectedCat)&&(!query||[x.name,x.label,x.category,x.desc,x.labs.map(l=>labText[l]).join(' ')].join(' ').toLowerCase().includes(query));}
 function labsFor(x){return x.labs.map(l=>'<span class="lcr-lab lcr-'+l+'">'+labText[l]+'</span>').join('');}
