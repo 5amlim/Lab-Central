@@ -156,7 +156,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="flow-navigation.css?v=20261031-poc-static-reference-v47" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261031-febridx-collection-v4" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261031-sendout-logistics-layout-v1" media="all">
-<link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-daily-monthly-qc-v9" media="all">
+<link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-separate-monthly-checklist-v10" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261031-calver-static-cards-v2" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
@@ -382,7 +382,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
 <script src="quality-reference.js?v=20261031-calver-static-cards-v2"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
-<script src="socal-daily-checklist.js?v=20261031-daily-monthly-qc-v9"></script>
+<script src="socal-daily-checklist.js?v=20261031-separate-monthly-checklist-v10"></script>
 <script src="instrument-qc-overview.js?v=20261031-sysmex-shutdown-v4"></script>
 <script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
@@ -415,7 +415,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-container-reference.js?v=20261031-gallery-api-v16"></script>
 <script src="collection-photo-preview.js?v=20261031-pathfast-gallery-label-v2"></script>
 <script src="analyzer-icons.js?v=20261031-cohesive-analyzer-v1"></script>
-<script src="sidebar-icons.js?v=20261031-athena-a-monogram-v2"></script>
+<script src="sidebar-icons.js?v=20261031-monthly-checklist-icon-v3"></script>
 <script>
 (()=>{
 'use strict';
@@ -512,7 +512,7 @@ function showNav(){
   const isArchive=cat==='Archived';
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
   out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
-  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${navIconSvg('socal-daily','clipboard-check')}</span>Lab Daily Checklist</button>`;
+  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${navIconSvg('socal-daily','clipboard-check')}</span>Lab Daily Checklist</button><button type="button" class="nav-link ${r.id==='lab-monthly-checklist'?'active':''}" data-go="lab-monthly-checklist"><span class="nav-icon">${navIconSvg('lab-monthly-checklist','calendar-check')}</span>Lab Monthly Checklist</button>`;
   for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${sectionSvg(s)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${navIconSvg('envi-ordering','package')}</span>Envi Ordering</button>`;
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${navIconSvg('specimen-dropoff','clipboard-check')}</span>Specimen drop-off</button>`;
@@ -913,6 +913,7 @@ const extraHomeGuides=[
  {id:'lab-container-gallery',title:'Lab Container Gallery',subtitle:'Collection tubes, swabs, kits and reference photos',category:'Send-outs',icon:'test-tube-2',blocks:[]},
  {id:'sendout-log',title:'Lab Sendout Log',subtitle:'Specimen tracking and regional submission forms',category:'Send-outs',icon:'file-text',blocks:[]},
  {id:'socal-daily',title:'Lab Daily Checklist',subtitle:'Daily tasks and binder documentation by clinic',category:'Operations',icon:'clipboard-check',blocks:[]},
+ {id:'lab-monthly-checklist',title:'Lab Monthly Checklist',subtitle:'Recurring instrument QC and monthly binder records',category:'Operations',icon:'calendar',blocks:[]},
  {id:'envi-ordering',title:'Envi Ordering',subtitle:'Supply ordering, vendors and tracking',category:'Operations',icon:'package',blocks:[]}
 ];
 function homeBrowseSections(){
@@ -923,10 +924,10 @@ function homeBrowseSections(){
   const s=standard[i];
   // Daily checklist is the first Operations destination, as in the sidebar.
   if(s.category==='Operations'&&(!i||standard[i-1].category!=='Operations'))
-   output.push(...(extras.get('Operations')||[]).filter(e=>e.id==='socal-daily'));
+   output.push(...(extras.get('Operations')||[]).filter(e=>e.id==='socal-daily'||e.id==='lab-monthly-checklist'));
   output.push(s);
   if(!standard[i+1]||standard[i+1].category!==s.category){
-   output.push(...(extras.get(s.category)||[]).filter(e=>e.id!=='socal-daily'));
+   output.push(...(extras.get(s.category)||[]).filter(e=>e.id!=='socal-daily'&&e.id!=='lab-monthly-checklist'));
   }
  }
  return output;
@@ -2220,6 +2221,7 @@ function render(){
    el('currentCrumb').textContent=route.id==='socal-daily'?'Lab Daily Checklist':window.LAB_OPS.titles[route.id]||'Lab operations';
    el('mainContent').innerHTML=route.id==='socal-daily'?window.LAB_SOCAL_DAILY.render():window.LAB_OPS.render(route.id,route.tab);
  }
+ else if(route.id==='lab-monthly-checklist'){el('currentCrumb').textContent='Lab Monthly Checklist';el('mainContent').innerHTML=window.LAB_MONTHLY_CHECKLIST.render();}
  else if(sec)sectionRender(sec,route.tab);
  else if(route.id==='lab-container-gallery')renderContainerGallery();
  else if(route.id==='favorites')renderHome('favorites');
