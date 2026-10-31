@@ -179,7 +179,7 @@ function screenPanel(item,brand,number){
     '<span class="qc-poch-option'+(value===item.focus?' active':'')+'"><b>'+esc(value)+'</b>'+(value===item.focus?'<em>SELECT</em>':'')+'</span>').join("")+
    '</div><div class="qc-poch-bottom"><span>Back</span><span>Top</span></div>';
  }else{
-  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options'+
+  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options">'+
    item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Back</span><span>Review selected action</span></div>';
  }
