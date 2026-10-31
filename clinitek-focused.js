@@ -91,7 +91,7 @@ function screenCloseup(mode,kind){
  const h=kind==="hcg", cassetteLabel=h?"Cassette Test":"Strip Test";
  const bg='<rect x="468" y="44" width="275" height="328" rx="18" fill="#eaf2f4" stroke="#bfd3dc" stroke-width="3"/>'+
  '<rect x="483" y="64" width="245" height="255" rx="7" fill="#f9fbfb" stroke="#809ca8" stroke-width="3"/>';
- const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":mode==="appearance"?"Select Appearance":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,mode==="appearance"?"Test in progress":"Ready",11,"#e3ecf0",false,"start");
+ const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":/^(appearance|color|clarity)$/.test(mode)?"Select Appearance":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,/^(appearance|color|clarity)$/.test(mode)?"Test in progress":mode==="analyzing"?"In progress":"Ready",11,"#e3ecf0",false,"start")+((mode==="color"||mode==="clarity")?tx(710,98,mode==="color"?"2 of 3":"3 of 3",10,"#e3ecf0",true,"end"):"");
  let body="";
  if(mode==="select"||mode==="qc"){
    const entries=mode==="qc"?["QC Strip Test","QC Cassette Test"]:["Instrument Set Up","Recall Results","Cassette Test","Strip Test"];
@@ -106,6 +106,18 @@ function screenCloseup(mode,kind){
        tx(499,186,h?"for cassette tests":"then place on test table",13,"#283b42",false,"start")+
        tx(499,216,h?"Place cassette on table":"Test pads facing up",13,"#283b42",false,"start")+
        '<rect x="615" y="259" width="104" height="51" rx="8" fill="#f0c1aa" stroke="#ba6348" stroke-width="2"/>'+tx(666,292,"START",19,"#382d2a");
+ }else if(mode==="color"||mode==="clarity"){
+  const isColor=mode==="color";
+  body=tx(495,128,isColor?"Select Color":"Select Clarity",14,"#304c5a",true,"start");
+  const labels=isColor?["Yellow","Orange","Red","Green","Blue","Brown","Other"]:["Clear","Cloudy","Slightly Cloudy","Turbid","Other"];
+  body+=labels.map((label,i)=>{
+   const col=i%2,row=Math.floor(i/2),x=497+col*111,y=138+row*34;
+   return '<rect x="'+x+'" y="'+y+'" width="106" height="31" rx="3" fill="#fff" stroke="#b0c6d0" stroke-width="1.5"/>'+
+     '<circle cx="'+(x+14)+'" cy="'+(y+16)+'" r="8" stroke="#8ca6b1" stroke-width="1.6" fill="#fff"/>'+
+     (label==="Slightly Cloudy"?tx(x+61,y+13,"Slightly",10,"#355260")+tx(x+61,y+25,"Cloudy",10,"#355260"):tx(x+58,y+21,label,12,"#355260"));
+  }).join("");
+  body+='<rect x="497" y="284" width="99" height="29" rx="5" fill="#edf2f3" stroke="#b8cbd3"/>'+tx(547,303,"Back  ◀",12,"#426777")+
+   '<rect x="607" y="284" width="107" height="29" rx="5" fill="#e3f1ed" stroke="#83b6ae" stroke-width="2"/>'+tx(660,303,"Next  ▶",12,"#216b65");
  }else if(mode==="appearance"){
   body=tx(605,139,"Select Color and Clarity",15,"#2c4955")+
        tx(605,159,"of urine sample",14,"#2c4955",false)+
@@ -145,8 +157,9 @@ function scene(kind,mode){
  if(mode==="table"){art=machine("table",isHcg?"hcg":"ua")+tableCloseup(isHcg?"hcg":"ua");}
  
  if(mode==="dispense")art=machine("dispense","hcg")+tableCloseup("hcg",true);
- if(mode==="select"||mode==="qc"||mode==="results"||mode==="appearance")art=machine(mode,isHcg?"hcg":"ua")+screenCloseup(mode,kind);
- if(mode==="analyzing")art=machine("reading",kind)+screenCloseup("analyzing",kind);
+ if(mode==="select"||mode==="qc"||mode==="results"||mode==="appearance"||mode==="color"||mode==="clarity")art=machine(mode,isHcg?"hcg":"ua")+screenCloseup(mode,kind);
+ if(mode==="running")art='<g transform="translate(-7 -8) scale(1.05)">'+machine("analyzing",kind)+'</g>'+screenCloseup("analyzing",kind);
+ if(mode==="analyzing")art=machine("analyzing",kind)+screenCloseup("analyzing",kind);
  if(mode==="start")art=machine("start",kind)+screenCloseup("start",kind);
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
 }
@@ -192,6 +205,12 @@ function render(title,group){
  if(/place.*test table|place.*strip|place cassette/.test(t))
   return fig("Place "+(kind==="hcg"?"cassette":"strip")+" on analyzer test table",scene(kind,"table"),
     "Use the reversible test-table insert with the correct face upward: strip-side for urinalysis (pads up), flipped cassette-side for CLINITEST hCG. Keep the urine cup off the table.");
+ if(kind==="ua"&&!qc&&/select urine color/i.test(t))return fig("Select Appearance · urine color",scene("ua","color"),
+   "If the specimen is Yellow and Clear, choose that shortcut on the first screen. Otherwise choose Other, select the observed urine color, and tap Next. The example screen shows available color options.");
+ if(kind==="ua"&&!qc&&/select urine clarity/i.test(t))return fig("Select Appearance · urine clarity",scene("ua","clarity"),
+   "If Other was selected, choose Clear, Cloudy, Slightly Cloudy, Turbid, or Other, then tap Next. This separate screen is skipped when Yellow and Clear is selected at the first prompt.");
+ if(kind==="ua"&&!qc&&/wait for analyzer to finish/i.test(t))return fig("CLINITEK Status+ · running the test",scene("ua","running"),
+   "The test table is automatically drawn inside and must remain closed during measurement. If analysis is still in progress, the Analyzing screen appears; otherwise Results appears immediately. Do not move the table.");
  if(/start|begin test|analyze/.test(t))return fig("Start the selected test",scene(kind,"start"),"Confirm test selection and start analysis.");
  if(/analyz|countdown|in progress|processing/.test(t))return fig("Analyzer processing screen",scene(kind,"analyzing"),"The analyzer pulls the table inward automatically. Do not push, pull, bump, or reposition the table during calibration and analysis.");
  if(kind==="ua"&&!qc&&/select.*(color|clarity)|urine.*(color|clarity)|select appearance/.test(t))
@@ -202,15 +221,36 @@ function render(title,group){
  if(qc)return fig("CLINITEK QC step",scene(kind,"select"),"Follow the correct QC workflow, materials, and prompts in the approved site SOP.");
  return fig("CLINITEK urine workflow",scene(kind,"specimen"),"Urine specimens only. Use the correct Siemens strip or CLINITEST cassette.");
 }
-// Keep the UA procedure sequence aligned with the manufacturer's Full Test flow.
+// Only the Full/Custom UA strip workflow requests color and clarity.
 const clinitekSection=window.LAB_GUIDE_DATA?.sections?.find(sec=>sec.id==="clinitek");
 const uaGroup=clinitekSection?.groups?.find(group=>group.id==="ua-strip");
-if(uaGroup?.blocks?.length && !uaGroup.blocks.some(block=>/select urine color and clarity/i.test(block.text||""))){
- const resultIndex=uaGroup.blocks.findIndex(block=>block.level===1&&/review and document results/i.test(block.text||""));
- if(resultIndex>=0)uaGroup.blocks.splice(resultIndex,0,
-  {type:"list",level:1,text:"Select urine color and clarity"},
-  {type:"list",level:2,text:"During the Full or Custom urinalysis strip test, visually observe the urine when Select Appearance displays. Choose Yellow and Clear only if both accurately describe the specimen. Otherwise select Other, choose the appropriate color and then clarity, and tap Next. The analyzer continues to Analyzing or Results."}
- );
+if(uaGroup?.blocks?.length){
+ const blocks=uaGroup.blocks;
+ let color=blocks.findIndex(b=>b.level===1&&/select urine color/i.test(b.text||""));
+ const results=blocks.findIndex(b=>b.level===1&&/review and document results/i.test(b.text||""));
+ if(color<0&&results>=0){
+  blocks.splice(results,0,{type:"list",level:1,text:"Select urine color"});
+  color=results;
+ }
+ if(color>=0){
+  blocks[color].text="Select urine color";
+  const note="During a Full or Custom UA strip test, select Yellow and Clear when both apply. Otherwise choose Other, select the observed color, and tap Next.";
+  if(blocks[color+1]?.level===2)blocks[color+1].text=note;
+  else blocks.splice(color+1,0,{type:"list",level:2,text:note});
+ }
+ const clarity=blocks.findIndex(b=>b.level===1&&/select urine clarity/i.test(b.text||""));
+ if(clarity<0&&color>=0){
+  const next=blocks.findIndex((b,i)=>i>color&&b.level===1);
+  blocks.splice(next<0?blocks.length:next,0,
+   {type:"list",level:1,text:"Select urine clarity (if Other)"},
+   {type:"list",level:2,text:"If you chose Other, select the observed clarity: Clear, Cloudy, Slightly Cloudy, Turbid, or Other, then tap Next. Skip this prompt if Yellow and Clear was selected."});
+ }
+ if(!blocks.some(b=>b.level===1&&/wait for analyzer to finish/i.test(b.text||""))){
+  const last=blocks.findIndex(b=>b.level===1&&/review and document results/i.test(b.text||""));
+  if(last>=0)blocks.splice(last,0,
+   {type:"list",level:1,text:"Wait for analyzer to finish"},
+   {type:"list",level:2,text:"The analyzer draws in the test table, calibrates, and measures the strip. Do not move the table. After entering appearance, Analyzing displays only if testing is still in progress."});
+ }
 }
 window.LAB_CLINITEK_FOCUSED={render};
 })();
