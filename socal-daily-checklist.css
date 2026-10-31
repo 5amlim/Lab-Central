@@ -412,3 +412,11 @@
 
 /* Binder labels for logs that are filed only when an event occurs. */
 .dqc-task-badge.is-as-needed{color:#417767;background:#eff7f3;border-color:#d4e5dc}
+
+/* Monthly fire-safety verification is separate from instrument QC. */
+.dqc-monthly-safety{margin-top:27px;padding-top:20px;border-top:1px solid #d8e5e9}
+.dqc-monthly-safety-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:7px}
+.dqc-monthly-safety-heading h3{margin:0;color:#315a68;font-size:15px;line-height:1.4;font-weight:850}
+.dqc-monthly-safety-heading span{font-size:10px;font-weight:800;color:#318176;background:#edf7f4;border:1px solid #d3e8df;border-radius:999px;padding:5px 10px}
+.dqc-monthly-safety>p{color:#6c8796;font-size:11.5px;line-height:1.6;margin:0 0 13px}
+.dqc-monthly-safety .dqc-monthly-grid{max-width:none}
