@@ -291,3 +291,32 @@
 .envi-guide .ev-screen-zoom-foot{font-size:11px;color:#728a9b;margin:0;padding:10px 18px 14px;line-height:1.5}
 @media(max-width:650px){.envi-guide .ev-illustration-title small{margin-left:0}.envi-guide .ev-zoom-trigger{margin-left:auto}.envi-guide .ev-screen-zoom{width:98vw;max-height:95vh}.envi-guide .ev-screen-zoom-header{padding:12px}.envi-guide .ev-screen-zoom-header strong{font-size:15px}.envi-guide .ev-screen-zoom-content{padding:6px}.envi-guide .ev-screen-zoom-content .ev-mini-screen{min-height:330px}.envi-guide .ev-screen-zoom-content .ev-mini-screen-content{min-height:270px}.envi-guide .ev-screen-zoom-content .ev-mini-result-title span{font-size:10px}}
 @media print{.envi-guide .ev-zoom-trigger,.envi-guide .ev-screen-zoom{display:none!important}}
+
+
+/* Envi controls live at the upper-right of each card, never beneath changing illustrations. */
+.envi-guide .ev-card-top{display:grid;grid-template-columns:42px minmax(0,1fr) 252px;gap:12px;align-items:start;min-height:85px}
+.envi-guide .ev-step-number{margin-top:1px}
+.envi-guide .ev-card-heading{padding-top:2px;min-width:0}
+.envi-guide .ev-card-heading h2{max-width:100%;overflow-wrap:break-word}
+.envi-guide .ev-card-controls{display:flex;align-self:stretch;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:10px;min-height:80px;width:252px}
+.envi-guide .ev-required-tag{margin:0;align-self:flex-end;max-width:100%}
+.envi-guide .ev-card-nav{display:grid;grid-template-columns:118px 126px;gap:8px;width:252px;height:37px;flex:none}
+.envi-guide .ev-card-nav button{width:100%;height:37px;min-height:37px;border-radius:9px;padding:7px 8px;white-space:nowrap;font-size:12px;line-height:1.2;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.envi-guide .ev-card-nav .ev-prev{color:#37647e;background:#fff;border:1px solid #cbdbe6}
+.envi-guide .ev-card-nav .ev-next{color:#fff;background:#2277c7;border:1px solid #2277c7}
+.envi-guide .ev-card-nav button:disabled{opacity:.4;cursor:default}
+.envi-guide .ev-card-nav button:focus-visible{outline:3px solid #8dc8ef;outline-offset:2px}
+.envi-guide .ev-card-nav button:not(:disabled):hover{filter:brightness(.96)}
+.envi-guide .ev-step-viewport{overflow-anchor:none}
+@media(max-width:760px){
+ .envi-guide .ev-card-top{grid-template-columns:42px minmax(0,1fr);row-gap:9px;min-height:0}
+ .envi-guide .ev-card-controls{grid-column:1/-1;grid-row:2;display:flex;align-items:stretch;flex-direction:row;justify-content:space-between;gap:8px;min-height:37px;width:100%}
+ .envi-guide .ev-required-tag{align-self:center}
+ .envi-guide .ev-card-nav{flex:none;width:252px}
+}
+@media(max-width:460px){
+ .envi-guide .ev-card-controls{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start}
+ .envi-guide .ev-required-tag{align-self:flex-start}
+ .envi-guide .ev-card-nav{width:100%;grid-template-columns:1fr 1fr}
+}
+@media print{.envi-guide .ev-card-nav{display:none!important}.envi-guide .ev-card-top{display:flex;min-height:0}.envi-guide .ev-card-controls{min-height:0;min-width:auto;width:auto;margin-left:auto}}
