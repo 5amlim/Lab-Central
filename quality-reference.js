@@ -102,6 +102,36 @@ function calverOverview(){
  '<article><span>TRIAGE METERPRO</span><strong>Troponin I / D-dimer</strong><p>Use the correct quantitative assay material and units.</p></article></div>'+
  '<div class="quality-followup"><strong>Before returning to testing</strong><p>Compare each result with predefined acceptability limits, document out-of-limit findings and have the appropriate reviewer approve the verification. The former local guide specified three replicates per level; follow your currently approved procedure.</p></div></section>';
 }
+
+/* Calibration verification is a reference checklist, not a click-through
+   instrument procedure. Keep its separate Overview unchanged. */
+function calverReference(group){
+ const meta={
+  preparation:{eyebrow:"BEFORE TESTING",summary:"Confirm the verification is due, gather the approved materials, and document the starting conditions."},
+  testing:{eyebrow:"VERIFICATION RUN",summary:"Work from low through midpoint and high using the active analyzer-specific procedure and documented limits."},
+  filing:{eyebrow:"RESULT REVIEW",summary:"Retain the measured values, acceptance decisions and documented review in one traceable record."}
+ };
+ const info=meta[group.id];if(!info)return "";
+ const steps=[];
+ for(const b of group.blocks||[]){
+  if(b.type!=="list")continue;
+  if(b.level===1)steps.push({title:b.text,details:[]});
+  else if(b.level===2&&steps.length)steps[steps.length-1].details.push(b.text);
+ }
+ const cards=steps.map((item,i)=>'<article class="quality-ref-card"><div class="quality-ref-card-head"><span class="quality-ref-number">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(item.title)+'</h3></div>'+item.details.map(d=>'<p>'+esc(d)+'</p>').join("")+'</article>').join("");
+ const reporting=group.id==="filing"?
+ '<div class="quality-ref-art-grid" aria-label="Illustrative verification documentation">'+
+ '<figure class="quality-ref-art"><figcaption>Verification points across the reportable range</figcaption>'+levelsVisual()+'<small>Illustrative low, midpoint, and high levels. Assay-specific required concentrations and replicates come from the approved protocol.</small></figure>'+
+ '<figure class="quality-ref-art"><figcaption>Suggested verification record layout</figcaption><div class="quality-ref-sheet"><strong>CALIBRATION VERIFICATION</strong><div class="quality-ref-sheet-meta">Analyzer / panel <span>Lot / date / operator</span></div><div class="quality-ref-sheet-row"><b>Level</b><b>Assigned</b><b>Observed</b><b>Limits</b><b>Pass / fail</b></div>'+["LOW","MID","HIGH"].map(x=>'<div class="quality-ref-sheet-row"><span>'+x+'</span><span>____</span><span>____</span><span>____</span><span>____</span></div>').join("")+'<div class="quality-ref-sheet-sign">Corrective action / reviewer signature / date</div></div><small>Reference only. Use the approved analyzer-specific worksheet and record actual results.</small></figure>'+
+ '</div>':"";
+ return '<section class="quality-ref" aria-label="'+esc(group.title)+' checklist">'+
+  '<header class="quality-ref-head"><span>'+esc(info.eyebrow)+'</span><h2>'+esc(group.title)+'</h2><p>'+esc(info.summary)+'</p></header>'+
+  '<div class="quality-ref-grid">'+cards+'</div>'+
+  reporting+
+  '<div class="quality-ref-footer"><strong>Before completing:</strong> Follow the current approved analyzer-specific protocol, manufacturer instructions, established acceptance limits and laboratory review requirements.</div>'+
+ '</section>';
+}
+
 function visual(id,title){
  if(id!=="calver")return "";
  const lower=String(title).toLowerCase();
@@ -109,5 +139,5 @@ function visual(id,title){
  if(/print|file in calibration/.test(lower))return '<section class="quality-step-visual quality-report"><div class="quality-step-visual-head">VERIFICATION REPORT</div><div class="quality-report-sheet"><strong>CALIBRATION VERIFICATION</strong><div>Analyzer · Lot · Date · Operator</div><div>Low &nbsp; ✓ &nbsp; Midpoint &nbsp; ✓ &nbsp; High &nbsp; ✓</div><div>Assigned value · Observed value · Limits</div><span>Reviewer approval → Calibration Verification Binder</span></div></section>';
  return "";
 }
-window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,visual};
+window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,visual};
 })();
