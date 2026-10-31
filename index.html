@@ -360,7 +360,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
 <script src="pathfast-interactive.js?v=20261030-early-ten-minute-window-v1"></script>
 <script src="pathfast-clinical.js?v=20261031-compact-and-full-print-v1"></script>
-<script src="equipment-art.js?v=20261031-piccolo-blue-sysmex-fit-v7"></script>
+<script src="equipment-art.js?v=20261031-piccolo-running-overview-v8"></script>
 <script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261031-poch-scroll-cue-v1"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
@@ -837,7 +837,7 @@ function homepageEquipmentArt(sec,featured=false){
  if(!sec||!window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id))return '';
  // Piccolo uses its tall full-height guide drawing, never a short landscape crop.
  const markup=sec.id==='piccolo'&&window.LAB_EQUIPMENT_ART.piccoloDeviceSvg
-  ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("drawer")
+  ?window.LAB_EQUIPMENT_ART.piccoloDeviceSvg("running-plain")
   :sec.id==='febridx'&&window.LAB_EQUIPMENT_ART.febridxDeviceSvg
   ?window.LAB_EQUIPMENT_ART.febridxDeviceSvg("ready")
   :window.LAB_EQUIPMENT_ART.render(sec);
