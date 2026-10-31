@@ -91,6 +91,14 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-parameter-table"><div class="qc-device-param-heading"><b>PARAMETER</b><b>TARGET</b><b>LIMIT</b></div>'+
    rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-device-barcode" aria-label="Scan target barcode"></span><span class="qc-device-barcode" aria-label="Scan limit barcode"></span></div>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Use the matching lot assay sheet</span><span>NEXT → MORE ANALYTES</span></div>';
+ }else if(item.kind==="manualLevel"){
+  // Piccolo QC uses a typed numeric control level, not a menu of level choices.
+  body='<div class="qc-device-screen-label">CONTROL · ENTER LEVEL</div>'+
+   '<div class="qc-piccolo-level-entry"><span class="qc-piccolo-entry-caption">Control level</span>'+
+   '<div class="qc-piccolo-entry-field"><strong>1</strong><span>MANUAL ENTRY</span></div>'+
+   '<p class="qc-piccolo-entry-help"><b>1</b> = Low control <span>·</span> <b>2</b> = High control</p>'+
+   '<div class="qc-piccolo-entry-confirm">Enter <b>CONFIRM</b></div></div>'+
+   '<div class="qc-device-screen-bottom"><span>Type 1 or 2</span><span>Then press Enter</span></div>';
  }else if(item.kind==="qcSave"){
   body='<div class="qc-device-screen-label">SET QC · CHECK ALL PARAMETERS</div>'+
    '<div class="qc-device-save-summary"><strong>Review all target and limit entries</strong><p>Use the arrows to review the remaining parameter pages. Do not enter sample values as QC targets.</p>'+
@@ -163,7 +171,7 @@ function qcClickStep(sec,groupId,title){
  if(sec.id==="piccolo"&&/click analyze/.test(t))scenes=[
   {heading:"Open analysis",screen:"HOME",items:["Analyze","Recall","Settings"],focus:"Analyze",tip:"Select Analyze, then close the drawer when prompted."},
   {heading:"Choose control mode",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control rather than Patient."},
-  {heading:"Identify the level",screen:"CONTROL",items:["Level 1 · Low","Level 2 · High","Enter"],focus:"Enter",tip:"Enter the required control level and confirm before starting."}];
+  {kind:"manualLevel",heading:"Manually enter the level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter to confirm. The level is typed, not selected from a list."}];
  else if(sec.id==="triage"&&/select run test|click run test/.test(t))scenes=[
   {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
   {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
