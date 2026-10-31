@@ -84,6 +84,42 @@ function flipInsertCloseup(){
   tx(616,343,"Then place the hCG cassette",10,"#4d7a80",false);
 }
 
+
+/* Screen enlargements follow Siemens' documented menu labels and layout.
+   They are redrawings rather than manufacturer screenshots. */
+function screenCloseup(mode,kind){
+ const h=kind==="hcg", cassetteLabel=h?"Cassette Test":"Strip Test";
+ const bg='<rect x="468" y="44" width="275" height="328" rx="18" fill="#eaf2f4" stroke="#bfd3dc" stroke-width="3"/>'+
+ '<rect x="483" y="64" width="245" height="255" rx="7" fill="#f9fbfb" stroke="#809ca8" stroke-width="3"/>';
+ const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,"Ready",11,"#e3ecf0",false,"start");
+ let body="";
+ if(mode==="select"||mode==="qc"){
+   const entries=mode==="qc"?["QC Strip Test","QC Cassette Test"]:["Instrument Set Up","Recall Results","Cassette Test","Strip Test"];
+   body=entries.map((a,i)=>{
+     const col=i%2,row=Math.floor(i/2),x=493+col*116,y=118+row*89;
+     const active=mode==="qc"?(h?i===1:i===0):(h?i===2:i===3);
+     return '<rect x="'+x+'" y="'+y+'" width="108" height="77" rx="5" fill="'+(active?"#e5eee9":"#fff")+'" stroke="'+(active?"#278d83":"#abb9c0")+'" stroke-width="'+(active?3:1.6)+'"/>'+tx(x+54,y+32,a.split(" ")[0],11,"#2c3d43")+tx(x+54,y+48,a.split(" ").slice(1).join(" "),11,"#2c3d43");
+   }).join("");
+ }else if(mode==="start"){
+  body=tx(499,133,h?"Clinitest hCG":"Urinalysis strip",16,"#222",true,"start")+
+       tx(499,165,h?"Adjust test table insert":"Dip and blot strip",13,"#283b42",false,"start")+
+       tx(499,186,h?"for cassette tests":"then place on test table",13,"#283b42",false,"start")+
+       tx(499,216,h?"Place cassette on table":"Test pads facing up",13,"#283b42",false,"start")+
+       '<rect x="615" y="259" width="104" height="51" rx="8" fill="#f0c1aa" stroke="#ba6348" stroke-width="2"/>'+tx(666,292,"START",19,"#382d2a");
+ }else if(mode==="analyzing"){
+  body=tx(605,150,"Analyzing",20,"#263940")+
+      '<rect x="504" y="188" width="200" height="20" rx="10" fill="#e5eaed" stroke="#a4b8c2"/>'+
+      '<rect x="505" y="189" width="113" height="18" rx="9" fill="#63a6a1"/>'+
+      tx(605,243,"Do not move test table",13,"#4c6770",false);
+ }else if(mode==="results"){
+  body=tx(605,137,h?"Clinitest hCG":"Urinalysis",18,"#263940")+
+       tx(605,178,h?"Result: see analyzer":"Result: see analyzer",13,"#365462")+
+       tx(605,201,"Verify ID and printout",12,"#365462",false)+
+       '<rect x="557" y="258" width="102" height="48" rx="7" fill="#e8eff0" stroke="#a2b9c2"/>'+tx(608,289,"Done",17,"#2f4c57");
+ }
+ return bg+top+body+tx(605,350,"SCREEN DETAIL · REDRAWN",11,"#527482");
+}
+
 function scene(kind,mode){
  const isHcg=kind==="hcg",testName=isHcg?"CLINITEST hCG CASSETTE":"URINALYSIS DIPSTICK";
  let art=machine(mode,isHcg?"hcg":"ua");
@@ -97,9 +133,11 @@ function scene(kind,mode){
   '<path d="M612 105C645 123 648 161 621 175" fill="none" stroke="#27958b" stroke-width="5"/>';}
  if(mode==="flip"){art=machine("home","hcg")+flipInsertCloseup();}
  if(mode==="table"){art=machine("table",isHcg?"hcg":"ua")+tableCloseup(isHcg?"hcg":"ua");}
- if(mode==="start")art+=isHcg?tableCloseup("hcg"):tx(600,220,"PRESS START FIRST",17,"#237e80");
+ 
  if(mode==="dispense")art=machine("dispense","hcg")+tableCloseup("hcg",true);
- if(mode==="results")art+=tx(587,197,isHcg?"CLINITEST hCG":"URINALYSIS",17,"#2a718a")+tx(587,225,"RESULTS",20,"#2a718a");
+ if(mode==="select"||mode==="qc"||mode==="results")art=machine(mode,isHcg?"hcg":"ua")+screenCloseup(mode,kind);
+ if(mode==="analyzing")art=machine("reading",kind)+screenCloseup("analyzing",kind);
+ if(mode==="start")art=machine("start",kind)+screenCloseup("start",kind);
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
 }
 
@@ -132,8 +170,8 @@ function render(title,group){
   return fig("Open QC test mode",scene(kind,"qc"),"Choose the correct QC menu and confirm control ID and lot.");
  if(kind==='hcg'&&/dispense urine|dispense qc material|apply.*sample/.test(t))
   return fig(qc?"Dispense approved hCG QC":"Dispense urine into hCG cassette",scene(kind,"dispense"),
-   "Apply the assay-specified volume with the supplied transfer pipette into the cassette sample well.");
- if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"Confirm the hCG cassette is seated in the flipped insert, select START, then use the kit pipette and approved volume.");
+   "After selecting START, transfer urine or QC with the supplied pipette to the marked line (approximately 0.2 mL), and dispense the full volume into the cassette sample well within 8 seconds. Do not push the table inward.");
+ if(kind==='hcg'&&/press start|place cassette and select start/.test(t))return fig("Select START before applying specimen",scene(kind,"start"),"With the cassette in the correct insert, select START first. The analyzer gives 8 seconds to fill the supplied pipette to its marked line (approximately 0.2 mL) and dispense into the sample well.");
  if(qc&&/run each control/.test(t))
   return kind==="ua"?quantimetrixQCFigure("Run each Quantimetrix Dipper control with the UA strip method","qc-dip",
    "Run Level 1 and Level 2 separately using approved QC mode and reagent-strip technique. Verify acceptable results before patient testing."):fig("Run controls using the urinalysis strip method",scene(kind,"qc-dip"),
@@ -145,6 +183,7 @@ function render(title,group){
   return fig("Place "+(kind==="hcg"?"cassette":"strip")+" on analyzer test table",scene(kind,"table"),
     "Use the reversible test-table insert with the correct face upward: strip-side for urinalysis (pads up), flipped cassette-side for CLINITEST hCG. Keep the urine cup off the table.");
  if(/start|begin test|analyze/.test(t))return fig("Start the selected test",scene(kind,"start"),"Confirm test selection and start analysis.");
+ if(/analyz|countdown|in progress|processing/.test(t))return fig("Analyzer processing screen",scene(kind,"analyzing"),"The analyzer pulls the table inward automatically. Do not push, pull, bump, or reposition the table during calibration and analysis.");
  if(/review|document|print|result/.test(t))
   return fig("Review and document results",scene(kind,"results"),"Verify the patient ID, QC status, and analyzer result before documenting.");
  if(qc)return fig("CLINITEK QC step",scene(kind,"select"),"Follow the correct QC workflow, materials, and prompts in the approved site SOP.");
