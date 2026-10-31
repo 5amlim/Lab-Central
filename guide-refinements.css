@@ -857,22 +857,110 @@
   flex-basis:min(290px,82vw);min-width:min(290px,82vw);max-width:min(290px,82vw);
  }
 }
-/* The same collection note appears with the same specimen card in testing. */
-.device-collection-guide .device-collection-test-window{
- display:flex;align-items:flex-start;gap:12px;
- margin:16px 0 0;padding:13px 15px;border:1px solid #cde3df;
- border-radius:11px;background:#f3faf8;color:#385f68;
- font-size:13px;line-height:1.55;
+/* Shared collection card: visual and materials left; subtle specimen-stability
+   reference right. The same component is used on Overview and Patient testing. */
+.device-collection-guide .device-collection-frame{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(230px,33%);
+ align-items:stretch;
+ border:1px solid #dce9ef;
+ border-radius:13px;
+ background:#f8fbfc;
+ overflow:hidden;
+ min-width:0;
 }
-.device-collection-test-window strong{
- flex:none;color:#176e69;font-size:11px;line-height:1.6;
- font-weight:850;text-transform:uppercase;letter-spacing:.07em;
+.device-collection-guide .device-collection-main{
+ min-width:0;
+ padding:10px 17px;
 }
-.device-collection-test-window span{min-width:0}
+.device-collection-guide .device-collection-frame .device-collection-list{
+ display:flex;
+ flex-direction:column;
+ gap:0;
+ min-width:0;
+}
+.device-collection-guide .device-collection-frame .device-collection-list .device-collection-item{
+ box-sizing:border-box;
+ display:grid;
+ grid-template-columns:136px minmax(0,1fr);
+ align-items:center;
+ gap:17px;
+ width:100%;
+ min-height:155px;
+ padding:9px 0;
+ border:0;
+ border-radius:0;
+ background:transparent;
+ min-width:0;
+}
+.device-collection-guide .device-collection-frame .device-collection-list .device-collection-item+.device-collection-item{
+ border-top:1px solid #e1eaf0;
+}
+.device-collection-guide .device-collection-frame .device-collection-copy{min-width:0}
+.device-collection-guide .device-collection-frame .device-collection-stability{
+ box-sizing:border-box;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:flex-start;
+ gap:8px;
+ min-width:0;
+ border-left:1px solid #d4e3e9;
+ padding:21px 22px;
+ background:transparent;
+ color:#587789;
+}
+.device-collection-guide .device-collection-stability strong{
+ display:block;
+ color:#486c7b;
+ font-size:12px;
+ font-weight:800;
+ line-height:1.3;
+ letter-spacing:.015em;
+ text-transform:none;
+}
+.device-collection-guide .device-collection-stability p{
+ color:#668294;
+ font-size:12.5px;
+ line-height:1.65;
+ margin:0;
+ font-weight:450;
+ overflow-wrap:break-word;
+}
+.device-collection-guide .device-collection-main .device-collection-caveat{
+ margin:0 0 11px;
+ color:#6c8594;
+ font-size:11.5px;
+}
+.device-collection-guide .febridx-collection-frame .device-collection-main{
+ padding:12px;
+}
+@media(max-width:1050px){
+ .device-collection-guide .device-collection-frame{
+  grid-template-columns:minmax(0,1fr);
+ }
+ .device-collection-guide .device-collection-frame .device-collection-stability{
+  border-left:0;
+  border-top:1px solid #d4e3e9;
+  padding:13px 17px 15px;
+  gap:4px;
+ }
+ .device-collection-guide .febridx-collection-frame .device-collection-stability{
+  padding:14px 17px;
+ }
+}
 @media(max-width:650px){
- .device-collection-guide .device-collection-test-window{flex-direction:column;gap:4px;padding:11px 13px}
+ .device-collection-guide .device-collection-main{padding:9px 12px}
+ .device-collection-guide .device-collection-frame .device-collection-list .device-collection-item{
+  grid-template-columns:92px minmax(0,1fr);
+  min-height:118px;
+  gap:13px;
+  padding:10px 0;
+ }
+ .device-collection-guide .device-collection-stability p{font-size:12px}
 }
 @media print{
  .pfux-primary-nav{display:none!important}
- .device-collection-guide .device-collection-test-window{break-inside:avoid}
+ .device-collection-guide .device-collection-frame{break-inside:avoid}
+ .device-collection-guide .device-collection-stability{break-inside:avoid}
 }
