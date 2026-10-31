@@ -176,13 +176,13 @@ function figure(title,mode,note,scene){
 function focused(sec,heading,group){
  if(sec?.id!=="sofia")return originalFocus?originalFocus(sec,heading,group):"";
  const g=String(group||"").toLowerCase(),t=String(heading||"").toLowerCase();
- if(g.includes("ordering-tests"))return figure("Order the intended Sofia 2 assay","menu-test","Select the correct Athena test. Flu, SARS, RSV and Strep may use different kit materials and specimen requirements.");
  if(g.includes("running-tests")){
   if(t.includes("verify order")||t.includes("check the order"))return figure("Verify test selection and kit","menu-test","Confirm the ordered assay, kit expiration, lot status and satisfactory QC before patient testing.","swab");
   if(t.includes("collect"))return figure("Collect an approved swab specimen","entry","Use the swab type and collection site specified by the selected assay; do not substitute a transport swab.","swab");
   if(t.includes("extract"))return figure("Process the swab in the kit extraction tube","entry","Follow the assay package insert for reagent, mixing, contact time and swab expression.","extract");
   if(t.includes("dispense")||t.includes("sample well"))return figure("Add prepared extract to test cassette","entry","Dispense the assay-specified volume using the supplied transfer device. Never pour directly from the extraction tube.","cassette");
-  if(t.includes("run test")||t.includes("patient id"))return figure("Run Test and enter identifiers","entry","Use the actual Sofia 2 Run Test screen: scan or enter User ID, patient MRN and Order Number when applicable.");
+  if(t.includes("select run test")||t.includes("tap run test"))return figure("Select Run Test on the Sofia 2 touchscreen","menu-test","From the instrument menu, select Run Test. This starts the patient-testing workflow; it is not a provider-ordering screen.");
+  if(t.includes("enter user id")||t.includes("patient id")||t.includes("mrn"))return figure("Enter User ID and patient identifiers","entry","On the Sofia 2 patient-testing screen, scan or enter User ID, the patient's MRN and Order Number when applicable. Match the patient chart before continuing.");
   if(t.includes("development mode")||t.includes("walk away"))return figure("Select WALK AWAY or READ NOW","mode","WALK AWAY: insert the newly inoculated cassette immediately. READ NOW: develop on bench for the assay-specific time before insertion.");
   if(t.includes("insert")||t.includes("drawer"))return figure("Insert cassette into lower-right blue drawer","load","Pull open the blue drawer, place the prepared cassette flat as directed, and gently close it. Never open the drawer during analysis.");
   if(t.includes("result")||t.includes("control"))return figure("Review test and procedural-control result","result","The Sofia 2 result screen reports analytes and the internal procedural control. A failed control means the test is invalid.");
