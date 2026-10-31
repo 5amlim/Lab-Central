@@ -158,22 +158,48 @@ function shortLabel(id,name){
  // The full target may already contain its short form, e.g. SARS-CoV-2 or MDMA.
  return short&&name.toLowerCase().includes('('+short.toLowerCase()+')')?'':short;
 }
-function formatTarget(id,name,complexityType){
+/* Disc CLIA complexity is distinct from federal PT analyte status.
+   Regulatory sources: 42 CFR 493.931 and 493.1236. This is not a
+   site-specific API enrollment record. */
+const piccoloRegulatedPT=new Set([
+ 'Albumin','Blood urea nitrogen','Calcium','Chloride',
+ 'Creatine kinase','Creatinine','Glucose','Magnesium','Phosphorus',
+ 'Potassium','Sodium','Total carbon dioxide'
+]);
+const piccoloAccuracy=new Set(['C-reactive protein','Lactate']);
+const ptLabels={
+ pt:{label:'PT REQUIRED',title:'Federally regulated PT analyte on this moderate-complexity disc. Check your enrolled API analyte list.'},
+ accuracy:{label:'ACCURACY 2×/YR',title:'Nonregulated PT analyte on this moderate-complexity disc: verify accuracy at least twice annually under CLIA.'},
+ calculated:{label:'CALCULATED',title:'eGFR is calculated, not a separate federally regulated PT analyte. Include applicable accuracy verification in the quality program.'}
+};
+function piccoloTargetStatus(panel,name,isCalculated){
+ if(isCalculated)return 'calculated';
+ if(panel.complexity!=='moderate')return '';
+ if(piccoloAccuracy.has(name))return 'accuracy';
+ if(piccoloRegulatedPT.has(name))return 'pt';
+ return '';
+}
+function formatTarget(id,name,status=''){
  const abbr=shortLabel(id,name);
  const hasShort=abbr&&abbr.toLowerCase()!==name.toLowerCase();
- const moderate=complexityType==='moderate';
- // Keep the full name legible. Abbreviations stay blue; moderate is an amber
- // compact chip in the same visual system, including when no short code exists.
+ const b=ptLabels[status];
  return '<span class="ac-analyte-name">'+esc(name)+'</span>'+
   (hasShort?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'')+
-  (moderate?' <span class="ac-analyte-short ac-analyte-mod" title="CLIA moderate for this assay or reagent disc" aria-label="Moderate complexity for this assay">MOD</span>':'');
+  (b?' <span class="ac-analyte-short ac-analyte-status ac-status-'+status+'" title="'+esc(b.title)+'" aria-label="'+esc(b.label)+': '+esc(b.title)+'">'+esc(b.label)+'</span>':'');
 }
 function formatPanelTarget(id,panel,name){
- // A calculated value (e.g., eGFR) is not a separately categorized performed
- // assay, even when it is printed on a moderate-complexity reagent disc.
  const isCalculated=Object.entries(panel.groups||{}).some(([group,names])=>
   /calculated/i.test(group)&&Array.isArray(names)&&names.includes(name));
- return formatTarget(id,name,isCalculated?'':panel.complexity);
+ return formatTarget(id,name,id==='piccolo'?piccoloTargetStatus(panel,name,isCalculated):'');
+}
+function piccoloPtLegend(panel){
+ if(panel.complexity!=='moderate')return '';
+ return '<div class="ac-pt-legend"><span class="ac-pt-legend-title">PT / ACCURACY STATUS</span>'+
+  '<div class="ac-pt-legend-items">'+
+  '<span class="ac-analyte-short ac-analyte-status ac-status-pt">PT REQUIRED</span>'+
+  '<span class="ac-analyte-short ac-analyte-status ac-status-accuracy">ACCURACY 2×/YR</span>'+
+  '<span class="ac-analyte-short ac-analyte-status ac-status-calculated">CALCULATED</span>'+
+  '</div><p>Federal classification, not a confirmation of your site’s API enrollment. Calculated eGFR also needs applicable accuracy evaluation.</p></div>';
 }
 
 const references={
@@ -188,14 +214,13 @@ function complexity(type){return type==='moderate'?'<span class="ac-complex ac-m
 function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" aria-label="'+esc(c.title)+' color reference"><div class="ac-disc-hole"></div><span>'+esc(c.short)+'</span></div>';}
 function oneCard(c,idx,withDisc,id){
  const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatPanelTarget(id,c,item)+'</li>').join('')+'</ul></div>').join('');
- const moderateLegend=c.complexity==='moderate'
-  ?'<div class="ac-complex-legend"><span class="ac-analyte-short ac-analyte-mod">MOD</span><span>Moderate complexity for this test/disc, not the analyte on every platform. Calculated values are not individually categorized.</span></div>':'';
+ const ptLegend=id==='piccolo'?piccoloPtLegend(c):'';
 
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
   '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
-  '<div class="ac-card-body">'+moderateLegend+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
+  '<div class="ac-card-body">'+ptLegend+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
  const id=typeof section==='string'?section:section?.id;
@@ -206,7 +231,7 @@ function render(section){
  let notes='';
  if(id==='spotfire')notes='Full and mini testing menus differ. Use the specimen-appropriate respiratory or sore throat menu printed on the installed U.S. pouch IFU.';
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
- if(isDisc)notes='CLIA status is disc-specific, not analyzer-wide. Only the two listed moderate-complexity discs are marked moderate. Always use the approved disc-specific IFU.';
+ if(isDisc)notes='CLIA complexity belongs to the reagent disc, not the analyte universally. PT REQUIRED identifies federally regulated PT analytes on the two moderate discs; ACCURACY 2×/YR marks nonregulated CRP and lactate. Calculated eGFR is not separately regulated for PT; verify its accuracy under the approved quality program. Confirm your site-specific API enrollment and current manufacturer IFU.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
   '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
@@ -215,5 +240,5 @@ function render(section){
 function qcMenu(selected){return '<div class="cl-qc-switch" role="group" aria-label="Select Siemens quality-control procedure"><div class="cl-qc-intro"><span class="ac-eyebrow">MONTHLY QUALITY CONTROL</span><h2>Choose the QC method</h2><p>Use the correct material and test-table orientation for each assay.</p></div><div class="cl-qc-switch-buttons">'+
   '<button type="button" data-clinitek-qc="ua-qc" aria-pressed="'+(selected==='ua-qc')+'" class="'+(selected==='ua-qc'?'is-active':'')+'"><strong>Urinalysis strip QC</strong><small>Quantimetrix controls</small><span class="ac-chevron" aria-hidden="true"></span></button>'+
   '<button type="button" data-clinitek-qc="hcg-qc" aria-pressed="'+(selected==='hcg-qc')+'" class="'+(selected==='hcg-qc'?'is-active':'')+'"><strong>Human chorionic gonadotropin QC</strong><small>CLINITEST cassette controls</small><span class="ac-chevron" aria-hidden="true"></span></button></div></div>';}
-window.LAB_ASSAY_CATALOG={render,qcMenu,tests,shortLabel,formatTarget,formatPanelTarget};
+window.LAB_ASSAY_CATALOG={render,qcMenu,tests,shortLabel,formatTarget,formatPanelTarget,piccoloTargetStatus};
 })();
