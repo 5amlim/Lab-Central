@@ -208,3 +208,8 @@
 @media print{
  .assay-catalog .ac-market-note{print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
+
+/* A single Sysmex CBC assay should occupy the entire assay-menu row. */
+.assay-catalog .ac-grid--sysmex{grid-template-columns:minmax(0,1fr)}
+.assay-catalog .ac-grid--sysmex .ac-card-index{width:52px;min-width:52px;font-size:16px;letter-spacing:.01em}
+@media print{.assay-catalog .ac-grid--sysmex{grid-template-columns:minmax(0,1fr)}}
