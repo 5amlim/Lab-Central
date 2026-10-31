@@ -223,3 +223,23 @@
  .ops-sendout-first-steps .ops-step:last-child:after{left:8px}
 }
 @media print{.ops-sendout-photo-arrow{display:none}}
+
+/* Lab send-outs reference: parallel links to order workflows and sendout logging. */
+.sendout-reference-shortcuts{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+ margin-top:18px;
+}
+.sendout-reference-shortcuts .ops-link-card{
+ margin-top:0;
+ min-width:0;
+ min-height:94px;
+ padding:16px 18px;
+}
+.sendout-reference-shortcuts .ops-link-card>div{min-width:0}
+.sendout-reference-shortcuts .ops-link-card button{flex:0 0 auto}
+@media(max-width:1120px){
+ .sendout-reference-shortcuts{grid-template-columns:1fr}
+ .sendout-reference-shortcuts .ops-link-card{min-height:0}
+}
