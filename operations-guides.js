@@ -58,7 +58,7 @@ var urineSteps=[
 ];
 function patient(type){
 var stool=type==="stool";
-var h=notice('<strong>Patient reference:</strong> Highlight the correct test and container on the handout. The handout recommends same-day specimen return. For questions, call <strong>310-870-0400</strong> and ask for a nurse.','green');
+var h=notice('<strong>Patient reference:</strong> Highlight the correct test and container on the handout. The handout recommends same-day specimen return. For questions, call the clinic and ask for a nurse.','green');
 h+='<h2 class="ops-section-heading">'+(stool?'Stool':'Urine')+' collection steps</h2>'+steps(stool?stoolSteps:urineSteps);
 h+='<h2 class="ops-section-heading">By test and collection device</h2>';
 if(stool){
