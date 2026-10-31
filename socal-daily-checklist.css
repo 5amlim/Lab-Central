@@ -382,9 +382,6 @@
 /* Daily and monthly navigation tiles share the same dimensions and responsive grid. */
 
 /* Lab Templates are accessible within both checklist pages. */
-.dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-switch{
- grid-template-columns:repeat(3,minmax(0,1fr));
-}
 .dqc-templates-workstream{margin-top:0}
 .dqc-template-intro{margin:0 0 16px;padding:11px 14px;background:#f2f8f8;border-left:3px solid #93c8c0;color:#547584;font-size:11.5px;line-height:1.6}
 .dqc-template-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
@@ -397,11 +394,9 @@
 .dqc-template-action:hover{text-decoration:underline}
 .dqc-template-action:focus-visible{outline:2px solid #207f82;outline-offset:3px}
 @media(max-width:1050px){
- .dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-switch{grid-template-columns:repeat(2,minmax(0,1fr))}
  .dqc-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:550px){
- .dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-switch{grid-template-columns:1fr}
  .dqc-template-grid{grid-template-columns:1fr}
 }
 @media print{
