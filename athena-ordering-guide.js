@@ -1,6 +1,23 @@
 /* Athena sendout order workflow with visual UI references, not live order entry. */
 (function(){
 'use strict';
+const labs={
+ quest:{name:'Quest Diagnostics',search:'Quest Lab',note:'Verify the intended Quest receiver and location.'},
+ labcorp:{name:'LabCorp',search:'LabCorp',note:'Verify the intended LabCorp receiver and location.'},
+ cedars:{name:'Cedars',search:'Cedars-Sinai',note:'Verify the intended Cedars-Sinai facility and address.'},
+ htrx:{name:'HealthTrackRx',search:'HealthTrackRx',note:'Verify the intended HealthTrackRx receiver.'},
+ pathmd:{name:'PathMD',search:'PathMD',note:'Verify the intended PathMD receiver.'}
+};
+let selectedLab=null;
+function chosen(){return selectedLab?labs[selectedLab]:null;}
+function selectedName(){return chosen()?chosen().name:'No lab selected';}
+function stepDetail(step,i){
+ if(!chosen())return step.text;
+ if(i===6)return 'Confirm the clinic <strong>location ZIP code</strong> and correct if needed. Search for <strong>'+chosen().search+'</strong> and select the correct facility/address. '+chosen().note;
+ if(i===7)return 'Search by the <strong>exact '+chosen().name+' test code</strong> from the requisition or Lab Calculator. Verify the panel, reflex algorithm, specimen requirements and performing lab.';
+ if(i===8)return 'Confirm the <strong>'+chosen().name+'</strong> order in <strong>Outstanding Orders</strong>. If <strong>unsigned</strong>, follow the provider-signature process.';
+ return step.text;
+}
 function shell(title,body,kind){
  return '<div class="ao-art-app '+kind+'"><div class="ao-art-top"><strong>athenaOne</strong><span>Calendar　 Patients　 Claims</span><b>⚙</b></div><div class="ao-art-subhead"><strong>'+title+'</strong><small>ILLUSTRATED VIEW</small></div>'+body+'</div>';
 }
@@ -22,11 +39,11 @@ function scene(n){
  case 6:return shell('Diagnoses & Orders',
   '<div class="ao-art-edit-link">Displaying labs from currently selected facility　<strong>Edit preferences ↗</strong></div><div class="ao-art-prefs"><div><b>Lab orders</b><span>Imaging orders</span><span>Procedure orders</span></div><div><small>LAB ORDERS</small><strong>Set a preferred lab orders provider　›</strong><p>Change receiving laboratory</p></div></div>'+cue('OPEN LAB PREFERENCES'),'ao-art-settings');
  case 7:return shell('Add a receiver',
-  '<div class="ao-art-zip"><span>Search within selected location</span><strong>Clinic ZIP　✎</strong></div>'+bar('Search receiving lab')+'<div class="ao-art-receivers"><b>Receiver</b><b>Location</b><div>'+check()+'<strong>Correct lab and facility</strong><small>Verify address / distance</small></div><div class="ao-art-alt">Another matching location</div></div>'+cue('CONFIRM ZIP AND FACILITY'),'ao-art-receiver');
+  '<div class="ao-art-zip"><span>Search within selected location</span><strong>Clinic ZIP　✎</strong></div>'+bar(chosen()?chosen().search:'Search receiving lab')+'<div class="ao-art-receivers"><b>Receiver</b><b>Location</b><div>'+check()+'<strong>'+(chosen()?chosen().name:'Correct lab and facility')+'</strong><small>Verify address / distance</small></div><div class="ao-art-alt">Another matching location</div></div>'+cue('CONFIRM ZIP AND FACILITY'),'ao-art-receiver');
  case 8:return shell('Diagnoses & Orders',
-  bar('Enter exact lab test code')+'<div class="ao-art-lab-chosen">Displaying labs from <strong>selected laboratory</strong></div><div class="ao-art-test-details"><div><strong>Matching test code</strong><p class="ao-art-selected">'+check()+'Correct test</p></div><div><strong>Verify details</strong><span>Panel / reflex algorithm</span><span>Specimen requirements</span><span>Performing laboratory</span></div></div>'+cue('CHECK CODE & TEST DETAILS'),'ao-art-test-code');
+  bar('Enter exact lab test code')+'<div class="ao-art-lab-chosen">Displaying labs from <strong>'+(chosen()?chosen().name:'selected laboratory')+'</strong></div><div class="ao-art-test-details"><div><strong>Matching test code</strong><p class="ao-art-selected">'+check()+'Correct test</p></div><div><strong>Verify details</strong><span>Panel / reflex algorithm</span><span>Specimen requirements</span><span>Performing laboratory</span></div></div>'+cue('CHECK CODE & TEST DETAILS'),'ao-art-test-code');
  default:return shell('Patient chart',
-  '<div class="ao-art-final"><div><b>Orders</b><p>Diagnosis linked</p><small>Ordering provider selected</small></div><div><b>Outstanding Orders</b><div class="ao-art-final-row">'+check()+'<span><strong>External laboratory test</strong><small>Receiving lab confirmed</small></span><em>Unsigned</em></div></div></div>'+cue('VERIFY ORDER STATUS'),'ao-art-final-view');
+  '<div class="ao-art-final"><div><b>Orders</b><p>Diagnosis linked</p><small>Ordering provider selected</small></div><div><b>Outstanding Orders</b><div class="ao-art-final-row">'+check()+'<span><strong>'+(chosen()?chosen().name+' order':'External laboratory test')+'</strong><small>Receiving lab confirmed</small></span><em>Unsigned</em></div></div></div>'+cue('VERIFY ORDER STATUS'),'ao-art-final-view');
  }
 }
 const steps=[
@@ -43,11 +60,24 @@ const steps=[
 function render(){
  return '<section id="athena-external-ordering" class="ao-guide" aria-labelledby="ao-guide-heading">'+
  '<header class="ao-guide-intro"><div><span class="ao-guide-eyebrow">ATHENA / SENDOUT LAB WORKFLOW</span><h2 id="ao-guide-heading">Order an external laboratory test</h2><p>Follow the screens from the patient chart through order verification.</p></div><span class="ao-guide-role">Ordering staff / provider</span></header>'+
- '<div class="ao-guide-labs" aria-label="Receiving laboratories"><span class="ao-guide-labs-label">RECEIVING LAB</span><span>Quest Diagnostics</span><span>LabCorp</span><span>Cedars</span><span>HealthTrackRx</span><span>PathMD</span></div>'+
+ '<div class="ao-guide-labs" role="group" aria-label="Choose receiving laboratory"><span class="ao-guide-labs-label">RECEIVING LAB</span>'+Object.keys(labs).map(function(id){return '<button type="button" class="ao-lab-chip'+(selectedLab===id?' is-selected':'')+'" data-ao-lab="'+id+'" aria-pressed="'+(selectedLab===id)+'">'+labs[id].name+'</button>';}).join('')+'</div>'+
+ '<div class="ao-guide-selection" role="status"><span class="ao-guide-selection-icon">'+(chosen()?'✓':'i')+'</span><div><strong>'+(chosen()?'Selected lab: '+chosen().name:'Choose a receiving lab above')+'</strong><p>'+(chosen()?'In Athena, search receivers for <b>'+chosen().search+'</b>. '+chosen().note+' Use the exact lab test code.':'Selecting a lab customizes the illustrated ordering steps and printouts. It does not place an order in Athena.')+'</p></div></div>'+
  '<div class="ao-guide-progress" aria-label="Sendout workflow overview"><span>Chart &amp; provider</span><b>›</b><span>Diagnosis</span><b>›</b><span>Receiving lab</span><b>›</b><span>Test code</span><b>›</b><span>Confirm</span></div>'+
- '<div class="ao-guide-grid">'+steps.map(function(s,i){return '<article class="ao-guide-card"><div class="ao-guide-card-header"><span class="ao-guide-index">'+String(i+1).padStart(2,'0')+'</span><div class="ao-guide-card-heading"><span class="ao-guide-step-type">'+s.label+'</span><h3>'+s.title+'</h3></div><span class="ao-guide-next" aria-hidden="true">'+(i===steps.length-1?'✓':'→')+'</span></div><div class="ao-guide-sketch" aria-hidden="true">'+scene(i+1)+'</div><p class="ao-guide-detail">'+s.text+'</p></article>';}).join('')+'</div>'+
+ '<div class="ao-guide-grid">'+steps.map(function(s,i){return '<article class="ao-guide-card"><div class="ao-guide-card-header"><span class="ao-guide-index">'+String(i+1).padStart(2,'0')+'</span><div class="ao-guide-card-heading"><span class="ao-guide-step-type">'+s.label+'</span><h3>'+s.title+'</h3></div><span class="ao-guide-next" aria-hidden="true">'+(i===steps.length-1?'✓':'→')+'</span></div><div class="ao-guide-sketch" aria-hidden="true">'+scene(i+1)+'</div><p class="ao-guide-detail">'+stepDetail(s,i)+'</p></article>';}).join('')+'</div>'+
  '<div class="ao-guide-tips"><div class="ao-guide-tip ao-guide-tip-teal"><span class="ao-guide-tip-icon" aria-hidden="true">✓</span><div><strong>Use the exact lab test code</strong><p>Searching only by name can select the wrong test, panel, profile, reflex testing, specimen requirements or performing laboratory. Check the order details.</p></div></div><div class="ao-guide-tip ao-guide-tip-amber"><span class="ao-guide-tip-icon" aria-hidden="true">!</span><div><strong>Outstanding does not mean signed</strong><p>Verify the receiving lab and test. An unsigned order still needs to follow the authorized provider-signing workflow.</p></div></div></div>'+
  '<p class="ao-guide-footnote">Illustrations are training references, not live Athena screens. Menus, available labs and facility locations can vary by clinic or account. Follow current Sollis ordering requirements.</p></section>';
 }
+function onGuideClick(e){
+ const chip=e.target.closest('[data-ao-lab]');
+ if(!chip||!e.target.closest('#athena-external-ordering'))return;
+ const id=chip.getAttribute('data-ao-lab');
+ if(!Object.prototype.hasOwnProperty.call(labs,id))return;
+ selectedLab=selectedLab===id?null:id;
+ const root=document.getElementById('athena-external-ordering');
+ if(root)root.outerHTML=render();
+ const next=document.querySelector('#athena-external-ordering [data-ao-lab="'+id+'"]');
+ if(next)next.focus({preventScroll:true});
+}
+if(typeof document!=='undefined'&&document.addEventListener)document.addEventListener('click',onGuideClick);
 window.LAB_ATHENA_ORDER_GUIDE={render:render};
 })();
