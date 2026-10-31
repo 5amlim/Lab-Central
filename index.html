@@ -2007,6 +2007,31 @@ function sendoutLogisticsOverview(){
   '</div>'+
  '</section>';
 }
+/* Other POC tests are kit-specific references, not an instrument walkthrough. */
+function renderPocStaticReference(group){
+ const id=String(group.id||'');
+ const patient=/^running-tests(?:-|$)/.test(id)||/^Running tests/i.test(group.title||'');
+ const qc=/^qc(?:-|$)/.test(id)||/^QC\b/i.test(group.title||'');
+ const title=patient?'Patient testing reference':qc?'External QC reference':'Reference notes';
+ const description=patient
+  ?'Use the ordered assay and current kit-specific instructions. Collection, test timing and interpretation vary by test.'
+  :qc
+  ?'Verify the kit-specific QC requirements, approved site SOP, and documentation before patient testing.'
+  :'These are general notes, not a shared step-by-step testing procedure.';
+ const nodes=makeTree(group.blocks||[]);
+ const steps=nodes.filter(node=>node.kind==='step');
+ const notes=nodes.filter(node=>node.kind==='note');
+ const children=items=>items&&items.length?'<ul class="poc-reference-sublist">'+items.map(item=>'<li>'+safeHtml(item.text)+(item.children&&item.children.length?children(item.children):'')+'</li>').join('')+'</ul>':'';
+ let h='<section class="poc-reference-panel" aria-label="'+safeHtml(title)+'"><header class="poc-reference-heading"><span class="poc-reference-eyebrow">OTHER POC TESTS / KIT-SPECIFIC REFERENCE</span><h2>'+safeHtml(title)+'</h2><p>'+safeHtml(description)+'</p></header>';
+ if(steps.length){
+  h+='<ol class="poc-reference-list">'+steps.map((node,i)=>'<li class="poc-reference-item"><span class="poc-reference-index">'+String(i+1).padStart(2,'0')+'</span><div><strong>'+safeHtml(node.text)+'</strong>'+children(node.children)+'</div></li>').join('')+'</ol>';
+ }
+ if(notes.length){
+  h+='<div class="poc-reference-notes"><strong>Additional notes</strong>'+notes.map(n=>'<p>'+safeHtml(n.text)+'</p>').join('')+'</div>';
+ }
+ h+='<p class="poc-reference-reminder">Confirm the specific assay, specimen, controls and read window in the current manufacturer IFU and approved site SOP.</p></section>';
+ return h;
+}
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
@@ -2099,7 +2124,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='febridx'&&tab==='reference-notes')h+=renderFebridxReferences();
  else{
   const group=groups.find(g=>g.id===tab);
-  if(group)h+=renderGuidedProcedure(group,sec);
+  if(group)h+=sec.id==='poc'?renderPocStaticReference(group):renderGuidedProcedure(group,sec);
  }
  if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
