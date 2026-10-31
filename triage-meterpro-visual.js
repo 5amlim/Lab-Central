@@ -321,6 +321,82 @@ function renderStep(title,group){
     "Do not pull the device out manually. Eject only through the meter's documented controls."),
     "The Print key is highlighted; the meter has a separate Exit key for ejection.","result");
  }
+ // Distinguish daily reusable QC, liquid QC Sample, and new-lot CODE CHIP
+ // screens. They do not share the patient-testing menu selection.
+ if(daily){
+  if(/power on.*qc device is due/.test(t))
+   return show(title,actionPanel("Check daily readiness",
+     ["Power on the meter. Electronic QC is required each day patient testing is performed.",
+      "Do not begin patient testing if the QC Device has not passed within the required interval."]),
+     "Daily electronic QC uses the reusable QC Device, not a specimen-filled assay cassette.","main");
+  if(/select run test from the main menu/.test(t))
+   return show(title,actionPanel("Enter the test menu",
+     ["Highlight RUN TEST using the up / down arrows.","Press Enter to continue."]),
+     "Main Menu displayed with RUN TEST selected.","main");
+  if(/enter or scan user id/.test(t))
+   return show(title,actionPanel("Verify operator ID",
+     ["Type or scan the User ID if prompted.","Press Enter after checking the ID."]),
+     "Operator ID entry is skipped if user-ID bypass is configured.","userid");
+  if(/select qc device/.test(t))
+   return show(title,actionPanel("Choose QC DEVICE",
+     ["Highlight QC DEVICE using the arrow keys.","Press Enter, then follow the meter's QC Device prompts."],
+     "QC SAMPLE is for liquid controls, not for the reusable QC Device."),
+     "QC DEVICE menu selection is highlighted.","qcmenu");
+  if(/insert the reusable qc device/.test(t))
+   return show(title,qcElectronicSvg(),
+     "Insert the clean, dry reusable electronic QC Device until it catches. No specimen is added. Do not force or pull the device.","insert-qc");
+  if(/press enter to run the electronic qc/.test(t))
+   return show(title,actionPanel("Run the electronic QC",
+     ["Press Enter to start after insertion.","Keep the device in place until the meter finishes reading."],
+     "A reused QC Device is dry and requires no pipette."),
+     "Electronic QC in progress; display is a schematic, not a numeric report.","reading");
+  if(/verify qc device pass/.test(t))
+   return show(title,actionPanel("Check the daily QC result",
+     ["Confirm QC DEVICE PASS on the meter.","Use the physical Print key for the daily QC report if required.","Record the result; troubleshoot or escalate any failed QC."],
+     "Do not proceed to patient testing until the required QC passes."),
+     "QC result schematic. Never treat a synthetic PASS label as a real result.","qcresult");
+  if(/eject and return the reusable/.test(t))
+   return show(title,qcElectronicSvg(),
+     "Return to Main Menu, press Exit to eject, and store the dry QC Device in its opaque case.","main");
+ }
+ if(qc){
+  if(/select run test and enter user id|select run test, enter user id/.test(t))
+   return show(title,actionPanel("Open QC testing",
+     ["Choose RUN TEST from the Main Menu with the arrow keys and Enter.","Enter your User ID if prompted."],
+     "The next menu choice for liquid controls is QC SAMPLE, not QC DEVICE."),
+     "Main Menu, followed by optional User ID entry.","main");
+  if(/select qc sample and enter|select run test, enter user id, then select qc sample/.test(t))
+   return show(title,actionPanel("Choose QC SAMPLE",
+     ["Use the arrow keys to select QC SAMPLE.","Press Enter and enter the four-digit QC control lot from the vial label."],
+     "Use QC SAMPLE for external liquid controls. QC DEVICE is the dry reusable electronic check."),
+     "QC SAMPLE is highlighted on the test-mode menu.","qcsamplemenu");
+  if(/enter or scan the qc control lot/.test(t))
+   return show(title,actionPanel("Enter the correct control lot",
+     ["Enter the four-digit numeric control lot from the QC vial.","Press Enter and verify the lot matches the reagent and selected QC file."],
+     "Do not use a patient's ID as the QC lot."),
+     "Four-digit QC lot entry screen; illustrated fields intentionally blank.","qc-lot");
+  if(/select install new code chip/.test(t))
+   return show(title,actionPanel("Install the reagent CODE CHIP",
+     ["Highlight INSTALL NEW CODE CHIP on the main menu.","Press Enter, insert the matching reagent CODE CHIP when directed."],
+     "Use the chip supplied with the reagent box, not a different assay or lot."),
+     "The manufacturer's Main Menu has INSTALL NEW CODE CHIP as an option.","main");
+  if(/insert the matching reagent code chip/.test(t))
+   return show(title,chipSvg(),
+     "Fit the matching lot CODE CHIP only as directed by the meter. Follow the on-screen installation sequence.","chip");
+  if(/insert the level.*cartridge|wait for absorption; insert|wait for full absorption, then insert/.test(t))
+   return show(title,selectedMaterial("troponin",true),
+     "Gently insert the prepared level-specific assay cassette until it clicks. Press Enter when directed; do not remove while processing.","insert-qc");
+  if(/review and print the qc|review both level|confirm both qc levels pass|press enter and verify the level/.test(t))
+   return show(title,actionPanel("Verify external QC",
+     ["Check the selected QC level, lot, date and acceptance.","Press the physical Print key to obtain the control report.","Run and document both approved control levels with separate fresh test devices."],
+     "If external QC is out of range, do not release patient testing for an affected analyte."),
+     "QC result illustration contains no actual control measurement.","qcresult");
+  if(/print, log new-box qc/.test(t))
+   return show(title,actionPanel("File the new-box QC",
+     ["Verify both required control levels passed.","Print both QC records and file with the correct reagent lot.","Label the approved reagent box as directed by site SOP."],
+     "A new reagent lot is not ready until required QC has passed."),
+     "QC report screen. Press the meter's physical Print key.","qcresult");
+ }
  // Unique daily optical QC steps never depict liquid handling or sample wells.
  if(daily){
   if(/power on|select run test|enter or scan user id/.test(t))return show(title,qcElectronicSvg(),"Choose RUN TEST; provide your User ID if prompted. QC DEVICE is separate from liquid QC.");
