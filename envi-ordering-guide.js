@@ -445,7 +445,9 @@ function visual(which){
 }
 function renderStep(s,i){
  return '<article class="ev-step" data-ev-card="'+i+'" '+(mode==='guided'&&index!==i?'hidden':'')+'>'+
- '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag ev-kind-'+s.kind+'">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',branch:'CHOOSE ONE',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span></div>'+
+ '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div>'+
+ '<div class="ev-card-controls"><span class="ev-required-tag ev-kind-'+s.kind+'">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',branch:'CHOOSE ONE',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span>'+
+ (mode==='guided'?'<nav class="ev-card-nav" role="group" aria-label="Envi ordering step navigation"><button type="button" class="ev-prev" data-ev-step="'+Math.max(0,i-1)+'" '+(i===0?'disabled':'')+' aria-label="Previous step">‹ Previous</button><button type="button" class="ev-next" data-ev-step="'+Math.min(steps.length-1,i+1)+'" '+(i===steps.length-1?'disabled':'')+' aria-label="Next step">Next step ›</button></nav>':'')+'</div></div>'+
  '<p class="ev-step-description">'+s.body+'</p><div class="ev-illustration"><div class="ev-illustration-title"><span class="ev-illustration-dot"></span> ENVI SCREEN REFERENCE <small>Illustrated, not a live screen</small><button type="button" class="ev-zoom-trigger" data-ev-zoom="'+i+'" aria-label="Expand Envi illustration for step '+(i+1)+'">Expand screen ↗</button></div>'+visual(s.scene)+'</div>'+
  '<div class="ev-next-action"><span class="ev-action-icon">➜</span><strong>'+tag(s.action)+'</strong></div>'+
  '<div class="ev-card-note"><span class="ev-note-symbol">i</span><span>'+s.note+'</span></div></article>';
@@ -457,7 +459,7 @@ function render(){
  '<div class="ev-guide-toolbar"><div class="ev-guide-toolbar-label"><strong>Step-by-step instructions</strong><span>'+steps.length+' visual steps · Screens recreated from the supplied Envi workflow</span></div><div class="ev-mode-control" role="group" aria-label="Choose guide view"><button type="button" data-ev-mode="guided" aria-pressed="'+(mode==='guided')+'" class="'+(mode==='guided'?'ev-mode-on':'')+'">One step at a time</button><button type="button" data-ev-mode="all" aria-pressed="'+(mode==='all')+'" class="'+(mode==='all'?'ev-mode-on':'')+'">View all steps</button></div></div>'+
  '<div class="ev-step-map-heading"><strong>Jump to any step</strong><small>Choose a number to open that screen</small></div><div class="ev-jump-strip" aria-label="Jump to a step">'+steps.map(function(s,i){return '<button type="button" data-ev-step="'+i+'" class="'+(i===index?'ev-current-step':'')+'" '+(i===index?'aria-current="step"':'')+' title="'+tag(s.title)+'">'+String(i+1).padStart(2,'0')+'</button>';}).join('')+'</div>'+
  '<div class="ev-step-viewport">'+steps.map(renderStep).join('')+'</div>'+
- '<nav class="ev-transport" aria-label="Guide step navigation"><span>STEP <strong>'+String(index+1).padStart(2,'0')+' / '+steps.length+'</strong></span><div><button type="button" data-ev-step="'+Math.max(0,index-1)+'" '+(index===0?'disabled':'')+'>‹ Previous</button><button type="button" data-ev-step="'+Math.min(steps.length-1,index+1)+'" '+(index===steps.length-1?'disabled':'')+'>Next step ›</button></div></nav>'+
+
  '<dialog id="evScreenZoom" class="ev-screen-zoom" aria-label="Expanded Envi screen illustration"><div class="ev-screen-zoom-header"><div><small>ENVI SCREEN REFERENCE</small><strong id="evScreenZoomTitle">Illustrated step</strong></div><button type="button" data-ev-close-zoom>Close ×</button></div><div class="ev-screen-zoom-content"></div><p class="ev-screen-zoom-foot">Training illustration, not a live Envi screen. Follow the highlighted action in the actual application.</p></dialog>'+
  '<aside class="ev-final-note"><strong>Before closing the order</strong><p>Confirm the correct clinic and order reference, all quantities and units of measure, Pending submission, and any market-specific inventory notification or spreadsheet entry.</p><small>Training reference only. Envi permissions, approval rules and market requirements may vary. This page does not submit an order or save inventory data.</small></aside>'+
  '</section>';
@@ -505,11 +507,16 @@ if(typeof document!=='undefined')document.addEventListener('click',function(even
   mode=chosen;
  }
  var old=document.getElementById('envi-ordering-guide');
- var loc=old&&old.getBoundingClientRect().top;
+ var oldHeader=old&&old.querySelector('.ev-step:not([hidden]) .ev-card-top');
+ var anchorTop=oldHeader?oldHeader.getBoundingClientRect().top:null;
  refresh(old);
- if(mode==='guided'){
-  var current=document.querySelector('#envi-ordering-guide .ev-step:not([hidden])');
-  if(current&&loc!=null)current.scrollIntoView({block:'nearest',behavior:'instant'});
+ if(mode==='guided'&&anchorTop!==null){
+  var nextHeader=document.querySelector('#envi-ordering-guide .ev-step:not([hidden]) .ev-card-top');
+  if(nextHeader){
+   // Keep the header navigation at the same screen position as the staff advances.
+   var offset=nextHeader.getBoundingClientRect().top-anchorTop;
+   if(Math.abs(offset)>1)window.scrollBy({top:offset,left:0,behavior:'instant'});
+  }
  }
 });
 window.LAB_ENVI_ORDERING={render:render,compactSop:compactSop};
