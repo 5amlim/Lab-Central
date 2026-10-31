@@ -127,7 +127,10 @@ function monthlyCard(t){
 }
 function binderCard(item){
  const badge=item.badges&&item.badges.includes('Printouts Needed')?'<div class="dqc-binder-task-badges"><span class="dqc-task-badge is-print">Printouts Needed</span></div>':'';
- return '<article class="dqc-binder-item"><div class="dqc-binder-main"><h3>'+safe(item.title)+'</h3><p>'+safe(item.desc)+'</p>'+badge+'</div><span class="dqc-role">'+safe(item.role)+'</span></article>';
+ return '<article class="dqc-binder-item"><div class="dqc-binder-main">'+
+  '<div class="dqc-binder-heading"><h3>'+safe(item.title)+'</h3><span class="dqc-role">'+safe(item.role)+'</span></div>'+
+  '<div class="dqc-binder-description-row"><p>'+safe(item.desc)+'</p>'+badge+'</div>'+
+  '</div></article>';
 }
 function renderDailySections(market,dailyQcTasks){
  return '<nav class="dqc-view-switch" role="tablist" aria-label="Lab checklist sections">'+
