@@ -992,3 +992,78 @@
 @media print{
  .device-collection-guide .device-collection-stability-sources{display:none}
 }
+
+/* Instrument collection illustrations keep their existing SVGs and sizes.
+   Small indicator and floating real-photo preview reuse Container Gallery images. */
+.device-collection-guide .device-media-has-photo{
+ position:relative;
+ cursor:zoom-in;
+}
+.device-collection-guide .device-media-has-photo::after{
+ content:"↗";
+ position:absolute;right:6px;top:6px;
+ display:grid;place-items:center;
+ width:21px;height:21px;
+ border:1px solid #d5e6ec;
+ border-radius:7px;
+ background:rgba(255,255,255,.92);
+ color:#548899;font-size:13px;font-weight:800;
+ pointer-events:none;
+}
+.device-collection-guide .device-media-has-photo:hover,
+.device-collection-guide .device-media-has-photo:focus-visible{
+ border-color:#84b8c2;
+ outline:2px solid #9ac9cd;
+ outline-offset:2px;
+}
+.device-collection-photo-tooltip{
+ box-sizing:border-box;
+ position:fixed;
+ left:0;top:0;
+ z-index:2200;
+ width:min(280px,calc(100vw - 24px));
+ max-height:calc(100vh - 24px);
+ padding:11px;
+ background:#fff;
+ border:1px solid #c3dce2;
+ border-radius:13px;
+ box-shadow:0 16px 45px rgba(27,63,86,.22);
+ color:#2b5065;
+ overflow:auto;
+ pointer-events:none;
+}
+.device-collection-photo-tooltip[hidden]{display:none!important}
+.device-collection-photo-frame{
+ min-height:140px;
+ max-height:min(280px,50vh);
+ display:flex;justify-content:center;align-items:center;
+ padding:7px;
+ background:#f5f9fa;
+ border-radius:8px;
+ overflow:hidden;
+}
+.device-collection-photo-frame img{
+ display:block;
+ width:100%;
+ max-height:min(265px,47vh);
+ object-fit:contain;
+}
+.device-collection-photo-frame img[hidden],
+.device-collection-photo-error[hidden]{display:none!important}
+.device-collection-photo-error{
+ font-size:11px;line-height:1.5;
+ color:#718a9b;text-align:center;
+}
+.device-collection-photo-tooltip strong{
+ display:block;margin:9px 0 2px;
+ font-size:12px;font-weight:850;
+ color:#2b5369;
+}
+.device-collection-photo-tooltip small{
+ display:block;font-size:10.5px;
+ color:#708998;line-height:1.5;
+}
+@media print{
+ .device-collection-guide .device-media-has-photo::after,
+ .device-collection-photo-tooltip{display:none!important}
+}
