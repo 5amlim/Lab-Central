@@ -408,6 +408,10 @@ const safeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);
 let favs=[];let localVideos={};
 try{favs=JSON.parse(localStorage.getItem('labGuideFavorites')||'[]')||[];localVideos=JSON.parse(localStorage.getItem('labGuideVideoOverrides')||'{}')||{}}catch(_){favs=[];localVideos={}}
+if(favs.includes('tubes')){
+ favs=[...new Set(favs.map(id=>id==='tubes'?'sendout':id))];
+ try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}
+}
 const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
