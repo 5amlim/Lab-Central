@@ -371,3 +371,16 @@
  .dqc-daily-qc-grid,.dqc-monthly-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .dqc-monthly-card,.dqc-daily-qc-grid > .dqc-item{break-inside:avoid}
 }
+
+/* Monthly Checklist lives on its own Operations page and uses two independent tabs. */
+.dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-switch{
+ grid-template-columns:repeat(2,minmax(0,1fr));max-width:none;
+}
+.dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-button{
+ min-height:76px;
+}
+@media(max-width:440px){
+ .dqc-page[aria-label="Lab Monthly Checklist reference"] .dqc-view-switch{
+  grid-template-columns:1fr;
+ }
+}
