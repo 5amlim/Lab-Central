@@ -1,0 +1,30 @@
+/* Supply Ordering: vendor-specific reference cards without artificial step navigation */
+.svendor{--sv-ink:#294a5e;--sv-muted:#648397;--sv-teal:#197e79;--sv-border:#d8e7ed;max-width:1100px;margin:12px auto 26px;color:var(--sv-ink);border:1px solid var(--sv-border);border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 6px 22px rgba(27,65,88,.035)}
+.svendor *{box-sizing:border-box}
+.svendor-head{display:flex;align-items:center;gap:14px;padding:24px 25px;border-bottom:1px solid #e1ebf0;background:linear-gradient(115deg,#f0f9f7,#f7fbfe)}
+.svendor-emblem{display:grid;place-items:center;flex:none;width:48px;height:48px;border:1px solid #c8e4e0;border-radius:13px;background:#e1f2ef;color:#248880}
+.svendor-emblem svg{width:23px;height:23px}
+.svendor-name{flex:1;min-width:0}
+.svendor-kicker{display:block;margin-bottom:7px;color:#628a96;font-size:10px;font-weight:850;letter-spacing:.095em}
+.svendor-name h2{font-size:clamp(20px,3vw,25px);color:#25485e;line-height:1.2;letter-spacing:-.03em;margin:0}
+.svendor-badge{flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:9px 11px;white-space:nowrap;font-size:10px;color:#426b7f;font-weight:850;letter-spacing:.055em;background:#e7f1f6;border:1px solid #cddfe9}
+.svendor-badge.is-region{background:#e4f6f0;color:#167e6e;border-color:#b9e4d6}
+.svendor-content{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(220px,.9fr);gap:16px;padding:20px}
+.svendor-primary{border:1px solid #e1eaf0;border-radius:12px;padding:23px 24px;background:#fff}
+.svendor-primary h3{color:#254c63;font-size:19px;line-height:1.35;margin:0 0 11px;letter-spacing:-.02em}
+.svendor-primary p{font-size:13px;line-height:1.75;color:#57778a;margin:0;max-width:640px}
+.svendor-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:21px}
+.svendor-portal{display:inline-flex;align-items:center;gap:11px;padding:11px 16px;background:#188a83;color:#fff!important;border:1px solid #188a83;border-radius:9px;text-decoration:none!important;font-size:12px;font-weight:850}
+.svendor-portal:hover{background:#126f69}
+.svendor-portal:focus-visible{outline:3px solid #88c9bb;outline-offset:3px}
+.svendor-method{display:inline-flex;align-items:center;gap:9px;border:1px solid #cfe5df;background:#eff9f6;color:#317b70;font-size:12px;font-weight:750;padding:10px 12px;border-radius:9px}
+.svendor-method svg{width:16px;height:16px}
+.svendor-secondary{border:1px solid #deebef;border-radius:12px;padding:20px 19px;background:#f7fafc}
+.svendor-secondary>strong{display:block;color:#365d72;font-size:12px;font-weight:850;margin-bottom:12px}
+.svendor-secondary ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.svendor-secondary li{position:relative;padding-left:17px;font-size:12px;line-height:1.7;color:#5d7d8e}
+.svendor-secondary li:before{content:"✓";position:absolute;left:0;top:0;color:#1a9185;font-weight:900}
+.svendor-foot{padding:12px 22px 15px;border-top:1px solid #e3ebf0;font-size:11px;line-height:1.6;color:#788e9a;background:#fcfdfe}
+@media(max-width:750px){.svendor-content{grid-template-columns:1fr}.svendor-head{flex-wrap:wrap;padding:18px}.svendor-badge{margin-left:62px}.svendor-primary{padding:18px}.svendor-secondary{padding:17px}}
+@media(max-width:450px){.svendor-head{gap:11px}.svendor-emblem{height:41px;width:41px}.svendor-badge{margin-left:0}.svendor-content{padding:12px;gap:10px}.svendor-primary h3{font-size:17px}.svendor-primary p{font-size:12px}.svendor-foot{padding:12px}}
+@media print{.svendor{box-shadow:none;break-inside:avoid}.svendor-portal{background:#fff;color:#245879!important;border-color:#a7bbca}.svendor-head{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
