@@ -1153,6 +1153,24 @@ function febridxDeviceSvg(stage="ready"){
  return illustratedSvg(febridxDeviceMarkup(stage),labels[stage]||labels.ready,"0 0 860 310");
 }
 
+function febridxDeviceMarkup(stage="ready"){
+ const parts=[
+ '<rect x="205" y="45" width="13" height="94" rx="3" fill="#11845f"/>',
+ '<path d="M146 265V144Q146 90 212 90Q278 90 278 144V265H251V147Q251 119 212 119Q173 119 173 147V265Z" fill="#e5dbc0" stroke="#a9a38e" stroke-width="3"/>',
+ '<path d="M154 207Q154 178 181 178H241Q268 178 268 207V699Q268 765 211 782Q154 765 154 699Z" fill="#f8fafb" stroke="#a3b1b9" stroke-width="3"/>',
+ '<rect x="172" y="197" width="80" height="154" rx="23" fill="#f5f8f9" stroke="#a6afb4" stroke-width="2"/>',
+ '<rect x="198" y="432" width="28" height="48" rx="13" fill="#e3e7ea" stroke="#aab4b8" stroke-width="2"/>',
+ '<rect x="198" y="538" width="30" height="84" rx="14" fill="#f9fbfb" stroke="#a5b0b5" stroke-width="2"/>',
+ '<path d="M202 557h22" stroke="#aab5b9" stroke-width="7"/><path d="M202 580h22" stroke="#d85d6c" stroke-width="7"/><path d="M202 606h22" stroke="#6fa7c7" stroke-width="7"/>',
+ '<text x="237" y="584" font-size="13" fill="#b9c3c9">T</text><text x="237" y="610" font-size="13" fill="#b9c3c9">C</text>',
+ '<rect x="197" y="648" width="32" height="65" rx="4" fill="#e4ecef" stroke="#a0b0b6"/><rect x="201" y="653" width="24" height="55" rx="3" fill="#00afd2"/>'
+ ];
+ return parts.join('');
+}
+function febridxDeviceSvg(stage="ready"){
+ return illustratedSvg(febridxDeviceMarkup(stage),"Upright FebriDx with green stem, arched lid, vertical T C window and blue activation button","0 0 420 810");
+}
+
 function kitShape(id,filled,context){
  const sampleColor=context==="qc"?"#6c9bcc":"#b73d4c";
  const specimen=filled?sampleColor:"#e5f1f5";
