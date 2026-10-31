@@ -44,6 +44,8 @@
 .rgi-references p{line-height:1.6;font-size:11px;margin:12px 0 0}
 .rgi-ua-layout{grid-template-columns:minmax(260px,.9fr) minmax(0,1.1fr)}
 .rgi-ua-notes{grid-template-columns:1fr;align-content:start}
+/* Visually separate printout symbols from analyte-specific clinical notes. */
+.rgi-ua-analyte-notes{border-top:1px solid #dbe7ed;margin-top:24px;padding-top:22px}
 @media(max-width:800px){.rgi-flags,.rgi-notes,.rgi-receipts,.rgi-ua-layout{grid-template-columns:1fr}.rgi-ua-notes{grid-template-columns:repeat(2,minmax(0,1fr))}.rgi-hero{padding:20px}.rgi-receipt pre{min-width:238px}}
 @media(max-width:500px){.rgi-hero{flex-direction:column;gap:10px}.rgi-hero h2{font-size:22px}.rgi-ua-notes{grid-template-columns:1fr}.rgi-compare{padding:11px}.rgi-flag{padding:11px}.rgi-flag code{min-width:43px}.rgi-receipt{padding:9px}.rgi-receipt pre{font-size:10px;padding:16px 12px}}
 @media print{.rgi-receipt,.rgi-compare,.rgi-flag,.rgi-note{break-inside:avoid}.rgi-receipt-scroll{overflow:visible}.rgi-receipt pre{box-shadow:none;border:1px solid #bbb;background:#fff}.rgi-references a{background:#fff}.rgi-hero{background:#fff}.rgi-alert{background:#fff;border-left-color:#555}}
