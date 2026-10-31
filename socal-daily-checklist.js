@@ -40,9 +40,9 @@ function render(){
 }
 document.addEventListener('change',function(e){
  const t=e.target;if(!t.closest('.dqc-page'))return;
- if(t.matches('[data-dqc-site]')){site=sites.some(s=>s[0]===t.value)?t.value:'BH';document.querySelector('.dqc-page')?.outerHTML=render();return}
- if(t.matches('[data-dqc-date]')){date=/^\d{4}-\d{2}-\d{2}$/.test(t.value)?t.value:localDate();document.querySelector('.dqc-page')?.outerHTML=render();return}
- if(t.matches('[data-dqc-done]')){const data=read(),id=t.dataset.dqcDone;data[id]={...(data[id]||{}),done:t.checked};write(data);document.querySelector('.dqc-page')?.outerHTML=render()}
+ if(t.matches('[data-dqc-site]')){site=sites.some(s=>s[0]===t.value)?t.value:'BH';(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})();return}
+ if(t.matches('[data-dqc-date]')){date=/^\d{4}-\d{2}-\d{2}$/.test(t.value)?t.value:localDate();(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})();return}
+ if(t.matches('[data-dqc-done]')){const data=read(),id=t.dataset.dqcDone;data[id]={...(data[id]||{}),done:t.checked};write(data);(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})()}
 });
 document.addEventListener('input',function(e){
  const t=e.target;if(!t.matches('.dqc-page [data-dqc-initials]'))return;
