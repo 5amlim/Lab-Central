@@ -2282,3 +2282,77 @@
  .calc-guide-simplified .calc-guide-phase-descriptor{flex-basis:100%}
  .calc-guide-simplified .calc-guide-phase .calc-guide-card{padding:14px 12px}
 }
+
+
+/* Calculator guide v3: compact, sequential six-step workflow */
+.calc-overview-reworked{margin-top:32px}
+.calc-overview-reworked .calc-overview-head{align-items:center;margin-bottom:15px}
+.calc-overview-reworked .calc-guide-eyebrow{display:block;color:#37849d;font-weight:850;font-size:10px;letter-spacing:.13em;margin-bottom:6px}
+.calc-overview-reworked .calc-overview-head .section-title{color:#213e56;font-size:21px;line-height:1.25;letter-spacing:-.02em}
+.calc-overview-reworked .calc-overview-head p{color:#6e8395;font-size:12px}
+.calc-overview-reworked .calc-guide-count{border-radius:8px;background:#edf7f5;color:#327c70;border-color:#d8e8e2;padding:8px 11px;font-size:10px;white-space:nowrap}
+.calc-overview-reworked .calc-guide-roadmap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 17px;border:1px solid #dfe9ef;background:#f7fafc;border-radius:11px;color:#526e83;font-size:11px;font-weight:760}
+.calc-overview-reworked .calc-guide-roadmap b{font-size:17px;font-weight:600;color:#9bb8c7;line-height:1}
+.calc-overview-reworked .calc-guide-phases{gap:15px;margin-top:0}
+.calc-overview-reworked .calc-guide-phase{padding:0;overflow:hidden;border:1px solid #dfe9ef;border-left:4px solid #609dc1;border-radius:14px;background:#fff;box-shadow:0 2px 12px rgba(43,74,99,.03)}
+.calc-overview-reworked .calc-guide-phase::before{display:none}
+.calc-overview-reworked .calc-guide-phase:nth-child(2){border-left-color:#c49c60}
+.calc-overview-reworked .calc-guide-phase:nth-child(3){border-left-color:#51a69b}
+.calc-overview-reworked .calc-guide-phase-head{display:flex;flex-wrap:nowrap;align-items:center;gap:15px;min-height:68px;padding:14px 18px;margin:0;border-bottom:1px solid #e5edf2;background:linear-gradient(100deg,#f2f8fc,#fff 82%)}
+.calc-overview-reworked .calc-guide-phase:nth-child(2) .calc-guide-phase-head{background:linear-gradient(100deg,#fdf9f2,#fff 82%)}
+.calc-overview-reworked .calc-guide-phase:nth-child(3) .calc-guide-phase-head{background:linear-gradient(100deg,#f2faf7,#fff 82%)}
+.calc-overview-reworked .calc-guide-phase-kicker{font-size:10px;letter-spacing:.065em;color:#3c789e;border:1px solid #d6e7f1;background:#eaf4fa;border-radius:7px;padding:6px 9px;white-space:nowrap}
+.calc-overview-reworked .calc-guide-phase:nth-child(2) .calc-guide-phase-kicker{color:#90692d;border-color:#eadcc4;background:#fbf0df}
+.calc-overview-reworked .calc-guide-phase:nth-child(3) .calc-guide-phase-kicker{color:#277e71;border-color:#d4e9e1;background:#eaf7f2}
+.calc-overview-reworked .calc-guide-phase-head>div{display:flex;align-items:baseline;gap:12px;min-width:0;flex-wrap:wrap}
+.calc-overview-reworked .calc-guide-phase-head>div strong{font-size:15px;font-weight:830;color:#29465b}
+.calc-overview-reworked .calc-guide-phase-descriptor{font-size:11px;color:#798da0}
+.calc-overview-reworked .calc-guide-phase-range{margin-left:auto;flex:none;color:#8a9aaa;font-size:9px;font-weight:800;letter-spacing:.08em}
+.calc-overview-reworked .calc-guide-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card{display:grid;grid-template-columns:38px minmax(190px,.64fr) minmax(0,1.55fr);column-gap:15px;row-gap:7px;align-items:start;min-height:0;border:0;border-radius:0;border-bottom:1px solid #e8eef3;box-shadow:none;background:#fff;padding:18px 20px}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card:last-child{border-bottom:0}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card>div{display:contents}
+.calc-overview-reworked .calc-guide-phase .calc-guide-step{grid-column:1;grid-row:1;display:grid;width:36px;height:36px;border-radius:10px;background:#edf5fa;color:#277a9f;place-items:center;font-size:13px;font-weight:860}
+.calc-overview-reworked .calc-guide-phase:nth-child(2) .calc-guide-step{background:#faf2e4;color:#996d30}
+.calc-overview-reworked .calc-guide-phase:nth-child(3) .calc-guide-step{background:#e9f5f1;color:#287f73}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card h3{grid-column:2;grid-row:1;font-size:14px;line-height:1.35;font-weight:825;margin:3px 0 0;color:#27475d}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card ul{grid-column:3;grid-row:1;list-style:none;display:grid;gap:7px;margin:0;padding:0}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card li{position:relative;padding-left:14px;color:#587183;font-size:12px;line-height:1.58}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card li::before{content:"";position:absolute;left:0;top:.67em;width:5px;height:5px;border-radius:50%;background:#6cafbd}
+.calc-overview-reworked .calc-guide-phase:nth-child(2) .calc-guide-card li::before{background:#c5a06c}
+.calc-overview-reworked .calc-guide-phase:nth-child(3) .calc-guide-card li::before{background:#69ada0}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card li strong{font-weight:790;color:#2b6b80}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card-stat{border-top:0;background:#fffdfa}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card .calc-guide-optional{font-size:10px;color:#9d762f;font-weight:750;white-space:nowrap;margin-left:2px}
+.calc-overview-reworked .calc-guide-phase .calc-guide-card .calc-guide-tip{grid-column:3;grid-row:2;margin:0;padding:8px 10px;background:#f0f7f6;border:1px solid #e1ecea;border-radius:8px;color:#4d7480;font-size:11px;line-height:1.5}
+.calc-overview-reworked .calc-extra-heading{margin:22px 0 12px}
+.calc-overview-reworked .calc-extra-card{background:#f9fbfc;box-shadow:none;border-color:#e0e9ee}
+.calc-overview-reworked .calc-guide-safety{border-left:3px solid #70ad9e}
+.athena-sendout-workflow-link{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;margin-top:12px;padding:9px 11px;background:#f0f7fb;color:#276e96;border:1px solid #c9e0ed;border-radius:8px;font:inherit;font-size:11.5px;font-weight:770;line-height:1.4;text-align:left;cursor:pointer;box-shadow:none;transition:background .16s,border-color .16s}
+.athena-sendout-workflow-link:hover{background:#e4f1f9;border-color:#99c6df}
+.athena-sendout-workflow-link:focus-visible{outline:2px solid #70b6dc;outline-offset:2px}
+.athena-sendout-workflow-link .athena-sendout-link-symbol{display:grid;place-items:center;flex:none;width:20px;height:20px;border-radius:5px;background:#e0f0f8;color:#387ca7}
+.athena-sendout-workflow-link .athena-sendout-link-symbol svg{width:13px;height:13px}
+.athena-sendout-workflow-link .athena-sendout-link-arrow{margin-left:3px;font-size:15px;color:#478bb0}
+.escalation-box>.athena-sendout-workflow-link{background:#fffaf0;border-color:#e6c99d;color:#845d22}
+.escalation-box>.athena-sendout-workflow-link:hover{background:#fcefd6}
+.escalation-box>.athena-sendout-workflow-link .athena-sendout-link-symbol{background:#fae9ca;color:#916c30}
+.walkin-review-note+.athena-sendout-workflow-link{margin-top:10px}
+.workflow-step-content>.athena-sendout-workflow-link{margin-top:10px}
+@media(max-width:1020px){
+ .calc-overview-reworked .calc-guide-phase .calc-guide-card{grid-template-columns:36px minmax(155px,.65fr) minmax(0,1.4fr);column-gap:12px;padding:15px}
+}
+@media(max-width:720px){
+ .calc-overview-reworked .calc-guide-phase-head{padding:12px 14px;flex-wrap:wrap;gap:9px}
+ .calc-overview-reworked .calc-guide-phase-head>div{flex:1 1 190px}
+ .calc-overview-reworked .calc-guide-phase-range{display:none}
+ .calc-overview-reworked .calc-guide-phase .calc-guide-card{grid-template-columns:34px minmax(0,1fr);gap:7px 11px;padding:15px 13px}
+ .calc-overview-reworked .calc-guide-phase .calc-guide-card h3{grid-column:2;grid-row:1;margin:3px 0}
+ .calc-overview-reworked .calc-guide-phase .calc-guide-card ul{grid-column:2;grid-row:2}
+ .calc-overview-reworked .calc-guide-phase .calc-guide-card .calc-guide-tip{grid-column:2;grid-row:3}
+ .calc-overview-reworked .calc-guide-roadmap{gap:7px;font-size:10px;padding:11px}
+}
+@media print{
+ .calc-overview-reworked .calc-guide-phase,.calc-overview-reworked .calc-guide-card{break-inside:avoid}
+ .athena-sendout-workflow-link{display:none}
+}
