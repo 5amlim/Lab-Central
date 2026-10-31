@@ -214,7 +214,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261031-sofia-stability-bullets-v4"">
-<link rel="stylesheet" href="assay-catalog.css?v=20261031-green-panel-results-v9" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261031-spotfire-menu-context-v10" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261031-clinitek-section-divider-v2" media="all">
 <link rel="stylesheet" href="instrument-troubleshooting.css?v=20261031-troubleshooting-workflow-v2" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
@@ -836,7 +836,7 @@ function searchPanelCard({section,panel,targets,hits}){
     'Respiratory menu · '+(panel.spotfireMini?'Nasal/NP swab':'NP swab'))
   :'';
  const spotfireContext=spotfireMenu?'<div class="lab-panel-menu-context">'+safeHtml(spotfireMenu)+
-  (panel.marketNote?'<span class="lab-panel-market-tag">'+safeHtml(panel.marketNote)+'</span>':'')+'</div>':'';
+  (panel.marketNote?'<span class="lab-panel-market-tag">'+safeHtml(panel.marketNote)+' only</span>':'')+'</div>':'';
  const athena=orders.length?'<div class="lab-panel-athena">'+
   '<div class="lab-panel-athena-head"><strong><span class="athena-accent">ATHENA</span> ORDER FOR THIS PANEL</strong>'+
   '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View <span class="athena-accent">Athena</span> orders <span aria-hidden="true">→</span></button></div>'+
