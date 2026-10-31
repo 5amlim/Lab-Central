@@ -27,9 +27,9 @@ const tests={
   {title:'Urine pregnancy (human chorionic gonadotropin)',complexity:'waived',groups:{'Pregnancy marker':A('Human chorionic gonadotropin')}}
  ],
  spotfire:[
-  {title:'Full respiratory panel',complexity:'waived',groups:{'Viruses':A('Adenovirus|Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Seasonal coronaviruses|Human metapneumovirus|Human rhinovirus / enterovirus|Influenza A virus (including A/H1-2009 and A/H3 subtyping)|Influenza B virus|Parainfluenza viruses|Respiratory syncytial virus'),'Bacteria':A('Bordetella parapertussis|Bordetella pertussis|Chlamydia pneumoniae|Mycoplasma pneumoniae')}},
-  {title:'Mini respiratory panel',complexity:'waived',groups:{'Viruses':A('Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus')}},
-  {title:'Mini sore throat panel',complexity:'waived',groups:{'Viruses':A('Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus'),'Bacteria':A('Streptococcus pyogenes (group A Streptococcus)')}}
+  {title:'Full respiratory panel',spotfireMark:'R',complexity:'waived',groups:{'Viruses':A('Adenovirus|Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Seasonal coronaviruses|Human metapneumovirus|Human rhinovirus / enterovirus|Influenza A virus (including A/H1-2009 and A/H3 subtyping)|Influenza B virus|Parainfluenza viruses|Respiratory syncytial virus'),'Bacteria':A('Bordetella parapertussis|Bordetella pertussis|Chlamydia pneumoniae|Mycoplasma pneumoniae')}},
+  {title:'Mini respiratory panel',spotfireMark:'R',spotfireMini:true,complexity:'waived',groups:{'Viruses':A('Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus')}},
+  {title:'Mini sore throat panel',spotfireMark:'ST',spotfireMini:true,complexity:'waived',groups:{'Viruses':A('Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus'),'Bacteria':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
  torch:[
   {title:'Gastrointestinal Pathogen Panel',complexity:'moderate',groups:{
@@ -192,12 +192,18 @@ const references={
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function complexity(type){return type==='moderate'?'<span class="ac-complex ac-moderate">CLIA MODERATE</span>':type==='waived'?'<span class="ac-complex ac-waived">CLIA WAIVED</span>':type==='conditional'?'<span class="ac-complex ac-conditional">CLIA VARIES</span>':'';}
 function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" aria-label="'+esc(c.title)+' color reference"><div class="ac-disc-hole"></div><span>'+esc(c.short)+'</span></div>';}
+/* SPOTFIRE panel identifiers mirror the R and ST pouch markings, including MINI. */
+function spotfireMark(c){
+ const label=c.spotfireMark+(c.spotfireMini?' mini':'');
+ return '<span class="ac-spotfire-mark'+(c.spotfireMini?' ac-spotfire-mark-mini':'')+'" role="img" aria-label="'+esc(label)+' panel">'+
+  '<span class="ac-spotfire-mark-face"><b>'+esc(c.spotfireMark)+'</b>'+(c.spotfireMini?'<small>MINI</small>':'')+'</span></span>';
+}
 function oneCard(c,idx,withDisc,id){
  const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group'+(id==='piccolo'&&/calculated/i.test(name)?' ac-calculated-results':'')+'"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatPanelTarget(id,c,item)+'</li>').join('')+'</ul></div>').join('');
 
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
-  '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
+  '<summary class="ac-card-head">'+(withDisc?disc(c):id==='spotfire'&&c.spotfireMark?spotfireMark(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
   '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
   '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
