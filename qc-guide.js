@@ -192,7 +192,7 @@ function screenPanel(item,brand,number){
  }
  return '<div class="qc-screen-reference" role="group" aria-label="Illustrated '+esc(brand)+' screen: '+esc(item.heading)+'">'+
   top+'<div class="qc-device-face"><div class="qc-device-screen'+(item.kind==="status"?' qc-device-screen--status':'')+(isPiccoloScene?' qc-device-screen--piccolo':'')+'">'+header+body+'</div></div>'+
-  '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+  '<p class="qc-screen-instruction">'+(item.heading==="Print the current QC result"?esc(item.tip).replace("Repeat separately for any missing QC1, QC2 or QC3 records.","<strong>Repeat separately for any missing QC1, QC2 or QC3 records.</strong>"):esc(item.tip))+'</p></div>';
 }
 function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
