@@ -1,0 +1,41 @@
+/* External lab ordering guide, scoped to the Athena order directory. */
+.ao-guide{margin:35px 0 25px;display:grid;gap:18px;color:#273e54;scroll-margin-top:85px}
+.ao-guide-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:23px 25px;border:1px solid #dce7f0;border-radius:17px;background:linear-gradient(110deg,#f2f8fc,#fff 75%)}
+.ao-guide-eyebrow{display:block;margin-bottom:8px;color:#31759c;font-size:10px;letter-spacing:.13em;font-weight:850}
+.ao-guide-intro h2{margin:0 0 7px;font-size:clamp(20px,2.5vw,26px);line-height:1.25;letter-spacing:-.025em;color:#1f3b56}
+.ao-guide-intro p{margin:0;font-size:13px;color:#657a8c;line-height:1.65}
+.ao-guide-intro p strong{color:#3b6079;font-weight:750}
+.ao-guide-role{flex:none;border:1px solid #d4e6e1;background:#eff8f5;border-radius:8px;padding:7px 10px;font-size:10px;font-weight:800;color:#2c7a6e;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.ao-guide-orientation{display:flex;align-items:flex-start;gap:12px;background:#f8fafc;border:1px solid #e5ebf1;border-left:3px solid #7da7c4;border-radius:11px;padding:13px 16px}
+.ao-guide-orientation-icon{display:grid;place-items:center;flex:none;width:23px;height:23px;border-radius:50%;color:#376c91;background:#e8f3fa;font-size:17px;font-weight:750}
+.ao-guide-orientation p{margin:0;line-height:1.65;font-size:12px;color:#52697e}
+.ao-guide-orientation strong{color:#29495f}
+.ao-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.ao-guide-card{min-width:0;display:flex;flex-direction:column;gap:13px;padding:17px;background:#fff;border:1px solid #e2e9f0;border-radius:15px;box-shadow:0 3px 11px rgba(33,60,90,.028)}
+.ao-guide-card-wide{grid-column:1/-1}
+.ao-guide-card-header{display:flex;gap:12px;align-items:center}
+.ao-guide-index{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:#eaf4fa;color:#266d9d;font-size:17px;font-weight:830;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ao-guide-step-type{display:block;color:#6b95af;font-size:9px;letter-spacing:.1em;font-weight:850;margin-bottom:4px}
+.ao-guide-card-header h3{font-size:15px;line-height:1.35;letter-spacing:-.012em;margin:0;color:#203b54;font-weight:800}
+.ao-guide-images{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
+.ao-guide-images-double{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ao-guide-shot{min-width:0;display:flex;flex-direction:column;gap:6px;margin:0}
+.ao-guide-shot a{display:block;overflow:hidden;background:#f4f6f9;border:1px solid #e2e7ed;border-radius:9px;outline-offset:3px}
+.ao-guide-shot img{display:block;object-fit:contain;object-position:center top;width:100%;height:205px;background:#f8fafc}
+.ao-guide-card-wide .ao-guide-shot img{height:255px}
+.ao-guide-shot figcaption{color:#8291a0;font-weight:700;font-size:10px;padding:0 2px}
+.ao-guide-shot figcaption span{color:#437b9f}
+.ao-guide-detail{margin:0;padding-top:3px;color:#596d80;font-size:12px;line-height:1.75}
+.ao-guide-detail strong{font-weight:800;color:#2c5875}
+.ao-guide-tips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.ao-guide-tip{display:flex;align-items:flex-start;gap:12px;border-radius:12px;border:1px solid #d9eae5;background:#f3faf8;padding:15px 16px}
+.ao-guide-tip-amber{border-color:#eedfc2;background:#fffaf0}
+.ao-guide-tip-icon{flex:none;display:grid;place-items:center;width:27px;height:27px;border-radius:50%;background:#e0f3ed;color:#2c8a77;font-size:16px;font-weight:900}
+.ao-guide-tip-amber .ao-guide-tip-icon{background:#fff0cc;color:#a37220}
+.ao-guide-tip strong{display:block;color:#276a5c;font-size:12px;margin:1px 0 5px}
+.ao-guide-tip-amber strong{color:#916629}
+.ao-guide-tip p{margin:0;color:#607386;font-size:11px;line-height:1.65}
+.ao-guide-footnote{margin:0;color:#8492a1;font-size:10px;line-height:1.65}
+@media(max-width:960px){.ao-guide-grid{grid-template-columns:1fr}.ao-guide-card-wide{grid-column:auto}.ao-guide-card-wide .ao-guide-shot img{height:205px}}
+@media(max-width:600px){.ao-guide{margin-top:22px}.ao-guide-intro{flex-direction:column;padding:18px}.ao-guide-role{align-self:flex-start}.ao-guide-grid{gap:12px}.ao-guide-card{padding:14px}.ao-guide-card-header h3{font-size:14px}.ao-guide-index{width:38px;height:38px}.ao-guide-shot img{height:190px}.ao-guide-images-double{grid-template-columns:1fr}.ao-guide-tips{grid-template-columns:1fr}}
+@media print{.ao-guide{break-before:page}.ao-guide-card{break-inside:avoid}.ao-guide-shot img{max-height:240px}.ao-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ao-guide-role{border:0}}

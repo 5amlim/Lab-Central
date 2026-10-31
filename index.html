@@ -173,6 +173,8 @@
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261029-piccolo-febridx-fit-v2" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
+<link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-guide-v1" media="all">
+<script src="athena-ordering-guide.js?v=20261030-guide-v1"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -1561,6 +1563,7 @@ function renderOrderSetDirectory(){
  let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Athena orders & order sets','Browse the Athena order names by instrument.');
  h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Athena order directory</strong><p>Point of Care Tests and Order Sets are listed using the provided Athena display names.</p></div></div>`;
  h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
+ h+=window.LAB_ATHENA_ORDER_GUIDE.render();
  h+=`<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p>`;
  el('mainContent').innerHTML=h;
 }
