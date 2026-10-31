@@ -30,7 +30,7 @@ function machine(mode="home",kind="ua"){
  const selectType=kind==="hcg"?"cassette":"strip";
  const shapeMode=mode==="table"?selectType:mode==="dispense"?"cassette":
   mode==="select"?"select-"+selectType:mode==="qc"?"qc":
-  mode==="results"?"reading":mode==="start"?(kind==="hcg"?"start-cassette":"start-strip"):
+  mode==="results"?"reading":mode==="analyzing"?"analyzing":mode==="start"?(kind==="hcg"?"start-cassette":"start-strip"):
   mode==="dip"?"empty":mode==="qc-dip"?"qc":"empty";
  // Original photographed instrument, scaled to leave space for consumable
  // and table-insert closeups on the right. Screens are simplified diagrams.
