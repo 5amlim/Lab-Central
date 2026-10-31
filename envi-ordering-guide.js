@@ -2,19 +2,316 @@
 (function(){
 'use strict';
 var steps=[
- {phase:'START',title:'Open Order Entry',action:'OPEN ORDER ENTRY',scene:'navigation',body:'In <strong>Envi</strong>, expand <strong>Purchasing</strong> in the left navigation and select <strong>Order Entry</strong>.',note:'This is the ordering-entry workflow, not Purchase Orders or Auto PO.'},
- {phase:'START',title:'Create a new order entry',action:'ADD ORDER ENTRY',scene:'new',body:'On the Order Entry list, select <strong>Add Order Entry</strong>.',note:'Use a new order entry for the current clinic order.'},
- {phase:'SETUP',title:'Select facility and enter reference',action:'COMPLETE REQUIRED FIELDS',scene:'form',body:'Choose the ordering <strong>Facility</strong> (your clinic). Set <strong>Location</strong> to <strong>Order Entry</strong>. Enter a recognizable <strong>Reference</strong>, for example <strong>BH Lab [Initials] 10/30</strong>, or use your market’s preferred naming format.',note:'Department is optional. Select the department required by your local workflow, if applicable.'},
- {phase:'SETUP',title:'Save the draft order entry',action:'CLICK ADD',scene:'draft',body:'Click <strong>Add</strong> to create the order entry. Envi opens the new entry in <strong>Draft</strong> status and assigns an <strong>Order Entry #</strong>.',note:'This is not yet a submitted purchase order.'},
- {phase:'ITEMS',title:'Open Add Items from Inventory',action:'CHOOSE INVENTORY',scene:'menu',body:'Open the <strong>Line Items</strong> tab. Click the <strong>Add Items</strong> dropdown and choose <strong>Add Items from Inventory</strong>.',note:'Select Add Items from Inventory, not Add Any Items.'},
- {phase:'ITEMS',title:'Find the correct item',action:'SEARCH, THEN PRESS ENTER',scene:'search',body:'Search by the <strong>vendor item SKU</strong> or <strong>Envi Inventory #</strong>, then press <strong>Enter</strong>. Confirm the correct description, vendor and package size before selecting.',note:'Illustrated example: McKesson SKU 832497 / Envi inventory 10856. These are examples, not default items for every order.'},
- {phase:'ITEMS',title:'Select the item and quantity',action:'CHECK ITEM + ENTER QTY',scene:'quantity',body:'Check the box beside the matching item and enter the number to order in the <strong>QTY</strong> field. Verify the <strong>unit of measure (UOM)</strong> before continuing.',note:'Example: QTY 2 with UOM BX (10) means two boxes of ten, not two individual discs.'},
- {phase:'ITEMS',title:'Add the item and repeat as needed',action:'ADD & CONTINUE',scene:'continue',body:'Click <strong>Add &amp; Continue</strong> to save the selected item and search for the next SKU or inventory number. Repeat the search, selection and quantity steps for each additional item. <strong>When the last item is ready</strong>, select <strong>Add &amp; Go to Line Items</strong>, or return to the <strong>Line Items</strong> tab.',note:'Keep adding until every needed item appears in the order. Do not submit after entering only the first item.'},
- {phase:'REVIEW',title:'Review all line items',action:'VERIFY EVERY QUANTITY',scene:'review',body:'On <strong>Line Items</strong>, review every product, <strong>quantity</strong>, <strong>UOM</strong> and item number. Confirm that all requested supplies are listed and no duplicates or incorrect items were added.',note:'The review must be completed before Submit to PO.'},
- {phase:'REVIEW',title:'Correct a line item if needed',action:'EDIT → UPDATE',scene:'edit',body:'<strong>If anything is incorrect:</strong> open the line item, select <strong>Edit</strong>, change the <strong>Order Quantity</strong> and click <strong>Update</strong>. Return to Line Items and verify the change. If everything is correct, skip this correction step.',note:'Editing is conditional. Do not change an already correct quantity.'},
- {phase:'SUBMIT',title:'Submit the order entry to PO',action:'DETAILS → SUBMIT TO PO',scene:'submit',body:'After confirming all line items, open <strong>Details</strong> and click <strong>Submit to PO</strong>.',note:'Envi may create one or more purchase orders from the entry.'},
- {phase:'SUBMIT',title:'Choose Pending and submit',action:'SELECT PENDING → SUBMIT',scene:'pending',body:'In the <strong>Submit Order Entry</strong> dialog, choose <strong>Pending</strong>, not Draft, then click <strong>Submit</strong>.',note:'Do not confuse the original Draft order entry status with the desired Pending PO submission status.'},
- {phase:'HANDOFF',title:'Complete your market handoff',action:'FOLLOW MARKET REQUIREMENTS',scene:'handoff',body:'Record the <strong>Order Entry #</strong> and any generated <strong>PO number(s)</strong>. <strong>Depending on your market</strong>, notify the <strong>Lab Inventory group</strong> of the order number and enter the order in the designated <strong>ordering spreadsheet</strong>. Follow your market’s specific notification and tracking requirements.',note:'Both follow-up actions are market-dependent. Neither is assumed to be required at every site.'}
+ {
+  "phase": "START",
+  "title": "Expand Purchasing",
+  "action": "EXPAND PURCHASING",
+  "scene": "purchasing",
+  "body": "In Envi’s left sidebar, click <strong>Purchasing</strong> to reveal its submenu.",
+  "note": "You are not creating a Purchase Order directly at this stage.",
+  "kind": "required",
+  "id": "step-01"
+ },
+ {
+  "phase": "START",
+  "title": "Open Order Entry",
+  "action": "SELECT ORDER ENTRY",
+  "scene": "navigation",
+  "body": "Under Purchasing, select <strong>Order Entry</strong>. This opens the list of existing order entries.",
+  "note": "Choose Order Entry, not Purchase Orders, PO Search, or Auto PO.",
+  "kind": "required",
+  "id": "step-02"
+ },
+ {
+  "phase": "START",
+  "title": "Start a new entry",
+  "action": "CLICK ADD ORDER ENTRY",
+  "scene": "new",
+  "body": "On the Order Entry list, click the blue <strong>Add Order Entry</strong> button.",
+  "note": "Use a new entry for the current clinic and ordering session.",
+  "kind": "required",
+  "id": "step-03"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Choose your clinic",
+  "action": "SELECT FACILITY",
+  "scene": "facility",
+  "body": "Select <strong>Facility</strong> and choose the clinic receiving the supplies, such as <strong>Beverly Hills Flagship</strong>.",
+  "note": "The clinic in the example is illustrative. Use your actual ordering location.",
+  "kind": "required",
+  "id": "step-04"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Set the order location",
+  "action": "SELECT ORDER ENTRY",
+  "scene": "location",
+  "body": "Open <strong>Location</strong> and select <strong>Order Entry</strong>.",
+  "note": "The Location field is required and must match the Envi Order Entry location.",
+  "kind": "required",
+  "id": "step-05"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Check Department",
+  "action": "SELECT IF YOUR MARKET USES ONE",
+  "scene": "department",
+  "body": "Review <strong>Department</strong>. Leave <strong>None</strong> only when your market does not require a specific department.",
+  "note": "Department is not marked required in the screenshot. Follow local rules.",
+  "kind": "optional",
+  "id": "step-06"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Enter a recognizable reference",
+  "action": "ENTER ORDER REFERENCE",
+  "scene": "reference",
+  "body": "In <strong>Reference</strong>, enter a descriptive label such as <strong>BH Lab [Initials] 10/30</strong>, or use your market’s naming convention.",
+  "note": "The reference helps identify the order later. No employee names are used in the example.",
+  "kind": "required",
+  "id": "step-07"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Create the order entry",
+  "action": "CLICK ADD",
+  "scene": "draft",
+  "body": "Check the facility, location and reference. Click <strong>Add</strong> to save the new order entry.",
+  "note": "This creates an entry, not a submitted PO.",
+  "kind": "required",
+  "id": "step-08"
+ },
+ {
+  "phase": "SETUP",
+  "title": "Check the draft details",
+  "action": "CONFIRM DRAFT & ENTRY NUMBER",
+  "scene": "draft-details",
+  "body": "Envi opens the new <strong>Order Entry #</strong>. Confirm the clinic, reference and <strong>Draft</strong> status.",
+  "note": "The illustrated entry number is an example, not a live reference.",
+  "kind": "required",
+  "id": "step-09"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Open the Line Items tab",
+  "action": "CLICK LINE ITEMS",
+  "scene": "line-tab",
+  "body": "Click <strong>Line Items</strong> at the top of the new order entry.",
+  "note": "A new entry may show No records found until items are added.",
+  "kind": "required",
+  "id": "step-10"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Open the Add Items dropdown",
+  "action": "OPEN ADD ITEMS",
+  "scene": "open-menu",
+  "body": "Click the blue <strong>Add Items</strong> dropdown above the Line Items table.",
+  "note": "Use the dropdown arrow to choose an item source.",
+  "kind": "required",
+  "id": "step-11"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Choose inventory items",
+  "action": "SELECT ADD ITEMS FROM INVENTORY",
+  "scene": "menu",
+  "body": "In the dropdown, select <strong>Add Items from Inventory</strong>.",
+  "note": "Do not choose Add Any Items for this standard inventory ordering workflow.",
+  "kind": "required",
+  "id": "step-12"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Search by SKU or inventory #",
+  "action": "TYPE SKU / INVENTORY NUMBER",
+  "scene": "search",
+  "body": "In the search field, enter the <strong>vendor item SKU</strong> or <strong>Envi Inventory #</strong>.",
+  "note": "Example SKU 832497 or inventory # 10856. Use the number for the requested product.",
+  "kind": "required",
+  "id": "step-13"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Run the item search",
+  "action": "PRESS ENTER",
+  "scene": "search-result",
+  "body": "Press <strong>Enter</strong> or the search icon, then wait for the matching inventory row to appear.",
+  "note": "If there is no match, recheck the number and search filter. Do not substitute a similar product without confirmation.",
+  "kind": "required",
+  "id": "step-14"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Verify the exact product",
+  "action": "MATCH ITEM, VENDOR & UOM",
+  "scene": "verify-row",
+  "body": "Review the <strong>inventory number, vendor, vendor item number, description and package unit</strong> before selecting the row.",
+  "note": "Example: 832497, Piccolo CMP, BX (10). Do not assume 1 box equals 1 test.",
+  "kind": "required",
+  "id": "step-15"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Select the item row",
+  "action": "CHECK THE ITEM BOX",
+  "scene": "check-row",
+  "body": "Check the box beside the correct item so it is selected for your order.",
+  "note": "Select only the intended item.",
+  "kind": "required",
+  "id": "step-16"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Enter quantity",
+  "action": "ENTER QTY & CHECK UOM",
+  "scene": "quantity",
+  "body": "Enter the order <strong>QTY</strong> and confirm the <strong>unit of measure</strong>. A quantity of 2 with BX (10) means 2 boxes of 10.",
+  "note": "Verify the number of boxes, cartons or eaches, not just the numeral.",
+  "kind": "required",
+  "id": "step-17"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Add this item and continue",
+  "action": "CLICK ADD & CONTINUE",
+  "scene": "add-continue",
+  "body": "Click <strong>Add &amp; Continue</strong> to add the item while staying on the inventory search screen.",
+  "note": "Use this when you have more items to add.",
+  "kind": "required",
+  "id": "step-18"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Repeat for each additional item",
+  "action": "REPEAT SEARCH → SELECT → QTY",
+  "scene": "continue",
+  "body": "For another supply, enter its SKU or inventory #, press Enter, verify the match, check the row and enter quantity. Repeat until all required supplies have been added.",
+  "note": "Repeat steps 13 to 18 for every additional item.",
+  "kind": "repeat",
+  "id": "step-19"
+ },
+ {
+  "phase": "ITEMS",
+  "title": "Finish adding items",
+  "action": "ADD & GO TO LINE ITEMS",
+  "scene": "add-to-lines",
+  "body": "For your final item, use <strong>Add &amp; Go to Line Items</strong>. If you already used Add &amp; Continue, open the <strong>Line Items</strong> tab to review everything.",
+  "note": "Do not leave the order without verifying the complete list.",
+  "kind": "required",
+  "id": "step-20"
+ },
+ {
+  "phase": "REVIEW",
+  "title": "Verify all line items",
+  "action": "CHECK ITEMS, QTY & UOM",
+  "scene": "review",
+  "body": "On Line Items, check each <strong>product, vendor SKU, quantity and UOM</strong>. Look for missing products and accidental duplicates.",
+  "note": "Complete this review before submitting to a PO.",
+  "kind": "required",
+  "id": "step-21"
+ },
+ {
+  "phase": "REVIEW",
+  "title": "Open an item to correct it",
+  "action": "OPEN THE ITEM ROW",
+  "scene": "open-item",
+  "body": "<strong>Only if a line is incorrect:</strong> click that item’s row or line number to view its details.",
+  "note": "If everything is correct, skip directly to Details.",
+  "kind": "optional",
+  "id": "step-22"
+ },
+ {
+  "phase": "REVIEW",
+  "title": "Edit the order quantity",
+  "action": "CLICK EDIT & CHANGE QTY",
+  "scene": "edit",
+  "body": "On the line detail, click <strong>Edit</strong> and correct <strong>Order Quantity</strong> if needed.",
+  "note": "Confirm the UOM is still correct. This step is only for corrections.",
+  "kind": "optional",
+  "id": "step-23"
+ },
+ {
+  "phase": "REVIEW",
+  "title": "Save changes and recheck",
+  "action": "CLICK UPDATE → VERIFY",
+  "scene": "save-edit",
+  "body": "Click <strong>Update</strong>, return to Line Items, and verify the corrected quantity is shown.",
+  "note": "Do not proceed if a correction has not saved.",
+  "kind": "optional",
+  "id": "step-24"
+ },
+ {
+  "phase": "SUBMIT",
+  "title": "Return to Details",
+  "action": "CLICK DETAILS",
+  "scene": "details-tab",
+  "body": "When all lines are correct, select the <strong>Details</strong> tab.",
+  "note": "Ensure the order is ready before conversion to PO.",
+  "kind": "required",
+  "id": "step-25"
+ },
+ {
+  "phase": "SUBMIT",
+  "title": "Start PO submission",
+  "action": "CLICK SUBMIT TO PO",
+  "scene": "submit",
+  "body": "On Details, click <strong>Submit to PO</strong> to open the submission dialog.",
+  "note": "Envi may create one or more purchase orders from one entry.",
+  "kind": "required",
+  "id": "step-26"
+ },
+ {
+  "phase": "SUBMIT",
+  "title": "Choose Pending",
+  "action": "SELECT PENDING",
+  "scene": "pending",
+  "body": "In <strong>Submit Order Entry</strong>, select <strong>Pending</strong> instead of Draft.",
+  "note": "This is the required submission choice shown in the provided workflow.",
+  "kind": "required",
+  "id": "step-27"
+ },
+ {
+  "phase": "SUBMIT",
+  "title": "Confirm the submission",
+  "action": "CLICK SUBMIT",
+  "scene": "submit-confirm",
+  "body": "With <strong>Pending</strong> selected, click the blue <strong>Submit</strong> button in the dialog.",
+  "note": "Submit only after the list and quantities have been verified.",
+  "kind": "required",
+  "id": "step-28"
+ },
+ {
+  "phase": "HANDOFF",
+  "title": "Record the order reference",
+  "action": "SAVE ORDER ENTRY / PO NUMBER",
+  "scene": "record-number",
+  "body": "Record the <strong>Order Entry #</strong> and any generated <strong>PO number(s)</strong>. Confirm the resulting order status in Envi.",
+  "note": "The original entry number and resulting purchase-order number may differ.",
+  "kind": "required",
+  "id": "step-29"
+ },
+ {
+  "phase": "HANDOFF",
+  "title": "Notify the Lab Inventory group",
+  "action": "SEND ORDER NUMBER IF REQUIRED",
+  "scene": "notify",
+  "body": "<strong>If your market requires it:</strong> notify the designated <strong>Lab Inventory group</strong> of the order and its PO number(s).",
+  "note": "Use your market’s approved group and messaging channel.",
+  "kind": "market",
+  "id": "step-30"
+ },
+ {
+  "phase": "HANDOFF",
+  "title": "Update the ordering spreadsheet",
+  "action": "LOG ORDER IF REQUIRED",
+  "scene": "sheet",
+  "body": "<strong>If your market requires it:</strong> enter the order number, clinic, date and other required fields in the designated <strong>ordering spreadsheet</strong>.",
+  "note": "Use your local spreadsheet. Do not assume every market uses the same tracker.",
+  "kind": "market",
+  "id": "step-31"
+ }
 ];
 var mode='guided',index=0;
 function tag(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -26,6 +323,7 @@ function frame(title,inner,active){return '<div class="ev-mini-screen" aria-hidd
 function tabs(which){return '<div class="ev-tabs"><span class="'+(which==='details'?'ev-tab-active':'')+'">Details</span><span class="'+(which==='items'?'ev-tab-active':'')+'">Line Items</span><span class="'+(which==='update'?'ev-tab-active':'')+'">Update</span><span>Resources</span></div>';}
 function rowline(second,edit){return '<div class="ev-table-row"><span>☑</span><span>'+(second?'2':'1')+'</span><span>'+(second?'11151':'10856')+'</span><span>McKesson</span><span>'+(second?'824758':'832497')+'</span><span class="ev-item-description">'+(second?'Triage Troponin-I Kit':'Piccolo Comprehensive Metabolic Panel')+'</span><b class="'+(edit?'ev-highlight':'')+'">'+(second?'1 CT (25)':'2 BX (10)')+'</b></div>';}
 function visual(which){
+  var custom=visualDetail(which);if(custom)return custom;
  if(which==='navigation')return frame('Dashboard','<div class="ev-placeholder-header"><strong>Welcome to Envi</strong><p>Purchasing <span>›</span> Order Entry</p></div><div class="ev-ui-pointer">SELECT ORDER ENTRY ↖</div>',true);
  if(which==='new')return frame('Order Entry','<div class="ev-mini-toolbar">'+mark('＋ Add Order Entry')+'<span>Multiple Orders Entry Upload</span></div><div class="ev-table-head">OE #　　Reference　　　　　 Facility　　　　　　 Status</div><div class="ev-table-simple">1442　　Lab order　　　　　Clinic　　　　　　Submitted</div>',true);
  if(which==='form')return frame('Order Entry · Add Order Entry','<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div><div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',true)+field('Location *','Order Entry',true)+field('Department','None',false)+field('Reference','BH Lab [Initials] 10/30',true)+'</div>',true);
@@ -42,7 +340,7 @@ function visual(which){
 }
 function renderStep(s,i){
  return '<article class="ev-step" data-ev-card="'+i+'" '+(mode==='guided'&&index!==i?'hidden':'')+'>'+
- '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag">ACTION REQUIRED</span></div>'+
+ '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag ev-kind-"+s.kind+"">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span></div>'+
  '<p class="ev-step-description">'+s.body+'</p><div class="ev-illustration"><div class="ev-illustration-title"><span class="ev-illustration-dot"></span> ENVI SCREEN REFERENCE <small>Illustrated, not a live screen</small></div>'+visual(s.scene)+'</div>'+
  '<div class="ev-next-action"><span class="ev-action-icon">➜</span><strong>'+tag(s.action)+'</strong></div>'+
  '<div class="ev-card-note"><span class="ev-note-symbol">i</span><span>'+s.note+'</span></div></article>';
@@ -51,7 +349,7 @@ function render(){
  return '<section id="envi-ordering-guide" class="envi-guide" aria-labelledby="ev-heading">'+
  '<header class="ev-header"><div><span class="ev-eyebrow">LAB OPERATIONS / INVENTORY PURCHASING</span><h1 id="ev-heading">Envi Ordering</h1><p>Create an order entry, add inventory items, verify quantities and submit purchase orders as <strong>Pending</strong>.</p></div><span class="ev-app-badge"><span>e</span> envi · ORDER ENTRY</span></header>'+
  '<div class="ev-overview"><div><strong>START</strong><span>Purchasing<br>Order Entry</span></div><b>›</b><div><strong>SET UP</strong><span>Facility &amp;<br>reference</span></div><b>›</b><div><strong>BUILD</strong><span>Add inventory<br>items</span></div><b>›</b><div><strong>REVIEW</strong><span>Check item<br>quantities</span></div><b>›</b><div><strong>SUBMIT</strong><span>Pending &amp;<br>market handoff</span></div></div>'+
- '<div class="ev-guide-toolbar"><div class="ev-guide-toolbar-label"><strong>Step-by-step instructions</strong><span>'+steps.length+' steps · Screens recreated from the supplied Envi workflow</span></div><div class="ev-mode-control" role="group" aria-label="Choose guide view"><button type="button" data-ev-mode="guided" aria-pressed="'+(mode==='guided')+'" class="'+(mode==='guided'?'ev-mode-on':'')+'">One step at a time</button><button type="button" data-ev-mode="all" aria-pressed="'+(mode==='all')+'" class="'+(mode==='all'?'ev-mode-on':'')+'">View all steps</button></div></div>'+
+ '<div class="ev-guide-toolbar"><div class="ev-guide-toolbar-label"><strong>Step-by-step instructions</strong><span>'+steps.length+' visual steps · Screens recreated from the supplied Envi workflow</span></div><div class="ev-mode-control" role="group" aria-label="Choose guide view"><button type="button" data-ev-mode="guided" aria-pressed="'+(mode==='guided')+'" class="'+(mode==='guided'?'ev-mode-on':'')+'">One step at a time</button><button type="button" data-ev-mode="all" aria-pressed="'+(mode==='all')+'" class="'+(mode==='all'?'ev-mode-on':'')+'">View all steps</button></div></div>'+
  '<div class="ev-jump-strip" aria-label="Jump to a step">'+steps.map(function(s,i){return '<button type="button" data-ev-step="'+i+'" class="'+(i===index?'ev-current-step':'')+'" '+(i===index?'aria-current="step"':'')+' title="'+tag(s.title)+'">'+String(i+1).padStart(2,'0')+'</button>';}).join('')+'</div>'+
  '<div class="ev-step-viewport">'+steps.map(renderStep).join('')+'</div>'+
  '<nav class="ev-transport" aria-label="Guide step navigation"><span>STEP <strong>'+String(index+1).padStart(2,'0')+' / '+steps.length+'</strong></span><div><button type="button" data-ev-step="'+Math.max(0,index-1)+'" '+(index===0?'disabled':'')+'>‹ Previous</button><button type="button" data-ev-step="'+Math.min(steps.length-1,index+1)+'" '+(index===steps.length-1?'disabled':'')+'>Next step ›</button></div></nav>'+
@@ -63,8 +361,8 @@ function compactSop(){
  var h='<div class="lc-sop-document"><header class="lc-sop-header"><div class="lc-sop-eyebrow">LAB CENTRAL / LAB OPERATIONS</div><h1>Envi Ordering · Order Entry to Pending PO</h1><p>Inventory purchasing workflow with item-by-item review and market-dependent follow-up.</p><div class="lc-sop-meta"><span><b>System</b> Envi · Purchasing</span><span><b>Submit status</b> Pending</span><span><b>Scope</b> Clinic supply orders</span></div></header>';
  steps.forEach(function(s,i){
   h+='<article class="lc-sop-step"><div class="lc-sop-step-top"><span class="lc-sop-index">'+String(i+1).padStart(2,'0')+'</span><h3>'+E(s.title)+'</h3><span class="lc-sop-owner">'+E(s.phase)+'</span></div><div class="lc-sop-step-body"><p>'+s.body+'</p><p><strong>Action:</strong> '+E(s.action)+'</p><p><em>'+s.note+'</em></p></div></article>';
-  if(i===7)h+='<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>More items to order?</strong><span>SELECT ONE PATH</span></div><div class="lc-sop-branches"><div class="lc-sop-branch"><span class="lc-sop-branch-label">YES</span><div>Use Add &amp; Continue. Repeat search, item selection, and quantity entry for each additional SKU.</div></div><div class="lc-sop-branch"><span class="lc-sop-branch-label">NO</span><div>Use Add &amp; Go to Line Items, or open Line Items, and review the complete order.</div></div></div></div>';
-  if(i===9)h+='<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>Any incorrect quantity or item?</strong><span>SELECT ONE PATH</span></div><div class="lc-sop-branches"><div class="lc-sop-branch"><span class="lc-sop-branch-label">YES</span><div>Open line item, click Edit, correct quantity, Update, and review again.</div></div><div class="lc-sop-branch"><span class="lc-sop-branch-label">NO</span><div>Go to Details and choose Submit to PO.</div></div></div></div>';
+  if(s.scene==='continue')h+='<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>More items to order?</strong><span>SELECT ONE PATH</span></div><div class="lc-sop-branches"><div class="lc-sop-branch"><span class="lc-sop-branch-label">YES</span><div>Use Add &amp; Continue. Repeat search, item selection, and quantity entry for each additional SKU.</div></div><div class="lc-sop-branch"><span class="lc-sop-branch-label">NO</span><div>Use Add &amp; Go to Line Items, or open Line Items, and review the complete order.</div></div></div></div>';
+  if(s.scene==='save-edit')h+='<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>Any incorrect quantity or item?</strong><span>SELECT ONE PATH</span></div><div class="lc-sop-branches"><div class="lc-sop-branch"><span class="lc-sop-branch-label">YES</span><div>Open line item, click Edit, correct quantity, Update, and review again.</div></div><div class="lc-sop-branch"><span class="lc-sop-branch-label">NO</span><div>Go to Details and choose Submit to PO.</div></div></div></div>';
  });
  h+='<div class="lc-sop-decision"><div class="lc-sop-decision-title"><span class="lc-sop-diamond">◇</span><strong>Market-specific follow-up required?</strong><span>FOLLOW LOCAL WORKFLOW</span></div><div class="lc-sop-branches"><div class="lc-sop-branch"><span class="lc-sop-branch-label">INVENTORY GROUP</span><div>If required, notify the designated Lab Inventory group of the generated PO number(s).</div></div><div class="lc-sop-branch"><span class="lc-sop-branch-label">ORDER TRACKER</span><div>If required, enter the order in your market’s approved spreadsheet.</div></div></div></div>'+
  '<footer class="lc-sop-footer">Envi training reference. Check current market policies and Envi approval requirements. This document does not place purchase orders.</footer></div>';
