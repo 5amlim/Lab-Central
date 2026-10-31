@@ -820,7 +820,14 @@ function collectionTestWindow(sec){
  if(sec.archived||!collectionTestWindows[sec.id])return "";
  const refs=(collectionStabilitySources[sec.id]||[]).map(x=>
   '<a href="'+visualEsc(x[1])+'" target="_blank" rel="noopener noreferrer">'+visualEsc(x[0])+' ↗</a>').join('');
- return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong><p>'+visualEsc(collectionTestWindows[sec.id])+'</p>'+
+ const details=sec.id==='sofia'
+  ?'<ul class="device-collection-stability-list">'+
+   '<li><b>Flu + SARS:</b> Dry nasal/NP swabs, ≤48 h at room temperature or 2–8°C.</li>'+
+   '<li><b>RSV:</b> ≤24 h in validated transport medium.</li>'+
+   '<li><b>Strep A+:</b> Dry throat swabs, ≤24 h at room temperature or ≤48 h refrigerated.</li>'+
+   '</ul><p class="device-collection-stability-note">Check the current kit IFU.</p>'
+  :'<p>'+visualEsc(collectionTestWindows[sec.id])+'</p>';
+ return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong>'+details+
   (refs?'<div class="device-collection-stability-sources">'+refs+'</div>':'')+'</aside>';
 }
 /* Keep collection illustrations intact; preview the matching gallery photo on hover.
