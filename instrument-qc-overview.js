@@ -4,7 +4,7 @@
 'use strict';
 const cfg={
  triage:{label:'QC Device daily; liquid QC every 30 days',name:'QC',frequency:'QC Device daily · liquid QC every 30 days',detail:'Liquid QC also with new shipments or lots.',source:'https://www.quidelortho.com/content/dam/quidelortho/global/docs/Z2VQM2Y5XFDAVOE65B.pdf'},
- sysmex:{label:'External QC · 3 levels daily before patient testing',name:'External QC',frequency:'3 levels daily before patient testing',detail:'',source:'https://www.sysmex-ap.com/wp-content/uploads/2020/05/poch-100i-brochure_ebook.pdf'},
+ sysmex:{label:'External QC · 3 levels daily before patient testing',name:'External QC',frequency:'3 levels daily before patient testing',detail:'Also complete the daily shutdown and blank/background check; print and file QC and blank records per SOP.',source:'https://www.sysmex-ap.com/wp-content/uploads/2020/05/poch-100i-brochure_ebook.pdf'},
  pathfast:{label:'Calibration + QC every 28 days',name:'Calibration + QC',frequency:'Every 28 days',detail:'',source:''},
  piccolo:{label:'External QC · Every 30 days and per panel SOP',name:'External QC',frequency:'Every 30 days and per panel SOP',detail:'Also with new lots or shipments, as applicable.',source:'https://www.abaxis.com/faqs/'},
  clinitek:{label:'External QC · Monthly UA + hCG QC',name:'External QC',frequency:'Monthly UA + hCG QC',detail:'Also for new strip bottles/lots and as required by SOP.',source:'https://doclib.siemens-healthineers.com/rest/v1/view?document-id=778963'},
