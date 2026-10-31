@@ -214,6 +214,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="guide-refinements.css?v=20261031-clinitek-appearance-running-v2"">
 <link rel="stylesheet" href="assay-catalog.css?v=20261031-calculated-label-bold-v9" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261031-clinitek-section-divider-v2" media="all">
+<link rel="stylesheet" href="instrument-troubleshooting.css?v=20261031-all-instruments-v1" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261031-whole-analyzer-fit-v3" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261031-triage-accurate-screen-actions-v2" media="all">
@@ -380,6 +381,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-reference-polish.js?v=20261031-spotfire-auto-start-v2""></script>
 <script src="sendout-market-guide.js?v=20261029-regional-shipping-scope-v3"></script>
 <script src="assay-catalog.js?v=20261031-calculated-label-badges-v8"></script>
+<script src="instrument-troubleshooting.js?v=20261031-all-instruments-v1"></script>
 <script src="triage-meterpro-visual.js?v=20261031-triage-accurate-screen-actions-v2"></script>
 <script src="lab-container-art.js?v=20261031"></script>
 <script src="lab-container-photos.js?v=20261031"></script>
@@ -1966,7 +1968,7 @@ function sectionRender(sec,tab){
   {id:'collection',title:'Collection notes'},
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
- ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id)?[{id:'troubleshooting',title:'Troubleshooting'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -2021,6 +2023,7 @@ function sectionRender(sec,tab){
   if(selected)h+=supplyVendorCard(selected);
  }
  else if(tab==='visuals'&&hasVisualGuide)h+=window.LAB_EQUIPMENT_ART.visualGuide(sec);
+ else if(tab==='troubleshooting'&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))h+=window.LAB_TROUBLESHOOTING.render(sec.id);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="Expanded Calibration and QC dropdown"><div class="pfux-cal-nested-label">Inside Calibration + QC · Choose assay panel below</div>'+window.LAB_PATHFAST_UI.render()+'</div>';
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
