@@ -218,6 +218,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
 <link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-faithful-minimal-anonymous-v6" media="all">
 <script src="athena-ordering-guide.js?v=20261030-faithful-minimal-anonymous-v6"></script>
+<link rel="stylesheet" href="sop-print.css?v=20261031-complete-workflow-v1" media="all">
+<script src="sop-print.js?v=20261031-complete-workflow-v1"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -2011,11 +2013,15 @@ function procedurePrintGroup(){
    groups.find(x=>x.id===route.tab);
  return group?{sec,group}:null;
 }
+function canPrintCompactSOP(){
+ const route=sectionFromHash();
+ return Boolean(procedurePrintGroup()||window.LAB_SOP_PRINT?.supports(route,false));
+}
 function updatePrintChoices(){
- const available=Boolean(procedurePrintGroup());
+ const available=canPrintCompactSOP();
  el('compactPrintChoice').disabled=!available;
  el('compactPrintDescription').textContent=available?
-  'All steps, nested instructions and important notes':'Available in step-by-step testing, QC or maintenance tabs';
+  'Complete SOP-style process, including decision paths':'Available for procedures, workflows and step-by-step guides';
  el('compactPrintHelp').hidden=available;
 }
 function closePrintOptions(){
@@ -2103,7 +2109,7 @@ function compactPathfastRN(sec){
 }
 function buildCompactPrint(){
  const selected=procedurePrintGroup();
- if(!selected)return null;
+ if(!selected)return window.LAB_SOP_PRINT?.build(sectionFromHash(),el('mainContent'))||null;
  const {sec,group}=selected;
  if(selected.custom==='rn')return compactPathfastRN(sec);
  if(selected.custom==='cal')return compactPathfastCalibration(sec);
@@ -2145,7 +2151,7 @@ function ensureCompactPrint(){
  node.id='lcCompactPrintDocument';
  node.className='lc-print-compact-document';
  node.setAttribute('aria-label','Compact procedure steps for printing');
- node.innerHTML=html;
+ node.innerHTML=html.startsWith('<div class="lc-sop-document')?html:'<div class="lc-sop-document lc-sop-instrument">'+html+'</div>';
  document.body.appendChild(node);
  document.documentElement.setAttribute('data-lc-print','compact');
  return true;
@@ -2178,7 +2184,7 @@ function prepareGuidePrint(){
 }
 function printSelection(type){
  closePrintOptions();
- if(type==='compact'&&!procedurePrintGroup())return;
+ if(type==='compact'&&!canPrintCompactSOP())return;
  labPrintMode=type==='compact'?'compact':'full';
  if(labPrintMode==='compact'){if(!ensureCompactPrint()){labPrintMode=null;return}}
  else prepareGuidePrint();
