@@ -204,3 +204,35 @@
  .triage-focus-figure .triage-guide-scene{grid-template-columns:1fr 1fr}
  .triage-action-warning,.triage-conditional-note{break-inside:avoid}
 }
+
+/* For specimen handling, make the kit/pipette the hero instead of drawing
+   a blank LCD and implying an analyzer interaction. */
+.triage-physical-step .triage-guide-scene{
+ display:block;
+ padding:18px 24px 22px;
+}
+.triage-physical-wrap{width:100%;max-width:980px;margin:0 auto}
+.triage-physical-label{
+ display:inline-flex;align-items:center;
+ background:#eaf4f5;border:1px solid #cfe3e6;
+ border-radius:999px;padding:7px 11px;margin-bottom:15px;
+ font-size:10px;letter-spacing:.08em;font-weight:850;color:#3a7a82;
+}
+.triage-physical-step .triage-material-stage{
+ width:100%;max-width:100%;
+ min-height:165px;
+}
+.triage-physical-step .triage-material-stage>svg{
+ max-width:520px;max-height:350px;
+}
+.triage-physical-step .triage-kit-chooser{max-width:800px}
+.triage-physical-step .triage-kit-picture{height:190px}
+.triage-physical-step .triage-pipette-sequence{max-width:900px;margin:auto}
+.triage-physical-step .triage-pipette-source>.triage-pipette-media,
+.triage-physical-step .triage-pipette-tool>.triage-pipette-media{height:230px}
+@media(max-width:700px){
+ .triage-physical-step .triage-guide-scene{padding:12px}
+ .triage-physical-step .triage-pipette-source>.triage-pipette-media,
+ .triage-physical-step .triage-pipette-tool>.triage-pipette-media{height:160px}
+ .triage-physical-step .triage-kit-picture{height:125px}
+}
