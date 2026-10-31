@@ -640,15 +640,22 @@ function illustratedSvg(inner,label,view="0 0 320 210"){
  return '<svg viewBox="'+view+'" role="img" aria-label="'+visualEsc(label)+'" xmlns="http://www.w3.org/2000/svg">'+
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+inner+'</svg>';
 }
+/* Shared cotton-tipped Sofia collection swab used in the kit reference and
+   patient collection/extraction illustrations. This is not the analyzer art. */
+function sofiaSwabMarkup(x,y,angle=0,scale=1){
+ return '<g transform="translate('+x+' '+y+') rotate('+angle+') scale('+scale+')">'+
+  '<path d="M8 0 H237" stroke="#b9c9d1" stroke-width="7" fill="none" stroke-linecap="round"/>'+
+  '<path d="M19 -2 H224" stroke="#eef4f7" stroke-width="2" fill="none" stroke-linecap="round" opacity=".85"/>'+
+  '<path d="M-27 0 C-27 -8 -17 -11 -7 -11 C3 -11 14 -7 17 -3 Q21 0 17 3 C14 7 3 11 -7 11 C-17 11 -27 8 -27 0Z" fill="#fafdff" stroke="#9eb6c2" stroke-width="2.1" stroke-linejoin="round"/>'+
+  '<path d="M-20 -5 Q-13 -8 -4 -7 M-20 4 Q-12 7 -4 7 M2 -6 Q9 -4 12 -1" stroke="#dae6eb" stroke-width="1.8" fill="none" stroke-linecap="round"/>'+
+ '</g>';
+}
 function mediaSvg(kind){
  if(kind==="sofia-kit-swab"){
   return illustratedSvg(
-   '<ellipse cx="160" cy="185" rx="78" ry="8" fill="#e7eef2"/>'+
-   '<path d="M173 162 L145 53" fill="none" stroke="#c9b9a4" stroke-width="7" stroke-linecap="round"/>'+
-   '<path d="M145 53 L141 37" stroke="#b7b8ab" stroke-width="8" stroke-linecap="round"/>'+
-   '<ellipse cx="138" cy="29" rx="11" ry="24" transform="rotate(-14 138 29)" fill="#fbfcfd" stroke="#aebfc6" stroke-width="1.8"/>'+
-   '<path d="M131 16 Q137 11 144 19 M130 29 Q138 22 147 29" fill="none" stroke="#e0e7ea" stroke-width="2"/>'+
-   '<path d="M99 174 H220" stroke="#c4d2da" stroke-width="2" opacity=".65"/>'+
+   '<ellipse cx="164" cy="186" rx="40" ry="6" fill="#e7eef2"/>'+
+   sofiaSwabMarkup(143,33,74,.68)+
+   '<path d="M118 183 H212" stroke="#c4d2da" stroke-width="2" opacity=".65"/>'+
    '<text x="160" y="209" font-size="12" font-family="Arial" font-weight="800" text-anchor="middle" fill="#4b788d">KIT-SUPPLIED SWAB</text>',
    "Sofia assay kit sterile collection swab alone, without a collection or transport tube",
    "100 4 130 208");
@@ -1596,5 +1603,5 @@ function visualGuide(sec){
  '<p class="device-gallery-note">Verify the correct panel, collection materials, sample ports, lot and assay requirements in the approved IFU.</p></section>';
 }
 
-window.LAB_EQUIPMENT_ART={coagSenseDeviceSvg:coagSenseDeviceSvg,coagSenseDeviceMarkup:coagSenseDeviceMarkup,clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide,febridxDeviceSvg:febridxDeviceSvg};
+window.LAB_EQUIPMENT_ART={coagSenseDeviceSvg:coagSenseDeviceSvg,coagSenseDeviceMarkup:coagSenseDeviceMarkup,clinitekDeviceMarkup:clinitekDeviceMarkup,clinitekDeviceSvg:clinitekDeviceSvg,sysmexDeviceSvg:sysmexDeviceSvg,sysmexDeviceMarkup:sysmexDeviceMarkup,piccoloDeviceSvg:piccoloDeviceSvg,pathfastActionVisual:pathfastActionVisual,pathfastMachineStateSvg:pathfastMachineStateSvg,pathfastRackSvg:pathfastRackSvg,render:render,ids:Object.keys(specs),piccoloVisual:piccoloVisual,piccoloDiscSvg:piccoloDiscSvg,piccoloPipetteSvg:piccoloPipetteSvg,specimenGuide:specimenGuide,mediaSvg:mediaSvg,sofiaSwabMarkup:sofiaSwabMarkup,kitShape:kitShape,kitScene:kitScene,workflowVisual:workflowVisual,inlineKitVisual:inlineKitVisual,clinitekKit:clinitekKit,visualGuide:visualGuide,febridxDeviceSvg:febridxDeviceSvg};
 })();
