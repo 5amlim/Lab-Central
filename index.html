@@ -1143,7 +1143,7 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
   guideDetailNodes(root.children||[],0,sec,groupId||root.text,!displayedVisual)+
   guideDetailNodes(entry.notes,0,sec,groupId||root.text,!displayedVisual);
  const isPathfastStatus=sec?.id==='pathfast'&&groupId==='patient'&&/review reagent-status pills/i.test(root.text);
- const piccoloPatientScreens=sec?.id==='piccolo'&&groupId==='patient'&&/^Load the disc into Piccolo Xpress$/i.test(root.text)&&window.LAB_QC_GUIDE?.piccoloPatientLoadStep?window.LAB_QC_GUIDE.piccoloPatientLoadStep():'';
+ const piccoloPatientScreens=sec?.id==='piccolo'&&/^(running-samples|patient)/.test(groupId)&&/^Load the disc into Piccolo Xpress$/i.test(root.text)&&window.LAB_QC_GUIDE?.piccoloPatientLoadStep?window.LAB_QC_GUIDE.piccoloPatientLoadStep():'';
  const stepBody=displayedVisual+piccoloPatientScreens+(!isPathfastStatus&&content?(sysmexControl?content:'<div class="guide-card-body">'+content+'</div>'):'');
  const isPathfast=sec&&sec.id==='pathfast'&&groupId==='patient';
  const navClass=headerNav?' guide-card-has-nav':'';
