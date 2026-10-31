@@ -198,6 +198,7 @@
  min-width:0;padding:17px 18px;
 }
 .dqc-binder-main{flex:1;min-width:0}
+.dqc-binder-task-badges{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:10px}
 .dqc-binder-item h3{
  margin:0 0 5px;color:#2d5066;font-size:13.5px;
  line-height:1.4;font-weight:830;
