@@ -2399,16 +2399,16 @@
  }
 }
 
-/* Temperature handling stays in its own column; pickup destinations stack. */
+/* Step 07: three pickup and temperature instructions in one readable column. */
 .workflow-main .collection-handoff-card--full .collection-handoff-list {
- grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ grid-template-rows:auto;
+ gap:12px;
 }
-.workflow-main .collection-handoff-card--full .collection-handoff-list li:first-child {grid-column:1;grid-row:1 / span 2}
-.workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(2) {grid-column:2;grid-row:1}
-.workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(3) {grid-column:2;grid-row:2}
-@media(max-width:650px) {
- .workflow-main .collection-handoff-card--full .collection-handoff-list {grid-template-columns:1fr;grid-template-rows:none}
- .workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(n) {grid-column:auto;grid-row:auto}
+.workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(n) {
+ grid-column:auto;
+ grid-row:auto;
 }
 .device-collection-photo-frame {position:relative}
 .device-collection-photo-label {
