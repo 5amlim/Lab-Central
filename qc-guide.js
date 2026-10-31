@@ -197,15 +197,17 @@ function screenPanel(item,brand,number){
 }
 function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
+ const scrollCueOnly=scroll&&options.scrollCueOnly===true;
  const cards=list.map((x,i)=>{
   const html=screenPanel(x,brand,i+1);
-  if(!scroll||i===list.length-1)return html;
+  if(!scroll||i===list.length-1||scrollCueOnly)return html;
   const closing=html.lastIndexOf('</p></div>');
   return closing<0?html:html.slice(0,closing)+'</p><button class="qc-gallery-more" type="button" aria-label="Show screen '+String(i+2)+'">More <span aria-hidden="true">→</span></button></div>'+html.slice(closing+10);
  }).join("");
- return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
+ return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(scrollCueOnly?' qc-screen-gallery--cue-only':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
   (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
   cards+'</div>'+
+  (scrollCueOnly&&list.length>2?'<div class="qc-gallery-scroll-hint" aria-hidden="true"><span class="qc-gallery-scroll-hint-line"></span><span>Scroll horizontally to see the next screens</span><span class="qc-gallery-scroll-hint-arrow">→</span></div>':'')+
   '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p>';
 }
 if(!window.__labQcGalleryMoreBound){
