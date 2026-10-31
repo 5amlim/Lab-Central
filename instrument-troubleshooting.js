@@ -356,6 +356,37 @@ poc:{
  ],'Escalate missing analytes, mismatched tests or unresolvable QC failures.','hold')
  ]}
 };
+/* Start with the checks most likely to prevent an unnecessary repeat. */
+const firstChecks={
+ pathfast:['Confirm lithium-heparin mixing, sample well, bubble-free pipetting and correct lane/SID.','Review reagent pill, 28-day calibration and both QC levels.','For failed or questionable tests, save the analyzer remark and notify the ordering provider.'],
+ piccolo:['Confirm correct disc, approved lithium-heparin specimen and required sample volume.','Look for ~~~ suppression and HEM/LIP/ICT index flags before reporting.','Re-use no disc. Capture error code and perform approved repeat with a NEW disc.'],
+ sysmex:['Inspect properly mixed EDTA tube for clots and adequate volume.','Review daily LOW/NORMAL/HIGH EIGHTCHECK and blank/background acceptance.','Review CBC flags and histogram; keep QC/blank printouts in the binder.'],
+ clinitek:['Confirm the correct Strip vs Cassette mode and test-table orientation.','Check specimen age, strip bottle expiry, positive/negative QC and reagent pad exposure.','An E-code or unreadable hCG test is INVALID, not a negative result.'],
+ triage:['Run the electronic QC Device daily when patient testing is performed.','Check assay-specific liquid QC at every new shipment/lot and at least every 30 days.','! means failed internal QC; # means failed lot liquid QC. Never report blocked fields.'],
+ spotfire:['Confirm exact R/ST Regular or Mini panel and compatible specimen/transport medium.','Verify hydration and sample loading; an invalid pouch cannot be reused.','Record the exact run message, pouch lot, sample ID and instrument module.'],
+ torch:['Confirm correct GI pouch, sample buffer, Cary-Blair specimen and transfer steps.','Review RNA process and PCR2 controls before reporting.','Repeat only with a new pouch after any pouch failure or invalid run.'],
+ sofia:['Check the 30-day calibration cassette status and external lot QC.','Confirm correct kit, reader mode, extraction volume and the prescribed timing window.','A failed assay control invalidates the result regardless of visible positivity.'],
+ febridx:['Only fresh fingerstick blood; completely fill the collection tube.','Check the blue control, clear result window and pink/red blood-clearance window.','A failed 30-minute blood-clearance check or absent control requires a new device.'],
+ hemocue:['Inspect microcuvette for bubble, incomplete fill or dirty optical window.','Confirm built-in self-test and any local liquid-QC requirement.','Out-of-range HHH is not a measured numeric value.'],
+ coagsense:['Confirm meter ready, valid strip lot and complete fingerstick transfer tube.','Check high/low QC for new shipment/lot and any instrument QC lockout.','Do not add a second drop or bypass an error on the same strip.'],
+ poc:['Identify exact stocked kit; approved swab, buffer and read time differ by assay.','Verify control line before interpreting faint test bands.','Repeat invalid tests with a new device and follow lot/shipment QC.'],
+ 'drug-screen':['Competitive screens often show a faint TEST line when negative at the cutoff.','Verify control on each drug panel, each abbreviation and cutoff.','Document as presumptive; request confirmatory laboratory testing when indicated.']
+};
+const resumeChecks={
+ pathfast:'Current CAL/QC passes for the affected assay, instrument unlocked, sample integrity accepted, and correct SID/result verified.',
+ piccolo:'Repeat on an eligible new disc with accepted internal QC and no unresolved suppression. Report only actual printed results.',
+ sysmex:'Three-level daily QC and blank/background within limits; reprocessed specimen meets acceptance and CBC flags have been reviewed.',
+ clinitek:'Correct mode and consumables, accepted required controls, and a new valid strip/cassette run with patient ID verified.',
+ triage:'Electronic QC passes and the relevant lot liquid QC is current and acceptable; no ! or # blockers on the final report.',
+ spotfire:'New pouch finishes with valid controls, correct panel/specimen and verified patient/sample identifiers.',
+ torch:'New pouch passes both process controls with the correct GI specimen and verified result.',
+ sofia:'Calibration and kit-specific QC pass, valid test control, correct cassette/timing and patient ID.',
+ febridx:'New single-use device with blue control and both windows acceptable within the permitted read window.',
+ hemocue:'Cuvette/optical check resolved, instrument self-test successful, any required QC passes and result within reportable range.',
+ coagsense:'High and low controls meet limits, strip current, and patient procedure finishes with a valid INR result.',
+ poc:'Appropriate current kit and approved specimen, valid control, proper read window and passed required external controls.',
+ 'drug-screen':'Valid control on all panels, correct lot/expiry and verified presumptive result entry or approved confirmation.'
+};
 const names={specimen:'Specimen & results',qc:'QC & calibration',instrument:'Instrument & workflow'};
 const order=['Specimen & results','QC & calibration','Instrument & workflow'];
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -363,7 +394,7 @@ function card(item,num){
  const urgent=item.level==='hold';
  return '<details class="lt-issue'+(urgent?' lt-hold':'')+'">'+
   '<summary><span class="lt-no">'+String(num).padStart(2,'0')+'</span><span class="lt-main"><strong>'+esc(item.title)+'</strong><small>'+esc(item.signal)+'</small></span><span class="lt-status '+(urgent?'lt-status-hold':item.level==='service'?'lt-status-service':'lt-status-check')+'">'+(urgent?'HOLD RESULT':item.level==='service'?'SUPPORT':'CHECK')+'</span><span class="lt-chevron" aria-hidden="true"></span></summary>'+
-  '<div class="lt-issue-content"><div class="lt-subhead">What to do</div><ol>'+item.actions.map(a=>'<li>'+esc(a)+'</li>').join('')+'</ol><p class="lt-escalate"><b>Escalate / stop:</b> '+esc(item.escalate)+'</p></div></details>';
+  '<div class="lt-issue-content"><div class="lt-subhead">Corrective action</div><ol>'+item.actions.map(a=>'<li>'+esc(a)+'</li>').join('')+'</ol><p class="lt-escalate"><b>If unresolved / stop:</b> '+esc(item.escalate)+'</p><p class="lt-record"><strong>Record:</strong> exact error or printout flag, sample/lot ID in the approved system, QC status, action performed, repeat result and who was notified. Do not enter patient information in this reference page.</p></div></details>';
 }
 function render(id){
  const guide=guides[id];if(!guide)return '';
@@ -376,10 +407,30 @@ function render(id){
  return '<section class="lt-guide" aria-label="'+esc(guide.name)+' troubleshooting reference">'+
   '<header class="lt-hero"><div><span class="lt-eyebrow">LAB CENTRAL / TROUBLESHOOTING</span><h2>Troubleshooting</h2><p>'+esc(guide.subtitle)+'</p></div><span class="lt-counter">'+items.length+' common issues</span></header>'+
   '<div class="lt-response"><div><span>01</span><b>HOLD</b><small>Do not report a failed, blocked or invalid result.</small></div><div><span>02</span><b>CHECK</b><small>Confirm patient, specimen, lot, QC and exact instrument message.</small></div><div><span>03</span><b>RESOLVE</b><small>Follow the current assay IFU, document the action and verify a valid repeat.</small></div></div>'+
+  '<div class="lt-quick"><strong>First checks for '+esc(guide.name)+'</strong><ul>'+(firstChecks[id]||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>'+
+  '<div class="lt-tools"><label>Find an error or symptom<input type="search" class="lt-search" data-lt-search placeholder="e.g. QC, clot, invalid, E67" aria-label="Search troubleshooting situations"></label><div class="lt-tools-actions"><button type="button" data-lt-action="expand">Expand all</button><button type="button" data-lt-action="collapse">Collapse all</button></div></div>'+
   '<p class="lt-notice"><b>Use the site SOP first.</b> These are operator-level reference steps, not authorization to bypass QC, dilute specimens, repair internal components or override the manufacturer IFU. For urgent clinical decisions, inform the provider and use an approved alternate testing pathway if necessary.</p>'+
   groups+
+  '<p class="lt-empty" hidden>No matching issues. Try an error code, assay or symptom.</p>'+
+  '<div class="lt-resume"><strong>Before testing resumes</strong><p>'+esc(resumeChecks[id]||'Confirm acceptable QC, valid consumables and a reportable result per the current IFU.')+'</p></div>'+
   '<footer class="lt-resources"><div><b>Manufacturer / product references</b><p>Open the source documentation for exact error codes, specimen restrictions and corrective-action steps. Local approved instructions take precedence.</p></div><div class="lt-source-links">'+guide.sources.map(s=>'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.title)+' ↗</a>').join('')+'</div></footer>'+
   '</section>';
 }
+document.addEventListener('click',function(e){
+ const button=e.target.closest('.lt-guide [data-lt-action]');
+ if(!button)return;
+ const root=button.closest('.lt-guide');if(!root)return;
+ const expand=button.dataset.ltAction==='expand';
+ root.querySelectorAll('.lt-issue').forEach(x=>{if(!x.hidden)x.open=expand});
+});
+document.addEventListener('input',function(e){
+ if(!e.target.matches('.lt-guide [data-lt-search]'))return;
+ const root=e.target.closest('.lt-guide'),q=e.target.value.trim().toLowerCase();
+ root.querySelectorAll('.lt-issue').forEach(x=>{
+  x.hidden=Boolean(q)&&!x.textContent.toLowerCase().includes(q);
+ });
+ root.querySelectorAll('.lt-group').forEach(g=>{g.hidden=![...g.querySelectorAll('.lt-issue')].some(x=>!x.hidden)});
+ const empty=root.querySelector('.lt-empty');if(empty)empty.hidden=[...root.querySelectorAll('.lt-issue')].some(x=>!x.hidden);
+});
 window.LAB_TROUBLESHOOTING={render,ids:Object.keys(guides),guides};
 })();
