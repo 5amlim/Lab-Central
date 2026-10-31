@@ -2356,3 +2356,45 @@
  .calc-overview-reworked .calc-guide-phase,.calc-overview-reworked .calc-guide-card{break-inside:avoid}
  .athena-sendout-workflow-link{display:none}
 }
+
+/* Full-width final handoff step: sleeve selection and site-specific pickup location. */
+.workflow-main .collection-handoff-grid > .collection-handoff-card--full{
+ grid-column:1/-1;
+ padding:19px 21px 20px;
+ gap:16px;
+}
+.workflow-main .collection-handoff-card--full .collection-handoff-copy{
+ width:100%;
+}
+.workflow-main .collection-handoff-card--full .collection-handoff-copy h3{
+ margin-bottom:12px;
+}
+.workflow-main .collection-handoff-card--full .collection-handoff-list{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ align-items:start;
+ gap:13px 22px;
+ margin:0;
+}
+.workflow-main .collection-handoff-card--full .collection-handoff-list li{
+ min-width:0;
+}
+@media(max-width:1000px){
+ .workflow-main .collection-handoff-card--full .collection-handoff-list{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+@media(max-width:650px){
+ .workflow-main .collection-handoff-grid > .collection-handoff-card--full{
+  padding:14px;
+ }
+ .workflow-main .collection-handoff-card--full .collection-handoff-list{
+  grid-template-columns:minmax(0,1fr);
+  gap:10px;
+ }
+}
+@media print{
+ .workflow-main .collection-handoff-grid > .collection-handoff-card--full{
+  break-inside:avoid;
+ }
+}
