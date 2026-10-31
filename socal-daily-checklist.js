@@ -39,10 +39,7 @@ const socalBinder=[
  {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Document required shutdown, cleaning and instrument maintenance on the approved schedule, including any corrective action.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
  {"id":"triage-daily","title":"Triage MeterPro Daily QC Log","desc":"If installed, document the daily electronic QC Device result when required and file its QC printout. Keep liquid QC in the monthly binder.","role":"Trained lab personnel / RN","template":"triage-daily","badges":["Printouts Needed"]},
  {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
- {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"},
- {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"Record applicable rapid-test kit controls and new-lot or shipment QC for the tests in use.","role":"Trained lab personnel / RN","template":"waived-qc"},
- {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"Document FebriDx external controls when required, including new box or lot QC and any failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc"},
- {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed QC, specimen or instrument issues and other exceptions with the corrective action and resolution.","role":"Lab personnel / RN","template":"remedial"}
+ {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"}
 ];
 // Reference cadences sourced from the instrument QC overview. Only applicable
 // when the instrument is installed and the clinic's approved SOP requires it.
@@ -63,7 +60,9 @@ const monthlyBinder=[
  {"id":"sofia-qc","title":"Sofia 2 Quality Control Log","desc":"Document positive and negative external QC for new shipments, new lots or other approved triggers. No printout is required.","role":"Trained lab personnel / RN","template":"sofia-qc"},
  {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"SoCal: record monthly UA strip QC and required new-bottle/new-lot controls. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
  {"id":"clinitek-hcg","title":"Siemens hCG Pregnancy Control Log","desc":"SoCal: record monthly hCG controls and required new-lot or other event-based QC. File any applicable printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-hcg","badges":["Printouts Needed"]},
- {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed monthly QC, calibration issues, corrective actions and final resolution, as applicable.","role":"Lab personnel / RN","template":"remedial"}
+ {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"As needed, record rapid-test kit controls for new shipments, new lots and other SOP-triggered QC events.","role":"Trained lab personnel / RN","template":"waived-qc","badges":["As needed"]},
+ {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"As needed, document external controls for new kit boxes, lots or other required QC events, including failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc","badges":["As needed"]},
+ {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"As needed, document failed QC, specimen or instrument issues, corrective actions and resolution. Complete this log when an incident occurs.","role":"Lab personnel / RN","template":"remedial","badges":["As needed"]}
 ];
 const sharedBinder=[
  {"id":"temperature","title":"Daily Temperature and Humidity Log","desc":"Record and file required room, refrigerator, freezer and humidity readings. Document any excursion and corrective action.","role":"Lab personnel / RN","template":"temperature"},
@@ -75,10 +74,7 @@ const sharedBinder=[
  {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
  {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"Record daily UA strip control results and new-bottle or new-lot checks as required. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
  {"id":"clinitek-hcg","title":"Siemens hCG Pregnancy Control Log","desc":"Record daily hCG positive and negative control results and event-triggered QC. File any applicable printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-hcg","badges":["Printouts Needed"]},
- {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"},
- {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"Record applicable rapid-test kit controls and new-lot or shipment QC for the tests in use.","role":"Trained lab personnel / RN","template":"waived-qc"},
- {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"Document FebriDx external controls when required, including new box or lot QC and any failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc"},
- {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"Record failed QC, specimen or instrument issues and other exceptions with the corrective action and resolution.","role":"Lab personnel / RN","template":"remedial"}
+ {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"}
 ];
 // Non-SoCal markets document Clinitek QC daily, so it does not appear as a separate monthly task.
 const otherMarketsMonthlyQcTasks=monthlyQcTasks.filter(t=>t.id!=='clinitek-monthly');
@@ -149,7 +145,7 @@ function monthlyCard(t){
  return '<section class="dqc-monthly-card"><div class="dqc-monthly-frequency">'+safe(t.frequency)+'</div>'+taskItem(t)+'</section>';
 }
 function binderCard(item,market,view){
- const badge=item.badges&&item.badges.includes('Printouts Needed')?'<div class="dqc-binder-task-badges"><span class="dqc-task-badge is-print">Printouts Needed</span></div>':'';
+ const badge=Array.isArray(item.badges)&&item.badges.length?'<div class="dqc-binder-task-badges">'+item.badges.map(function(label){return '<span class="dqc-task-badge '+(label==='Printouts Needed'?'is-print':'is-as-needed')+'">'+safe(label)+'</span>';}).join('')+'</div>':'';
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
  const url=item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
  const link=url?'<a class="dqc-binder-template-link" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">Open log template <span aria-hidden="true">↗</span></a>':'';
@@ -167,10 +163,7 @@ const dailyTemplateCatalog=[
  {id:'sysmex-maint',title:'pocH-100i Maintenance Log',detail:'Instrument maintenance record',group:'Maintenance'},
  {id:'triage-daily',title:'Triage MeterPro Daily QC Log',detail:'Daily electronic QC device result',group:'Instrument QC'},
  {id:'clinitek-maint',title:'Siemens Urinalysis Maintenance Log',detail:'Platform cleaning and as-needed maintenance',group:'Maintenance'},
- {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'},
- {id:'waived-qc',title:'Waived Test QC Log',detail:'Event-based controls for new or active kits',group:'As needed'},
- {id:'febridx-qc',title:'FebriDx Quality Control Log',detail:'New-box positive and negative controls',group:'As needed'},
- {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'Problems, specimen rejections and corrective actions',group:'Exceptions'}
+ {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'}
 ];
 const monthlyTemplateCatalog=[
  {id:'pathfast-maint',title:'PATHFAST Maintenance Schedule',detail:'Weekly and monthly instrument maintenance',group:'Maintenance'},
@@ -178,7 +171,9 @@ const monthlyTemplateCatalog=[
  {id:'triage-liquid',title:'Triage MeterPro Liquid QC Log',detail:'Scheduled liquid QC for active assays',group:'Instrument QC'},
  {id:'sofia-cal',title:'Sofia 2 Calibration Check Log',detail:'Optical calibration results; no printout required',group:'Instrument QC'},
  {id:'sofia-qc',title:'Sofia 2 QC Log',detail:'New-lot, new-shipment or other event-based controls',group:'As needed'},
- {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'Monthly corrective-action record',group:'Exceptions'}
+ {id:'waived-qc',title:'Waived Test QC Log',detail:'New-lot, new-shipment or other event-triggered controls',group:'As needed'},
+ {id:'febridx-qc',title:'FebriDx Quality Control Log',detail:'External controls when required by kit or site SOP',group:'As needed'},
+ {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'QC failures, incidents and corrective action documentation',group:'As needed'}
 ];
 const clinitekTemplateCatalog=[
  {id:'clinitek-ua',title:'Siemens Urinalysis QC Log',detail:'Low and high UA controls',group:'Clinitek'},
@@ -198,9 +193,9 @@ function renderTemplatePanel(market,page){
  const tabId=page==='monthly'?'dqc-tab-monthly-templates':'dqc-tab-templates';
  const cards=records.map(function(t){
   const href='lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
-  return '<article class="dqc-template-card"><div class="dqc-template-top"><span class="dqc-template-category">'+safe(t.group)+'</span></div><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">Open printable template <span aria-hidden="true">↗</span></a></article>';
+  return '<article class="dqc-template-card"><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><div class="dqc-template-footer"><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">Open printable template <span aria-hidden="true">↗</span></a><span class="dqc-template-category">'+safe(t.group)+'</span></div></article>';
  }).join('');
- return '<section id="'+panelId+'" class="dqc-workstream dqc-templates-workstream" role="tabpanel" aria-labelledby="'+tabId+'"'+(active?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('templates')+'</span><div><h2>Lab Templates</h2><p>Blank log sheets for '+(page==='monthly'?'recurring QC, maintenance and documentation':'daily checks, controls and lab documentation')+'</p></div></div><span class="dqc-check-count">'+records.length+' templates</span></header><p class="dqc-template-intro">Open a print-ready log and fill in the header if needed, then print or save it as a PDF. These are adapted from the supplied lab logs. Verify the current controlled form and site SOP before clinical use.</p><div class="dqc-template-grid">'+cards+'</div></section>';
+ return '<section id="'+panelId+'" class="dqc-workstream dqc-templates-workstream" role="tabpanel" aria-labelledby="'+tabId+'"'+(active?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('templates')+'</span><div><h2>Lab Templates</h2><p>Blank log sheets for '+(page==='monthly'?'recurring QC, maintenance and as-needed documentation':'daily checks, controls and lab documentation')+'</p></div></div><span class="dqc-check-count">'+records.length+' templates</span></header><p class="dqc-template-intro">Open a print-ready log and fill in the header if needed, then print or save it as a PDF. These are adapted from the supplied lab logs. Verify the current controlled form and site SOP before clinical use.</p><div class="dqc-template-grid">'+cards+'</div></section>';
 }
 
 function renderDailySections(market,dailyQcTasks){
@@ -228,10 +223,10 @@ function renderMonthlySections(market,monthlyTasks){
  '<section id="dqc-panel-monthly" role="tabpanel" class="dqc-workstream dqc-monthly-workstream" aria-labelledby="dqc-tab-monthly"'+(v==='monthly'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('monthly')+'</span><div><h2>Monthly QC Tasks</h2><p>Recurring QC and calibration checks for applicable instruments</p></div></div><span class="dqc-check-count">'+monthlyTasks.length+' recurring checks</span></header>'+
  '<p class="dqc-cadence-note"><strong>File required instrument printouts with the monthly binder records; document Sofia 2 calibration and QC in the approved signed log.</strong> For checks without printouts, use the approved signed QC record. PATHFAST is due every 28 days, while other intervals may be every 30 days or market-specific. Follow actual due dates, not the calendar month, and only perform tasks applicable to installed instruments.'+(market.id==='socal'?'':' <strong>Clinitek:</strong> UA and hCG external QC is scheduled daily in this market. File its printouts in the Daily Checklist binder, not as a separate monthly QC task.')+'</p>'+
  '<div class="dqc-monthly-grid">'+monthlyTasks.map(monthlyCard).join('')+'</div></section>'+
- '<section id="dqc-panel-monthly-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-monthly-binder"'+(v==='monthly-binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2>Monthly Binder Documentation</h2><p>Printouts and records for recurring QC and calibration checks</p></div></div><span class="dqc-check-count">'+monthlyRecords.length+' record groups</span></header>'+
+ '<section id="dqc-panel-monthly-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-monthly-binder"'+(v==='monthly-binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2>Monthly Binder Documentation</h2><p>Records for recurring QC, calibration and as-needed events</p></div></div><span class="dqc-check-count">'+monthlyRecords.length+' record groups</span></header>'+
  '<p class="dqc-cadence-note"><strong>File required QC/calibration printouts and signed QC records in the monthly binder.</strong> Include the date, instrument, lot, operator and corrective action when required by site SOP. Sofia 2 calibration and QC are documented in the approved log without a printout.</p>'+
  '<div class="dqc-binder-grid">'+monthlyRecords.map(item=>binderCard(item,market,'monthly')).join('')+'</div>'+
- '<p class="dqc-binder-note">Only include installed equipment and checks that were required or due. Daily binder items remain on the Lab Daily Checklist page.</p></section>'+renderTemplatePanel(market,'monthly');
+ '<p class="dqc-binder-note">Only include installed equipment and checks that were required or due. As-needed logs are completed when an event occurs, not automatically every month. Daily binder items remain on the Lab Daily Checklist page.</p></section>'+renderTemplatePanel(market,'monthly');
 }
 function render(page='daily'){
  currentPage=page==='monthly'?'monthly':'daily';
