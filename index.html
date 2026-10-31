@@ -105,6 +105,47 @@
 .calculator-brand-title .calculator-logo-svg{width:52px!important;height:52px!important}
 @media(max-width:650px){.nav-link .nav-icon.calc-nav-icon{width:30px;height:29px;min-width:30px;margin-left:0}.nav-link .nav-icon.calc-nav-icon .calculator-logo-svg{width:26px!important;height:26px!important}}
 
+
+/* Print options and compact procedure layout */
+.lc-print-anchor{position:relative;display:flex;align-items:center}
+.lc-print-trigger{display:inline-flex;align-items:center;gap:7px}
+.lc-print-chevron{font-size:13px;margin-left:2px;color:#7892a6}
+.lc-print-trigger[aria-expanded=true] .lc-print-chevron{transform:rotate(180deg)}
+.lc-print-options{position:absolute;z-index:500;right:0;top:calc(100% + 9px);width:min(335px,calc(100vw - 22px));padding:6px;background:white;border:1px solid #dce6ee;border-radius:13px;box-shadow:0 16px 35px rgba(22,46,73,.14)}
+.lc-print-options[hidden],.lc-print-options-help[hidden]{display:none!important}
+.lc-print-options button{display:flex;align-items:center;gap:11px;border:0;border-radius:9px;text-align:left;padding:12px 11px;width:100%;background:transparent;color:#2b445d;cursor:pointer;font-family:inherit}
+.lc-print-options button:hover,.lc-print-options button:focus-visible{background:#f0f7fb}
+.lc-print-options button:focus-visible{outline:2px solid #88c5e7;outline-offset:1px}
+.lc-print-options button:disabled{opacity:.48;cursor:not-allowed;background:none}
+.lc-print-option-icon{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:9px;background:#edf5fa;color:#367da7;font-size:18px}
+.lc-print-options button[data-lc-print=compact] .lc-print-option-icon{background:#eaf6f2;color:#2d887c}
+.lc-print-options button>span:last-child{display:flex;flex-direction:column;gap:3px;min-width:0}
+.lc-print-options button strong{font-size:13px;font-weight:800;line-height:1.3}
+.lc-print-options button small{font-size:11px;color:#768ca0;line-height:1.35;font-weight:500}
+.lc-print-options-help{font-size:10px;color:#7b8ea0;line-height:1.5;margin:3px 8px 5px;padding-top:6px;border-top:1px solid #eef1f5}
+.lc-print-compact-document{display:none}
+@media print{
+html[data-lc-print=compact] body>*:not(#lcCompactPrintDocument){display:none!important}
+html[data-lc-print=compact] body{background:white!important;color:#223b52!important;overflow:visible!important}
+html[data-lc-print=compact] #lcCompactPrintDocument{display:block!important;position:static!important;width:100%!important;margin:0!important;padding:0!important}
+html[data-lc-print=compact] .lc-compact-head{border-bottom:2px solid #d6e7f0;padding-bottom:10px;margin-bottom:14px}
+html[data-lc-print=compact] .lc-compact-kicker{color:#3b799a;letter-spacing:.12em;font-weight:850;font-size:9px}
+html[data-lc-print=compact] .lc-compact-head h1{font-size:23px;margin:4px 0 6px;line-height:1.25;color:#223c54}
+html[data-lc-print=compact] .lc-compact-head p{font-size:11px;color:#526a80;line-height:1.5;margin:3px 0}
+html[data-lc-print=compact] .lc-compact-meta{display:flex;gap:10px;flex-wrap:wrap;background:#f5f8fb;border:1px solid #dee7ef;border-radius:7px;padding:9px 11px;margin:10px 0 13px;font-size:10px;color:#526e82}
+html[data-lc-print=compact] .lc-compact-meta span{font-weight:700}
+html[data-lc-print=compact] .lc-compact-step{border:1px solid #dce6ed;border-radius:7px;padding:11px 12px;margin-bottom:9px;break-inside:avoid-page}
+html[data-lc-print=compact] .lc-compact-step-head{display:flex;align-items:flex-start;gap:9px}
+html[data-lc-print=compact] .lc-compact-step-number{display:grid;place-items:center;flex:none;border-radius:6px;background:#e8f3f9;color:#286d98;width:26px;height:26px;font-size:11px;font-weight:850}
+html[data-lc-print=compact] .lc-compact-step h2{margin:2px 0 5px;line-height:1.3;font-size:12px;color:#25455c}
+html[data-lc-print=compact] .lc-compact-step ul{padding:0 0 0 17px;margin:4px 0 3px;list-style:disc}
+html[data-lc-print=compact] .lc-compact-step li{padding:0;margin:3px 0;line-height:1.45;font-size:10px;color:#344f62}
+html[data-lc-print=compact] .lc-compact-step li ul{margin-top:3px;list-style:circle}
+html[data-lc-print=compact] .lc-compact-note{border-left:3px solid #a4b9c9;margin:7px 0;background:#f7f9fb;padding:6px 8px;color:#43596d;font-size:10px;line-height:1.5;break-inside:avoid}
+html[data-lc-print=compact] .lc-compact-note.urgent{border-left-color:#bb854a;background:#fff9f0;color:#765630;font-weight:690}
+html[data-lc-print=compact] .lc-compact-footer{font-size:9px;line-height:1.4;color:#75889b;margin-top:12px;border-top:1px solid #e5ebf1;padding-top:8px}
+html[data-lc-print=compact] .lc-compact-step a{color:#245d88;text-decoration:underline;overflow-wrap:anywhere}
+}
 </style>
   
   
@@ -194,7 +235,7 @@
     <div class="workspace">
       <header class="topbar">
         <div class="topbar-left"><button id="openSidebar" type="button" class="icon-button menu-button" aria-label="Open menu"><span class="hamburger">☰</span></button><span class="breadcrumbs"><button type="button" id="homeCrumb">Lab Central</button><span class="crumb-sep">/</span><span id="currentCrumb">Overview</span></span></div>
-        <div class="topbar-actions"><span class="edition-pill">STAFF REFERENCE</span><button id="printBtn" class="text-button" type="button"><span class="print-icon">▤</span><span>Print page</span></button></div>
+        <div class="topbar-actions"><span class="edition-pill">STAFF REFERENCE</span><div class="lc-print-anchor"><button id="printBtn" class="text-button lc-print-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="printOptions"><span class="print-icon">▤</span><span>Print page</span><span class="lc-print-chevron" aria-hidden="true">⌄</span></button><div id="printOptions" class="lc-print-options" hidden role="group" aria-label="Choose print format"><button type="button" data-lc-print="full"><span class="lc-print-option-icon" aria-hidden="true">▤</span><span><strong>Full page</strong><small>Current page with illustrations and details</small></span></button><button type="button" data-lc-print="compact" id="compactPrintChoice"><span class="lc-print-option-icon" aria-hidden="true">☷</span><span><strong>Compact steps</strong><small id="compactPrintDescription">Procedure steps, important notes and warnings</small></span></button><p class="lc-print-options-help" id="compactPrintHelp" hidden>Open a testing, QC, or maintenance step tab for compact printing.</p></div></div></div>
       </header>
       <main id="mainContent" class="main-content" tabindex="-1"></main>
       <footer class="global-footer"><span>Lab Central · Staff reference</span><span>Clinical instructions require confirmation against approved SOPs and current manufacturer instructions.</span></footer>
