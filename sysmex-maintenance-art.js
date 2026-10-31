@@ -21,17 +21,33 @@
  T(300,443,"SYSMEX pocH-100i · illustrated front view",13,"#648093");
 }
 function cellclean(){
-  return '<ellipse cx="787" cy="410" rx="139" ry="12" fill="#e0e9ef"/>'+
-   '<path d="M676 102H898L890 407H688Z" fill="#eaf6f8" stroke="#aec8d4" stroke-width="4" opacity=".65"/>'+
-   '<rect x="716" y="125" width="144" height="264" rx="22" fill="#f4fbfd" stroke="#88adbe" stroke-width="5"/>'+
-   '<path d="M724 292H852V354Q847 384 794 384H785Q735 380 724 354Z" fill="#eef5eb" opacity=".86"/>'+
-   '<ellipse cx="788" cy="125" rx="72" ry="15" fill="#e6f1f5" stroke="#80a6b8" stroke-width="4"/>'+
-   '<rect x="734" y="183" width="108" height="91" rx="5" fill="#fff" stroke="#d7e5eb"/>'+
-   T(788,204,"CELLCLEAN",16,"#31667a",900)+T(788,229,"3 mL",24,"#288b91",900)+
-   T(788,252,"SAMPLE TUBE",10,"#5d8192")+
-   '<rect x="677" y="375" width="219" height="24" rx="9" fill="#d9e9ed" stroke="#99b7c6" stroke-width="3"/>'+
-   T(788,445,"Open tube in approved sample adapter",12,"#628194");
- }
+ // Photo reference: white CELL CLEAN AUTO carton, Sysmex REF CF-579-595, 4 mL × 20.
+ // This is a packaging-identification example, NOT a pocH-compatible reagent recommendation.
+ const barcode=Array.from({length:25},(_,i)=>
+  '<rect x="'+(735+i*3.3)+'" y="324" width="'+(i%4===0?2.6:i%3===0?1.8:1)+'" height="'+(i%5===0?35:30)+'" fill="#2f3539"/>').join("");
+ return '<ellipse cx="791" cy="406" rx="152" ry="12" fill="#e0e9ed"/>'+
+  '<path d="M657 131Q657 120 666 119H753Q769 120 773 107Q781 92 793 94Q805 96 816 111L830 118H914V380Q912 391 898 391H669Q656 391 656 378Z" fill="#fafbfa" stroke="#cad2d4" stroke-width="4"/>'+
+  '<path d="M667 134H905" stroke="#e8eceb" stroke-width="3"/>'+
+  '<path d="M656 154H911" stroke="#f0f2f1" stroke-width="2"/>'+
+  '<g fill="#161b1e"><path d="M801 157l17-13 15 5-15 13Z"/><path d="M818 162l13-12 17 7-14 12Z"/></g>'+
+  T(866,177,"sysmex",22,"#181c20",900)+
+  '<rect x="675" y="193" width="219" height="75" fill="#fff" stroke="#202529" stroke-width="3"/>'+
+  '<rect x="683" y="201" width="42" height="59" fill="#1b2024"/>'+
+  T(704,237,"CL",31,"#fff",850)+
+  T(737,223,"CELLCLEAN",15,"#141a1f",900,"start")+
+  T(737,241,"AUTO",17,"#141a1f",900,"start")+
+  '<path d="M730 247H887" stroke="#23282b" stroke-width="1.4"/>'+
+  T(740,258,"SYSMEX CLEANER",9,"#333c42",650,"start")+
+  '<rect x="675" y="277" width="35" height="15" fill="#fff" stroke="#3e474b" stroke-width="1.3"/>'+
+  T(692,288,"REF",10,"#263038",850)+
+  T(717,288,"CF-579-595",12,"#22292d",800,"start")+
+  T(898,291,"4 mL × 20",13,"#252c30",800,"end")+
+  T(685,320,"IVD",12,"#232a2f",800,"start")+
+  T(684,358,"CE",14,"#232a2f",750,"start")+
+  barcode+
+  T(776,375,"CELL CLEAN AUTO",9,"#58636a",650)+
+  T(792,444,"CELL CLEAN AUTO · pictured carton",12,"#647b87",650);
+}
  function waste(){
    return '<ellipse cx="789" cy="418" rx="135" ry="13" fill="#dce7ec"/>'+
      '<path d="M677 131L700 119H875L900 131V381Q894 408 877 410H702Q680 408 677 388Z" fill="#edf8fb" fill-opacity=".84" stroke="#98b5c4" stroke-width="5"/>'+
@@ -100,7 +116,8 @@ function cellclean(){
  }
  function step(mode){
   if(mode==='shutdown')return scene('Shutdown is an analyzer command',media(mode),'On the Main screen, select Shutdown, then Execute. Wait for the completion prompt before switching OFF. No blood tube is involved.');
-  if(mode==='transducer')return scene('CELLCLEAN and sample adapter',media(mode),'Use 3 mL of approved CELLCLEAN in a clean sample tube. Place in the sample adapter, close the compartment and choose Execute. Remove after the completed cycle.');
+  if(mode==='transducer')return scene('Verify the correct CELLCLEAN product',media(mode),'The photo supplied shows CELL CLEAN AUTO (4 mL × 20). This carton is a product-identification reference only. Follow the pocH-100i instructions for 3 mL of approved CELLCLEAN in a separate clean sample tube and sample adapter.')+
+   '<aside class="guide-note urgent sysmex-cleaner-compatibility"><strong>Product compatibility:</strong> CELL CLEAN AUTO (CF-579-595) is specified by Sysmex for XN-series systems and related equipment, not the pocH-100i. Do not substitute it for the pocH-100i cleaning reagent. Confirm the correct CELLCLEAN supply with Sysmex and the approved site SOP before proceeding.</aside>';
   if(mode==='other')return scene('Select the maintenance task on the instrument',media(mode),'Follow the specific Clean Waste Chamber, Auto Rinse or Clog Removal prompt and its manufacturer procedure. These are separate maintenance tasks.');
   if(mode==='waste')return scene('Waste bottle, red waste line and float switch',media(mode),'Empty the waste bottle into the designated lab sink, then follow with bleach according to the approved local waste-handling SOP. Refit the float switch and cap, reconnect without kinking tubing, and confirm no leaks.');
   if(mode==='reagent')return scene('pocH-pack D · diluent / pocH-pack L · lyse',media(mode),'D is the larger diluent container; L is the smaller purple-labeled lyse bottle. Transfer the matching spout kit without contaminating the tubing and enter or scan the new reagent barcode when prompted.');
