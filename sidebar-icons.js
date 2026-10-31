@@ -9,7 +9,7 @@ window.LAB_CENTRAL_SIDEBAR_ICONS=Object.freeze({
   "home": "<path d=\"m3 11 9-7 9 7v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 20Z\"/><path d=\"M9 21.5v-7h6v7M9.5 11h5M12 8.5v5\"/>",
   "favorites": "<path d=\"m12 2.8 2.85 5.77 6.37.92-4.61 4.49 1.09 6.35L12 17.33l-5.7 3 1.09-6.35-4.61-4.49 6.37-.92L12 2.8Z\"/><path d=\"m9.4 12.5 1.7 1.7 3.6-3.7\"/>",
   "orders": "<path d=\"M6.5 2.5h8l4 4V21H6.5a2 2 0 0 1-2-2V4.5a2 2 0 0 1 2-2Z\"/><path d=\"M14.5 2.5v4h4M8 10.5h6M8 13.7h4\"/><path d=\"m12.9 17.4 2 2 4-4\"/>",
-  "order-sets": "<path d=\"M7 2.5h8l4.5 4.5v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4.5a2 2 0 0 1 2-2Z\"/><path d=\"M15 2.5V7h4.5M8.5 10.5h5M8.5 14h4M8.5 17.5h3\"/><path d=\"m14.1 16.8 1.8 1.8 3.4-3.9\"/>",
+  "order-sets": "<path d=\"M5.6 19 10.7 5h2.6l5.1 14M8.1 13.4h7.8\" stroke-width=\"2.45\"/>",
   "drug-screen": "<path d=\"M6 6h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 6ZM5 6h14M8 3h8\"/><path d=\"M9.5 10v6m2.5-6v6m2.5-6v6\"/>",
   "poc": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"12\" rx=\"3\"/><path d=\"M6 10h5v4H6zM15 10h3M16.5 9v5M6 3.5h4\"/><path d=\"m12.8 20 2 1.5 3-2\"/>",
   "sendout": "<path d=\"M3 8h12v10H3zM15 11h3.6l2.4 3v4h-6M6 8V5h6v3\"/><circle cx=\"7\" cy=\"18.5\" r=\"2\"/><circle cx=\"18\" cy=\"18.5\" r=\"2\"/><path d=\"M8.5 11.5h4M10.5 9.5v4\"/>",
