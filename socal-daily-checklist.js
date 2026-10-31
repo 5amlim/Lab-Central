@@ -83,7 +83,7 @@ function card(group,index,tasks){
         return '<span class="dqc-task-badge '+(badge==='QC'?'is-qc':'is-print')+'">'+safe(badge)+'</span>';
        }).join('')+'</div>'
       :'';
-    return '<article class="dqc-item"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4>'+badges+'<p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
+    return '<article class="dqc-item'+(badges?' has-task-badges':'')+'"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span>'+badges+'</article>';
   }).join('')+'</div></section>';
 }
 function binderCard(item){
