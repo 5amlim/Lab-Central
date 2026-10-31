@@ -28,6 +28,7 @@ const tests={
  ],
  spotfire:[
   {title:'Full respiratory panel',spotfireMark:'R',complexity:'waived',groups:{'Viruses':A('Adenovirus|Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Seasonal coronaviruses|Human metapneumovirus|Human rhinovirus / enterovirus|Influenza A virus (including A/H1-2009 and A/H3 subtyping)|Influenza B virus|Parainfluenza viruses|Respiratory syncytial virus'),'Bacteria':A('Bordetella parapertussis|Bordetella pertussis|Chlamydia pneumoniae|Mycoplasma pneumoniae')}},
+  {title:'Full sore throat panel',spotfireMark:'ST',marketNote:'NY clinics',complexity:'waived',countLabel:'14 targets (including influenza A subtypes)',groups:{'Viruses':A('Adenovirus|Seasonal coronaviruses|Human metapneumovirus|Human rhinovirus / enterovirus|Influenza A virus (including A/H1-2009 and A/H3 subtyping)|Influenza B virus|Parainfluenza viruses|Respiratory syncytial virus'),'Bacteria':A('Chlamydia pneumoniae|Mycoplasma pneumoniae|Streptococcus dysgalactiae (group C/G Streptococcus)|Streptococcus pyogenes (group A Streptococcus)')}},
   {title:'Mini respiratory panel',spotfireMark:'R',spotfireMini:true,complexity:'waived',groups:{'Viruses':A('Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)|Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus')}},
   {title:'Mini sore throat panel',spotfireMark:'ST',spotfireMini:true,complexity:'waived',groups:{'Viruses':A('Human rhinovirus|Influenza A virus|Influenza B virus|Respiratory syncytial virus'),'Bacteria':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
@@ -204,7 +205,7 @@ function oneCard(c,idx,withDisc,id){
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):id==='spotfire'&&c.spotfireMark?spotfireMark(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
-  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
+  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small>'+(c.marketNote?'<span class="ac-market-note">'+esc(c.marketNote)+'</span>':'')+'</span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
   '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
@@ -214,7 +215,7 @@ function render(section){
  const heading=isDisc?'Available Piccolo reagent discs':id==='torch'?'Gastrointestinal panel targets':'Available tests and detected analytes';
  const subtitle=isDisc?'Six approved chemistry discs. Accent colors follow the corresponding reagent pouch labeling. Measured and calculated results are separated.':'Select an assay below to review its full analyte or pathogen menu. Categories and complexity labels are assay-specific.';
  let notes='';
- if(id==='spotfire')notes='Full and mini testing menus differ. Use the specimen-appropriate respiratory or sore throat menu printed on the installed U.S. pouch IFU.';
+ if(id==='spotfire')notes='Select the specimen-appropriate respiratory or sore throat menu per the installed U.S. pouch IFU. Full sore throat is listed for NY clinics.';
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
