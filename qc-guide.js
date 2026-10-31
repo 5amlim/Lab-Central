@@ -66,9 +66,10 @@ function isQcGroup(sec,group){
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
  const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
+ const isPoch=brand==="Sysmex pocH-100i";
  const header=isPiccoloScene
   ?'<div class="qc-device-screen-top qc-px-screen-top"><strong>'+esc(item.screen)+'</strong></div>'
-  :'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
+  :isPoch?'<div class="qc-device-screen-top qc-poch-top"><strong>sysmex</strong><small>Ready · Top</small></div>':'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
  let body="";
  if(item.kind==="piccoloHome"){
   // Match the actual Piccolo Home screen: one yellow Analyze action with small utility icons.
@@ -171,8 +172,14 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-mainstate"><span>Ready</span><span>Sample ID <b>#####</b></span></div>'+
    '<div class="qc-device-mainmodes"><span>WB</span><span>PD</span><span>RUN</span></div>'+
    '<div class="qc-device-mainfooter"><span>QC</span><span>Result</span><span>Shutdown</span></div>';
+ }else if(isPoch&&Array.isArray(item.items)){
+  // Schematic based on the pocH-100i IFU's pastel-color two-column operator buttons.
+  body='<div class="qc-poch-menu-label">'+esc(item.screen||"MAIN")+'</div>'+
+   '<div class="qc-poch-options">'+item.items.map((value,i)=>
+    '<span class="qc-poch-option'+(value===item.focus?' active':'')+'"><b>'+esc(value)+'</b>'+(value===item.focus?'<em>SELECT</em>':'')+'</span>').join("")+
+   '</div><div class="qc-poch-bottom"><span>Back</span><span>Top</span></div>';
  }else{
-  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options">'+
+  body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div><div class="qc-device-options'+
    item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Back</span><span>Review selected action</span></div>';
  }
@@ -335,5 +342,5 @@ function printStep(id){
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
  '<p>'+esc(cfg.note)+'</p></div></div></div>';
 }
-window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep};
+window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep,screenGallery:screenGallery};
 })();
