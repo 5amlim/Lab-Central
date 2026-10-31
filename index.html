@@ -219,6 +219,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-faithful-minimal-anonymous-v6" media="all">
 <script src="athena-ordering-guide.js?v=20261030-faithful-minimal-anonymous-v6"></script>
 <link rel="stylesheet" href="envi-ordering-guide.css?v=20261031-31screens-zoom-v3" media="all">
+<link rel="stylesheet" href="tube-reference.css?v=20261031-tube-summary-v1" media="all">
 <script src="envi-ordering-guide.js?v=20261031-31screens-zoom-v3"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261031-internal-sop-layout-v2" media="all">
 <script src="sop-print.js?v=20261031-internal-sop-layout-v2"></script>
@@ -1810,12 +1811,36 @@ function febridxResultInterpretation(){
  '</section>';
 }
 
+
+/* Collection reference tabs intentionally do not use the guided-step renderer. */
+function tubeReferencePanel(tab){
+ const lockbox=tab==='for-lockbox-pickups';
+ const title=lockbox?'Quest lockbox pickups':'Quest collection & transport notes';
+ let h='<section class="tube-ref" aria-label="'+title+'"><header class="tr-hero"><div><span class="tr-eyebrow">QUEST DIAGNOSTICS · COLLECTION REFERENCE</span><h2>'+title+'</h2><p>'+
+ (lockbox?'A quick reference for packing temperature-sensitive specimens and requesting pickup.':'Confirm the correct collection tube and transport temperature for every test.')+
+ '</p></div><span class="tr-hero-symbol" aria-hidden="true">'+svg(lockbox?'package':'test-tube-2')+'</span></header>';
+ if(lockbox){
+  h+='<div class="tr-grid">'+
+  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('package')+'</span><div><span class="tr-card-label">PACKAGING</span><h3>Use the Quest transport pouch</h3></div></div><p>Use the <strong>frozen/refrigerated pouch provided by Quest</strong> for the corresponding specimen.</p><p class="tr-supporting">Keep reusable pouches refrigerated or frozen when not in use, according to the approved site procedure.</p></article>'+
+  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('file-text')+'</span><div><span class="tr-card-label">LABELING</span><h3>Mark the transport temperature</h3></div></div><p>Clearly label the specimen <strong>“Frozen”</strong> or <strong>“Refrigerated”</strong> as required for the test.</p><div class="tr-feature-list"><span>Frozen</span><span>Refrigerated</span></div></article></div>'+
+  '<aside class="tr-warning" role="note"><span class="tr-warning-icon" aria-hidden="true">!</span><div><strong>Do not mix frozen specimens with other temperatures</strong><p><b>Keep frozen specimens separate from refrigerated and room-temperature specimens.</b> Use the correct transport bag for each temperature group.</p></div></aside>'+
+  '<section class="tr-pickup"><div><span class="tr-eyebrow">PICKUP COMMUNICATION</span><h3>Specify the temperatures when requesting pickup</h3><p>Tell the courier whether the samples are <strong>frozen, refrigerated, or room temperature</strong>. Identify every temperature group included in the pickup.</p></div><div class="tr-feature-list" aria-label="Temperature groups"><span>Frozen</span><span>Refrigerated</span><span>Room temperature</span></div></section>'+
+  '<div class="tr-foot"><span>i</span><div>Always confirm current test-specific handling requirements and site pickup instructions before packaging.</div></div>';
+ }else{
+  h+='<div class="tr-grid">'+
+  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('test-tube-2')+'</span><div><span class="tr-card-label">TUBE SELECTION</span><h3>Use the test-specific directory</h3></div></div><p><strong>Not every tube is listed here.</strong> Confirm the correct container, sample volume, processing, and storage requirements for each ordered test in the Quest Test Directory.</p><div class="tr-card-actions"><a class="tr-external" href="https://testdirectory.questdiagnostics.com/test/home" target="_blank" rel="noopener noreferrer">Open Quest Test Directory ↗</a></div></article>'+
+  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('package')+'</span><div><span class="tr-card-label">HANDLING</span><h3>Frozen and refrigerated labs</h3></div></div><p>Verify which temperature each specimen requires. <strong>Frozen, refrigerated, and room-temperature specimens</strong> may need different transport bags and pickup instructions.</p><div class="tr-card-actions"><button type="button" class="tr-nav-button" data-gotab="for-lockbox-pickups">View lockbox guidance <span aria-hidden="true">→</span></button></div></article></div>'+
+  '<div class="tr-reference-quick"><div><strong>Need to identify a specimen tube?</strong><p>See photos of the containers included in this reference.</p></div><button type="button" class="tr-nav-button" data-gotab="gallery">Open tube photos <span aria-hidden="true">→</span></button></div>';
+ }
+ return h+'</section>';
+}
+
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
  const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Tube photos'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -1868,6 +1893,7 @@ function sectionRender(sec,tab){
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
  else if(sec.id==='sendout'&&tab!=='resources')h+=window.LAB_SENDOUT_MARKETS.render('guide');
  else if(tab==='overview')h+=sectionOverview(sec,groups);
+ else if(sec.id==='tubes'&&(tab==='general'||tab==='for-lockbox-pickups'))h+=tubeReferencePanel(tab);
  else if(tab==='visuals'&&hasVisualGuide)h+=window.LAB_EQUIPMENT_ART.visualGuide(sec);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="Expanded Calibration and QC dropdown"><div class="pfux-cal-nested-label">Inside Calibration + QC · Choose assay panel below</div>'+window.LAB_PATHFAST_UI.render()+'</div>';
