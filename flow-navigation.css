@@ -2398,3 +2398,23 @@
   break-inside:avoid;
  }
 }
+
+/* Temperature handling stays in its own column; pickup destinations stack. */
+.workflow-main .collection-handoff-card--full .collection-handoff-list {
+ grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;
+}
+.workflow-main .collection-handoff-card--full .collection-handoff-list li:first-child {grid-column:1;grid-row:1 / span 2}
+.workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(2) {grid-column:2;grid-row:1}
+.workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(3) {grid-column:2;grid-row:2}
+@media(max-width:650px) {
+ .workflow-main .collection-handoff-card--full .collection-handoff-list {grid-template-columns:1fr;grid-template-rows:none}
+ .workflow-main .collection-handoff-card--full .collection-handoff-list li:nth-child(n) {grid-column:auto;grid-row:auto}
+}
+.device-collection-photo-frame {position:relative}
+.device-collection-photo-label {
+ position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);
+ max-width:84%;padding:6px 9px;background:rgba(255,255,255,.96);
+ border:1px solid #a8bdc6;border-radius:4px;box-shadow:0 1px 5px #0002;
+ color:#233f50;font-size:11px;line-height:1.5;text-align:left;pointer-events:none;
+}
+.device-collection-photo-label strong {display:block;font-size:11px;color:#233f50}
