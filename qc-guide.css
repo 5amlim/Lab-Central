@@ -252,3 +252,12 @@
 .sysmex-maint-screen-flow .qc-screen-instruction{font-size:11.5px}
 @media(max-width:650px){.sysmex-maint-screen-flow{padding:11px 10px}.sysmex-maint-screen-heading{flex-direction:column;align-items:flex-start;gap:5px}.sysmex-maint-screen-flow .qc-screen-gallery--scroll>.qc-screen-reference{flex-basis:85vw;width:85vw}}
 @media print{.sysmex-maint-screen-flow .qc-screen-gallery--scroll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.sysmex-maint-screen-flow .qc-screen-gallery--scroll>.qc-screen-reference{width:auto;flex-basis:auto}}
+
+
+/* Separate real touchscreen actions from physical bottle/tube preparation. */
+.qc-poch-physical,.qc-poch-status{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:11px;padding:20px 18px;min-height:145px;text-align:center;color:#365d73;flex:1}
+.qc-poch-physical strong,.qc-poch-status strong{font-size:14px;color:#2e6377}
+.qc-poch-physical p,.qc-poch-status p{font-size:11px;line-height:1.55;max-width:340px;margin:0}
+.qc-poch-physical-labels{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.qc-poch-physical-labels span{background:#e5f4f1;border:1px solid #aacfc7;color:#287f76;border-radius:6px;padding:8px 9px;font-size:10px;font-weight:800}
+.qc-poch-status>span{padding:5px 10px;background:#e6f2f9;border-radius:20px;color:#527d94;font-size:10px;font-weight:800}
