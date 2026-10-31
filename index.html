@@ -156,7 +156,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="flow-navigation.css?v=20261031-seven-step-full-width-handoff-v44" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261031-febridx-collection-v4" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261031-sendout-logistics-layout-v1" media="all">
-<link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-socal-v1" media="all">
+<link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-market-reference-v2" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-instrument-qc-v1" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261031-calver-static-cards-v2" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
@@ -360,8 +360,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
 <script src="quality-reference.js?v=20261031-calver-static-cards-v2"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
-<script src="socal-daily-checklist.js?v=20261031-socal-v1"></script>
-<script src="instrument-qc-overview.js?v=20261031-qc-frequency-v1"></script>
+<script src="socal-daily-checklist.js?v=20261031-market-reference-v2"></script>
+<script src="instrument-qc-overview.js?v=20261031-pathfast-glance-v2"></script>
 <script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
 <script src="pathfast-interactive.js?v=20261030-early-ten-minute-window-v1"></script>
@@ -481,7 +481,7 @@ function showNav(){
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
   out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
   for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${svg(s.icon)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
-  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${svg('clipboard-check')}</span>SoCal daily checklist</button>`;
+  if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${svg('clipboard-check')}</span>Lab Daily Checklist</button>`;
   if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${svg('package')}</span>Envi Ordering</button>`;
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${svg('clipboard-check')}</span>Specimen drop-off</button>`;
   if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='lab-container-gallery'?'active':''}" data-go="lab-container-gallery"><span class="nav-icon">${svg('test-tube-2')}</span>Lab Container Gallery</button>`;
@@ -2101,7 +2101,7 @@ function render(){
  showNav();
  if(state.search)renderHome('search');
  else if(route.id==='outside'||route.id==='specimen-dropoff'||route.id==='sendout-log'||route.id==='socal-daily'){
-   el('currentCrumb').textContent=route.id==='socal-daily'?'SoCal daily checklist':window.LAB_OPS.titles[route.id]||'Lab operations';
+   el('currentCrumb').textContent=route.id==='socal-daily'?'Lab Daily Checklist':window.LAB_OPS.titles[route.id]||'Lab operations';
    el('mainContent').innerHTML=route.id==='socal-daily'?window.LAB_SOCAL_DAILY.render():window.LAB_OPS.render(route.id,route.tab);
  }
  else if(sec)sectionRender(sec,route.tab);
