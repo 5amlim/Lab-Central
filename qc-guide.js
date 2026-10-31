@@ -65,7 +65,7 @@ function isQcGroup(sec,group){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
- const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
+ const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const header=isPiccoloScene
   ?'<div class="qc-device-screen-top qc-px-screen-top"><strong>'+esc(item.screen)+'</strong></div>'
   :'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
@@ -81,14 +81,18 @@ function screenPanel(item,brand,number){
    '<span class="qc-px-help-icon" aria-hidden="true">i</span></div>'+
    '<div class="qc-px-blue-button">Close</div>';
  }else if(item.kind==="piccoloType"){
-  body='<div class="qc-px-type-body"><div class="qc-px-type-choice">Patient</div>'+
-   '<div class="qc-px-type-choice qc-px-type-active">Control</div>'+
+  body='<div class="qc-px-type-body"><div class="qc-px-type-choice'+(item.patient?' qc-px-type-active':'')+'">Patient</div>'+
+   '<div class="qc-px-type-choice'+(!item.patient?' qc-px-type-active':'')+'">Control</div>'+
    '<div class="qc-px-type-cancel">Cancel</div></div>';
  }else if(item.kind==="piccoloLevel"){
   // 1 or 2 is entered by the operator, never selected from a prepopulated level list.
   body='<div class="qc-px-level-body"><div class="qc-px-level-field"><strong>1</strong></div>'+
    '<div class="qc-px-keypad">'+["1","2","3","4","5","6","7","8","9","◂","0","▸"].map(v=>'<span>'+v+'</span>').join("")+'</div>'+
    '<div class="qc-px-keypad-actions"><span>Cancel</span><b>Enter</b></div></div>';
+ }else if(item.kind==="piccoloPatientId"){
+  body='<div class="qc-px-level-body"><div class="qc-px-level-field"><strong>#####</strong></div>'+
+   '<div class="qc-px-keypad">'+["1","2","3","4","5","6","7","8","9","←","0","→"].map(v=>'<span>'+esc(v)+'</span>').join("")+'</div>'+
+   '<div class="qc-px-keypad-actions"><span>Cancel</span><b>Done</b></div></div>';
  }else if(item.kind==="piccoloRunning"){
   body='<div class="qc-px-running-body"><div class="qc-px-running-disc" aria-hidden="true">◉</div>'+
    '<strong>Analyzing sample...</strong><small>QC run in progress</small></div>';
@@ -178,10 +182,42 @@ function screenPanel(item,brand,number){
 }
 function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
+ const cards=list.map((x,i)=>{
+  const html=screenPanel(x,brand,i+1);
+  return scroll&&i<list.length-1
+   ?html.replace('</p></div>','</p><button class="qc-gallery-more" type="button" aria-label="Show screen '+String(i+2)+'">More <span aria-hidden="true">→</span></button></div>')
+   :html;
+ }).join("");
  return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
   (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
-  list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
+  cards+'</div>'+
   '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p>';
+}
+if(!window.__labQcGalleryMoreBound){
+ window.__labQcGalleryMoreBound=true;
+ document.addEventListener('click',function(event){
+  const button=event.target.closest?.('.qc-gallery-more');
+  if(!button)return;
+  const card=button.closest('.qc-screen-reference'),next=card?.nextElementSibling;
+  if(next?.classList?.contains('qc-screen-reference')){
+   const gallery=card.parentElement;
+   gallery.scrollTo({left:next.offsetLeft-gallery.offsetLeft,behavior:'smooth'});
+   next.setAttribute('tabindex','-1');
+   next.focus({preventScroll:true});
+  }
+ });
+}
+function piccoloPatientLoadStep(){
+ const scenes=[
+  {kind:"piccoloHome",heading:"Select Analyze",screen:"Home",tip:"Select Analyze to open the disc drawer."},
+  {kind:"piccoloLoad",heading:"Insert disc and Close",screen:"Load Disc",tip:"Seat the prepared disc, barcode up, then select Close."},
+  {kind:"piccoloType",heading:"Choose Patient",screen:"Select Type",patient:true,tip:"Select Patient when prompted. Control is only for QC."},
+  {kind:"piccoloPatientId",heading:"Enter patient ID",screen:"Enter Sample ID",tip:"Enter and verify the patient's MRN or approved sample ID. Select Done."}
+ ];
+ return '<section class="qc-patient-load-sequence" aria-label="Piccolo patient sample touchscreen sequence">'+
+  '<div class="qc-patient-sequence-head"><strong>Follow the analyzer screens</strong><span>Select More or swipe right to continue</span></div>'+
+  screenGallery(scenes,"Piccolo Xpress",{scroll:true,piccolo:true,disclaimer:"Screens are manufacturer-informed illustrations. Confirm prompts on your analyzer."})+
+  '</section>';
 }
 function sysmexStep(sec,group,title){
  if(sec.id!=="sysmex"||group!=="daily-qc")return "";
@@ -299,5 +335,5 @@ function printStep(id){
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
  '<p>'+esc(cfg.note)+'</p></div></div></div>';
 }
-window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep};
+window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep};
 })();
