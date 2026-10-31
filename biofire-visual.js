@@ -322,6 +322,7 @@ function analyzer(id,state){
  const mode=String(state||"ready").toLowerCase();
  const statuses={
   ready:{title:"Available",detail:"",action:"›"},
+  insert:{title:"Review information",detail:"Insert pouch to start",action:""},
   selected:{title:"Module selected",detail:"Ready for new run",action:"›"},
   scan:{title:"Scan pouch barcode",detail:"Identify the pouch",action:"›"},
   identify:{title:"Confirm sample ID",detail:"Verify identifiers",action:"›"},
@@ -404,12 +405,79 @@ function analyzer(id,state){
  status.action?'<circle cx="466" cy="183" r="6" fill="#fff" stroke="#90bad5" stroke-width="1"/><path d="M464 180l4 3l-4 3" fill="none" stroke="#2c8fc1" stroke-width="1.1" stroke-linejoin="round"/>':'',
  '<path d="M333 284H495" stroke="#d1d1d7" stroke-width="2"/>'
  ];
+ // On the insertion step, overlay the final review form instead of a module-selection tile.
+ if(mode==="insert")parts.push(
+ '<rect x="350" y="110" width="131" height="148" fill="#f9fafb" stroke="#d0d5d9" stroke-width=".5"/>',
+ '<text x="358" y="123" font-size="7.2" font-weight="850" font-family="Arial,sans-serif" fill="#262a30">Review Information,</text>',
+ '<text x="358" y="132" font-size="7.2" font-weight="850" font-family="Arial,sans-serif" fill="#262a30">Then Insert Pouch</text>',
+ '<text x="358" y="143" font-size="4.4" font-family="Arial,sans-serif" fill="#54626e">Run begins when pouch is inserted.</text>',
+ '<path d="M355 149H475" stroke="#dce2e5" stroke-width=".8"/>',
+ '<text x="358" y="161" font-size="5" font-family="Arial,sans-serif" fill="#687781">Sample ID:</text>',
+ '<text x="398" y="161" font-size="5.6" font-weight="750" font-family="Arial,sans-serif" fill="#283747">SAMPLE-001</text>',
+ '<text x="358" y="174" font-size="5" font-family="Arial,sans-serif" fill="#687781">Sample Type:</text>',
+ '<text x="400" y="174" font-size="5.1" font-weight="720" font-family="Arial,sans-serif" fill="#283747">NP swab</text>',
+ '<text x="358" y="187" font-size="5" font-family="Arial,sans-serif" fill="#687781">Test:</text>',
+ '<text x="398" y="187" font-size="5.7" font-weight="720" font-family="Arial,sans-serif" fill="#283747">Respiratory Panel</text>',
+ '<rect x="458" y="180" width="10" height="10" rx="2" fill="#399dc3"/>',
+ '<text x="463" y="187.2" fill="#fff" font-size="6.5" text-anchor="middle" font-weight="850" font-family="Arial,sans-serif">R</text>',
+ '<rect x="394" y="201" width="43" height="42" rx="2" fill="#edf1f4" stroke="#cad5dd" stroke-width=".9"/>',
+ '<rect x="400" y="207" width="31" height="11" fill="#eef3f7" stroke="#8696a3" stroke-width=".7"/>',
+ '<rect x="400" y="219" width="31" height="12" fill="#e2f5ff" stroke="#3899c9" stroke-width="1.4"/>',
+ '<rect x="400" y="232" width="31" height="7" fill="#eff3f6" stroke="#8696a3" stroke-width=".6"/>',
+ '<path d="M411 224h16" stroke="#d35158" stroke-width="2.2"/>',
+ '<path d="M413 227l-5 -3l5 -3" fill="none" stroke="#d35158" stroke-width="1.2"/>',
+ '<text x="361" y="251" font-size="5.2" fill="#3a7f9b" font-family="Arial,sans-serif" font-weight="760">INSERT PREPARED POUCH</text>'
+ );
+
  if(mode==="selected")parts.push('<rect x="347" y="160" width="132" height="50" rx="4" stroke="#18948b" stroke-width="2.5" fill="none" stroke-dasharray="5 3"/>');
  if(mode==="running")parts.push('<path d="M357 224H469" stroke="#e3e8ec" stroke-width="5" stroke-linecap="round"/><path d="M357 224H425" stroke="#399789" stroke-width="5" stroke-linecap="round"/>');
  return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BioFire SPOTFIRE front-view analyzer with white cartridge housing, red L-shaped pouch bay, lower vents, elevated right-hand touchscreen showing '+esc(status.title)+'" viewBox="145 40 430 420">'+parts.join('')+'</svg>';
 }
+/* Manufacturer-manual-informed final patient-test screen.
+   Text and layout are a schematic, not a direct reproduction of the UI. */
+function spotfireReviewScreenSvg(){
+ const markup=[
+ '<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 650 430" aria-label="Illustrated SPOTFIRE Review Information, Then Insert Pouch screen showing sample ID, sample type, Respiratory Panel, an available highlighted module and automatic run start">',
+ '<rect x="5" y="5" width="640" height="420" rx="12" fill="#fff" stroke="#c9d8e2" stroke-width="2"/>',
+ '<rect x="18" y="16" width="614" height="26" rx="3" fill="#34383c"/>',
+ '<text x="34" y="33" font-family="Arial,sans-serif" font-size="11" fill="#fff">SPOTFIRE</text>',
+ '<text x="612" y="33" text-anchor="end" font-family="Arial,sans-serif" font-size="11" fill="#fff">Operator</text>',
+ '<circle cx="41" cy="70" r="14" fill="#404449"/><path d="M46 70H36m0 0l5 -5m-5 5l5 5" fill="none" stroke="#fff" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>',
+ '<text x="69" y="75" font-size="21" font-weight="800" fill="#252c33" font-family="Arial,sans-serif">Review Information, Then Insert Pouch</text>',
+ '<text x="69" y="103" font-size="13.5" fill="#495965" font-family="Arial,sans-serif">The run will start automatically when the pouch is inserted.</text>',
+ '<path d="M40 121H610" stroke="#e3e9ed" stroke-width="1.5"/>',
+ '<text x="125" y="148" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Sample ID:</text>',
+ '<text x="232" y="148" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">SAMPLE-001</text>',
+ '<text x="125" y="173" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Sample Type:</text>',
+ '<text x="232" y="173" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">Nasopharyngeal Swab</text>',
+ '<text x="125" y="198" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Test:</text>',
+ '<text x="232" y="198" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">Respiratory Panel</text>',
+ '<rect x="360" y="184" width="20" height="19" rx="3" fill="#2fa4d6"/><text x="370" y="197" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="11">R</text>',
+ // Three front module slots, with selected middle module indicated in blue.
+ '<g transform="translate(238 218)">',
+ '<path d="M0 7L17 1H128L145 7V165H0Z" fill="#e5e9ed" stroke="#91a3ae" stroke-width="2"/>',
+ '<path d="M0 7L17 1H128L145 7L130 14H10Z" fill="#f9fbfc" stroke="#aebec8" stroke-width="1.3"/>',
+ '<rect x="14" y="22" width="117" height="40" rx="4" fill="#f5f7f9" stroke="#8999a7" stroke-width="1.6"/>',
+ '<path d="M65 30h13v25h-5v-19h-8z" fill="#242e35" stroke="#bc3b46" stroke-width="1.5"/>',
+ '<rect x="7" y="67" width="132" height="47" rx="3" fill="#b9effc" stroke="#268ecd" stroke-width="3"/>',
+ '<rect x="14" y="74" width="117" height="34" rx="4" fill="#eaf6fd" stroke="#368ac1" stroke-width="1.5"/>',
+ '<rect x="58" y="89" width="29" height="8" rx="1" fill="#212e35"/>',
+ '<rect x="81" y="87" width="55" height="7" rx="1" fill="#d3d8db" stroke="#87979f" stroke-width=".8"/>',
+ '<path d="M134 91l-16 0" stroke="#d05259" stroke-width="3"/>',
+ '<path d="M121 86l-7 5l7 5" fill="none" stroke="#d05259" stroke-width="2"/>',
+ '<rect x="14" y="119" width="117" height="36" rx="3" fill="#f2f6f8" stroke="#93a3af" stroke-width="1.5"/>',
+ '<path d="M65 124h13v24h-5v-19h-8z" fill="#242e35" stroke="#bc3b46" stroke-width="1.3"/>',
+ '</g>',
+ '<text x="327" y="403" text-anchor="middle" font-family="Arial,sans-serif" font-size="11.5" fill="#648395">Selected module blinks blue before insertion</text>',
+ '<text x="627" y="416" text-anchor="end" font-family="Arial,sans-serif" font-size="9.5" fill="#8ca1ad">ILLUSTRATED SCREEN</text>',
+ '</svg>'
+ ];
+ return markup.join("");
+}
+
 function spotfireScreenWithZoom(mode){
  const full=analyzer("spotfire",mode);
+ if(mode==="insert")return '<div class="bf-spotfire-insert-reference"><div class="bf-spotfire-insert-device">'+full+'</div><div class="bf-spotfire-insert-screen">'+spotfireReviewScreenSvg()+'</div></div>';
  const zoom=full.replace('viewBox="145 40 430 420"','viewBox="322 64 186 232"');
  return '<div class="bf-spotfire-screen-sequence">'+full+
   '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
