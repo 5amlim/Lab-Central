@@ -1993,6 +1993,10 @@ function procedurePrintGroup(){
  const route=sectionFromHash();
  const sec=all.find(x=>x.id===route.id);
  if(!sec||sec.archived||!instrumentCategories.includes(sec.category))return null;
+ if(sec.id==='pathfast'&&route.tab==='rn-collection')return {sec,group:{title:'RN collection & timing'},custom:'rn'};
+ if(sec.id==='pathfast'&&route.tab==='cal-qc'){
+  return window.LAB_PATHFAST_UI?.hasSelectedPanel?.()?{sec,group:{title:'Calibration + QC'},custom:'cal'}:null;
+ }
  const groups=buildGroups(sec);
  const group=route.tab==='combined-qc'&&sec.id==='clinitek'?
    (groups.find(x=>x.id===state.clinitekQc)||groups.find(x=>x.id==='ua-qc')):
@@ -2030,10 +2034,71 @@ function compactChildren(nodes){
  }
  return h+'</ul>';
 }
+function textFromCompactElement(element){
+ if(!element)return '';
+ const clone=element.cloneNode(true);
+ clone.querySelectorAll('svg,img,canvas,video,button,input,select,textarea,script,style').forEach(node=>node.remove());
+ clone.innerHTML=clone.innerHTML.replace(/<\/(?:p|div|li|section|h[1-6]|span|strong|small|aside|article)>/gi,' $&');
+ return (clone.textContent||'').replace(/\s+/g,' ').trim();
+}
+function compactPathfastCalibration(sec){
+ const api=window.LAB_PATHFAST_UI;
+ if(!api?.hasSelectedPanel?.())return null;
+ const display=document.createElement('div');
+ display.innerHTML=api.renderAllForPrint();
+ const cards=Array.from(display.querySelectorAll('.pf-workflow-step'));
+ if(cards.length!==14)return null; // Never silently omit calibration stages.
+ const assay=api.selectedPanelLabel();
+ const head='<div class="lc-compact-head"><span class="lc-compact-kicker">LAB CENTRAL · CALIBRATION + QC</span><h1>PATHFAST · '+safeHtml(assay)+'</h1><p>14-step calibration and quality control sequence. Current SOP and assay IFU govern acceptance criteria.</p></div>';
+ const lanes=api.lanes.map((lane,i)=>(i+1)+': '+lane.name).join(' · ');
+ let out='<div class="lc-compact-meta"><span>Every 28 days, and whenever calibration or QC is required</span><span>Rack sequence: '+safeHtml(lanes)+'</span></div>';
+ cards.forEach(function(card,i){
+  const title=card.querySelector('.pf-workflow-label strong');
+  const desc=card.querySelector('.pf-workflow-label small');
+  const detail=card.querySelector('.pf-workflow-detail');
+  out+='<article class="lc-compact-step"><div class="lc-compact-step-head"><span class="lc-compact-step-number">'+String(i+1).padStart(2,'0')+'</span><h2>'+safeHtml(title?.textContent||'Calibration/QC step')+'</h2></div>';
+  if(desc?.textContent?.trim())out+='<p>'+safeHtml(desc.textContent.trim())+'</p>';
+  const content=textFromCompactElement(detail);
+  if(content)out+='<p>'+safeHtml(content)+'</p>';
+  out+='</article>';
+ });
+ const warning=display.querySelector('.pf-tip');
+ if(warning)out+='<aside class="lc-compact-note urgent">'+safeHtml(textFromCompactElement(warning))+'</aside>';
+ return head+out+'<div class="lc-compact-footer">Training reference only. Do not use expired reagents or controls. Check current approved assay SOP, IFU, acceptable ranges and exact on-screen assignments. The illustrated Full page printout remains available for material and screen recognition.</div>';
+}
+function compactPathfastRN(sec){
+ const api=window.LAB_PATHFAST_CLINICAL;
+ if(!api?.collection)return null;
+ const display=document.createElement('div');
+ display.innerHTML=api.collection();
+ const cards=Array.from(display.querySelectorAll('.pcr-rn-step'));
+ if(!cards.length)return null;
+ const head='<div class="lc-compact-head"><span class="lc-compact-kicker">LAB CENTRAL · NURSING</span><h1>PATHFAST · RN collection & timing</h1><p>Serial specimen collection, mixing, documentation and line-draw cautions.</p></div>';
+ let out='<div class="lc-compact-meta"><span>Specimen: lithium heparin green top</span><span>Default serial pathway: 0/1 hour; provider-authorized fallback: 0/2 hours</span></div>';
+ const specimen=Array.from(display.querySelectorAll('.pcr-specimen-checklist > div'));
+ for(const row of specimen){
+  const title=row.querySelector('strong')?.textContent||'Specimen note';
+  const detail=row.querySelector('p')?.textContent||'';
+  out+='<aside class="lc-compact-note"><strong>'+safeHtml(title)+'</strong> '+safeHtml(detail)+'</aside>';
+ }
+ cards.forEach(function(card,i){
+  out+='<article class="lc-compact-step"><div class="lc-compact-step-head"><span class="lc-compact-step-number">'+String(i+1).padStart(2,'0')+'</span><h2>'+safeHtml(card.querySelector('h3')?.textContent||'Collection step')+'</h2></div>';
+  const detail=card.querySelector('p');
+  if(detail)out+='<p>'+safeHtml(detail.textContent.trim())+'</p>';
+  out+='</article>';
+ });
+ for(const selector of ['.pcr-warning','.pcr-line-waste-body','.pcr-tech-note','.pcr-foot']){
+  const note=display.querySelector(selector);
+  if(note)out+='<aside class="lc-compact-note'+(selector==='.pcr-warning'?' urgent':'')+'">'+safeHtml(textFromCompactElement(note))+'</aside>';
+ }
+ return head+out+'<div class="lc-compact-footer">Record the actual collection time. Verify timing windows in the current clinical pathway and obtain provider authorization for any fallback. The Full page printout includes the serial clock and specimen illustrations.</div>';
+}
 function buildCompactPrint(){
  const selected=procedurePrintGroup();
  if(!selected)return null;
  const {sec,group}=selected;
+ if(selected.custom==='rn')return compactPathfastRN(sec);
+ if(selected.custom==='cal')return compactPathfastCalibration(sec);
  const steps=guideStepData(makeTree(group.blocks||[]));
  const title=instrumentTabTitle(group.title);
  const head='<div class="lc-compact-head"><span class="lc-compact-kicker">LAB CENTRAL · PROCEDURE STEPS</span><h1>'+safeHtml(sec.title)+' · '+safeHtml(title)+'</h1><p>'+safeHtml(sec.subtitle||'')+'</p></div>';
