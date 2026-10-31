@@ -173,8 +173,8 @@
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261029-piccolo-febridx-fit-v2" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261029-pipette-steps-v2" media="all">
-<link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-compact-ui-illustrations-v2" media="all">
-<script src="athena-ordering-guide.js?v=20261030-compact-ui-illustrations-v2"></script>
+<link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-detailed-sendout-tabs-v4" media="all">
+<script src="athena-ordering-guide.js?v=20261030-detailed-sendout-tabs-v4"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -1557,14 +1557,26 @@ function orderSetsPanel(sec){
  return h;
 }
 
-function renderOrderSetDirectory(){
+function renderOrderSetDirectory(tab){
  el('currentCrumb').textContent='Athena orders';
+ const active=tab==='sendout'?'sendout':'in-house';
  const inst=all.filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
- let h=toolHeader('ATHENA / INSTRUMENT REFERENCE','Athena orders & order sets','Browse the Athena order names by instrument.');
- h+=`<div class="order-directory-banner"><span class="order-directory-symbol">${svg('clipboard-check')}</span><div><strong>Athena order directory</strong><p>Point of Care Tests and Order Sets are listed using the provided Athena display names.</p></div></div>`;
+ let h=toolHeader('ATHENA / ORDERING REFERENCE','Athena orders & order sets','In-house order sets and external laboratory ordering workflows.');
+ h+='<nav class="ao-directory-tabs" aria-label="Athena ordering sections">'+
+ '<button type="button" class="ao-directory-tab '+(active==='in-house'?'active':'')+'" data-go="order-sets" data-target-tab="in-house" '+(active==='in-house'?'aria-current="page"':'')+'><span class="ao-tab-symbol" aria-hidden="true">⌂</span>In-house</button>'+
+ '<button type="button" class="ao-directory-tab sendout '+(active==='sendout'?'active':'')+'" data-go="order-sets" data-target-tab="sendout" '+(active==='sendout'?'aria-current="page"':'')+'><span class="ao-tab-symbol" aria-hidden="true">⇥</span>Sendout</button>'+
+ '</nav>';
+ if(active==='in-house'){
+  h+='<section class="ao-directory-panel" aria-label="In-house order sets">';
+  h+='<div class="ao-directory-panel-title"><div><h2>In-house orders</h2><p>Browse the verified Athena Point of Care Tests and Order Sets by instrument.</p></div><span class="ao-directory-panel-count">'+inst.length+' INSTRUMENTS</span></div>';
  h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
- h+=window.LAB_ATHENA_ORDER_GUIDE.render();
- h+=`<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p>`;
+
+  h+='<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p></section>';
+ }else{
+  h+='<section class="ao-directory-panel" aria-label="Sendout laboratory ordering">';
+  h+=window.LAB_ATHENA_ORDER_GUIDE.render();
+  h+='</section>';
+ }
  el('mainContent').innerHTML=h;
 }
 function videoURL(slot){if(Object.prototype.hasOwnProperty.call(localVideos,slot.id))return localVideos[slot.id];if(slot.id==='calibration'&&Object.prototype.hasOwnProperty.call(localVideos,'qc'))return localVideos.qc;return window.LAB_GUIDE_VIDEOS?.[slot.id]||(slot.id==='calibration'?window.LAB_GUIDE_VIDEOS?.qc:'')||slot.url||''}
@@ -1830,7 +1842,7 @@ function render(){
  else if(route.id==='favorites')renderHome('favorites');
  else if(route.id==='calculators')renderCalculators();
  else if(route.id==='orders')renderOrders(route.tab);
- else if(route.id==='order-sets')renderOrderSetDirectory();
+ else if(route.id==='order-sets')renderOrderSetDirectory(route.tab);
  else renderHome('home');
 }
 function openEditor(id){
