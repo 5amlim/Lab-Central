@@ -52,3 +52,26 @@
 @media(max-width:830px){.lt-response{grid-template-columns:1fr}.lt-response>div{grid-template-columns:35px auto}.lt-resources{display:block}.lt-source-links{justify-content:flex-start;margin-top:12px}}
 @media(max-width:520px){.lt-hero{padding:19px;display:block}.lt-counter{margin-top:12px}.lt-issue>summary{padding:12px;gap:9px}.lt-no{width:30px;height:30px}.lt-status{font-size:8px;padding:4px 5px}.lt-main strong{font-size:12px}.lt-issue-content{padding:14px 13px}.lt-group-heading h3{font-size:14px}.lt-main small{font-size:10.5px}}
 @media print{.lt-guide{max-width:none;margin:8px 0}.lt-hero,.lt-response>div,.lt-issue{background:#fff!important;box-shadow:none!important;break-inside:avoid}.lt-issue .lt-issue-content{display:block!important}.lt-issue>summary{min-height:0}.lt-chevron{display:none}.lt-source-links a{background:#fff!important;color:#333!important}.lt-response{gap:6px}.lt-issue-content{padding:9px 14px 14px 45px}}
+
+/* Search/expand actions and device-specific rapid assessment. */
+.lt-quick{border:1px solid #cfe4e5;border-radius:13px;background:#f3faf9;padding:16px 18px;margin:0 0 17px}
+.lt-quick>strong{display:block;color:#246473;font-size:13px;margin:0 0 9px}
+.lt-quick ul{margin:0;padding:0 0 0 18px;display:grid;gap:6px}
+.lt-quick li{color:#4d7181;font-size:12px;line-height:1.65}
+.lt-quick li::marker{color:#228e83}
+.lt-tools{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:17px 0 22px}
+.lt-tools label{display:grid;gap:6px;max-width:460px;width:100%;color:#4b7185;font-size:11px;font-weight:800}
+.lt-tools input{width:100%;height:42px;border:1px solid #cbdde6;border-radius:9px;background:#fff;color:#285065;padding:0 13px;font-size:12px;outline:0}
+.lt-tools input:focus{border-color:#49a3a1;box-shadow:0 0 0 3px #e1f3f1}
+.lt-tools-actions{display:flex;gap:7px;flex:none}
+.lt-tools-actions button{height:39px;border:1px solid #d2e1e7;border-radius:8px;background:#fff;color:#397080;font-size:11px;font-weight:800;padding:0 12px;cursor:pointer}
+.lt-tools-actions button:hover{background:#f1f8f8}
+.lt-record{font-size:10.7px;line-height:1.65;color:#6a8292;border-top:1px solid #e7eef2;margin:12px 0 0;padding-top:10px}
+.lt-record strong{color:#45697d}
+.lt-resume{border-left:4px solid #329288;border-radius:0 10px 10px 0;background:#f0f8f5;padding:15px 18px;margin:26px 0 10px}
+.lt-resume strong{font-size:13px;color:#277165}
+.lt-resume p{font-size:12px;color:#577c76;line-height:1.65;margin:5px 0 0}
+.lt-empty{padding:18px;border:1px dashed #cedfe6;border-radius:9px;color:#698495;text-align:center}
+.lt-group[hidden],.lt-issue[hidden],.lt-empty[hidden]{display:none!important}
+@media(max-width:650px){.lt-tools{flex-direction:column;align-items:stretch}.lt-tools label{max-width:none}.lt-tools-actions button{flex:1}.lt-tools-actions{width:100%}.lt-quick{padding:13px 15px}}
+@media print{.lt-tools{display:none!important}.lt-quick,.lt-resume{background:#fff!important;break-inside:avoid}.lt-record{color:#555!important}}
