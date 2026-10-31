@@ -501,13 +501,14 @@ function render(sec){
  const item=specs[sec.id],a=item.accent,label=item.label;
  const core=(sec.id==="torch"||sec.id==="spotfire")?"":body(item.shape,a);
  const svg=sec.id==="piccolo"?piccoloMainReferenceSvg():
+ sec.id==="sysmex"?sysmexDeviceSvg("ready",true).replace("<svg ","<svg class=\"equipment-svg\" "):
  sec.id==="febridx"?febridxDeviceSvg("ready").replace("<svg ","<svg class=\"equipment-svg\" "):
  (sec.id==="torch"||sec.id==="spotfire")&&window.LAB_BIOFIRE_ART?.analyzer
    ?window.LAB_BIOFIRE_ART.analyzer(sec.id,"ready").replace('<svg ','<svg class="equipment-svg" ')
    :'<svg class="equipment-svg" viewBox="'+(sec.id==="pathfast"?"0 0 740 350":"0 0 740 310")+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified illustration of '+String(sec.title).replace(/"/g,"&quot;")+' instrument">'+
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+
  '<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+core+'</svg>';
- return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":sec.id==="piccolo"?"piccolo-overview":sec.id==="spotfire"?"spotfire-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
+ return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":sec.id==="piccolo"?"piccolo-overview":sec.id==="spotfire"?"spotfire-overview":sec.id==="sysmex"?"sysmex-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
  '<div class="equipment-information"><div class="equipment-overline">EQUIPMENT REFERENCE</div><h2>'+sec.title+'</h2><p>'+label+'</p>'+
  '<dl><div><dt>Specimen</dt><dd>'+item.tip+'</dd></div><div><dt>Instructions</dt><dd>Use the procedure tabs for operation, QC and handling.</dd></div></dl>'+
  '</div></section>';
