@@ -179,7 +179,7 @@ function formatPanelTarget(id,panel,name){
   /calculated/i.test(group)&&Array.isArray(names)&&names.includes(name));
  const calculation=id==='piccolo'&&isCalculated?piccoloCalculationDetails[name]:'';
  return formatTarget(id,name)+
-  (calculation?'<span class="ac-calculation">Calculated: '+esc(calculation)+'</span>':'');
+  (calculation?'<span class="ac-calculation"><span class="ac-calculation-label">Calculated:</span> '+esc(calculation)+'</span>':'');
 }
 
 const references={
