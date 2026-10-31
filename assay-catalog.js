@@ -158,48 +158,28 @@ function shortLabel(id,name){
  // The full target may already contain its short form, e.g. SARS-CoV-2 or MDMA.
  return short&&name.toLowerCase().includes('('+short.toLowerCase()+')')?'':short;
 }
-/* Disc CLIA complexity is distinct from federal PT analyte status.
-   Regulatory sources: 42 CFR 493.931 and 493.1236. This is not a
-   site-specific API enrollment record. */
-const piccoloRegulatedPT=new Set([
- 'Albumin','Blood urea nitrogen','Calcium','Chloride',
- 'Creatine kinase','Creatinine','Glucose','Magnesium','Phosphorus',
- 'Potassium','Sodium','Total carbon dioxide'
-]);
-const piccoloAccuracy=new Set(['C-reactive protein','Lactate']);
-const ptLabels={
- pt:{label:'PT REQUIRED',title:'Federally regulated PT analyte on this moderate-complexity disc. Check your enrolled API analyte list.'},
- accuracy:{label:'ACCURACY 2×/YR',title:'Nonregulated PT analyte on this moderate-complexity disc: verify accuracy at least twice annually under CLIA.'},
- calculated:{label:'CALCULATED',title:'eGFR is calculated, not a separate federally regulated PT analyte. Include applicable accuracy verification in the quality program.'}
+/* Calculated Piccolo results are explained in plain language, not given status badges.
+   Methods and limitations follow the manufacturer's assay IFU and analyzer manual. */
+const piccoloCalculationDetails={
+ 'Estimated glomerular filtration rate':'Estimated from measured creatinine, patient age, sex, and required demographic inputs using the Piccolo MDRD equation. The older device equation includes a race factor. Result is N/C if disabled or required inputs are missing.',
+ 'Cholesterol-to-high-density-lipoprotein ratio':'Total cholesterol ÷ HDL cholesterol.',
+ 'Non-high-density-lipoprotein cholesterol':'Total cholesterol − HDL cholesterol.',
+ 'Very-low-density lipoprotein cholesterol':'Triglycerides ÷ 5 (when concentrations are in mg/dL). This estimate is unreliable above 400 mg/dL triglycerides and in nonfasting samples.'
 };
-function piccoloTargetStatus(panel,name,isCalculated){
- if(isCalculated)return 'calculated';
- if(panel.complexity!=='moderate')return '';
- if(piccoloAccuracy.has(name))return 'accuracy';
- if(piccoloRegulatedPT.has(name))return 'pt';
- return '';
-}
+/* Retained for callers of the older API; analyte-level PT/accuracy badges are no longer displayed. */
+function piccoloTargetStatus(){return '';}
 function formatTarget(id,name,status=''){
  const abbr=shortLabel(id,name);
  const hasShort=abbr&&abbr.toLowerCase()!==name.toLowerCase();
- const b=ptLabels[status];
  return '<span class="ac-analyte-name">'+esc(name)+'</span>'+
-  (hasShort?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'')+
-  (b?' <span class="ac-analyte-short ac-analyte-status ac-status-'+status+'" title="'+esc(b.title)+'" aria-label="'+esc(b.label)+': '+esc(b.title)+'">'+esc(b.label)+'</span>':'');
+  (hasShort?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'');
 }
 function formatPanelTarget(id,panel,name){
  const isCalculated=Object.entries(panel.groups||{}).some(([group,names])=>
   /calculated/i.test(group)&&Array.isArray(names)&&names.includes(name));
- return formatTarget(id,name,id==='piccolo'?piccoloTargetStatus(panel,name,isCalculated):'');
-}
-function piccoloPtLegend(panel){
- if(panel.complexity!=='moderate')return '';
- return '<div class="ac-pt-legend"><span class="ac-pt-legend-title">PT / ACCURACY STATUS</span>'+
-  '<div class="ac-pt-legend-items">'+
-  '<span class="ac-analyte-short ac-analyte-status ac-status-pt">PT REQUIRED</span>'+
-  '<span class="ac-analyte-short ac-analyte-status ac-status-accuracy">ACCURACY 2×/YR</span>'+
-  '<span class="ac-analyte-short ac-analyte-status ac-status-calculated">CALCULATED</span>'+
-  '</div><p>Federal classification, not a confirmation of your site’s API enrollment. Calculated eGFR also needs applicable accuracy evaluation.</p></div>';
+ const calculation=id==='piccolo'&&isCalculated?piccoloCalculationDetails[name]:'';
+ return formatTarget(id,name)+
+  (calculation?'<span class="ac-calculation">How calculated: '+esc(calculation)+'</span>':'');
 }
 
 const references={
@@ -213,14 +193,13 @@ function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 function complexity(type){return type==='moderate'?'<span class="ac-complex ac-moderate">CLIA MODERATE</span>':type==='waived'?'<span class="ac-complex ac-waived">CLIA WAIVED</span>':type==='conditional'?'<span class="ac-complex ac-conditional">CLIA VARIES</span>':'';}
 function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" aria-label="'+esc(c.title)+' color reference"><div class="ac-disc-hole"></div><span>'+esc(c.short)+'</span></div>';}
 function oneCard(c,idx,withDisc,id){
- const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatPanelTarget(id,c,item)+'</li>').join('')+'</ul></div>').join('');
- const ptLegend=id==='piccolo'?piccoloPtLegend(c):'';
+ const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group'+(id==='piccolo'&&/calculated/i.test(name)?' ac-calculated-results':'')+'"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatPanelTarget(id,c,item)+'</li>').join('')+'</ul></div>').join('');
 
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
   '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
-  '<div class="ac-card-body">'+ptLegend+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
+  '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
  const id=typeof section==='string'?section:section?.id;
@@ -231,7 +210,7 @@ function render(section){
  let notes='';
  if(id==='spotfire')notes='Full and mini testing menus differ. Use the specimen-appropriate respiratory or sore throat menu printed on the installed U.S. pouch IFU.';
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
- if(isDisc)notes='CLIA complexity belongs to the reagent disc, not the analyte universally. PT REQUIRED identifies federally regulated PT analytes on the two moderate discs; ACCURACY 2×/YR marks nonregulated CRP and lactate. Calculated eGFR is not separately regulated for PT; verify its accuracy under the approved quality program. Confirm your site-specific API enrollment and current manufacturer IFU.';
+ if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
   '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
