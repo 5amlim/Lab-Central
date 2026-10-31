@@ -1067,3 +1067,25 @@
  .device-collection-guide .device-media-has-photo::after,
  .device-collection-photo-tooltip{display:none!important}
 }
+
+/* Sofia 2 specimen stability: short, assay-specific bullets instead of a paragraph. */
+.device-collection-guide .device-collection-stability-list{
+ margin:0;
+ padding:0 0 0 19px;
+ list-style:disc outside;
+ color:#668294;
+ font-size:12.5px;
+ line-height:1.65;
+ font-weight:450;
+}
+.device-collection-guide .device-collection-stability-list li{
+ padding-left:1px;
+ margin:0 0 5px;
+ overflow-wrap:break-word;
+}
+.device-collection-guide .device-collection-stability-list li::marker{color:#248b84}
+.device-collection-guide .device-collection-stability-list b{color:#456d7c;font-weight:800}
+.device-collection-guide .device-collection-stability-note{margin:0}
+@media(max-width:650px){
+ .device-collection-guide .device-collection-stability-list{font-size:12px}
+}
