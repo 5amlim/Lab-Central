@@ -510,7 +510,7 @@ function render(sec){
  '<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+core+'</svg>';
  return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":sec.id==="piccolo"?"piccolo-overview":sec.id==="spotfire"?"spotfire-overview":sec.id==="sysmex"?"sysmex-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
  '<div class="equipment-information"><div class="equipment-overline">EQUIPMENT REFERENCE</div><h2>'+sec.title+'</h2><p>'+label+'</p>'+
- '<dl><div><dt>Specimen</dt><dd>'+item.tip+'</dd></div><div><dt>Instructions</dt><dd>Use the procedure tabs for operation, QC and handling.</dd></div></dl>'+
+ '<dl><div><dt>Specimen</dt><dd>'+item.tip+'</dd></div><div><dt>Instructions</dt><dd>Use the procedure tabs for operation, QC and handling.</dd></div>'+(window.LAB_QC_OVERVIEW?.row?.(sec.id)||'')+'</dl>'+
  '</div></section>';
 }
 
