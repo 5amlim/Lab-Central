@@ -28,10 +28,10 @@ const configs={
   {heading:"Print the selected record",screen:"STORED RESULT",items:["Print","Done","More"],focus:"Print",tip:"Check QC identification and lot before filing."}
  ],note:"File UA strip and hCG cassette controls in the correct monthly section. Verify that the record is labeled as QC, not a patient report."},
  sofia:{brand:"Quidel Sofia 2",binder:"Waived Tests QC Log binder",steps:[
-  {heading:"Open stored control results",screen:"MAIN MENU",items:["Run QC","Review Data","Run Calibration"],focus:"Review Data",tip:"QC results can also be printed from the completion screen."},
-  {heading:"Select the QC result",screen:"REVIEW DATA",items:["Patient Results","QC Results","Calibration Results"],focus:"QC Results",tip:"Verify assay, lot and positive/negative control."},
-  {heading:"Print if connected",screen:"QC RESULTS",items:["Details","Print icon","Home"],focus:"Print icon",tip:"A compatible connected printer is optional. If absent, use an approved QC record."}
- ],note:"Record positive and negative controls in the waived QC log. An attached printer is required to produce an analyzer paper printout."},
+  {heading:"Open stored control results",screen:"MAIN MENU",items:["Run QC","Review Data","Run Calibration"],focus:"Review Data",tip:"Review the completed Sofia 2 QC or calibration record on the analyzer."},
+  {heading:"Select the QC result",screen:"REVIEW DATA",items:["Patient Results","QC Results","Calibration Results"],focus:"QC Results",tip:"Verify assay, lot, date, and positive/negative control results."},
+  {heading:"Document the QC result",screen:"QC RESULTS",items:["Details","Result status","Home"],focus:"Result status",tip:"Record the result, lot, date, operator, and any corrective action in the approved QC log. No printout is required."}
+ ],note:"Document positive and negative controls and calibration checks in the approved signed log. Sofia 2 does not produce a printout for this workflow."},
  torch:{brand:"BioFire TORCH",binder:"Monthly Molecular QC Log binder",steps:[
   {heading:"Open completed run",screen:"DASHBOARD",items:["Dashboard","Browse Runs","Settings"],focus:"Browse Runs",tip:"Choose the QC control run by assay and date."},
   {heading:"Review the QC report",screen:"COMPLETED RUN",items:["Summary","Details","Print"],focus:"Print",tip:"A completed run report can be opened from the Finished module or Browse Runs."},
