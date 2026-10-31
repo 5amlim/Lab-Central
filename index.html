@@ -157,6 +157,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="procedure-guide.css?v=20261031-febridx-collection-v4" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261031-sendout-logistics-layout-v1" media="all">
 <link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-separate-monthly-checklist-v10" media="all">
+<link rel="stylesheet" href="training-competency.css?v=20261031-schedule-v1" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261031-calver-static-cards-v2" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
@@ -383,6 +384,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="quality-reference.js?v=20261031-calver-static-cards-v2"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261031-separate-monthly-checklist-v10"></script>
+<script src="training-competency.js?v=20261031-schedule-v1"></script>
 <script src="instrument-qc-overview.js?v=20261031-sysmex-shutdown-v4"></script>
 <script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
@@ -422,6 +424,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 const DATA=window.LAB_GUIDE_DATA||{sections:[],videoSlots:[],tubes:[]};
 // The container catalog and Quest collection notes now belong to Lab Sendout Logistics.
 const all=DATA.sections.filter(s=>s.id!=='tubes');
+// Training and competency is a dedicated Quality & compliance page.
+all.push({id:'training-competency',title:'Training & Competency',subtitle:'Initial training, six-month and annual competency',category:'Quality & compliance',icon:'clipboard-check',blocks:[]});
 const sendoutLogistics=all.find(s=>s.id==='sendout');
 if(sendoutLogistics){
  sendoutLogistics.title='Lab Sendout Logistics';
@@ -507,6 +511,10 @@ function showNav(){
   if(cat==='Point of care'){
    const otherIndex=list.findIndex(s=>s.id==='poc');
    if(otherIndex>=0)list.push(...list.splice(otherIndex,1));
+  }
+  if(cat==='Quality & compliance'){
+   const trainingIndex=list.findIndex(s=>s.id==='training-competency');
+   if(trainingIndex>=0)list.unshift(...list.splice(trainingIndex,1));
   }
   if(!list.length)continue;
   const isArchive=cat==='Archived';
@@ -2222,6 +2230,7 @@ function render(){
    el('mainContent').innerHTML=route.id==='socal-daily'?window.LAB_SOCAL_DAILY.render():window.LAB_OPS.render(route.id,route.tab);
  }
  else if(route.id==='lab-monthly-checklist'){el('currentCrumb').textContent='Lab Monthly Checklist';el('mainContent').innerHTML=window.LAB_MONTHLY_CHECKLIST.render();}
+ else if(route.id==='training-competency'){el('currentCrumb').textContent='Training & Competency';el('mainContent').innerHTML=window.LAB_TRAINING_COMPETENCY.render();}
  else if(sec)sectionRender(sec,route.tab);
  else if(route.id==='lab-container-gallery')renderContainerGallery();
  else if(route.id==='favorites')renderHome('favorites');
