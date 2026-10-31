@@ -1731,7 +1731,7 @@ function sectionRender(sec,tab){
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='sendout'||sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
 
- if(sec.id==='sendout')h+=`<div class="ops-link-card"><div><strong>Lab Sendout Log: step-by-step handoff</strong><p>Color printing, RN .rn documentation, processing, Microsoft Forms and specimen bin.</p></div><button type="button" data-go="sendout-log">Open Sendout Log →</button></div>`;
+ if(sec.id==='sendout')h+=`<div class="sendout-reference-shortcuts"><div class="ops-link-card"><div><strong>Sendout lab order workflows</strong><p>Scheduled, walk-in and Sollis-ordered requests, Athena uploads, collection and handoff.</p></div><button type="button" data-go="orders">Open Workflows →</button></div><div class="ops-link-card"><div><strong>Lab Sendout Log: step-by-step handoff</strong><p>Color printing, RN .rn documentation, processing, Microsoft Forms and specimen bin.</p></div><button type="button" data-go="sendout-log">Open Sendout Log →</button></div></div>`;
  if(sec.id==='pathfast'){
   const workflows=[
    {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'01'},
