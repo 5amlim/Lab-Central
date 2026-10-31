@@ -9,7 +9,7 @@ const socalTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Read, record and assess current/min/max where applicable. Escalate excursions, quarantine affected material as directed, and document corrective action.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Verify required freezer checks and out-of-range alarms. Do not assume thawed reagents or controls are usable without review.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record the room conditions and compare them with all active instrument/reagent allowable operating ranges. Report excursions.',role:'Lab personnel / RN'},
- {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'},title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
+ {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],note:'QC frequency varies by market. Perform Clinitek QC daily when required by the market-specific SOP; otherwise follow the applicable QC schedule, including new-bottle requirements.',title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
  {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'},title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Trained lab personnel / RN'},
  {id:'triage',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'},title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Trained lab personnel / RN'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
@@ -22,7 +22,7 @@ const sharedTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Record and review refrigerator temperatures. Follow local escalation and quarantine procedures for excursions.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Check applicable freezer temperatures and alarms. Escalate excursions before using affected reagents or controls.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Review and document ambient conditions against the limits of equipment and reagents in use.',role:'Lab personnel / RN'},
- {id:'analyzers',group:'Instrument QC & readiness',title:'Review active analyzer QC and maintenance',desc:'Confirm due QC, calibration, cleaning and required records for installed analyzers. Perform testing only when authorized.',role:'Authorized personnel'},
+ {id:'analyzers',group:'Instrument QC & readiness',title:'Review active analyzer QC and maintenance',desc:'Confirm due QC, calibration, cleaning and required records for installed analyzers. For Clinitek, daily QC depends on the market-specific SOP. Perform testing only when authorized.',role:'Authorized personnel'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Check rapid and POC test readiness',desc:'Check stock, expiration and kit-specific QC requirements for tests used at your clinic.',role:'Trained personnel'},
  {id:'handoff',group:'Tasks & handoff',title:'Review outstanding lab follow-ups',desc:'Address specimen issues, rejected tests and open lab-related tasks, then hand off anything unresolved.',role:'Lab personnel / RN'}
 ];
@@ -72,6 +72,13 @@ let selectedMarket='socal';
 let selectedView='daily';
 const siteByMarket=Object.fromEntries(markets.map(m=>[m.id,m.clinics[0].id]));
 function safe(x){return String(x??'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+/* Shared outlined guide symbols used in the selector tiles and section headers. */
+function dqcSectionIcon(kind){
+ const shape=kind==='binder'
+  ?'<rect x="4" y="2.7" width="16" height="18.6" rx="2.1"/><path d="M9.3 2.7v18.6M13 7h4M13 11h4M13 15h2.8"/><circle cx="6.7" cy="7" r=".7"/><circle cx="6.7" cy="12" r=".7"/><circle cx="6.7" cy="17" r=".7"/>'
+  :'<rect x="4.5" y="4.2" width="15" height="17" rx="2.1"/><path d="M9 2.5h6v3.3H9zM8.1 11l1.6 1.6 2.6-2.7M14.3 11.2h2.1M8.1 16.8l1.6 1.6 2.6-2.7M14.3 17h2.1"/>';
+ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+shape+'</svg>';
+}
 function card(group,index,tasks){
  const rows=tasks.filter(t=>t.group===group);
  if(!rows.length)return '';
@@ -87,7 +94,7 @@ function card(group,index,tasks){
       ?'<button type="button" class="dqc-qc-guide-link" data-go="'+safe(t.qcGuide.instrument)+'" data-target-tab="'+safe(t.qcGuide.tab)+'" aria-label="Open '+safe(t.title)+' QC instructions">View QC guide <span aria-hidden="true">↗</span></button>'
       :'';
     const footer=(badges||qcLink)?'<div class="dqc-task-actions">'+qcLink+badges+'</div>':'';
-    return '<article class="dqc-item'+(footer?' has-task-badges':'')+'"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span>'+footer+'</article>';
+    return '<article class="dqc-item'+(footer?' has-task-badges':'')+'"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4><p>'+safe(t.desc)+'</p>'+(t.note?'<p class="dqc-task-note"><strong>Note:</strong> '+safe(t.note)+'</p>':'')+'</div><span class="dqc-role">'+safe(t.role)+'</span>'+footer+'</article>';
   }).join('')+'</div></section>';
 }
 function binderCard(item){
@@ -97,7 +104,7 @@ function render(){
  const market=markets.find(m=>m.id===selectedMarket)||markets[0];
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
  return '<section class="dqc-page" aria-label="Lab Daily Checklist reference">'+
- '<header class="dqc-hero"><div><span class="dqc-eyebrow">LAB OPERATIONS / DAILY REFERENCE</span><h1>Lab Daily Checklist</h1><p>Daily readiness tasks and binder documentation for each clinic location.</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
+ '<header class="dqc-hero"><div><span class="dqc-eyebrow">LAB OPERATIONS / DAILY LAB TASKS</span><h1>Lab Daily Checklist</h1><p>Daily readiness tasks and binder documentation for each clinic location.</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
  '<nav class="dqc-market-picker" aria-label="Select checklist market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+markets.map(function(m){
   return '<button type="button" data-dqc-market="'+safe(m.id)+'" class="dqc-market-choice'+(market.id===m.id?' is-selected':'')+'" aria-pressed="'+(market.id===m.id)+'">'+safe(m.short)+'</button>';
  }).join('')+'</div></nav>'+
@@ -107,13 +114,13 @@ function render(){
  '<div class="dqc-location-options" id="dqc-location-options" role="listbox" aria-labelledby="dqc-clinic-label" hidden>'+
  market.clinics.map(c=>'<button type="button" role="option" data-dqc-clinic-option="'+safe(c.id)+'" class="dqc-location-option'+(c.id===clinic.id?' is-selected':'')+'" aria-selected="'+(c.id===clinic.id)+'" tabindex="-1">'+safe(c.name)+(c.id===clinic.id?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
  '</div></div><span class="dqc-location-hint">Choose a clinic to view its reference</span></div>'+
- '<div class="dqc-market-heading"><div><span class="dqc-market-overline">DAILY REFERENCE / '+safe(market.short).toUpperCase()+'</span><h2>'+safe(clinic.name)+'</h2><p>'+safe(market.name)+' · Follow site-approved SOPs for installed equipment and required documentation.</p></div></div>'+
+ '<div class="dqc-market-heading"><div><span class="dqc-market-overline">DAILY LAB TASKS / '+safe(market.short).toUpperCase()+'</span><h2>'+safe(clinic.name)+'</h2><p>'+safe(market.name)+' · Follow site-approved SOPs for installed equipment and required documentation.</p></div></div>'+
  '<nav class="dqc-view-switch" role="tablist" aria-label="Reference section">'+
- '<button type="button" id="dqc-tab-daily" class="dqc-view-button'+(selectedView==='daily'?' is-selected':'')+'" role="tab" data-dqc-view="daily" aria-controls="dqc-panel-daily" aria-selected="'+(selectedView==='daily')+'" tabindex="'+(selectedView==='daily'?'0':'-1')+'"><span class="dqc-view-number">01</span><span class="dqc-view-label"><strong>Daily Task Checklist</strong><small>'+market.tasks.length+' checks</small></span></button>'+
- '<button type="button" id="dqc-tab-binder" class="dqc-view-button'+(selectedView==='binder'?' is-selected':'')+'" role="tab" data-dqc-view="binder" aria-controls="dqc-panel-binder" aria-selected="'+(selectedView==='binder')+'" tabindex="'+(selectedView==='binder'?'0':'-1')+'"><span class="dqc-view-number">02</span><span class="dqc-view-label"><strong>Binder Documentation</strong><small>'+market.binder.length+' record groups</small></span></button></nav>'+
- '<section id="dqc-panel-daily" role="tabpanel" class="dqc-workstream" aria-labelledby="dqc-tab-daily"'+(selectedView==='daily'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">01</span><div><h2 id="dqc-daily-title">Daily Task Checklist</h2><p>Opening checks, QC readiness and unresolved lab handoffs</p></div></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></header>'+
+ '<button type="button" id="dqc-tab-daily" class="dqc-view-button'+(selectedView==='daily'?' is-selected':'')+'" role="tab" data-dqc-view="daily" aria-controls="dqc-panel-daily" aria-selected="'+(selectedView==='daily')+'" tabindex="'+(selectedView==='daily'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('checklist')+'</span><span class="dqc-view-label"><strong>Daily Task Checklist</strong><small>'+market.tasks.length+' checks</small></span></button>'+
+ '<button type="button" id="dqc-tab-binder" class="dqc-view-button'+(selectedView==='binder'?' is-selected':'')+'" role="tab" data-dqc-view="binder" aria-controls="dqc-panel-binder" aria-selected="'+(selectedView==='binder')+'" tabindex="'+(selectedView==='binder'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('binder')+'</span><span class="dqc-view-label"><strong>Binder Documentation</strong><small>'+market.binder.length+' record groups</small></span></button></nav>'+
+ '<section id="dqc-panel-daily" role="tabpanel" class="dqc-workstream" aria-labelledby="dqc-tab-daily"'+(selectedView==='daily'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('checklist')+'</span><div><h2 id="dqc-daily-title">Daily Task Checklist</h2><p>Opening checks, QC readiness and unresolved lab handoffs</p></div></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></header>'+
  '<div class="dqc-sections">'+groupOrder.map(function(group,i){return card(group,i,market.tasks)}).join('')+'</div></section>'+
- '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">02</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
+ '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
  '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
  '<p class="dqc-binder-note">Only file records for procedures and instruments used at this clinic, when required or due. Consult the approved site binder index and SOP.</p></section>'+
  '<footer class="dqc-footer"><strong>Official records remain separate.</strong><span>This page is a read-only reference, not a signed checklist or QC log. Record results, exceptions and operator initials in the approved system.<span class="dqc-contact-note">Need an item added or updated? <strong>Contact Sam.</strong></span></span></footer>'+
