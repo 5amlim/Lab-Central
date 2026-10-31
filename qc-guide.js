@@ -90,6 +90,13 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-parameter-table"><div class="qc-device-param-heading"><b>PARAMETER</b><b>TARGET</b><b>LIMIT</b></div>'+
    rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-device-barcode" aria-label="Scan target barcode"></span><span class="qc-device-barcode" aria-label="Scan limit barcode"></span></div>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Use the matching lot assay sheet</span><span>NEXT → MORE ANALYTES</span></div>';
+ }else if(item.kind==="piccoloClose"){
+  // Closing the drawer is the final manual action and immediately starts QC analysis.
+  body='<div class="qc-device-screen-label">CONTROL · READY</div>'+
+   '<div class="qc-piccolo-close-action"><span class="qc-piccolo-close-status">Level confirmed</span>'+
+   '<span class="qc-device-option targeted">Close <b>SELECT</b></span>'+
+   '<span class="qc-piccolo-close-running">Drawer closes → QC analysis starts</span></div>'+
+   '<div class="qc-device-screen-bottom"><span>Confirm entered level</span><span>Then select Close</span></div>';
  }else if(item.kind==="singleAction"){
   // Piccolo Home has Analyze as its only text action.
   body='<div class="qc-device-screen-label">'+esc(item.screen)+'</div>'+
@@ -175,7 +182,7 @@ function qcClickStep(sec,groupId,title){
   {kind:"singleAction",heading:"Select Analyze",screen:"HOME",tip:"Select Analyze. Keep the drawer open until the control mode and level are entered."},
   {heading:"Select Control",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control before closing the drawer."},
   {kind:"manualLevel",heading:"Enter QC level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter."},
-  {kind:"status",heading:"Close to start QC",screen:"QC RUNNING",status:"Analysis in progress",detail:"QC run started",tip:"After confirming the level, select Close. The drawer closes and the QC run starts automatically."}];
+  {kind:"piccoloClose",heading:"Close to start QC",screen:"CONTROL",tip:"Once the entered level is confirmed, select Close. The drawer closes and QC analysis starts automatically."}];
  else if(sec.id==="triage"&&/select run test|click run test/.test(t))scenes=[
   {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
   {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
