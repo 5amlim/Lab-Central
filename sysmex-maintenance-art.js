@@ -108,13 +108,42 @@ function cellclean(){
   return '<figure class="lab-step-scene sysmex-maint-scene"><div class="lab-step-scene-media">'+visual+
    '</div><figcaption><strong>'+E(title)+'</strong><span>'+E(desc)+'</span></figcaption></figure>';
  }
+ function maintenanceScreens(mode){
+  const gallery=window.LAB_QC_GUIDE?.screenGallery;
+  if(typeof gallery!=="function")return "";
+  const procedures={
+   transducer:[
+    {heading:"Open Maintenance",screen:"MENU",items:["Str. Data","Chg. Reag.","Maint.","Settings"],focus:"Maint.",tip:"Choose Menu, then Maint."},
+    {heading:"Choose Clean Transducer",screen:"MAINTENANCE",items:["Clean Transducer","Auto Rinse","Clean Waste Chamber"],focus:"Clean Transducer",tip:"Open Clean Transducer. Follow the on-screen cleaning instructions."},
+    {heading:"Prepare the CELLCLEAN tube",screen:"CLEAN TRANSDUCER",items:["Add 3 mL CELLCLEAN","Insert adapter","Set sample tube"],focus:"Add 3 mL CELLCLEAN",tip:"Follow the IFU: use 3 mL of approved CELLCLEAN in the required sample tube and adapter."},
+    {heading:"Start cleaning",screen:"CLEAN TRANSDUCER",items:["Execute","Cancel"],focus:"Execute",tip:"Close the sample compartment, then select Execute."},
+    {heading:"Finish and remove tube",screen:"CLEANING COMPLETE",items:["Auto Rinse","Background Check","Remove CELLCLEAN"],focus:"Remove CELLCLEAN",tip:"Allow auto rinse and background check to finish, then remove the cleaning sample tube."}
+   ],
+   reagent:[
+    {heading:"Open reagent change",screen:"MENU",items:["Str. Data","Chg. Reag.","Maint.","Settings"],focus:"Chg. Reag.",tip:"Respond to the replacement prompt, or choose Menu → Chg. Reag."},
+    {heading:"Choose D or L",screen:"CHG. REAG.",items:["pocH-pack D","pocH-pack L"],focus:"pocH-pack D",tip:"Select the matching product. The displayed D selection is an example; use L when replacing lyse."},
+    {heading:"Fit the matching spout",screen:"REPLACE REAGENT",items:["Replace container","Transfer spout kit","Execute"],focus:"Transfer spout kit",tip:"Transfer the clean blue diluent or purple lyse spout kit to its matching new bottle. Tighten the cap."},
+    {heading:"Start replacement",screen:"REPLACE REAGENT",items:["Execute","Cancel"],focus:"Execute",tip:"Select Execute to start the documented replacement sequence."},
+    {heading:"Scan new barcode",screen:"REAGENT BARCODE",items:["Scan barcode","Manual"],focus:"Scan barcode",tip:"Scan the new bottle label using the scanner and red laser. Select Manual only if scanning is unavailable."},
+    {heading:"Confirm bottle details",screen:"REAGENT BARCODE",items:["Barcode / lot","OK","Cancel"],focus:"OK",tip:"Verify reagent identity, barcode and lot, then select OK."},
+    {heading:"Finish replacement",screen:"REPLACE REAGENT",items:["Execute","Cancel"],focus:"Execute",tip:"Select Execute for the remaining replacement/priming sequence. Confirm the analyzer returns to the ready screen."}
+   ],
+   other:[
+    {heading:"Choose maintenance",screen:"MENU",items:["Maint.","Chg. Reag.","Settings"],focus:"Maint.",tip:"Enter the correct maintenance menu."},
+    {heading:"Select the prompted task",screen:"MAINTENANCE",items:["Clean Waste Chamber","Auto Rinse","Clog Removal"],focus:"Clean Waste Chamber",tip:"Choose only the task shown on the analyzer. Each has different instructions."}
+   ]
+  };
+  const cards=procedures[mode];if(!cards)return "";
+  return '<section class="sysmex-maint-screen-flow"><div class="sysmex-maint-screen-heading"><strong>Follow the analyzer screens</strong><span>Use More on each screen to continue</span></div>'+
+    gallery(cards,"Sysmex pocH-100i",{scroll:true,disclaimer:"Manufacturer-informed screen illustrations. Verify the live pocH-100i prompt and current site SOP."})+'</section>';
+ }
  function step(mode){
-  if(mode==='shutdown')return scene('Shutdown is an analyzer command',media(mode),'On the Main screen, select Shutdown, then Execute. Wait for the completion prompt before switching OFF. No blood tube is involved.');
-  if(mode==='transducer')return scene('Verify the correct CELLCLEAN product',media(mode),'The photo supplied shows CELL CLEAN AUTO (4 mL × 20). This carton is a product-identification reference only. Follow the pocH-100i instructions for 3 mL of approved CELLCLEAN in a separate clean sample tube and sample adapter.')+
-   '<aside class="guide-note urgent sysmex-cleaner-compatibility"><strong>Product compatibility:</strong> CELL CLEAN AUTO (CF-579-595) is specified by Sysmex for XN-series systems and related equipment, not the pocH-100i. Do not substitute it for the pocH-100i cleaning reagent. Confirm the correct CELLCLEAN supply with Sysmex and the approved site SOP before proceeding.</aside>';
-  if(mode==='other')return scene('Select the maintenance task on the instrument',media(mode),'Follow the specific Clean Waste Chamber, Auto Rinse or Clog Removal prompt and its manufacturer procedure. These are separate maintenance tasks.');
-  if(mode==='waste')return scene('Waste bottle, red waste line and float switch',media(mode),'Empty the waste bottle into the designated lab sink, then follow with bleach according to the approved local waste-handling SOP. Refit the float switch and cap, reconnect without kinking tubing, and confirm no leaks.');
-  if(mode==='reagent')return scene('pocH-pack D · diluent / pocH-pack L · lyse',media(mode),'D is the larger diluent container; L is the smaller purple-labeled lyse bottle. Transfer the matching spout kit without contaminating the tubing and enter or scan the new reagent barcode when prompted.');
+  if(mode==='shutdown')return scene('Shutdown is an analyzer command',media(mode),'On the Main screen, select Shutdown, then Execute. Wait for completion before turning off the physical power switch.');
+  if(mode==='transducer')return scene('CELLCLEAN tube and approved sample adapter',media(mode),'CELL CLEAN AUTO is supplied as a sealed 4 mL tube, not a carton. For this pocH-100i procedure, the documented IFU specifies 3 mL of approved CELLCLEAN in a separate sample tube and approved adapter.')+
+   '<aside class="guide-note urgent sysmex-cleaner-compatibility"><strong>Confirm reagent compatibility:</strong> The pictured CELL CLEAN AUTO (CF-579-595) is marketed for other Sysmex systems. Do not assume this factory-filled 4 mL tube can replace the pocH-100i approved CELLCLEAN or that its full volume should be used. Follow the site SOP and confirm reagent selection with Sysmex.</aside>'+maintenanceScreens(mode);
+  if(mode==='other')return scene('Select the maintenance task on the instrument',media(mode),'Follow the on-screen procedure for the prompted maintenance task. Do not substitute one cleaning process for another.')+maintenanceScreens(mode);
+  if(mode==='waste')return scene('Waste bottle, red waste line and float switch',media(mode),'Follow the approved waste-handling SOP and analyzer prompts. Secure the float-switch assembly and verify tubing connections before restarting.');
+  if(mode==='reagent')return scene('pocH-pack D · 2 L / pocH-pack L · 250 mL',media(mode),'Pack D is the larger white 2 L diluent bottle. Pack L is the smaller 250 mL lyse bottle. Transfer the matching blue (D) or purple (L) spout kit, then scan the new bottle barcode with the red laser scanner.')+maintenanceScreens(mode);
   return '';
  }
  const before=art.workflowVisual;
