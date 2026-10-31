@@ -2004,9 +2004,9 @@ function sectionRender(sec,tab){
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
  ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id)?[{id:'troubleshooting',title:'Troubleshooting'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
- // For every active analyzer or POC menu, patient testing is the second tab after Overview.
+ // Patient testing is second for active instruments except PATHFAST, where RN collection comes first.
  // Device-specific tests (e.g. Clinitek UA/hCG) retain their other sub-tabs unchanged.
- if(instrumentCategories.includes(sec.category)&&!sec.archived){
+ if(instrumentCategories.includes(sec.category)&&!sec.archived&&sec.id!=='pathfast'){
   const patientIndex=tabs.findIndex(t=>/^(patient-testing|patient|ua-strip|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))$/.test(t.id)||/^(?:Patient testing|Running (?:Patient )?Samples|Running tests)(?:\b|\s|$)/i.test(t.fullTitle||t.title));
   if(patientIndex>1)tabs.splice(1,0,tabs.splice(patientIndex,1)[0]);
  }
@@ -2040,8 +2040,8 @@ function sectionRender(sec,tab){
  if(sec.id==='pathfast'){
   const workflows=[
    {id:'overview',title:'Overview',subtitle:'Instrument and test reference',index:'01'},
-   {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'02'},
-   {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'03'},
+   {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'02'},
+   {id:'patient',title:'Patient testing',subtitle:'Prepare cartridge & run analyzer',index:'03'},
    {id:'chest-pain',title:'Chest pain pathway',subtitle:'hs-Troponin I · approved pathways',index:'04'},
    {id:'cal-qc',title:'Calibration + QC',subtitle:'Every 28 days · run when required by IFU/SOP',index:'28D'}
   ];
