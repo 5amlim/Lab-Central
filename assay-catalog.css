@@ -46,8 +46,8 @@
 
 /* Derived results show a short explanation instead of a status badge. */
 .ac-calculation{display:block;color:#637e92;font-size:11px;font-weight:500;line-height:1.48;margin:3px 0 0;max-width:100%}
-.ac-calculation-label{display:inline-block;font-weight:850;color:#0d7185;background:#eaf5f8;border:1px solid #cfe2e8;border-radius:5px;padding:0 5px;margin-right:3px;line-height:1.5}
-@media print{.ac-calculation{color:#444!important}.ac-calculation-label{color:#16495b!important;background:#eaf0f2!important;border-color:#c9d2d8!important}}
+.ac-calculation-label{font-weight:800;color:inherit}
+@media print{.ac-calculation{color:#444!important}.ac-calculation-label{font-weight:800}}
 
 .ac-disc-grid .ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}
 .ac-disc-grid .ac-group.ac-calculated-results ul{grid-template-columns:1fr;gap:10px}
