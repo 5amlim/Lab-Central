@@ -412,7 +412,7 @@ function render(){
  if(selectedCat!=='all'&&!opts.includes(selectedCat))selectedCat='all';
  const matches=visible();
  return '<section id="labContainerReference" class="lcr" aria-labelledby="lcrTitle">'+
- '<div class="lcr-hero"><div><span class="lcr-eyebrow">LAB CENTRAL / SPECIMEN REFERENCE</span><h2 id="lcrTitle">Lab Container Reference</h2>'+
+ '<div class="lcr-hero"><div><span class="lcr-eyebrow">LAB CENTRAL / SPECIMEN REFERENCE</span><h2 id="lcrTitle">Lab Container Gallery</h2>'+
  '<p>Illustrated blood tubes, urine containers, stool kits, transport vials and swab systems. Choose the receiving laboratory, then a container category.</p></div>'+
  '<span class="lcr-summary">'+list.length+' container types</span></div>'+
  '<div class="lcr-filter-bar"><div class="lcr-filter-label">RECEIVING LAB</div><div class="lcr-filter-buttons" role="group" aria-label="Filter by receiving lab">'+labs.map(l=>'<button type="button" class="'+(selectedLab===l.id?'active':'')+'" data-lcr-lab="'+l.id+'" aria-pressed="'+(selectedLab===l.id)+'">'+l.name+'</button>').join('')+'</div>'+
