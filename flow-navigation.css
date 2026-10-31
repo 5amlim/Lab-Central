@@ -25,7 +25,7 @@
 .tool-navigation{--nav-accent:#24778e;--nav-tint:#eaf5f8;--nav-deep:#175d71;border-top:0}
 .tool-navigation .nav-link[data-go="calculators"]{--nav-accent:#2f743f;--nav-tint:#eef6ed;--nav-deep:#275a31}
 .tool-navigation .nav-link[data-go="orders"]{--nav-accent:#286a9e;--nav-tint:#eaf3fc;--nav-deep:#20547d}
-.tool-navigation .nav-link[data-go="order-sets"]{--nav-accent:#8e6728;--nav-tint:#fff6e9;--nav-deep:#75551c}
+.tool-navigation .nav-link[data-go="order-sets"]{--nav-accent:#7c4dcc;--nav-tint:#f3ecff;--nav-deep:#6f3fc7}
 .tool-navigation .nav-link.active{box-shadow:inset 3px 0 var(--nav-accent)}
 .sidebar-calculator-button{border:1px solid #cde4d5;background:#eaf6ee;color:#255d35;min-height:44px;box-shadow:0 2px 10px #2b734014}
 .sidebar-calculator-button:hover{background:#dbf0e2}
