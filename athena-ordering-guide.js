@@ -24,28 +24,49 @@ function shell(title,body,kind){
 function cue(s){return '<span class="ao-art-cue">'+s+'</span>';}
 function bar(txt){return '<div class="ao-art-search"><span>⌕</span><b>'+txt+'</b><span>×</span></div>';}
 function check(){return '<span class="ao-art-check">✓</span>';}
+function artFrame(title,body,variant){
+ return '<div class="ao-art-app ao-art-rev ao-art-rev-'+variant+'">'+
+ '<div class="ao-art-top"><strong>athenaOne</strong><span>Calendar　 Patients　 Claims　 Reports</span><b>⚙</b></div>'+
+ '<div class="ao-r-screen-title"><span>'+title+'</span><small>ILLUSTRATED EXAMPLE</small></div>'+body+'</div>';
+}
+function artCue(s){return '<span class="ao-art-cue">'+s+'</span>';}
+function artSearch(s){return '<div class="ao-r-search"><span>⌕</span><strong>'+s+'</strong></div>';}
+function artCheck(){return '<span class="ao-r-check">✓</span>';}
 function scene(n){
  switch(n){
- case 1:return shell('Patient chart',
-  '<div class="ao-art-patient"><span class="ao-art-avatar">PT</span><div><strong>Training patient</strong><small>Chart overview</small></div><span class="ao-art-highlight-menu">☰</span></div><div class="ao-art-two-panels"><div><b>Personal info</b><i></i><i></i></div><div><b>Outstanding orders</b><i></i><i></i></div></div>'+cue('CLICK HAMBURGER MENU'),'ao-art-chart');
- case 2:return shell('Patient chart',
-  '<div class="ao-art-menu-background"><i></i><i></i></div><div class="ao-art-purple-menu"><span>Quickview</span><span>Create patient case</span><strong>＋ Create order group</strong><span>Print chart sections</span><span>Add document</span></div>'+cue('CREATE ORDER GROUP'),'ao-art-chart-menu');
- case 3:return shell('Create order group',
-  '<div class="ao-art-order-provider"><strong>First, select the ordering provider:</strong>'+bar('Search provider name')+'<div class="ao-art-selected">'+check()+'<strong>Selected ordering provider</strong></div><small>Confirm correct provider before continuing</small></div>'+cue('CHOOSE PROVIDER'),'ao-art-provider');
- case 4:return shell('Order group',
-  '<div class="ao-art-order-layout"><div class="ao-art-rail"><strong>Active Problems</strong><span>Historical (0)</span><p>□ No known problems</p></div><div class="ao-art-main-order"><strong>Orders</strong><div class="ao-art-dropdown-row"><span>Ordering Provider</span><b>Selected provider　⌄</b></div><div class="ao-art-add-button">⊕　 DIAGNOSES &amp; ORDERS</div></div></div>'+cue('CLICK + DIAGNOSES & ORDERS'),'ao-art-order-group');
- case 5:return shell('Diagnoses & Orders',
-  bar('Search diagnosis')+'<div class="ao-art-diagnosis"><div><strong>Diagnoses (20+)</strong><p class="ao-art-selected">'+check()+'Correct diagnosis</p><p>Another diagnosis</p><p>Another result</p></div><div><strong>Order Sets</strong><p>Available orders</p><p>Related orders</p></div></div>'+cue('ADD DIAGNOSIS FIRST'),'ao-art-dx');
- case 6:return shell('Diagnoses & Orders',
-  '<div class="ao-art-edit-link">Displaying labs from currently selected facility　<strong>Edit preferences ↗</strong></div><div class="ao-art-prefs"><div><b>Lab orders</b><span>Imaging orders</span><span>Procedure orders</span></div><div><small>LAB ORDERS</small><strong>Set a preferred lab orders provider　›</strong><p>Change receiving laboratory</p></div></div>'+cue('OPEN LAB PREFERENCES'),'ao-art-settings');
- case 7:return shell('Add a receiver',
-  '<div class="ao-art-zip"><span>Search within selected location</span><strong>Clinic ZIP　✎</strong></div>'+bar(chosen()?chosen().search:'Search receiving lab')+'<div class="ao-art-receivers"><b>Receiver</b><b>Location</b><div>'+check()+'<strong>'+(chosen()?chosen().name:'Correct lab and facility')+'</strong><small>Verify address / distance</small></div><div class="ao-art-alt">Another matching location</div></div>'+cue('CONFIRM ZIP AND FACILITY'),'ao-art-receiver');
- case 8:return shell('Diagnoses & Orders',
-  bar('Enter exact lab test code')+'<div class="ao-art-lab-chosen">Displaying labs from <strong>'+(chosen()?chosen().name:'selected laboratory')+'</strong></div><div class="ao-art-test-details"><div><strong>Matching test code</strong><p class="ao-art-selected">'+check()+'Correct test</p></div><div><strong>Verify details</strong><span>Panel / reflex algorithm</span><span>Specimen requirements</span><span>Performing laboratory</span></div></div>'+cue('CHECK CODE & TEST DETAILS'),'ao-art-test-code');
- default:return shell('Patient chart',
-  '<div class="ao-art-final"><div><b>Orders</b><p>Diagnosis linked</p><small>Ordering provider selected</small></div><div><b>Outstanding Orders</b><div class="ao-art-final-row">'+check()+'<span><strong>'+(chosen()?chosen().name+' order':'External laboratory test')+'</strong><small>Receiving lab confirmed</small></span><em>Unsigned</em></div></div></div>'+cue('VERIFY ORDER STATUS'),'ao-art-final-view');
+  case 1:return artFrame('Patient chart',
+   '<div class="ao-r-chart-banner"><span class="ao-r-avatar">PT</span><div><b>Patient chart</b><small>Patient overview</small></div><span class="ao-r-menu-button">☰</span></div>'+
+   '<div class="ao-r-chart-body"><div><b>Personal info</b><span>Allergies</span><i></i><span>Medications</span><i></i></div><div><b>Outstanding Orders</b><i></i><i></i></div></div>'+artCue('OPEN MENU'),'chart');
+  case 2:return artFrame('Patient chart',
+   '<div class="ao-r-chart-background"><div><b>Personal info</b><i></i><i></i></div><div><b>Outstanding Orders</b><i></i></div></div>'+
+   '<div class="ao-r-drop-menu"><span>Quickview</span><span>Create patient case</span><strong>＋ Create order group</strong><span>Print chart sections</span><span>Print forms</span><span>Add document</span></div>'+artCue('CREATE ORDER GROUP'),'menu');
+  case 3:return artFrame('Create order group',
+   '<div class="ao-r-provider-modal"><b>First, select the ordering provider:</b>'+artSearch('Search provider name')+
+   '<div class="ao-r-provider-selected">'+artCheck()+'<strong>Ordering provider selected</strong></div></div>'+artCue('SELECT PROVIDER'),'provider');
+  case 4:return artFrame('Order group',
+   '<div class="ao-r-order-workspace"><div class="ao-r-order-sidebar"><b>Active Problems</b><span>Historical (0)</span><p>☑ No Known Problems</p></div>'+
+   '<div class="ao-r-order-form"><b>Orders</b><div class="ao-r-field"><span>Ordering Provider</span><strong>Selected provider　⌄</strong></div><div class="ao-r-field"><span>Supervising Provider</span><strong>Selected provider　⌄</strong></div><div class="ao-r-order-plus">⊕　 DIAGNOSES &amp; ORDERS</div></div></div>'+artCue('CLICK + DIAGNOSES & ORDERS'),'group');
+  case 5:return artFrame('Diagnoses & Orders',
+   '<div class="ao-r-modal-head"><b>⊕　 DIAGNOSES &amp; ORDERS</b></div>'+artSearch('Search diagnosis')+
+   '<div class="ao-r-search-meta">Displaying orders from preferred facility <b>Edit preferences</b></div>'+
+   '<div class="ao-r-dual-list"><div><b>Diagnoses (20+)</b><span class="ao-r-highlight-row">'+artCheck()+' Appropriate diagnosis</span><span>Other diagnosis</span></div><div><b>Order Sets</b><span>Available order set</span><span>Related test</span></div></div>'+artCue('ADD DIAGNOSIS'),'diagnosis');
+  case 6:return artFrame('Edit preferences',
+   '<div class="ao-r-preferences-window"><div class="ao-r-preferences-heading"><b>Set a preferred facility</b></div><div class="ao-r-pref-content"><aside><strong>Lab orders</strong><span>Imaging orders</span><span>Referral orders</span></aside>'+
+   '<section><b>Lab orders</b><p>Choose where laboratory orders are sent</p><div class="ao-r-pref-action">Set a preferred lab orders provider <span>›</span></div></section></div></div>'+artCue('LAB ORDERS → SET PROVIDER'),'preferences');
+  case 7:return artFrame('Add a receiver',
+   '<div class="ao-r-receiver-controls"><div><b>View by</b><span>Relevance</span><span>Frequently Used</span></div>'+artSearch(chosen()?chosen().search:'Search receivers')+'</div>'+
+   '<div class="ao-r-zip-control"><span>Distance: within selected area</span><strong>Practice ZIP code　✎</strong></div>'+
+   '<div class="ao-r-receiver-results"><div class="ao-r-results-heading"><b>Receiver</b><b>Location</b></div><div class="ao-r-result-selected">'+artCheck()+'<strong>'+(chosen()?chosen().name:'Select intended lab')+'</strong><small>Confirm facility &amp; address</small></div><div class="ao-r-result-alt">Another matching receiver</div></div>'+artCue('VERIFY ZIP + RECEIVER'),'receiver');
+  case 8:return artFrame('Diagnoses & Orders',
+   '<div class="ao-r-modal-head"><b>⊕　 DIAGNOSES &amp; ORDERS</b></div>'+artSearch('Enter exact test code')+
+   '<div class="ao-r-search-meta">Displaying labs from <b>'+(chosen()?chosen().name:'selected receiving lab')+'</b> · Edit preferences</div>'+
+   '<div class="ao-r-dual-list ao-r-test-list"><div><b>Diagnoses</b><span>Selected diagnosis</span></div><div><b>Orders (matching code)</b><span class="ao-r-highlight-row">'+artCheck()+' Verify matching test</span><span>Check panel / reflex rules</span><span>Check specimen &amp; laboratory</span></div></div>'+artCue('MATCH EXACT TEST CODE'),'testcode');
+  default:return artFrame('Patient chart',
+   '<div class="ao-r-outstanding"><div class="ao-r-outstanding-left"><b>Orders</b><span>Diagnosis linked</span><i></i><small>Provider selected</small></div>'+
+   '<div class="ao-r-outstanding-right"><b>Outstanding Orders</b><div class="ao-r-outstanding-row">'+artCheck()+'<span><strong>'+(chosen()?chosen().name+' laboratory order':'External lab order')+'</strong><small>Receiving laboratory verified</small></span><em>Unsigned</em></div></div></div>'+artCue('CHECK SIGNATURE STATUS'),'outstanding');
  }
 }
+
 const steps=[
  {label:'CHART',title:'Open patient chart',text:'Open the patient chart and click the upper-right <strong>hamburger menu</strong>.'},
  {label:'MENU',title:'Create order group',text:'Select <strong>Create order group</strong> from the purple menu.'},
