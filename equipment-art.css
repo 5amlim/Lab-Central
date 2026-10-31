@@ -26,3 +26,12 @@
 .equipment-overview.torch-overview .equipment-art{min-height:245px;background:radial-gradient(ellipse at center,#f1f7f8 0%,#fff 77%)}
 .equipment-overview.torch-overview .equipment-svg{width:100%;max-width:550px;max-height:280px}
 @media(max-width:760px){.equipment-overview.torch-overview .equipment-art{min-height:175px}.equipment-overview.torch-overview .equipment-svg{max-height:230px}}
+
+/* Upright FebriDx occupies the same reference area without distortion. */
+.equipment-overview:has(.equipment-information h2:first-child) .equipment-svg{object-fit:contain}
+.equipment-overview .equipment-art svg[viewBox="0 0 420 810"]{height:330px;width:auto;max-height:330px;max-width:100%}
+.equipment-overview .equipment-art:has(svg[viewBox="0 0 420 810"]){min-height:350px}
+@media(max-width:740px){
+ .equipment-overview .equipment-art svg[viewBox="0 0 420 810"]{height:285px;max-height:285px}
+ .equipment-overview .equipment-art:has(svg[viewBox="0 0 420 810"]){min-height:305px}
+}
