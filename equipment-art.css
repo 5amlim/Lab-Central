@@ -35,3 +35,30 @@
  .equipment-overview .equipment-art svg[viewBox="0 0 420 810"]{height:285px;max-height:285px}
  .equipment-overview .equipment-art:has(svg[viewBox="0 0 420 810"]){min-height:305px}
 }
+
+
+/* Piccolo: dedicated full-length front view for the equipment Overview only.
+   Training/disc/loading illustrations and homepage device card are unchanged. */
+.equipment-overview.piccolo-overview .equipment-art{
+ min-height:355px;
+ background:radial-gradient(ellipse at center,#f0f6f9 0%,#fcfdfd 76%);
+}
+.equipment-overview.piccolo-overview .equipment-svg.piccolo-main-svg{
+ display:block;
+ width:auto;
+ height:355px;
+ max-height:355px;
+ max-width:100%;
+ margin:auto;
+ object-fit:contain;
+}
+@media(max-width:740px){
+ .equipment-overview.piccolo-overview .equipment-art{min-height:300px}
+ .equipment-overview.piccolo-overview .equipment-svg.piccolo-main-svg{
+  height:300px;max-height:300px;
+ }
+}
+@media print{
+ .equipment-overview.piccolo-overview .equipment-svg.piccolo-main-svg{height:245px;max-height:245px}
+ .equipment-overview.piccolo-overview .equipment-art{min-height:250px}
+}
