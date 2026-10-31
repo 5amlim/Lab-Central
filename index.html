@@ -160,7 +160,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261031-spotfire-insert-screen-v7" media="all">
-  <link rel="stylesheet" href="reference-refresh.css?v=20261029-drug-strip-illustrations-v3" media="all">
+  <link rel="stylesheet" href="reference-refresh.css?v=20261031-clinitek-static-references-v4" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261029-sixpack-mix-v3" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261029-pink-status-lane-v5" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261029-patient-stable-nav-v2" media="all">
@@ -1185,6 +1185,20 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  if(isPathfast)return '<article class="guide-card pf-static-step'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header><div class="pf-step-collapse-body">'+stepBody+'</div></article>';
  return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+'</article>';
 }
+function renderClinitekReferenceCards(group){
+ // References are documents to consult, not an ordered patient-testing workflow.
+ const items=[];
+ (group?.blocks||[]).forEach(function(block){
+  if(block.type!=='list')return;
+  if(block.level===1)items.push({title:block.text,details:[]});
+  else if(block.level>=2&&items.length)items[items.length-1].details.push(block.text);
+ });
+ return '<section class="clinitek-reference-page" aria-label="Clinitek references and SOP">'+
+  '<header class="clinitek-reference-intro"><span class="clinitek-reference-kicker">REFERENCE MATERIALS</span><h2>References &amp; SOP</h2><p>Review the manufacturer instructions and local training materials whenever you need to verify a procedure.</p></header>'+
+  '<div class="clinitek-reference-grid">'+items.map(function(item,i){
+   return '<article class="clinitek-reference-card"><span class="clinitek-reference-number">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safeHtml(item.title)+'</h3>'+item.details.map(function(note){return '<p>'+safeHtml(note)+'</p>';}).join('')+'</div></article>';
+  }).join('')+'</div></section>';
+}
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
  if(state.guideRoute!==key){state.guideRoute=key;state.guideStep=0;state.guideMode='guided';state.guideDetailsExpanded=true;}
@@ -2020,6 +2034,7 @@ function sectionRender(sec,tab){
  else if(tab==='videos')h+=videoLibrary();
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
+ else if(sec.id==='clinitek'&&tab==='references')h+=renderClinitekReferenceCards(groups.find(g=>g.id==='references'));
  else{
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
