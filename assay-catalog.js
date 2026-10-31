@@ -204,7 +204,7 @@ function oneCard(c,idx,withDisc,id){
 
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
-  '<summary class="ac-card-head">'+(withDisc?disc(c):id==='spotfire'&&c.spotfireMark?spotfireMark(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
+  '<summary class="ac-card-head">'+(withDisc?disc(c):id==='spotfire'&&c.spotfireMark?spotfireMark(c):'<span class="ac-card-index">'+(id==='sysmex'?'CBC':String(idx+1).padStart(2,'0'))+'</span>')+
   '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small>'+(c.marketNote?'<span class="ac-market-note">'+esc(c.marketNote)+'</span>':'')+'</span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
   '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
@@ -219,7 +219,7 @@ function render(section){
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
-  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
+  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+(id==='sysmex'?' ac-grid--sysmex':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
   (references[id]?'<p class="ac-reference">Source: <a href="'+references[id]+'" target="_blank" rel="noopener noreferrer">Official test menu / manufacturer reference ↗</a></p>':'')+'</section>';
 }
