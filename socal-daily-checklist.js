@@ -26,35 +26,86 @@ const sharedTasks=[
  {id:'rapid',group:'Instrument QC & readiness',title:'Check rapid and POC test readiness',desc:'Check stock, expiration and kit-specific QC requirements for tests used at your clinic.',role:'Trained personnel'},
  {id:'handoff',group:'Tasks & handoff',title:'Review outstanding lab follow-ups',desc:'Address specimen issues, rejected tests and open lab-related tasks, then hand off anything unresolved.',role:'Lab personnel / RN'}
 ];
+
+/* Tasks stay market-scoped; clinic selection provides a dedicated view for each site.
+   The equipment/binder inventory must be verified locally before SOP use. */
+const socalBinder=[
+ {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
+ {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel'},
+ {title:'Triage and Clinitek QC records',desc:'File completed electronic or liquid QC and UA/hCG controls when performed or due.',role:'Authorized / trained personnel'},
+ {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
+ {title:'Maintenance and exceptions',desc:'File required instrument maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
+];
+const sharedBinder=[
+ {title:'Environmental and cleaning logs',desc:'Verify completed temperature and cleaning records are filed in the approved location.',role:'Lab personnel / RN'},
+ {title:'Analyzer QC and calibration records',desc:'File applicable QC printouts, calibration and blank/background results for installed devices.',role:'Authorized personnel'},
+ {title:'New lot/shipment control records',desc:'Document external controls for relevant kit or reagent lots when performed or due.',role:'Trained personnel'},
+ {title:'Maintenance and corrective actions',desc:'File required instrument service, out-of-range results, failed QC and resolution records.',role:'Lab personnel / RN'}
+];
 const markets=[
- {id:'socal',name:'Southern California',short:'SoCal',description:'Beverly Hills, Santa Monica and Manhattan Beach',tasks:socalTasks},
- {id:'norcal',name:'Northern California',short:'NorCal',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks},
- {id:'ny',name:'New York',short:'New York',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks},
- {id:'fl',name:'Florida',short:'Florida',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks}
+ {id:'socal',name:'Southern California',short:'SoCal',tasks:socalTasks,binder:socalBinder,clinics:[
+  {id:'bh',name:'Beverly Hills'},
+  {id:'bh-satellite',name:'Beverly Hills Satellite'},
+  {id:'sm',name:'Santa Monica'},
+  {id:'mb',name:'Manhattan Beach'}
+ ]},
+ {id:'norcal',name:'Northern California',short:'NorCal',tasks:sharedTasks,binder:sharedBinder,clinics:[
+  {id:'sf',name:'San Francisco'},
+  {id:'palo-alto',name:'Palo Alto'}
+ ]},
+ {id:'ny',name:'New York',short:'New York',tasks:sharedTasks,binder:sharedBinder,clinics:[
+  {id:'ues',name:'Upper East Side'},
+  {id:'tribeca',name:'Tribeca'},
+  {id:'hamptons',name:'Hamptons'},
+  {id:'fifth',name:'5th Avenue'},
+  {id:'gramercy',name:'Gramercy'},
+  {id:'hudson-yards',name:'Hudson Yards'}
+ ]},
+ {id:'fl',name:'Florida',short:'Florida',tasks:sharedTasks,binder:sharedBinder,clinics:[
+  {id:'boca',name:'Boca Raton'},
+  {id:'palm-beach',name:'Palm Beach'},
+  {id:'coral-gables',name:'Coral Gables'}
+ ]}
 ];
 const groupOrder=['Courier readiness','Environment & logs','Instrument QC & readiness','Tasks & handoff'];
 let selectedMarket='socal';
+const siteByMarket=Object.fromEntries(markets.map(m=>[m.id,m.clinics[0].id]));
 function safe(x){return String(x??'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
-function section(group,index,tasks){
+function card(group,index,tasks){
  const rows=tasks.filter(t=>t.group===group);
  if(!rows.length)return '';
  return '<section class="dqc-section" aria-labelledby="dqc-group-'+index+'">'+
-  '<header class="dqc-section-head"><span class="dqc-section-number">'+String(index+1).padStart(2,'0')+'</span><h2 id="dqc-group-'+index+'">'+safe(group)+'</h2><span class="dqc-section-count">'+rows.length+' checks</span></header>'+
+  '<header class="dqc-section-head"><span class="dqc-section-number">'+String(index+1).padStart(2,'0')+'</span><h3 id="dqc-group-'+index+'">'+safe(group)+'</h3><span class="dqc-section-count">'+rows.length+' checks</span></header>'+
   '<div class="dqc-items">'+rows.map(function(t){
-    return '<article class="dqc-item"><div class="dqc-item-main"><h3>'+safe(t.title)+'</h3><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
+    return '<article class="dqc-item"><div class="dqc-item-main"><h4>'+safe(t.title)+'</h4><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
   }).join('')+'</div></section>';
+}
+function binderCard(item){
+ return '<article class="dqc-binder-item"><div class="dqc-binder-main"><h3>'+safe(item.title)+'</h3><p>'+safe(item.desc)+'</p></div><span class="dqc-role">'+safe(item.role)+'</span></article>';
 }
 function render(){
  const market=markets.find(m=>m.id===selectedMarket)||markets[0];
+ const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
  return '<section class="dqc-page" aria-label="Lab Daily Checklist reference">'+
- '<header class="dqc-hero"><div><span class="dqc-eyebrow">LAB OPERATIONS / DAILY REFERENCE</span><h1>Lab Daily Checklist</h1><p>Opening checks, instrument readiness and lab handoff. Select a market to view its daily reference.</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
+ '<header class="dqc-hero"><div><span class="dqc-eyebrow">LAB OPERATIONS / DAILY REFERENCE</span><h1>Lab Daily Checklist</h1><p>Daily readiness tasks and binder documentation for each clinic location.</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
  '<nav class="dqc-market-picker" aria-label="Select checklist market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+markets.map(function(m){
   return '<button type="button" data-dqc-market="'+safe(m.id)+'" class="dqc-market-choice'+(market.id===m.id?' is-selected':'')+'" aria-pressed="'+(market.id===m.id)+'">'+safe(m.short)+'</button>';
  }).join('')+'</div></nav>'+
- '<div class="dqc-market-heading"><div><span class="dqc-market-overline">DAILY REFERENCE</span><h2>'+safe(market.name)+'</h2><p>'+safe(market.description)+'</p></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></div>'+
- '<div class="dqc-sections">'+groupOrder.map(function(group,i){return section(group,i,market.tasks)}).join('')+'</div>'+
- '<footer class="dqc-footer"><strong>Use the approved logs for sign-off.</strong><span>This page is a reference, not a completion record. Document QC, temperature excursions, missed pickups and follow-ups using the required clinic records and escalate concerns through your local workflow.</span></footer>'+
+ '<div class="dqc-location-bar"><label class="dqc-location-label" for="dqc-clinic-select">Clinic location</label>'+
+ '<select id="dqc-clinic-select" data-dqc-clinic aria-label="Select clinic location">'+market.clinics.map(c=>'<option value="'+safe(c.id)+'"'+(c.id===clinic.id?' selected':'')+'>'+safe(c.name)+'</option>').join('')+'</select>'+
+ '<span class="dqc-location-hint">Show records for the selected clinic</span></div>'+
+ '<div class="dqc-market-heading"><div><span class="dqc-market-overline">DAILY REFERENCE / '+safe(market.short).toUpperCase()+'</span><h2>'+safe(clinic.name)+'</h2><p>'+safe(market.name)+' · Follow site-approved SOPs for installed equipment and required documentation.</p></div></div>'+
+ '<section class="dqc-workstream" aria-labelledby="dqc-daily-title"><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">01</span><div><h2 id="dqc-daily-title">Daily Task Checklist</h2><p>Opening checks, QC readiness and unresolved lab handoffs</p></div></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></header>'+
+ '<div class="dqc-sections">'+groupOrder.map(function(group,i){return card(group,i,market.tasks)}).join('')+'</div></section>'+
+ '<section class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-binder-title"><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">02</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
+ '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
+ '<p class="dqc-binder-note">Only file records for procedures and instruments used at this clinic, when required or due. Consult the approved site binder index and SOP.</p></section>'+
+ '<footer class="dqc-footer"><strong>Official records remain separate.</strong><span>This page is a read-only reference, not a signed checklist or QC log. Record results, exceptions and operator initials in the approved system.</span></footer>'+
  '</section>';
+}
+function rerender(){
+ const page=document.querySelector('.dqc-page');
+ if(page)page.outerHTML=render();
 }
 document.addEventListener('click',function(e){
  const button=e.target.closest('.dqc-page [data-dqc-market]');
@@ -62,9 +113,16 @@ document.addEventListener('click',function(e){
  const next=button.getAttribute('data-dqc-market');
  if(!markets.some(m=>m.id===next)||selectedMarket===next)return;
  selectedMarket=next;
- const page=document.querySelector('.dqc-page');
- if(page)page.outerHTML=render();
+ rerender();
+});
+document.addEventListener('change',function(e){
+ const select=e.target.closest('.dqc-page [data-dqc-clinic]');
+ if(!select)return;
+ const market=markets.find(m=>m.id===selectedMarket);
+ if(!market||!market.clinics.some(c=>c.id===select.value))return;
+ siteByMarket[market.id]=select.value;
+ rerender();
 });
 window.LAB_SOCAL_DAILY={render,taskCount:socalTasks.length,tasks:socalTasks};
-window.LAB_DAILY_CHECKLIST={render,markets:markets.map(function(m){return {id:m.id,name:m.name}})};
+window.LAB_DAILY_CHECKLIST={render,markets:markets.map(m=>({id:m.id,name:m.name,clinics:m.clinics.map(c=>({...c}))}))};
 })();
