@@ -135,7 +135,7 @@ function cellclean(){
   };
   const cards=procedures[mode];if(!cards)return "";
   return '<section class="sysmex-maint-screen-flow"><div class="sysmex-maint-screen-heading"><strong>Follow the analyzer screens</strong><span>Use More on each screen to continue</span></div>'+
-    gallery(cards,"Sysmex pocH-100i",{scroll:true,disclaimer:"Manufacturer-informed screen illustrations. Verify the live pocH-100i prompt and current site SOP."})+'</section>';
+    gallery(cards,"Sysmex pocH-100i",{scroll:true,disclaimer:"Manufacturer-informed screen illustrations. Verify the live pocH-100i prompt and current site SOP."}).replace("Scan new barcode", "Scan new barcode &nbsp; <span style=\"display:inline-block;padding:4px 10px;border:1px solid #d9ab6c;border-radius:999px;background:#fff5e8;color:#8d581f;font-size:12px;font-weight:800;letter-spacing:.04em\">ACTION REQUIRED</span>")+'</section>';
  }
  function step(mode){
   if(mode==='shutdown')return scene('Shutdown is an analyzer command',media(mode),'On the Main screen, select Shutdown, then Execute. Wait for completion before turning off the physical power switch.');
