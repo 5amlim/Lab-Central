@@ -122,3 +122,18 @@
 .fbr-invalid strong{color:#923c44}
 .fbr-caution{font-size:11.75px;line-height:1.65;color:#6b6570;margin:16px 0 0}
 @media(max-width:700px){.fbr-interpretation{padding:16px}.fbr-results-grid{grid-template-columns:1fr}.fbr-result-card{padding:15px}.fbr-strip{max-width:none}}
+
+/* Clinitek References & SOP: reference cards, not a guided procedure. */
+.clinitek-reference-page{margin:20px 0 24px}
+.clinitek-reference-intro{margin:0 0 17px}
+.clinitek-reference-kicker{display:block;font-size:10px;font-weight:850;letter-spacing:.14em;color:#087d80;margin-bottom:6px}
+.clinitek-reference-intro h2{font-size:23px;line-height:1.2;letter-spacing:-.03em;font-weight:850;color:#29445c;margin:0 0 7px}
+.clinitek-reference-intro p{font-size:13px;line-height:1.6;color:#658195;margin:0;max-width:710px}
+.clinitek-reference-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.clinitek-reference-card{display:flex;align-items:flex-start;gap:14px;min-width:0;padding:21px;background:#fff;border:1px solid #dce8ef;border-top:3px solid #4a9fa6;border-radius:14px;box-shadow:0 3px 13px rgba(24,64,89,.035)}
+.clinitek-reference-number{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#e9f5f4;color:#0c7875;font-size:13px;font-weight:850}
+.clinitek-reference-card h3{margin:2px 0 9px;color:#25465f;font-size:15px;font-weight:820;line-height:1.4}
+.clinitek-reference-card p{margin:0 0 7px;font-size:13px;line-height:1.7;color:#527086}
+.clinitek-reference-card p:last-child{margin-bottom:0}
+@media(max-width:720px){.clinitek-reference-grid{grid-template-columns:1fr}.clinitek-reference-card{padding:17px}}
+@media print{.clinitek-reference-page{margin:8px 0}.clinitek-reference-card{box-shadow:none;break-inside:avoid}}
