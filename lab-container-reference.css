@@ -82,3 +82,22 @@
 .lcr-transport-note strong{font-weight:800;color:#286a51}
 .lcr-modal-info .lcr-transport-note{margin:0 0 13px}
 @media print{.lcr-transport-note{break-inside:avoid}}
+
+
+/* Do not visually merge Quest BacT/ALERT and Cedars BACTEC culture systems. */
+.lcr-culture-group-heading{
+ grid-column:1/-1;display:flex;align-items:center;gap:10px;
+ margin:12px 0 0;padding:12px 3px 3px;
+ border-top:1px solid #dce7ed;color:#2a4e63;
+}
+.lcr-culture-group-heading:first-child{margin-top:0;border-top:0;padding-top:0}
+.lcr-culture-group-heading strong{font-size:14px;letter-spacing:-.01em}
+.lcr-culture-group-heading small{margin-left:auto;font-size:10px;color:#7892a0;font-weight:700}
+.lcr-culture-group-mark{
+ flex:none;border-radius:6px;font-size:9px;font-weight:850;
+ letter-spacing:.055em;padding:5px 8px;border:1px solid;
+}
+@media(max-width:620px){
+ .lcr-culture-group-heading{gap:7px;flex-wrap:wrap}
+ .lcr-culture-group-heading small{width:100%;margin-left:0}
+}
