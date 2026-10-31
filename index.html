@@ -218,7 +218,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261031-clinitek-section-divider-v2" media="all">
 <link rel="stylesheet" href="instrument-troubleshooting.css?v=20261031-troubleshooting-workflow-v2" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
-<link rel="stylesheet" href="home-device-cards.css?v=20261031-whole-analyzer-fit-v3" media="all">
+<link rel="stylesheet" href="home-device-cards.css?v=20261031-directory-symbol-art-v1" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261031-triage-accurate-screen-actions-v2" media="all">
 <link rel="stylesheet" href="athena-ordering-guide.css?v=20261030-faithful-minimal-anonymous-v6" media="all">
 <script src="athena-ordering-guide.js?v=20261030-faithful-minimal-anonymous-v6"></script>
@@ -899,17 +899,49 @@ function homepageEquipmentArt(sec,featured=false){
  }
  return '<span class="'+(featured?'featured-device-art':'card-device-art')+'" aria-hidden="true">'+graphic+'</span>';
 }
+// Extend the browse grid with destinations added to the sidebar. These are
+// genuine pages, not duplicated analyzer guides or the three top tool shortcuts.
+const extraHomeGuides=[
+ {id:'specimen-dropoff',title:'Specimen drop-off',subtitle:'Walk-in scheduling, orders and specimen handoff',category:'Home collection',icon:'clipboard-check',blocks:[]},
+ {id:'lab-container-gallery',title:'Lab Container Gallery',subtitle:'Collection tubes, swabs, kits and reference photos',category:'Send-outs',icon:'test-tube-2',blocks:[]},
+ {id:'sendout-log',title:'Lab Sendout Log',subtitle:'Specimen tracking and regional submission forms',category:'Send-outs',icon:'file-text',blocks:[]},
+ {id:'socal-daily',title:'Lab Daily Checklist',subtitle:'Daily tasks and binder documentation by clinic',category:'Operations',icon:'clipboard-check',blocks:[]},
+ {id:'envi-ordering',title:'Envi Ordering',subtitle:'Supply ordering, vendors and tracking',category:'Operations',icon:'package',blocks:[]}
+];
+function homeBrowseSections(){
+ const standard=all.filter(s=>s.category!=='Archived');
+ const extras=new Map(extraHomeGuides.map(s=>[s.category,extraHomeGuides.filter(e=>e.category===s.category)]));
+ const output=[];
+ for(let i=0;i<standard.length;i++){
+  const s=standard[i];
+  // Daily checklist is the first Operations destination, as in the sidebar.
+  if(s.category==='Operations'&&(!i||standard[i-1].category!=='Operations'))
+   output.push(...(extras.get('Operations')||[]).filter(e=>e.id==='socal-daily'));
+  output.push(s);
+  if(!standard[i+1]||standard[i+1].category!==s.category){
+   output.push(...(extras.get(s.category)||[]).filter(e=>e.id!=='socal-daily'));
+  }
+ }
+ return output;
+}
+// Without an instrument illustration, enlarge the matching navigation icon
+// into a soft watermark. Do not introduce a new background color.
+function homeSymbolArt(section){
+ return '<span class="card-symbol-art" aria-hidden="true">'+sectionSvg(section)+'</span>';
+}
 function card(s){
  const illustration=homepageEquipmentArt(s);
- return '<button type="button" class="item-card'+(illustration?' has-device-art':'')+'" data-go="'+safeHtml(s.id)+'"><div class="card-head"><span class="card-icon">'+sectionSvg(s)+'</span><span class="card-category">'+safeHtml(s.category)+'</span></div><strong>'+safeHtml(s.title)+'</strong><p>'+safeHtml(s.subtitle)+'</p><span class="card-trailing">Open guide &nbsp;›</span>'+illustration+'</button>';
+ const symbol=illustration?'':homeSymbolArt(s);
+ return '<button type="button" class="item-card'+(illustration?' has-device-art':' has-symbol-art')+'" data-go="'+safeHtml(s.id)+'"><div class="card-head"><span class="card-icon">'+sectionSvg(s)+'</span><span class="card-category">'+safeHtml(s.category)+'</span></div><strong>'+safeHtml(s.title)+'</strong><p>'+safeHtml(s.subtitle)+'</p><span class="card-trailing">Open guide &nbsp;›</span>'+illustration+symbol+'</button>';
 }
 function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Confirm the current approved SOP, manufacturer IFU, specimen requirements and site-specific procedures before testing or sending specimens.</div></div>`}
 function renderHome(mode='home'){
  const search=state.search.trim();
  const isFav=mode==='favorites';
- const matches=all.filter(s=>isFav?favs.includes(s.id):s.category!=='Archived');
+ const directory=homeBrowseSections();
+ const matches=(isFav?all.filter(s=>favs.includes(s.id)):directory);
  let filtered=matches.filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));
- if(search){filtered=all.filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));}
+ if(search){filtered=[...directory,...all.filter(s=>s.category==='Archived')].filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));}
  el('currentCrumb').textContent=search?'Search':isFav?'Favorites':'Overview';
  let h='';
  if(!search&&!isFav){
