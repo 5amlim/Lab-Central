@@ -108,6 +108,10 @@ function meterBody(mode="home"){
    T(548,573,"QUIDEL",25,"#343e48",400)+
    P("M440 671 Q450 631 499 631 Q550 631 558 671Z","#141c22")+
    P("M570 658 h36 m-20-13 h17", "none","#607788",2)+T(590,650,"Click",10,"#657985",700);
+ const focus=String(mode||"");
+ if(["main","testmenu","qcmenu","qcsamplemenu","sampletype","analytes"].includes(focus))h+=C(541,317,70,"none","#dc9b2b",4)+C(490,414,26,"none","#dc9b2b",3);
+ if(["userid","patientid","confirmid","qc-lot","insert","insert-qc","reading"].includes(focus))h+=C(490,414,26,"none","#dc9b2b",3);
+ if(focus==="result"||focus==="qcresult")h+=C(501,220,26,"none","#dc9b2b",3);
  return h;
 }
 function meterSvg(mode="home"){
@@ -228,6 +232,25 @@ function figure(title,mode,extra,note){
  const right=extra||kitChooser();
  const isPipette=right.includes('triage-pipette-sequence');
  return '<figure class="lc-focus-figure triage-focus-figure'+(isPipette?' triage-pipette-step':'')+'"><header>'+E(title)+'</header><div class="triage-guide-scene"><div class="triage-meter-stage">'+meterSvg(mode)+'</div><div class="triage-material-stage">'+right+'</div></div><figcaption>'+E(note)+'</figcaption></figure>';
+}
+
+function actionPanel(heading,actions,warning="",label="ON THE METER"){
+ const items=actions.map((item,i)=>'<div class="triage-action-row"><span class="triage-action-no">'+String(i+1).padStart(2,"0")+'</span><span>'+E(item)+'</span></div>').join("");
+ return '<div class="triage-action-panel"><span class="triage-action-label">'+E(label)+'</span>'+
+  '<h4>'+E(heading)+'</h4><div class="triage-action-rows">'+items+'</div>'+
+  (warning?'<div class="triage-action-warning"><strong>Important</strong><span>'+E(warning)+'</span></div>':'')+
+  '</div>';
+}
+function conditionalScreens(){
+ const boxes=[
+  {title:"SELECT SAMPLE TYPE",lines:["BLOOD SAMPLE","PLASMA SAMPLE"],note:"Only if sample selection is enabled."},
+  {title:"SELECT TESTS",lines:["CARDIAC","CKMB  |  MYO  |  TNI"],note:"Only if analyte selection is enabled. The actual analytes depend on your test device."}
+ ];
+ return '<div class="triage-conditional-screens"><strong>Conditional MeterPro prompts</strong>'+
+ boxes.map((box,i)=>'<div class="triage-conditional-screen"><span class="triage-conditional-num">'+String(i+1).padStart(2,"0")+'</span><div class="triage-conditional-lcd">'+
+ '<b>'+E(box.title)+'</b>'+box.lines.map(x=>'<span>'+E(x)+'</span>').join('')+
+ '</div><p>'+E(box.note)+'</p></div>').join('')+
+ '<div class="triage-conditional-note">On the SELECT TESTS screen, press a numbered key to toggle an available analyte, then Enter to continue. At least one analyte must remain selected.</div></div>';
 }
 function selectedMaterial(type,filled){
  const a=byId(type);
