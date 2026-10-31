@@ -113,8 +113,8 @@
 }
 
 .lab-panel-abbrev{display:inline-block;color:#567a92;background:#edf4f8;font-size:10px;font-weight:800;padding:3px 7px;border-radius:6px;margin-top:6px}
-.lab-panel-open{flex:none;border:1px solid #b9dcd6;background:#eaf7f3;color:#176b61;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;white-space:nowrap}
-.lab-panel-open:hover{background:#d9f0e9;border-color:#81beb1}
+.lab-panel-open{flex:none;border:1px solid #d3dce3;background:#f1f3f5;color:#526474;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+.lab-panel-open:hover{background:#e5e9ed;border-color:#b8c5ce}
 .lab-panel-open span{margin-left:5px}
 .lab-panel-target-hits{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:0 17px 12px}
 .lab-panel-target-hits>strong{width:100%;font-size:10px;font-weight:830;color:#547788}
