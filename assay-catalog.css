@@ -228,10 +228,12 @@
   }
 }
 
-/* Sysmex, SpotFire, and Sofia: one analyte/pathogen per row without changing card columns. */
+/* Scoped analyte/pathogen lists use one column; parent assay-card grids stay unchanged. */
 .assay-catalog .ac-grid--sysmex .ac-group ul,
 .assay-catalog .ac-grid--spotfire .ac-group ul,
 .assay-catalog .ac-grid--sofia .ac-group ul,
-.assay-catalog .ac-grid--coagsense .ac-group ul {
+.assay-catalog .ac-grid--coagsense .ac-group ul,
+.assay-catalog .ac-grid--poc .ac-group ul,
+.assay-catalog .ac-grid--pathfast .ac-group ul {
   grid-template-columns:minmax(0,1fr);
 }
