@@ -789,19 +789,19 @@ function febridxCollectionGuide(){
 /* Research-checked specimen handling. Times describe the patient specimen,
    not cartridge/reagent shelf life. Current installed US IFU/SOP governs. */
 const collectionTestWindows={
- sysmex:"EDTA blood: process preferably within 4 h. Documented stability: up to 8 h at room temperature or 24 h at 2–8°C. Bring refrigerated blood to room temperature and mix before testing; prolonged storage can change CBC indices.",
- piccolo:"Lithium-heparin whole blood: analyze within 60 min at room temperature; do not refrigerate. Separated plasma/serum: up to 5 h at room temperature or 48 h at 2–8°C. Start analysis within 10 min of filling the disc.",
- pathfast:"hs-Troponin I, NT-proBNP and D-dimer: whole blood within 4 h at 2–25°C. Heparinized plasma: up to 24 h at 2–25°C. Start the run immediately after dispensing into cartridges. Verify the installed U.S. assay IFU.",
- triage:"For Triage Troponin I and D-dimer, test EDTA whole blood/plasma within 1 h of collection; mix and bring to room temperature before testing. BNP: check its specific Triage IFU.",
- clinitek:"Urinalysis: test fresh urine within 2 h. CLINITEST hCG: test within 2 h or refrigerate at 2–8°C for up to 72 h; bring chilled urine to room temperature before testing.",
- torch:"GI panel: stool in Cary-Blair transport medium can be tested up to 4 days after collection at room temperature (15–25°C) or refrigerated (2–8°C). Test sooner whenever possible.",
- spotfire:"R / ST full and mini panels: test swabs in the specified transport medium promptly; validated up to 4 h at 15–25°C, 3 days at 2–8°C, or 30 days frozen at −15°C or colder. Match respiratory vs throat collection medium.",
- febridx:"Use only fresh fingerstick blood. Fill the device's integrated collection tube and transfer the blood immediately; no collected-sample storage interval is provided. Read the developed result at 10 minutes, not after 1 hour.",
- "drug-screen":"Urine stability depends on the exact screening cup and ordered tests. Collect in the approved container, cap securely and test promptly; verify any delayed storage against the actual kit IFU and SOP.",
- coagsense:"Use fresh fingerstick capillary blood and transfer it to the test strip immediately after collection. The manufacturer's testing tips specify transfer within 15 seconds of lancing.",
- poc:"Rapid antigen and other POC tests have kit-specific swab or sample limits. Test promptly unless the exact assay IFU validates delayed storage; do not apply a generic stability time to all rapid kits.",
- sofia:"Flu + SARS (referenced IFU): dry nasal/NP swabs up to 48 h at room temperature or 2–8°C. RSV: validated transport media up to 24 h. Strep A+: dry throat swabs up to 24 h at room temperature or 48 h at 2–8°C. Confirm the current kit IFU.",
- hemocue:"Fill the Hb 201 microcuvette completely, then start measurement as soon as possible and no later than 10 minutes after filling."
+ sysmex:"EDTA blood: preferably test ≤4 h; ≤8 h at room temp or ≤24 h refrigerated (2–8°C). Warm and mix before testing.",
+ piccolo:"Whole blood: ≤60 min at room temp; do not refrigerate. Separated serum/plasma: ≤5 h room temp or ≤48 h refrigerated (2–8°C). Start disc ≤10 min after filling.",
+ pathfast:"Whole blood: ≤4 h (2–25°C). Heparin plasma: ≤24 h (2–25°C). Run immediately after loading cartridges.",
+ triage:"Troponin I / D-dimer: EDTA blood or plasma ≤1 h after collection. BNP: follow its assay IFU.",
+ clinitek:"Urinalysis: ≤2 h. hCG urine: ≤2 h or refrigerate ≤72 h (2–8°C); bring to room temp before testing.",
+ torch:"GI stool in Cary-Blair: ≤4 days at room temp (15–25°C) or refrigerated (2–8°C).",
+ spotfire:"R/ST swabs: ≤4 h at 15–25°C, ≤3 days refrigerated (2–8°C), or ≤30 days frozen (−15°C or colder). Use panel-specific transport medium.",
+ febridx:"Fresh fingerstick only. Transfer immediately; no sample storage interval. Read at 10 min, not after 1 h.",
+ "drug-screen":"Test urine promptly. For delayed storage, follow the specific cup IFU and SOP.",
+ coagsense:"Fresh fingerstick blood: apply to strip immediately, within 15 sec of lancing.",
+ poc:"Test promptly. Storage and stability limits vary by kit; follow the specific assay IFU.",
+ sofia:"Flu + SARS dry nasal/NP swabs: ≤48 h at room temp or 2–8°C. RSV: ≤24 h in validated transport medium. Strep A+ dry throat swabs: ≤24 h room temp, ≤48 h refrigerated. Check kit IFU.",
+ hemocue:"Hb 201 microcuvette: test as soon as possible, within 10 min of filling."
 };
 const collectionStabilitySources={
  sysmex:[["Procedure reference","https://www.scribd.com/document/981273870/Lab-3A-Sysmex-PocH-100i-Operations-Manual-1-1"]],
