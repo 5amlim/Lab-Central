@@ -10,7 +10,7 @@ const socalTasks=[
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Verify required freezer checks and out-of-range alarms. Do not assume thawed reagents or controls are usable without review.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record the room conditions and compare them with all active instrument/reagent allowable operating ranges. Report excursions.',role:'Lab personnel / RN'},
  {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens Clinitek cleaning and readiness',desc:'Inspect and clean the test table and correct strip/cassette insert per SOP. Confirm controls are current under the SoCal monthly and event-triggered QC schedule; routine daily UA/hCG external QC is not required in SoCal.',role:'Trained lab personnel / RN'},
- {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'},title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Trained lab personnel / RN'},
+ {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'},title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results, complete the dedicated control and start-up blank-check logs, then file all three QC printouts and the blank-check printout.',role:'Trained lab personnel / RN'},
  {id:'triage',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'},title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Trained lab personnel / RN'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
  {id:'navigator',group:'Tasks & handoff',title:'Check and resolve Navigator tasks',desc:'Review open specimen follow-ups, rejected tests, provider communications and lab-related Navigator tasks. Close only resolved items and hand off outstanding issues.',role:'Lab personnel / RN'}
@@ -23,7 +23,7 @@ const sharedTasks=[
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Review freezer readings and alarms. Escalate excursions before using affected reagents or controls.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record ambient conditions and check against the required ranges for active instruments and reagents.',role:'Lab personnel / RN'},
  {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens Clinitek daily UA and hCG QC',desc:'Perform daily external QC for UA strips and hCG controls per market SOP. Confirm acceptable results and print/file required QC records in the daily binder. Repeat QC for new bottles or lots when required.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'}},
- {id:'sysmex',group:'Instrument QC & readiness',title:'Sysmex pocH daily QC and blank check',desc:'If installed, run or verify three EIGHTCHECK QC levels and the blank/background check. Confirm acceptable results and print/file records in the daily binder.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'}},
+ {id:'sysmex',group:'Instrument QC & readiness',title:'Sysmex pocH daily QC and blank check',desc:'If installed, run or verify three EIGHTCHECK QC levels and the blank/background check. Complete the pocH-100i Control Log and Start-up Blank Check Log, and file all three QC printouts plus the blank-check printout in the daily binder.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'}},
  {id:'triage',group:'Instrument QC & readiness',title:'Triage electronic QC Device',desc:'If installed, run the electronic QC Device daily when testing is performed. Check liquid-QC due dates and new-lot or new-shipment requirements. Print/file the daily QC record.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'}},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and new shipment/lot QC requirements for active POC kits. Document failed controls or unavailable kits.',role:'Lab personnel / RN'},
  {id:'handoff',group:'Tasks & handoff',title:'Review outstanding lab follow-ups',desc:'Address specimen issues, rejected tests and open lab-related tasks. Resolve or hand off outstanding items before the end of shift.',role:'Lab personnel / RN'}
@@ -33,7 +33,7 @@ const sharedTasks=[
    The equipment/binder inventory must be verified locally before SOP use. */
 const socalBinder=[
  {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
- {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel',badges:['Printouts Needed']},
+ {title:'Sysmex QC printouts and dedicated logs',desc:'If installed, complete the pocH-100i Control Log and Start-up Blank Check Log. File all three EIGHTCHECK QC printouts and the blank/background-check printout with their matching logs; include dates, operator initials and corrective actions.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
  {title:'Triage daily electronic QC records',desc:'File the daily electronic QC Device printout and corrective actions when required. Keep scheduled 30-day liquid QC records in the Monthly Checklist binder.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
 
  {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
@@ -59,7 +59,7 @@ const monthlyBinder=[
 ];
 const sharedBinder=[
  {title:'Environmental and cleaning logs',desc:'File temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
- {title:'Sysmex QC and blank-check printouts',desc:'If installed, file all three EIGHTCHECK QC levels and blank/background check with required identifiers.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
+ {title:'Sysmex QC printouts and dedicated logs',desc:'If installed, complete the pocH-100i Control Log and Start-up Blank Check Log. File all three EIGHTCHECK QC printouts and the blank/background-check printout with the logs, including required identifiers and corrective actions.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
  {title:'Triage daily electronic QC records',desc:'If installed, file electronic QC Device printouts and relevant corrective action. Keep scheduled liquid QC in the monthly binder.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
  {title:'Clinitek daily UA and hCG QC records',desc:'File daily UA strip and hCG external QC printouts, plus applicable new-bottle and new-lot control results.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
  {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, control and new-lot or shipment verification records.',role:'Authorized personnel'},
@@ -106,7 +106,8 @@ function dqcSectionIcon(kind){
   binder:'<rect x="4" y="2.7" width="16" height="18.6" rx="2.1"/><path d="M9.3 2.7v18.6M13 7h4M13 11h4M13 15h2.8"/><circle cx="6.7" cy="7" r=".7"/><circle cx="6.7" cy="12" r=".7"/><circle cx="6.7" cy="17" r=".7"/>',
   checklist:'<rect x="4.5" y="4.2" width="15" height="17" rx="2.1"/><path d="M9 2.5h6v3.3H9zM8.1 11l1.6 1.6 2.6-2.7M14.3 11.2h2.1M8.1 16.8l1.6 1.6 2.6-2.7M14.3 17h2.1"/>',
   qc:'<path d="M12 3 3.5 7v5.5c0 4.2 3.1 7.4 8.5 9 5.4-1.6 8.5-4.8 8.5-9V7L12 3Z"/><path d="m8.5 12.1 2.5 2.5 4.8-5.2"/>',
-  monthly:'<rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 10h17M8 14h2M13 14h3M8 17.4h2M13 17.4h3"/>'
+  monthly:'<rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 10h17M8 14h2M13 14h3M8 17.4h2M13 17.4h3"/>',
+  templates:'<path d="M5 3.5h10l4 4V21H5zM15 3.5v4h4M8 12h8M8 16h8M8 9h3"/>'
  };
  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(shapes[kind]||shapes.checklist)+'</svg>';
 }
@@ -139,11 +140,57 @@ function binderCard(item){
   '<div class="dqc-binder-description-row"><p>'+safe(item.desc)+'</p>'+badge+'</div>'+
   '</div></article>';
 }
+/* Blank, print-ready adaptations of the logs supplied for the lab templates library. */
+const dailyTemplateCatalog=[
+ {id:'temperature',title:'Daily Temperature Log',detail:'Room, refrigerator, freezer and humidity readings',group:'Environment'},
+ {id:'cleaning',title:'Daily Cleaning and Disinfection Log',detail:'Bench and work-area cleaning documentation',group:'Environment'},
+ {id:'sysmex-control',title:'pocH-100i Three-Level Control Log',detail:'Low, normal and high QC with supporting printouts',group:'Instrument QC'},
+ {id:'sysmex-blank',title:'pocH-100i Start-up Blank Check Log',detail:'Startup/background result and attached printout',group:'Instrument QC'},
+ {id:'sysmex-maint',title:'pocH-100i Maintenance Log',detail:'Instrument maintenance record',group:'Maintenance'},
+ {id:'triage-daily',title:'Triage MeterPro Daily QC Log',detail:'Daily electronic QC device result',group:'Instrument QC'},
+ {id:'clinitek-maint',title:'Siemens Urinalysis Maintenance Log',detail:'Platform cleaning and as-needed maintenance',group:'Maintenance'},
+ {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'},
+ {id:'waived-qc',title:'Waived Test QC Log',detail:'Event-based controls for new or active kits',group:'As needed'},
+ {id:'febridx-qc',title:'FebriDx Quality Control Log',detail:'New-box positive and negative controls',group:'As needed'},
+ {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'Problems, specimen rejections and corrective actions',group:'Exceptions'}
+];
+const monthlyTemplateCatalog=[
+ {id:'pathfast-maint',title:'PATHFAST Maintenance Schedule',detail:'Weekly and monthly instrument maintenance',group:'Maintenance'},
+ {id:'piccolo-qc',title:'Piccolo Xpress QC Control Sheet',detail:'Low- and high-level controls with printout attachments',group:'Instrument QC'},
+ {id:'triage-liquid',title:'Triage MeterPro Liquid QC Log',detail:'Scheduled liquid QC for active assays',group:'Instrument QC'},
+ {id:'sofia-cal',title:'Sofia 2 Calibration Check Log',detail:'Optical calibration results; no printout required',group:'Instrument QC'},
+ {id:'sofia-qc',title:'Sofia 2 QC Log',detail:'New-lot, new-shipment or other event-based controls',group:'As needed'},
+ {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'Monthly corrective-action record',group:'Exceptions'}
+];
+const clinitekTemplateCatalog=[
+ {id:'clinitek-ua',title:'Siemens Urinalysis QC Log',detail:'Low and high UA controls',group:'Clinitek'},
+ {id:'clinitek-hcg',title:'Siemens hCG Pregnancy QC Log',detail:'Negative and positive pregnancy controls',group:'Clinitek'}
+];
+function templatesForMarket(market,page){
+ const base=(page==='monthly'?monthlyTemplateCatalog:dailyTemplateCatalog);
+ return page==='monthly'?(market.id==='socal'?[...base,...clinitekTemplateCatalog]:base)
+ :market.id==='socal'?base:[...base,...clinitekTemplateCatalog];
+}
+function renderTemplatePanel(market,page){
+ const records=templatesForMarket(market,page);
+ const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
+ const view=page==='monthly'?'monthly':'daily';
+ const active=page==='monthly'?selectedMonthlyView==='monthly-templates':selectedView==='templates';
+ const panelId=page==='monthly'?'dqc-panel-monthly-templates':'dqc-panel-templates';
+ const tabId=page==='monthly'?'dqc-tab-monthly-templates':'dqc-tab-templates';
+ const cards=records.map(function(t){
+  const href='lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
+  return '<article class="dqc-template-card"><div class="dqc-template-top"><span class="dqc-template-category">'+safe(t.group)+'</span></div><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">Open printable template <span aria-hidden="true">↗</span></a></article>';
+ }).join('');
+ return '<section id="'+panelId+'" class="dqc-workstream dqc-templates-workstream" role="tabpanel" aria-labelledby="'+tabId+'"'+(active?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('templates')+'</span><div><h2>Lab Templates</h2><p>Blank log sheets for '+(page==='monthly'?'recurring QC, maintenance and documentation':'daily checks, controls and lab documentation')+'</p></div></div><span class="dqc-check-count">'+records.length+' templates</span></header><p class="dqc-template-intro">Open a print-ready log and fill in the header if needed, then print or save it as a PDF. These are adapted from the supplied lab logs. Verify the current controlled form and site SOP before clinical use.</p><div class="dqc-template-grid">'+cards+'</div></section>';
+}
+
 function renderDailySections(market,dailyQcTasks){
  return '<nav class="dqc-view-switch" role="tablist" aria-label="Lab checklist sections">'+
  '<button type="button" id="dqc-tab-daily" class="dqc-view-button'+(selectedView==='daily'?' is-selected':'')+'" role="tab" data-dqc-view="daily" aria-controls="dqc-panel-daily" aria-selected="'+(selectedView==='daily')+'" tabindex="'+(selectedView==='daily'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('checklist')+'</span><span class="dqc-view-label"><strong>Daily Task Checklist</strong><small>'+market.tasks.length+' checks</small></span></button>'+
  '<button type="button" id="dqc-tab-daily-qc" class="dqc-view-button'+(selectedView==='daily-qc'?' is-selected':'')+'" role="tab" data-dqc-view="daily-qc" aria-controls="dqc-panel-daily-qc" aria-selected="'+(selectedView==='daily-qc')+'" tabindex="'+(selectedView==='daily-qc'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('qc')+'</span><span class="dqc-view-label"><strong>Daily QC</strong><small>'+dailyQcTasks.length+' checks</small></span></button>'+
- '<button type="button" id="dqc-tab-binder" class="dqc-view-button'+(selectedView==='binder'?' is-selected':'')+'" role="tab" data-dqc-view="binder" aria-controls="dqc-panel-binder" aria-selected="'+(selectedView==='binder')+'" tabindex="'+(selectedView==='binder'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('binder')+'</span><span class="dqc-view-label"><strong>Binder Documentation</strong><small>'+market.binder.length+' record groups</small></span></button></nav>'+
+ '<button type="button" id="dqc-tab-binder" class="dqc-view-button'+(selectedView==='binder'?' is-selected':'')+'" role="tab" data-dqc-view="binder" aria-controls="dqc-panel-binder" aria-selected="'+(selectedView==='binder')+'" tabindex="'+(selectedView==='binder'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('binder')+'</span><span class="dqc-view-label"><strong>Binder Documentation</strong><small>'+market.binder.length+' record groups</small></span></button>'+
+ '<button type="button" id="dqc-tab-templates" class="dqc-view-button'+(selectedView==='templates'?' is-selected':'')+'" role="tab" data-dqc-view="templates" aria-controls="dqc-panel-templates" aria-selected="'+(selectedView==='templates')+'" tabindex="'+(selectedView==='templates'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('templates')+'</span><span class="dqc-view-label"><strong>Lab Templates</strong><small>'+templatesForMarket(market,'daily').length+' templates</small></span></button></nav>'+
  '<section id="dqc-panel-daily" role="tabpanel" class="dqc-workstream" aria-labelledby="dqc-tab-daily"'+(selectedView==='daily'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('checklist')+'</span><div><h2 id="dqc-daily-title">Daily Task Checklist</h2><p>Opening checks, QC readiness and unresolved lab handoffs</p></div></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></header>'+
  '<div class="dqc-sections">'+groupOrder.map(function(group,i){return card(group,i,market.tasks)}).join('')+'</div></section>'+
  '<section id="dqc-panel-daily-qc" role="tabpanel" class="dqc-workstream dqc-daily-qc-workstream" aria-labelledby="dqc-tab-daily-qc"'+(selectedView==='daily-qc'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('qc')+'</span><div><h2>Daily QC</h2><p>Instrument QC and readiness tasks, based on the approved market schedule</p></div></div><span class="dqc-check-count">'+dailyQcTasks.length+' checks</span></header>'+
@@ -151,21 +198,22 @@ function renderDailySections(market,dailyQcTasks){
  '<div class="dqc-daily-qc-grid">'+dailyQcTasks.map(taskItem).join('')+'</div></section>'+
  '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
  '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
- '<p class="dqc-binder-note">File daily QC records, cleaning logs and event-based controls required by the clinic SOP. For recurring 28-day or 30-day QC and calibration printouts, use the separate Lab Monthly Checklist binder. Consult the approved site binder index.</p></section>';
+ '<p class="dqc-binder-note">File daily QC records, cleaning logs and event-based controls required by the clinic SOP. For recurring 28-day or 30-day QC and calibration printouts, use the separate Lab Monthly Checklist binder. Consult the approved site binder index.</p></section>'+renderTemplatePanel(market,'daily');
 }
 function renderMonthlySections(market,monthlyTasks){
  const v=selectedMonthlyView;
  const monthlyRecords=market.monthlyBinder||monthlyBinder;
  return '<nav class="dqc-view-switch" role="tablist" aria-label="Monthly checklist sections">'+
  '<button type="button" id="dqc-tab-monthly" class="dqc-view-button'+(v==='monthly'?' is-selected':'')+'" role="tab" data-dqc-view="monthly" aria-controls="dqc-panel-monthly" aria-selected="'+(v==='monthly')+'" tabindex="'+(v==='monthly'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('monthly')+'</span><span class="dqc-view-label"><strong>Monthly QC Tasks</strong><small>'+monthlyTasks.length+' recurring checks</small></span></button>'+
- '<button type="button" id="dqc-tab-monthly-binder" class="dqc-view-button'+(v==='monthly-binder'?' is-selected':'')+'" role="tab" data-dqc-view="monthly-binder" aria-controls="dqc-panel-monthly-binder" aria-selected="'+(v==='monthly-binder')+'" tabindex="'+(v==='monthly-binder'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('binder')+'</span><span class="dqc-view-label"><strong>Monthly Binder Documentation</strong><small>'+monthlyRecords.length+' record groups</small></span></button></nav>'+
+ '<button type="button" id="dqc-tab-monthly-binder" class="dqc-view-button'+(v==='monthly-binder'?' is-selected':'')+'" role="tab" data-dqc-view="monthly-binder" aria-controls="dqc-panel-monthly-binder" aria-selected="'+(v==='monthly-binder')+'" tabindex="'+(v==='monthly-binder'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('binder')+'</span><span class="dqc-view-label"><strong>Monthly Binder Documentation</strong><small>'+monthlyRecords.length+' record groups</small></span></button>'+
+ '<button type="button" id="dqc-tab-monthly-templates" class="dqc-view-button'+(v==='monthly-templates'?' is-selected':'')+'" role="tab" data-dqc-view="monthly-templates" aria-controls="dqc-panel-monthly-templates" aria-selected="'+(v==='monthly-templates')+'" tabindex="'+(v==='monthly-templates'?'0':'-1')+'"><span class="dqc-view-icon">'+dqcSectionIcon('templates')+'</span><span class="dqc-view-label"><strong>Lab Templates</strong><small>'+templatesForMarket(market,'monthly').length+' templates</small></span></button></nav>'+
  '<section id="dqc-panel-monthly" role="tabpanel" class="dqc-workstream dqc-monthly-workstream" aria-labelledby="dqc-tab-monthly"'+(v==='monthly'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('monthly')+'</span><div><h2>Monthly QC Tasks</h2><p>Recurring QC and calibration checks for applicable instruments</p></div></div><span class="dqc-check-count">'+monthlyTasks.length+' recurring checks</span></header>'+
  '<p class="dqc-cadence-note"><strong>File required instrument printouts with the monthly binder records; document Sofia 2 calibration and QC in the approved signed log.</strong> For checks without printouts, use the approved signed QC record. PATHFAST is due every 28 days, while other intervals may be every 30 days or market-specific. Follow actual due dates, not the calendar month, and only perform tasks applicable to installed instruments.'+(market.id==='socal'?'':' <strong>Clinitek:</strong> UA and hCG external QC is scheduled daily in this market. File its printouts in the Daily Checklist binder, not as a separate monthly QC task.')+'</p>'+
  '<div class="dqc-monthly-grid">'+monthlyTasks.map(monthlyCard).join('')+'</div></section>'+
  '<section id="dqc-panel-monthly-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-monthly-binder"'+(v==='monthly-binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2>Monthly Binder Documentation</h2><p>Printouts and records for recurring QC and calibration checks</p></div></div><span class="dqc-check-count">'+monthlyRecords.length+' record groups</span></header>'+
  '<p class="dqc-cadence-note"><strong>File required QC/calibration printouts and signed QC records in the monthly binder.</strong> Include the date, instrument, lot, operator and corrective action when required by site SOP. Sofia 2 calibration and QC are documented in the approved log without a printout.</p>'+
  '<div class="dqc-binder-grid">'+monthlyRecords.map(binderCard).join('')+'</div>'+
- '<p class="dqc-binder-note">Only include installed equipment and checks that were required or due. Daily binder items remain on the Lab Daily Checklist page.</p></section>';
+ '<p class="dqc-binder-note">Only include installed equipment and checks that were required or due. Daily binder items remain on the Lab Daily Checklist page.</p></section>'+renderTemplatePanel(market,'monthly');
 }
 function render(page='daily'){
  currentPage=page==='monthly'?'monthly':'daily';
@@ -207,7 +255,7 @@ function setLocationMenu(open,focusSelected=false,returnFocus=false){
 }
 function switchView(next,returnFocus=false){
  const monthly=currentPage==='monthly';
- const valid=monthly?['monthly','monthly-binder']:['daily','daily-qc','binder'];
+ const valid=monthly?['monthly','monthly-binder','monthly-templates']:['daily','daily-qc','binder','templates'];
  if(!valid.includes(next)||(monthly?selectedMonthlyView:selectedView)===next)return;
  if(monthly)selectedMonthlyView=next;else selectedView=next;
  rerender();
@@ -270,7 +318,7 @@ document.addEventListener('keydown',function(e){
  const tab=e.target.closest('.dqc-page [data-dqc-view]');
  if(tab&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){
   e.preventDefault();
-  const order=currentPage==='monthly'?['monthly','monthly-binder']:['daily','daily-qc','binder'];
+  const order=currentPage==='monthly'?['monthly','monthly-binder','monthly-templates']:['daily','daily-qc','binder','templates'];
   const index=order.indexOf(tab.dataset.dqcView);
   const next=e.key==='Home'?order[0]:e.key==='End'?order[order.length-1]:order[(index+(e.key==='ArrowRight'?1:-1)+order.length)%order.length];
   switchView(next,true);
