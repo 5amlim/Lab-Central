@@ -260,7 +260,7 @@ function sysmexPrintFallback(){
   '<div class="lc-poc-print-response" data-poc-print-panel="no" hidden>'+
   '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint QC1, QC2 and QC3 individually</strong><p>Menu → QC → select a QC file → Print → Current. Repeat for each of the three files. Do not select Chart when you need the current record.</p></div></div>'+
   screenGallery(qcScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"These are illustrative pocH screens. Verify the correct file, level, lot and date on the actual analyzer."})+
-  '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint today's blank check</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
+  '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint the daily blank check</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
   screenGallery(blankScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"Select the current dated blank-check record. Verify the printed values and file the accepted record."})+
   '</div>'+sysmexBinderChecklist()+'</div></section>';
 }
