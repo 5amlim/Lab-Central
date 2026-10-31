@@ -118,3 +118,16 @@
 .qc-screen-gallery--scroll .qc-screen-reference{min-width:0}
 @media(max-width:620px){.qc-device-scan-form>div{grid-template-columns:52px 70px 1fr}.qc-device-param-heading,.qc-device-param-row{grid-template-columns:60px 1fr 1fr;gap:5px;padding:5px 6px}}
 @media print{.qc-device-file-choice.selected,.qc-device-save-highlight{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Piccolo Xpress QC: illustrate manual numeric entry rather than a selectable level menu. */
+.qc-piccolo-level-entry{display:flex;flex-direction:column;gap:9px;padding:3px 12px 13px;color:#365b6d}
+.qc-piccolo-entry-caption{font-size:10px;font-weight:800;color:#365b6d}
+.qc-piccolo-entry-field{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:41px;border:2px solid #268c82;border-radius:5px;background:#fff;padding:5px 10px}
+.qc-piccolo-entry-field strong{font-size:19px;line-height:1;color:#244e60}
+.qc-piccolo-entry-field span{font-size:8px;letter-spacing:.06em;font-weight:800;color:#6f8998}
+.qc-piccolo-entry-help{font-size:9px;line-height:1.5;color:#566d7d;margin:0}
+.qc-piccolo-entry-help b{color:#245d6a}
+.qc-piccolo-entry-help span{padding:0 5px;color:#94a9b4}
+.qc-piccolo-entry-confirm{display:flex;justify-content:space-between;align-items:center;border:1px solid #a6c9c8;background:#e5f3ee;color:#176d63;padding:7px 10px;font-weight:850;font-size:10px;border-radius:5px}
+.qc-piccolo-entry-confirm b{font-size:8px;color:#fff;background:#258d82;padding:4px 6px;border-radius:3px;letter-spacing:.06em}
+@media print{.qc-piccolo-entry-field,.qc-piccolo-entry-confirm{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
