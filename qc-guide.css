@@ -212,3 +212,19 @@
 .qc-px-report-method .qc-px-checked{background:#fff5ca;border-color:#e5bc60;color:#655122}
 .qc-screen-gallery--piccolo .qc-device-screen--piccolo{min-height:290px}
 @media print{.qc-px-blue-footer,.qc-px-amber-choice,.qc-px-results-selected{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+
+/* In-card navigation for horizontally scrollable screen sets. */
+.qc-screen-gallery--scroll>.qc-screen-reference{position:relative;padding-bottom:58px}
+.qc-gallery-more{position:absolute;right:15px;bottom:14px;display:flex;align-items:center;gap:8px;border:1px solid #a7d2d2;border-radius:999px;background:#f0faf9;color:#1d7480;font-size:12px;font-weight:800;line-height:1;padding:10px 13px;cursor:pointer;box-shadow:0 1px 3px rgba(28,90,105,.09);transition:background .16s,border-color .16s,transform .16s}
+.qc-gallery-more span{font-size:17px;line-height:.8}
+.qc-gallery-more:hover{border-color:#399c96;background:#dcf2ed;transform:translateX(2px)}
+.qc-gallery-more:focus-visible{outline:3px solid #3d9c97;outline-offset:3px}
+.qc-screen-gallery--scroll>.qc-screen-reference:last-child{padding-bottom:17px}
+.qc-patient-load-sequence{margin:16px 18px 20px;padding:17px 17px 7px;background:#f6fafb;border:1px solid #d6e9ee;border-radius:14px}
+.qc-patient-sequence-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}
+.qc-patient-sequence-head strong{font-size:15px;color:#285a6d}
+.qc-patient-sequence-head span{font-size:11px;color:#467e89;font-weight:700}
+.qc-patient-load-sequence .qc-screen-gallery--piccolo{margin-bottom:11px}
+@media(max-width:650px){.qc-patient-sequence-head{align-items:flex-start;flex-direction:column;gap:5px}.qc-patient-load-sequence{margin:12px;padding:10px}}
+@media print{.qc-gallery-more{display:none!important}.qc-screen-gallery--scroll>.qc-screen-reference{padding-bottom:13px}.qc-patient-load-sequence{break-inside:auto}}
