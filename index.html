@@ -1312,7 +1312,7 @@ function renderCalculators(){
     <div class="calc-extra-card"><span class="calc-extra-icon">${svg('settings')}</span><div><strong>Clinical and specimen filters</strong><p>Category browsing is a search aid, not a substitute for the correct order code. Some tests have multiple categories or additional collection restrictions.</p></div></div>
     <div class="calc-extra-card"><span class="calc-extra-icon">${svg('file-text')}</span><div><strong>Lab-specific references</strong><p>Cedars includes a separate illustrated <strong>container guide</strong>. Labcorp also offers Quest-to-Labcorp comparisons, but suggested matches must be verified before ordering.</p></div></div>
   </div>
-  <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory. Never enter patient identifiers in the calculator.</p>
+  <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory.</p>
 </section>`;
  h+=`<div class="tool-bottom-link"><span>Need the full intake, upload and scheduling instructions?</span><button type="button" data-go="orders">Open sendout order workflows <span>→</span></button></div>`;
  h+=`<div class="calculator-sendout-guide"><span class="calculator-sendout-icon">${svg('package')}</span><div><strong>Ready to send specimens?</strong><p>RN collects using the calculator. Lab tech processes, packages and submits the electronic log.</p></div><button type="button" data-go="sendout-log">Sendout Log instructions →</button></div>`;
@@ -1874,7 +1874,7 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
  }
- if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
+ if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
  if(sec.id==='sendout')h+='</section></div>';
  el('mainContent').innerHTML=h;
@@ -2120,6 +2120,7 @@ function buildCompactPrint(){
  if(sec.sample)meta+='<span>Specimen: '+safeHtml(sec.sample)+'</span>';
  if(sec.qc&&/\bqc\b|control|calibrat/i.test(group.title))meta+='<span>QC: '+safeHtml(sec.qc)+'</span>';
  meta+='</div>';
+ if(instrumentCategories.includes(sec.category)&&/^patient testing$/i.test(title))meta+='<aside class="lc-compact-note"><strong>Patient identification</strong> Match the patient and specimen to the order. Enter and verify the MRN or other required identifiers if prompted by the instrument before testing.</aside>';
  let list='';
  steps.forEach(function(entry,i){
   let content='';
