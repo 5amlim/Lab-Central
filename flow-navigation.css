@@ -2418,3 +2418,31 @@
  color:#233f50;font-size:11px;line-height:1.5;text-align:left;pointer-events:none;
 }
 .device-collection-photo-label strong {display:block;font-size:11px;color:#233f50}
+
+/* Other POC tests: simple, kit-specific reference instead of a faux guided stepper. */
+.poc-reference-panel{
+ margin:22px 0 28px;padding:23px 25px;
+ border:1px solid #d9e7ec;border-radius:17px;background:#fff;
+ box-shadow:0 3px 16px rgba(26,73,91,.035);
+}
+.poc-reference-heading{margin-bottom:18px}
+.poc-reference-eyebrow{display:block;color:#087e7a;font-size:10px;font-weight:850;letter-spacing:.13em;margin-bottom:8px}
+.poc-reference-heading h2{color:#24445a;font-size:22px;line-height:1.25;letter-spacing:-.018em;margin:0 0 7px}
+.poc-reference-heading p{font-size:13px;color:#5e788b;line-height:1.65;margin:0}
+.poc-reference-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.poc-reference-item{display:flex;align-items:flex-start;gap:13px;padding:14px 0;border-top:1px solid #e4eef2;color:#3a6075;font-size:13px;line-height:1.6}
+.poc-reference-item>div{min-width:0}
+.poc-reference-item strong{color:#2a4d62;font-size:14px;font-weight:800}
+.poc-reference-index{flex:none;display:grid;place-items:center;border-radius:9px;background:#e9f4f5;color:#217677;font-size:12px;font-weight:850;width:34px;height:34px}
+.poc-reference-sublist{margin:7px 0 0;padding-left:18px;color:#557388;line-height:1.65}
+.poc-reference-sublist li{margin:4px 0}
+.poc-reference-notes{padding:14px 16px;margin-top:12px;border:1px solid #dae8ed;border-radius:11px;background:#f7fafb;color:#587587;font-size:12px;line-height:1.6}
+.poc-reference-notes>strong{display:block;margin-bottom:5px;color:#31576e;font-size:12px}
+.poc-reference-notes p{margin:6px 0}
+.poc-reference-reminder{margin:17px 0 0;padding:12px 14px;border-left:3px solid #55a9a0;border-radius:0 9px 9px 0;background:#f1f8f7;color:#446e6c;font-size:12px;line-height:1.6}
+@media(max-width:650px){
+ .poc-reference-panel{padding:17px 15px;margin:16px 0 22px}
+ .poc-reference-heading h2{font-size:19px}
+ .poc-reference-item{gap:10px}
+}
+@media print{.poc-reference-panel,.poc-reference-item{break-inside:avoid}.poc-reference-reminder{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
