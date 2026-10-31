@@ -342,8 +342,8 @@ function evSidebar(focus){
 function evFrame(title,inner,focus){
  return '<div class="ev-mini-screen" aria-hidden="true">'+evTopbar()+
   '<div class="ev-mini-screen-content">'+evSidebar(focus)+
-  '<main class="ev-mini-main"><div class="ev-mini-crumb">'+title+'<span>▦ Sollis Health</span></div>'+inner+
-  '</main></div><div class="ev-mini-foot">Envi · Training illustration</div></div>';
+  '<div class="ev-mini-main"><div class="ev-mini-crumb">'+title+'<span>▦ Sollis Health</span></div>'+inner+
+  '</div></div><div class="ev-mini-foot">Envi · Training illustration</div></div>';
 }
 function evDashboard(){
  return '<div class="ev-dashboard"><h3>Hello!</h3><p>Visualize data, navigate faster and track your messages.</p>'+
@@ -399,7 +399,7 @@ function evResult(mode,sku){
 }
 function evInventoryBody(mode,sku){
  return evTabs('update')+evInventoryToolbar(mode==='added'?'continue':mode==='final'?'finish':'')+
- evSearch(sku,mode==='search')+
+ evSearch(sku,mode==='search'||mode==='result')+
  '<div class="ev-mini-result-head">Inv #　　　　　　 Vendor Item #　　　　 Description　　　　　　　　　　 UOM / QTY</div>'+
  (mode==='search'?'':evResult(mode,sku));
 }
