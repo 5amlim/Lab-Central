@@ -90,6 +90,17 @@ function svg(item){
    L(110,50,110,122,'#fff',2)+
    [0,1,2,3].map((_,i)=>L(147,111+i*5,151,111+i*5,'#90a5b0',.9)).join('');
  }
+ function cultureUrine(){
+  // BD 364951: 13 × 75 mm, 4 mL, gray closure and distinctly rounded base.
+  const x=112,w=36;
+  return P('M'+x+' 53H'+(x+w)+'V117Q'+(x+w)+' 136 130 136Q'+x+' 136 '+x+' 117Z',
+      glass,'#89a2ad',1.6)+
+    cap(x-3,30,w+6,23,'#a2a7ab')+
+    R(115,65,30,47,'#fff',2,'#cad8df')+
+    T(130,78,'C&S',8)+T(130,88,'4 mL',7.5)+
+    L(115,103,145,103,'#ae8a60',1.4)+T(130,100,'MIN',6,'#a18065')+
+    L(116,57,116,124,'#fff',1.4);
+ }
  function cryo(){
   let z=R(103,57,54,74,glass,7,'#8ba4b0',1.5)+
     R(102,29,56,34,c,6,'#657f8c',1.6)+ribs(102,29,56,34)+
@@ -211,7 +222,7 @@ function svg(item){
  else if(kind==='micro')out=item.id==='frozen-transfer'?cryo():microtainer();
  else if(kind==='conical')out=conical();
  else if(item.id==='ua-yellow')out=urineTube('#f0ce38','UA',true);
- else if(item.id==='urine-gray')out=urineTube('#9ba3ad','URINE CULTURE');
+ else if(item.id==='urine-gray')out=cultureUrine();
  else if(item.id==='gold-sst')out=vacutainer(c,'SST','GEL', {gel:true,stripe:'#c79d28'});
  else if(item.id==='tiger-sst')out=vacutainer('#c95840','SST','GEL', {gel:true,pattern:'tiger',highVolume:true,stripe:'#d2a62f'});
  else if(item.id==='royalblue-edta')out=vacutainer('#2850a2','TRACE','EDTA',{stripe:'#9d75b4'});
