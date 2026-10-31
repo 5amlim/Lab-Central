@@ -115,14 +115,14 @@ function cellclean(){
    transducer:[
     {heading:"Open Maintenance",screen:"MENU",items:["Str. Data","Chg. Reag.","Maint.","Settings"],focus:"Maint.",tip:"Choose Menu, then Maint."},
     {heading:"Choose Clean Transducer",screen:"MAINTENANCE",items:["Clean Transducer","Auto Rinse","Clean Waste Chamber"],focus:"Clean Transducer",tip:"Open Clean Transducer. Follow the on-screen cleaning instructions."},
-    {heading:"Prepare the CELLCLEAN tube",screen:"CLEAN TRANSDUCER",items:["Add 3 mL CELLCLEAN","Insert adapter","Set sample tube"],focus:"Add 3 mL CELLCLEAN",tip:"Follow the IFU: use 3 mL of approved CELLCLEAN in the required sample tube and adapter."},
+    {kind:"pochPhysical",heading:"Prepare the CELLCLEAN tube",screen:"CLEAN TRANSDUCER",title:"Prepare the sample position",detail:"Transfer 3 mL of approved CELLCLEAN into the proper sample tube, seat it in the approved adapter, then close the compartment.",labels:["3 mL approved cleaner","Sample tube + adapter"],tip:"Use the IFU-specified sample tube and adapter. Do not substitute a 4 mL CELL CLEAN AUTO vial without verified compatibility."},
     {heading:"Start cleaning",screen:"CLEAN TRANSDUCER",items:["Execute","Cancel"],focus:"Execute",tip:"Close the sample compartment, then select Execute."},
-    {heading:"Finish and remove tube",screen:"CLEANING COMPLETE",items:["Auto Rinse","Background Check","Remove CELLCLEAN"],focus:"Remove CELLCLEAN",tip:"Allow auto rinse and background check to finish, then remove the cleaning sample tube."}
+    {kind:"pochStatus",heading:"Finish and remove tube",screen:"CLEANING COMPLETE",title:"Rinse and background check",detail:"The analyzer completes Auto Rinse and Background Check automatically. Remove the cleaning tube only when prompted.",tip:"Allow the process to complete. Remove the sample tube after the on-screen completion message."}
    ],
    reagent:[
     {heading:"Open reagent change",screen:"MENU",items:["Str. Data","Chg. Reag.","Maint.","Settings"],focus:"Chg. Reag.",tip:"Respond to the replacement prompt, or choose Menu → Chg. Reag."},
     {heading:"Choose D or L",screen:"CHG. REAG.",items:["pocH-pack D","pocH-pack L"],focus:"pocH-pack D",tip:"Select the matching product. The displayed D selection is an example; use L when replacing lyse."},
-    {heading:"Fit the matching spout",screen:"REPLACE REAGENT",items:["Replace container","Transfer spout kit","Execute"],focus:"Transfer spout kit",tip:"Transfer the clean blue diluent or purple lyse spout kit to its matching new bottle. Tighten the cap."},
+    {kind:"pochPhysical",heading:"Fit the matching spout",screen:"REPLACE REAGENT",title:"Transfer container spout kit",detail:"Do not touch the tubing. Seat the proper spout kit in the corresponding new bottle and tighten the cap.",labels:["Blue → D (diluent)","Purple → L (lyse)"],tip:"This is a physical preparation step, not a touchscreen button. Keep tubing clean."},
     {heading:"Start replacement",screen:"REPLACE REAGENT",items:["Execute","Cancel"],focus:"Execute",tip:"Select Execute to start the documented replacement sequence."},
     {heading:"Scan new barcode",screen:"REAGENT BARCODE",items:["Scan barcode","Manual"],focus:"Scan barcode",tip:"Scan the new bottle label using the scanner and red laser. Select Manual only if scanning is unavailable."},
     {heading:"Confirm bottle details",screen:"REAGENT BARCODE",items:["Barcode / lot","OK","Cancel"],focus:"OK",tip:"Verify reagent identity, barcode and lot, then select OK."},
