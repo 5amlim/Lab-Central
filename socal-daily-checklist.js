@@ -36,7 +36,7 @@ const socalBinder=[
  {"id":"cleaning","title":"Daily Cleaning and Disinfection Log","desc":"Record required work-surface cleaning, disinfection and operator initials. Note any missed tasks or corrective action.","role":"Lab personnel / RN","template":"cleaning"},
  {"id":"sysmex-control","title":"pocH-100i Three-Level Control Log","desc":"If installed, record acceptable EIGHTCHECK Low, Normal and High QC results. File the three matching QC printouts with this log.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},
  {"id":"sysmex-blank","title":"pocH-100i Start-up Blank Check Log","desc":"If installed, record the daily blank/background check and file its separate printout with this log.","role":"Trained lab personnel / RN","template":"sysmex-blank","badges":["Printouts Needed"]},
- {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Document required shutdown, cleaning and instrument maintenance on the approved schedule, including any corrective action.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
+ {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Use the original Sysmex maintenance log for daily status, shutdown and QC; biweekly/150-sample and quarterly/1,500-sample maintenance; reagent replacement, as-needed tasks and supervisor review.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
  {"id":"triage-daily","title":"Triage MeterPro Daily QC Log","desc":"If installed, document the daily electronic QC Device result when required and file its QC printout. Keep liquid QC in the monthly binder.","role":"Trained lab personnel / RN","template":"triage-daily","badges":["Printouts Needed"]},
  {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
  {"id":"eyewash","title":"Eyewash Station Maintenance Log","desc":"Record required eyewash checks and flushing on the approved schedule, with initials and any corrective actions.","role":"Lab personnel / RN","template":"eyewash"}
@@ -69,7 +69,7 @@ const sharedBinder=[
  {"id":"cleaning","title":"Daily Cleaning and Disinfection Log","desc":"Record required work-surface cleaning, disinfection and operator initials. Note any missed tasks or corrective action.","role":"Lab personnel / RN","template":"cleaning"},
  {"id":"sysmex-control","title":"pocH-100i Three-Level Control Log","desc":"If installed, record acceptable EIGHTCHECK Low, Normal and High QC results. File the three matching QC printouts with this log.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},
  {"id":"sysmex-blank","title":"pocH-100i Start-up Blank Check Log","desc":"If installed, record the daily blank/background check and file its separate printout with this log.","role":"Trained lab personnel / RN","template":"sysmex-blank","badges":["Printouts Needed"]},
- {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Document required shutdown, cleaning and instrument maintenance on the approved schedule, including any corrective action.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
+ {"id":"sysmex-maint","title":"pocH-100i Maintenance Log","desc":"Use the original Sysmex maintenance log for daily status, shutdown and QC; biweekly/150-sample and quarterly/1,500-sample maintenance; reagent replacement, as-needed tasks and supervisor review.","role":"Trained lab personnel / RN","template":"sysmex-maint"},
  {"id":"triage-daily","title":"Triage MeterPro Daily QC Log","desc":"If installed, document the daily electronic QC Device result when required and file its QC printout. Keep liquid QC in the monthly binder.","role":"Trained lab personnel / RN","template":"triage-daily","badges":["Printouts Needed"]},
  {"id":"clinitek-maint","title":"Siemens Urinalysis Maintenance and Cleaning Log","desc":"Record Clinitek test-table/platform cleaning and maintenance according to the site SOP. Keep this separate from the environmental and general cleaning logs.","role":"Trained lab personnel / RN","template":"clinitek-maint"},
  {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"Record daily UA strip control results and new-bottle or new-lot checks as required. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
@@ -147,8 +147,8 @@ function monthlyCard(t){
 function binderCard(item,market,view){
  const badge=Array.isArray(item.badges)&&item.badges.length?'<div class="dqc-binder-task-badges">'+item.badges.map(function(label){return '<span class="dqc-task-badge '+(label==='Printouts Needed'?'is-print':'is-as-needed')+'">'+safe(label)+'</span>';}).join('')+'</div>':'';
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
- const url=item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
- const link=url?'<a class="dqc-binder-template-link" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">Open log template <span aria-hidden="true">↗</span></a>':'';
+ const url=item.template==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
+ const link=url?'<a class="dqc-binder-template-link" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">'+(item.template==='sysmex-maint'?'Open original maintenance log (PDF)':'Open log template')+' <span aria-hidden="true">↗</span></a>':'';
  return '<article class="dqc-binder-item"><div class="dqc-binder-main">'+
   '<div class="dqc-binder-heading"><h3>'+safe(item.title)+'</h3><span class="dqc-role">'+safe(item.role)+'</span></div>'+
   '<div class="dqc-binder-description-row"><p>'+safe(item.desc)+'</p>'+badge+'</div>'+link+
@@ -160,7 +160,7 @@ const dailyTemplateCatalog=[
  {id:'cleaning',title:'Daily Cleaning and Disinfection Log',detail:'Bench and work-area cleaning documentation',group:'Environment'},
  {id:'sysmex-control',title:'pocH-100i Three-Level Control Log',detail:'Low, normal and high QC with supporting printouts',group:'Instrument QC'},
  {id:'sysmex-blank',title:'pocH-100i Start-up Blank Check Log',detail:'Startup/background result and attached printout',group:'Instrument QC'},
- {id:'sysmex-maint',title:'pocH-100i Maintenance Log',detail:'Instrument maintenance record',group:'Maintenance'},
+ {id:'sysmex-maint',title:'pocH-100i Maintenance Log',detail:'Original Sysmex maintenance form (PDF)',group:'Maintenance'},
  {id:'triage-daily',title:'Triage MeterPro Daily QC Log',detail:'Daily electronic QC device result',group:'Instrument QC'},
  {id:'clinitek-maint',title:'Siemens Urinalysis Maintenance Log',detail:'Platform cleaning and as-needed maintenance',group:'Maintenance'},
  {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'}
@@ -192,8 +192,8 @@ function renderTemplatePanel(market,page){
  const panelId=page==='monthly'?'dqc-panel-monthly-templates':'dqc-panel-templates';
  const tabId=page==='monthly'?'dqc-tab-monthly-templates':'dqc-tab-templates';
  const cards=records.map(function(t){
-  const href='lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
-  return '<article class="dqc-template-card"><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><div class="dqc-template-footer"><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">Open printable template <span aria-hidden="true">↗</span></a><span class="dqc-template-category">'+safe(t.group)+'</span></div></article>';
+  const href=t.id==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
+  return '<article class="dqc-template-card"><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><div class="dqc-template-footer"><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">'+(t.id==='sysmex-maint'?'Open original PDF':'Open printable template')+' <span aria-hidden="true">↗</span></a><span class="dqc-template-category">'+safe(t.group)+'</span></div></article>';
  }).join('');
  return '<section id="'+panelId+'" class="dqc-workstream dqc-templates-workstream" role="tabpanel" aria-labelledby="'+tabId+'"'+(active?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('templates')+'</span><div><h2>Lab Templates</h2><p>Blank log sheets for '+(page==='monthly'?'recurring QC, maintenance and as-needed documentation':'daily checks, controls and lab documentation')+'</p></div></div><span class="dqc-check-count">'+records.length+' templates</span></header><p class="dqc-template-intro">Open a print-ready log and fill in the header if needed, then print or save it as a PDF. These are adapted from the supplied lab logs. Verify the current controlled form and site SOP before clinical use.</p><div class="dqc-template-grid">'+cards+'</div></section>';
 }
