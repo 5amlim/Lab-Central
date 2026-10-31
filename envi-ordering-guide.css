@@ -320,3 +320,89 @@
  .envi-guide .ev-card-nav{width:100%;grid-template-columns:1fr 1fr}
 }
 @media print{.envi-guide .ev-card-nav{display:none!important}.envi-guide .ev-card-top{display:flex;min-height:0}.envi-guide .ev-card-controls{min-height:0;min-width:auto;width:auto;margin-left:auto}}
+
+
+/* Focused Envi screens, 2026-10-31: show one authentic-positioned UI target.
+   Do not add floating direction tags, dummy navigation or colored instruction boxes. */
+.envi-guide .ev-mini-screen{min-height:310px;background:#fff}
+.envi-guide .ev-mini-screen-content{min-height:260px}
+.envi-guide .ev-mini-top{height:46px;padding:0 19px}
+.envi-guide .ev-mini-sidebar{width:180px;min-width:180px;gap:0;padding:11px 0 12px;background:#eef3f7;line-height:1.25}
+.envi-guide .ev-side-label{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;font-size:10px;color:#72899a}
+.envi-guide .ev-side-label i,.envi-guide .ev-side-purchasing i{font-size:10px;color:#8a9fac;font-style:normal}
+.envi-guide .ev-side-purchasing{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:11px 13px;background:#fff;font-size:11px;color:#3d5667;font-weight:750;border-left:3px solid transparent}
+.envi-guide .ev-side-children{display:flex;flex-direction:column;padding:2px 0 5px;background:#fff}
+.envi-guide .ev-side-children small{display:block;padding:8px 12px 8px 26px;font-size:10px;color:#587080;line-height:1.2;margin:0;font-weight:500}
+.envi-guide .ev-side-children small.ev-nav-active{padding:8px 12px 8px 26px;margin:0;background:#e8f2fa;border-radius:0;color:#1a78b5;font-weight:750}
+.envi-guide .ev-mini-main{min-width:0;padding:0 17px 21px}
+.envi-guide .ev-mini-crumb{margin:0 -17px 15px;padding:0 17px;min-height:40px}
+.envi-guide .ev-target{outline:2px solid #168e88!important;outline-offset:2px;box-shadow:0 0 0 3px rgba(22,142,136,.10)!important;border-radius:5px;position:relative;z-index:1}
+.envi-guide .ev-side-purchasing.ev-target{outline-offset:-3px;background:#f0f9f7;border-left-color:#168e88;border-radius:3px}
+.envi-guide .ev-nav-active.ev-target{outline-offset:-2px;background:#e8f7f2!important;border-radius:3px}
+.envi-guide .ev-field-active{border:2px solid #168e88!important;background:#fff!important;box-shadow:0 0 0 3px rgba(22,142,136,.09)!important}
+.envi-guide .ev-field-active.ev-target{outline:0!important;outline-offset:0;box-shadow:0 0 0 3px rgba(22,142,136,.10)!important}
+.envi-guide .ev-field strong{font-weight:600;font-size:11px;color:#364d5e}
+.envi-guide .ev-field{min-height:42px}
+.envi-guide .ev-mini-form{max-width:395px;gap:12px;margin-top:5px}
+.envi-guide .ev-ui-button{display:inline-flex;align-items:center;justify-content:center}
+.envi-guide .ev-mini-toolbar{gap:10px;margin:9px 0 15px}
+.envi-guide .ev-mini-toolbar .ev-blue-pill{background:#1e70cc;color:#fff;border:1px solid #1e70cc}
+.envi-guide .ev-mini-toolbar .ev-target.ev-blue-pill{background:#1e70cc!important;color:#fff!important;border-color:#1e70cc!important}
+.envi-guide .ev-mini-result{background:#fff;border-bottom:1px solid #e0e8ee;min-height:74px}
+.envi-guide .ev-mini-result .ev-mini-result-title strong.ev-target,
+.envi-guide .ev-mini-result .ev-mini-pack strong.ev-target,
+.envi-guide .ev-mini-detail-list strong.ev-target{display:inline-block;max-width:max-content;padding:2px 5px;background:#f4faf9;color:#266c70}
+.envi-guide .ev-mini-result-title span{font-size:11px}
+.envi-guide .ev-mini-check.ev-target{outline-offset:3px!important}
+.envi-guide .ev-mini-qty strong.ev-target{background:#fff!important;border-color:#168e88;color:#254d61}
+.envi-guide .ev-search-box{max-width:425px;border-color:#c7d5df;background:#fff;min-height:41px}
+.envi-guide .ev-search-box.ev-target{border-color:#168e88}
+.envi-guide .ev-search-box b{font-size:16px;color:#667c8c}
+.envi-guide .ev-mini-crumb{font-size:11px}
+.envi-guide .ev-tabs>.ev-target{outline-offset:-2px!important;box-shadow:inset 0 -2px 0 #168e88!important;border-radius:3px 3px 0 0}
+.envi-guide .ev-dropdown{width:min(290px,100%);padding:5px}
+.envi-guide .ev-dropdown span{font-size:11px;padding:11px 12px}
+.envi-guide .ev-dropdown .ev-target{background:#f1faf8;color:#126c71;font-weight:800}
+.envi-guide .ev-minimal-order-row{display:grid;grid-template-columns:24px 53px 68px minmax(0,1fr) 83px;gap:9px;align-items:center;padding:13px 9px;border-bottom:1px solid #e2eaf0;font-size:10px;color:#4d6575}
+.envi-guide .ev-minimal-order-row:nth-of-type(odd){background:#f8fafc}
+.envi-guide .ev-minimal-order-row strong{font-size:10px;color:#2b5368}
+.envi-guide .ev-minimal-order-row strong.ev-target{padding:5px 6px;background:#eff9f7;color:#236e6b}
+.envi-guide .ev-minimal-open-row{display:grid;grid-template-columns:27px 49px 61px minmax(0,1fr) 82px;gap:10px;align-items:center;border-bottom:1px solid #e2ebf1;padding:13px 9px;color:#566f7d;font-size:10px}
+.envi-guide .ev-minimal-open-row strong{font-size:11px;color:#2276b6}
+.envi-guide .ev-minimal-open-row .ev-target{display:inline-flex;align-items:center;justify-content:center;width:22px;height:23px;background:#eaf7f3}
+.envi-guide .ev-mini-empty{min-height:110px}
+.envi-guide .ev-mini-detail-list{padding-top:2px}
+.envi-guide .ev-mini-draft{color:#7c6472}
+.envi-guide .ev-modal-back{min-height:260px;background:rgba(29,54,76,.2)}
+.envi-guide .ev-modal .ev-pending-selected.ev-target{background:#f1fbf8;border-color:#5bb3a3;color:#176d68}
+.envi-guide .ev-modal>div strong.ev-target{background:#1d74ce;color:#fff;padding:8px 12px}
+.envi-guide .ev-dashboard{max-width:640px;padding:10px 3px}
+.envi-guide .ev-dashboard h3{font-size:19px;color:#2c3945;letter-spacing:-.025em;margin:2px 0 6px}
+.envi-guide .ev-dashboard p{font-size:11px;color:#536c7c;line-height:1.55;max-width:370px;margin:0 0 13px}
+.envi-guide .ev-dashboard-cta{display:inline-flex;border:1px solid #c7d4de;border-radius:6px;padding:8px 12px;color:#354f63;font-size:10px;font-weight:750;background:#fff}
+.envi-guide .ev-dashboard-divider{border-top:1px solid #e2eaf0;margin:19px 0 14px}
+.envi-guide .ev-dashboard h4{font-size:13px;margin:0 0 11px;color:#3b4b57}
+.envi-guide .ev-dashboard-tabs{display:flex;gap:8px}
+.envi-guide .ev-dashboard-tabs span{display:inline-flex;padding:8px 11px;border:1px solid #d4e0e8;border-radius:6px;color:#617889;font-size:10px}
+.envi-guide .ev-handoff-reference .ev-target{background:#fff;padding:3px 5px;color:#236e6b}
+.envi-guide .ev-demo-tracker-table .ev-target{display:block}
+@media(max-width:760px){
+ .envi-guide .ev-mini-sidebar{width:118px;min-width:118px}
+ .envi-guide .ev-side-label,.envi-guide .ev-side-purchasing{font-size:9px;padding:9px 6px}
+ .envi-guide .ev-side-children small,.envi-guide .ev-side-children small.ev-nav-active{font-size:9px;padding:6px 7px 6px 13px}
+ .envi-guide .ev-mini-main{padding:0 10px 12px}
+ .envi-guide .ev-mini-crumb{margin:0 -10px 10px;padding:0 10px}
+ .envi-guide .ev-minimal-order-row{grid-template-columns:17px 31px 45px minmax(0,1fr) 62px;gap:5px;padding:8px 3px;font-size:9px}
+ .envi-guide .ev-minimal-order-row strong{font-size:9px}
+ .envi-guide .ev-minimal-open-row{grid-template-columns:17px 33px 43px minmax(0,1fr) 58px;gap:5px;padding:8px 3px;font-size:9px}
+}
+@media(max-width:440px){
+ .envi-guide .ev-mini-sidebar{width:83px;min-width:83px}
+ .envi-guide .ev-side-label{font-size:8px;overflow:hidden;white-space:nowrap}
+ .envi-guide .ev-side-purchasing{font-size:8px}
+ .envi-guide .ev-side-children small,.envi-guide .ev-side-children small.ev-nav-active{font-size:8px;padding:6px 4px 6px 8px}
+ .envi-guide .ev-mini-screen-content{min-height:235px}
+ .envi-guide .ev-mini-form{gap:8px}
+ .envi-guide .ev-mini-result-title span{font-size:9px}
+}
+@media print{.envi-guide .ev-target,.envi-guide .ev-field-active{outline:1px solid #188d87!important;box-shadow:none!important}}
