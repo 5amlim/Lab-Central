@@ -51,7 +51,7 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?(opts.figure===1?link(sourcePouchGuide,"SPOTFIRE kit packaging reference"):link(legacyGuide,"FilmArray RP2 handling figure source"))+' · '+link(docLibrary,"Current GI panel resources"):
+ const source=id==="torch"?(opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure===1?link(sourcePouchGuide,"SPOTFIRE kit packaging reference"):link(legacyGuide,"FilmArray RP2 handling figure source")))+' · '+link(docLibrary,"Current GI panel resources"):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
@@ -67,6 +67,80 @@ function prepOnly(id,position){
  const art=B.pipette?.(id)||"";
  const view=position==="first"?"0 0 460 400":"460 0 460 400";
  return art.replace('viewBox="0 0 920 400"','viewBox="'+view+'"');
+}
+
+/* Original GI-specific transfer illustration. The orange-capped Cary-Blair
+   transport container replaces the unrelated conical specimen tube in the
+   generic FilmArray handling reference. Only the red injection vial remains
+   as the assay-preparation receiving container. */
+function giCaryBlairTransfer(){
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 485" role="img" aria-label="Open orange-cap Cary Blair stool transport specimen container, 0.2 mL transfer pipette with second-line mark, and a separate BioFire clear red sample injection vial containing buffer; no generic specimen tube">
+ <defs>
+  <linearGradient id="gi-blair-plastic" x1="0" x2="1"><stop stop-color="#eaf1f3"/><stop offset=".24" stop-color="#fff"/><stop offset=".75" stop-color="#e2eff3"/><stop offset="1" stop-color="#c5dbe2"/></linearGradient>
+  <linearGradient id="gi-blair-fluid" x1="0" x2=".8" y1="0" y2="1"><stop stop-color="#c89d73"/><stop offset="1" stop-color="#9d7958"/></linearGradient>
+  <linearGradient id="gi-red-vial" x1="0" x2="1"><stop stop-color="#dcecf2"/><stop offset=".35" stop-color="#fff"/><stop offset="1" stop-color="#c9dce4"/></linearGradient>
+ </defs>
+ <rect x="8" y="8" width="784" height="469" rx="21" fill="#fbfdfd" stroke="#dce9ed" stroke-width="2"/>
+ <text x="31" y="47" font-family="Arial,sans-serif" font-size="21" font-weight="800" fill="#2e677d">GI specimen transfer</text>
+ <text x="31" y="72" font-family="Arial,sans-serif" font-size="15" fill="#5d8190">BUFFER FIRST, then add 0.2 mL mixed Cary-Blair stool</text>
+ <path d="M37 89H763" stroke="#e3eef1" stroke-width="2"/>
+ <ellipse cx="183" cy="412" rx="124" ry="13" fill="#e0e9eb"/>
+ <ellipse cx="620" cy="412" rx="112" ry="12" fill="#e0e9eb"/>
+ <g aria-label="Cary Blair stool transport vial">
+  <rect x="96" y="157" width="176" height="244" rx="25" fill="url(#gi-blair-plastic)" stroke="#94b0bc" stroke-width="4"/>
+  <path d="M107 314H261V379Q253 396 234 398H134Q115 396 107 379Z" fill="url(#gi-blair-fluid)" opacity=".9"/>
+  <path d="M108 221V179Q108 165 126 165H248" fill="none" stroke="#fff" stroke-width="7" opacity=".7"/>
+  <rect x="116" y="206" width="139" height="123" rx="5" fill="#fffaf3" stroke="#e0c3a9" stroke-width="2"/>
+  <rect x="116" y="206" width="139" height="34" fill="#f49a4e"/>
+  <text x="184" y="230" text-anchor="middle" font-size="18" font-family="Arial,sans-serif" font-weight="800" fill="#813e1a">CARY-BLAIR</text>
+  <text x="184" y="268" text-anchor="middle" font-size="15" font-family="Arial,sans-serif" font-weight="800" fill="#704d38">Stool transport</text>
+  <text x="184" y="287" text-anchor="middle" font-size="14" font-family="Arial,sans-serif" fill="#785f51">Mix specimen first</text>
+  <path d="M122 305H248" stroke="#b6514b" stroke-width="3" stroke-dasharray="8 4"/>
+  <text x="183" y="319" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" fill="#aa594d">COLLECTION FILL LINE</text>
+  <path d="M122 158V144H246V158" stroke="#92aeb8" stroke-width="4" fill="#e7f3f5"/>
+  <ellipse cx="184" cy="143" rx="62" ry="11" fill="#e7f2f5" stroke="#94b2bf" stroke-width="3"/>
+  <ellipse cx="184" cy="144" rx="50" ry="7" fill="#bda487"/>
+  <g transform="translate(250 91) rotate(9)">
+   <rect x="-8" y="9" width="105" height="41" rx="12" fill="#f47635" stroke="#d65c25" stroke-width="3"/>
+   <path d="M2 14V46M14 13V46M26 13V46M38 13V46M50 13V46M62 13V46M74 13V46M86 13V46" stroke="#ffb074" stroke-width="3"/>
+   <ellipse cx="44" cy="11" rx="52" ry="11" fill="#ff914e" stroke="#d65c25" stroke-width="3"/>
+  </g>
+ </g>
+ <g aria-label="0.2 mL transfer pipette">
+  <path d="M338 180C371 145 418 145 443 169" fill="none" stroke="#268e92" stroke-width="6" stroke-linecap="round"/>
+  <path d="M426 163L446 171L433 149" stroke="#268e92" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <g transform="translate(429 193) rotate(-35)">
+   <rect x="-16" y="-120" width="32" height="74" rx="16" fill="#e5f2f5" stroke="#91b0be" stroke-width="3"/>
+   <rect x="-9" y="-50" width="18" height="151" rx="7" fill="#f3fbfc" stroke="#9ab7c1" stroke-width="3"/>
+   <path d="M0 100V132" stroke="#9cb6c0" stroke-width="5" stroke-linecap="round"/>
+   <path d="M-8 28H8" stroke="#d15a60" stroke-width="3"/>
+   <path d="M-7 46H7" stroke="#b74b58" stroke-width="4"/>
+   <path d="M-5 49H5V99H-5Z" fill="#b58e67" opacity=".8"/>
+   <text x="26" y="43" font-size="13" font-family="Arial,sans-serif" font-weight="800" fill="#a24a52">2nd mark</text>
+  </g>
+  <rect x="342" y="309" width="172" height="46" rx="10" fill="#e7f3f2" stroke="#94c7c2" stroke-width="2"/>
+  <text x="428" y="339" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#237d78" font-weight="800">0.2 mL</text>
+ </g>
+ <path d="M491 224Q533 197 566 230" fill="none" stroke="#278d89" stroke-width="5" stroke-linecap="round"/>
+ <path d="M552 220L566 230L568 212" fill="none" stroke="#278d89" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+ <g aria-label="Red sample injection vial with buffer">
+  <path d="M570 218H672L660 383Q655 399 619 402Q583 399 580 383Z" fill="url(#gi-red-vial)" stroke="#90acb9" stroke-width="4"/>
+  <path d="M584 330H660V380Q656 392 620 395Q591 392 584 380Z" fill="#deaaa1" opacity=".6"/>
+  <rect x="585" y="253" width="72" height="70" rx="5" fill="#fff" stroke="#d3e1e5" stroke-width="2"/>
+  <rect x="585" y="253" width="72" height="12" fill="#c84c5d"/>
+  <text x="621" y="286" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="800" fill="#a84553">SAMPLE</text>
+  <text x="621" y="304" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#687d88">INJECTION</text>
+  <path d="M588 218V202H654V218" fill="#fff" stroke="#95b4bd" stroke-width="3"/>
+  <ellipse cx="621" cy="202" rx="33" ry="8" fill="#e0e9ed" stroke="#95b4bd" stroke-width="2"/>
+  <g transform="translate(683 171) rotate(8)">
+   <rect x="0" y="0" width="74" height="30" rx="9" fill="#f4f8f7" stroke="#97b4be" stroke-width="3"/>
+   <rect x="9" y="9" width="58" height="9" fill="#c9515c" opacity=".9"/>
+  </g>
+ </g>
+ <text x="184" y="435" font-family="Arial,sans-serif" text-anchor="middle" font-size="16" font-weight="800" fill="#34697d">1 · Cary-Blair specimen</text>
+ <text x="626" y="435" font-family="Arial,sans-serif" text-anchor="middle" font-size="16" font-weight="800" fill="#34697d">2 · Red injection vial</text>
+ <text x="398" y="463" font-family="Arial,sans-serif" text-anchor="middle" font-size="12" fill="#688591">Instructional illustration · verify the site's actual Cary-Blair container and GI assay IFU</text>
+ </svg>`;
 }
 function render(id,title){
  if(id!=="torch"&&id!=="spotfire")return previous?previous(id,title):"";
@@ -100,9 +174,9 @@ function render(id,title){
  });
  if(/transfer gi specimen|cary blair|gi specimen/.test(t))return c({
   title:"Add 0.2 mL GI specimen",tag:"RED · sample prep",hue:"red",
-  visual:direct("05","transfer-specimen","Transfer specimen into red injection vial, physical technique only, not GI volume guidance"),figure:4,page:15,
+  visual:giCaryBlairTransfer(),originalDiagram:true,figure:0,page:15,
   lines:["Mix stool thoroughly in Cary Blair transport medium.","Draw to the second line of the supplied transfer pipette (0.2 mL).","Dispense into the red vial after buffer, as directed in the GI workflow."],
-  note:"Do not use the SPOTFIRE fixed-volume specimen method for the TORCH GI panel."
+  note:"Use the well-mixed stool from the Cary-Blair transport container, not a plain conical specimen tube. The orange-cap bottle is an example; verify your site collection kit. Do not use the SPOTFIRE fixed-volume method."
  });
  if(/transfer spotfire specimen|spotfire specimen|specimen.*first/.test(t) || !gi&&/open buffer|prepare red sample/.test(t))return c({
   title:"Transfer SPOTFIRE specimen first",tag:"RED · sample prep",hue:"red",
