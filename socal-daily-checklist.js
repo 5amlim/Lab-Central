@@ -1,7 +1,7 @@
-/* SoCal daily lab operations work aid, not an official auditable sign-off system. */
+/* Read-only daily laboratory reference by market. Official logs remain the record. */
 (function(){
 'use strict';
-const tasks=[
+const socalTasks=[
  {id:'bins',group:'Courier readiness',title:'Check receiving-lab sendout bins',desc:'At opening, inspect Quest, Labcorp, Cedars and other designated bins for uncollected specimens or misplaced bags. Check labels and conditions before moving anything.',role:'Lab personnel / RN'},
  {id:'quest-lockbox',group:'Courier readiness',title:'Check the Quest lockbox',desc:'Confirm no prior-day samples or unresolved courier pickup remain. Verify correct secure holding and escalate missed collections promptly.',role:'Lab personnel / RN'},
  {id:'htrx',group:'Courier readiness',title:'Check the HealthTrackRx UPS bag',desc:'Check the assigned HTRX collection bag and handoff location first thing. Flag a missed or overnight bag immediately; follow SoCal courier schedule and temperature requirements.',role:'Lab personnel / RN'},
@@ -15,39 +15,56 @@ const tasks=[
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
  {id:'navigator',group:'Tasks & handoff',title:'Check and resolve Navigator tasks',desc:'Review open specimen follow-ups, rejected tests, provider communications and lab-related Navigator tasks. Close only resolved items and hand off outstanding issues.',role:'Lab personnel / RN'}
 ];
-const sites=[['BH','Beverly Hills'],['SM','Santa Monica'],['MB','Manhattan Beach']];
-function safe(x){return String(x||'').replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));}
-function localDate(){const n=new Date();return [n.getFullYear(),String(n.getMonth()+1).padStart(2,'0'),String(n.getDate()).padStart(2,'0')].join('-')}
-let site='BH',date=localDate();const prefix='lc-socal-daily-v1:';
-function storageKey(){return prefix+site+':'+date}
-function read(){try{const v=JSON.parse(localStorage.getItem(storageKey())||'{}');return v&&typeof v==='object'?v:{}}catch{return {}}}
-function write(v){try{localStorage.setItem(storageKey(),JSON.stringify(v))}catch{}}
-function render(){
- const records=read();let total=0;
- let groups=['Courier readiness','Environment & logs','Instrument QC & readiness','Tasks & handoff'].map((group,gi)=>{
-  const rows=tasks.filter(t=>t.group===group);
-  const body=rows.map((t,i)=>{
-   const rec=records[t.id]||{};if(rec.done)total++;
-   return '<div class="dqc-task'+(rec.done?' dqc-complete':'')+'"><label class="dqc-task-label"><input type="checkbox" data-dqc-done="'+safe(t.id)+'" '+(rec.done?'checked':'')+' aria-label="Complete '+safe(t.title)+'"><span class="dqc-check-square" aria-hidden="true"></span><span class="dqc-task-main"><strong>'+safe(t.title)+'</strong><span>'+safe(t.desc)+'</span><small>'+safe(t.role)+'</small></span></label><label class="dqc-initials"><span>Initials</span><input type="text" maxlength="8" autocomplete="off" placeholder="e.g. AB" data-dqc-initials="'+safe(t.id)+'" value="'+safe(rec.initials||'')+'" aria-label="Initials for '+safe(t.title)+'"></label></div>';
-  }).join('');
-  return '<section class="dqc-group"><header><span class="dqc-group-num">'+String(gi+1).padStart(2,'0')+'</span><h2>'+safe(group)+'</h2><span>'+rows.length+' checks</span></header>'+body+'</section>';
- }).join('');
- return '<section class="dqc-page" aria-label="SoCal daily lab checklist"><header class="dqc-hero"><div><span class="dqc-eyebrow">OPERATIONS / SOUTHERN CALIFORNIA</span><h1>Daily lab checklist</h1><p>Opening and daily checks for Beverly Hills, Santa Monica and Manhattan Beach. Lab personnel or trained RNs complete only tasks they are authorized to perform.</p></div><span class="dqc-market">SOCAL · LAB / RN</span></header>'+
- '<div class="dqc-toolbar"><label>Clinic<select data-dqc-site>'+sites.map(s=>'<option value="'+s[0]+'" '+(site===s[0]?'selected':'')+'>'+s[1]+'</option>').join('')+'</select></label><label>Date<input type="date" value="'+safe(date)+'" data-dqc-date></label><div class="dqc-progress" aria-live="polite"><b>'+total+' of '+tasks.length+'</b><span>completed on this browser</span><div><i style="width:'+(total/tasks.length*100)+'%"></i></div></div><button type="button" class="dqc-print" data-dqc-print>Print checklist</button></div>'+
- '<div class="dqc-caution"><strong>Work aid, not the official log.</strong> Checkboxes and initials are saved only in this browser for the selected clinic and date. They do not sync, submit, certify QC or replace required logs and printouts. Enter initials and date on the approved shared SoCal checklist and maintain original QC records.</div>'+
- groups+
- '<div class="dqc-handoff"><strong>Unresolved or abnormal?</strong><p>Document the finding in the approved log, notify the lab supervisor or clinical lead, and hand off any missed pickup, excursion, failed QC or open Navigator issue. Do not mark complete until the check was actually performed.</p></div></section>';
+const sharedTasks=[
+ {id:'pending',group:'Courier readiness',title:'Review sendout bins and staging areas',desc:'Check for samples or transport bags remaining from the previous shift. Verify required storage and resolve pending handoffs.',role:'Lab personnel / RN'},
+ {id:'couriers',group:'Courier readiness',title:'Confirm courier pickup readiness',desc:'Check assigned lockboxes, pickup points and shipping bags as applicable. Escalate missed pickups using your market procedure.',role:'Lab personnel / RN'},
+ {id:'clean',group:'Environment & logs',title:'Cleaning and disinfection log',desc:'Confirm required work areas have been disinfected and the approved cleaning record is current.',role:'Lab personnel / RN'},
+ {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Record and review refrigerator temperatures. Follow local escalation and quarantine procedures for excursions.',role:'Lab personnel / RN'},
+ {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Check applicable freezer temperatures and alarms. Escalate excursions before using affected reagents or controls.',role:'Lab personnel / RN'},
+ {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Review and document ambient conditions against the limits of equipment and reagents in use.',role:'Lab personnel / RN'},
+ {id:'analyzers',group:'Instrument QC & readiness',title:'Review active analyzer QC and maintenance',desc:'Confirm due QC, calibration, cleaning and required records for installed analyzers. Perform testing only when authorized.',role:'Authorized personnel'},
+ {id:'rapid',group:'Instrument QC & readiness',title:'Check rapid and POC test readiness',desc:'Check stock, expiration and kit-specific QC requirements for tests used at your clinic.',role:'Trained personnel'},
+ {id:'handoff',group:'Tasks & handoff',title:'Review outstanding lab follow-ups',desc:'Address specimen issues, rejected tests and open lab-related tasks, then hand off anything unresolved.',role:'Lab personnel / RN'}
+];
+const markets=[
+ {id:'socal',name:'Southern California',short:'SoCal',description:'Beverly Hills, Santa Monica and Manhattan Beach',tasks:socalTasks},
+ {id:'norcal',name:'Northern California',short:'NorCal',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks},
+ {id:'ny',name:'New York',short:'New York',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks},
+ {id:'fl',name:'Florida',short:'Florida',description:'Use your clinic’s approved courier, QC and environmental procedures.',tasks:sharedTasks}
+];
+const groupOrder=['Courier readiness','Environment & logs','Instrument QC & readiness','Tasks & handoff'];
+let selectedMarket='socal';
+function safe(x){return String(x??'').replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+function section(group,index,tasks){
+ const rows=tasks.filter(t=>t.group===group);
+ if(!rows.length)return '';
+ return '<section class="dqc-section" aria-labelledby="dqc-group-'+index+'">'+
+  '<header class="dqc-section-head"><span class="dqc-section-number">'+String(index+1).padStart(2,'0')+'</span><h2 id="dqc-group-'+index+'">'+safe(group)+'</h2><span class="dqc-section-count">'+rows.length+' checks</span></header>'+
+  '<div class="dqc-items">'+rows.map(function(t){
+    return '<article class="dqc-item"><div class="dqc-item-main"><h3>'+safe(t.title)+'</h3><p>'+safe(t.desc)+'</p></div><span class="dqc-role">'+safe(t.role)+'</span></article>';
+  }).join('')+'</div></section>';
 }
-document.addEventListener('change',function(e){
- const t=e.target;if(!t.closest('.dqc-page'))return;
- if(t.matches('[data-dqc-site]')){site=sites.some(s=>s[0]===t.value)?t.value:'BH';(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})();return}
- if(t.matches('[data-dqc-date]')){date=/^\d{4}-\d{2}-\d{2}$/.test(t.value)?t.value:localDate();(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})();return}
- if(t.matches('[data-dqc-done]')){const data=read(),id=t.dataset.dqcDone;data[id]={...(data[id]||{}),done:t.checked};write(data);(()=>{const page=document.querySelector('.dqc-page');if(page)page.outerHTML=render()})()}
+function render(){
+ const market=markets.find(m=>m.id===selectedMarket)||markets[0];
+ return '<section class="dqc-page" aria-label="Lab Daily Checklist reference">'+
+ '<header class="dqc-hero"><div><span class="dqc-eyebrow">LAB OPERATIONS / DAILY REFERENCE</span><h1>Lab Daily Checklist</h1><p>Opening checks, instrument readiness and lab handoff. Select a market to view its daily reference.</p></div><span class="dqc-readonly">REFERENCE ONLY</span></header>'+
+ '<nav class="dqc-market-picker" aria-label="Select checklist market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+markets.map(function(m){
+  return '<button type="button" data-dqc-market="'+safe(m.id)+'" class="dqc-market-choice'+(market.id===m.id?' is-selected':'')+'" aria-pressed="'+(market.id===m.id)+'">'+safe(m.short)+'</button>';
+ }).join('')+'</div></nav>'+
+ '<div class="dqc-market-heading"><div><span class="dqc-market-overline">DAILY REFERENCE</span><h2>'+safe(market.name)+'</h2><p>'+safe(market.description)+'</p></div><span class="dqc-check-count">'+market.tasks.length+' checks</span></div>'+
+ '<div class="dqc-sections">'+groupOrder.map(function(group,i){return section(group,i,market.tasks)}).join('')+'</div>'+
+ '<footer class="dqc-footer"><strong>Use the approved logs for sign-off.</strong><span>This page is a reference, not a completion record. Document QC, temperature excursions, missed pickups and follow-ups using the required clinic records and escalate concerns through your local workflow.</span></footer>'+
+ '</section>';
+}
+document.addEventListener('click',function(e){
+ const button=e.target.closest('.dqc-page [data-dqc-market]');
+ if(!button)return;
+ const next=button.getAttribute('data-dqc-market');
+ if(!markets.some(m=>m.id===next)||selectedMarket===next)return;
+ selectedMarket=next;
+ const page=document.querySelector('.dqc-page');
+ if(page)page.outerHTML=render();
 });
-document.addEventListener('input',function(e){
- const t=e.target;if(!t.matches('.dqc-page [data-dqc-initials]'))return;
- const id=t.dataset.dqcInitials,data=read();data[id]={...(data[id]||{}),initials:t.value.toUpperCase()};write(data);
-});
-document.addEventListener('click',function(e){if(e.target.closest('.dqc-page [data-dqc-print]'))window.print()});
-window.LAB_SOCAL_DAILY={render,taskCount:tasks.length,tasks};
+window.LAB_SOCAL_DAILY={render,taskCount:socalTasks.length,tasks:socalTasks};
+window.LAB_DAILY_CHECKLIST={render,markets:markets.map(function(m){return {id:m.id,name:m.name}})};
 })();
