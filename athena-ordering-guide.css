@@ -199,3 +199,21 @@
 @media(max-width:850px){.ao-guide-grid{grid-template-columns:1fr}.ao-guide-sketch{height:224px}.ao-art-app{height:186px}.ao-guide-detail{min-height:0}}
 @media(max-width:500px){.ao-guide-progress{font-size:10px;gap:6px}.ao-art-top>span{display:none}.ao-art-subhead small{font-size:7px}.ao-art-app{font-size:9px}.ao-art-prefs>div:last-child>strong{font-size:8px}.ao-art-receivers small{display:none}.ao-guide-sketch{padding:7px}}
 @media print{.ao-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ao-guide-card{break-inside:avoid}.ao-guide-sketch{height:185px}.ao-art-app{height:160px}}
+
+
+/* Two Athena order directory tabs: In-house and Sendout */
+.ao-directory-tabs{display:flex;align-items:center;gap:6px;margin:19px 0 19px;padding:5px;max-width:600px;border:1px solid #e1e8ef;border-radius:12px;background:#f2f6fa}
+.ao-directory-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:9px;min-width:0;padding:11px 16px;border:1px solid transparent;border-radius:9px;background:transparent;color:#647e91;font-family:inherit;font-size:13px;line-height:1.35;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.ao-directory-tab:hover{background:#fff9;color:#365c79}
+.ao-directory-tab.active{border-color:#d6e4ef;background:#fff;color:#226c9a;box-shadow:0 2px 7px rgba(33,60,89,.055)}
+.ao-directory-tab .ao-tab-symbol{display:grid;place-items:center;flex:none;width:22px;height:22px;border-radius:6px;background:#e4eff8;color:#4282ac;font-size:15px}
+.ao-directory-tab.sendout .ao-tab-symbol{background:#e8f5f2;color:#308777}
+.ao-directory-tab.sendout.active{color:#237a69}
+.ao-directory-tab:focus-visible{outline:3px solid #79c1e5;outline-offset:2px}
+.ao-directory-panel-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:15px}
+.ao-directory-panel-title h2{font-size:19px;line-height:1.35;color:#26435d;letter-spacing:-.01em;margin:0}
+.ao-directory-panel-title p{color:#788da0;line-height:1.5;font-size:12px;margin:4px 0 0}
+.ao-directory-panel-count{font-size:10px;font-weight:850;color:#2e7c72;padding:7px 10px;border:1px solid #cee6dd;background:#f1faf6;border-radius:7px;white-space:nowrap}
+.ao-directory-panel[hidden]{display:none!important}
+.ao-directory-panel .ao-guide{margin:0}
+@media(max-width:570px){.ao-directory-tabs{max-width:none}.ao-directory-tab{padding:10px 8px;gap:6px;font-size:12px}.ao-directory-panel-title{align-items:flex-start;flex-direction:column;gap:8px}.ao-directory-panel-title h2{font-size:17px}}
