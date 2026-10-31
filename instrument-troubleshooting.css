@@ -1,0 +1,54 @@
+/* Lab Central shared instrument troubleshooting. Applies to current analyzers and POC. */
+.lt-guide{max-width:1200px;margin:24px auto 32px;color:#27475c}
+.lt-guide *{box-sizing:border-box}
+.lt-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 26px;border-radius:18px;border:1px solid #d9e7ee;background:linear-gradient(115deg,#f2f8fa 0%,#fff 77%)}
+.lt-eyebrow{display:block;color:#168481;font-size:10px;font-weight:850;letter-spacing:.16em;margin:0 0 9px}
+.lt-hero h2{margin:0 0 7px;color:#213f53;font-size:25px;font-weight:880;letter-spacing:-.035em}
+.lt-hero p{margin:0;color:#5a788b;font-size:13px;line-height:1.6;max-width:690px}
+.lt-counter{flex:none;align-self:flex-start;display:inline-flex;padding:8px 12px;border:1px solid #d6e4eb;border-radius:99px;background:#fff;color:#4a6b7e;font-size:11px;font-weight:800;white-space:nowrap}
+.lt-response{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:15px 0 12px}
+.lt-response>div{display:grid;grid-template-columns:33px minmax(0,1fr);grid-template-rows:auto auto;column-gap:10px;align-content:start;border:1px solid #dce8ec;background:#fff;padding:15px 16px;border-radius:12px;min-width:0}
+.lt-response>div>span{grid-row:1/span 2;display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#e8f3f5;color:#287187;font-size:12px;font-weight:900}
+.lt-response b{font-size:12px;color:#244b60;letter-spacing:.06em}
+.lt-response small{color:#617f91;font-size:11px;line-height:1.45;margin-top:4px}
+.lt-notice{border-left:3px solid #9ebeca;background:#f8fbfd;padding:13px 16px;border-radius:0 9px 9px 0;color:#547082;font-size:12px;line-height:1.7;margin:0 0 26px}
+.lt-notice b{color:#2b5267}
+.lt-group{margin:25px 0}
+.lt-group-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 11px;padding:0 1px 10px;border-bottom:1px solid #dce7ed}
+.lt-group-heading h3{font-size:15px;font-weight:850;letter-spacing:-.01em;color:#23475f;margin:0}
+.lt-group-heading span{color:#8396a5;font-size:11px;font-weight:650;white-space:nowrap}
+.lt-issues{display:grid;gap:10px}
+.lt-issue{min-width:0;border:1px solid #d9e6ed;background:#fff;border-radius:13px;overflow:hidden}
+.lt-issue[open]{border-color:#b6d6db;box-shadow:0 4px 13px rgba(24,70,90,.045)}
+.lt-issue>summary{display:flex;align-items:center;gap:12px;min-height:72px;padding:14px 16px;cursor:pointer;list-style:none}
+.lt-issue>summary::-webkit-details-marker{display:none}
+.lt-issue>summary:focus-visible{outline:2px solid #39999e;outline-offset:-3px}
+.lt-issue>summary:hover{background:#f8fbfc}
+.lt-no{flex:none;width:35px;height:35px;border-radius:9px;background:#edf4f8;display:grid;place-items:center;font-size:12px;font-weight:900;color:#487184}
+.lt-main{flex:1;min-width:0}
+.lt-main strong{font-size:13px;line-height:1.45;color:#294a60;font-weight:850;display:block}
+.lt-main small{display:block;color:#6d8799;font-size:11px;line-height:1.55;margin-top:3px}
+.lt-status{display:inline-flex;align-items:center;flex:none;border-radius:5px;letter-spacing:.055em;font-size:9px;font-weight:850;padding:5px 7px;white-space:nowrap}
+.lt-status-hold{background:#fff0e8;color:#96572d;border:1px solid #f0d4c0}
+.lt-status-check{background:#edf5f8;color:#406e83;border:1px solid #d6e5eb}
+.lt-status-service{background:#f3f0fa;color:#645686;border:1px solid #e0d8ed}
+.lt-chevron{flex:none;height:9px;width:9px;margin-left:5px;border-right:2px solid #7894a4;border-bottom:2px solid #7894a4;transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+.lt-issue[open] .lt-chevron{transform:rotate(225deg);margin-top:5px}
+.lt-issue-content{border-top:1px solid #edf1f3;padding:15px 20px 17px 64px;color:#4c6c7f}
+.lt-subhead{text-transform:uppercase;letter-spacing:.1em;font-weight:850;color:#0d7880;font-size:10px}
+.lt-issue-content ol{margin:9px 0 15px;padding:0 0 0 19px;display:grid;gap:8px}
+.lt-issue-content li{font-size:12px;line-height:1.65;padding-left:3px}
+.lt-issue-content li::marker{color:#338b92;font-weight:850}
+.lt-escalate{background:#f7f9fa;border-left:3px solid #9aadb8;color:#536e80;padding:10px 13px;border-radius:0 7px 7px 0;margin:0;font-size:11.5px;line-height:1.65}
+.lt-escalate b{color:#294c60}
+.lt-hold .lt-escalate{border-left-color:#c98e61;background:#fffaf6}
+.lt-resources{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;border-top:1px solid #dce7ed;padding:19px 1px 0;margin-top:28px}
+.lt-resources>div:first-child{max-width:600px}
+.lt-resources b{display:block;color:#294a60;font-size:13px;margin-bottom:6px}
+.lt-resources p{color:#6b8293;margin:0;font-size:11.5px;line-height:1.6}
+.lt-source-links{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.lt-source-links a{border:1px solid #cfe2e9;border-radius:7px;background:#f3f9fb;padding:9px 11px;text-decoration:underline;text-underline-offset:3px;color:#16768a;font-size:11px;font-weight:750}
+.lt-source-links a:hover{background:#e5f2f6}
+@media(max-width:830px){.lt-response{grid-template-columns:1fr}.lt-response>div{grid-template-columns:35px auto}.lt-resources{display:block}.lt-source-links{justify-content:flex-start;margin-top:12px}}
+@media(max-width:520px){.lt-hero{padding:19px;display:block}.lt-counter{margin-top:12px}.lt-issue>summary{padding:12px;gap:9px}.lt-no{width:30px;height:30px}.lt-status{font-size:8px;padding:4px 5px}.lt-main strong{font-size:12px}.lt-issue-content{padding:14px 13px}.lt-group-heading h3{font-size:14px}.lt-main small{font-size:10.5px}}
+@media print{.lt-guide{max-width:none;margin:8px 0}.lt-hero,.lt-response>div,.lt-issue{background:#fff!important;box-shadow:none!important;break-inside:avoid}.lt-issue .lt-issue-content{display:block!important}.lt-issue>summary{min-height:0}.lt-chevron{display:none}.lt-source-links a{background:#fff!important;color:#333!important}.lt-response{gap:6px}.lt-issue-content{padding:9px 14px 14px 45px}}
