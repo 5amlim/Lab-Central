@@ -137,3 +137,22 @@
 .clinitek-reference-card p:last-child{margin-bottom:0}
 @media(max-width:720px){.clinitek-reference-grid{grid-template-columns:1fr}.clinitek-reference-card{padding:17px}}
 @media print{.clinitek-reference-page{margin:8px 0}.clinitek-reference-card{box-shadow:none;break-inside:avoid}}
+
+
+/* FebriDx manufacturer/SOP reference: a static resource directory, never a guided sequence. */
+.fbr-static-reference{margin:22px 0 28px;max-width:1240px}
+.fbr-ref-intro{margin:0 0 17px}
+.fbr-ref-intro>span{display:block;font-weight:850;letter-spacing:.15em;font-size:10px;color:#15857e;margin-bottom:7px}
+.fbr-ref-intro h2{font-size:23px;line-height:1.24;letter-spacing:-.025em;margin:0 0 7px;color:#26475d}
+.fbr-ref-intro>p{font-size:13px;line-height:1.65;color:#628095;margin:0;max-width:850px}
+.fbr-ref-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.fbr-ref-card{min-width:0;background:#fff;border:1px solid #d9e7ed;border-top:3px solid #5ba69d;border-radius:13px;padding:19px 20px;box-shadow:0 3px 12px rgba(33,73,95,.035)}
+.fbr-ref-label{display:block;font-size:10px;font-weight:850;letter-spacing:.12em;color:#188780;margin-bottom:10px}
+.fbr-ref-card h3{font-size:15px;line-height:1.4;color:#294a61;font-weight:850;margin:0 0 9px}
+.fbr-ref-card p{font-size:12px;line-height:1.7;color:#5f788b;margin:0 0 13px}
+.fbr-ref-card a{font-size:12px;font-weight:780;color:#0c7890;text-underline-offset:3px}
+.fbr-ref-card a:focus-visible{outline:2px solid #368e97;outline-offset:3px}
+.fbr-ref-foot{margin:15px 0 0;border-left:3px solid #a2c7cc;background:#f4f9fa;color:#587788;padding:11px 14px;font-size:11.5px;line-height:1.65;border-radius:0 8px 8px 0}
+@media(max-width:970px){.fbr-ref-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.fbr-ref-grid{grid-template-columns:1fr}.fbr-ref-card{padding:17px}}
+@media print{.fbr-ref-card{box-shadow:none;break-inside:avoid}.fbr-static-reference{margin:10px 0}}
