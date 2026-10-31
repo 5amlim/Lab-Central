@@ -50,7 +50,7 @@ const tests={
   {title:'Rapid respiratory syncytial virus test',groups:{'Virus':A('Respiratory syncytial virus')}},
   {title:'Rapid group A Streptococcus test',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}},
   {title:'Conjunctivitis rapid test',groups:{'Target (assay-dependent)':A('Adenovirus antigen, if using an adenovirus-specific conjunctivitis test')}},
-  {title:'Human immunodeficiency virus antigen / antibody test',complexity:'moderate',groups:{'Antigen':A('Human immunodeficiency virus type 1 p24 antigen'),'Antibodies':A('Human immunodeficiency virus type 1 antibodies|Human immunodeficiency virus type 2 antibodies')}},
+  {title:'Human immunodeficiency virus antigen / antibody test',complexity:'conditional',groups:{'Antigen':A('Human immunodeficiency virus type 1 p24 antigen'),'Antibodies':A('Human immunodeficiency virus type 1 antibodies|Human immunodeficiency virus type 2 antibodies')},note:'CLIA complexity depends on the exact product and specimen. For example, Abbott Determine HIV-1/2 Ag/Ab Combo is waived for fingerstick whole blood but moderate for venous whole blood, serum or plasma. Verify the current kit IFU.'},
   {title:'Infectious mononucleosis rapid test',groups:{'Antibodies':A('Heterophile antibodies (not direct Epstein-Barr virus detection)')}},
   {title:'McKesson 14-panel urine drug screen',groups:{'Drug classes and compounds':A('Amphetamine|Barbiturates|Benzodiazepines|Buprenorphine|Cocaine metabolite|3,4-Methylenedioxymethamphetamine (MDMA)|Methadone|Methamphetamine|Morphine / opiates|Oxycodone|Phencyclidine|Propoxyphene|Tetrahydrocannabinol (THC) metabolite|Tricyclic antidepressants')},note:'Use the current McKesson 14-panel cup and confirm every analyte, cutoff and reading time against its product-specific insert. This entry matches the separate 14-panel workflow.'}
  ],
@@ -58,7 +58,7 @@ const tests={
   {title:'McKesson 14-panel urine drug screen (current guide)',complexity:'waived',groups:{'Drug classes and compounds':A('Amphetamine|Barbiturates|Benzodiazepines|Buprenorphine|Cocaine metabolite|3,4-Methylenedioxymethamphetamine (MDMA)|Methadone|Methamphetamine|Morphine / opiates|Oxycodone|Phencyclidine|Propoxyphene|Tetrahydrocannabinol (THC) metabolite|Tricyclic antidepressants')},note:'This is the existing 14-panel workflow. Confirm the selected site kit, its labeling, and cutoff values before use.'}
  ],
  sysmex:[{title:'Three-part complete blood count',complexity:'moderate',groups:{'Blood cell measurements':A('White blood cell count|Red blood cell count|Hemoglobin|Hematocrit|Mean corpuscular volume|Mean corpuscular hemoglobin|Mean corpuscular hemoglobin concentration|Red blood cell distribution width|Platelet count|Mean platelet volume'),'Three-part white cell differential':A('Lymphocytes|Mixed cells (monocytes / eosinophils / basophils)|Granulocytes (predominantly neutrophils)')},countLabel:'17 reported CBC parameters · 13 grouped references',note:'RDW has separate SD and CV values. LYM, MXD and NEUT each have a percentage (%) and an absolute count (#) on the Sysmex result printout.'}],
- febridx:[{title:'FebriDx inflammatory marker test',complexity:'moderate',groups:{'Host-response markers':A('Myxovirus resistance protein A|C-reactive protein')}}],
+ febridx:[{title:'FebriDx inflammatory marker test',complexity:'waived',groups:{'Host-response markers':A('Myxovirus resistance protein A|C-reactive protein')}}],
  hemocue:[{title:'Hemoglobin',groups:{'Measured analyte':A('Hemoglobin')}}],
  coagsense:[{title:'Prothrombin time / INR',groups:{'Coagulation results':A('Prothrombin time|International normalized ratio')}}]
 };
@@ -158,11 +158,22 @@ function shortLabel(id,name){
  // The full target may already contain its short form, e.g. SARS-CoV-2 or MDMA.
  return short&&name.toLowerCase().includes('('+short.toLowerCase()+')')?'':short;
 }
-function formatTarget(id,name){
+function formatTarget(id,name,complexityType){
  const abbr=shortLabel(id,name);
+ const hasShort=abbr&&abbr.toLowerCase()!==name.toLowerCase();
+ const moderate=complexityType==='moderate';
+ // Keep the full name legible. Abbreviations stay blue; moderate is an amber
+ // compact chip in the same visual system, including when no short code exists.
  return '<span class="ac-analyte-name">'+esc(name)+'</span>'+
-  (abbr&&abbr.toLowerCase()!==name.toLowerCase()
-   ?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'');
+  (hasShort?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'')+
+  (moderate?' <span class="ac-analyte-short ac-analyte-mod" title="CLIA moderate for this assay or reagent disc" aria-label="Moderate complexity for this assay">MOD</span>':'');
+}
+function formatPanelTarget(id,panel,name){
+ // A calculated value (e.g., eGFR) is not a separately categorized performed
+ // assay, even when it is printed on a moderate-complexity reagent disc.
+ const isCalculated=Object.entries(panel.groups||{}).some(([group,names])=>
+  /calculated/i.test(group)&&Array.isArray(names)&&names.includes(name));
+ return formatTarget(id,name,isCalculated?'':panel.complexity);
 }
 
 const references={
@@ -173,15 +184,18 @@ const references={
  torch:'https://www.biomerieux.com/us/en/our-offer/clinical-products/biofire-gastrointestinal-panel.html'
 };
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function complexity(type){return type==='moderate'?'<span class="ac-complex ac-moderate">CLIA MODERATE</span>':type==='waived'?'<span class="ac-complex ac-waived">CLIA WAIVED</span>':'';}
+function complexity(type){return type==='moderate'?'<span class="ac-complex ac-moderate">CLIA MODERATE</span>':type==='waived'?'<span class="ac-complex ac-waived">CLIA WAIVED</span>':type==='conditional'?'<span class="ac-complex ac-conditional">CLIA VARIES</span>':'';}
 function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" aria-label="'+esc(c.title)+' color reference"><div class="ac-disc-hole"></div><span>'+esc(c.short)+'</span></div>';}
 function oneCard(c,idx,withDisc,id){
- const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatTarget(id,item)+'</li>').join('')+'</ul></div>').join('');
+ const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatPanelTarget(id,c,item)+'</li>').join('')+'</ul></div>').join('');
+ const moderateLegend=c.complexity==='moderate'
+  ?'<div class="ac-complex-legend"><span class="ac-analyte-short ac-analyte-mod">MOD</span><span>Moderate complexity for this test/disc, not the analyte on every platform. Calculated values are not individually categorized.</span></div>':'';
+
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
   '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
-  '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
+  '<div class="ac-card-body">'+moderateLegend+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
  const id=typeof section==='string'?section:section?.id;
@@ -201,5 +215,5 @@ function render(section){
 function qcMenu(selected){return '<div class="cl-qc-switch" role="group" aria-label="Select Siemens quality-control procedure"><div class="cl-qc-intro"><span class="ac-eyebrow">MONTHLY QUALITY CONTROL</span><h2>Choose the QC method</h2><p>Use the correct material and test-table orientation for each assay.</p></div><div class="cl-qc-switch-buttons">'+
   '<button type="button" data-clinitek-qc="ua-qc" aria-pressed="'+(selected==='ua-qc')+'" class="'+(selected==='ua-qc'?'is-active':'')+'"><strong>Urinalysis strip QC</strong><small>Quantimetrix controls</small><span class="ac-chevron" aria-hidden="true"></span></button>'+
   '<button type="button" data-clinitek-qc="hcg-qc" aria-pressed="'+(selected==='hcg-qc')+'" class="'+(selected==='hcg-qc'?'is-active':'')+'"><strong>Human chorionic gonadotropin QC</strong><small>CLINITEST cassette controls</small><span class="ac-chevron" aria-hidden="true"></span></button></div></div>';}
-window.LAB_ASSAY_CATALOG={render,qcMenu,tests,shortLabel,formatTarget};
+window.LAB_ASSAY_CATALOG={render,qcMenu,tests,shortLabel,formatTarget,formatPanelTarget};
 })();
