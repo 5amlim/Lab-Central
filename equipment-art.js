@@ -786,24 +786,42 @@ function febridxCollectionGuide(){
 }
 
 /* Reuse the same specimen collection and stability card in overview and patient testing. */
+/* Research-checked specimen handling. Times describe the patient specimen,
+   not cartridge/reagent shelf life. Current installed US IFU/SOP governs. */
 const collectionTestWindows={
- sysmex:"Run EDTA whole-blood samples within 8 hours of collection when stored at room temperature.",
- piccolo:"Run whole blood within 60 minutes of collection. If delayed, separate and handle plasma under the approved SOP.",
- pathfast:"Test promptly after collection and mixing. Follow assay-specific whole-blood/plasma limits and record serial draw times.",
- triage:"Follow the specimen stability window in the selected Triage assay IFU; handling differs by cardiac assay.",
- clinitek:"For urine reagent strips, aim to test within 2 hours of collection. Check the separate hCG cassette IFU for its specimen handling limit.",
- torch:"Follow the current BioFire GI panel IFU's testing window and temperature requirements for stool in Cary Blair.",
- spotfire:"Follow the selected respiratory or throat assay IFU's testing window and transport temperature requirements.",
- febridx:"Begin the test immediately after the fingerstick collection and follow the IFU's transfer and result-read timing.",
- "drug-screen":"Follow the approved urine drug-screen cup IFU's specimen stability and read-time requirements.",
- coagsense:"Apply the freshly collected fingerstick blood to the test strip immediately after filling the transfer tube.",
- poc:"Follow the selected test kit IFU's specimen stability limit; collection-to-test timing varies by assay.",
- sofia:"Follow the selected Sofia 2 assay IFU's specimen stability window. Cassette development and reading have separate time limits.",
- hemocue:"Measure as soon as possible, no later than 10 minutes after filling the microcuvette."
+ sysmex:"EDTA blood: process preferably within 4 h. Documented stability: up to 8 h at room temperature or 24 h at 2–8°C. Bring refrigerated blood to room temperature and mix before testing; prolonged storage can change CBC indices.",
+ piccolo:"Lithium-heparin whole blood: analyze within 60 min at room temperature; do not refrigerate. Separated plasma/serum: up to 5 h at room temperature or 48 h at 2–8°C. Start analysis within 10 min of filling the disc.",
+ pathfast:"hs-Troponin I, NT-proBNP and D-dimer: whole blood within 4 h at 2–25°C. Heparinized plasma: up to 24 h at 2–25°C. Start the run immediately after dispensing into cartridges. Verify the installed U.S. assay IFU.",
+ triage:"For Triage Troponin I and D-dimer, test EDTA whole blood/plasma within 1 h of collection; mix and bring to room temperature before testing. BNP: check its specific Triage IFU.",
+ clinitek:"Urinalysis: test fresh urine within 2 h. CLINITEST hCG: test within 2 h or refrigerate at 2–8°C for up to 72 h; bring chilled urine to room temperature before testing.",
+ torch:"GI panel: stool in Cary-Blair transport medium can be tested up to 4 days after collection at room temperature (15–25°C) or refrigerated (2–8°C). Test sooner whenever possible.",
+ spotfire:"R / ST full and mini panels: test swabs in the specified transport medium promptly; validated up to 4 h at 15–25°C, 3 days at 2–8°C, or 30 days frozen at −15°C or colder. Match respiratory vs throat collection medium.",
+ febridx:"Use only fresh fingerstick blood. Fill the device's integrated collection tube and transfer the blood immediately; no collected-sample storage interval is provided. Read the developed result at 10 minutes, not after 1 hour.",
+ "drug-screen":"Urine stability depends on the exact screening cup and ordered tests. Collect in the approved container, cap securely and test promptly; verify any delayed storage against the actual kit IFU and SOP.",
+ coagsense:"Use fresh fingerstick capillary blood and transfer it to the test strip immediately after collection. The manufacturer's testing tips specify transfer within 15 seconds of lancing.",
+ poc:"Rapid antigen and other POC tests have kit-specific swab or sample limits. Test promptly unless the exact assay IFU validates delayed storage; do not apply a generic stability time to all rapid kits.",
+ sofia:"Flu + SARS (referenced IFU): dry nasal/NP swabs up to 48 h at room temperature or 2–8°C. RSV: validated transport media up to 24 h. Strep A+: dry throat swabs up to 24 h at room temperature or 48 h at 2–8°C. Confirm the current kit IFU.",
+ hemocue:"Fill the Hb 201 microcuvette completely, then start measurement as soon as possible and no later than 10 minutes after filling."
+};
+const collectionStabilitySources={
+ sysmex:[["Procedure reference","https://www.scribd.com/document/981273870/Lab-3A-Sysmex-PocH-100i-Operations-Manual-1-1"]],
+ piccolo:[["Operator manual","https://www.abaxis.com/sites/default/files/resource-files/Piccolo_Xpress_Operators_Manual.pdf"]],
+ pathfast:[["Manufacturer assay IFUs","https://www.phchd.com/eu/ivd/pathfast/ifu/english"]],
+ triage:[["Triage D-dimer reference","https://www.appn.net.au/Data/Sites/1/appn/02implementation/technicalresources/d-dimer/aleretriagemeterprod-d-dimermethodandsamplecollection.pdf"]],
+ clinitek:[["Siemens hCG instructions","https://www.siemens-healthineers.com/en-us/point-of-care-testing/featured-topics-in-poct/urinalysis-featured-topics/clinitest-hcg-proper-testing"]],
+ torch:[["GI panel IFU","https://dgs.virginia.gov/content/dam/site-assets/dcls/MRG%20Documents/RFIT-PRT-0143%20FilmArray%20GI%20Panel%20IVD%20Instruction%20Booklet%20EN.pdf"]],
+ spotfire:[["FDA specimen study","https://www.accessdata.fda.gov/cdrh_docs/clia_waivers/CW240014.pdf"]],
+ febridx:[["FebriDx instructions","https://www.lumosdiagnostics.com/products/febridx/usa/how-to-use"]],
+ coagsense:[["Professional manual","https://coag-sense.com/wp-content/uploads/2021/02/PN-200220-PT2-Professional-User-Manual-Rev-AD.pdf"]],
+ sofia:[["Flu + SARS IFU","https://www.fda.gov/media/142704/download"],["Strep A+ reference","https://maxanim.com/content/quidel/sofia-strepa-faq.PDF"],["RSV reference","https://maxanim.com/content/quidel/sofia-rsv-fia-faq.PDF"]],
+ hemocue:[["FDA device instructions","https://www.accessdata.fda.gov/CDRH510K/K032203.pdf"]]
 };
 function collectionTestWindow(sec){
  if(sec.archived||!collectionTestWindows[sec.id])return "";
- return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong><p>'+visualEsc(collectionTestWindows[sec.id])+'</p></aside>';
+ const refs=(collectionStabilitySources[sec.id]||[]).map(x=>
+  '<a href="'+visualEsc(x[1])+'" target="_blank" rel="noopener noreferrer">'+visualEsc(x[0])+' ↗</a>').join('');
+ return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong><p>'+visualEsc(collectionTestWindows[sec.id])+'</p>'+
+  (refs?'<div class="device-collection-stability-sources">'+refs+'</div>':'')+'</aside>';
 }
 function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
