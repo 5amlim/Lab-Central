@@ -507,5 +507,5 @@ if(typeof document!=='undefined')document.addEventListener('input',e=>{
  if(grid)grid.innerHTML=items.length?cardsFor(items):'<p class="lcr-empty">No matching containers found.</p>';
  if(count)count.textContent=items.length+' containers';
 });
-window.LAB_CONTAINER_REFERENCE={render,items:list,draw:svg,setLab(lab){selectedLab=['Q','L','C'].includes(lab)?lab:'all';selectedCat='all';query='';}};
+window.LAB_CONTAINER_REFERENCE={render,items:list,draw:svg,photoForId(id){const item=list.find(x=>x.id===id);return item?photo(item):'';},setLab(lab){selectedLab=['Q','L','C'].includes(lab)?lab:'all';selectedCat='all';query='';}};
 })();
