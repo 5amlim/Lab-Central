@@ -70,3 +70,15 @@
 @media(max-width:1000px){.lcr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.lcr-hero{padding:17px;align-items:flex-start}.lcr-summary{display:none}.lcr-grid{grid-template-columns:1fr}.lcr-filter-bar{align-items:stretch;flex-direction:column}.lcr-filter-bar>.lcr-filter-label{margin-bottom:0}.lcr-search-wrap{margin-left:0;width:100%;max-width:none}.lcr-results-row{align-items:flex-start;flex-direction:column}.lcr-modal-layout{grid-template-columns:1fr}.lcr-modal-art,.lcr-modal-photo{min-height:150px}.lcr-card p{min-height:0}.lcr-hover{left:50%;bottom:calc(100% - 4px)}}
 @media print{.lcr-filter-bar,.lcr-categories,.lcr-hover,.lcr-dialog,.lcr-links{display:none!important}.lcr-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lcr-card{break-inside:avoid}.lcr-card-bottom button,.lcr-hover-hint{display:none}.lcr-hero{border:0;padding:12px}.lcr-disclaimer{break-inside:avoid}}
+
+
+/* Specimen types share the same green-cap aliquot transport tube. */
+.lcr-transport-note{
+ margin-top:10px;padding:10px 11px;
+ border:1px solid #cae6dc;border-left:3px solid #459e81;
+ background:#f0f9f5;border-radius:7px;
+ font-size:11px;line-height:1.55;color:#3c6a59;
+}
+.lcr-transport-note strong{font-weight:800;color:#286a51}
+.lcr-modal-info .lcr-transport-note{margin:0 0 13px}
+@media print{.lcr-transport-note{break-inside:avoid}}
