@@ -31,7 +31,16 @@
 .dqc-item-main{flex:1;min-width:0}
 .dqc-item h4{font-size:13.5px;line-height:1.4;font-weight:830;color:#2d5066;margin:0 0 5px}
 .dqc-item p{font-size:11.8px;color:#6a8293;line-height:1.6;margin:0}
-.dqc-task-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:5px 0 8px}
+.dqc-item.has-task-badges{position:relative;padding-bottom:49px}
+.dqc-item.has-task-badges > .dqc-task-badges{
+ position:absolute;right:0;bottom:15px;
+ display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;
+ margin:0;
+}
+@media print{
+ .dqc-item.has-task-badges{padding-bottom:34px}
+ .dqc-item.has-task-badges > .dqc-task-badges{bottom:7px}
+}
 .dqc-task-badge{display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:999px;padding:4px 9px;line-height:1.1;font-size:9px;font-weight:800;letter-spacing:.025em;white-space:nowrap}
 .dqc-task-badge.is-qc{color:#277c74;background:#eaf6f3;border-color:#c9e6df}
 .dqc-task-badge.is-print{color:#356f9b;background:#edf4fb;border-color:#ccdfef}
