@@ -183,7 +183,7 @@ function screenPanel(item,brand,number){
    item.items.map(x=>'<span class="qc-device-option'+(x===item.focus?' targeted':'')+'">'+esc(x)+(x===item.focus?'<b>SELECT</b>':'')+'</span>').join("")+'</div>'+
    '<div class="qc-device-screen-bottom"><span>Back</span><span>Review selected action</span></div>';
  }
- return '<div class="qc-screen-reference" role="img" aria-label="Illustrated '+esc(brand)+' screen: '+esc(item.heading)+'">'+
+ return '<div class="qc-screen-reference" role="group" aria-label="Illustrated '+esc(brand)+' screen: '+esc(item.heading)+'">'+
   top+'<div class="qc-device-face"><div class="qc-device-screen'+(item.kind==="status"?' qc-device-screen--status':'')+(isPiccoloScene?' qc-device-screen--piccolo':'')+'">'+header+body+'</div></div>'+
   '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
 }
