@@ -316,133 +316,163 @@ var steps=[
 var mode='guided',index=0;
 
 function tag(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function mark(v){return '<span class="ev-focus">'+v+'</span>';}
-function field(label,value,active){return '<div class="ev-field '+(active?'ev-field-active':'')+'"><span>'+label+'</span><strong>'+value+'</strong><i aria-hidden="true">⌄</i></div>';}
-function topbar(){return '<div class="ev-mini-top"><b class="ev-mini-brand">envi</b><span>⌕　☷　◷　?</span></div>';}
-function sidebar(active){return '<aside class="ev-mini-sidebar"><span>▤　Dashboard</span><strong>🛒　Purchasing</strong><small>Purchasing Dashboard</small><small>Purchase Orders</small><small class="'+(active?'ev-nav-active':'')+'">Order Entry</small><small>Standing PO</small></aside>';}
-function frame(title,inner,active){return '<div class="ev-mini-screen" aria-hidden="true">'+topbar()+'<div class="ev-mini-screen-content">'+sidebar(active!==false)+'<div class="ev-mini-main"><div class="ev-mini-crumb">'+title+'<span>▣ Sollis Health</span></div>'+inner+'</div></div><div class="ev-mini-foot">Envi · Training illustration</div></div>';}
-function tabs(which){return '<div class="ev-tabs"><span class="'+(which==='details'?'ev-tab-active':'')+'">Details</span><span class="'+(which==='items'?'ev-tab-active':'')+'">Line Items</span><span class="'+(which==='update'?'ev-tab-active':'')+'">Update</span><span>Resources</span></div>';}
-function rowline(second,edit){return '<div class="ev-table-row"><span>☑</span><span>'+(second?'2':'1')+'</span><span>'+(second?'11151':'10856')+'</span><span>McKesson</span><span>'+(second?'824758':'832497')+'</span><span class="ev-item-description">'+(second?'Triage Troponin-I Kit':'Piccolo Comprehensive Metabolic Panel')+'</span><b class="'+(edit?'ev-highlight':'')+'">'+(second?'1 CT (25)':'2 BX (10)')+'</b></div>';}
 
-/* An individual, task-focused screen for every action, modeled on the supplied Envi screens. */
-function evScreenHead(active){return tabs(active);}
-function evToolbar(btn,selected){return '<div class="ev-mini-toolbar"><span class="'+(selected?'ev-mini-target ev-blue-pill':'ev-blue-pill')+'">'+btn+'</span><span>Cancel</span></div>';}
-function evItemResult(mode){
- const checked=mode==='selected'||mode==='quantity'||mode==='add';
- const focused=mode==='verify'?'ev-mini-target':mode==='selected'?'ev-mini-check-target':mode==='quantity'?'ev-mini-qty-target':'';
- return '<div class="ev-mini-result '+focused+'"><span class="ev-mini-check '+(checked?'is-checked':'')+'">'+(checked?'✓':'')+'</span>'+
- '<div class="ev-mini-result-title"><small>Inv # 10856　·　McKesson</small><strong>832497</strong><span>Piccolo Comprehensive Metabolic Panel (10/BX)</span><small>Manufacturer item 07P0208</small></div>'+
- '<div class="ev-mini-pack"><small>UOM</small><strong>BX (10)</strong></div>'+
- '<div class="ev-mini-qty '+(mode==='quantity'?'ev-mini-target':'')+'"><small>QTY</small><strong>'+(mode==='quantity'||mode==='add'?'2':'')+'</strong></div></div>';
+/* Envi training illustrations: highlight only a control or field on the original
+   screen layout. Never redraw a second sidebar or overlay instructions. */
+function evTarget(inner){return '<span class="ev-target" data-ev-target="true">'+inner+'</span>';}
+function evBtn(label,target,primary){
+ return '<span class="ev-ui-button '+(primary?'ev-blue-pill ':'')+(target?'ev-target':'')+'" '+(target?'data-ev-target="true"':'')+'>'+label+'</span>';
 }
-function evToolbarAdd(active){
- return '<div class="ev-mini-toolbar"><span class="ev-blue-pill '+(active==='continue'?'ev-mini-target':'')+'">Add &amp; Continue</span>'+
- '<span class="ev-blue-pill '+(active==='finish'?'ev-mini-target':'')+'">Add &amp; Go to Line Items</span></div>';
+function evField(label,value,target,isSelect){
+ return '<div class="ev-field '+(target?'ev-field-active':'')+'" '+(target?'data-ev-target="true"':'')+'><span>'+label+'</span><strong>'+value+'</strong>'+(isSelect===false?'':'<i aria-hidden="true">⌄</i>')+'</div>';
 }
-function evOrderDetails(extra){
- return '<div class="ev-mini-detail-list"><div><small>Order Entry #</small><strong>1443</strong></div><div><small>Facility</small><strong>Beverly Hills Flagship</strong></div>'+
- '<div><small>Location</small><strong>Order Entry</strong></div><div><small>Department</small><strong>None</strong></div>'+
- '<div><small>Reference</small><strong>BH Lab [Initials] 10/30</strong></div><div><small>Status</small><strong class="ev-mini-draft">Draft</strong></div></div>'+ (extra||'');
+function evTopbar(){return '<div class="ev-mini-top"><b class="ev-mini-brand">envi</b><span>⌕　▤　◷　?</span></div>';}
+function evSidebar(focus){
+ const collapsed=focus==='purchasing';
+ const entry=focus==='entry';
+ const top='<aside class="ev-mini-sidebar"><span class="ev-side-label">▤　Dashboard</span>'+
+   '<span class="ev-side-label">▦　Organization <i>⌄</i></span><span class="ev-side-label">▣　Inventory <i>⌄</i></span>'+
+   '<span class="ev-side-label">↕　Adjustments <i>⌄</i></span>'+
+   '<strong class="ev-side-purchasing '+(collapsed?'ev-target':'')+'" '+(collapsed?'data-ev-target="true"':'')+'><span>🛒　Purchasing</span><i>'+(collapsed?'⌄':'⌃')+'</i></strong>';
+ const children=collapsed?'':'<div class="ev-side-children"><small>Purchasing Dashboard</small><small>Purchase Orders</small>'+
+  '<small>PO Search</small><small>PO Email Delivery</small><small>PO Confirmations</small><small>Auto PO</small>'+
+  '<small class="ev-nav-active '+(entry?'ev-target':'')+'" '+(entry?'data-ev-target="true"':'')+'>Order Entry</small><small>Standing PO</small></div>';
+ return top+children+'<span class="ev-side-label">▣　Receiving <i>⌄</i></span></aside>';
 }
-function visualDetail(which){
- if(which==='purchasing')return frame('Dashboard',
-   '<div class="ev-mini-task-label">LEFT SIDEBAR · PURCHASING</div><div class="ev-mini-navigation-enlarged"><div>Dashboard</div>'+
-   '<div>Organization</div><div>Inventory</div><div class="ev-mini-target">🛒 Purchasing <span>⌃</span></div>'+
-   '<div class="ev-mini-nav-child">Purchasing Dashboard</div><div class="ev-mini-nav-child">Purchase Orders</div>'+
-   '<div class="ev-mini-nav-child">Order Entry</div></div><div class="ev-mini-callout">CLICK PURCHASING TO EXPAND</div>',false);
- if(which==='facility')return frame('Add Order Entry',
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div>'+
-   '<div class="ev-mini-form">'+field('Facility *',mark('Beverly Hills Flagship'),true)+
-   '<div class="ev-mini-select-pop"><span>Select Facility</span><strong>✓ Beverly Hills Flagship</strong><span>Other clinics …</span></div>'+
-   field('Location *','Select Location',false)+field('Department','Select Department',false)+field('Reference','',false)+'</div>',true);
- if(which==='location')return frame('Add Order Entry',
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div>'+
-   '<div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',false)+field('Location *',mark('Order Entry'),true)+
-   '<div class="ev-mini-select-pop"><span>Select Location</span><strong>✓ Order Entry</strong></div>'+
-   field('Department','None',false)+field('Reference','',false)+'</div>',true);
- if(which==='department')return frame('Add Order Entry',
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div>'+
-   '<div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',false)+field('Location *','Order Entry',false)+
-   field('Department',mark('None'),true)+field('Reference','',false)+'</div>'+
-   '<span class="ev-mini-callout">OPTIONAL · VERIFY LOCAL REQUIREMENT</span>',true);
- if(which==='reference')return frame('Add Order Entry',
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div>'+
-   '<div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',false)+field('Location *','Order Entry',false)+
-   field('Department','None',false)+field('Reference',mark('BH Lab [Initials] 10/30'),true)+'</div>'+
-   '<span class="ev-mini-callout">USE MARKET NAMING CONVENTION</span>',true);
- if(which==='draft-details')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('details')+ '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Edit</span></div>'+evOrderDetails('<span class="ev-mini-callout">DRAFT ENTRY · NOT YET A PO</span>'),true);
- if(which==='line-tab')return frame('Order Entry › Order Entry 1443',
-   '<div class="ev-tabs"><span>Details</span><span class="ev-tab-active ev-mini-target">Line Items</span><span>Update</span><span>Resources</span></div>'+
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add Items ⌄</span><span>Delete Selected</span><span>Quick Add</span></div>'+
-   '<div class="ev-mini-empty">▤<br><strong>No records found</strong><span>Add items to build your order.</span></div>',true);
- if(which==='open-menu')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('items')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill ev-mini-target">Add Items　⌄</span><span>Delete Selected</span><span>Quick Add</span></div>'+
-   '<div class="ev-mini-empty">▤<br>No records found</div>',true);
- if(which==='search-result')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('update')+evToolbarAdd('')+
-   '<div class="ev-search-box"><strong>832497</strong><span class="ev-mini-target">⌕</span></div>'+
-   '<div class="ev-mini-result-head">☐　Inv #　　　　　 Vendor Item #　　　 Description　　　　　　　　 QTY</div>'+
-   evItemResult('normal')+'<span class="ev-mini-callout">1 MATCH FOUND · VERIFY BEFORE SELECTING</span>',true);
- if(which==='verify-row')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('update')+evToolbarAdd('')+
-   '<div class="ev-search-box">832497 <span>⌕</span></div>'+
-   '<div class="ev-mini-result-head">☐　Inv #　　　　　 Vendor Item #　　　 Description　　　　　　　　 QTY</div>'+
-   evItemResult('verify')+'<div class="ev-mini-verification-tags"><span>✓ Vendor</span><span>✓ SKU</span><span>✓ Description</span><span>✓ UOM</span></div>',true);
- if(which==='check-row')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('update')+evToolbarAdd('')+
-   '<div class="ev-search-box">832497 <span>⌕</span></div>'+
-   evItemResult('selected')+'<div class="ev-mini-callout">CHECK THE MATCHING ITEM</div>',true);
- if(which==='add-continue')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('update')+evToolbarAdd('continue')+
-   '<div class="ev-search-box">832497 <span>⌕</span></div>'+
-   evItemResult('add')+'<div class="ev-mini-callout">SAVE ITEM &amp; STAY IN SEARCH</div>',true);
- if(which==='add-to-lines')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('update')+evToolbarAdd('finish')+
-   '<div class="ev-search-box">824758 <span>⌕</span></div>'+
-   '<div class="ev-mini-result ev-mini-finish-row"><span class="ev-mini-check is-checked">✓</span><div class="ev-mini-result-title"><small>Inv # 11151 · McKesson</small><strong>824758</strong><span>Triage Troponin-I Test Kit</span></div><div class="ev-mini-pack">CT (25)</div><div class="ev-mini-qty">1</div></div>'+
-   '<div class="ev-mini-callout">LAST ITEM → GO TO LINE ITEMS</div>',true);
- if(which==='open-item')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('items')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add Items ⌄</span><span>Quick Add</span></div>'+
-   '<div class="ev-table-head">Line　Inv #　Vendor　　 SKU　　 Description　　　　　　　　　QTY</div>'+
-   '<div class="ev-mini-open-line ev-mini-target"><strong>01</strong><span>10856</span><span>832497</span><span>Piccolo CMP (10/BX)</span><b>2 BX (10)</b></div>'+
-   '<div class="ev-mini-open-line"><strong>02</strong><span>11151</span><span>824758</span><span>Triage TnI (25/CT)</span><b>1 CT (25)</b></div>'+
-   '<div class="ev-mini-callout">OPEN ONLY AN ITEM NEEDING CORRECTION</div>',true);
- if(which==='save-edit')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('items')+'<div class="ev-mini-toolbar"><span>← Back</span><span class="ev-blue-pill ev-mini-target">Update</span><span>Cancel</span></div>'+
-   '<div class="ev-detail-grid"><span>Line Item</span><strong>1</strong><span>Vendor SKU</span><strong>832497</strong></div>'+
-   '<div class="ev-mini-form ev-mini-form-edit">'+field('Order Quantity *','2',true)+'<small>UOM　BX (10)</small></div>'+
-   '<div class="ev-mini-callout">UPDATE, THEN RECHECK LINE ITEMS</div>',true);
- if(which==='details-tab')return frame('Order Entry › Order Entry 1443',
-   '<div class="ev-tabs"><span class="ev-tab-active ev-mini-target">Details</span><span>Line Items</span><span>Update</span><span>Resources</span></div>'+
-   '<div class="ev-mini-toolbar"><span class="ev-blue-pill">Edit</span><span class="ev-blue-pill">Submit to PO</span></div>'+
-   evOrderDetails(),true);
- if(which==='submit-confirm')return frame('Order Entry › Order Entry 1443',
-   evScreenHead('details')+'<div class="ev-modal-back"><div class="ev-modal"><strong>Submit Order Entry</strong>'+
-   '<p>Submit Purchase Order(s) to:</p><span>◯ Draft</span><b class="ev-pending-selected">◉ Pending</b>'+
-   '<div><span>Cancel</span><strong class="ev-mini-target">Submit</strong></div></div></div>',true);
- if(which==='record-number')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustrated order-number handoff, not a live confirmation"><div class="ev-handoff-po"><small>ORDER REFERENCE</small><strong>Order Entry #</strong><b>1443 · Example only</b><span>Find the resulting purchase-order number in Envi.</span></div><div class="ev-handoff-connect">→</div><div class="ev-handoff-po"><small>RESULTING ORDER</small><strong>PO #</strong><b>Record actual generated number</b><span>Confirm Pending status in Envi.</span></div></div>';
- if(which==='notify')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustrative notification checklist"><div class="ev-handoff-po"><small>MARKET DEPENDENT</small><strong>Lab Inventory group</strong><span>Send order reference or PO number(s) using the approved channel.</span><div class="ev-notification-example"><b>Clinic</b><span>[Clinic name]</span><b>PO #</b><span>[Actual PO number]</span></div></div></div>';
- if(which==='sheet')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustrative inventory spreadsheet, not real tracking data"><div class="ev-demo-tracker"><div class="ev-demo-tracker-top"><strong>ORDER TRACKER</strong><small>EXAMPLE FORMAT · LOCAL SHEET MAY VARY</small></div><div class="ev-demo-tracker-table"><b>Date</b><b>Clinic</b><b>Order #</b><b>Status</b><span>[Date]</span><span>[Clinic]</span><span>[PO #]</span><span>Pending</span></div><p>Complete the designated spreadsheet only if required by your market.</p></div></div>';
- return '';
+function evFrame(title,inner,focus){
+ return '<div class="ev-mini-screen" aria-hidden="true">'+evTopbar()+
+  '<div class="ev-mini-screen-content">'+evSidebar(focus)+
+  '<main class="ev-mini-main"><div class="ev-mini-crumb">'+title+'<span>▦ Sollis Health</span></div>'+inner+
+  '</main></div><div class="ev-mini-foot">Envi · Training illustration</div></div>';
 }
-
+function evDashboard(){
+ return '<div class="ev-dashboard"><h3>Hello!</h3><p>Visualize data, navigate faster and track your messages.</p>'+
+ '<div class="ev-dashboard-cta">⚙ Configure Dashboard</div>'+
+ '<div class="ev-dashboard-divider"></div><h4>Training Video Center</h4>'+
+ '<div class="ev-dashboard-tabs"><span>All Videos</span><span>Adjustments</span></div></div>';
+}
+function evTabs(active,target){
+ return '<div class="ev-tabs">'+['Details','Line Items','Update','Resources'].map(function(t){
+  const code=t==='Line Items'?'items':t.toLowerCase();
+  return '<span class="'+(active===code?'ev-tab-active ':'')+(target===code?'ev-target':'')+'" '+(target===code?'data-ev-target="true"':'')+'>'+t+'</span>';
+ }).join('')+'</div>';
+}
+function evToolbar(buttons){return '<div class="ev-mini-toolbar">'+buttons.join('')+'</div>';}
+function evForm(active){
+ const v=active==='facility'?['Select Facility','Select Location','Select Department','']:
+ active==='location'?['Beverly Hills Flagship','Select Location','Select Department','']:
+ active==='department'?['Beverly Hills Flagship','Order Entry','None','']:
+ ['Beverly Hills Flagship','Order Entry','None','BH Lab [Initials] 10/30'];
+ return '<div class="ev-mini-form">'+
+  evField('Facility *',v[0],active==='facility')+
+  evField('Location *',v[1],active==='location')+
+  evField('Department',v[2],active==='department')+
+  evField('Reference',v[3]||' ',active==='reference',false)+'</div>';
+}
+function evOrderDetails(focus){
+ const data=[['Order Entry #','1443'],['Facility','Beverly Hills Flagship'],
+ ['Location','Order Entry'],['Department','None'],['Reference','BH Lab [Initials] 10/30'],['Status','Draft']];
+ return '<div class="ev-mini-detail-list">'+data.map(function(x){
+  const target=focus==='entry'&&x[0]==='Order Entry #'||focus==='status'&&x[0]==='Status';
+  return '<div><small>'+x[0]+'</small><strong class="'+(target?'ev-target':'')+'" '+(target?'data-ev-target="true"':'')+'>'+x[1]+'</strong></div>';
+ }).join('')+'</div>';
+}
+function evOrderTable(target){
+ return '<div class="ev-table-head">Line　　Inv #　　 Vendor Item #　　 Description　　　　　　　　　　　　Quantity</div>'+
+ '<div class="ev-minimal-order-row"><span>1</span><span>10856</span><span>832497</span><span>Piccolo Comprehensive Metabolic Panel</span><strong class="'+(target==='first'?'ev-target':'')+'" '+(target==='first'?'data-ev-target="true"':'')+'>2 BX (10)</strong></div>'+
+ '<div class="ev-minimal-order-row"><span>2</span><span>11151</span><span>824758</span><span>Triage Troponin-I Test Kit</span><strong class="'+(target==='second'?'ev-target':'')+'" '+(target==='second'?'data-ev-target="true"':'')+'>1 CT (25)</strong></div>';
+}
+function evInventoryToolbar(target){
+ return evToolbar([evBtn('Add &amp; Continue',target==='continue',true),evBtn('Add &amp; Go to Line Items',target==='finish',true)]);
+}
+function evSearch(sku,focus){
+ return '<div class="ev-search-box '+(focus?'ev-target':'')+'" '+(focus?'data-ev-target="true"':'')+'><span>'+sku+'</span><b>⌕</b></div>';
+}
+function evResult(mode,sku){
+ const second=sku==='824758',selected=['selected','quantity','added','final'].includes(mode);
+ return '<div class="ev-mini-result"><span class="ev-mini-check '+(selected?'is-checked ':'')+(mode==='selected'?'ev-target':'')+'" '+(mode==='selected'?'data-ev-target="true"':'')+'>'+(selected?'✓':'')+'</span>'+
+ '<div class="ev-mini-result-title"><small>Inv # '+(second?'11151':'10856')+' · McKesson</small>'+
+ '<strong class="'+(mode==='verify'?'ev-target':'')+'" '+(mode==='verify'?'data-ev-target="true"':'')+'>'+sku+'</strong>'+
+ '<span>'+(second?'Triage Troponin-I Test Kit':'Piccolo Comprehensive Metabolic Panel')+'</span></div>'+
+ '<div class="ev-mini-pack"><small>UOM</small><strong class="'+(mode==='verify'?'ev-target':'')+'" '+(mode==='verify'?'data-ev-target="true"':'')+'>'+(second?'CT (25)':'BX (10)')+'</strong></div>'+
+ '<div class="ev-mini-qty"><small>QTY</small><strong class="'+(mode==='quantity'?'ev-target':'')+'" '+(mode==='quantity'?'data-ev-target="true"':'')+'>'+(second?'1':selected?'2':'')+'</strong></div></div>';
+}
+function evInventoryBody(mode,sku){
+ return evTabs('update')+evInventoryToolbar(mode==='added'?'continue':mode==='final'?'finish':'')+
+ evSearch(sku,mode==='search')+
+ '<div class="ev-mini-result-head">Inv #　　　　　　 Vendor Item #　　　　 Description　　　　　　　　　　 UOM / QTY</div>'+
+ (mode==='search'?'':evResult(mode,sku));
+}
+function evSubmitModal(focus){
+ return '<div class="ev-modal-back"><div class="ev-modal"><strong>Submit Order Entry</strong>'+
+ '<p>Are you sure you want to submit this order? Submit Purchase Order(s) to:</p>'+
+ '<span>◯ Draft</span><b class="ev-pending-selected '+(focus==='pending'?'ev-target':'')+'" '+(focus==='pending'?'data-ev-target="true"':'')+'>◉ Pending</b>'+
+ '<div><span>Cancel</span><strong class="'+(focus==='submit'?'ev-target':'')+'" '+(focus==='submit'?'data-ev-target="true"':'')+'>Submit</strong></div></div></div>';
+}
 function visual(which){
-  var custom=visualDetail(which);if(custom)return custom;
- if(which==='navigation')return frame('Dashboard','<div class="ev-placeholder-header"><strong>Welcome to Envi</strong><p>Purchasing <span>›</span> Order Entry</p></div><div class="ev-ui-pointer">SELECT ORDER ENTRY ↖</div>',true);
- if(which==='new')return frame('Order Entry','<div class="ev-mini-toolbar">'+mark('＋ Add Order Entry')+'<span>Multiple Orders Entry Upload</span></div><div class="ev-table-head">OE #　　Reference　　　　　 Facility　　　　　　 Status</div><div class="ev-table-simple">1442　　Lab order　　　　　Clinic　　　　　　Submitted</div>',true);
- if(which==='form')return frame('Order Entry · Add Order Entry','<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add</span><span>Cancel</span></div><div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',true)+field('Location *','Order Entry',true)+field('Department','None',false)+field('Reference','BH Lab [Initials] 10/30',true)+'</div>',true);
- if(which==='draft')return frame('Add Order Entry','<div class="ev-mini-toolbar">'+mark('Add')+'<span>Cancel</span></div><div class="ev-mini-form">'+field('Facility *','Beverly Hills Flagship',false)+field('Location *','Order Entry',false)+field('Reference','BH Lab [Initials] 10/30',false)+'</div><p class="ev-secondary-caption">After Add: <strong>Order Entry 1443</strong> · Status: <strong>Draft</strong></p>',true);
- if(which==='menu')return frame('Order Entry 1443',tabs('items')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add Items ⌄</span><span>Delete Selected</span><span>Quick Add</span></div><div class="ev-dropdown"><span class="ev-dropdown-active">Add Items from Inventory　✓</span><span>Add Any Items</span><span>Add Items from Template</span><span>Add Items from Recent Orders</span></div>',true);
- if(which==='search')return frame('Order Entry 1443',tabs('update')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add &amp; Continue</span><span>Add &amp; Go to Line Items</span></div><div class="ev-search-box">'+mark('832497')+' <b>⌕</b></div><div class="ev-table-head">Inv #　　 Vendor　　 Vendor Item #　　 Description　　 QTY</div><div class="ev-ui-search-meta">Press <strong>Enter</strong> to search</div>',true);
- if(which==='quantity')return frame('Order Entry 1443',tabs('update')+'<div class="ev-search-box">832497　⌕</div><div class="ev-item-result"><span>☑</span><span><small>Inv # 10856 · McKesson</small><strong>832497</strong><small>Piccolo Comprehensive Metabolic Panel</small></span><span><small>UOM</small><b>BX (10)</b></span><span class="ev-qty-focus"><small>QTY</small><b>2</b></span></div>',true);
- if(which==='continue')return frame('Order Entry 1443',tabs('update')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill ev-button-primary-outline">Add &amp; Continue</span><span class="ev-blue-pill">Add &amp; Go to Line Items</span></div><div class="ev-loop"><div>① Search item</div><b>›</b><div>② Select + QTY</div><b>›</b><div>③ Add &amp; Continue</div><span class="ev-loop-back">↩ REPEAT FOR MORE ITEMS</span></div>',true);
- if(which==='review')return frame('Order Entry 1443',tabs('items')+'<div class="ev-mini-toolbar"><span class="ev-blue-pill">Add Items ⌄</span><span>Delete Selected</span><span>Quick Add</span></div><div class="ev-table-head">　Line　 Inv #　　　 Vendor　　 SKU　　　　 Description　　　　　　 Quantity</div><div class="ev-table-grid">'+rowline(false,false)+rowline(true,false)+'</div><div class="ev-ui-pointer ev-pointer-bottom">CHECK ALL ITEM QUANTITIES ✓</div>',true);
- if(which==='edit')return frame('Order Entry 1443',tabs('items')+'<div class="ev-mini-toolbar"><span>← Back</span><span class="ev-blue-pill">Update</span><span>Cancel</span></div><div class="ev-detail-grid"><span>Inventory #</span><strong>10856</strong><span>Vendor Item #</span><strong>832497</strong></div><div class="ev-mini-form ev-mini-form-edit">'+field('Order Quantity *','2',true)+'<small>UOM　BX (10)</small></div>',true);
- if(which==='submit')return frame('Order Entry 1443',tabs('details')+'<div class="ev-mini-toolbar"><span>Edit</span>'+mark('Submit to PO')+'</div><div class="ev-detail-grid"><span>Reference</span><strong>BH Lab [Initials] 10/30</strong><span>Status</span><strong>Draft</strong><span>Line items</span><strong>Reviewed ✓</strong></div>',true);
- if(which==='pending')return frame('Order Entry 1443',tabs('details')+'<div class="ev-modal-back"><div class="ev-modal"><strong>Submit Order Entry</strong><p>Submit Purchase Order(s) to:</p><span>◯ Draft</span><b class="ev-pending-selected">◉ Pending</b><div><span>Cancel</span><strong>Submit</strong></div></div></div>',true);
- return '<div class="ev-handoff-picture" aria-hidden="true"><div class="ev-handoff-po"><small>ENVI</small><strong>Order submitted</strong><span>Record generated PO number(s)</span><b>PO # ______</b></div><div class="ev-handoff-connect">→</div><div class="ev-handoff-tasks"><div><span>✉</span><strong>Lab Inventory group</strong><small>Notify when required by market</small></div><div><span>▦</span><strong>Ordering spreadsheet</strong><small>Record when required by market</small></div></div></div>';
+ if(which==='purchasing')return evFrame('Dashboard',evDashboard(),'purchasing');
+ if(which==='navigation')return evFrame('Dashboard',evDashboard(),'entry');
+ if(which==='new')return evFrame('Order Entry',
+  evToolbar([evBtn('Add Order Entry',true,true),evBtn('Multiple Orders Entry Upload',false)])+
+  '<div class="ev-table-head">OE #　　　　 Reference　　　　　　　 Facility　　　　　　　 Created Date　　　　　 Status</div>'+
+  '<div class="ev-table-simple">1442　　　　 KS 10/30　　　　　　　 Hamptons Center　　　 10/30/2026　　　　 Submitted</div>');
+ if(['facility','location','department','reference','draft'].includes(which)){
+  const toolbar=evToolbar([evBtn('Add',which==='draft',true),evBtn('Cancel',false)]);
+  return evFrame('Order Entry · Add Order Entry',toolbar+evForm(which==='draft'?'none':which));
+ }
+ if(which==='draft-details')return evFrame('Order Entry › Order Entry 1443',evTabs('details')+evToolbar([evBtn('Edit',false,true)])+evOrderDetails('entry'));
+ if(which==='line-tab')return evFrame('Order Entry › Order Entry 1443',
+  evTabs('items','items')+evToolbar([evBtn('Add Items　⌄',false,true),evBtn('Delete Selected',false),evBtn('Quick Add',false)])+
+  '<div class="ev-mini-empty">▤<br><strong>No records found</strong></div>');
+ if(which==='open-menu'||which==='menu'){
+  return evFrame('Order Entry › Order Entry 1443',evTabs('items')+
+   evToolbar([evBtn('Add Items　⌄',which==='open-menu',true),evBtn('Delete Selected',false),evBtn('Quick Add',false)])+
+   (which==='menu'?'<div class="ev-dropdown"><span class="ev-target" data-ev-target="true">Add Items from Inventory</span>'+
+   '<span>Add Any Items</span><span>Add Items from Template</span><span>Add Items from Recent Orders</span></div>':
+   '<div class="ev-mini-empty">▤<br><strong>No records found</strong></div>'));
+ }
+ if(which==='search')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('search','832497'));
+ if(which==='search-result')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('result','832497'));
+ if(which==='verify-row')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('verify','832497'));
+ if(which==='check-row')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('selected','832497'));
+ if(which==='quantity')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('quantity','832497'));
+ if(which==='add-continue')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('added','832497'));
+ if(which==='continue')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('search','824758'));
+ if(which==='add-to-lines')return evFrame('Order Entry › Order Entry 1443',evInventoryBody('final','824758'));
+ if(which==='review')return evFrame('Order Entry › Order Entry 1443',evTabs('items')+
+  evToolbar([evBtn('Add Items　⌄',false,true),evBtn('Delete Selected',false),evBtn('Quick Add',false)])+evOrderTable('first'));
+ if(which==='open-item')return evFrame('Order Entry › Order Entry 1443',evTabs('items')+
+  evToolbar([evBtn('Add Items　⌄',false,true)])+
+  '<div class="ev-table-head">Line　　　　 Inventory #　　 Vendor SKU　　　 Description　　　　　　　 Qty</div>'+
+  '<div class="ev-minimal-open-row"><strong class="ev-target" data-ev-target="true">1</strong><span>10856</span><span>832497</span><span>Piccolo CMP</span><span>2 BX (10)</span></div>'+
+  '<div class="ev-minimal-open-row"><strong>2</strong><span>11151</span><span>824758</span><span>Triage Troponin-I</span><span>1 CT (25)</span></div>');
+ if(which==='edit'||which==='save-edit')return evFrame('Order Entry › Order Entry 1443',evTabs('items')+
+  evToolbar([evBtn(which==='save-edit'?'Update':'Edit',true,true),evBtn('Cancel',false)])+
+  '<div class="ev-detail-grid"><span>Inventory #</span><strong>10856</strong><span>Vendor Item #</span><strong>832497</strong></div>'+
+  '<div class="ev-mini-form ev-mini-form-edit">'+evField('Order Quantity *','2',which==='edit',false)+'</div><small>UOM　BX (10)</small>');
+ if(which==='details-tab')return evFrame('Order Entry › Order Entry 1443',evTabs('details','details')+
+  evToolbar([evBtn('Edit',false,true),evBtn('Submit to PO',false,true)])+evOrderDetails());
+ if(which==='submit')return evFrame('Order Entry › Order Entry 1443',evTabs('details')+
+  evToolbar([evBtn('Edit',false,true),evBtn('Submit to PO',true,true)])+evOrderDetails());
+ if(which==='pending')return evFrame('Order Entry › Order Entry 1443',evTabs('details')+evSubmitModal('pending'));
+ if(which==='submit-confirm')return evFrame('Order Entry › Order Entry 1443',evTabs('details')+evSubmitModal('submit'));
+ if(which==='record-number')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustration only, not a live confirmation">'+
+  '<div class="ev-handoff-po"><small>ENVI · ORDER ENTRY</small><strong>Entry number</strong><b>1443 · Example</b><span>Record the actual order entry number.</span></div>'+
+  '<div class="ev-handoff-connect">→</div>'+
+  '<div class="ev-handoff-po"><small>PURCHASE ORDER</small><strong>PO number</strong><b class="ev-target" data-ev-target="true">[Actual PO #]</b><span>Verify the generated PO and status.</span></div></div>';
+ if(which==='notify')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustrative notification checklist">'+
+  '<div class="ev-handoff-po"><small>MARKET DEPENDENT</small><strong>Lab Inventory group</strong>'+
+  '<span>Send the order number using the approved channel.</span>'+
+  '<div class="ev-notification-example"><b>Clinic</b><span>[Clinic name]</span>'+
+  '<b>PO #</b><span class="ev-target" data-ev-target="true">[Actual PO number]</span></div></div></div>';
+ if(which==='sheet')return '<div class="ev-handoff-picture ev-handoff-reference" aria-label="Illustrative spreadsheet only">'+
+  '<div class="ev-demo-tracker"><div class="ev-demo-tracker-top"><strong>ORDER TRACKER</strong><small>LOCAL FORMAT MAY VARY</small></div>'+
+  '<div class="ev-demo-tracker-table"><b>Date</b><b>Clinic</b><b>Order #</b><b>Status</b>'+
+  '<span>[Date]</span><span>[Clinic]</span><span class="ev-target" data-ev-target="true">[PO #]</span><span>Pending</span></div>'+
+  '<p>Complete the local tracker if required by your market.</p></div></div>';
+ return evFrame('Order Entry',evOrderDetails());
 }
+
 function renderStep(s,i){
  return '<article class="ev-step" data-ev-card="'+i+'" '+(mode==='guided'&&index!==i?'hidden':'')+'>'+
  '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div>'+
