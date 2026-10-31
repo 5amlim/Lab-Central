@@ -392,6 +392,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-container-photo-updates.js?v=20261031-pathfast-green-v2"></script>
 <script src="lab-container-reference.js?v=20261031-gallery-api-v16"></script>
 <script src="collection-photo-preview.js?v=20261031-pathfast-gallery-label-v2"></script>
+<script src="analyzer-icons.js?v=20261031-cohesive-analyzer-v1"></script>
 <script>
 (()=>{
 'use strict';
@@ -446,6 +447,7 @@ const iconMap={
  'book':'<path d="M4 3h15v18H6a2 2 0 0 1-2-2V3Zm0 16a2 2 0 0 1 2-2h13"/>'
 };
 function svg(n){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(iconMap[n]||iconMap.book)+'</svg>'}
+function sectionSvg(s){const custom=window.LAB_CENTRAL_ANALYZER_ICONS?.[s.id];return custom?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+custom+'</svg>':svg(s.icon)}
 const titleCount=(x)=>x.length;
 const urlFor=(id,tab='overview')=>id==='home'?'#home':'#'+id+(tab&&tab!=='overview'?'/'+encodeURIComponent(tab):'');
 function navigate(id,tab='overview'){
@@ -486,7 +488,7 @@ function showNav(){
   const isArchive=cat==='Archived';
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
   out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
-  for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${svg(s.icon)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
+  for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${sectionSvg(s)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${svg('clipboard-check')}</span>Lab Daily Checklist</button>`;
   if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${svg('package')}</span>Envi Ordering</button>`;
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${svg('clipboard-check')}</span>Specimen drop-off</button>`;
@@ -882,7 +884,7 @@ function homepageEquipmentArt(sec,featured=false){
 }
 function card(s){
  const illustration=homepageEquipmentArt(s);
- return '<button type="button" class="item-card'+(illustration?' has-device-art':'')+'" data-go="'+safeHtml(s.id)+'"><div class="card-head"><span class="card-icon">'+svg(s.icon)+'</span><span class="card-category">'+safeHtml(s.category)+'</span></div><strong>'+safeHtml(s.title)+'</strong><p>'+safeHtml(s.subtitle)+'</p><span class="card-trailing">Open guide &nbsp;›</span>'+illustration+'</button>';
+ return '<button type="button" class="item-card'+(illustration?' has-device-art':'')+'" data-go="'+safeHtml(s.id)+'"><div class="card-head"><span class="card-icon">'+sectionSvg(s)+'</span><span class="card-category">'+safeHtml(s.category)+'</span></div><strong>'+safeHtml(s.title)+'</strong><p>'+safeHtml(s.subtitle)+'</p><span class="card-trailing">Open guide &nbsp;›</span>'+illustration+'</button>';
 }
 function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Confirm the current approved SOP, manufacturer IFU, specimen requirements and site-specific procedures before testing or sending specimens.</div></div>`}
 function renderHome(mode='home'){
@@ -1745,7 +1747,7 @@ function renderOrderSetDirectory(tab){
  if(active==='in-house'){
   h+='<section class="ao-directory-panel" aria-label="In-house order sets">';
   h+='<div class="ao-directory-panel-title"><div><h2>In-house orders</h2><p>Browse the verified Athena Point of Care Tests and Order Sets by instrument.</p></div><span class="ao-directory-panel-count">'+inst.length+' INSTRUMENTS</span></div>';
- h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${svg(s.icon)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
+ h+=`<div class="grid-cards order-directory-grid">${inst.map(s=>{const c=orderSetsFor(s).length;return `<button type="button" class="item-card order-directory-item" data-goorderset="${safeHtml(s.id)}"><div class="card-head"><span class="card-icon">${sectionSvg(s)}</span><span class="${c?'published-tag':'pending-tag'}">${c?c+' AVAILABLE':'NOT LISTED'}</span></div><strong>${safeHtml(s.title)}</strong><p>${safeHtml(s.subtitle)}</p><span class="card-trailing">View order sets &nbsp;›</span></button>`}).join('')}</div>`;
 
   h+='<p class="source-footnote">Use the current Athena order and approved instrument workflow.</p></section>';
  }else{
