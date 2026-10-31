@@ -123,5 +123,10 @@ if(typeof window!=='undefined'&&typeof window.addEventListener==='function'&&typ
  window.addEventListener('beforeprint',function(){printState=Array.from(document.querySelectorAll('.pcr-reference-accordion, .pcr-review-detail')).map(function(node){return {node:node,open:node.open};});printState.forEach(function(item){item.node.open=true;});});
  window.addEventListener('afterprint',function(){printState.forEach(function(item){item.node.open=item.open;});printState=[];});
 }
-window.LAB_PATHFAST_CLINICAL={collection:collection,pathway:pathway};
+function collectionAllForPrint(){
+ const previous=rnAllSteps;
+ try{rnAllSteps=true;return collection();}
+ finally{rnAllSteps=previous;}
+}
+window.LAB_PATHFAST_CLINICAL={collection:collection,collectionAllForPrint:collectionAllForPrint,pathway:pathway};
 })();
