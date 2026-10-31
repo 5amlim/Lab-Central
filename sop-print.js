@@ -126,8 +126,8 @@ function ops(root,route){
  }[route.id]||route.id,'RN · Lab personnel · Front Desk · Provider, as applicable');
  const first=root.querySelector('.ops-lead,.ops-header p,.ops-intro p');
  if(first)h+=note('Purpose',htmlText(first));
- const warning=root.querySelector('.ops-notice,.ops-alert,.ops-warning');
- if(warning)h+=note('Required before proceeding',htmlText(warning),true);
+ const notices=Array.from(root.querySelectorAll('.ops-notice,.ops-alert,.ops-warning'));
+ notices.forEach((item,i)=>h+=note(i===0?'Required before proceeding':'Handling and exception note',htmlText(item),true));
  const flow=Array.from(root.querySelectorAll('.ops-flow > .ops-step'));
  if(flow.length){
   h+=section('Procedure','Follow each step in sequence.');
@@ -136,14 +136,20 @@ function ops(root,route){
  // Render every accordion, including ones that are closed on the screen.
  const accordions=Array.from(root.querySelectorAll('.ops-accordion,.lc-lab-detail'));
  if(accordions.length){
-  h+=section('Specimen or receiving-lab alternatives','Choose the section that matches the ordered test, kit and receiving laboratory.');
-  h+=fork('Which test, container or receiving lab applies?',accordions.map(el=>{
+  const options=accordions.map(el=>{
    const label=nodeText(el.querySelector('summary strong,summary'))||'Specific instruction';
    const detail=el.querySelector('.ops-accordion-content,.lc-lab-content');
    const lines=detail?Array.from(detail.querySelectorAll('li')).map(li=>li.innerHTML):[];
    const info=lines.length?bullet(...lines):'<p>'+htmlText(detail)+'</p>';
    return [label,info];
-  }));
+  });
+  if(route.id==='outside'&&['stool','urine'].includes(route.tab)){
+   h+=section('Specimen medium and container decision','Follow only the instructions matching the ordered test and supplied kit.');
+   h+=fork('Which collection medium or container is issued?',options);
+  }else{
+   h+=section('Questions, exceptions and special handling','Review these whenever the condition applies.');
+   options.forEach(item=>h+=note(item[0],item[1]));
+  }
  }
  const additional=Array.from(root.querySelectorAll('.ops-card')).slice(0,20);
  const kitOptions=additional.filter(card=>!/^Include with every kit$/i.test(nodeText(card.querySelector('h3'))));
