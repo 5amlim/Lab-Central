@@ -147,3 +147,40 @@
 .qc-piccolo-close-action .qc-device-option{min-height:36px;font-size:11px;padding:7px 10px}
 .qc-piccolo-close-action .qc-device-option.targeted{padding:6px 9px}
 .qc-piccolo-close-running{display:block;font-size:10px;font-weight:750;color:#22756e;background:#e9f6f1;border-radius:5px;padding:9px 11px}
+
+/* Manufacturer-referenced Piccolo screens; restore the large three-at-a-time scrolling cards. */
+.qc-screen-gallery--piccolo{gap:16px;scroll-snap-type:x mandatory;scroll-padding-inline:3px;padding-bottom:16px}
+.qc-screen-gallery--piccolo>.qc-screen-reference{flex:0 0 clamp(390px,34%,535px);width:clamp(390px,34%,535px);max-width:calc(100% - 5px);scroll-snap-align:start;padding:16px 18px;gap:13px}
+.qc-screen-gallery--piccolo .qc-visual-top strong{font-size:13px}
+.qc-screen-gallery--piccolo .qc-device-face{padding:15px 12px}
+.qc-screen-gallery--piccolo .qc-device-screen{min-height:265px;background:linear-gradient(180deg,#f8fdfd,#e0f0f5);display:flex;flex-direction:column}
+.qc-screen-gallery--piccolo .qc-screen-instruction{font-size:12.5px;line-height:1.55}
+.qc-px-scroll-cue{margin:3px 3px 4px;color:#37778b;font-size:11px;font-weight:750;text-align:right}
+.qc-px-scroll-cue span{padding-left:6px}
+.qc-device-screen--piccolo .qc-px-screen-top{justify-content:center;padding:7px;background:linear-gradient(90deg,#406c94,#274a79);color:white;font-size:12px}
+.qc-device-screen--piccolo .qc-px-screen-top strong{font-size:12px;color:#fff}
+.qc-px-home-body{min-height:205px;flex:1;display:flex;flex-direction:column;align-items:center;padding:14px 16px 3px}
+.qc-px-yellow-button{width:84%;padding:9px;text-align:center;color:#2b4863;font-size:15px;border-radius:9px;border:1px solid #e4b34a;background:linear-gradient(180deg,#fff1ac,#ffd45c);font-weight:700}
+.qc-px-home-tools{margin-top:auto;display:flex;width:100%;justify-content:space-between;padding:0 20px 3px;color:#477f9c;font-size:24px}
+.qc-px-screen-footer{font-size:10px;color:#d8e8fa;background:#244b75;text-align:center;padding:5px}
+.qc-px-load-body{min-height:190px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:19px 12px}
+.qc-px-load-body p{margin:0;text-align:center;font-size:15px;line-height:1.45;color:#436078}
+.qc-px-help-icon{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid #a3c5d7;background:#d5edfb;font-style:italic;color:#2876a7;font-weight:800}
+.qc-px-blue-button{background:linear-gradient(#4ba9fa,#0962bd);color:#fff;font-size:14px;font-weight:700;text-align:center;padding:8px}
+.qc-px-type-body{display:flex;flex-direction:column;align-items:stretch;gap:9px;margin:auto;width:min(85%,290px);padding:20px 0}
+.qc-px-type-choice{border:2px solid #c29f9a;background:#fff;font-size:14px;color:#314e67;text-align:center;border-radius:3px;padding:10px}
+.qc-px-type-active{border-color:#bd5764;background:#fff1f1;font-weight:750;color:#743745}
+.qc-px-type-cancel{color:#fff;background:#3b74ad;text-align:center;padding:6px;margin-top:10px;font-size:12px}
+.qc-px-level-body{display:flex;flex-direction:column;justify-content:center;gap:8px;padding:11px 15px;flex:1}
+.qc-px-level-field{background:#fff;border:1px solid #9ab7c8;border-radius:3px;min-height:29px;padding:5px 12px;text-align:center;color:#264b66}
+.qc-px-level-field strong{font-size:18px}
+.qc-px-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.qc-px-keypad span{background:linear-gradient(#fff2a4,#ffd44e);color:#344c5e;border:1px solid #d7b45f;border-radius:3px;text-align:center;font-size:12px;padding:3px 0;font-weight:750}
+.qc-px-keypad-actions{display:flex;gap:6px;justify-content:space-between}
+.qc-px-keypad-actions span,.qc-px-keypad-actions b{flex:1;background:#3982c1;color:#fff;text-align:center;font-size:10px;padding:6px;border-radius:3px}
+.qc-px-running-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#3b6984;padding:15px}
+.qc-px-running-disc{font-size:68px;color:#a6cfe0}
+.qc-px-running-body strong{font-size:15px}
+.qc-px-running-body small{font-size:10px}
+@media(max-width:650px){.qc-screen-gallery--piccolo>.qc-screen-reference{flex:0 0 min(85vw,440px);width:min(85vw,440px)}}
+@media print{.qc-screen-gallery--piccolo{overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.qc-screen-gallery--piccolo>.qc-screen-reference{width:auto;max-width:none;flex-basis:auto}.qc-px-scroll-cue{display:none}}
