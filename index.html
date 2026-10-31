@@ -157,7 +157,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261030-sendout-page-organization-v7" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
-  <link rel="stylesheet" href="qc-guide.css?v=20261031-piccolo-optional-reprint-v3" media="all">
+  <link rel="stylesheet" href="qc-guide.css?v=20261031-piccolo-qc-screens-restored-v4" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
   <link rel="stylesheet" href="reference-refresh.css?v=20261029-drug-strip-illustrations-v3" media="all">
@@ -359,10 +359,10 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261029-sysmex-reference-v4"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
-<script src="qc-guide.js?v=20261031-piccolo-optional-reprint-v3"></script>
+<script src="qc-guide.js?v=20261031-piccolo-qc-screens-restored-v4"></script>
 <script src="biofire-visual.js?v=20261029-spotfire-zoom-all-v13"></script>
 <script src="lab-visual-corrections-20261029.js?v=4"></script>
-<script src="lab-guide-polish.js?v=20261029-station-consistency-v10"></script>
+<script src="lab-guide-polish.js?v=20261031-piccolo-qc-screens-restored-v4"></script>
 <script src="piccolo-results.js?v=20261029-printouts-v2"></script>
 <script src="sysmex-focused.js?v=20261029-sysmex-reference-v6"></script>
 <script src="clinitek-focused.js?v=20261029-quantimetrix-photo-v10"></script>
@@ -1131,7 +1131,10 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
  const instrumentFocus=sec&&window.LAB_INSTRUMENT_FOCUS?.render?window.LAB_INSTRUMENT_FOCUS.render(sec,root.text,groupId):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
- const priorityVisual=triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
+ // The Piccolo QC walkthrough is the authoritative illustration for Run QC and QC record filing.
+ // Keep the four screen cards visible instead of substituting the generic analyzer art.
+ const piccoloQcWorkflowVisual=sec?.id==='piccolo'?(qcScreenVisual||qcPrintVisual):'';
+ const priorityVisual=piccoloQcWorkflowVisual||triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
  const informational=sec&&sec.id==='hemocue'&&/^(turnaround-time|available-locations|order-set)$/.test(groupId);
  const fallbackVisual=!priorityVisual&&!informational&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const displayedVisual=priorityVisual||fallbackVisual;
