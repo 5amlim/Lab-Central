@@ -106,7 +106,7 @@ function piccolo(title,group){
  if(/analysis is running|confirm analysis|run is running|run in progress/.test(t))return fig("Piccolo Xpress · Analysis in progress",piccoloRunningSvg(),"Check that the analyzer has started processing the disc. A green check marks successful run initiation only. Review final analyzer results and internal QC before reporting.","lc-piccolo-single lc-piccolo-running");
  if(/select patient|enter.*mrn|patient.*sample id/.test(t))return fig("Select Patient and enter patient MRN",piccoloPatientScreen(),"After the drawer is closed, select Patient. Enter the correct patient ID (up to 14 characters), then select Done. Verify the identifier before the analyzer processes the disc.","lc-piccolo-single lc-piccolo-screen-step");
   // Control menu steps use the QC screen walk-through, not another disc-loading drawing.
- if(/click analyze|control\s*>\s*enter|enter 1 for low|enter 2 for high/.test(t))return "";
+ if(q&&(/^(run qc|review and file qc results)$/i.test(t)||/click analyze|control\s*>\s*enter|enter 1 for low|enter 2 for high/.test(t)))return "";
  if(/within 60|sample time|collection|blood tube/.test(t)){
   return fig("Lithium-heparin whole blood",A.mediaSvg?A.mediaSvg("green"):empty,"Confirm specimen identity and stability per the approved Piccolo SOP.","lc-piccolo-single");
  }
