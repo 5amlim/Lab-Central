@@ -9,8 +9,7 @@ const configs={
  sysmex:{brand:"SYSMEX pocH-100i",binder:"pocH Daily Control Log · Maintenance Log binder",steps:[
   {kind:"mainMenu",heading:"Open QC from Menu",tip:"From the Main screen select Menu, then QC."},
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
-  {heading:"Open the print menu",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the desired QC file displayed, select Print."},
-  {heading:"Print the selected level",screen:"PRINT CONTROL CHART",items:["Chart","Current","Cancel"],focus:"Current",tip:"Select Current for the chosen QC file. Repeat file selection and printing separately for QC1, QC2 and QC3; Chart prints the full chart instead."}
+  {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print, then choose Current on the confirmation prompt (not Chart). Repeat separately for any missing QC1, QC2 or QC3 records."}
  ],note:"Print the accepted QC1 (Low), QC2 (Normal) and QC3 (High) control records one by one. File the startup blank-check report separately in the pocH blank-check log; retain new-lot comparison records in the validation log until the approved transition is complete."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
   {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
@@ -238,10 +237,20 @@ function piccoloPatientLoadStep(){
 }
 
 function sysmexBinderChecklist(){
- return '<div class="lc-poc-print-binder"><strong>File four reports in the Maintenance Log binder</strong>'+
-  '<div class="lc-poc-print-checklist">'+
-  ['QC1 · Low','QC2 · Normal','QC3 · High',"Today's blank check"].map(label=>'<div class="lc-poc-check-item"><span aria-hidden="true">□</span>'+esc(label)+'</div>').join('')+
-  '</div><p>Verify the accepted QC results, correct date, lot and operator on the printouts. File the three controls in the pocH Daily Control Log and the blank check in the blank-check section. Escalate missing or unacceptable results.</p></div>';
+ return '<div class="lc-poc-print-binder" aria-label="pocH-100i four required reports">'+
+  '<div class="lc-poc-binder-heading"><span>FINAL CHECK · 4 REPORTS</span><strong>Verify and file the daily records</strong><p>Three accepted QC levels plus today’s startup blank check.</p></div>'+
+  '<div class="lc-poc-report-groups">'+
+   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>3 QC printouts</strong><small>pocH Daily Control Log</small></div>'+
+    '<div class="lc-poc-print-checklist">'+
+     ['QC1 · Low','QC2 · Normal','QC3 · High'].map(label=>'<div class="lc-poc-check-item"><span aria-hidden="true">□</span>'+esc(label)+'</div>').join('')+
+    '</div></section>'+
+   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>1 blank-check printout</strong><small>Maintenance Log · Blank Check</small></div>'+
+    '<div class="lc-poc-print-checklist"><div class="lc-poc-check-item lc-poc-blank-check"><span aria-hidden="true">□</span>Today’s startup blank check</div></div></section>'+
+  '</div>'+
+  '<ol class="lc-poc-binder-filing-steps"><li><b>Review:</b> Match date, control level, lot, operator and accepted results. Check that the blank check is acceptable.</li>'+
+   '<li><b>File:</b> Keep all three QC reports together in the pocH Daily Control Log. File the blank check in its separate section.</li>'+
+   '<li><b>Document:</b> Complete the Insight daily log and Daily Maintenance Log with date and initials. Escalate missing or unacceptable results.</li></ol>'+
+  '</div>';
 }
 function sysmexPrintFallback(){
  const qcScreens=configs.sysmex.steps;
@@ -252,15 +261,15 @@ function sysmexPrintFallback(){
   {heading:"Print blank-check result",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Tap Print and file the report in the blank-check section of the Maintenance Log binder."}
  ];
  return '<section class="lc-poc-print-decision" data-poc-print-decision aria-label="pocH control result printing">'+
-  '<div class="lc-poc-print-prompt"><div><span class="lc-poc-print-eyebrow">AFTER QC · ACTION REQUIRED</span><h4>Did the results print automatically?</h4><p>All three QC levels and today’s blank check must be available for the binder. Select the matching route.</p></div>'+
+  '<div class="lc-poc-print-prompt"><div><span class="lc-poc-print-eyebrow">AFTER QC · ACTION REQUIRED</span><h4>Do you have all four reports?</h4><p>Check QC1 Low, QC2 Normal, QC3 High and today’s blank check. If any report is missing, follow the reprint route.</p></div>'+
   '<div class="lc-poc-print-choices" role="group" aria-label="Was the QC printout generated?">'+
-  '<button type="button" data-poc-print-choice="yes" aria-pressed="false">Yes, printed</button>'+
-  '<button type="button" data-poc-print-choice="no" aria-pressed="false">No, reprint</button></div></div>'+
-  '<div class="lc-poc-print-response" data-poc-print-panel="yes" hidden><p class="lc-poc-print-instruction"><strong>Review before filing.</strong> Check that all three levels printed, along with today’s startup blank check. Missing any one report? Choose “No, reprint” for the retrieval steps.</p>'+sysmexBinderChecklist()+'</div>'+
+  '<button type="button" data-poc-print-choice="yes" aria-pressed="false">Yes, all four</button>'+
+  '<button type="button" data-poc-print-choice="no" aria-pressed="false">No, missing reports</button></div></div>'+
+  '<div class="lc-poc-print-response" data-poc-print-panel="yes" hidden><p class="lc-poc-print-instruction"><strong>Review before filing.</strong> Verify all three QC levels and today’s startup blank check. If one is missing, select “No, missing reports” to retrieve it.</p>'+sysmexBinderChecklist()+'</div>'+
   '<div class="lc-poc-print-response" data-poc-print-panel="no" hidden>'+
-  '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint QC1, QC2 and QC3 individually</strong><p>Menu → QC → select a QC file → Print → Current. Repeat for each of the three files. Do not select Chart when you need the current record.</p></div></div>'+
+  '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint only the missing QC level(s)</strong><p>Menu → QC → choose the correct QC file (Low, Normal or High) → Print → Current. Repeat for each missing level. Chart prints the full chart, not the selected record.</p></div></div>'+
   screenGallery(qcScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"These are illustrative pocH screens. Verify the correct file, level, lot and date on the actual analyzer."})+
-  '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint the daily blank check</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
+  '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint today’s blank check, if missing</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
   screenGallery(blankScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"Select the current dated blank-check record. Verify the printed values and file the accepted record."})+
   '</div>'+sysmexBinderChecklist()+'</div></section>';
 }
