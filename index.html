@@ -167,7 +167,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="pathfast-polish.css?v=20261028" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261029-waste-badge-v7" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261029-provider-notify-two-options-v2" media="all">
-  <link rel="stylesheet" href="equipment-art.css?v=20261031-febridx-front-v2" media="all">
+  <link rel="stylesheet" href="equipment-art.css?v=20261031-piccolo-main-v3" media="all">
 <style id="lab-central-shared-chevron-style">
 
 /* Shared chevron standard: same rounded-stroke SVG as Lab Calculator, consistent on all disclosures. */
@@ -360,7 +360,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
 <script src="pathfast-interactive.js?v=20261030-early-ten-minute-window-v1"></script>
 <script src="pathfast-clinical.js?v=20261031-compact-and-full-print-v1"></script>
-<script src="equipment-art.js?v=20261031-febridx-collection-v4""></script>
+<script src="equipment-art.js?v=20261031-piccolo-main-clia-v5"></script>
 <script src="step-illustrations.js?v=20261029-sofia-swab-v5"></script>
 <script src="sysmex-maintenance-art.js?v=20261031-poch-scroll-cue-v1"></script>
 <script src="pathfast-accurate-details.js?v=20261029-dome-clean-v3"></script>
@@ -1958,7 +1958,7 @@ function sectionRender(sec,tab){
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
- let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${['sysmex','pathfast','triage','torch','febridx'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
+ let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${sec.id==='febridx'?'<span class="ac-complex ac-waived ac-header-badge">CLIA WAIVED</span>':['sysmex','pathfast','triage','torch'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
  if(sec.id==='sendout')h+='<div class="sendout-reference-layout">';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
