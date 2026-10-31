@@ -63,9 +63,34 @@ function isQcGroup(sec,group){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
- const header='<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
+ const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|Running)$/.test(item.kind||"");
+ const header=isPiccoloScene
+  ?'<div class="qc-device-screen-top qc-px-screen-top"><strong>'+esc(item.screen)+'</strong></div>'
+  :'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
  let body="";
- if(item.kind==="status"){
+ if(item.kind==="piccoloHome"){
+  // Match the actual Piccolo Home screen: one yellow Analyze action with small utility icons.
+  body='<div class="qc-px-home-body"><div class="qc-px-yellow-button">Analyze</div>'+
+   '<div class="qc-px-home-tools"><span aria-hidden="true">▣</span><span aria-hidden="true">☞</span></div></div>'+
+   '<div class="qc-px-screen-footer">HOME</div>';
+ }else if(item.kind==="piccoloLoad"){
+  // Verified Load Disc prompt and blue Close bar from manufacturer literature.
+  body='<div class="qc-px-load-body"><p>Close drawer to<br>analyze a sample</p>'+
+   '<span class="qc-px-help-icon" aria-hidden="true">i</span></div>'+
+   '<div class="qc-px-blue-button">Close</div>';
+ }else if(item.kind==="piccoloType"){
+  body='<div class="qc-px-type-body"><div class="qc-px-type-choice">Patient</div>'+
+   '<div class="qc-px-type-choice qc-px-type-active">Control</div>'+
+   '<div class="qc-px-type-cancel">Cancel</div></div>';
+ }else if(item.kind==="piccoloLevel"){
+  // 1 or 2 is entered by the operator, never selected from a prepopulated level list.
+  body='<div class="qc-px-level-body"><div class="qc-px-level-field"><strong>1</strong></div>'+
+   '<div class="qc-px-keypad">'+["1","2","3","4","5","6","7","8","9","◂","0","▸"].map(v=>'<span>'+v+'</span>').join("")+'</div>'+
+   '<div class="qc-px-keypad-actions"><span>Cancel</span><b>Enter</b></div></div>';
+ }else if(item.kind==="piccoloRunning"){
+  body='<div class="qc-px-running-body"><div class="qc-px-running-disc" aria-hidden="true">◉</div>'+
+   '<strong>Analyzing sample...</strong><small>QC run in progress</small></div>';
+ }else if(item.kind==="status"){
   // Startup is a passive system display, not a set of selectable actions.
   body='<div class="qc-device-state"><div class="qc-device-state-title">'+esc(item.screen)+'</div>'+
    '<div class="qc-device-state-message"><span class="qc-device-state-indicator" aria-hidden="true"></span>'+
@@ -105,7 +130,7 @@ function screenPanel(item,brand,number){
   // Piccolo QC uses a typed numeric control level, not a menu of level choices.
   body='<div class="qc-device-screen-label">CONTROL · ENTER LEVEL</div>'+
    '<div class="qc-piccolo-level-entry"><span class="qc-piccolo-entry-caption">Control level</span>'+
-   '<div class="qc-piccolo-entry-field"><strong>1</strong><span>MANUAL ENTRY</span></div>'+
+   '<div class="qc-piccolo-entry-field"><strong>1</strong></div>'+
    '<p class="qc-piccolo-entry-help"><b>1</b> = Low control <span>·</span> <b>2</b> = High control</p>'+
    '<div class="qc-piccolo-entry-confirm">Enter <b>CONFIRM</b></div></div>'+
    '<div class="qc-device-screen-bottom"><span>Type 1 or 2</span><span>Then press Enter</span></div>';
@@ -126,12 +151,12 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-screen-bottom"><span>Back</span><span>Review selected action</span></div>';
  }
  return '<div class="qc-screen-reference" role="img" aria-label="Illustrated '+esc(brand)+' screen: '+esc(item.heading)+'">'+
-  top+'<div class="qc-device-face"><div class="qc-device-screen'+(item.kind==="status"?' qc-device-screen--status':'')+'">'+header+body+'</div></div>'+
+  top+'<div class="qc-device-face"><div class="qc-device-screen'+(item.kind==="status"?' qc-device-screen--status':'')+(isPiccoloScene?' qc-device-screen--piccolo':'')+'">'+header+body+'</div></div>'+
   '<p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
 }
 function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
- return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+'"'+
+ return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
   (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
   list.map((x,i)=>screenPanel(x,brand,i+1)).join("")+'</div>'+
   '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p>';
@@ -179,10 +204,11 @@ function qcClickStep(sec,groupId,title){
  const t=String(title).toLowerCase();
  let scenes=null;
  if(sec.id==="piccolo"&&/^(run qc|click analyze)/.test(t))scenes=[
-  {kind:"singleAction",heading:"Select Analyze",screen:"HOME",tip:"Select Analyze. Keep the drawer open until the control mode and level are entered."},
-  {heading:"Select Control",screen:"ANALYZE",items:["Patient","Control","Calibration"],focus:"Control",tip:"Select Control before closing the drawer."},
-  {kind:"manualLevel",heading:"Enter QC level",screen:"CONTROL",tip:"Manually enter 1 for Low or 2 for High, then press Enter."},
-  {kind:"piccoloClose",heading:"Close to start QC",screen:"CONTROL",tip:"Once the entered level is confirmed, select Close. The drawer closes and QC analysis starts automatically."}];
+  {kind:"piccoloHome",heading:"Select Analyze",screen:"Home",tip:"Select Analyze to open the disc drawer."},
+  {kind:"piccoloLoad",heading:"Insert disc and Close",screen:"Load Disc",tip:"Place the prepared QC disc in the open drawer, barcode up. Select Close to begin analysis."},
+  {kind:"piccoloType",heading:"Select Control",screen:"Select Type",tip:"When prompted after closing the drawer, select Control, not Patient."},
+  {kind:"piccoloLevel",heading:"Enter QC level",screen:"Enter Sample ID",tip:"Enter 1 for Low or 2 for High using the numeric keypad, then confirm the entry."},
+  {kind:"piccoloRunning",heading:"Confirm QC is running",screen:"Analysis",tip:"The analyzer verifies the disc and processes the control. Review the automatic printout when finished."}];
  else if(sec.id==="triage"&&/select run test|click run test/.test(t))scenes=[
   {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
   {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
@@ -201,7 +227,9 @@ function qcClickStep(sec,groupId,title){
   {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
   {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
  if(!scenes)return "";
- return '<div class="qc-instrument-walkthrough">'+screenGallery(scenes,getConfig(sec.id).brand,{disclaimer:sec.id==="piccolo"?"Verify the correct control level before selecting Close to begin the QC run.":null})+'</div>';
+ return '<div class="qc-instrument-walkthrough">'+
+ (sec.id==="piccolo"?'<p class="qc-px-scroll-cue">Scroll right to see every screen <span aria-hidden="true">→</span></p>':'')+
+ screenGallery(scenes,getConfig(sec.id).brand,{scroll:sec.id==="piccolo",piccolo:sec.id==="piccolo",disclaimer:sec.id==="piccolo"?"Screen layout is based on the manufacturer guide. Close starts the run; then select Control and enter the level when prompted.":null})+'</div>';
 }
 function binderSvg(){
  return '<svg class="qc-binder-art" viewBox="0 0 490 280" role="img" aria-label="Illustration of printed QC report being placed into a labeled ring binder">'+
