@@ -91,7 +91,7 @@ function screenCloseup(mode,kind){
  const h=kind==="hcg", cassetteLabel=h?"Cassette Test":"Strip Test";
  const bg='<rect x="468" y="44" width="275" height="328" rx="18" fill="#eaf2f4" stroke="#bfd3dc" stroke-width="3"/>'+
  '<rect x="483" y="64" width="245" height="255" rx="7" fill="#f9fbfb" stroke="#809ca8" stroke-width="3"/>';
- const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,"Ready",11,"#e3ecf0",false,"start");
+ const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":mode==="appearance"?"Select Appearance":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,mode==="appearance"?"Test in progress":"Ready",11,"#e3ecf0",false,"start");
  let body="";
  if(mode==="select"||mode==="qc"){
    const entries=mode==="qc"?["QC Strip Test","QC Cassette Test"]:["Instrument Set Up","Recall Results","Cassette Test","Strip Test"];
@@ -106,6 +106,16 @@ function screenCloseup(mode,kind){
        tx(499,186,h?"for cassette tests":"then place on test table",13,"#283b42",false,"start")+
        tx(499,216,h?"Place cassette on table":"Test pads facing up",13,"#283b42",false,"start")+
        '<rect x="615" y="259" width="104" height="51" rx="8" fill="#f0c1aa" stroke="#ba6348" stroke-width="2"/>'+tx(666,292,"START",19,"#382d2a");
+ }else if(mode==="appearance"){
+  body=tx(605,139,"Select Color and Clarity",15,"#2c4955")+
+       tx(605,159,"of urine sample",14,"#2c4955",false)+
+       '<rect x="498" y="184" width="215" height="51" rx="7" fill="#e8f3f1" stroke="#88bdb9" stroke-width="2.5"/>'+
+       tx(592,215,"Yellow and Clear",16,"#236f6c")+
+       '<path d="M690 204l11 7-11 7" fill="none" stroke="#267d77" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+
+       '<rect x="498" y="242" width="215" height="48" rx="7" fill="#f6f9f9" stroke="#adc5ce" stroke-width="2"/>'+
+       tx(600,272,"Other",17,"#345865")+
+       '<path d="M690 258l11 7-11 7" fill="none" stroke="#537d89" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+
+       tx(605,307,"Color → Clarity → Next",12,"#507682",false);
  }else if(mode==="analyzing"){
   body=tx(605,150,"Analyzing",20,"#263940")+
       '<rect x="504" y="188" width="200" height="20" rx="10" fill="#e5eaed" stroke="#a4b8c2"/>'+
@@ -135,7 +145,7 @@ function scene(kind,mode){
  if(mode==="table"){art=machine("table",isHcg?"hcg":"ua")+tableCloseup(isHcg?"hcg":"ua");}
  
  if(mode==="dispense")art=machine("dispense","hcg")+tableCloseup("hcg",true);
- if(mode==="select"||mode==="qc"||mode==="results")art=machine(mode,isHcg?"hcg":"ua")+screenCloseup(mode,kind);
+ if(mode==="select"||mode==="qc"||mode==="results"||mode==="appearance")art=machine(mode,isHcg?"hcg":"ua")+screenCloseup(mode,kind);
  if(mode==="analyzing")art=machine("reading",kind)+screenCloseup("analyzing",kind);
  if(mode==="start")art=machine("start",kind)+screenCloseup("start",kind);
  return svg(art,"Siemens CLINITEK Status+ analyzer and "+(mode==="specimen"?"urine cup with "+testName:mode==="select"?"selected "+testName+" screen":mode==="dip"?"urine dipstick dipped in urine":mode==="table"?testName+" on test table":mode==="start"?"Start button selected":"result display"));
@@ -184,10 +194,23 @@ function render(title,group){
     "Use the reversible test-table insert with the correct face upward: strip-side for urinalysis (pads up), flipped cassette-side for CLINITEST hCG. Keep the urine cup off the table.");
  if(/start|begin test|analyze/.test(t))return fig("Start the selected test",scene(kind,"start"),"Confirm test selection and start analysis.");
  if(/analyz|countdown|in progress|processing/.test(t))return fig("Analyzer processing screen",scene(kind,"analyzing"),"The analyzer pulls the table inward automatically. Do not push, pull, bump, or reposition the table during calibration and analysis.");
+ if(kind==="ua"&&!qc&&/select.*(color|clarity)|urine.*(color|clarity)|select appearance/.test(t))
+  return fig("Select Appearance · color and clarity",scene("ua","appearance"),
+   "During a Full or Custom UA strip test, visually inspect the urine. Select Yellow and Clear only when both apply. Otherwise select Other, choose the actual color, then the clarity, and select Next. The analyzer continues to Analyzing or Results.");
  if(/review|document|print|result/.test(t))
   return fig("Review and document results",scene(kind,"results"),"Verify the patient ID, QC status, and analyzer result before documenting.");
  if(qc)return fig("CLINITEK QC step",scene(kind,"select"),"Follow the correct QC workflow, materials, and prompts in the approved site SOP.");
  return fig("CLINITEK urine workflow",scene(kind,"specimen"),"Urine specimens only. Use the correct Siemens strip or CLINITEST cassette.");
+}
+// Keep the UA procedure sequence aligned with the manufacturer's Full Test flow.
+const clinitekSection=window.LAB_GUIDE_DATA?.sections?.find(sec=>sec.id==="clinitek");
+const uaGroup=clinitekSection?.groups?.find(group=>group.id==="ua-strip");
+if(uaGroup?.blocks?.length && !uaGroup.blocks.some(block=>/select urine color and clarity/i.test(block.text||""))){
+ const resultIndex=uaGroup.blocks.findIndex(block=>block.level===1&&/review and document results/i.test(block.text||""));
+ if(resultIndex>=0)uaGroup.blocks.splice(resultIndex,0,
+  {type:"list",level:1,text:"Select urine color and clarity"},
+  {type:"list",level:2,text:"During the Full or Custom urinalysis strip test, visually observe the urine when Select Appearance displays. Choose Yellow and Clear only if both accurately describe the specimen. Otherwise select Other, choose the appropriate color and then clarity, and tap Next. The analyzer continues to Analyzing or Results."}
+ );
 }
 window.LAB_CLINITEK_FOCUSED={render};
 })();
