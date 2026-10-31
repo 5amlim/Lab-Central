@@ -219,7 +219,7 @@ function render(section){
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
-  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+(id==='sysmex'?' ac-grid--sysmex':'')+(id==='torch'?' ac-grid--torch':'')+(id==='spotfire'?' ac-grid--spotfire':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
+  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+(id==='sysmex'?' ac-grid--sysmex':'')+(id==='torch'?' ac-grid--torch':'')+(id==='spotfire'?' ac-grid--spotfire':'')+(id==='sofia'?' ac-grid--sofia':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
   (references[id]?'<p class="ac-reference">Source: <a href="'+references[id]+'" target="_blank" rel="noopener noreferrer">Official test menu / manufacturer reference ↗</a></p>':'')+'</section>';
 }
