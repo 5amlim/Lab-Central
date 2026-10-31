@@ -51,7 +51,7 @@ const monthlyBinder=[
  {title:'PATHFAST calibration and QC printouts',desc:'File the 28-day calibration and QC printouts for active assays, with date, operator, lot and corrective action.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
  {title:'Piccolo Xpress QC printouts',desc:'File panel-specific control printouts for 30-day or SOP-required runs, including applicable new-lot and new-shipment checks.',role:'Authorized trained personnel' ,badges:['Printouts Needed']},
  {title:'Quidel Triage liquid QC printouts',desc:'File 30-day liquid QC records for each active assay lot, separate from daily electronic QC documentation.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
- {title:'Sofia 2 calibration check records',desc:'File 30-day optical calibration documentation and additional external QC records when new lots or shipments require them.',role:'Trained lab personnel / RN'},
+ {title:'Sofia 2 calibration check records',desc:'File the 30-day optical calibration printout, or the approved signed record if printing is unavailable. Include new-lot or new-shipment QC documentation when required.',role:'Trained lab personnel / RN',badges:['Printouts Needed']},
  {title:'Clinitek UA and hCG QC documentation',desc:'File market-required QC and new-bottle/lot results. Follow daily QC rules in markets that require them.',role:'Trained lab personnel / RN' ,badges:['Printouts Needed']},
  {title:'QC exceptions and corrective actions',desc:'File failed controls, repeated runs, instrument lockouts and resolution, with instrument printouts or approved records.',role:'Trained lab personnel / RN'}
 ];
