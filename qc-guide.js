@@ -236,6 +236,46 @@ function piccoloPatientLoadStep(){
   screenGallery(scenes,"Piccolo Xpress",{scroll:true,piccolo:true,disclaimer:"Screens are manufacturer-informed illustrations. Confirm prompts on your analyzer."})+
   '</section>';
 }
+
+function sysmexBinderChecklist(){
+ return '<div class="lc-poc-print-binder"><strong>File four reports in the Maintenance Log binder</strong>'+
+  '<div class="lc-poc-print-checklist">'+
+  ['QC1 · Low','QC2 · Normal','QC3 · High',"Today's blank check"].map(label=>'<div class="lc-poc-check-item"><span aria-hidden="true">□</span>'+esc(label)+'</div>').join('')+
+  '</div><p>Verify the accepted QC results, correct date, lot and operator on the printouts. File the three controls in the pocH Daily Control Log and the blank check in the blank-check section. Escalate missing or unacceptable results.</p></div>';
+}
+function sysmexPrintFallback(){
+ const qcScreens=configs.sysmex.steps;
+ const blankScreens=[
+  {kind:"mainMenu",heading:"Open Menu",tip:"From the main screen, open Menu."},
+  {heading:"Open stored data",screen:"MENU",items:["Str. Data","QC","Maint."],focus:"Str. Data",tip:"Select Str. Data to retrieve today's startup blank check."},
+  {heading:"Select today's blank check",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored results","Back"],focus:"__BLANK CHECK__",tip:"Select the BLANK CHECK record with today's date. Verify the background check is acceptable."},
+  {heading:"Print blank-check result",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Tap Print and file the report in the blank-check section of the Maintenance Log binder."}
+ ];
+ return '<section class="lc-poc-print-decision" data-poc-print-decision aria-label="pocH control result printing">'+
+  '<div class="lc-poc-print-prompt"><div><span class="lc-poc-print-eyebrow">AFTER QC · ACTION REQUIRED</span><h4>Did the results print automatically?</h4><p>All three QC levels and today’s blank check must be available for the binder. Select the matching route.</p></div>'+
+  '<div class="lc-poc-print-choices" role="group" aria-label="Was the QC printout generated?">'+
+  '<button type="button" data-poc-print-choice="yes" aria-pressed="false">Yes, printed</button>'+
+  '<button type="button" data-poc-print-choice="no" aria-pressed="false">No, reprint</button></div></div>'+
+  '<div class="lc-poc-print-response" data-poc-print-panel="yes" hidden><p class="lc-poc-print-instruction"><strong>Review before filing.</strong> Check that all three levels printed, along with today’s startup blank check. Missing any one report? Choose “No, reprint” for the retrieval steps.</p>'+sysmexBinderChecklist()+'</div>'+
+  '<div class="lc-poc-print-response" data-poc-print-panel="no" hidden>'+
+  '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint QC1, QC2 and QC3 individually</strong><p>Menu → QC → select a QC file → Print → Current. Repeat for each of the three files. Do not select Chart when you need the current record.</p></div></div>'+
+  screenGallery(qcScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"These are illustrative pocH screens. Verify the correct file, level, lot and date on the actual analyzer."})+
+  '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint today's blank check</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
+  screenGallery(blankScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"Select the current dated blank-check record. Verify the printed values and file the accepted record."})+
+  '</div>'+sysmexBinderChecklist()+'</div></section>';
+}
+if(!window.__labPocPrintDecisionBound){
+ window.__labPocPrintDecisionBound=true;
+ document.addEventListener('click',function(event){
+  const btn=event.target.closest?.('[data-poc-print-choice]');
+  if(!btn)return;
+  const container=btn.closest('[data-poc-print-decision]');
+  if(!container)return;
+  const selected=btn.getAttribute('data-poc-print-choice');
+  container.querySelectorAll('[data-poc-print-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+  container.querySelectorAll('[data-poc-print-panel]').forEach(panel=>{panel.hidden=panel.getAttribute('data-poc-print-panel')!==selected;});
+ });
+}
 function sysmexStep(sec,group,title){
  if(sec.id!=="sysmex"||group!=="daily-qc")return "";
  const t=String(title).toLowerCase();
@@ -268,8 +308,8 @@ function sysmexStep(sec,group,title){
   {heading:"Open QC and check the lot",screen:"MAIN",items:["QC","Result","Shutdown"],focus:"QC",tip:"Select QC, choose the correct Low / Normal / High file and verify the control lot."},
   {kind:"qcFiles",heading:"Select QC1, QC2 or QC3",tip:"Choose the correct active QC file: QC1 Low, QC2 Normal or QC3 High. Verify lot and expiration."},
   {heading:"Run the selected QC level",screen:"QC FILE",items:["Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
-  {heading:"Accept and print result",screen:"QC RESULT",items:["Quit","Print (if needed)","Back"],focus:"Quit",tip:"Select Quit after reviewing results; printout is generated automatically when the printer option is configured."}
- ],"Sysmex pocH-100i",{scroll:true})+'</div>';
+  {heading:"Accept and print result",screen:"QC RESULT",items:["Quit","Print (if needed)","Back"],focus:"Quit",tip:"Review the result, then select Quit. An automatic printout is generated only when the printer setting is enabled. Otherwise follow the reprint route below."}
+ ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>';
  return "";
 }
 function qcClickStep(sec,groupId,title){
