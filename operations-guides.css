@@ -373,3 +373,134 @@
 @media print{
  .sendout-reference-shortcuts .ops-link-card{break-inside:avoid}
 }
+
+
+/* Lab Sendout Logistics: consolidated landing page and references. */
+.sendout-detail-header{margin-bottom:18px}
+.sendout-reference-layout{width:100%;max-width:100%;min-width:0}
+.sendout-reference-layout>.sendout-reference-notice{
+ display:flex;align-items:flex-start;gap:11px;
+ margin:0 0 20px;padding:12px 15px;border:1px solid #e9d9b9;
+ background:#fffaf0;border-radius:11px;font-size:12px;line-height:1.6;
+ color:#826942;
+}
+.sendout-reference-layout>.sendout-reference-notice strong{color:#755522}
+.sendout-reference-layout>.sendout-reference-tabs{
+ display:flex;flex-wrap:wrap;align-items:center;gap:7px;
+ margin:0;padding:0 0 14px;overflow-x:visible;
+ border-bottom:1px solid #dce7ee;
+}
+.sendout-reference-layout>.sendout-reference-tabs .tab{
+ min-height:39px;padding:9px 14px;
+ border-radius:9px;background:#f7fafc;border:1px solid #d9e4eb;
+ font-size:12px;font-weight:780;white-space:normal;
+}
+.sendout-reference-layout>.sendout-reference-tabs .tab.active{
+ background:#e8f5f2;border-color:#77bdb3;color:#0c726e;
+ box-shadow:inset 0 -2px #1d9385;
+}
+.sendout-reference-layout>.tab-content{padding:22px 0 0;min-width:0}
+.sendout-logistics-overview{color:#294c61}
+.sendout-logistics-heading{margin:0 0 14px}
+.sendout-logistics-heading>span{
+ display:block;margin-bottom:5px;color:#15827e;font-weight:850;
+ letter-spacing:.105em;font-size:10.5px;
+}
+.sendout-logistics-heading h2{
+ font-size:20px;line-height:1.3;letter-spacing:-.025em;font-weight:830;
+ color:#28445c;margin:0 0 5px;
+}
+.sendout-logistics-heading p{
+ margin:0;max-width:870px;font-size:12.5px;line-height:1.6;color:#698395;
+}
+.sendout-logistics-primary-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+ margin:0 0 29px;
+}
+.sendout-logistics-primary{
+ all:unset;box-sizing:border-box;cursor:pointer;
+ display:flex;align-items:flex-start;gap:15px;
+ min-height:163px;padding:20px;background:#fff;
+ border:1px solid #dce7ee;border-radius:15px;
+ box-shadow:0 3px 12px rgba(38,72,95,.035);
+ transition:border-color .15s,box-shadow .15s,background-color .15s;
+}
+.sendout-logistics-primary:hover,.sendout-logistics-reference:hover{
+ border-color:#88bdb8;background:#fbfefd;
+ box-shadow:0 8px 21px rgba(30,91,111,.09);
+}
+.sendout-logistics-primary-icon{
+ flex:0 0 45px;display:grid;place-items:center;
+ width:45px;height:45px;border-radius:12px;
+ color:#27819c;background:#e9f4fa;
+}
+.sendout-logistics-primary:nth-child(2) .sendout-logistics-primary-icon{
+ color:#168d82;background:#e5f6f1;
+}
+.sendout-logistics-primary-icon svg{width:22px;height:22px}
+.sendout-logistics-primary-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+.sendout-logistics-primary-body small{
+ color:#768fa0;font-size:10px;letter-spacing:.09em;font-weight:850;
+}
+.sendout-logistics-primary-body strong{
+ color:#22485e;font-size:17px;font-weight:830;line-height:1.3;
+}
+.sendout-logistics-primary-body>span{
+ color:#698292;font-size:12px;line-height:1.55;
+}
+.sendout-logistics-primary-body b{
+ display:inline-flex;align-items:center;gap:9px;
+ color:#167c91;font-size:12px;font-weight:850;margin-top:12px;
+}
+.sendout-logistics-secondary{padding-top:23px;border-top:1px solid #e1eaf0}
+.sendout-logistics-reference-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+}
+.sendout-logistics-reference{
+ all:unset;box-sizing:border-box;cursor:pointer;
+ display:flex;align-items:center;gap:12px;min-width:0;
+ background:#fff;border:1px solid #dce7ee;
+ border-radius:12px;padding:15px 16px;min-height:85px;
+ transition:border-color .15s,box-shadow .15s,background-color .15s;
+}
+.sendout-logistics-ref-icon{
+ flex:0 0 39px;width:39px;height:39px;border-radius:10px;
+ display:grid;place-items:center;background:#eef7f6;color:#208a86;
+}
+.sendout-logistics-ref-icon svg{width:19px;height:19px}
+.sendout-logistics-ref-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.sendout-logistics-ref-text strong{
+ color:#2c5367;font-size:13px;font-weight:830;line-height:1.35;
+}
+.sendout-logistics-ref-text small{
+ font-size:11.2px;line-height:1.48;color:#708998;
+}
+.sendout-logistics-arrow{flex:none;font-size:18px;color:#6d9eaa}
+.sendout-logistics-primary:focus-visible,
+.sendout-logistics-reference:focus-visible{
+ outline:3px solid #75bcb2;outline-offset:3px;
+}
+.sendout-logistics-clinic-intro{margin:0 0 14px}
+.sendout-logistics-clinic-intro h2{margin:0 0 5px;color:#264b61;font-size:19px}
+.sendout-logistics-clinic-intro p{font-size:12.5px;line-height:1.6;color:#688597;margin:0}
+.sendout-reference-layout .tube-ref{margin-top:0}
+.sendout-reference-layout .lcr{margin-top:0}
+@media(max-width:920px){
+ .sendout-logistics-primary-grid{grid-template-columns:1fr;gap:11px}
+ .sendout-logistics-primary{min-height:auto}
+}
+@media(max-width:720px){
+ .sendout-reference-layout>.sendout-reference-tabs{
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;
+ }
+ .sendout-reference-layout>.sendout-reference-tabs .tab{white-space:nowrap}
+ .sendout-logistics-reference-grid{grid-template-columns:1fr}
+ .sendout-logistics-primary{padding:16px}
+ .sendout-logistics-heading h2{font-size:18px}
+ .sendout-logistics-reference{padding:12px}
+}
+@media print{
+ .sendout-logistics-primary,.sendout-logistics-reference{break-inside:avoid}
+ .sendout-reference-layout>.sendout-reference-tabs{display:none}
+}
