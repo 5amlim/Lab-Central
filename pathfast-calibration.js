@@ -526,5 +526,10 @@ if(typeof document!=='undefined' && typeof document.addEventListener==='function
   }
  });
 }
-window.LAB_PATHFAST_UI={render:render,lanes:lanes,assays:groups.map(x=>x.id)};
+function renderAllForPrint(){
+ const oldAll=showAllSteps,oldStep=currentStep;
+ try{showAllSteps=true;return render();}
+ finally{showAllSteps=oldAll;currentStep=oldStep;}
+}
+window.LAB_PATHFAST_UI={render:render,renderAllForPrint:renderAllForPrint,hasSelectedPanel:function(){return !!selectedGroup();},selectedPanelLabel:function(){return selectedGroup()?.label||'';},lanes:lanes,assays:groups.map(x=>x.id)};
 })();
