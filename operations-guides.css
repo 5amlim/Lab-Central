@@ -243,3 +243,133 @@
  .sendout-reference-shortcuts{grid-template-columns:1fr}
  .sendout-reference-shortcuts .ops-link-card{min-height:0}
 }
+
+/* Lab send-outs: clear hierarchy between related workflows and the site guide. */
+.sendout-detail-header .detail-title{margin-top:11px}
+.sendout-detail-header .detail-subtitle{color:#52758a;font-size:13px}
+.sendout-reference-layout{--sendout-ink:#264b62;--sendout-teal:#14867e}
+.sendout-reference-layout .sendout-page-lead{
+ margin:10px 0 0;
+ font-size:13px;
+ line-height:1.65;
+ color:#607f90;
+ max-width:850px;
+}
+.sendout-reference-actions{margin-top:25px}
+.sendout-reference-heading{margin:0 0 14px}
+.sendout-reference-eyebrow{
+ display:block;margin:0 0 5px;
+ font-size:10px;line-height:1.4;
+ font-weight:850;letter-spacing:.12em;
+ color:var(--sendout-teal);
+}
+.sendout-reference-heading h2{
+ margin:0;color:var(--sendout-ink);
+ font-size:19px;font-weight:830;line-height:1.35;letter-spacing:-.02em;
+}
+.sendout-reference-heading p{
+ margin:4px 0 0;max-width:930px;
+ font-size:12.5px;line-height:1.55;color:#6f8797;
+}
+.sendout-reference-layout .sendout-reference-shortcuts{
+ margin-top:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;
+}
+.sendout-reference-layout .sendout-reference-shortcuts .ops-link-card{
+ display:grid;grid-template-columns:42px minmax(0,1fr);
+ grid-template-rows:auto auto;
+ column-gap:13px;row-gap:9px;
+ margin:0;min-height:148px;padding:19px;
+ border:1px solid #d9e6eb;
+ background:#fff;
+ border-radius:13px;
+ box-shadow:0 2px 9px rgba(28,70,92,.035);
+ align-content:center;
+}
+.sendout-reference-layout .sendout-shortcut-icon{
+ grid-column:1;grid-row:1 / span 2;align-self:start;
+ display:grid;place-items:center;
+ width:42px;height:42px;border-radius:11px;
+ color:#207e89;background:#e9f4f7;
+}
+.sendout-reference-layout .sendout-shortcut-icon svg{width:21px;height:21px}
+.sendout-reference-layout .ops-link-card:nth-child(2) .sendout-shortcut-icon{color:#168279;background:#e4f4ef}
+.sendout-reference-layout .sendout-shortcut-copy{grid-column:2;min-width:0}
+.sendout-reference-layout .sendout-shortcut-copy small{
+ display:block;color:#7b95a2;font-size:10px;
+ font-weight:800;letter-spacing:.09em;margin:0 0 4px;
+}
+.sendout-reference-layout .sendout-shortcut-copy strong{
+ display:block;color:#24536a;font-weight:830;font-size:14px;line-height:1.45;
+}
+.sendout-reference-layout .sendout-shortcut-copy p{
+ margin:5px 0 0;color:#617f8f;font-size:12px;line-height:1.55;
+}
+.sendout-reference-layout .sendout-reference-shortcuts .ops-link-card button{
+ grid-column:2;justify-self:start;align-self:end;
+ min-height:36px;padding:9px 12px;
+ border-radius:8px;background:#24759a;
+ font-weight:750;font-size:11.5px;
+ display:inline-flex;align-items:center;gap:8px;
+}
+.sendout-reference-layout .sendout-reference-shortcuts .ops-link-card button:hover{background:#1d617e}
+.sendout-reference-site{
+ margin:28px 0 0;padding-top:23px;
+ border-top:1px solid #dce8ed;
+}
+.sendout-reference-notice{
+ display:flex;align-items:center;gap:10px;
+ margin-top:12px;padding:11px 13px;
+ border:1px solid #f0e0c3;background:#fffaf1;
+ border-radius:10px;color:#876c41;
+ font-size:11.75px;line-height:1.6;
+}
+.sendout-reference-notice strong{color:#775524}
+.sendout-reference-notice-icon{
+ display:grid;place-items:center;flex:0 0 22px;
+ width:22px;height:22px;border-radius:7px;
+ background:#f8e9c9;color:#97681d;font-weight:850;font-size:12px;
+}
+.sendout-reference-layout .sendout-reference-tabs{
+ display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;
+ margin:14px 0 0;padding:0 0 11px;
+ border-bottom:1px solid #dbe7ec;
+}
+.sendout-reference-layout .sendout-reference-tabs .tab{
+ border:1px solid #d6e3eb;border-radius:9px;
+ padding:9px 14px;min-height:38px;
+ color:#56768b;background:#f7fafc;
+ font-weight:760;font-size:12px;white-space:nowrap;
+}
+.sendout-reference-layout .sendout-reference-tabs .tab.active{
+ color:#147b72;background:#e9f6f2;border-color:#98cec4;
+ box-shadow:inset 0 -2px #1b9388;
+}
+.sendout-reference-layout .sendout-reference-tabs .tab:hover{border-color:#8dc4be;color:#16756c}
+.sendout-reference-layout>.sendout-reference-site>.tab-content{padding-top:13px}
+.sendout-reference-layout .lc-sendout{margin:0 0 18px}
+.sendout-reference-layout .lc-market-choice{
+ padding:18px 20px;
+ background:#eff7f8;
+ border-radius:17px 17px 0 0;
+}
+.sendout-reference-layout .lc-picker-lead strong{font-size:16px}
+.sendout-reference-layout .lc-picker-lead p{margin:4px 0 13px;font-size:12px}
+@media(min-width:1050px){
+ .sendout-reference-layout .sendout-reference-shortcuts .ops-link-card{
+  grid-template-columns:42px minmax(0,1fr);
+ }
+}
+@media(max-width:980px){
+ .sendout-reference-layout .sendout-reference-shortcuts{grid-template-columns:1fr}
+ .sendout-reference-layout .sendout-reference-shortcuts .ops-link-card{min-height:0}
+}
+@media(max-width:620px){
+ .sendout-reference-site{margin-top:22px;padding-top:19px}
+ .sendout-reference-layout .sendout-reference-shortcuts .ops-link-card{padding:15px;column-gap:11px}
+ .sendout-reference-layout .lc-market-choice{padding:14px}
+ .sendout-reference-layout .sendout-reference-heading h2{font-size:17px}
+ .sendout-reference-layout .sendout-reference-notice{align-items:flex-start}
+}
+@media print{
+ .sendout-reference-shortcuts .ops-link-card{break-inside:avoid}
+}
