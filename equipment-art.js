@@ -489,17 +489,73 @@ function body(shape,a){
  }
  return v;
 }
+
+/* Front-view Piccolo Xpress reference for the MAIN equipment illustration only.
+   Other Piccolo training, cartridge, loading and homepage images are unchanged. */
+function piccoloMainReferenceSvg(){
+ return [
+ '<svg class="equipment-svg piccolo-main-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 590" role="img" aria-label="Front view illustration of ABAXIS Piccolo Xpress chemistry analyzer with tall black touchscreen enclosure, deep blue lower case, silver button and white base">',
+ '<defs>',
+ '<linearGradient id="pm-shell" x1="0" y1="0" x2="1" y2=".15"><stop stop-color="#0a1527"/><stop offset=".12" stop-color="#202e45"/><stop offset=".48" stop-color="#0d1423"/><stop offset=".88" stop-color="#131b2b"/><stop offset="1" stop-color="#030a18"/></linearGradient>',
+ '<linearGradient id="pm-face" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#28364b"/><stop offset=".36" stop-color="#0b1020"/><stop offset="1" stop-color="#030715"/></linearGradient>',
+ '<linearGradient id="pm-glass" x1="0" y1="0" x2=".85" y2="1"><stop stop-color="#536478"/><stop offset=".36" stop-color="#252f41"/><stop offset=".73" stop-color="#1c2636"/><stop offset="1" stop-color="#0c1526"/></linearGradient>',
+ '<linearGradient id="pm-blue" x1="0" y1="0" x2="1" y2=".3"><stop stop-color="#06355d"/><stop offset=".16" stop-color="#135d94"/><stop offset=".5" stop-color="#07457c"/><stop offset=".87" stop-color="#07548c"/><stop offset="1" stop-color="#002c58"/></linearGradient>',
+ '<linearGradient id="pm-white" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fafdfd"/><stop offset=".62" stop-color="#e9eef1"/><stop offset="1" stop-color="#c9d2d9"/></linearGradient>',
+ '<radialGradient id="pm-light" cx=".4" cy=".25" r=".65"><stop stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#8da7b5"/></radialGradient>',
+ '</defs>',
+ '<ellipse cx="200" cy="572" rx="118" ry="11" fill="#d9e6ec" opacity=".46"/>',
+ // Narrow, slightly rounded cabinet with a blue rim around its black face.
+ '<path d="M95 55Q97 25 131 20H268Q303 22 306 55V453Q305 478 286 493H114Q94 478 94 451Z" fill="#092e55" stroke="#4b8ebd" stroke-width="2.2"/>',
+ '<path d="M104 57Q105 36 131 34H268Q294 36 296 56V343H104Z" fill="url(#pm-shell)" stroke="#263d58" stroke-width="1.8"/>',
+ '<path d="M111 58Q113 40 134 40H266Q286 40 290 60V337H111Z" fill="url(#pm-face)" opacity=".94"/>',
+ '<path d="M110 61Q113 44 135 41H266Q282 42 288 57" fill="none" stroke="#637c96" stroke-width="1.5" opacity=".55"/>',
+ // Tall dark inset touchscreen and a subtle light reflection.
+ '<rect x="126" y="75" width="147" height="236" rx="2" fill="#050b16" stroke="#202c3e" stroke-width="2"/>',
+ '<rect x="131" y="79" width="138" height="228" rx="1" fill="url(#pm-glass)"/>',
+ '<path d="M134 83H263L265 180Q207 179 133 214Z" fill="#bbc4d0" opacity=".065"/>',
+ '<path d="M251 81L266 83L266 300L253 300Z" fill="#17263b" opacity=".25"/>',
+ '<path d="M136 86H139V300H136Z" fill="#8091a2" opacity=".14"/>',
+ // ABAXIS mark above the inactive screen.
+ '<text x="200" y="58" fill="#e5eaef" font-size="9" font-weight="800" font-family="Arial,Helvetica,sans-serif" text-anchor="middle" letter-spacing=".7">ABAXIS</text>',
+ '<path d="M195 50L200 46L205 50" fill="none" stroke="#d25a64" stroke-width="1.2"/>',
+ '<path d="M103 337H296" stroke="#556779" stroke-width="1.2" opacity=".65"/>',
+ '<path d="M103 344H296" stroke="#020c19" stroke-width="5"/>',
+ // Face branding above divider, in the same location as supplied photo.
+ '<text x="162" y="333" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="500" fill="#2d7aae" text-anchor="middle">piccolo</text>',
+ '<text x="224" y="330" font-family="Arial,Helvetica,sans-serif" font-size="12" font-style="italic" fill="#d2d8e0" text-anchor="middle">Xpress</text>',
+ '<path d="M215 317Q227 311 239 320" stroke="#ca4359" stroke-width="1.6" fill="none"/>',
+ '<text x="194" y="342" font-family="Arial,Helvetica,sans-serif" font-size="6.4" letter-spacing="1.1" text-anchor="middle" fill="#5682a1">CHEMISTRY ANALYZER</text>',
+ // Blue lower enclosure, with sides, sculpted top lip and subtle shading.
+ '<path d="M97 347Q99 359 108 364L112 469Q112 492 134 500H268Q289 496 294 471L297 347Z" fill="url(#pm-blue)" stroke="#164a75" stroke-width="2.4"/>',
+ '<path d="M106 348H294Q291 374 271 377H129Q112 372 106 348Z" fill="#154b7a" opacity=".7"/>',
+ '<path d="M110 377V466Q110 481 120 491" stroke="#66a9cf" stroke-width="4" fill="none" opacity=".4"/>',
+ '<path d="M285 379V474Q281 489 268 495" stroke="#002c56" stroke-width="5" fill="none" opacity=".55"/>',
+ '<rect x="120" y="388" width="158" height="86" rx="5" fill="#025080" opacity=".1"/>',
+ // Right-side round metallic status/button.
+ '<circle cx="264" cy="433" r="10" fill="#263b4e" stroke="#7593a4" stroke-width="1.5"/>',
+ '<circle cx="264" cy="432" r="7.5" fill="url(#pm-light)" stroke="#d4e0e4" stroke-width="1.3"/>',
+ '<circle cx="262" cy="430" r="2" fill="#fff" opacity=".9"/>',
+ // White foot/base; slightly sloped top rim.
+ '<path d="M110 491L292 491L293 542Q292 554 281 559H118Q109 555 108 543Z" fill="url(#pm-white)" stroke="#b5c4cd" stroke-width="2"/>',
+ '<path d="M113 498Q198 502 288 498" stroke="#fff" stroke-width="5" fill="none" opacity=".9"/>',
+ '<path d="M113 552Q201 548 287 552" stroke="#b8c7cf" stroke-width="2" opacity=".55" fill="none"/>',
+ '<path d="M111 540L109 551Q114 560 125 560" fill="#ccd5db" opacity=".42"/>',
+ '</svg>'
+ ].join('');
+}
+
 function render(sec){
  if(!sec||!Object.prototype.hasOwnProperty.call(specs,sec.id))return "";
  const item=specs[sec.id],a=item.accent,label=item.label;
  const core=(sec.id==="torch"||sec.id==="spotfire")?"":body(item.shape,a);
- const svg=sec.id==="febridx"?febridxDeviceSvg("ready").replace("<svg ","<svg class=\"equipment-svg\" "):
+ const svg=sec.id==="piccolo"?piccoloMainReferenceSvg():
+ sec.id==="febridx"?febridxDeviceSvg("ready").replace("<svg ","<svg class=\"equipment-svg\" "):
  (sec.id==="torch"||sec.id==="spotfire")&&window.LAB_BIOFIRE_ART?.analyzer
    ?window.LAB_BIOFIRE_ART.analyzer(sec.id,"ready").replace('<svg ','<svg class="equipment-svg" ')
    :'<svg class="equipment-svg" viewBox="'+(sec.id==="pathfast"?"0 0 740 350":"0 0 740 310")+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simplified illustration of '+String(sec.title).replace(/"/g,"&quot;")+' instrument">'+
  '<defs><linearGradient id="equip-white" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#cfdee5"/></linearGradient></defs>'+
  '<ellipse cx="376" cy="273" rx="230" ry="16" fill="#b7cad5" opacity=".23"/>'+core+'</svg>';
- return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
+ return '<section class="equipment-overview '+(sec.id==="torch"?"torch-overview":sec.id==="piccolo"?"piccolo-overview":"")+'" aria-label="'+String(sec.title).replace(/"/g,"&quot;")+' visual reference"><div class="equipment-art">'+svg+'</div>'+
  '<div class="equipment-information"><div class="equipment-overline">EQUIPMENT REFERENCE</div><h2>'+sec.title+'</h2><p>'+label+'</p>'+
  '<dl><div><dt>Specimen</dt><dd>'+item.tip+'</dd></div><div><dt>Instructions</dt><dd>Use the procedure tabs for operation, QC and handling.</dd></div></dl>'+
  '</div></section>';
