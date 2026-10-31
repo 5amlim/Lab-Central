@@ -387,9 +387,13 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 (()=>{
 'use strict';
 const DATA=window.LAB_GUIDE_DATA||{sections:[],videoSlots:[],tubes:[]};
-const all=DATA.sections;
-const labContainers=all.find(s=>s.id==='tubes');
-if(labContainers){labContainers.title='Lab Container Reference';labContainers.subtitle='Illustrated Quest, Labcorp and Cedars specimen containers';}
+// The container catalog and Quest collection notes now belong to Lab Sendout Logistics.
+const all=DATA.sections.filter(s=>s.id!=='tubes');
+const sendoutLogistics=all.find(s=>s.id==='sendout');
+if(sendoutLogistics){
+ sendoutLogistics.title='Lab Sendout Logistics';
+ sendoutLogistics.subtitle='Receiving labs, clinic pickups, specimen containers and transport';
+}
 const homeCollectionSection=all.find(s=>s.id==='outside');
 if(homeCollectionSection){homeCollectionSection.title='Home stool & urine collection';homeCollectionSection.subtitle='Take-home kits & patient guidance';homeCollectionSection.category='Home collection';}
 const categories=['Analyzers','Point of care','Home collection','Send-outs','Quality & compliance','Operations','Archived'];
@@ -441,7 +445,14 @@ function navigate(id,tab='overview'){
 function sectionFromHash(){
  const hash=decodeURIComponent(location.hash.replace(/^#/,''))||'home';
  const [id,...rest]=hash.split('/');
- return {id,tab:rest.join('/')||'overview'};
+ const tab=rest.join('/')||'overview';
+ // Preserve previous Lab Container Reference bookmarks and direct links.
+ if(id==='tubes'){
+  const oldTabs={overview:'containers',gallery:'containers',general:'collection',
+    'for-lockbox-pickups':'lockbox',resources:'resources'};
+  return {id:'sendout',tab:oldTabs[tab]||'containers'};
+ }
+ return {id,tab};
 }
 function showNav(){
  const nav=el('sidebarNav');const r=sectionFromHash();
@@ -1837,8 +1848,8 @@ function tubeReferencePanel(tab){
  }else{
   h+='<div class="tr-grid">'+
   '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('test-tube-2')+'</span><div><span class="tr-card-label">TUBE SELECTION</span><h3>Use the test-specific directory</h3></div></div><p><strong>Not every tube is listed here.</strong> Confirm the correct container, sample volume, processing, and storage requirements for each ordered test in the Quest Test Directory.</p><div class="tr-card-actions"><a class="tr-external" href="https://testdirectory.questdiagnostics.com/test/home" target="_blank" rel="noopener noreferrer">Open Quest Test Directory ↗</a></div></article>'+
-  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('package')+'</span><div><span class="tr-card-label">HANDLING</span><h3>Frozen and refrigerated labs</h3></div></div><p>Verify which temperature each specimen requires. <strong>Frozen, refrigerated, and room-temperature specimens</strong> may need different transport bags and pickup instructions.</p><div class="tr-card-actions"><button type="button" class="tr-nav-button" data-gotab="for-lockbox-pickups">View lockbox guidance <span aria-hidden="true">→</span></button></div></article></div>'+
-  '<div class="tr-reference-quick"><div><strong>Need to identify a specimen tube?</strong><p>See photos of the containers included in this reference.</p></div><button type="button" class="tr-nav-button" data-gotab="gallery">Open tube photos <span aria-hidden="true">→</span></button></div>';
+  '<article class="tr-card"><div class="tr-card-top"><span class="tr-card-icon" aria-hidden="true">'+svg('package')+'</span><div><span class="tr-card-label">HANDLING</span><h3>Frozen and refrigerated labs</h3></div></div><p>Verify which temperature each specimen requires. <strong>Frozen, refrigerated, and room-temperature specimens</strong> may need different transport bags and pickup instructions.</p><div class="tr-card-actions"><button type="button" class="tr-nav-button" data-gotab="lockbox">View lockbox guidance <span aria-hidden="true">→</span></button></div></article></div>'+
+  '<div class="tr-reference-quick"><div><strong>Need to identify a specimen tube?</strong><p>See photos of the containers included in this reference.</p></div><button type="button" class="tr-nav-button" data-gotab="containers">Open container gallery <span aria-hidden="true">→</span></button></div>';
  }
  return h+'</section>';
 }
@@ -1901,12 +1912,45 @@ function supplyVendorTeaser(id){
  })[id]||'Vendor ordering reference';
 }
 
+function sendoutLogisticsOverview(){
+ const card=(tab,icon,title,desc)=>{
+  return '<button type="button" class="sendout-logistics-reference" data-gotab="'+tab+'">'+
+   '<span class="sendout-logistics-ref-icon" aria-hidden="true">'+svg(icon)+'</span>'+
+   '<span class="sendout-logistics-ref-text"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
+   '<span class="sendout-logistics-arrow" aria-hidden="true">→</span></button>';
+ };
+ return '<section class="sendout-logistics-overview" aria-label="Lab sendout logistics overview">'+
+  '<div class="sendout-logistics-heading"><span>CORE WORKFLOWS</span><h2>Prepare and hand off specimens</h2><p>Use the ordering workflow first. After collection and processing, complete the tracking and handoff documentation.</p></div>'+
+  '<div class="sendout-logistics-primary-grid">'+
+   '<button type="button" class="sendout-logistics-primary" data-go="orders">'+
+    '<span class="sendout-logistics-primary-icon">'+svg('clipboard-check')+'</span>'+
+    '<span class="sendout-logistics-primary-body"><small>01 · ORDER &amp; COLLECT</small><strong>Sendout lab workflows</strong><span>External requisitions, Athena documentation, Lab Calculator and collection.</span><b>Open workflows <span aria-hidden="true">→</span></b></span></button>'+
+   '<button type="button" class="sendout-logistics-primary" data-go="sendout-log">'+
+    '<span class="sendout-logistics-primary-icon">'+svg('file-text')+'</span>'+
+    '<span class="sendout-logistics-primary-body"><small>02 · PROCESS &amp; TRACK</small><strong>Lab Sendout Log</strong><span>Separate and label transport bags, record photos and document pickup or shipment.</span><b>Open Sendout Log <span aria-hidden="true">→</span></b></span></button>'+
+  '</div>'+
+  '<div class="sendout-logistics-heading sendout-logistics-secondary"><span>REFERENCE LIBRARY</span><h2>Find a collection or transport reference</h2><p>Use the tabs above or select the reference you need.</p></div>'+
+  '<div class="sendout-logistics-reference-grid">'+
+   card('clinics','map-pin','Receiving labs by clinic','Market-specific couriers, pickup windows and packaging')+
+   card('containers','test-tube-2','Container gallery','Quest, Labcorp and Cedars illustrated specimen containers')+
+   card('collection','clipboard-check','Collection &amp; transport','Quest collection requirements and temperature guidance')+
+   card('lockbox','package','Quest lockbox pickups','Frozen and refrigerated pouches, labels and handoff')+
+  '</div>'+
+ '</section>';
+}
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec);
- const hasVideo=sec.id==='pathfast';const hasGallery=sec.id==='tubes';const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
+ const hasVideo=sec.id==='pathfast';const hasGallery=false;const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
- const tabs=sec.id==='sendout'?[{id:'overview',title:'Market / location guide'},{id:'resources',title:'Resources'}]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ const tabs=sec.id==='sendout'?[
+  {id:'overview',title:'Overview'},
+  {id:'clinics',title:'By clinic'},
+  {id:'containers',title:'Container gallery'},
+  {id:'collection',title:'Collection notes'},
+  {id:'lockbox',title:'Quest lockbox'},
+  {id:'resources',title:'Resources'}
+ ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'}]:[]),...(sec.id==='piccolo'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -1916,31 +1960,17 @@ function sectionRender(sec,tab){
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
  let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${['sysmex','pathfast','triage','torch','febridx'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
- if(sec.id==='sendout')h+='<div class="sendout-reference-layout"><p class="sendout-page-lead">Site-specific instructions for specimen packaging, courier pickup, and receiving laboratory requirements.</p>';
+ if(sec.id==='sendout')h+='<div class="sendout-reference-layout">';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
 
  if(sec.id==='supplies')h+=`<section class="ev-supply-link" aria-label="Envi purchasing guide"><div class="ev-supply-link-icon">${svg('package')}</div><div class="ev-supply-link-copy"><span>ENVI · PURCHASE ORDER ENTRY</span><strong>Place a supply order through Envi</strong><p>Illustrated workflow for selecting a clinic, finding items, checking quantities, and submitting Pending purchase orders.</p></div><button type="button" data-go="envi-ordering">Open Envi Ordering <span aria-hidden="true">→</span></button></section>`;
 
- if(sec.id==='sendout')h+=`<section class="sendout-reference-actions" aria-labelledby="sendout-quick-links-heading">
-  <div class="sendout-reference-heading"><span class="sendout-reference-eyebrow">QUICK ACCESS</span><h2 id="sendout-quick-links-heading">Open a sendout workflow</h2><p>Use the order workflow before collection, then the Sendout Log for the specimen handoff.</p></div>
-  <div class="sendout-reference-shortcuts">
-   <div class="ops-link-card">
-    <span class="sendout-shortcut-icon" aria-hidden="true">${svg('clipboard-check')}</span>
-    <div class="sendout-shortcut-copy"><small>ORDER &amp; COLLECTION</small><strong>Sendout lab order workflows</strong><p>Scheduled, walk-in and Sollis-ordered requests, document uploads, and collection.</p></div>
-    <button type="button" data-go="orders">Open Workflows <span aria-hidden="true">→</span></button>
-   </div>
-   <div class="ops-link-card">
-    <span class="sendout-shortcut-icon" aria-hidden="true">${svg('package')}</span>
-    <div class="sendout-shortcut-copy"><small>PROCESS &amp; HANDOFF</small><strong>Lab Sendout Log</strong><p>Packaging, required photos, Microsoft Forms, and pickup or shipment tracking.</p></div>
-    <button type="button" data-go="sendout-log">Open Sendout Log <span aria-hidden="true">→</span></button>
-   </div>
-  </div>
- </section>
- <section class="sendout-reference-site" aria-labelledby="sendout-site-heading">
-  <div class="sendout-reference-heading"><span class="sendout-reference-eyebrow">CLINIC REFERENCE</span><h2 id="sendout-site-heading">Find pickup and packaging instructions</h2><p>Select your clinic to see its approved receiving labs, transport requirements, and pickup guidance.</p></div>
-  <div class="sendout-reference-notice" role="note"><span class="sendout-reference-notice-icon" aria-hidden="true">!</span><span><strong>Verify current requirements.</strong> Pickup times, specimen handling, shipping temperatures, and account details may change. Confirm with the receiving lab and your site procedure.</span></div>`;
+ if(sec.id==='sendout')h+=`<div class="sendout-reference-notice" role="note">
+   <span class="sendout-reference-notice-icon" aria-hidden="true">!</span>
+   <span><strong>Verify current requirements.</strong> Test-specific collection, temperature, courier times and account instructions may change. Follow the receiving lab directory and site procedure.</span>
+  </div>`;
  if(sec.id==='pathfast'){
   const workflows=[
    {id:'rn-collection',title:'RN collection',subtitle:'Collect, mix & record draw time',index:'01'},
@@ -1957,7 +1987,11 @@ function sectionRender(sec,tab){
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
  else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
- else if(sec.id==='sendout'&&tab!=='resources')h+=window.LAB_SENDOUT_MARKETS.render('guide');
+ else if(sec.id==='sendout'&&tab==='overview')h+=sendoutLogisticsOverview();
+ else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a market and location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
+ else if(sec.id==='sendout'&&tab==='containers')h+=tubeGallery();
+ else if(sec.id==='sendout'&&tab==='collection')h+=tubeReferencePanel('general');
+ else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(sec.id==='tubes'&&(tab==='general'||tab==='for-lockbox-pickups'))h+=tubeReferencePanel(tab);
  else if(sec.id==='supplies'&&tab!=='mckesson'&&tab!=='overview'&&tab!=='resources'){
@@ -1983,7 +2017,7 @@ function sectionRender(sec,tab){
  }
  if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
- if(sec.id==='sendout')h+='</section></div>';
+ if(sec.id==='sendout')h+='</div>';
  el('mainContent').innerHTML=h;
 }
 function render(){
