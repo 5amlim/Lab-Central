@@ -260,9 +260,67 @@ function renderStep(title,group){
  const t=String(title||"").toLowerCase(),g=String(group||"").toLowerCase();
  const daily=/daily/.test(g),monthly=/monthly/.test(g),newBox=/new.box/.test(g);
  const qc=monthly||newBox,source=qc?"qc":"patient",level=/level 2|control level 2/.test(t)?2:1;
- const mode=daily?"qc":qc?"qcsample":"patient";
+ // Physical preparation has no new LCD navigation. Do not show a fictional
+ // PATIENT SAMPLE / Enter MRN menu while staff handle the specimen.
+ const mode="home";
  const show=(heading,right,note,m=mode)=>figure(heading,m,right,note);
  const pip=(phase)=>show(title,pipettingStage(phase,source,level),"Illustrated kit-supplied transfer pipette. Follow the current assay and control package insert.");
+ // Patient workflow: the LCD and highlighted keys match the specific action.
+ // Quidel MeterPro UM v5.04.021, Patient Sample pp. 46-49.
+ if(!daily&&!qc){
+  if(/power on.*select run test/.test(t))
+   return show(title,actionPanel("Open patient testing",
+    ["Power on the MeterPro, then use ▲ / ▼ to highlight RUN TEST.",
+     "Press the blue Enter key. Enter the User ID if your site requires it."],
+    "This is a keypad-driven instrument, not a touchscreen."),"Main Menu, RUN TEST selected. Use the physical arrow keys and Enter.","main");
+  if(/enter or scan your user id/.test(t))
+   return show(title,actionPanel("Identify the operator",
+    ["Enter or scan your own User ID when prompted.",
+     "Press Enter to continue. If User ID bypass is enabled, the meter skips this screen."],
+    "Do not enter the patient's MRN in the operator ID field."),"Operator ID screen, shown only when User ID entry is enabled.","userid");
+  if(/select patient sample/.test(t))
+   return show(title,actionPanel("Select PATIENT SAMPLE",
+    ["Use the ▲ / ▼ keys to highlight PATIENT SAMPLE.",
+     "Press the blue Enter key to open patient testing."],
+    "Do not select QC DEVICE or QC SAMPLE when testing a patient."),
+    "Actual menu labels from the Quidel MeterPro manual. The black highlighted row is PATIENT SAMPLE.","testmenu");
+  if(/enter or scan.*patient id|enter.*mrn.*confirm/.test(t))
+   return show(title,actionPanel("Confirm the patient's MRN",
+    ["Scan or enter the correct patient identifier / MRN on the numeric keypad.",
+     "Press Enter, verify the displayed identifier against the chart, and press Enter to confirm.",
+     "If incorrect, choose CORRECT PATIENT ID and fix it before loading a cassette."],
+    "An optional Auxiliary ID prompt can appear when enabled. Never proceed with a mismatched ID."),
+    "Patient ID entry screen. Hash marks are placeholders, not a real patient record.","patientid");
+  if(/insert the prepared cartridge/.test(t))
+   return show(title,actionPanel("Insert the prepared cassette",
+    ["After complete sample absorption, gently insert the cassette into the lower front test port.",
+     "Stop when the device catches with an audible click.",
+     "Press Enter to start when instructed."],
+    "Never push the device farther in or pull it out after engagement."),"Insertion is a physical step. The MeterPro will pull in and scan the cassette.", "insert");
+  if(/press enter to start the analysis/.test(t))
+   return show(title,actionPanel("Start and wait for analysis",
+    ["Press the blue Enter key after inserting the device.",
+     "The meter scans the cassette and reports the result when testing finishes."],
+    "Do not move the inserted test device. Follow any enabled sample/analyte prompts."),
+    "Processing status is an instructional representation; test time and prompts depend on the assay.","reading");
+  if(/verify specimen type or selected analytes/.test(t))
+   return show(title,conditionalScreens(),
+    "These prompts occur only when configured. If neither is enabled, the meter proceeds automatically. The analyte screen is an example, not a fixed Troponin/BNP/D-dimer selection.","sampletype");
+  if(/review the measured result/.test(t))
+   return show(title,actionPanel("Check the result before reporting",
+    ["Verify the Patient ID, analyte, units, and completed run.",
+     "Review internal procedural QC and active reagent-lot QC status.",
+     "Follow the site's policy for critical or invalid results."],
+    "An exclamation point (!) indicates failed internal QC; a pound sign (#) flags an analyte affected by failed QC Sample testing. Do not report blocked values."),
+    "Result screen is schematic and contains no invented patient measurements.","result");
+  if(/print, document the result/.test(t))
+   return show(title,actionPanel("Print, document, then eject",
+    ["Press the physical Print key if a paper result is required.",
+     "Confirm the result is recorded in the correct patient chart / approved interface.",
+     "Return to the Main Menu and press Exit to eject the used cassette. Discard it per policy."],
+    "Do not pull the device out manually. Eject only through the meter's documented controls."),
+    "The Print key is highlighted; the meter has a separate Exit key for ejection.","result");
+ }
  // Unique daily optical QC steps never depict liquid handling or sample wells.
  if(daily){
   if(/power on|select run test|enter or scan user id/.test(t))return show(title,qcElectronicSvg(),"Choose RUN TEST; provide your User ID if prompted. QC DEVICE is separate from liquid QC.");
