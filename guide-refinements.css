@@ -767,3 +767,15 @@
 .lc-scroll-cue-bottom>span{padding:10px 16px;background:#146c7c;border:2px solid #0c5f72;color:#fff;font-size:13px;font-weight:900;box-shadow:0 5px 15px #164d6038}
 @media(max-width:650px){.lc-page-scroll-cue{height:82px;padding-bottom:9px}.lc-page-scroll-cue>button{min-height:45px;font-size:13px}}
 @media print{.lc-page-scroll-cue{display:none!important}}
+
+/* Piccolo results: align the teaching sample to the manufacturer's narrow thermal receipt. */
+.pxr-printout{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:24px;align-items:start}
+.pxr-paper-area{display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0}
+.pxr-printout-paper{box-sizing:border-box;width:max-content;max-width:100%;min-width:0;align-self:center;padding:20px 15px;background:#fff;border:1px solid #d8e0e4;border-radius:1px;box-shadow:0 5px 18px rgba(40,73,89,.12);white-space:normal;overflow-x:auto;overflow-y:hidden}
+.pxr-receipt-text{display:block;margin:0;padding:0;background:transparent;border:0;color:#23323a;font-family:"Courier New",Courier,monospace;font-size:11px;line-height:1.4;letter-spacing:0;font-weight:500;font-variant-ligatures:none;font-variant-numeric:tabular-nums;white-space:pre;text-align:left;width:max-content;max-width:none}
+.pxr-paper-caption{font-size:10.5px;line-height:1.5;text-align:center;color:#68818e;margin:0}
+.pxr-printout-key{min-width:0;align-self:start}
+.pxr-printout-key>div span b{color:#285f75}
+@media(max-width:950px){.pxr-printout{grid-template-columns:1fr}.pxr-paper-area{justify-self:stretch}}
+@media(max-width:420px){.pxr-printout-paper{padding:12px 9px}.pxr-receipt-text{font-size:9.4px;line-height:1.45;letter-spacing:-.1px}}
+@media print{.pxr-paper-area,.pxr-printout-paper{break-inside:avoid}.pxr-printout-paper{box-shadow:none}.pxr-receipt-text{font-size:10px}}
