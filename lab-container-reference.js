@@ -424,7 +424,9 @@ function render(){
  '<div class="lcr-disclaimer"><strong>Use the approved test-specific directory.</strong> Cap colors, additives, collection volumes, transport conditions and accepting laboratories can differ by assay, product lot and region. A shared lab badge means the container family appears in its workflow, not that every test accepts that container. In particular, confirm Labcorp acceptance before substituting Total-Fix.</div>'+
  '<div class="lcr-links"><a href="https://testdirectory.questdiagnostics.com/test/home" target="_blank" rel="noopener noreferrer">Quest Test Directory ↗</a>'+
  '<a href="https://www.labcorp.com/test-menu/search" target="_blank" rel="noopener noreferrer">Labcorp Test Menu ↗</a>'+
- '<a href="https://5amlim.github.io/Lab-Calculator/cedars-container-guide.html" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a></div>'+
+ '<a href="https://5amlim.github.io/Lab-Calculator/cedars-container-guide.html" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>'+
+ '<a href="https://5amlim.github.io/Lab-Calculator/?containers=1" target="_blank" rel="noopener noreferrer">Open in Quest Calculator ↗</a>'+
+ '<a href="https://5amlim.github.io/Lab-Calculator/labcorp.html?containers=1" target="_blank" rel="noopener noreferrer">Open in Labcorp Calculator ↗</a></div>'+
  '<dialog class="lcr-dialog" id="lcrDialog" aria-label="Container photo and details"><div id="lcrDialogBody"></div><button type="button" data-lcr-close aria-label="Close photo viewer" class="lcr-dialog-close">✕</button></dialog>'+
  '</section>';
 }
@@ -460,5 +462,5 @@ if(typeof document!=='undefined')document.addEventListener('input',e=>{
  if(grid)grid.innerHTML=items.length?cardsFor(items):'<p class="lcr-empty">No matching containers found.</p>';
  if(count)count.textContent=items.length+' containers';
 });
-window.LAB_CONTAINER_REFERENCE={render,items:list,draw:svg};
+window.LAB_CONTAINER_REFERENCE={render,items:list,draw:svg,setLab(lab){selectedLab=['Q','L','C'].includes(lab)?lab:'all';selectedCat='all';query='';}};
 })();
