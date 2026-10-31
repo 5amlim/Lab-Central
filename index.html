@@ -1142,6 +1142,20 @@ function guideStepParts(entry,sec){
  // Specimen type already appears in the collection reference; avoid duplicate pill badges.
  return {badge:'',title:text};
 }
+// Patient-testing shortcuts should label the action, not repeat the full SOP instruction.
+function sysmexPatientStepNavLabel(full){
+ const label=String(full||'').trim();
+ const shortcuts=[
+  [/^Samples must be run within/i,'Check sample timing'],
+  [/^Invert the tube/i,'Invert EDTA tube'],
+  [/^Enter the patient MRN/i,'Enter MRN'],
+  [/^Load the sample/i,'Load sample'],
+  [/^Click Run$/i,'Start analysis'],
+  [/^Confirm analysis started/i,'Confirm run']
+ ];
+ for(const [pattern,short] of shortcuts)if(pattern.test(label))return short;
+ return instrumentStepNavLabel(label);
+}
 // Short navigation labels describe the action. Full instructions stay in
 // the large step header and full text remains in the button title.
 function instrumentStepNavLabel(full){
@@ -1281,7 +1295,7 @@ function renderGuidedProcedure(group,sec){
   h+=steps.map(function(entry,i){
     const parts=guideStepParts(entry,sec);
     const name=entry.root.text;
-    const navLabel=isInstrumentProcedure?instrumentStepNavLabel(name):name;
+    const navLabel=isInstrumentProcedure?(sec.id==='sysmex'&&/^running (patient )?samples?/i.test(group.title)?sysmexPatientStepNavLabel(name):instrumentStepNavLabel(name)):name;
      const vialFrequency=sec.id==='sysmex'&&group.id==='daily-qc'&&/^Replace QC vials/i.test(name)?'<small class="guide-pill-frequency">14 DAYS / AS NEEDED</small>':'';
     return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'" aria-label="Step '+(i+1)+': '+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+(isInstrumentProcedure?safeHtml(navLabel):guideStepTitle(parts))+vialFrequency+'</span></button>';
   }).join('');
