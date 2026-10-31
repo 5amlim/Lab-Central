@@ -159,12 +159,16 @@ function svg(item){
   return z;
  }
  function cobasUrine(){
-  let z=swabTransport();
-  // Urine cobas uses a transfer pipette, not a swab.
-  z=z.slice(0,z.indexOf(L(170,44,170,129)));
-  return z+ELL(179,41,9,14,'#edf5f8','#a9bdc6')+
-    P('M174 52H184L182 110L179 135L176 110Z','#f3f9fa','#a9bdc6',1.2)+
-    L(179,55,179,123,'#fff',1.5)+T(179,145,'PIPETTE',7,'#8198a8',600);
+  // cobas urine PCR kit has yellow-capped transport tube and a transfer pipette.
+  const tube=P('M92 42H134V124Q134 139 113 139Q92 139 92 124Z',glass,'#90a6b0',1.6)+
+    cap(88,17,50,26,'#e7cf32')+
+    R(97,71,32,43,'#fff',2,'#d4e0e5')+
+    T(113,84,'cobas',8)+T(113,96,'URINE PCR',6.5)+
+    L(98,51,98,127,'#fff',2);
+  const pipette=ELL(178,41,9,14,'#edf5f8','#a9bdc6')+
+    P('M174 52H182L181 110L178 136L175 110Z','#f3f9fa','#a9bdc6',1.2)+
+    L(178,55,178,124,'#fff',1.5)+T(178,145,'PIPETTE',7,'#8198a8',600);
+  return tube+pipette;
  }
  function uriSponge(){
   let v=R(51,38,61,98,glass,5,'#91a9b4',1.5)+R(57,73,49,42,'#fff',2,'#cfdee3')+
