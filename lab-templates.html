@@ -65,7 +65,7 @@ const forms=[
  {id:'cleaning',group:'daily',title:'Daily Cleaning and Disinfection Log',note:'Record completed cleaning and disinfection per the site SOP.',fields:['Month','Year','Clinic'],headers:['Day','Disinfection completed','Operator initials','Comments / exceptions'],rows:31,numbered:true},
  {id:'sysmex-control',group:'daily',title:'pocH-100i Three-Level Control Log',note:'Dedicated Sysmex QC log. File all three EIGHTCHECK QC printouts alongside the completed log.',fields:['Month / Year','Instrument serial number','Low / Normal / High control lots and expirations'],headers:['Date / initials','Low QC (lot / result)','Normal QC (lot / result)','High QC (lot / result)','Acceptable?','Corrective action'],rows:31,numbered:false},
  {id:'sysmex-blank',group:'daily',title:'pocH-100i Start-up Blank Check Log',note:'File the instrument blank/background check printout with this log.',fields:['Month / Year','Instrument serial number','Location'],headers:['Date','Initials','Blank check result','Printout filed','Corrective action'],rows:31,numbered:false},
- {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',note:'Record required instrument shutdown, cleaning and maintenance on the approved schedule.',fields:['Month / Year','Instrument serial number','Location'],headers:['Date','Initials','Maintenance performed','Outcome','Corrective action'],rows:31,numbered:false},
+ {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
  {id:'triage-daily',group:'daily',title:'Triage MeterPro Daily QC Log',note:'Daily electronic QC Device results. File device printouts with the log.',fields:['Month / Year','Instrument serial number','Clinic'],headers:['Date','Initials','QC Device result','Printout filed','Corrective action'],rows:31,numbered:false},
  {id:'clinitek-ua',group:'both',title:'Siemens Urinalysis QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and lot information.',fields:['Month / Year','Level 1 / Level 2 lots and expirations','Test strip lot and expiration'],headers:['Date / initials','Level 1 (low)','Level 2 (high)','Result','Comments / corrective action'],rows:22,numbered:false},
  {id:'clinitek-hcg',group:'both',title:'Siemens hCG Pregnancy QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and cassette lot.',fields:['Month / Year','Negative / Positive control lots and expirations','Cassette lot and expiration'],headers:['Date / initials','Level 1 (negative)','Level 2 (positive)','Result','Comments / corrective action'],rows:22,numbered:false},
@@ -90,6 +90,7 @@ function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':
 function byGroup(group){return forms.filter(x=>x.group===group||x.group==='both')}
 function choose(id){
  const next=forms.find(x=>x.id===id);if(!next)return;
+ if(next.originalPdf){location.assign(next.originalPdf);return;}
  selected=next;
  const url=new URL(location.href);url.searchParams.set('template',id);history.replaceState(null,'',url);
  show();
@@ -122,7 +123,7 @@ function show(){
 }
 document.addEventListener('click',function(e){const b=e.target.closest('[data-template]');if(b)choose(b.dataset.template)});
 document.getElementById('print').addEventListener('click',function(){window.print()});
-show();
+if(selected.originalPdf)location.replace(selected.originalPdf);else show();
 </script>
 </body>
 </html>
