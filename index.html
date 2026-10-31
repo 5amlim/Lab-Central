@@ -1247,11 +1247,12 @@ function renderCalculators(){
  el('currentCrumb').textContent='Lab calculators';
  let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators','Enter your test codes, add all requested tests, then print or save the calculator as a PDF.');
  h+=calculatorCards();
- h+=`<section class="calc-overview-guide" aria-labelledby="calculator-usage-heading">
-  <div class="section-head calc-overview-head"><div><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps</span></div>
+ h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
+  <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
+  <div class="calc-guide-roadmap" aria-label="Workflow overview"><span>Build the order</span><b aria-hidden="true">›</b><span>Verify requirements</span><b aria-hidden="true">›</b><span>Finalize sendout</span></div>
   <div class="calc-guide-phases calc-guide-simplified">
     <section class="calc-guide-phase" aria-label="Find and add tests">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">FIND &amp; ADD</span><strong>Build the order</strong><span class="calc-guide-phase-descriptor">Choose the lab, then add the requested tests.</span></div>
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 01</span><div><strong>Build the order</strong><span class="calc-guide-phase-descriptor">Choose the lab, then add the requested tests.</span></div><span class="calc-guide-phase-range">STEPS 01–02</span></div>
       <div class="calc-guide-grid">
         <article class="calc-guide-card">
           <span class="calc-guide-step">01</span>
@@ -1262,13 +1263,13 @@ function renderCalculators(){
         <article class="calc-guide-card">
           <span class="calc-guide-step">02</span>
           <div><h3>Find and add the tests</h3>
-            <ul><li>Use <strong>Smart Search</strong> to search by code, name or shorthand (e.g., CBC, GFR). <strong>Review suggested matches</strong> and confirm the correct test. Use <strong>Filters</strong> or Cedars <strong>Group by</strong> if needed.</li><li>For multiple tests: <strong>Add Tests</strong> → enter one per line → <strong>Review matches</strong> → verify each test → <strong>Add best matches</strong>.</li><li>Test not listed? Check <strong>Do not perform</strong> and the official lab directory before using <strong>Add Missing Test</strong> for Quest or Labcorp. Cedars manual entries are unavailable.</li></ul>
+            <ul><li>Use <strong>Smart Search</strong> by code, name or shorthand (CBC, GFR). <strong>Review suggested matches</strong>; use <strong>Filters</strong> or Cedars <strong>Group by</strong> as needed.</li><li><strong>Multiple tests:</strong> Add Tests → enter one per line → Review matches → verify → Add best matches.</li><li><strong>Missing test?</strong> Check Do not perform and the official directory first. Use Add Missing Test only for eligible Quest or Labcorp tests; Cedars manual entries are unavailable.</li></ul>
           </div>
         </article>
       </div>
     </section>
     <section class="calc-guide-phase" aria-label="Verify the collection plan">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">VERIFY</span><strong>Check requirements</strong><span class="calc-guide-phase-descriptor">Confirm routing, collection and processing before drawing.</span></div>
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 02</span><div><strong>Verify requirements</strong><span class="calc-guide-phase-descriptor">Check STAT routing and specimen handling before collection.</span></div><span class="calc-guide-phase-range">STEPS 03–04</span></div>
       <div class="calc-guide-grid">
         <article class="calc-guide-card calc-guide-card-stat">
           <span class="calc-guide-step">03</span>
@@ -1285,7 +1286,7 @@ function renderCalculators(){
       </div>
     </section>
     <section class="calc-guide-phase" aria-label="Prepare the flowsheet and send-out">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">FINALIZE</span><strong>Prepare for send-out</strong><span class="calc-guide-phase-descriptor">Review transport bag requirements, then save the collection plan.</span></div>
+      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 03</span><div><strong>Finalize sendout</strong><span class="calc-guide-phase-descriptor">Confirm bag separation, then save the lab flowsheet.</span></div><span class="calc-guide-phase-range">STEPS 05–06</span></div>
       <div class="calc-guide-grid">
         <article class="calc-guide-card">
           <span class="calc-guide-step">05</span>
