@@ -95,59 +95,28 @@ window.LAB_PATHFAST_EXTRAS.timing()+'</div>'+
 window.LAB_PATHFAST_EXTRAS.interference()+
 '<p class="pcr-foot">References: PATHFAST Clinic One-Page Guide; Quick Guide; Competency Quiz, PATHFAST assay IFU and cardiac troponin interference literature. The routine collection pathway is 0/1 hour; the provider must authorize any switch after a missed collection window.</p></section>';
 }
-function referenceRow(title,subtitle,criteria,kind){
- return '<article class="pcr-criteria-row '+kind+'">'+
- '<div class="pcr-criteria-label"><span class="pcr-criteria-marker" aria-hidden="true"></span>'+
- '<div><strong>'+title+'</strong><small>'+subtitle+'</small></div></div>'+
- '<ul class="pcr-criteria-list">'+criteria.map(function(item){return '<li>'+item+'</li>';}).join('')+'</ul></article>';
-}
-function routeBranch(value,note,kind){
- return '<article class="pcr-route-branch '+kind+'"><span class="pcr-route-caption">INITIAL hs-TnI</span>'+
- '<strong>'+value+'</strong><p>'+note+'</p></article>';
-}
 function pathway(){
- return '<section class="pcr-guide"><div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>hs-Troponin I · 0/1-hour pathway</h2>'+
- '<p>Use the approved 0/1-hour serial hs-Troponin I pathway for routine testing. Switch to the 0/2-hour fallback only after the approved 1-hour collection window is missed and the provider authorizes the change.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
- '<div class="pcr-review-strip"><span class="pcr-review-icon" aria-hidden="true">!</span><div><strong>Medical protocol verification required</strong><p>The source references contain differing thresholds. Confirm the approved assay-specific pathway before clinical decisions.</p><details class="pcr-review-detail"><summary>See threshold discrepancies</summary><p>References differ on 1-hour delta <b>&gt;3 versus ≥3 ng/L</b> and low-value rule-out conditions. The one-page guide states a 99th-percentile reference of 29 ng/L, while this pathway shows 21.4 ng/L (F) and 29.8 ng/L (M). Medical leadership must reconcile these differences before clinical use.</p></details></div></div>'+
- window.LAB_PATHFAST_EXTRAS.flow()+
- '<details class="pcr-reference-accordion" data-print-open><summary><span class="pcr-reference-summary-icon" aria-hidden="true">▤</span><span><strong>Clinical reference charts</strong><small>Assay thresholds and timed pathways</small></span><span class="pcr-reference-chevron" aria-hidden="true"></span></summary>'+
- '<div class="pcr-reference-content pcr-compact-reference">'+
- '<header class="pcr-reference-subheading"><div><span class="pcr-eyebrow">RESULT INTERPRETATION</span><h3>0/1-hour reference criteria</h3></div><span class="pcr-reference-static">Reference only</span></header>'+
- '<div class="pcr-criteria-table" aria-label="One-hour troponin reference criteria">'+
- referenceRow("Rule-out","Low-risk review",[
-  "Initial hs-TnI <b>&lt;4 ng/L</b>",
-  "1-hour delta <b>&lt;3 ng/L</b>",
-  "HEART ≤3 and reassuring ECG"
- ],"ruleout")+
- referenceRow("Consider discharge","Follow-up review",[
-  "Initial hs-TnI <b>≥4 ng/L</b> with 1-hour delta <b>&lt;3 ng/L</b>",
-  "Total below <b>21.4 ng/L (F)</b> or <b>29.8 ng/L (M)</b>",
-  "HEART ≤3 and cardiology follow-up within 48–72 hours; may repeat 2-hour troponin"
- ],"consider")+
- referenceRow("Observe / consult","Further assessment",[
-  "1-hour delta <b>&gt;3 and &lt;20 ng/L</b> with total &lt;90 ng/L",
-  "Or total above the sex-specific threshold but &lt;90 ng/L, or HEART &gt;3",
-  "Real-time cardiology consult, risk stratification or transfer"
- ],"observe")+
- referenceRow("Rule-in / transfer","Urgent escalation",[
-  "Initial hs-TnI <b>≥90 ng/L</b>",
-  "Or 1-hour delta <b>≥20 ng/L</b>",
-  "Or 1-hour total <b>≥90 ng/L</b>: transfer"
- ],"transfer")+
- '</div>'+
- '<div class="pcr-2h-reference"><span class="pcr-eyebrow">0/2-HOUR SERIAL PATHWAY</span><h3>2-hour high-sensitivity troponin I</h3><p>If the approved 1-hour window is missed and the provider authorizes the 0/2-hour fallback, collect the repeat at 120 minutes from the baseline within the approved 2-hour collection window. Interpret the actual value and delta against the approved PATHFAST-specific 0/2-hour limits, not one-hour thresholds.</p><div class="pcr-2h-route"><span><b>0 h</b> Baseline hs-Troponin I</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>2 h</b> Timed repeat + assay-specific delta</span><b class="pcr-2h-arrow" aria-hidden="true">→</b><span><b>Provider</b> Rule-out / observation / urgent review</span></div></div>'+
-'<header class="pcr-reference-subheading pcr-route-heading"><div><span class="pcr-eyebrow">INITIAL RESULT</span><h3>Where the 0-hour result leads</h3></div><span class="pcr-reference-static">Provider assessment</span></header>'+
- '<div class="pcr-simple-map" aria-label="Initial troponin routing overview">'+
- '<div class="pcr-route-start"><span class="pcr-route-start-icon" aria-hidden="true">●</span><div><strong>Chest pain presentation</strong><small>Initial hs-TnI (0 hour) + ECG</small></div></div>'+
- '<div class="pcr-route-connector" aria-hidden="true"><span>↓</span></div>'+
- '<div class="pcr-route-branches">'+
- routeBranch("&lt;4 ng/L","Assess symptom onset and HEART score. Onset &gt;3 hours with HEART ≤3 may support provider-directed discharge; for onset ≤3 hours, use 1-hour repeat pathway.","ruleout")+
- routeBranch("4 to &lt;90 ng/L","Obtain the 1-hour repeat and review delta, total, ECG and HEART score.","observe")+
- routeBranch("≥90 ng/L","Source pathway identifies rule-in / ED transfer for ACS or NSTEMI assessment.","transfer")+
- '</div></div>'+
- '<div class="pcr-reference-endnote"><strong>For clinical interpretation:</strong> Assess the ECG, symptoms, HEART score, actual serial sampling times, assay units, and results together. Elevated troponin can indicate myocardial injury without establishing MI. PATHFAST high-sensitivity troponin and conventional Triage values should not be directly trended.</div>'+
- '<p class="pcr-foot">References: “Step 4: interpret the 1-hour result”, “Primary Option: hs-TnI 0/1-Hour Chest Pain Pathway”, and PATHFAST Clinic One-Page Guide. Provider use only; verify the approved protocol.</p>'+
- '</div></details></section>';
+ return "<style>\n.pcr-static-pathways{display:grid;gap:22px}\n.pcr-static-intro{margin:0 0 3px;color:#617389;font-size:13px;line-height:1.7}\n.pcr-static-panel{border:1px solid #e3e9ef;border-radius:17px;background:#fff;overflow:hidden}\n.pcr-static-panel-head{padding:17px 20px;border-bottom:1px solid #edf1f5;display:flex;align-items:center;justify-content:space-between;gap:13px;flex-wrap:wrap}\n.pcr-static-panel-head h3{margin:0;color:#253e59;font-size:18px;letter-spacing:-.015em}\n.pcr-static-panel-head p{margin:5px 0 0;color:#6a7f90;font-size:12px;line-height:1.5}\n.pcr-static-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:24px;padding:6px 10px;background:#e9f5f1;color:#317c61;border:1px solid #cce8dd;font-size:10px;font-weight:850;letter-spacing:.08em;white-space:nowrap}\n.pcr-static-pill.fallback{background:#fff5e2;color:#9d6a18;border-color:#f0dfb9}\n.pcr-static-chart-wrap{overflow-x:auto;background:#f5f7fa;padding:15px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}\n.pcr-static-chart-wrap img{display:block;width:100%;min-width:760px;height:auto;margin:auto;border:1px solid #e5e9ed;border-radius:8px;background:#fff;box-shadow:0 2px 9px rgba(30,60,90,.05)}\n.pcr-static-chart-tip{color:#75879a;margin:9px 2px 0;font-size:11px}\n.pcr-static-notes{padding:18px 20px 19px}\n.pcr-static-notes strong{display:block;color:#324a61;font-size:12px;margin:0 0 8px}\n.pcr-static-notes ul{margin:0;padding-left:20px;color:#596e82;font-size:12px;line-height:1.8}\n.pcr-static-notes li+li{margin-top:4px}\n.pcr-static-notes b{color:#2e516c}\n.pcr-static-review{padding:15px 18px;background:#fff9eb;border:1px solid #f0dfb9;border-radius:13px;color:#786038;font-size:12px;line-height:1.65}\n.pcr-static-review strong{color:#735122}\n.pcr-static-source{font-size:11px;line-height:1.6;color:#778697}\n@media(max-width:760px){.pcr-static-panel-head{padding:15px}.pcr-static-notes{padding:16px}.pcr-static-chart-wrap{padding:10px}.pcr-static-chart-wrap img{min-width:900px}.pcr-static-panel-head h3{font-size:16px}}\n@media print{.pcr-static-chart-wrap{overflow:visible;padding:0}.pcr-static-chart-wrap img{min-width:0;box-shadow:none}.pcr-static-chart-tip{display:none}.pcr-static-panel{break-inside:avoid}}\n</style>"+
+ '<section class="pcr-guide pcr-static-pathways" aria-label="Static PATHFAST chest pain pathway references">'+
+ '<div class="pcr-heading"><div><span class="pcr-eyebrow">PATHFAST / PROVIDER REFERENCE</span><h2>Chest pain pathways · hs-Troponin I</h2>'+
+ '<p class="pcr-static-intro">Static visual references for the 0/1-hour standard pathway and provider-authorized 0/2-hour fallback. These images are not an interactive decision tool.</p></div><span class="pcr-role-label provider">Provider</span></div>'+
+ '<div class="pcr-static-review" role="note"><strong>Clinical protocol check</strong> Confirm current PATHFAST assay-specific criteria with medical leadership before applying thresholds. Review ECG, symptoms, HEART score, symptom onset, serial values and actual draw times together. Troponin elevation alone does not diagnose myocardial infarction.</div>'+
+ '<article class="pcr-static-panel"><div class="pcr-static-panel-head"><div><h3>0/1-hour chest pain pathway</h3><p>Routine first choice · baseline and 1-hour repeat</p></div><span class="pcr-static-pill">STANDARD PATHWAY</span></div>'+
+ '<div class="pcr-static-chart-wrap"><img src="assets/pathfast-pathways/hs-tni-01.svg" alt="Sollis 0/1-hour hs-Troponin I chest pain flowchart showing rule-out, repeat testing, observation and transfer" loading="lazy"><p class="pcr-static-chart-tip">On a smaller screen, swipe horizontally to view the entire image.</p></div>'+
+ '<div class="pcr-static-notes"><strong>Notes</strong><ul>'+
+ '<li>Use the <b>0/1-hour pathway by default</b>. Start the clock at the actual baseline collection time, not the analyzer result time.</li>'+
+ '<li>Repeat draw target is <b>60 minutes</b>. The collection window is <b>50–75 minutes after baseline</b> (10 minutes early to 15 minutes late), subject to the approved protocol.</li>'+
+ '<li>Interpret the <b>1-hour delta</b> and both troponin concentrations together with symptoms, ECG and clinical risk.</li>'+
+ '</ul></div></article>'+
+ '<article class="pcr-static-panel"><div class="pcr-static-panel-head"><div><h3>0/2-hour chest pain pathway</h3><p>Fallback only when the approved 1-hour window is missed</p></div><span class="pcr-static-pill fallback">PROVIDER AUTHORIZATION</span></div>'+
+ '<div class="pcr-static-chart-wrap"><img src="assets/pathfast-pathways/hs-tni-02.svg" alt="Sollis 0/2-hour hs-Troponin I chest pain flowchart showing 2-hour repeat, rule-out, observation and transfer" loading="lazy"><p class="pcr-static-chart-tip">On a smaller screen, swipe horizontally to view the entire image.</p></div>'+
+ '<div class="pcr-static-notes"><strong>Notes</strong><ul>'+
+ '<li>Use only after the <b>1-hour collection window is missed</b> and the treating provider authorizes the 0/2-hour fallback.</li>'+
+ '<li>Target <b>120 minutes from baseline</b>, with a <b>110–135-minute</b> collection window where approved. Do not restart timing from the missed 1-hour draw.</li>'+
+ '<li>Apply <b>2-hour-specific delta thresholds</b>, not 1-hour thresholds. The supplied 0/2-hour reference slide contains an incorrect “1 h” footer label; the 2-hour pathway and notes here use 2-hour labels.</li>'+
+ '</ul></div></article>'+
+ '<p class="pcr-static-source">Source references: Sollis Health 0/1-hour and 0/2-hour chest pain pathway images supplied for Lab Central; visual layout adapted for screen readability. Medical-director-approved criteria take precedence if updated.</p>'+
+ '</section>';
 }
 if(typeof window!=='undefined'&&typeof window.addEventListener==='function'&&typeof document!=='undefined'){
  let printState=[];
