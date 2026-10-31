@@ -10,6 +10,9 @@ const commonCats=['Blood tubes','Urine','Transport','Stool','Swabs & kits','Bloo
 let selectedLab='all',selectedCat='all',query='';
 const E=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;'}[c]));
 const list=RAW.map(a=>({id:a[0],name:a[1],category:a[2],labs:a[3].split(','),kind:a[4],color:a[5],label:a[6],desc:a[7],photo:a[8],external:a[9]}));
+const specialNote=item=>item.id==='serum-transfer'
+ ? '<div class="lcr-transport-note"><strong>Same green-cap tube</strong> for serum or plasma. <strong>Frozen transport is allowed when required by the ordered test.</strong></div>'
+ : '';
 const labText={Q:'QUEST',L:'LABCORP',C:'CEDARS'};
 const COLORS={gold:'#d9ac28',tiger:'#ca513f',red:'#cf5754',lavender:'#9378b5',pink:'#d08aa8',lightblue:'#89d5e5',green:'#368e66',darkgreen:'#236b53',royal:'#264c95',royalred:'#284994',yellow:'#efca3a',gray:'#9aa4ad',orange:'#e58c36',white:'#eceff2',blue:'#487cb2',purple:'#7657a0',amber:'#9d6232',black:'#313c45',mixed:'#b0bfcc'};
 const photoFallback={Q:'https://testdirectory.questdiagnostics.com/test/home',L:'https://www.labcorp.com/test-menu/search',C:'https://www.cedars-sinai.org/'};
@@ -144,13 +147,6 @@ function svg(item){
     T(130,78,'C&S',8)+T(130,88,'4 mL',7.5)+
     L(115,103,145,103,'#ae8a60',1.4)+T(130,100,'MIN',6,'#a18065')+
     L(116,57,116,124,'#fff',1.4);
- }
- function cryo(){
-  let z=R(103,57,54,74,glass,7,'#8ba4b0',1.5)+
-    R(102,29,56,34,c,6,'#657f8c',1.6)+ribs(102,29,56,34)+
-    R(110,76,40,36,'#fff',2,'#d4dfe5')+T(130,90,'FROZEN',8)+T(130,101,'PLASMA',6)+
-    R(112,113,36,6,'#d8d1e6',1);
-  return z;
  }
  function microtainer(){
   const isAmber=item.id==='microtainer-sst';
@@ -296,8 +292,8 @@ function card(x){
  const preview=picture?'<img src="'+E(picture)+'" alt="Representative reference photo of '+safe+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="lcr-no-photo" style="display:none">Photo could not be loaded. Open the reference source.</span>':
  '<span class="lcr-no-photo">Reference image is illustrative. Confirm the exact collection product with the lab.</span>';
  return '<article class="lcr-card"><div class="lcr-media"><button class="lcr-art-trigger" type="button" data-lcr-open="'+E(x.id)+'" aria-label="View reference photo for '+safe+'">'+svg(x)+'<span class="lcr-hover-hint">Hover or click to view photo ↗</span></button>'+
- '<div class="lcr-hover" aria-hidden="true"><div class="lcr-hover-photo">'+preview+'</div><strong>'+safe+'</strong><small>'+(picture?'Representative photo':'Image not yet verified')+'</small></div></div>'+
- '<div class="lcr-card-body"><div class="lcr-badges">'+labsFor(x)+'</div><h3>'+safe+'</h3><p>'+E(x.desc)+'</p>'+
+ '<div class="lcr-hover" aria-hidden="true"><div class="lcr-hover-photo">'+preview+'</div><strong>'+safe+'</strong><small>'+(picture?'Representative photo':'No hosted photo for this variant')+'</small></div></div>'+
+ '<div class="lcr-card-body"><div class="lcr-badges">'+labsFor(x)+'</div><h3>'+safe+'</h3><p>'+E(x.desc)+'</p>'+specialNote(x)+
  '<div class="lcr-card-bottom"><span>'+E(x.category)+'</span><button type="button" data-lcr-open="'+E(x.id)+'">View photo & details ↗</button></div></div></article>';
 }
 function visible(){return list.filter(belongs);}
@@ -317,7 +313,7 @@ function render(){
  '<div class="lcr-search-wrap"><label class="lcr-filter-label" for="lcrSearch">FIND A CONTAINER</label><input id="lcrSearch" type="search" value="'+E(query)+'" placeholder="Search name, cap, use…" autocomplete="off"></div></div>'+
  '<div class="lcr-categories"><span class="lcr-filter-label">CATEGORY</span><div class="lcr-filter-buttons" role="group" aria-label="Filter by container type">'+
  ['all',...opts].map(c=>'<button type="button" class="'+(selectedCat===c?'active':'')+'" data-lcr-cat="'+E(c)+'" aria-pressed="'+(selectedCat===c)+'">'+(c==='all'?'All containers':E(c))+'</button>').join('')+'</div></div>'+
- '<div class="lcr-results-row"><strong id="lcrResultsCount">'+matches.length+' containers</strong><span>Drawings show recognizable features. Hover to preview a photo; click for a larger view.</span></div>'+
+ '<div class="lcr-results-row"><strong id="lcrResultsCount">'+matches.length+' containers</strong><span>Drawings show recognizable features. Hover for a reference photo where available; click for details.</span></div>'+
  '<div class="lcr-grid" id="lcrGrid">'+(matches.length?matches.map(card).join(''):'<p class="lcr-empty">No containers match these filters. Try another category or search term.</p>')+'</div>'+
  '<div class="lcr-disclaimer"><strong>Use the approved test-specific directory.</strong> Cap colors, additives, collection volumes, transport conditions and accepting laboratories can differ by assay, product lot and region. A shared lab badge means the container family appears in its workflow, not that every test accepts that container. In particular, confirm Labcorp acceptance before substituting Total-Fix.</div>'+
  '<div class="lcr-links"><a href="https://testdirectory.questdiagnostics.com/test/home" target="_blank" rel="noopener noreferrer">Quest Test Directory ↗</a>'+
@@ -332,7 +328,7 @@ function modal(item){
  '<p class="lcr-photo-error">A verified product photo is not yet available for this variant. Use the manufacturer source or receiving-lab directory.</p>';
  return '<div class="lcr-modal-head"><div class="lcr-badges">'+labsFor(item)+'</div><h2>'+E(item.name)+'</h2></div>'+
  '<div class="lcr-modal-layout"><div class="lcr-modal-art"><span>ILLUSTRATION</span>'+svg(item)+'</div><div class="lcr-modal-photo"><span>REFERENCE PHOTO</span>'+photoBox+'</div></div>'+
- '<div class="lcr-modal-info"><p>'+E(item.desc)+'</p><a href="'+E(photoSource(item))+'" target="_blank" rel="noopener noreferrer">Open reference source ↗</a></div>';
+ '<div class="lcr-modal-info"><p>'+E(item.desc)+'</p>'+specialNote(item)+'<a href="'+E(photoSource(item))+'" target="_blank" rel="noopener noreferrer">Open reference source ↗</a></div>';
 }
 if(typeof document!=='undefined')document.addEventListener('click',e=>{
  const root=e.target.closest('#labContainerReference');
