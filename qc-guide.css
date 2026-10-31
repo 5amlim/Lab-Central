@@ -360,3 +360,6 @@
 .guide-pill-label .guide-pill-frequency{white-space:normal}
 .guide-card-frequency{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#e9f6f2;color:#25746c;border:1px solid #cce7df;font-size:10px;font-weight:850;letter-spacing:.055em;margin-top:8px}
 @media print{.lc-poc-print-binder,.lc-poc-report-group,.lc-poc-binder-filing-steps{break-inside:avoid}.guide-card-frequency,.guide-pill-frequency{color:#315d56}}
+
+/* Keep the Sysmex missing-QC reminder visually distinct from explanatory text. */
+.qc-screen-instruction strong{font-weight:850;color:#315b70}
