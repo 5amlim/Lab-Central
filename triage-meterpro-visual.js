@@ -231,7 +231,11 @@ function kitChooser(){
 function figure(title,mode,extra,note){
  const right=extra||kitChooser();
  const isPipette=right.includes('triage-pipette-sequence');
- return '<figure class="lc-focus-figure triage-focus-figure'+(isPipette?' triage-pipette-step':'')+'"><header>'+E(title)+'</header><div class="triage-guide-scene"><div class="triage-meter-stage">'+meterSvg(mode)+'</div><div class="triage-material-stage">'+right+'</div></div><figcaption>'+E(note)+'</figcaption></figure>';
+ const physical=mode==="home";
+ const layout=physical?
+  '<div class="triage-physical-wrap"><span class="triage-physical-label">PHYSICAL PREPARATION · NO METER KEY INPUT</span><div class="triage-material-stage">'+right+'</div></div>':
+  '<div class="triage-meter-stage">'+meterSvg(mode)+'</div><div class="triage-material-stage">'+right+'</div>';
+ return '<figure class="lc-focus-figure triage-focus-figure'+(isPipette?' triage-pipette-step':'')+(physical?' triage-physical-step':'')+'"><header>'+E(title)+'</header><div class="triage-guide-scene">'+layout+'</div><figcaption>'+E(note)+'</figcaption></figure>';
 }
 
 function actionPanel(heading,actions,warning="",label="ON THE METER"){
