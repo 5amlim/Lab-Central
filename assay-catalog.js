@@ -161,7 +161,7 @@ function shortLabel(id,name){
 /* Calculated Piccolo results are explained in plain language, not given status badges.
    Methods and limitations follow the manufacturer's assay IFU and analyzer manual. */
 const piccoloCalculationDetails={
- 'Estimated glomerular filtration rate':'Estimated from measured creatinine, patient age, sex, and required demographic inputs using the Piccolo MDRD equation. The older device equation includes a race factor. Result is N/C if disabled or required inputs are missing.',
+ 'Estimated glomerular filtration rate':'Piccolo estimates eGFR using measured creatinine and entered age, sex, and race with its built-in MDRD equation. Current guidelines recommend the 2021 CKD-EPI race-free equation instead. If eGFR is disabled or required information is missing, the analyzer reports N/C.',
  'Cholesterol-to-high-density-lipoprotein ratio':'Total cholesterol ÷ HDL cholesterol.',
  'Non-high-density-lipoprotein cholesterol':'Total cholesterol − HDL cholesterol.',
  'Very-low-density lipoprotein cholesterol':'Triglycerides ÷ 5 (when concentrations are in mg/dL). This estimate is unreliable above 400 mg/dL triglycerides and in nonfasting samples.'
@@ -179,7 +179,7 @@ function formatPanelTarget(id,panel,name){
   /calculated/i.test(group)&&Array.isArray(names)&&names.includes(name));
  const calculation=id==='piccolo'&&isCalculated?piccoloCalculationDetails[name]:'';
  return formatTarget(id,name)+
-  (calculation?'<span class="ac-calculation">How calculated: '+esc(calculation)+'</span>':'');
+  (calculation?'<span class="ac-calculation">Calculated: '+esc(calculation)+'</span>':'');
 }
 
 const references={
