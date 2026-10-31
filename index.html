@@ -382,7 +382,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-container-art.js?v=20261031"></script>
 <script src="lab-container-photos.js?v=20261031"></script>
 <script src="lab-container-photo-updates.js?v=20261031"></script>
-<script src="lab-container-reference.js?v=20261031-calculator-integration-v11"></script>
+<script src="lab-container-reference.js?v=20261031-standalone-gallery-v12"></script>
 <script>
 (()=>{
 'use strict';
@@ -452,10 +452,11 @@ function sectionFromHash(){
  const tab=rest.join('/')||'overview';
  // Preserve previous Lab Container Reference bookmarks and direct links.
  if(id==='tubes'){
-  const oldTabs={overview:'containers',gallery:'containers',general:'collection',
-    'for-lockbox-pickups':'lockbox',resources:'resources'};
-  return {id:'sendout',tab:oldTabs[tab]||'containers'};
+  if(tab==='overview'||tab==='gallery')return {id:'lab-container-gallery',tab:'overview'};
+  const oldTabs={general:'collection','for-lockbox-pickups':'lockbox',resources:'resources'};
+  return {id:'sendout',tab:oldTabs[tab]||'overview'};
  }
+ if(id==='sendout'&&tab==='containers')return {id:'lab-container-gallery',tab:'overview'};
  return {id,tab};
 }
 function showNav(){
@@ -474,6 +475,7 @@ function showNav(){
   for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${svg(s.icon)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${svg('package')}</span>Envi Ordering</button>`;
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${svg('clipboard-check')}</span>Specimen drop-off</button>`;
+  if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='lab-container-gallery'?'active':''}" data-go="lab-container-gallery"><span class="nav-icon">${svg('test-tube-2')}</span>Lab Container Gallery</button>`;
   if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='sendout-log'?'active':''}" data-go="sendout-log"><span class="nav-icon">${svg('file-text')}</span>Lab Sendout Log</button>`;
   out+=isArchive?'</div></details>':'</div>';
  }
@@ -1940,7 +1942,6 @@ function sendoutLogisticsOverview(){
   '<div class="sendout-logistics-heading sendout-logistics-secondary"><span>REFERENCE LIBRARY</span><h2>Find a collection or transport reference</h2><p>Use the tabs above or select the reference you need.</p></div>'+
   '<div class="sendout-logistics-reference-grid">'+
    card('clinics','map-pin','Receiving labs by clinic','Market-specific couriers, pickup windows and packaging')+
-   card('containers','test-tube-2','Container gallery','Quest, Labcorp and Cedars illustrated specimen containers')+
    card('collection','clipboard-check','Collection &amp; transport','Quest collection requirements and temperature guidance')+
    card('lockbox','package','Quest lockbox pickups','Frozen and refrigerated pouches, labels and handoff')+
   '</div>'+
@@ -1954,7 +1955,6 @@ function sectionRender(sec,tab){
  const tabs=sec.id==='sendout'?[
   {id:'overview',title:'Overview'},
   {id:'clinics',title:'By clinic'},
-  {id:'containers',title:'Container gallery'},
   {id:'collection',title:'Collection notes'},
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
@@ -1997,7 +1997,6 @@ function sectionRender(sec,tab){
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
  else if(sec.id==='sendout'&&tab==='overview')h+=sendoutLogisticsOverview();
  else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a market and location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
- else if(sec.id==='sendout'&&tab==='containers')h+=tubeGallery();
  else if(sec.id==='sendout'&&tab==='collection')h+=tubeReferencePanel('general');
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(tab==='overview')h+=sectionOverview(sec,groups);
@@ -2028,6 +2027,10 @@ function sectionRender(sec,tab){
  if(sec.id==='sendout')h+='</div>';
  el('mainContent').innerHTML=h;
 }
+function renderContainerGallery(){
+ el('currentCrumb').textContent='Lab Container Gallery';
+ el('mainContent').innerHTML='<div class="lab-container-gallery-page"><button type="button" class="back-link" data-go="sendout">‹ &nbsp;Back to Lab Sendout Logistics</button>'+tubeGallery()+'</div>';
+}
 function render(){
  const route=sectionFromHash();const sec=all.find(s=>s.id===route.id);
  state.section=sec||null;
@@ -2038,6 +2041,7 @@ function render(){
    el('mainContent').innerHTML=window.LAB_OPS.render(route.id,route.tab);
  }
  else if(sec)sectionRender(sec,route.tab);
+ else if(route.id==='lab-container-gallery')renderContainerGallery();
  else if(route.id==='favorites')renderHome('favorites');
  else if(route.id==='calculators')renderCalculators();
   else if(route.id==='envi-ordering'){el('currentCrumb').textContent='Envi Ordering';el('mainContent').innerHTML=window.LAB_ENVI_ORDERING.render();}
