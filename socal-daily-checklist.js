@@ -9,7 +9,7 @@ const socalTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Read, record and assess current/min/max where applicable. Escalate excursions, quarantine affected material as directed, and document corrective action.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Verify required freezer checks and out-of-range alarms. Do not assume thawed reagents or controls are usable without review.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record the room conditions and compare them with all active instrument/reagent allowable operating ranges. Report excursions.',role:'Lab personnel / RN'},
- {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],note:'QC frequency varies by market. Perform Clinitek QC daily when required by the market-specific SOP; otherwise follow the applicable QC schedule, including new-bottle requirements.',title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
+ {id:'clinitek',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'},note:'QC frequency varies by market. Perform Clinitek QC daily when required by the market-specific SOP; otherwise follow the applicable QC schedule, including new-bottle requirements.',title:'Siemens urinalysis analyzer cleaning / QA',desc:'Clean/check the Clinitek test table and appropriate strip or cassette insert per SOP. Check the current UA/hCG QC status and new-bottle requirements before testing.',role:'Trained lab personnel / RN'},
  {id:'sysmex',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'},title:'Sysmex pocH daily QC and blank check',desc:'Run/verify three-level EIGHTCHECK control and approved blank/background check. Confirm acceptable results and print/file QC and blank records in the binder.',role:'Trained lab personnel / RN'},
  {id:'triage',group:'Instrument QC & readiness',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'},title:'Triage electronic QC Device',desc:'Run the reusable electronic QC Device daily when patient testing is performed. Separately review each active assay lot liquid-QC due date and new shipment/lot requirements.',role:'Trained lab personnel / RN'},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and required new shipment/lot QC for QuickVue, Sofia, FebriDx and other active POC kits. Document any failed controls or unavailable kits.',role:'Lab personnel / RN'},
@@ -32,9 +32,20 @@ const sharedTasks=[
 const socalBinder=[
  {title:'Environmental and cleaning logs',desc:'File completed temperature/humidity and cleaning records. Document excursions and corrective action.',role:'Lab personnel / RN'},
  {title:'Sysmex QC and blank-check printouts',desc:'If installed, file three EIGHTCHECK QC levels and the blank/background check with required identifiers.',role:'Authorized lab personnel'},
- {title:'Triage and Clinitek QC records',desc:'File completed electronic or liquid QC and UA/hCG controls when performed or due.',role:'Authorized / trained personnel'},
+ {title:'Triage QC records',desc:'File daily electronic QC Device and scheduled liquid QC printouts, with lot, date, operator and corrective action when applicable.',role:'Trained lab personnel / RN'},
+ {title:'Clinitek UA and hCG QC records',desc:'File UA strip and hCG control results when required by the market SOP, including new-bottle or new-lot QC and applicable printouts.',role:'Trained lab personnel / RN'},
  {title:'Other analyzer and rapid-test QC',desc:'File applicable calibration, controls, new-lot/shipment verification and QC results.',role:'Authorized personnel'},
  {title:'Maintenance and exceptions',desc:'File required instrument maintenance, failed-QC follow-up, temperature excursions and corrective actions.',role:'Lab personnel / RN'}
+];
+// Reference cadences sourced from the instrument QC overview. Only applicable
+// when the instrument is installed and the clinic's approved SOP requires it.
+// Recurring 28-day checks are shown separately from calendar-month checks.
+const monthlyQcTasks=[
+ {id:'pathfast-28d',group:'Recurring QC & calibration',title:'PATHFAST calibration and QC',frequency:'Every 28 days',desc:'Complete calibration and both QC levels for the active PATHFAST assays before the instrument lockout. Verify acceptable results and document any failure or repeat.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'pathfast',tab:'cal-qc'}},
+ {id:'piccolo-30d',group:'Recurring QC & calibration',title:'Piccolo Xpress external QC',frequency:'Every 30 days / panel SOP',desc:'Run the required control levels for panels in use according to the clinic panel schedule; also complete new-lot or new-shipment checks as specified.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'piccolo',tab:'monthly-qc'}},
+ {id:'triage-30d',group:'Recurring QC & calibration',title:'Quidel Triage liquid QC',frequency:'Every 30 days',desc:'Run required liquid QC for each active assay lot. This is separate from the daily electronic QC Device and any new-box or new-lot checks.',role:'Authorized trained personnel',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'liquid-qc-every-30-days'}},
+ {id:'clinitek-monthly',group:'Recurring QC & calibration',title:'Siemens Clinitek UA / hCG QC',frequency:'Monthly where required',desc:'Complete urine dipstick and hCG external QC on the market-approved schedule. Some markets require daily QC instead; also follow new-bottle and new-lot rules.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'}},
+ {id:'sofia-cal-30d',group:'Recurring QC & calibration',title:'Sofia 2 optical calibration check',frequency:'Every 30 days',desc:'Run the optical calibration check with the dedicated calibration cassette. Separately perform assay external QC for new shipments or lots and when required by the IFU.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sofia',tab:'calibration-scan-ma'}}
 ];
 const sharedBinder=[
  {title:'Environmental and cleaning logs',desc:'Verify completed temperature and cleaning records are filed in the approved location.',role:'Lab personnel / RN'},
@@ -43,17 +54,17 @@ const sharedBinder=[
  {title:'Maintenance and corrective actions',desc:'File required instrument service, out-of-range results, failed QC and resolution records.',role:'Lab personnel / RN'}
 ];
 const markets=[
- {id:'socal',name:'Southern California',short:'SoCal',tasks:socalTasks,binder:socalBinder,clinics:[
+ {id:'socal',name:'Southern California',short:'SoCal',tasks:socalTasks,monthly:monthlyQcTasks,binder:socalBinder,clinics:[
   {id:'bh',name:'Beverly Hills'},
   {id:'bh-satellite',name:'Beverly Hills Satellite'},
   {id:'sm',name:'Santa Monica'},
   {id:'mb',name:'Manhattan Beach'}
  ]},
- {id:'norcal',name:'Northern California',short:'NorCal',tasks:sharedTasks,binder:sharedBinder,clinics:[
+ {id:'norcal',name:'Northern California',short:'NorCal',tasks:sharedTasks,monthly:monthlyQcTasks,binder:sharedBinder,clinics:[
   {id:'sf',name:'San Francisco'},
   {id:'palo-alto',name:'Palo Alto'}
  ]},
- {id:'ny',name:'New York',short:'New York',tasks:sharedTasks,binder:sharedBinder,clinics:[
+ {id:'ny',name:'New York',short:'New York',tasks:sharedTasks,monthly:monthlyQcTasks,binder:sharedBinder,clinics:[
   {id:'ues',name:'Upper East Side'},
   {id:'tribeca',name:'Tribeca'},
   {id:'hamptons',name:'Hamptons'},
@@ -61,7 +72,7 @@ const markets=[
   {id:'gramercy',name:'Gramercy'},
   {id:'hudson-yards',name:'Hudson Yards'}
  ]},
- {id:'fl',name:'Florida',short:'Florida',tasks:sharedTasks,binder:sharedBinder,clinics:[
+ {id:'fl',name:'Florida',short:'Florida',tasks:sharedTasks,monthly:monthlyQcTasks,binder:sharedBinder,clinics:[
   {id:'boca',name:'Boca Raton'},
   {id:'palm-beach',name:'Palm Beach'},
   {id:'coral-gables',name:'Coral Gables'}
