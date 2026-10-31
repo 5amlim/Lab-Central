@@ -148,11 +148,14 @@ function card(group,index,tasks){
 function monthlyCard(t){
  return '<section class="dqc-monthly-card"><div class="dqc-monthly-frequency">'+safe(t.frequency)+'</div>'+taskItem(t)+'</section>';
 }
-function binderCard(item){
+function binderCard(item,market,view){
  const badge=item.badges&&item.badges.includes('Printouts Needed')?'<div class="dqc-binder-task-badges"><span class="dqc-task-badge is-print">Printouts Needed</span></div>':'';
+ const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
+ const url=item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
+ const link=url?'<a class="dqc-binder-template-link" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">Open log template <span aria-hidden="true">↗</span></a>':'';
  return '<article class="dqc-binder-item"><div class="dqc-binder-main">'+
   '<div class="dqc-binder-heading"><h3>'+safe(item.title)+'</h3><span class="dqc-role">'+safe(item.role)+'</span></div>'+
-  '<div class="dqc-binder-description-row"><p>'+safe(item.desc)+'</p>'+badge+'</div>'+
+  '<div class="dqc-binder-description-row"><p>'+safe(item.desc)+'</p>'+badge+'</div>'+link+
   '</div></article>';
 }
 /* Blank, print-ready adaptations of the logs supplied for the lab templates library. */
@@ -212,7 +215,7 @@ function renderDailySections(market,dailyQcTasks){
  '<p class="dqc-cadence-note">Perform only the checks applicable to instruments and tests installed at this clinic. External QC may be due daily, with a new lot or shipment, or on another approved schedule. A readiness check does not replace required external QC.'+(market.id==='socal'?' <strong>SoCal:</strong> UA/hCG external QC is not a routine daily requirement; follow the monthly and event-triggered schedule.':' <strong>Other markets:</strong> Clinitek UA and hCG external QC is required daily; file its printouts in the daily binder.')+'</p>'+
  '<div class="dqc-daily-qc-grid">'+dailyQcTasks.map(taskItem).join('')+'</div></section>'+
  '<section id="dqc-panel-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-binder"'+(selectedView==='binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2 id="dqc-binder-title">Binder Documentation</h2><p>File or verify completed records in the clinic-approved binder or electronic log</p></div></div><span class="dqc-check-count">'+market.binder.length+' record groups</span></header>'+
- '<div class="dqc-binder-grid">'+market.binder.map(binderCard).join('')+'</div>'+
+ '<div class="dqc-binder-grid">'+market.binder.map(item=>binderCard(item,market,'daily')).join('')+'</div>'+
  '<p class="dqc-binder-note">File daily QC records, cleaning logs and event-based controls required by the clinic SOP. For recurring 28-day or 30-day QC and calibration printouts, use the separate Lab Monthly Checklist binder. Consult the approved site binder index.</p></section>'+renderTemplatePanel(market,'daily');
 }
 function renderMonthlySections(market,monthlyTasks){
@@ -227,7 +230,7 @@ function renderMonthlySections(market,monthlyTasks){
  '<div class="dqc-monthly-grid">'+monthlyTasks.map(monthlyCard).join('')+'</div></section>'+
  '<section id="dqc-panel-monthly-binder" role="tabpanel" class="dqc-workstream dqc-binder-workstream" aria-labelledby="dqc-tab-monthly-binder"'+(v==='monthly-binder'?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('binder')+'</span><div><h2>Monthly Binder Documentation</h2><p>Printouts and records for recurring QC and calibration checks</p></div></div><span class="dqc-check-count">'+monthlyRecords.length+' record groups</span></header>'+
  '<p class="dqc-cadence-note"><strong>File required QC/calibration printouts and signed QC records in the monthly binder.</strong> Include the date, instrument, lot, operator and corrective action when required by site SOP. Sofia 2 calibration and QC are documented in the approved log without a printout.</p>'+
- '<div class="dqc-binder-grid">'+monthlyRecords.map(binderCard).join('')+'</div>'+
+ '<div class="dqc-binder-grid">'+monthlyRecords.map(item=>binderCard(item,market,'monthly')).join('')+'</div>'+
  '<p class="dqc-binder-note">Only include installed equipment and checks that were required or due. Daily binder items remain on the Lab Daily Checklist page.</p></section>'+renderTemplatePanel(market,'monthly');
 }
 function render(page='daily'){
