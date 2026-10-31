@@ -27,19 +27,56 @@ const tiers=[
 ];
 function rows(){return symbols.map(s=>'<article class="pxr-flag-card"><header><span class="pxr-symbol">'+E(s.symbol)+'</span><strong>'+E(s.name)+'</strong></header><div class="pxr-flag-body"><p>'+E(s.meaning)+'</p><div class="pxr-action"><span>What to do</span><p>'+E(s.action)+'</p></div></div></article>').join('');}
 function sample(){
- return '<section class="pxr-printout" aria-label="Annotated example of a Piccolo result printout"><div class="pxr-printout-paper"><div class="pxr-ticket-name">PICCOLO XPRESS</div><div>Example panel: Comprehensive Metabolic</div><div>Sample type: Patient</div><div>Patient ID: EXAMPLE ONLY</div><div>Disc lot: EXAMPLE</div><div>Analyzer serial: EXAMPLE</div><div class="pxr-ticket-sep">Analyte&nbsp;&nbsp;&nbsp;Result&nbsp;&nbsp;Ref. range&nbsp;&nbsp;Units</div>'+
- '<div>NA+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;137&nbsp;&nbsp;&nbsp;&nbsp;128–145&nbsp;&nbsp;&nbsp;mmol/L</div>'+
- '<div>K+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.0&nbsp;&nbsp;&nbsp;&nbsp;3.6–5.1&nbsp;&nbsp;&nbsp;mmol/L</div>'+
- '<div>GLU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.8* &nbsp;&nbsp;4.05–6.55&nbsp;mmol/L</div>'+
- '<div>eGFR&nbsp;&nbsp;&nbsp;60 c &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mL/min</div>'+
- '<div class="pxr-ticket-sep">QC OK</div><div>HEM 1+&nbsp;&nbsp;LIP 0&nbsp;&nbsp;ICT 0</div></div>'+
+ // Manufacturer's receipt is a narrow thermal strip with a centered panel name,
+ // left/right metadata, and four fixed-width analyte columns. All IDs are fictional.
+ const width=37;
+ const center=s=>" ".repeat(Math.max(0,Math.floor((width-s.length)/2)))+s;
+ const field=(label,value)=>label.padEnd(20," ")+String(value).padStart(17," ");
+ const analyte=(name,value,range,unit)=>String(name).padEnd(6," ")+String(value).padStart(7," ")+String(range).padStart(13," ")+String(unit).padStart(11," ");
+ const chemistry=[
+  ["NA+","137","128-145","mmol/L"],
+  ["K+","4.0","3.6-5.1","mmol/L"],
+  ["tCO2","28","18-33","mmol/L"],
+  ["CL-","103","98-108","mmol/L"],
+  ["GLU","7.8*","4.05-6.55","mmol/L"],
+  ["CA","2.2","2.0-2.58","mmol/L"],
+  ["BUN","4.2","2.5-7.9","mmol/L"],
+  ["CRE","79","53-106","umol/L"],
+  ["eGFR","60 c","","mL/min"],
+  ["ALP","91","42-141","U/L"],
+  ["ALT","29","10-47","U/L"],
+  ["AST","25","11-38","U/L"],
+  ["TBIL","14.2","3.4-27.4","umol/L"],
+  ["ALB","44","33-55","g/L"],
+  ["TP","78","64-81","g/L"]
+ ];
+ const receipt=[
+  center("piccolo xpress"),
+  center("Comprehensive"),
+  center("Metabolic Panel"),
+  "",
+  field("01 Jan 2026","10:24 AM"),
+  field("Sample Type:","Patient"),
+  field("Patient ID:","SAMPLE001"),
+  field("Disc Lot Number:","DEMOLOT"),
+  field("Serial Number:","DEMO000"),
+  "-".repeat(width),
+  ...chemistry.map(row=>analyte(...row)),
+  "",
+  "QC     OK",
+  "HEM 1+       LIP 0       ICT 0"
+ ].join("\n");
+ return '<section class="pxr-printout" aria-label="Annotated example of a Piccolo result printout">'+
+ '<div class="pxr-paper-area"><div class="pxr-printout-paper"><pre class="pxr-receipt-text">'+E(receipt)+'</pre></div>'+
+ '<p class="pxr-paper-caption">Sample receipt layout · fictional patient ID, lot and serial number</p></div>'+
  '<div class="pxr-printout-key"><h3>How to read this example</h3>'+
- '<div><b>Header</b><span>Verify panel, date/time, sample type, patient ID, disc lot and instrument serial number.</span></div>'+
- '<div><b>Analyte rows</b><span>Read the value alongside its reference range and units. An asterisk identifies an out-of-range result.</span></div>'+
- '<div><b>QC OK</b><span>Internal quality checks passed. Review any additional flags before releasing results.</span></div>'+
- '<div><b>HEM / LIP / ICT</b><span>Qualitative interference indices are not the same as suppressed analyte values.</span></div>'+
- '<p class="pxr-sample-disclaimer">Illustrative values and sample identifier only. This is not a patient result or a substitute for the actual analyzer printout.</p></div></section>';
+ '<div><b>Header</b><span>The disc/panel name appears above the run date and time. Sample type, sample ID, lot, and serial number appear in aligned fields.</span></div>'+
+ '<div><b>Analyte rows</b><span>Four fixed-width columns show the analyte, result, reference interval, and units. The <b>*</b> next to GLU indicates a result outside its example interval.</span></div>'+
+ '<div><b>QC OK</b><span>Internal quality checks passed. This does not replace external QC or review of result flags.</span></div>'+
+ '<div><b>HEM / LIP / ICT</b><span>Qualitative sample interference indices appear beneath the QC line.</span></div>'+
+ '<p class="pxr-sample-disclaimer">Illustrative result values and identifiers only. Actual panels, units and reference intervals depend on analyzer settings and reagent disc. Not a patient result.</p></div></section>';
 }
+
 function render(){
  return '<section class="pxr-guide" aria-label="Piccolo Xpress result interpretation"><div class="pxr-hero"><div><span class="pxr-kicker">PICCOLO XPRESS · RESULT PRINTOUT</span><h2>Result interpretation</h2><p>Understand the printed symbols, internal QC status, and interference flags before documenting or releasing a result.</p></div><span class="pxr-reference-badge">STAFF REFERENCE</span></div>'+
  '<div class="pxr-alert"><strong>Important:</strong> A result marked with an asterisk is different from a result suppressed by ~~~, HEM, LIP or ICT. Suppressed values do not provide a numerical result for that analyte. Follow the approved instrument SOP and notify the provider when appropriate.</div>'+
@@ -47,7 +84,7 @@ function render(){
  '<h3 class="pxr-section-heading">What each symbol means</h3><div class="pxr-flag-grid">'+rows()+'</div>'+
  '<section class="pxr-indices"><h3>HEM / LIP / ICT indices</h3><p>These indicate the qualitative degree of <b>hemolysis (HEM)</b>, <b>lipemia (LIP)</b>, and <b>icterus (ICT)</b> in the specimen. Their 0 to 3+ scale is distinct from a flag printed instead of an analyte value.</p><div class="pxr-indices-grid">'+tiers.map(([v,h,d])=>'<div><strong>'+E(v)+'</strong><b>'+E(h)+'</b><span>'+E(d)+'</span></div>').join('')+'</div><p>The presence of an index does not automatically suppress every analyte. Confirm which individual results were reported and which were withheld.</p></section>'+
  '<section class="pxr-trouble"><h3>When an analyzer suppresses a result or cancels a disc</h3><ol><li>Do not manually enter or release a missing or suppressed analyte concentration.</li><li>Review the screen message and print or save the analyzer error report.</li><li>If the disc cancels, capture the product/panel name, lot number, four-digit error code and specimen type.</li><li>Follow the current SOP to troubleshoot, repeat or recollect. Escalate unresolved errors to the lab supervisor or manufacturer technical support.</li></ol><p>A displayed <b>QC OK</b> does not override a suppressed analyte flag. The analyzer uses internal QC to prevent potentially inaccurate values from being reported.</p></section>'+
- '<p class="pxr-source">Source: <b>Piccolo Xpress Quick Reference Guide</b>, English section, page 10 (“Interpreting Results”) and pages 15–17 (“Troubleshooting”). This is a guide to printout notation, not a clinical decision algorithm. Verify current panel-specific instructions and the approved laboratory SOP.</p></section>';
+ '<p class="pxr-source">Printout format based on the <a href="https://piccolo-xpress.sirv.com/resources/brochures/piccolo-xpress-quick-reference-guide.pdf" target="_blank" rel="noopener noreferrer">Piccolo Xpress Quick Reference Guide</a>, English page 10 (“Interpreting Results”); symbol guidance also references pages 15–17 (“Troubleshooting”). This is a guide to printout notation, not a clinical decision algorithm. Verify current panel-specific instructions and the approved laboratory SOP.</p></section>';
 }
 window.LAB_PICCOLO_RESULTS={render};
 })();
