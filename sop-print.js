@@ -196,7 +196,7 @@ function market(root){
 }
 function supports(route,procedure){
  if(procedure)return true;
- if(['orders','calculators','specimen-dropoff','sendout-log','outside'].includes(route.id))return true;
+ if(['orders','calculators','specimen-dropoff','sendout-log','outside','envi-ordering'].includes(route.id))return true;
  if(route.id==='order-sets'&&route.tab==='sendout')return true;
  if(route.id==='sendout'&&route.tab==='overview')return true;
  return false;
@@ -205,6 +205,7 @@ function build(route,root){
  if(route.id==='orders')return orders(route.tab);
  if(!root)return null;
  if(route.id==='calculators')return calculators(root);
+  if(route.id==='envi-ordering')return window.LAB_ENVI_ORDERING?.compactSop?.()||null;
  if(route.id==='order-sets'&&route.tab==='sendout')return athena(root);
  if(['outside','specimen-dropoff','sendout-log'].includes(route.id))return ops(root,route);
  if(route.id==='sendout'&&route.tab==='overview')return market(root);
