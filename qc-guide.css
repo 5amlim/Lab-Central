@@ -228,3 +228,27 @@
 .qc-patient-load-sequence .qc-screen-gallery--piccolo{margin-bottom:11px}
 @media(max-width:650px){.qc-patient-sequence-head{align-items:flex-start;flex-direction:column;gap:5px}.qc-patient-load-sequence{margin:12px;padding:10px}}
 @media print{.qc-gallery-more{display:none!important}.qc-screen-gallery--scroll>.qc-screen-reference{padding-bottom:13px}.qc-patient-load-sequence{break-inside:auto}}
+
+
+/* pocH-100i maintenance, QC and reagent screen illustrations. Screen labels follow IFU;
+   these are carefully annotated drawings rather than photographs of instrument software. */
+.qc-poch-top{background:#d7edf5!important;color:#2b6578!important;padding:7px 10px!important}
+.qc-poch-top strong{font-size:12px!important;color:#2196a0!important}
+.qc-poch-top small{font-size:9px;color:#638292!important}
+.qc-poch-menu-label{font-size:12px;font-weight:900;color:#345f73;text-align:center;padding:13px 8px 10px;letter-spacing:.035em}
+.qc-poch-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:3px 12px 14px;flex:1;align-content:center}
+.qc-poch-option{position:relative;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;background:#e5f0f5;border:1px solid #acc9d6;border-radius:6px;color:#37596e;padding:7px;font-size:11px;font-weight:750;line-height:1.4}
+.qc-poch-option.active{background:#def5ed;border:2px solid #26958b;color:#207b72}
+.qc-poch-option b{font-size:inherit;font-weight:inherit}
+.qc-poch-option em{position:absolute;right:4px;bottom:3px;color:#33857e;font-size:7px;font-style:normal;letter-spacing:.04em}
+.qc-poch-bottom{display:flex;justify-content:space-between;margin-top:auto;padding:8px 11px;background:#e1f1f7;color:#688496;border-top:1px solid #bcd6e2;font-size:10px}
+.sysmex-maint-screen-flow{margin:18px 0 8px;padding:16px 18px;background:#f6fafc;border:1px solid #d7e6ed;border-radius:13px}
+.sysmex-maint-screen-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px}
+.sysmex-maint-screen-heading strong{color:#285e75;font-size:14px}
+.sysmex-maint-screen-heading span{color:#4e8391;font-size:11px;font-weight:700}
+.sysmex-maint-screen-flow .qc-screen-gallery--scroll>.qc-screen-reference{flex:0 0 clamp(320px,33%,460px);width:clamp(320px,33%,460px)}
+.sysmex-maint-screen-flow .qc-device-screen{min-height:210px;display:flex;flex-direction:column;background:#f3fafb}
+.sysmex-maint-screen-flow .qc-visual-top strong{font-size:12px}
+.sysmex-maint-screen-flow .qc-screen-instruction{font-size:11.5px}
+@media(max-width:650px){.sysmex-maint-screen-flow{padding:11px 10px}.sysmex-maint-screen-heading{flex-direction:column;align-items:flex-start;gap:5px}.sysmex-maint-screen-flow .qc-screen-gallery--scroll>.qc-screen-reference{flex-basis:85vw;width:85vw}}
+@media print{.sysmex-maint-screen-flow .qc-screen-gallery--scroll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}.sysmex-maint-screen-flow .qc-screen-gallery--scroll>.qc-screen-reference{width:auto;flex-basis:auto}}
