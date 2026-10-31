@@ -172,6 +172,14 @@ function screenPanel(item,brand,number){
    '<div class="qc-device-mainstate"><span>Ready</span><span>Sample ID <b>#####</b></span></div>'+
    '<div class="qc-device-mainmodes"><span>WB</span><span>PD</span><span>RUN</span></div>'+
    '<div class="qc-device-mainfooter"><span>QC</span><span>Result</span><span>Shutdown</span></div>';
+ }else if(item.kind==="pochPhysical"){
+  body='<div class="qc-poch-physical"><strong>'+esc(item.title||"Prepare supplies")+'</strong>'+
+   '<p>'+esc(item.detail||"Follow the approved physical handling instructions.")+'</p>'+
+   '<div class="qc-poch-physical-labels">'+(item.labels||[]).map(value=>'<span>'+esc(value)+'</span>').join("")+'</div></div>';
+ }else if(item.kind==="pochStatus"){
+  body='<div class="qc-poch-status"><strong>'+esc(item.title||"Operation in progress")+'</strong>'+
+   '<p>'+esc(item.detail||"Wait for the completion prompt.")+'</p>'+
+   '<span>Automatic process</span></div>';
  }else if(isPoch&&Array.isArray(item.items)){
   // Schematic based on the pocH-100i IFU's pastel-color two-column operator buttons.
   body='<div class="qc-poch-menu-label">'+esc(item.screen||"MAIN")+'</div>'+
