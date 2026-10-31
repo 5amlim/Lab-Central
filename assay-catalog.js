@@ -20,7 +20,7 @@ const tests={
  triage:[
   {title:'Cardiac troponin I',complexity:'moderate',color:'#8b9fcf',tint:'#edf0f9',deep:'#4e6eaa',boxColor:'Blue stripe · magenta cassette',groups:{'Cardiac injury marker':A('Cardiac troponin I')}},
   {title:'D-dimer',complexity:'moderate',color:'#f0c631',tint:'#fff9df',deep:'#8e6c09',boxColor:'Yellow stripe · magenta cassette',groups:{'Coagulation / fibrinolysis marker':A('D-dimer')}},
-  {title:'B-type natriuretic peptide',complexity:'moderate',color:'#419a84',tint:'#e7f5f0',deep:'#226c5c',boxColor:'Green stripe · magenta cassette',groups:{'Heart failure marker':A('B-type natriuretic peptide')}}
+  {title:'B-type natriuretic peptide',complexity:'waived',color:'#419a84',tint:'#e7f5f0',deep:'#226c5c',boxColor:'Green stripe · magenta cassette',groups:{'Heart failure marker':A('B-type natriuretic peptide')},note:'CLIA waived for EDTA whole blood only. EDTA plasma testing is moderate complexity. Follow the current Quidel Triage BNP assay IFU and approved site SOP.'}
  ],
  clinitek:[
   {title:'Urinalysis reagent strip',complexity:'waived',groups:{'Urinalysis parameters':A('Glucose|Bilirubin|Ketones|Specific gravity|Blood / hemoglobin|pH|Protein|Urobilinogen|Nitrite|Leukocyte esterase')}},
@@ -205,7 +205,7 @@ function piccoloPtLegend(panel){
 const references={
  piccolo:'https://www.abaxis.com/reagent-panels/',
  pathfast:'https://www.pathfast.com/testing-menu',
- triage:'https://www.cliawaived.com/triage-meterpro.html',
+ triage:'https://www.quidelortho.com/us/en/products/triage-meter-pro/quidel-triage-bnp-test',
  spotfire:'https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-spotfire-respiratory-panels.html',
  torch:'https://www.biomerieux.com/us/en/our-offer/clinical-products/biofire-gastrointestinal-panel.html'
 };
