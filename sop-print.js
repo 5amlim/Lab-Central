@@ -145,11 +145,33 @@ function ops(root,route){
    return [label,info];
   }));
  }
- const additional=Array.from(root.querySelectorAll('.ops-card')).slice(0,14);
- for(const card of additional){h+=note(nodeText(card.querySelector('h3')),htmlText(card.querySelector('p,ul,ol')));}
+ const additional=Array.from(root.querySelectorAll('.ops-card')).slice(0,20);
+ const kitOptions=additional.filter(card=>!/^Include with every kit$/i.test(nodeText(card.querySelector('h3'))));
+ const kitSupplies=additional.find(card=>/^Include with every kit$/i.test(nodeText(card.querySelector('h3'))));
+ if(kitSupplies){
+  const list=Array.from(kitSupplies.querySelectorAll('li')).map(li=>li.innerHTML);
+  h+=note('Required kit supplies',list.length?bullet(...list):htmlText(kitSupplies));
+ }
+ if(kitOptions.length){
+  h+=fork('Which collection kit or specimen type is ordered?',kitOptions.map(card=>[
+   nodeText(card.querySelector('h3')),
+   '<p>'+htmlText(card.querySelector('p'))+'</p>'
+  ]));
+ }
+ const routes=Array.from(root.querySelectorAll('.ops-route'));
+ if(routes.length){
+  h+=fork('How should the returned specimen be handled?',routes.map(card=>[
+   nodeText(card.querySelector('strong')),
+   '<p>'+htmlText(card.querySelector('p'))+'</p>'
+  ]));
+ }
+ if(route.id==='sendout-log'){
+  const market=root.querySelector('.lc-log-outcome');
+  if(market)h+=note('Regional log and pickup confirmation',htmlText(market));
+ }
  const last=root.querySelector('.ops-citation,.lc-guide-warning');
  if(last)h+=note('Reference',htmlText(last),true);
- if(!flow.length&&!accordions.length&&!additional.length)return null;
+ if(!flow.length&&!accordions.length&&!additional.length&&!routes.length)return null;
  return h+finish();
 }
 function market(root){
