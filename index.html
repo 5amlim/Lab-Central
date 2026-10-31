@@ -1988,7 +1988,97 @@ el('openSidebar').addEventListener('click',()=>{el('sidebar').classList.add('ope
 el('closeSidebar').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 el('sidebarScrim').addEventListener('click',()=>{el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')});
 let guidePrintRestore=null;
+let labPrintMode=null;
+function procedurePrintGroup(){
+ const route=sectionFromHash();
+ const sec=all.find(x=>x.id===route.id);
+ if(!sec||sec.archived||!instrumentCategories.includes(sec.category))return null;
+ const groups=buildGroups(sec);
+ const group=route.tab==='combined-qc'&&sec.id==='clinitek'?
+   (groups.find(x=>x.id===state.clinitekQc)||groups.find(x=>x.id==='ua-qc')):
+   groups.find(x=>x.id===route.tab);
+ return group?{sec,group}:null;
+}
+function updatePrintChoices(){
+ const available=Boolean(procedurePrintGroup());
+ el('compactPrintChoice').disabled=!available;
+ el('compactPrintDescription').textContent=available?
+  'All steps, nested instructions and important notes':'Available in step-by-step testing, QC or maintenance tabs';
+ el('compactPrintHelp').hidden=available;
+}
+function closePrintOptions(){
+ el('printOptions').hidden=true;
+ el('printBtn').setAttribute('aria-expanded','false');
+}
+function togglePrintOptions(){
+ const menu=el('printOptions');
+ const opening=menu.hidden;
+ menu.hidden=!opening;
+ el('printBtn').setAttribute('aria-expanded',String(opening));
+ if(opening)updatePrintChoices();
+}
+function compactNote(node){
+ const urgent=/^(IMPORTANT|WARNING|DO NOT|A\) DO NOT|B\) DO NOT|CAUTION|STOP)/i.test(node.text||'');
+ return '<aside class="lc-compact-note'+(urgent?' urgent':'')+'">'+markText(node.text||'')+'</aside>';
+}
+function compactChildren(nodes){
+ if(!nodes||!nodes.length)return '';
+ let h='<ul>';
+ for(const node of nodes){
+  if(node.kind==='note'){h+='<li class="lc-compact-note-row">'+compactNote(node)+'</li>';continue}
+  h+='<li>'+markText(node.text||'')+compactChildren(node.children||[])+'</li>';
+ }
+ return h+'</ul>';
+}
+function buildCompactPrint(){
+ const selected=procedurePrintGroup();
+ if(!selected)return null;
+ const {sec,group}=selected;
+ const steps=guideStepData(makeTree(group.blocks||[]));
+ const title=instrumentTabTitle(group.title);
+ const head='<div class="lc-compact-head"><span class="lc-compact-kicker">LAB CENTRAL · PROCEDURE STEPS</span><h1>'+safeHtml(sec.title)+' · '+safeHtml(title)+'</h1><p>'+safeHtml(sec.subtitle||'')+'</p></div>';
+ let meta='<div class="lc-compact-meta"><span>'+safeHtml(sec.category)+'</span>';
+ if(sec.sample)meta+='<span>Specimen: '+safeHtml(sec.sample)+'</span>';
+ if(sec.qc&&/\bqc\b|control|calibrat/i.test(group.title))meta+='<span>QC: '+safeHtml(sec.qc)+'</span>';
+ meta+='</div>';
+ let list='';
+ steps.forEach(function(entry,i){
+  let content='';
+  for(const note of entry.leading||[])content+=compactNote(note);
+  content+=compactChildren(entry.root.children||[]);
+  for(const note of entry.notes||[])content+=compactNote(note);
+  list+='<article class="lc-compact-step"><div class="lc-compact-step-head"><span class="lc-compact-step-number">'+String(i+1).padStart(2,'0')+'</span><h2>'+markText(entry.root.text||'')+'</h2></div>'+content+'</article>';
+ });
+ // Some Sysmex QC control handling details are supplied separately from the base procedure blocks.
+ if(sec.id==='sysmex'&&/\bQC\b/i.test(group.title)&&window.LAB_QC_GUIDE?.controlNotes){
+  const temp=document.createElement('div');
+  temp.innerHTML=window.LAB_QC_GUIDE.controlNotes();
+  const extra=temp.textContent.trim();
+  if(extra&&extra.length>30)list+='<aside class="lc-compact-note">'+safeHtml(extra)+'</aside>';
+ }
+ const foot='<div class="lc-compact-footer">Staff reference only. Verify against the approved SOP and manufacturer IFU. Procedure steps and their written substeps are included; equipment illustrations are excluded. Use Full page for procedures where on-screen images are needed.</div>';
+ return head+meta+list+foot;
+}
+function removeCompactPrint(){
+ const node=el('lcCompactPrintDocument');
+ if(node)node.remove();
+ document.documentElement.removeAttribute('data-lc-print');
+}
+function ensureCompactPrint(){
+ const html=buildCompactPrint();
+ if(!html)return false;
+ removeCompactPrint();
+ const node=document.createElement('section');
+ node.id='lcCompactPrintDocument';
+ node.className='lc-print-compact-document';
+ node.setAttribute('aria-label','Compact procedure steps for printing');
+ node.innerHTML=html;
+ document.body.appendChild(node);
+ document.documentElement.setAttribute('data-lc-print','compact');
+ return true;
+}
 function prepareGuidePrint(){
+ if(labPrintMode==='compact')return;
  const route=sectionFromHash();
  const sec=all.find(x=>x.id===route.id);
  if(sec&&buildGroups(sec).some(x=>x.id===route.tab)&&state.guideMode!=='all'){
@@ -1997,9 +2087,30 @@ function prepareGuidePrint(){
   render();
  }
 }
+function printSelection(type){
+ closePrintOptions();
+ if(type==='compact'&&!procedurePrintGroup())return;
+ labPrintMode=type==='compact'?'compact':'full';
+ if(labPrintMode==='compact'){if(!ensureCompactPrint()){labPrintMode=null;return}}
+ else prepareGuidePrint();
+ window.print();
+}
+el('printBtn').addEventListener('click',togglePrintOptions);
+el('printOptions').addEventListener('click',e=>{
+ const choice=e.target.closest('[data-lc-print]');
+ if(!choice||choice.disabled)return;
+ printSelection(choice.dataset.lcPrint);
+});
+document.addEventListener('click',e=>{
+ if(!e.target.closest('.lc-print-anchor'))closePrintOptions();
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!el('printOptions').hidden){closePrintOptions();el('printBtn').focus()}
+});
 window.addEventListener('beforeprint',prepareGuidePrint);
-el('printBtn').addEventListener('click',()=>{prepareGuidePrint();window.print();});
 window.addEventListener('afterprint',()=>{
+ removeCompactPrint();
+ labPrintMode=null;
  if(guidePrintRestore!==null){
   state.guideMode=guidePrintRestore;
   guidePrintRestore=null;
