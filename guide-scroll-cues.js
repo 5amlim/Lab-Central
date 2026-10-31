@@ -93,10 +93,11 @@ function setup(node){
   const moreRight=/(auto|scroll)/.test(style.overflowX)&&node.clientWidth>100&&
     node.scrollWidth>node.clientWidth+12&&node.scrollLeft+node.clientWidth<node.scrollWidth-8;
   const horizontal=/(auto|scroll)/.test(style.overflowX)&&node.scrollWidth>node.clientWidth+12;
+  const onCardControls=node.matches(".qc-screen-gallery--scroll");
   frame.classList.toggle("lc-has-horizontal-overflow",horizontal);
   frame.classList.toggle("lc-has-more-below",below);
-  frame.classList.toggle("lc-has-more-right",moreRight);
-  right.hidden=!moreRight;
+  frame.classList.toggle("lc-has-more-right",moreRight&&!onCardControls);
+  right.hidden=!moreRight||onCardControls;
   if((below||moreRight)&&!node.hasAttribute("tabindex"))node.tabIndex=0;
  }
  function schedule(){
