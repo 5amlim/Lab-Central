@@ -466,7 +466,7 @@ function body(shape,a){
  }else if(shape==="modules"){
  v=rect(194,104,215,166,18,"#eef3f6","#9cadb9",3)+rect(211,119,180,99,10,"#d9e5ea","#b7cbd4",2)+'<path d="M260 135 H330 V151 H280 V192 H260Z" fill="#293847" stroke="#c84f4f" stroke-width="4"/>'+rect(214,228,179,29,7,"#dae6eb")+txt(303,245,"BIOFIRE SPOTFIRE",11,"#2a809b",840)+rect(404,59,120,196,17,"#f3f7f9","#9db3bf",3)+rect(417,81,95,154,6,"#263c4b")+rect(427,94,75,119,3,"#e1edf2")+txt(465,131,"Available",13,"#356b86",850)+circle(464,243,7,"#4a91aa");
  }else if(shape==="febridx"){
-  v='<g transform="translate(5 5) scale(.84)">'+febridxDeviceMarkup("ready")+'</g>';
+  v='<g transform="translate(286 2) scale(.38)">'+febridxDeviceMarkup("ready")+'</g>';
  }else if(shape==="sofia"){
  v='<path d="M210 92 Q219 62 262 59 L460 69 Q507 76 519 126 L524 241 Q522 258 503 264 L253 266 Q218 258 214 230Z" fill="#223440" stroke="#1a313d" stroke-width="4"/>'+'<path d="M205 119 L223 77 Q245 60 270 59 L270 263 L237 264Z" fill="#117b9b"/>'+rect(284,87,204,121,15,"#1d2835","#638ca1",2)+rect(303,106,166,80,7,"#d9e9ef")+circle(387,146,24,"#edb76c")+txt(388,153,"+",29,"#fff",800)+rect(390,216,103,36,8,"#0d283a")+rect(415,220,55,27,6,"#1587a5")+txt(329,236,"Sofia 2",16,"#e5edf2",800);
  }else if(shape==="hemocue"){
