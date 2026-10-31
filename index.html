@@ -1815,7 +1815,7 @@ function sectionRender(sec,tab){
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
- let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1>${['sysmex','pathfast','triage','torch','febridx'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}<p class="detail-subtitle">${safeHtml(sec.subtitle)}</p></div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
+ let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${['sysmex','pathfast','triage','torch','febridx'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
  if(sec.id==='sendout')h+='<div class="sendout-reference-layout"><p class="sendout-page-lead">Site-specific instructions for specimen packaging, courier pickup, and receiving laboratory requirements.</p>';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
@@ -1874,7 +1874,7 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=renderGuidedProcedure(group,sec);
  }
- if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'} Do not enter patient information.</p>`;
+ if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
  if(sec.id==='sendout')h+='</section></div>';
  el('mainContent').innerHTML=h;
