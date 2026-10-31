@@ -777,20 +777,19 @@ function febridxCollectionGuide(){
  ].join(""),"FebriDx collection: the integrated capillary tube fills from a new hanging blood drop without touching finger skin, and must be completely filled","0 0 355 255");
  return '<section class="device-collection-guide febridx-collection-guide" aria-label="FebriDx fingerstick specimen collection reference">'+
   '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN &amp; COLLECTION</span><h3>What to collect</h3><p>Fingerstick capillary whole blood, collected with the FebriDx device’s integrated blood collection tube. No separate blood tube.</p></div></div>'+
-  '<div class="febridx-collection-grid">'+
+  '<div class="device-collection-frame febridx-collection-frame"><div class="device-collection-main"><div class="febridx-collection-grid">'+
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Clean the fingertip, twist and remove the protective lancet tab, then puncture using the device’s integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>02</span><strong>Fill the collection tube completely</strong></div><div class="febridx-collection-figure">'+collectArt+'</div><p>Massage from the base of the finger to form a new, large hanging drop. Touch the integrated tube to <strong>the drop only</strong>, never the skin, and fill it completely.</p></article>'+
   '</div>'+
-  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p>'+
+  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
  '</section>';
 }
 
-/* Keep one shared collection card and testing-window note in both overview
-   and patient-testing views. Exact limits are included only where established. */
+/* Reuse the same specimen collection and stability card in overview and patient testing. */
 const collectionTestWindows={
  sysmex:"Run EDTA whole-blood samples within 8 hours of collection when stored at room temperature.",
  piccolo:"Run whole blood within 60 minutes of collection. If delayed, separate and handle plasma under the approved SOP.",
- pathfast:"Test promptly after collection and mixing. Follow each assay's IFU for whole-blood/plasma stability and document serial draw times.",
+ pathfast:"Test promptly after collection and mixing. Follow assay-specific whole-blood/plasma limits and record serial draw times.",
  triage:"Follow the specimen stability window in the selected Triage assay IFU; handling differs by cardiac assay.",
  clinitek:"For urine reagent strips, aim to test within 2 hours of collection. Check the separate hCG cassette IFU for its specimen handling limit.",
  torch:"Follow the current BioFire GI panel IFU's testing window and temperature requirements for stool in Cary Blair.",
@@ -804,19 +803,18 @@ const collectionTestWindows={
 };
 function collectionTestWindow(sec){
  if(sec.archived||!collectionTestWindows[sec.id])return "";
- return '<p class="device-collection-test-window" role="note"><strong>Test within</strong><span>'+visualEsc(collectionTestWindows[sec.id])+'</span></p>';
+ return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong><p>'+visualEsc(collectionTestWindows[sec.id])+'</p></aside>';
 }
 function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
- if(sec.id==="febridx")return febridxCollectionGuide().replace(/<\/section>$/,collectionTestWindow(sec)+"</section>");
+ if(sec.id==="febridx")return febridxCollectionGuide().replace(/<\/section>$/,""+collectionTestWindow(sec)+"</div></section>");
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
- '<div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
+ '<div class="device-collection-frame"><div class="device-collection-main"><div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item"><div class="device-media-picture">'+mediaSvg(x[0])+'</div><div class="device-collection-copy"><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
- collectionTestWindow(sec)+
- '</section>';
+ '</div>'+collectionTestWindow(sec)+'</div></section>';
 }
 
 
