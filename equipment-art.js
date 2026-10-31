@@ -696,8 +696,89 @@ function mediaSvg(kind){
  '<text x="160" y="178" font-size="11" fill="#537a90" text-anchor="middle">VERIFY ASSAY</text>',
  "Assay-specific specimen collection reference");
 }
+
+/* Dedicated FebriDx fingerstick reference. The two actions are shown separately:
+   puncture/wipe the first drop, then fill the integrated tube using a new drop.
+   Layout and labels follow the manufacturer’s current U.S. collection guidance. */
+function febridxCollectionGuide(){
+ const fingerArt=illustratedSvg([
+  '<defs>',
+  '<linearGradient id="fbskin1" x1=".08" y1="0" x2=".95" y2=".3"><stop stop-color="#dca392"/><stop offset=".23" stop-color="#f4c8b9"/><stop offset=".72" stop-color="#f8d8c8"/><stop offset="1" stop-color="#d9a295"/></linearGradient>',
+  '<linearGradient id="fblancet1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfc"/><stop offset="1" stop-color="#bed0d8"/></linearGradient>',
+  '</defs>',
+  '<ellipse cx="165" cy="238" rx="111" ry="7" fill="#e5edf0"/>',
+  // Close-up finger profile and natural pad, with an off-center puncture site.
+  '<path d="M102 237L105 161Q106 126 117 103Q127 86 151 82Q182 79 201 106Q207 115 204 138L201 238Z" fill="url(#fbskin1)" stroke="#b98777" stroke-width="2.8"/>',
+  '<path d="M114 175Q108 130 126 109Q144 89 170 95" stroke="#fff2e6" stroke-width="7" opacity=".5" fill="none" stroke-linecap="round"/>',
+  '<path d="M170 95Q189 95 198 112L196 137" stroke="#ba8578" stroke-width="1.7" fill="none" opacity=".65"/>',
+  '<path d="M133 96Q143 88 163 89Q182 90 186 107L185 127Q183 140 167 144L139 142Q126 136 127 122Z" fill="#ffe3d7" stroke="#ca9d8d" stroke-width="1.8"/>',
+  '<path d="M135 107Q145 98 166 102" stroke="#fff5ef" stroke-width="2.3" stroke-linecap="round" fill="none"/>',
+  '<path d="M113 200Q134 213 161 205M115 223Q155 230 189 220" stroke="#d49f91" opacity=".28" stroke-width="1.5" fill="none"/>',
+  // Small puncture on the side, not through the nail.
+  '<circle cx="203" cy="144" r="3" fill="#b83b50"/><circle cx="201.8" cy="143" r="1" fill="#fce3e0"/>',
+  // Integrated green lancet head and housing at the lateral finger pad.
+  '<g transform="rotate(-24 234 132)">',
+  '<rect x="223" y="87" width="28" height="64" rx="8" fill="url(#fblancet1)" stroke="#819ca8" stroke-width="2.2"/>',
+  '<rect x="227" y="88" width="20" height="22" rx="5" fill="#268b75" stroke="#317767" stroke-width="1"/>',
+  '<path d="M226 114H249" stroke="#edf6f8" stroke-width="2"/>',
+  '<path d="M235 151V159" stroke="#7c949c" stroke-width="3" stroke-linecap="round"/>',
+  '</g>',
+  // Wipe-away gauze is a separate handling step, not in contact during puncture.
+  '<g transform="rotate(12 275 201)">',
+  '<rect x="263" y="180" width="56" height="48" rx="5" fill="#f9fcfc" stroke="#b8c9d1" stroke-width="1.7"/>',
+  '<path d="M267 190L312 218M270 218L313 186M277 183V224M296 182V225" stroke="#d5e2e5" stroke-width="1.2"/>',
+  '<circle cx="288" cy="204" r="7" fill="#b84a59" opacity=".82"/>',
+  '</g>',
+  '<path d="M214 176Q241 190 257 196" stroke="#9caeb7" stroke-width="1.7" stroke-dasharray="5 5" fill="none"/>',
+  '<path d="M250 190L258 197L248 199" fill="none" stroke="#9caeb7" stroke-width="1.7"/>',
+  '<text x="34" y="48" font-size="11" font-family="Arial,Helvetica,sans-serif" font-weight="800" fill="#57788a" letter-spacing=".6">SIDE OF FINGERTIP</text>',
+  '<path d="M147 53L194 78L203 141" fill="none" stroke="#5d8d9f" stroke-width="1.6"/>',
+  '<circle cx="203" cy="141" r="4.6" fill="none" stroke="#5d8d9f" stroke-width="1.5"/>'
+ ].join(""),"FebriDx fingerstick: lateral fingertip puncture with integrated lancet, followed by wiping the first blood drop with clean gauze","0 0 355 255");
+ const collectArt=illustratedSvg([
+  '<defs>',
+  '<linearGradient id="fbskin2" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#fff0e2"/><stop offset=".45" stop-color="#f1c5b4"/><stop offset="1" stop-color="#d6a192"/></linearGradient>',
+  '<linearGradient id="fbglass2" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#e7f4f8" stop-opacity=".75"/><stop offset=".4" stop-color="#fff" stop-opacity=".88"/><stop offset="1" stop-color="#b6d2df" stop-opacity=".65"/></linearGradient>',
+  '</defs>',
+  '<ellipse cx="161" cy="241" rx="121" ry="7" fill="#e5edf0"/>',
+  // Resting fingertip seen from the side, with natural curved finger pad.
+  '<path d="M28 90Q66 92 111 86L207 79Q246 77 258 102Q268 121 263 140Q256 159 229 161L99 167Q58 164 28 158Z" fill="url(#fbskin2)" stroke="#b98679" stroke-width="2.7"/>',
+  '<path d="M35 101Q109 98 202 90Q237 89 248 108" fill="none" stroke="#fff2e9" stroke-width="5" opacity=".68"/>',
+  '<path d="M180 84Q204 80 230 85Q244 92 246 111Q221 116 188 110Q177 103 180 84Z" fill="#ffe6d9" stroke="#c79688" stroke-width="1.7"/>',
+  '<path d="M193 88Q218 84 235 96" stroke="#fff9f2" stroke-width="2.5" fill="none"/>',
+  // A new large hanging blood drop from the underside of the pad.
+  '<path d="M247 159C245 171 235 188 235 201Q236 218 251 220Q267 219 267 202Q266 189 257 172Q252 163 247 159Z" fill="#bb334b" stroke="#9e2d40" stroke-width="1.8"/>',
+  '<path d="M241 192Q240 201 245 208" stroke="#f2a6a9" stroke-width="3.8" opacity=".7" fill="none" stroke-linecap="round"/>',
+  // Slim integrated capillary tube with red blood column, angled up into the drop.
+  '<g transform="rotate(-44 270 219)">',
+  '<rect x="264" y="217" width="16" height="81" rx="6" fill="url(#fbglass2)" stroke="#7d9eaa" stroke-width="2"/>',
+  '<rect x="267.7" y="225" width="8.6" height="62" rx="3" fill="#ba3950" opacity=".93"/>',
+  '<rect x="261" y="292" width="22" height="20" rx="5" fill="#e5ebee" stroke="#94aab4" stroke-width="1.8"/>',
+  '<path d="M266 224V295" stroke="#fff" stroke-width="1.5" opacity=".65"/>',
+  '</g>',
+  // Callouts are outside the skin and sample, with careful leader placement.
+  '<text x="28" y="34" font-size="12" fill="#547d8d" font-family="Arial,Helvetica,sans-serif" font-weight="800">HANGING BLOOD DROP</text>',
+  '<path d="M147 40L217 60L245 180" stroke="#6d98a9" stroke-width="1.7" fill="none"/>',
+  '<circle cx="245" cy="180" r="3" fill="#6d98a9"/>',
+  '<text x="23" y="213" font-size="11" fill="#287f76" font-family="Arial,Helvetica,sans-serif" font-weight="800">NO SKIN CONTACT</text>',
+  '<path d="M154 210L216 215L234 218" stroke="#359486" stroke-width="1.7" fill="none" stroke-dasharray="4 4"/>',
+  '<text x="265" y="65" font-size="10.5" fill="#547d8d" font-family="Arial,Helvetica,sans-serif" font-weight="800">TUBE</text>',
+  '<text x="265" y="78" font-size="10.5" fill="#547d8d" font-family="Arial,Helvetica,sans-serif" font-weight="800">FULL</text>',
+  '<path d="M283 82L304 161L292 205" stroke="#6d98a9" stroke-width="1.5" fill="none"/>'
+ ].join(""),"FebriDx collection: the integrated capillary tube fills from a new hanging blood drop without touching finger skin, and must be completely filled","0 0 355 255");
+ return '<section class="device-collection-guide febridx-collection-guide" aria-label="FebriDx fingerstick specimen collection reference">'+
+  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN &amp; COLLECTION</span><h3>What to collect</h3><p>Fingerstick capillary whole blood, collected with the FebriDx device’s integrated blood collection tube. No separate blood tube.</p></div></div>'+
+  '<div class="febridx-collection-grid">'+
+   '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Clean the fingertip, twist and remove the protective lancet tab, then puncture using the device’s integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
+   '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>02</span><strong>Fill the collection tube completely</strong></div><div class="febridx-collection-figure">'+collectArt+'</div><p>Massage from the base of the finger to form a new, large hanging drop. Touch the integrated tube to <strong>the drop only</strong>, never the skin, and fill it completely.</p></article>'+
+  '</div>'+
+  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p>'+
+ '</section>';
+}
+
 function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
+ if(sec.id==="febridx")return febridxCollectionGuide();
  const items=collection[sec.id],arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
