@@ -41,6 +41,26 @@
 .lab-panel-target-group .ac-analyte-short{font-size:10px;padding:0 4px}
 @media print{.ac-analyte-short{background:#f0f0f0!important;color:#333!important;border-color:#cbd5dc!important}}
 
+/* Moderate labels use abbreviation-pill styling. They apply to the performed
+   assay or disc, not to that analyte on every laboratory platform. */
+.ac-analyte-short.ac-analyte-mod{
+ color:#8a560f;background:#fff2dd;border-color:#e7c68e;
+ font-size:9px;font-weight:900;letter-spacing:.045em;white-space:nowrap;
+}
+.ac-complex-legend{
+ display:flex;align-items:center;gap:8px;padding:10px 11px;
+ margin:13px 0 4px;background:#fffbf4;border:1px solid #f2e5d1;
+ border-radius:9px;color:#806644;font-size:10.5px;line-height:1.55;
+}
+.ac-complex-legend .ac-analyte-mod{flex:none;margin:0}
+.ac-conditional{background:#eef2f6;border:1px solid #cddce7;color:#46677e}
+.lab-panel-target-match .ac-analyte-mod,
+.lab-panel-target-group .ac-analyte-mod{margin-left:4px;padding:1px 5px;font-size:9px}
+@media print{
+ .ac-analyte-short.ac-analyte-mod{color:#694b19!important;background:#fff2db!important;border-color:#d3ad71!important}
+ .ac-complex-legend{background:#fff!important}
+}
+
 .ac-disc-grid .ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}
 .ac-disc{position:relative;display:flex;align-items:flex-end;justify-content:center;flex:none;width:62px;height:62px;border-radius:50%;border:4px solid #e6ebef;box-shadow:inset 0 0 0 6px #f8fafb,inset 0 0 0 12px var(--disc-color),0 1px 5px #ccd7df;background:repeating-conic-gradient(from 8deg,#f1f5f7 0deg 13deg,#d9e3e9 13deg 15deg,#fbfdff 15deg 25deg);overflow:hidden}
 .ac-disc-hole{position:absolute;top:22px;left:22px;width:12px;height:12px;background:#e6eef2;border:2px solid #b1c9d7;border-radius:50%}
