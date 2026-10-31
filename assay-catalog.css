@@ -41,24 +41,40 @@
 .lab-panel-target-group .ac-analyte-short{font-size:10px;padding:0 4px}
 @media print{.ac-analyte-short{background:#f0f0f0!important;color:#333!important;border-color:#cbd5dc!important}}
 
-/* Moderate labels use abbreviation-pill styling. They apply to the performed
-   assay or disc, not to that analyte on every laboratory platform. */
-.ac-analyte-short.ac-analyte-mod{
- color:#8a560f;background:#fff2dd;border-color:#e7c68e;
- font-size:9px;font-weight:900;letter-spacing:.045em;white-space:nowrap;
+/* Compact analyte QA markers; assay complexity stays on the card header. */
+.ac-analyte-short.ac-analyte-status{
+ display:inline-flex;align-items:center;vertical-align:baseline;
+ padding:1px 5px;margin:2px 0 2px 4px;
+ font-size:9px;line-height:1.6;font-weight:850;
+ letter-spacing:.02em;white-space:nowrap;border:1px solid;
+ border-radius:5px;
 }
-.ac-complex-legend{
- display:flex;align-items:center;gap:8px;padding:10px 11px;
- margin:13px 0 4px;background:#fffbf4;border:1px solid #f2e5d1;
- border-radius:9px;color:#806644;font-size:10.5px;line-height:1.55;
+.ac-analyte-short.ac-status-pt{
+ color:#22685f;background:#eaf6f2;border-color:#c9e4da;
 }
-.ac-complex-legend .ac-analyte-mod{flex:none;margin:0}
+.ac-analyte-short.ac-status-accuracy{
+ color:#89601c;background:#fff6e9;border-color:#eedabb;
+}
+.ac-analyte-short.ac-status-calculated{
+ color:#546879;background:#eef2f6;border-color:#d4e0e8;
+}
+.ac-pt-legend{
+ background:#f8fafb;border:1px solid #e3ebee;border-radius:9px;
+ padding:10px 12px;margin:12px 0 4px;
+}
+.ac-pt-legend-title{
+ display:block;font-size:10px;letter-spacing:.07em;font-weight:850;
+ color:#597184;margin:0 0 7px;
+}
+.ac-pt-legend-items{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.ac-pt-legend-items>.ac-analyte-status{margin:0}
+.ac-pt-legend p{color:#6a7f8b;font-size:10.5px;line-height:1.5;margin:8px 0 0}
 .ac-conditional{background:#eef2f6;border:1px solid #cddce7;color:#46677e}
-.lab-panel-target-match .ac-analyte-mod,
-.lab-panel-target-group .ac-analyte-mod{margin-left:4px;padding:1px 5px;font-size:9px}
+.lab-panel-target-match .ac-analyte-status,
+.lab-panel-target-group .ac-analyte-status{margin:1px 2px 1px 4px;font-size:9px;padding:1px 5px}
 @media print{
- .ac-analyte-short.ac-analyte-mod{color:#694b19!important;background:#fff2db!important;border-color:#d3ad71!important}
- .ac-complex-legend{background:#fff!important}
+ .ac-analyte-short.ac-analyte-status{background:#f4f4f4!important;color:#333!important;border-color:#c7c7c7!important}
+ .ac-pt-legend{background:#fff!important}
 }
 
 .ac-disc-grid .ac-group ul{grid-template-columns:repeat(2,minmax(0,1fr))}
