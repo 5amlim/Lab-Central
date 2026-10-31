@@ -113,10 +113,12 @@ function stage(id,title){
    link:library,under:docNote});
  }
  if(/start run|load pouch/.test(t)){
-  return block({id,kind:"green",title:"Insert pouch and start analysis",
-   visual:diagram(B.analyzer?.(id,"selected")),
-   steps:["Insert the prepared pouch into the chosen available module.","Confirm assay, sample ID and module on the actual analyzer.","Select Start Run and confirm analysis begins."],
-   warning:"A started run is not a completed or QC-passed test.",
+  return block({id,kind:"green",title:gi?"Insert pouch and start TORCH analysis":"Review information, then insert pouch",
+   visual:gi?diagram(B.analyzer?.(id,"selected")):(B.spotfireScreenWithZoom?.("insert")||""),
+   steps:gi?
+     ["Insert the prepared pouch into the correct TORCH module.","Follow the TORCH analyzer prompts and confirm the run begins."]:
+     ["Review sample ID, specimen type and panel on the SPOTFIRE review screen.","Wait for the selected module LED to blink blue and insert the prepared pouch.","SPOTFIRE pulls in the pouch and automatically starts the run; its LED changes to solid green."],
+   warning:gi?"A started run is not a completed or QC-passed test.":"No additional Start Run tap is needed after pouch insertion. A started run is not a completed result.",
    link:library,under:docNote});
  }
  if(/run in progress|analysis started|confirm analysis|analyzing|running/.test(t)){
