@@ -235,7 +235,7 @@ function sysmexDeviceSvg(mode,showAccessory=true){
    The strip and CLINITEST hCG cassette use DISTINCT removable table inserts. */
 function clinitekDeviceMarkup(mode="empty"){
  const m=String(mode||"empty").toLowerCase();
- const stripMode=/^(strip|start-strip|qc-strip)$/.test(m),cassetteMode=/^(cassette|start-cassette|qc-cassette)$/.test(m),trayOut=!/reading|result|closed/.test(m);
+ const stripMode=/^(strip|start-strip|qc-strip)$/.test(m),cassetteMode=/^(cassette|start-cassette|qc-cassette)$/.test(m),trayOut=!/reading|result|closed|analyzing/.test(m);
  const T=(x,y,t,size=13,color="#425b69",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+t+'</text>';
  let art=
  '<defs>'+
@@ -256,10 +256,13 @@ function clinitekDeviceMarkup(mode="empty"){
  // Keep real physical interface silhouette. The menu remains schematic.
  ((m==="empty"||m==="ready")?'':(
  '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
- T(287,137,(/cassette/.test(m))?"Cassette Test":(/strip/.test(m))?"Strip Test":m==="qc"?"QC Test":/start/.test(m)?"READY / START":/result|reading/.test(m)?"Results":"CLINITEK Status+",13,"#426679",850)+
+ T(287,137,(/cassette/.test(m))?"Cassette Test":(/strip/.test(m))?"Strip Test":m==="qc"?"QC Test":/start/.test(m)?"READY / START":/result|reading/.test(m)?"Results":m==="analyzing"?"Analyzing":"CLINITEK Status+",13,"#426679",850)+
  '<rect x="199" y="147" width="172" height="23" rx="4" fill="#c9e8e7" stroke="#b1cdd2"/>'+
- T(285,163,(/cassette/.test(m))?"CLINITEST hCG":(/strip/.test(m))?"Urinalysis strip":m==="qc"?"Confirm control ID":/result|reading/.test(m)?"Review report":"Follow screen prompts",11,"#376577",700)
+ T(285,163,(/cassette/.test(m))?"CLINITEST hCG":(/strip/.test(m))?"Urinalysis strip":m==="qc"?"Confirm control ID":/result|reading/.test(m)?"Review report":m==="analyzing"?"In progress":"Follow screen prompts",11,"#376577",700)
  ))+
+ (m==="analyzing"?
+  '<rect x="211" y="176" width="144" height="5" rx="2.5" fill="#c1d3d7"/>'+
+  '<rect x="211" y="176" width="75" height="5" rx="2.5" fill="#2c9890"/>':"")+
  // Correct CLINITEK Status+ / Siemens branding and power button.
  T(162,244,"CLINITEK Status+",19,"#273944",820,"start")+
  T(255,260,"Analyzer",9,"#647681",620)+
