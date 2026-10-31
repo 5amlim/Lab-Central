@@ -229,6 +229,21 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <script src="envi-ordering-guide.js?v=20261031-control-focus-v5"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261031-internal-sop-layout-v2" media="all">
 <script src="sop-print.js?v=20261031-sendout-seven-steps-v3"></script>
+<style id="lab-central-athena-icon-theme">
+/* Athena requisition icon: purple, consistent across the sidebar and portal cards. */
+.nav-link[data-go="order-sets"] .nav-icon.athena-nav-icon {
+  width:24px;height:24px;margin:-3px;border-radius:7px;
+  background:#f3ecff;color:#7c4dcc;
+}
+.nav-link[data-go="order-sets"].active .nav-icon.athena-nav-icon {
+  background:#eadfff;color:#6f3fc7;
+}
+.home-tool-icon.athena {background:#f3ecff;color:#7c4dcc}
+.athena-sendout-workflow-link .athena-sendout-link-symbol,
+.escalation-box > .athena-sendout-workflow-link .athena-sendout-link-symbol {
+  background:#f3ecff;color:#7c4dcc;
+}
+</style>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -478,7 +493,7 @@ function showNav(){
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${navIconSvg('home','book')}</span>Overview</button>`;
  if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
@@ -490,8 +505,8 @@ function showNav(){
   const isArchive=cat==='Archived';
   const expanded=!isArchive||Boolean(search)||list.some(item=>item.id===r.id);
   out+=isArchive?`<details class="nav-section archive-nav" ${expanded?'open':''}><summary class="nav-label archive-summary"><span>${safeHtml(cat)}</span><span class="archive-summary-end"><em>${list.length}</em><span class="lab-shared-chevron" aria-hidden="true"></span></span></summary><div class="archive-nav-content">`:`<div class="nav-section"><div class="nav-label"><span>${safeHtml(cat)}</span><em>${list.length}</em></div>`;
-  for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${sectionSvg(s)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Operations')out+=`<button type="button" class="nav-link ${r.id==='socal-daily'?'active':''}" data-go="socal-daily"><span class="nav-icon">${navIconSvg('socal-daily','clipboard-check')}</span>Lab Daily Checklist</button>`;
+  for(const s of list){out+=`<button type="button" class="nav-link ${r.id===s.id?'active':''}" data-go="${safeHtml(s.id)}"><span class="nav-icon">${sectionSvg(s)}</span><span>${safeHtml(s.title)}</span>${s.archived?'<span class="nav-end">OLD</span>':''}</button>`;}
   if(cat==='Operations'&&list.some(s=>s.id==='supplies'))out+=`<button type="button" class="nav-link ${r.id==='envi-ordering'?'active':''}" data-go="envi-ordering"><span class="nav-icon">${navIconSvg('envi-ordering','package')}</span>Envi Ordering</button>`;
   if(cat==='Home collection')out+=`<button type="button" class="nav-link ${r.id==='specimen-dropoff'?'active':''}" data-go="specimen-dropoff"><span class="nav-icon">${navIconSvg('specimen-dropoff','clipboard-check')}</span>Specimen drop-off</button>`;
   if(cat==='Send-outs')out+=`<button type="button" class="nav-link ${r.id==='lab-container-gallery'?'active':''}" data-go="lab-container-gallery"><span class="nav-icon">${navIconSvg('lab-container-gallery','test-tube-2')}</span>Lab Container Gallery</button>`;
@@ -900,7 +915,7 @@ function renderHome(mode='home'){
  if(!search&&!isFav){
  h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Lab operations reference</h1><p class="lede">Instrument procedures, collection and send-out workflows, training, and order references.</p>`;
  h+=noticeText();
- h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
+ h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${svg('droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${svg('clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
   h+=`<div class="featured"><button type="button" class="feature-primary has-featured-art" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span>${homepageEquipmentArt(all.find(s=>s.id==="pathfast"),true)}</button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${svg('truck')}</span><span><strong>Lab Sendout Logistics</strong><small>Containers, pickups &amp; transport</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${svg('heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
  }
@@ -1515,7 +1530,7 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
   (includeCalculatorLink?'<div class="calculator-chart-actions">'+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
 }
 function athenaSendoutWorkflowLink(){
- return '<button type="button" class="athena-sendout-workflow-link" data-go="order-sets" data-target-tab="sendout"><span class="athena-sendout-link-symbol" aria-hidden="true">'+svg('file-text')+'</span><span>How to order sendout labs in Athena</span><span class="athena-sendout-link-arrow" aria-hidden="true">→</span></button>';
+ return '<button type="button" class="athena-sendout-workflow-link" data-go="order-sets" data-target-tab="sendout"><span class="athena-sendout-link-symbol" aria-hidden="true">'+navIconSvg('order-sets','file-text')+'</span><span>How to order sendout labs in Athena</span><span class="athena-sendout-link-arrow" aria-hidden="true">→</span></button>';
 }
 function workflowStepExtras(kind){
  if(kind==='walkin-review')return "<div class=\"walkin-review-checklist\"><strong>Confirm before collection</strong><ul><li><b>Patient identity:</b> Name, date of birth and identifiers match the requisition and Athena chart.</li><li><b>Orders:</b> Test names and <mark class=\"walkin-review-highlight\">test codes</mark> are complete, legible and match the receiving lab.</li><li><b>Ordering details:</b> Ordering provider, laboratory and required <mark class=\"walkin-review-highlight\">account number</mark> are correct.</li><li><b>Collection:</b> Verify specimen type, tubes, volume, fasting or timed requirements and special handling against the current lab directory and calculator.</li><li><b>Ready to proceed:</b> Resolve discrepancies and verify the patient is prepared before collection.</li></ul></div><div class=\"walkin-review-note\" role=\"note\"><strong>Missing or unclear information?</strong> Contact the ordering provider’s office to obtain missing information. <strong>If the test codes or account number cannot be obtained, the Sollis provider on duty must place the orders in Athena before collection.</strong></div>"+athenaSendoutWorkflowLink();
@@ -1691,7 +1706,7 @@ function inhouseFlow(){
  ['Upload the Lab Calculator','File the finalized Lab Calculator in Athena before specimen collection.','sollis-calculator-upload','','Lab Personnel / RN'],
  ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','RN']
  ]);
- h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets" data-target-tab="sendout"><span class="home-tool-icon amber">${svg('file-text')}</span><span><strong>Athena Sendout Orders</strong><small>Illustrated external lab ordering guide</small></span><span>→</span></button></div>`;
+ h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets" data-target-tab="sendout"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Sendout Orders</strong><small>Illustrated external lab ordering guide</small></span><span>→</span></button></div>`;
  h+=collectionProcessingHandoff(state.sollisPatientPath==='clinic');
  h+=`<p class="source-footnote">Follow the approved collection and send-out procedure. External requisition escalation and Navigator tasks are documented separately.</p>`;
  return h;
