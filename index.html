@@ -212,7 +212,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261029-unified-collection-v4">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261029-market-only-log-v2">
   <link rel="stylesheet" href="guide-refinements.css?v=20261031-clinitek-appearance-running-v2"">
-<link rel="stylesheet" href="assay-catalog.css?v=20261031-piccolo-calculation-notes-v5" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261031-calculated-label-badges-v8" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261031-results-v1" media="all">
 <link rel="stylesheet" href="pathfast-visual-refresh.css?v=20261029-static-steps-foil-pouch-v2" media="all">
 <link rel="stylesheet" href="home-device-cards.css?v=20261031-whole-analyzer-fit-v3" media="all">
@@ -379,7 +379,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261031-spotfire-auto-start-v3"></script>
 <script src="biofire-reference-polish.js?v=20261031-spotfire-auto-start-v2""></script>
 <script src="sendout-market-guide.js?v=20261029-regional-shipping-scope-v3"></script>
-<script src="assay-catalog.js?v=20261031-piccolo-egfr-method-v7"></script>
+<script src="assay-catalog.js?v=20261031-calculated-label-badges-v8"></script>
 <script src="triage-meterpro-visual.js?v=20261031-triage-accurate-screen-actions-v2"></script>
 <script src="lab-container-art.js?v=20261031"></script>
 <script src="lab-container-photos.js?v=20261031"></script>
@@ -1961,7 +1961,13 @@ function sectionRender(sec,tab){
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
- let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${sec.id==='febridx'?'<span class="ac-complex ac-waived ac-header-badge">CLIA WAIVED</span>':['sysmex','pathfast','triage','torch'].includes(sec.id)?'<span class="ac-complex ac-moderate ac-header-badge">CLIA MODERATE</span>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
+ // Show the same CLIA badge style as assay cards, based on the actual tests in this guide.
+ // Mixed or kit-dependent menus must not be labeled wholly waived or moderate.
+ const guideAssays=window.LAB_ASSAY_CATALOG?.tests?.[sec.id]||[];
+ const guideComplexities=new Set(guideAssays.map(assay=>assay.complexity||'unspecified'));
+ const guideClia=guideAssays.length===0?'':guideComplexities.size===1&&guideComplexities.has('waived')?'waived':guideComplexities.size===1&&guideComplexities.has('moderate')?'moderate':'conditional';
+ const guideCliaBadge=guideClia?'<span class="ac-complex ac-'+(guideClia==='conditional'?'conditional':guideClia)+' ac-header-badge"'+(guideClia==='conditional'?' title="Complexity depends on the assay, panel or specimen. Refer to the assay-specific IFU."':'')+'>'+(guideClia==='waived'?'CLIA WAIVED':guideClia==='moderate'?'CLIA MODERATE':'CLIA VARIES')+'</span>':'';
+ let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${guideCliaBadge}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
  if(sec.id==='sendout')h+='<div class="sendout-reference-layout">';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
