@@ -57,11 +57,114 @@ const tests={
  'drug-screen':[
   {title:'McKesson 14-panel urine drug screen (current guide)',complexity:'waived',groups:{'Drug classes and compounds':A('Amphetamine|Barbiturates|Benzodiazepines|Buprenorphine|Cocaine metabolite|3,4-Methylenedioxymethamphetamine (MDMA)|Methadone|Methamphetamine|Morphine / opiates|Oxycodone|Phencyclidine|Propoxyphene|Tetrahydrocannabinol (THC) metabolite|Tricyclic antidepressants')},note:'This is the existing 14-panel workflow. Confirm the selected site kit, its labeling, and cutoff values before use.'}
  ],
- sysmex:[{title:'Three-part complete blood count',complexity:'moderate',groups:{'Blood cell measurements':A('White blood cell count|Red blood cell count|Hemoglobin|Hematocrit|Mean corpuscular volume|Mean corpuscular hemoglobin|Mean corpuscular hemoglobin concentration|Red blood cell distribution width|Platelet count|Mean platelet volume'),'Three-part white cell differential':A('Lymphocytes|Mixed cells (monocytes / eosinophils / basophils)|Granulocytes (predominantly neutrophils)')}}],
+ sysmex:[{title:'Three-part complete blood count',complexity:'moderate',groups:{'Blood cell measurements':A('White blood cell count|Red blood cell count|Hemoglobin|Hematocrit|Mean corpuscular volume|Mean corpuscular hemoglobin|Mean corpuscular hemoglobin concentration|Red blood cell distribution width|Platelet count|Mean platelet volume'),'Three-part white cell differential':A('Lymphocytes|Mixed cells (monocytes / eosinophils / basophils)|Granulocytes (predominantly neutrophils)')},countLabel:'17 reported CBC parameters · 13 grouped references',note:'RDW has separate SD and CV values. LYM, MXD and NEUT each have a percentage (%) and an absolute count (#) on the Sysmex result printout.'}],
  febridx:[{title:'FebriDx inflammatory marker test',complexity:'moderate',groups:{'Host-response markers':A('Myxovirus resistance protein A|C-reactive protein')}}],
  hemocue:[{title:'Hemoglobin',groups:{'Measured analyte':A('Hemoglobin')}}],
  coagsense:[{title:'Prothrombin time / INR',groups:{'Coagulation results':A('Prothrombin time|International normalized ratio')}}]
 };
+
+/* Short codes are display-only metadata, not additional assays or orderables.
+   Prefer the analyzer's result/printout terminology; preserve full names. */
+const printoutAbbreviations={
+ sysmex:{
+  'White blood cell count':'WBC',
+  'Red blood cell count':'RBC',
+  'Hemoglobin':'HGB',
+  'Hematocrit':'HCT',
+  'Mean corpuscular volume':'MCV',
+  'Mean corpuscular hemoglobin':'MCH',
+  'Mean corpuscular hemoglobin concentration':'MCHC',
+  'Red blood cell distribution width':'RDW-SD / RDW-CV',
+  'Platelet count':'PLT',
+  'Mean platelet volume':'MPV',
+  'Lymphocytes':'LYM% / LYM#',
+  'Mixed cells (monocytes / eosinophils / basophils)':'MXD% / MXD#',
+  'Granulocytes (predominantly neutrophils)':'NEUT% / NEUT#'
+ },
+ piccolo:{
+  'Albumin':'ALB','Alkaline phosphatase':'ALP',
+  'Alanine aminotransferase':'ALT','Aspartate aminotransferase':'AST',
+  'Blood urea nitrogen':'BUN','Calcium':'CA','Chloride':'CL-',
+  'Creatinine':'CRE','Glucose':'GLU','Potassium':'K+','Sodium':'NA+',
+  'Total bilirubin':'TBIL','Total carbon dioxide':'tCO2','Total protein':'TP',
+  'Estimated glomerular filtration rate':'eGFR',
+  'Creatine kinase':'CK','C-reactive protein':'CRP',
+  'Lactate':'LAC','Magnesium':'MG','Phosphorus':'PHOS',
+  'Amylase':'AMY','Gamma-glutamyl transferase':'GGT',
+  'Total cholesterol':'CHOL','High-density lipoprotein cholesterol':'HDL',
+  'Triglycerides':'TRIG',
+  'Cholesterol-to-high-density-lipoprotein ratio':'CHOL/HDL',
+  'Non-high-density-lipoprotein cholesterol':'nHDLc',
+  'Very-low-density lipoprotein cholesterol':'VLDL'
+ },
+ pathfast:{
+  'High-sensitivity cardiac troponin I':'hs-TnI',
+  'N-terminal pro-B-type natriuretic peptide':'NT-proBNP'
+ },
+ triage:{'Cardiac troponin I':'TnI','B-type natriuretic peptide':'BNP'},
+ clinitek:{
+  'Glucose':'GLU','Bilirubin':'BIL','Ketones':'KET',
+  'Specific gravity':'SG','Blood / hemoglobin':'BLD',
+  'Protein':'PRO','Urobilinogen':'URO','Nitrite':'NIT',
+  'Leukocyte esterase':'LEU',
+  'Human chorionic gonadotropin':'hCG'
+ },
+ febridx:{'Myxovirus resistance protein A':'MxA','C-reactive protein':'CRP'},
+ hemocue:{'Hemoglobin':'Hb'},
+ coagsense:{'Prothrombin time':'PT','International normalized ratio':'INR'},
+ poc:{
+  'Human immunodeficiency virus type 1 p24 antigen':'HIV-1 p24',
+  'Human immunodeficiency virus type 1 antibodies':'HIV-1 Ab',
+  'Human immunodeficiency virus type 2 antibodies':'HIV-2 Ab',
+  'Heterophile antibodies (not direct Epstein-Barr virus detection)':'Mono / heterophile Ab',
+  'Adenovirus antigen, if using an adenovirus-specific conjunctivitis test':'AdV'
+ },
+ 'drug-screen':{
+  'Amphetamine':'AMP','Barbiturates':'BAR','Benzodiazepines':'BZO',
+  'Buprenorphine':'BUP','Cocaine metabolite':'COC',
+  'Methadone':'MTD','Methamphetamine':'mAMP',
+  'Morphine / opiates':'OPI','Oxycodone':'OXY',
+  'Phencyclidine':'PCP','Propoxyphene':'PPX',
+  'Tricyclic antidepressants':'TCA'
+ }
+};
+const commonTargetAbbreviations={
+ 'Influenza A virus':'Flu A','Influenza B virus':'Flu B',
+ 'Influenza A virus (including A/H1-2009 and A/H3 subtyping)':'Flu A',
+ 'Respiratory syncytial virus':'RSV',
+ 'Human metapneumovirus':'hMPV',
+ 'Human rhinovirus':'HRV',
+ 'Human rhinovirus / enterovirus':'HRV/EV',
+ 'Parainfluenza viruses':'PIV',
+ 'Streptococcus pyogenes (group A Streptococcus)':'GAS / Strep A',
+ 'Clostridioides difficile toxin A/B':'C. diff',
+ 'Enteroaggregative Escherichia coli':'EAEC',
+ 'Enteropathogenic Escherichia coli':'EPEC',
+ 'Enterotoxigenic Escherichia coli (heat-labile / heat-stable toxin)':'ETEC',
+ 'Shiga toxin-producing Escherichia coli (stx1 / stx2)':'STEC',
+ 'Shigella / enteroinvasive Escherichia coli':'Shigella/EIEC',
+ 'Escherichia coli O157':'E. coli O157',
+ 'B-type natriuretic peptide':'BNP',
+ 'D-dimer':'D-dimer',
+ 'C-reactive protein':'CRP',
+ 'Myxovirus resistance protein A':'MxA',
+ 'Prothrombin time':'PT','International normalized ratio':'INR',
+ 'Hemoglobin':'HGB',
+ 'Tetrahydrocannabinol (THC) metabolite':'THC',
+ '3,4-Methylenedioxymethamphetamine (MDMA)':'MDMA'
+};
+function shortLabel(id,name){
+ const short=printoutAbbreviations[id]?.[name]||commonTargetAbbreviations[name]||'';
+ // The full target may already contain its short form, e.g. SARS-CoV-2 or MDMA.
+ return short&&name.toLowerCase().includes('('+short.toLowerCase()+')')?'':short;
+}
+function formatTarget(id,name){
+ const abbr=shortLabel(id,name);
+ return '<span class="ac-analyte-name">'+esc(name)+'</span>'+
+  (abbr&&abbr.toLowerCase()!==name.toLowerCase()
+   ?' <span class="ac-analyte-short" aria-label="Abbreviation: '+esc(abbr)+'">'+esc(abbr)+'</span>':'');
+}
+
 const references={
  piccolo:'https://www.abaxis.com/reagent-panels/',
  pathfast:'https://www.pathfast.com/testing-menu',
@@ -72,12 +175,12 @@ const references={
 function esc(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function complexity(type){return type==='moderate'?'<span class="ac-complex ac-moderate">CLIA MODERATE</span>':type==='waived'?'<span class="ac-complex ac-waived">CLIA WAIVED</span>':'';}
 function disc(c){return '<div class="ac-disc" style="--disc-color:'+c.color+'" aria-label="'+esc(c.title)+' color reference"><div class="ac-disc-hole"></div><span>'+esc(c.short)+'</span></div>';}
-function oneCard(c,idx,withDisc){
- const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+esc(item)+'</li>').join('')+'</ul></div>').join('');
+function oneCard(c,idx,withDisc,id){
+ const groups=Object.entries(c.groups).map(([name,arr])=>'<div class="ac-group"><h4>'+esc(name)+'</h4><ul>'+arr.map(item=>'<li>'+formatTarget(id,item)+'</li>').join('')+'</ul></div>').join('');
  const count=Object.values(c.groups).reduce((n,a)=>n+a.length,0);
  return '<details class="ac-card'+(c.boxColor?' ac-kit-coded':'')+'" open style="'+(c.color?'--ac-strip:'+c.color+';--ac-kit-tint:'+(c.tint||'#eef5f8')+';--ac-kit-deep:'+(c.deep||c.color):'')+'">'+
   '<summary class="ac-card-head">'+(withDisc?disc(c):'<span class="ac-card-index">'+String(idx+1).padStart(2,'0')+'</span>')+
-  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+count+' listed analytes / targets'+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
+  '<span class="ac-card-summary"><strong>'+esc(c.title)+'</strong><small>'+(c.countLabel||count+' listed analytes / targets')+(withDisc?' · '+esc(c.short):'')+(c.boxColor?' · '+esc(c.boxColor):'')+'</small></span>'+complexity(c.complexity)+'<span class="ac-chevron" aria-hidden="true"></span></summary>'+
   '<div class="ac-card-body">'+groups+(c.note?'<p class="ac-card-note">'+esc(c.note)+'</p>':'')+(c.source?'<a class="ac-source-link" href="'+esc(c.source)+'" target="_blank" rel="noopener noreferrer">Manufacturer panel details ↗</a>':'')+'</div></details>';
 }
 function render(section){
@@ -91,12 +194,12 @@ function render(section){
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA status is disc-specific, not analyzer-wide. Only the two listed moderate-complexity discs are marked moderate. Always use the approved disc-specific IFU.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
-  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc)).join('')+'</div>'+
+  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
   (references[id]?'<p class="ac-reference">Source: <a href="'+references[id]+'" target="_blank" rel="noopener noreferrer">Official test menu / manufacturer reference ↗</a></p>':'')+'</section>';
 }
 function qcMenu(selected){return '<div class="cl-qc-switch" role="group" aria-label="Select Siemens quality-control procedure"><div class="cl-qc-intro"><span class="ac-eyebrow">MONTHLY QUALITY CONTROL</span><h2>Choose the QC method</h2><p>Use the correct material and test-table orientation for each assay.</p></div><div class="cl-qc-switch-buttons">'+
   '<button type="button" data-clinitek-qc="ua-qc" aria-pressed="'+(selected==='ua-qc')+'" class="'+(selected==='ua-qc'?'is-active':'')+'"><strong>Urinalysis strip QC</strong><small>Quantimetrix controls</small><span class="ac-chevron" aria-hidden="true"></span></button>'+
   '<button type="button" data-clinitek-qc="hcg-qc" aria-pressed="'+(selected==='hcg-qc')+'" class="'+(selected==='hcg-qc'?'is-active':'')+'"><strong>Human chorionic gonadotropin QC</strong><small>CLINITEST cassette controls</small><span class="ac-chevron" aria-hidden="true"></span></button></div></div>';}
-window.LAB_ASSAY_CATALOG={render,qcMenu,tests};
+window.LAB_ASSAY_CATALOG={render,qcMenu,tests,shortLabel,formatTarget};
 })();
