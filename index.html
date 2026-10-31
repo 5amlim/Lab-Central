@@ -156,7 +156,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="flow-navigation.css?v=20261031-seven-step-full-width-handoff-v44" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261029-febridx-horizontal-v2" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261031-sendout-logistics-layout-v1" media="all">
-  <link rel="stylesheet" href="quality-reference.css?v=20261029-api-linked-assay-badges-v2" media="all">
+  <link rel="stylesheet" href="quality-reference.css?v=20261031-calver-static-cards-v2" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261029-original-photo-pairs-v5" media="all">
@@ -354,7 +354,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
-<script src="quality-reference.js?v=20261029-api-enrollment-links-v2"></script>
+<script src="quality-reference.js?v=20261031-calver-static-cards-v2"></script>
 <script src="operations-guides.js?v=20261031-sendout-pickup-sleeves-v5"></script>
 <script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
@@ -1990,6 +1990,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a market and location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
  else if(sec.id==='sendout'&&tab==='collection')h+=tubeReferencePanel('general');
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
+ else if(sec.id==='calver'&&['preparation','testing','filing'].includes(tab))h+=window.LAB_QUALITY_GUIDE.calverReference(groups.find(g=>g.id===tab));
  else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(sec.id==='tubes'&&(tab==='general'||tab==='for-lockbox-pickups'))h+=tubeReferencePanel(tab);
  else if(sec.id==='supplies'&&tab!=='mckesson'&&tab!=='overview'&&tab!=='resources'){
