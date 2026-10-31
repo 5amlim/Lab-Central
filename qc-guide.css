@@ -184,3 +184,31 @@
 .qc-px-running-body small{font-size:10px}
 @media(max-width:650px){.qc-screen-gallery--piccolo>.qc-screen-reference{flex:0 0 min(85vw,440px);width:min(85vw,440px)}}
 @media print{.qc-screen-gallery--piccolo{overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.qc-screen-gallery--piccolo>.qc-screen-reference{width:auto;max-width:none;flex-basis:auto}.qc-px-scroll-cue{display:none}}
+
+
+/* Piccolo Xpress Recall / reprint illustrations, based on operator-manual section 5.
+   Retains the full-size scrollable card proportions used in the QC testing walkthrough. */
+.qc-px-recall-menu,.qc-px-report-options{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 16px 10px}
+.qc-px-amber-choice{box-sizing:border-box;display:block;width:min(90%,265px);padding:7px 10px;text-align:center;border:1px solid #d7ac4a;border-radius:6px;background:linear-gradient(#fff3ad,#ffd04b);color:#474d54;font-size:12px;font-weight:700;line-height:1.2;box-shadow:inset 0 1px #fffeeb}
+.qc-px-amber-selected{outline:2px solid #258d85;outline-offset:2px}
+.qc-px-blue-footer{display:flex;align-items:stretch;min-height:29px;background:linear-gradient(#50aaf0,#0c63b4);color:#fff;font-size:11px;margin-top:auto}
+.qc-px-blue-footer>span{display:flex;flex:1;justify-content:center;align-items:center;text-align:center;border-right:1px solid #a8cae7;padding:4px 6px}
+.qc-px-blue-footer>span:last-child{border:0}
+.qc-px-blue-footer .qc-px-print-focus{background:linear-gradient(#fbe7a3,#f5bd45);color:#334d64;font-weight:800}
+.qc-px-results-table{display:flex;flex:1;flex-direction:column;padding:12px 13px 0}
+.qc-px-results-row{display:grid;grid-template-columns:27px 63px minmax(0,1fr);gap:5px;align-items:center;min-height:34px;padding:4px 8px;border:1px dotted #bdcedc;background:#fff;color:#405c70;font-size:11px}
+.qc-px-results-row+.qc-px-results-row{border-top:0}
+.qc-px-results-row>b{font-size:12px}
+.qc-px-results-row>span:last-child{font:10px/1.3 "Courier New",monospace;overflow-wrap:anywhere}
+.qc-px-results-selected{background:#fff4ba;outline:2px solid #288b7f;outline-offset:-2px}
+.qc-px-arrow-row{display:flex;margin:6px 13px 8px;border:1px solid #e4bd6b;border-radius:3px;overflow:hidden}
+.qc-px-arrow-row>span{flex:1;text-align:center;background:linear-gradient(#fff4c0,#ffd671);color:#805c35;font-size:20px;padding:3px;border-right:1px solid #e4bd6b}
+.qc-px-arrow-row>span:last-child{border:0}
+.qc-px-preview{flex:1;margin:12px 13px 2px;padding:12px;background:#fff;border:1px solid #cadbe5;min-height:145px}
+.qc-px-preview pre{font:11px/1.55 "Courier New",monospace;color:#35536b;margin:0;white-space:pre-wrap}
+.qc-px-report-options{gap:6px;padding:12px 16px 6px}
+.qc-px-report-method{display:flex;gap:9px;margin:0 13px 10px;font-size:11px;font-weight:750;color:#385b77}
+.qc-px-report-method>span{flex:1;text-align:center;background:#f7fafb;border:1px solid #c1d0db;padding:6px;border-radius:3px}
+.qc-px-report-method .qc-px-checked{background:#fff5ca;border-color:#e5bc60;color:#655122}
+.qc-screen-gallery--piccolo .qc-device-screen--piccolo{min-height:290px}
+@media print{.qc-px-blue-footer,.qc-px-amber-choice,.qc-px-results-selected{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
