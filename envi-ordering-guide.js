@@ -446,7 +446,7 @@ function visual(which){
 function renderStep(s,i){
  return '<article class="ev-step" data-ev-card="'+i+'" '+(mode==='guided'&&index!==i?'hidden':'')+'>'+
  '<div class="ev-card-top"><span class="ev-step-number">'+String(i+1).padStart(2,'0')+'</span><div class="ev-card-heading"><span class="ev-step-phase">'+s.phase+'</span><h2>'+tag(s.title)+'</h2></div><span class="ev-required-tag ev-kind-'+s.kind+'">'+({optional:'IF NEEDED',repeat:'REPEAT AS NEEDED',branch:'CHOOSE ONE',market:'MARKET DEPENDENT'}[s.kind]||'ACTION REQUIRED')+'</span></div>'+
- '<p class="ev-step-description">'+s.body+'</p><div class="ev-illustration"><div class="ev-illustration-title"><span class="ev-illustration-dot"></span> ENVI SCREEN REFERENCE <small>Illustrated, not a live screen</small></div>'+visual(s.scene)+'</div>'+
+ '<p class="ev-step-description">'+s.body+'</p><div class="ev-illustration"><div class="ev-illustration-title"><span class="ev-illustration-dot"></span> ENVI SCREEN REFERENCE <small>Illustrated, not a live screen</small><button type="button" class="ev-zoom-trigger" data-ev-zoom="'+i+'" aria-label="Expand Envi illustration for step '+(i+1)+'">Expand screen ↗</button></div>'+visual(s.scene)+'</div>'+
  '<div class="ev-next-action"><span class="ev-action-icon">➜</span><strong>'+tag(s.action)+'</strong></div>'+
  '<div class="ev-card-note"><span class="ev-note-symbol">i</span><span>'+s.note+'</span></div></article>';
 }
@@ -458,6 +458,7 @@ function render(){
  '<div class="ev-step-map-heading"><strong>Jump to any step</strong><small>Choose a number to open that screen</small></div><div class="ev-jump-strip" aria-label="Jump to a step">'+steps.map(function(s,i){return '<button type="button" data-ev-step="'+i+'" class="'+(i===index?'ev-current-step':'')+'" '+(i===index?'aria-current="step"':'')+' title="'+tag(s.title)+'">'+String(i+1).padStart(2,'0')+'</button>';}).join('')+'</div>'+
  '<div class="ev-step-viewport">'+steps.map(renderStep).join('')+'</div>'+
  '<nav class="ev-transport" aria-label="Guide step navigation"><span>STEP <strong>'+String(index+1).padStart(2,'0')+' / '+steps.length+'</strong></span><div><button type="button" data-ev-step="'+Math.max(0,index-1)+'" '+(index===0?'disabled':'')+'>‹ Previous</button><button type="button" data-ev-step="'+Math.min(steps.length-1,index+1)+'" '+(index===steps.length-1?'disabled':'')+'>Next step ›</button></div></nav>'+
+ '<dialog id="evScreenZoom" class="ev-screen-zoom" aria-label="Expanded Envi screen illustration"><div class="ev-screen-zoom-header"><div><small>ENVI SCREEN REFERENCE</small><strong id="evScreenZoomTitle">Illustrated step</strong></div><button type="button" data-ev-close-zoom>Close ×</button></div><div class="ev-screen-zoom-content"></div><p class="ev-screen-zoom-foot">Training illustration, not a live Envi screen. Follow the highlighted action in the actual application.</p></dialog>'+
  '<aside class="ev-final-note"><strong>Before closing the order</strong><p>Confirm the correct clinic and order reference, all quantities and units of measure, Pending submission, and any market-specific inventory notification or spreadsheet entry.</p><small>Training reference only. Envi permissions, approval rules and market requirements may vary. This page does not submit an order or save inventory data.</small></aside>'+
  '</section>';
 }
@@ -477,6 +478,19 @@ function refresh(root){
  if(!root)return;
  root.outerHTML=render();
 }
+if(typeof document!=='undefined')document.addEventListener('click',function(event){
+ var zoom=event.target.closest('[data-ev-zoom]');
+ var closer=event.target.closest('[data-ev-close-zoom]');
+ var dialog=document.getElementById('evScreenZoom');
+ if(closer&&dialog){dialog.close();return;}
+ if(!zoom||!zoom.closest('#envi-ordering-guide')||!dialog)return;
+ var card=zoom.closest('.ev-step');
+ var shot=card&&card.querySelector('.ev-illustration .ev-mini-screen,.ev-illustration .ev-handoff-picture');
+ if(!shot)return;
+ dialog.querySelector('#evScreenZoomTitle').textContent=card.querySelector('h2')?.textContent||'Envi screen';
+ dialog.querySelector('.ev-screen-zoom-content').innerHTML=shot.outerHTML;
+ dialog.showModal();
+});
 if(typeof document!=='undefined')document.addEventListener('click',function(event){
  var btn=event.target.closest('[data-ev-step],[data-ev-mode]');
  if(!btn||!btn.closest('#envi-ordering-guide'))return;
