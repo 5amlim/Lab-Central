@@ -31,18 +31,18 @@ const configs={
  ["Prepare and run SAMPLE","Use the routine PATHFAST patient SAMPLE workflow with the exact CM specimen ID. Run hs-Troponin I, D-dimer and NT-proBNP using their respective test cartridges, following the active event and SOP."],
  ["Review and print","Check hs-Troponin I, D-dimer and NT-proBNP results, units and flags. Print the reports for all three assays and compare them with the API event worksheet before submission."]]}
 };
-const other={
- clinitek:"Use the correct UA or hCG patient-test mode. Follow the event's PT-material preparation.",
- spotfire:"Use the assigned respiratory or throat panel with its normal patient workflow. Verify PT matrix compatibility.",
- sofia:"Use the assigned Sofia 2 assay and normal cassette/reader procedure and timing.",
- febridx:"Confirm compatible approved PT material. Do not substitute venous blood for a fingerstick-only test.",
- hemocue:"Use the routine patient hemoglobin method with the compatible assigned PT material.",
- coagsense:"Use the routine patient coagulation workflow only if the PT sample matrix is approved for the instrument.",
- "drug-screen":"Use the enrolled rapid panel and its normal patient read window; report only assigned analytes."
-};
 const remembered=new Map();
 const stepsSaved=new Map();
-function supports(sec){return !!sec&&!sec.archived&&sec.id!=="poc"&&["Analyzers","Point of care"].includes(sec.category);}
+/* PT is assigned only to these five analyzers and the Abbott HIV POC method.
+   Never create PT tabs merely because an instrument belongs to Analyzers or
+   Point of care. SPOTFIRE and Clinitek are analyzers with no assigned PT. */
+const ptAnalyzers=new Set(["sysmex","triage","piccolo","torch","pathfast"]);
+function supports(sec){
+ return !!sec&&!sec.archived&&(
+  (sec.category==="Analyzers"&&ptAnalyzers.has(sec.id))||
+  (sec.category==="Point of care"&&sec.id==="hiv")
+ );
+}
 function patientGroup(sec,groups){
  const x=(groups||[]).find(g=>/^(patient|patient-testing|ua-strip|running-samples|running-patient-samples|running-tests)(-|$)/i.test(g.id)||/^Running (Patient )?Samples|^Running tests|^Patient testing/i.test(g.title));
  return x?(sec.id==="clinitek"?"ua-strip":x.id):null;
@@ -77,23 +77,7 @@ const materials={
  triage:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
  torch:[{id:"GIP",name:"GIP · GI pathogen PT sample",code:"GIP",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
  hiv:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
- clinitek:[
-  {id:"UA",name:"Urinalysis PT sample",code:"UA",color:"#649a9b",note:"Match the actual UA specimen to the assigned urinalysis event. API offers an Urinalysis & HCG program, but confirm this clinic's exact enrollment."},
-  {id:"HCG",name:"Urine hCG PT sample",code:"hCG",color:"#9c88a9",note:"Confirm whether hCG is covered by the assigned Urinalysis & HCG program or a separate urine hCG event before testing."}
- ],
- spotfire:[
-  {id:"RESP",name:"Respiratory panel PT sample",code:"R",color:"#668ea8",note:"Respiratory-panel shorthand in this guide. Confirm the actual API sample ID, assigned panel and preparation before testing."},
-  {id:"ST",name:"Sore-throat panel PT sample",code:"ST",color:"#a4879e",note:"Sore-throat-panel shorthand in this guide. Confirm the actual API sample ID, assigned panel and preparation before testing."}
- ],
- sofia:[
-  {id:"FLU-COVID",name:"Flu + COVID PT sample",code:"F/C",color:"#5d96a3",note:"F/C is a guide shorthand, not a verified API vial prefix. Check the actual assay, specimen ID and event."},
-  {id:"RSV",name:"RSV PT sample",code:"RSV",color:"#7d9f84",note:"RSV denotes the assay in this guide. Test only when the clinic is enrolled and the current shipment identifies a compatible specimen."},
-  {id:"STREP",name:"Strep A PT sample",code:"ST",color:"#a284a7",note:"ST denotes the assay in this guide. Test only when the clinic is enrolled and the current shipment identifies a compatible specimen."}
- ],
- febridx:[{id:"FEBRIDX",name:"FebriDx PT sample",code:"PT",color:"#8a9b9d",note:"Confirm the assigned FebriDx proficiency material is approved for the analyzer method; PT is a generic badge here, not a verified vial code."}],
- hemocue:[{id:"HGB",name:"Hemoglobin PT sample",code:"HGB",color:"#a87989",note:"Confirm the HemoCue model, approved hemolysate specimen and event. HGB is an analyte shorthand unless printed on the vial."}],
- coagsense:[{id:"INR",name:"Coagulation (PT/INR) sample",code:"INR",color:"#688ca5",note:"Verify the assigned event's specimen compatibility with Coag-Sense. INR is an analyte shorthand, not a verified API vial code."}],
- "drug-screen":[{id:"DRUG",name:"Urine drug screen PT sample",code:"PT",color:"#8b9b9f",note:"Use only an enrolled event and kit-specific method. PT is a generic guide badge, not a verified API specimen prefix."}]
+
 };
 function selectedMaterial(id,st){
  if(id==="pathfast"||id==="triage")return materials[id][0]; // Ignore prior saved PSC or other selections for CM-only instruments.
@@ -172,26 +156,8 @@ function reagentFor(id,st){
  }
  const named={
   torch:{name:"BIOFIRE FILMARRAY GI Panel pouch",type:"BioFire TORCH · GI Panel",note:"Single-use clear FilmArray GI pouch with a barcode label, reagent fitment and PCR array. Confirm the printed panel/version and lot match the GIP event before loading it into TORCH.",art:"gi-pouch"},
-  hiv:{name:"Abbott Determine HIV-1/2 Ag/Ab Combo",type:"Abbott rapid Ag/Ab test strip",note:"Use the Abbott Determine strip with its distinct Control, Ag and Ab readout areas. Confirm that the HV material is compatible with the kit and its 50 µL method. Read results at 20–30 minutes.",art:"abbott-hiv"},
-  febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
-  hemocue:{name:"Hemoglobin microcuvette",type:"HemoCue",note:"Use the compatible microcuvette for the installed HemoCue model.",art:"cuvette"},
-  coagsense:{name:"PT/INR test strip",type:"Coag-Sense",note:"Check compatibility of the assigned PT material before using the instrument's strip.",art:"strip"},
-  "drug-screen":{name:"Assigned drug-screen test panel",type:"Rapid POC test",note:"Use the same approved panel and read window as the enrolled patient method.",art:"cassette"}
+  hiv:{name:"Abbott Determine HIV-1/2 Ag/Ab Combo",type:"Abbott rapid Ag/Ab test strip",note:"Use the Abbott Determine strip with its distinct Control, Ag and Ab readout areas. Confirm that the HV material is compatible with the kit and its 50 µL method. Read results at 20–30 minutes.",art:"abbott-hiv"}
  };
- if(id==="clinitek")return mat==="HCG"?
-  {name:"hCG test cassette",type:"Clinitek Status+",note:"Use the approved hCG cassette and its routine patient procedure.",art:"cassette"}:
-  {name:"Urinalysis reagent strip",type:"Clinitek Status+",note:"Use the clinic's assigned UA reagent strip and confirm tested analytes.",art:"strip"};
- if(id==="spotfire")return mat==="ST"?
-  {name:"Assigned sore-throat panel pouch",type:"BioFire SpotFire",note:"Check the event's exact ST panel version and preparation.",art:"pouch"}:
-  {name:"Assigned respiratory panel pouch",type:"BioFire SpotFire",note:"Check whether the event requires the full or mini respiratory panel.",art:"pouch"};
- if(id==="sofia"){
-  const m={
-   "FLU-COVID":["Flu + COVID test cassette","Use the assigned Flu + COVID assay kit."],
-   RSV:["RSV test cassette","Use the assigned RSV kit only when enrolled."],
-   STREP:["Strep A test cassette","Use the assigned Strep A test kit only when enrolled."]
-  }[mat]||["Assigned Sofia test cassette","Check the event's kit"];
-  return {name:m[0],type:"Sofia 2",note:m[1]+" Follow the kit-specific read timing.",art:"cassette"};
- }
  return named[id]||null;
 }
 /* Compact, intentionally schematic test consumables. Never use artwork for product identification. */
@@ -453,17 +419,13 @@ function actions(patient){
 function render(sec,groups){
  if(!supports(sec))return "";
  const cfg=configs[sec.id];
- const sequence=cfg?cfg.steps:[
-  ["Confirm assignment","Check the clinic's actual API enrollment, specimen ID, assay and event instructions before testing."],
-  ["Test as a patient sample",other[sec.id]||"Use the approved patient testing procedure for the assigned PT material."],
-  ["Review and print","Verify the result, specimen ID and any flags, then print the original result for each assigned sample."]
- ];
- const full=[...sequence,fileStep()];
+ if(!cfg)return ""; // Safety check: never invent a PT workflow for other instruments.
+ const full=[...cfg.steps,fileStep()];
  const patient=patientGroup(sec,groups);
  const st=stateFor(sec.id,full.length);
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
   '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.'+
-  (cfg?'':' Only test if this assay and site are enrolled.')+'</p></div>'+
+  +'</p></div>'+
   '<div class="ptg-heading-picker'+((materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
