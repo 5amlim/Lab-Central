@@ -12,6 +12,11 @@
 .egfr-panel{background:#fff;border:1px solid #dce7ed;border-radius:17px;min-width:0;padding:24px;box-shadow:0 5px 17px rgba(30,65,88,.035)}
 .egfr-panel-title h3{font-size:19px;letter-spacing:-.02em;margin:5px 0 5px}
 .egfr-panel-title p{font-size:12px;line-height:1.55;color:#708498;margin:0 0 19px}
+/* Keep the Piccolo creatinine panel names tiny and right-aligned beside the entry heading. */
+.egfr-entry-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px 12px;flex-wrap:wrap}
+.egfr-entry-heading h3{flex:none}
+.egfr-creatinine-sources{display:inline-block;margin-left:auto;color:#668695;font-size:9px;font-weight:700;line-height:1.4;letter-spacing:0;white-space:nowrap}
+
 .egfr-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .egfr-field{display:flex;flex-direction:column;gap:7px;min-width:0}
 .egfr-field>span{font-weight:750;font-size:12px;color:#365c73}
