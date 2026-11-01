@@ -306,7 +306,7 @@ coagsense:{
  ],'Do not bypass expiry or repeated strip/motor alarms.','service')
  ]},
 poc:{
- name:'Rapid point-of-care tests',subtitle:'QuickVue flu, COVID, RSV, Strep A, mono, HIV and conjunctivitis kits',
+ name:'Other rapid point-of-care tests',subtitle:'QuickVue flu, COVID, RSV, Strep A, mono and conjunctivitis kits. HIV has a separate guide.',
  sources:[S('Quidel QuickVue rapid-test product information','https://www.quidelortho.com/us/en/products/quickvue-rapid-lateral-flow-tests/quickvue-sars-antigen-test'),S('Quidel SARS/flu test product insert (example)','https://imgcdn.mckesson.com/CumulusWeb/Click_and_learn/QuickVue_Flu%2BSARS_Test_IFU.pdf')],
  items:[
  entry('Specimen & results','Control line missing','Lateral-flow assay is invalid even if a test line is visible.',[
