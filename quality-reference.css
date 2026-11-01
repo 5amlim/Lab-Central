@@ -356,20 +356,40 @@
  align-items:start
 }
 .quality-api-overview .quality-map-card{
- align-self:stretch;min-width:0;padding:18px;border:1px solid #d9e7eb;
- border-radius:15px;background:linear-gradient(145deg,#f9fcfd 0%,#fff 75%);
+ --pt-accent:#226b79;--pt-tint:#f4f9fb;--pt-border:#d5e4eb;--pt-chip:#e7f2f5;
+ align-self:stretch;min-width:0;padding:18px;
+ border:1px solid var(--pt-border);border-left:4px solid var(--pt-accent);
+ border-radius:15px;background:linear-gradient(115deg,var(--pt-tint) 0%,#fff 94%);
  box-shadow:0 3px 12px rgba(32,72,93,.035)
+}
+/* Distinct, restrained color accents for each PT discipline. */
+.quality-api-overview .quality-map-card[data-pt-category="chemistry-core"]{
+ --pt-accent:#18796e;--pt-tint:#eff9f5;--pt-border:#cbe7dd;--pt-chip:#e0f2eb
+}
+.quality-api-overview .quality-map-card[data-pt-category="hematology"]{
+ --pt-accent:#2f6595;--pt-tint:#f1f7fc;--pt-border:#d2e2f0;--pt-chip:#e4f0f9
+}
+.quality-api-overview .quality-map-card[data-pt-category="microbiology"]{
+ --pt-accent:#6e5693;--pt-tint:#f7f4fc;--pt-border:#ded6ee;--pt-chip:#eee8f8
+}
+.quality-api-overview .quality-map-card[data-pt-category="immunology"]{
+ --pt-accent:#8a632e;--pt-tint:#fefaf2;--pt-border:#eadfc8;--pt-chip:#f7eddc
 }
 .quality-api-overview .quality-map-top{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
  padding-bottom:14px;margin-bottom:13px;border-bottom:1px solid #e1ebef
 }
 .quality-api-overview .quality-map-top strong{
- font-size:16px;line-height:1.3;font-weight:850;letter-spacing:-.025em;color:#2d596e
+ font-size:16px;line-height:1.3;font-weight:850;letter-spacing:-.025em;color:var(--pt-accent)
 }
-.quality-api-overview .quality-map-top>span{
- flex:none;padding:7px 10px;border-radius:8px;font-size:10px;
- color:#246d83;background:#e6f3f6;border:1px solid #d4e7ec
+.quality-api-overview .quality-map-badges{
+ display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;min-width:0
+}
+.quality-api-overview .quality-map-badges .quality-map-code-badge{
+ flex:none;display:inline-flex;align-items:center;justify-content:center;
+ padding:7px 10px;border-radius:8px;font-size:10px;font-weight:850;line-height:1.2;
+ letter-spacing:.045em;white-space:nowrap;
+ color:var(--pt-accent);background:var(--pt-chip);border:1px solid var(--pt-border)
 }
 .quality-api-overview .quality-api-assessments{gap:10px}
 .quality-api-overview .quality-api-assessments li{
@@ -404,10 +424,6 @@
 }
 .quality-api-overview .quality-pt-analyzer-tests{gap:9px}
 .quality-api-overview .quality-pt-analyzer-group{padding:11px 12px}
-.quality-api-overview .quality-map-card[data-pt-category="hematology"] .quality-map-top>span,
-.quality-api-overview .quality-map-card[data-pt-category="microbiology"] .quality-map-top>span{
- background:#edf5f8;color:#396b82
-}
 @media(max-width:1040px){
  .quality-api-overview .quality-api-assessment-links{
   flex:1 1 100%;max-width:100%;margin-left:45px;justify-content:flex-start
