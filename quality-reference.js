@@ -81,22 +81,29 @@ function groups(sec){
  }
  return null;
 }
-function apiOverview(){
- return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
- '<h2>Assessment types and assigned analyzers</h2>'+
- '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
- '<div class="quality-map-grid">'+map.map(x=>
-  '<article class="quality-map-card"><div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
-  '<span>'+esc(x.badge)+'</span></div>'+
-  '<div class="quality-api-instrument-row"><span class="quality-api-instrument-label">INSTRUMENT GUIDES</span>'+
-  '<div class="quality-api-instrument-links">'+x.machines.map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
+/* Two compact, independent columns prevent shorter PT categories from stretching
+   to the height of their neighbors. Each event retains its direct analyzer links. */
+function apiOverviewCard(x, index){
+ return '<article class="quality-map-card" data-pt-order="'+index+'" data-pt-category="'+esc(x.id)+'">'+
+  '<div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
+   '<span>'+esc(x.badge)+'</span></div>'+
   '<ul class="quality-api-assessments">'+x.items.map(it=>
    '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
     '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
     '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
     '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
     '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+
-    apiTestGroups(it)+'</div></li>').join('')+'</ul></article>'
+     apiTestGroups(it)+'</div></li>'
+  ).join('')+'</ul></article>';
+}
+function apiOverview(){
+ return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
+ '<h2>Assessment types and assigned analyzers</h2>'+
+ '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
+ '<div class="quality-map-grid">'+[0,1].map(col=>
+  '<div class="quality-map-column">'+map.map((x,index)=>
+   index%2===col?apiOverviewCard(x,index):''
+  ).join('')+'</div>'
  ).join('')+'</div>'+
  '</section>';
 }
