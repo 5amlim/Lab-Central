@@ -204,8 +204,8 @@
       result.dataset.state = "valid";
       interpretation.hidden = false;
       interpretation.innerHTML = '<div class="egfr-category-eyebrow">GFR CATEGORY</div>'+ 
-        '<strong class="egfr-category-title">'+esc(category[0])+' · '+esc(category[2])+'</strong>'+
-        '<div class="egfr-category-range">'+esc(category[1])+' mL/min/1.73 m²</div>'+
+        '<div class="egfr-category-line"><strong class="egfr-category-title">'+esc(category[0])+' · '+esc(category[2])+'</strong>'+
+        '<div class="egfr-category-range">'+esc(category[1])+' mL/min/1.73 m²</div></div>'+
         '<p>'+esc(category[3])+'</p>';
     }
     form.addEventListener("submit", calculateFromForm);
