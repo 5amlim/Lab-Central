@@ -201,7 +201,8 @@ const steps=[
 const rail=(items,aria)=>'<div class="api2-rail" aria-label="'+x(aria)+'">'+items.map((s,i)=>'<div><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+x(s)+'</strong></div>').join('')+'</div>';
 function submission(){
  return '<section class="api2-page api2-submission">'+
- '<header class="api2-intro"><div class="api2-overline">API · PAPERLESS PROFICIENCY TESTING</div><h2>Submit PT results</h2><p>Follow the actual API screens from event selection through confirmed transmission. The steps below use API’s documented portal labels, not a simulated login or result-entry system.</p><div class="api2-intro-actions">'+link(url.portal,"Open API Paperless PT","api2-primary")+link(url.guide,"Official 7-page API entry guide")+'</div></header>'+
+ '<header class="api2-intro"><div class="api2-overline">API · PAPERLESS PROFICIENCY TESTING</div><h2>Submit PT results</h2><p>Follow the actual API screens from event selection through confirmed transmission. The steps below use API’s documented portal labels, not a simulated login or result-entry system.</p><div class="api2-intro-actions">'+link(url.guide,"Official 7-page API entry guide")+'</div></header>'+
+ overviewCta()+
  '<div class="api2-alert api2-alert-critical"><strong>Saving is not submitting.</strong><p>A result is only received after the attestation is completed, results are transmitted, and the submitted event appears in Event History.</p></div>'+
  rail(["Prepare","Enter & review","Attest & submit","Confirm & file"],"Online submission phases")+
  '<div class="api2-section-head api2-flow-title"><div><h3>Online submission, step by step</h3><p>Follow each phase in order. Expand the page by scrolling; no separate guided mode is needed.</p></div>'+badge("9 steps · 4 phases","neutral")+'</div>'+
@@ -272,7 +273,7 @@ function exceptionsPage(){
  '<section class="api2-sources"><strong>Official references</strong><div>'+link(url.cms,"CMS PT & referral brochure")+link(url.correction,"API correction window")+link(url.comment,"API sample problem comments")+link(url.attest,"API attestation")+'</div></section></section>';
 }
 function overviewCta(){
- return '<div class="api2-overview-callout"><div><span>API PAPERLESS PT</span><h3>Submit results correctly, from entry to confirmation</h3><p>Step-by-step portal guide, unit conversions, attestation, handling of repeats and exceptions.</p></div><button type="button" data-gotab="submit-results">Open submission guide <span aria-hidden="true">→</span></button></div>'+
+ return '<div class="api2-overview-callout"><div><span>API PAPERLESS PT</span><h3>Submit results correctly, from entry to confirmation</h3><p>Step-by-step portal guide, unit conversions, attestation, handling of repeats and exceptions.</p></div><a class="api2-overview-open" href="'+x(url.portal)+'" target="_blank" rel="noopener noreferrer">Open API Paperless PT <span aria-hidden="true">↗</span></a></div>'+
  '<div class="api2-overview-quick">'+[
  ["01","Prepare & enter","Verify event, sample IDs, method and units."],
  ["02","Review & attest","Reconcile entries and identify testing personnel."],
