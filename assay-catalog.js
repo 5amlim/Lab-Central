@@ -46,7 +46,7 @@ const tests={
   {title:'Group A Streptococcus',complexity:'waived',color:'#af2447',tint:'#fae9ed',deep:'#8c1737',boxColor:'Red box',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
  hiv:[
-  {title:'Human immunodeficiency virus antigen / antibody test',complexity:'conditional',groups:{'Antigen':A('Human immunodeficiency virus type 1 p24 antigen'),'Antibodies':A('Human immunodeficiency virus type 1 antibodies|Human immunodeficiency virus type 2 antibodies')},note:'CLIA complexity depends on the exact product and specimen. For example, Abbott Determine HIV-1/2 Ag/Ab Combo is waived for fingerstick whole blood but moderate for venous whole blood, serum or plasma. Verify the current kit IFU.'}
+  {title:'Abbott Determine HIV-1/2 Ag/Ab Combo',complexity:'conditional',source:'https://www.fda.gov/media/86959/download',groups:{'Antigen (Ag line)':A('HIV-1 p24 antigen'),'Antibodies (Ab line)':A('HIV-1/2 antibodies (combined readout)')},note:'Separate Ag and Ab lines: the Ab line detects HIV-1/2 antibodies but does not distinguish HIV-1 from HIV-2. Read at 20–30 minutes. CLIA waived ONLY for fingerstick whole blood; moderate complexity for venous whole blood, serum and plasma. Follow the Abbott IFU and site SOP.'}
  ],
  poc:[
   {title:'Rapid influenza test',complexity:'waived',note:'CLIA waived for the Quidel QuickVue Influenza A+B test with its approved nasal or nasopharyngeal specimens. Verify the exact stocked kit and current IFU.',source:'https://www.quidelortho.com/us/en/products/quickvue-rapid-lateral-flow-tests/quickvue-influenza-a-b-test',groups:{'Viruses':A('Influenza A virus|Influenza B virus')}},
@@ -116,9 +116,8 @@ const printoutAbbreviations={
  hemocue:{'Hemoglobin':'Hb'},
  coagsense:{'Prothrombin time':'PT','International normalized ratio':'INR'},
  hiv:{
-  'Human immunodeficiency virus type 1 p24 antigen':'HIV-1 p24',
-  'Human immunodeficiency virus type 1 antibodies':'HIV-1 Ab',
-  'Human immunodeficiency virus type 2 antibodies':'HIV-2 Ab'
+  'HIV-1 p24 antigen':'Ag · HIV-1 p24',
+  'HIV-1/2 antibodies (combined readout)':'Ab · HIV-1/2'
  },
  poc:{
   'Heterophile antibodies (not direct Epstein-Barr virus detection)':'Mono / heterophile Ab',
@@ -216,14 +215,14 @@ function render(section){
  const id=typeof section==='string'?section:section?.id;
  const list=tests[id];if(!list)return '';
  const isDisc=id==='piccolo';
- const heading=isDisc?'Available Piccolo reagent discs':id==='torch'?'Gastrointestinal panel targets':'Available tests and detected analytes';
+ const heading=isDisc?'Available Piccolo reagent discs':id==='torch'?'Gastrointestinal panel targets':id==='hiv'?'Abbott Determine HIV-1/2 Ag/Ab Combo':'Available tests and detected analytes';
  const subtitle=isDisc?'Six approved chemistry discs. Accent colors follow the corresponding reagent pouch labeling. Measured and calculated results are separated.':'Select an assay below to review its full analyte or pathogen menu. Categories and complexity labels are assay-specific.';
  let notes='';
  if(id==='spotfire')notes='Select the specimen-appropriate respiratory or sore throat menu per the installed U.S. pouch IFU. Full sore throat is listed for NY clinics.';
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
-  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+(id==='sysmex'?' ac-grid--sysmex':'')+(id==='torch'?' ac-grid--torch':'')+(id==='spotfire'?' ac-grid--spotfire':'')+(id==='sofia'?' ac-grid--sofia':'')+(id==='coagsense'?' ac-grid--coagsense':'')+(id==='poc'?' ac-grid--poc':'')+(id==='pathfast'?' ac-grid--pathfast':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
+  '<div class="ac-grid '+(isDisc?'ac-disc-grid':'')+(id==='sysmex'?' ac-grid--sysmex':'')+(id==='torch'?' ac-grid--torch':'')+(id==='spotfire'?' ac-grid--spotfire':'')+(id==='sofia'?' ac-grid--sofia':'')+(id==='coagsense'?' ac-grid--coagsense':'')+(id==='poc'?' ac-grid--poc':'')+(id==='hiv'?' ac-grid--hiv':'')+(id==='pathfast'?' ac-grid--pathfast':'')+'">'+list.map((c,i)=>oneCard(c,i,isDisc,id)).join('')+'</div>'+
   (notes?'<p class="ac-footnote">'+esc(notes)+'</p>':'')+
   (references[id]?'<p class="ac-reference">Source: <a href="'+references[id]+'" target="_blank" rel="noopener noreferrer">Official test menu / manufacturer reference ↗</a></p>':'')+'</section>';
 }
