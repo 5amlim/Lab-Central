@@ -160,7 +160,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="training-competency.css?v=20261101-compliance-scroll-v1" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261101-compliance-scroll-v1" media="all">
-<link rel="stylesheet" href="api-submission.css?v=20261101-api-market-and-phases-v2" media="all">
+<link rel="stylesheet" href="api-submission.css?v=20261101-api-calver-nav-v3" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261031-spotfire-insert-screen-v7" media="all">
@@ -383,7 +383,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
 <script src="quality-reference.js?v=20261101-pt-category-dropdown-v1"></script>
-<script src="api-submission.js?v=20261101-api-market-and-phases-v2"></script>
+<script src="api-submission.js?v=20261101-api-calver-nav-v3"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
 <script src="training-competency.js?v=20261101-compliance-scroll-v1"></script>
@@ -1926,7 +1926,7 @@ function metaForGuide(sec){
   :instrumentCategories.includes(sec.category)
    ?[['Specimen / panel',sec.sample||'Confirm test-specific requirements'],['QC / calibration',window.LAB_QC_OVERVIEW?.cfg?.[sec.id]?.label||sec.qc||'Use current approved QC procedure'],['Reference','Current approved SOP and manufacturer IFU']]
    :(operationalGuideMeta[sec.id]||[['Scope',sec.subtitle],['Workflow','See instructions and resources'],['Reference','Current approved local policy']]);
- return '<div class="meta-bar'+(instrumentCategories.includes(sec.category)?'':' meta-bar-operations')+(sec.id==='api'?' api-meta-bar':'')+'">'+pairs.map(function(p){return '<div class="meta-chip"><small>'+safeHtml(p[0])+'</small><span>'+safeHtml(p[1])+'</span></div>'}).join('')+'</div>';
+ return '<div class="meta-bar'+(instrumentCategories.includes(sec.category)?'':' meta-bar-operations')+(['api','calver'].includes(sec.id)?' api-meta-bar':'')+'">'+pairs.map(function(p){return '<div class="meta-chip"><small>'+safeHtml(p[0])+'</small><span>'+safeHtml(p[1])+'</span></div>'}).join('')+'</div>';
 }
 function guideHeaderType(sec){
  if(sec.archived)return 'ARCHIVED REFERENCE';
@@ -2161,6 +2161,7 @@ function sectionRender(sec,tab){
  if(sec.id==='sendout')h+='<div class="sendout-reference-layout">';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.id==='api')h+=window.LAB_API_SUBMISSION.marketSelector();
+ if(sec.id==='calver')h+=window.LAB_API_SUBMISSION.calverMarketSelector();
  if(sec.archived)h+=`<div class="archive-strip"><strong>Discontinued / archived.</strong> This content is retained for historical reference and should not be used as an active testing workflow.</div>`;
  else if(sec.id==='tubes')h+=`<div class="notice"><span class="notice-icon">!</span><div><strong>Verify before using.</strong> Pickup schedules, specimen requirements, shipping temperatures and account instructions can change. Use the current receiving-lab directory and site-specific process.</div></div>`;
 
@@ -2181,7 +2182,7 @@ function sectionRender(sec,tab){
   h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''} ${x.id==='cal-qc'?'maintenance':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
- }else if(sec.id==='api'){
+ }else if(sec.id==='api'||sec.id==='calver'){
   const apiTabDetails={
    overview:{icon:'book',subtitle:'Program & analyzers'},
    'pt-handling':{icon:'package',subtitle:'Receipt & handling'},
@@ -2190,7 +2191,15 @@ function sectionRender(sec,tab){
    'units-reporting':{icon:'settings',subtitle:'Units & result limits'},
    'pt-exceptions':{icon:'shield-check',subtitle:'Rules & follow-up'}
   };
-  h+=`<nav class="api-guide-tabs" role="tablist" aria-label="Proficiency testing reference sections">${tabs.map(t=>`<button type="button" role="tab" aria-selected="${tab===t.id}" class="api-guide-tab ${tab===t.id?'is-selected':''}" data-gotab="${safeHtml(t.id)}" title="${safeHtml(t.title)}"><span class="api-guide-tab-icon">${svg(apiTabDetails[t.id]?.icon||'book')}</span><span class="api-guide-tab-copy"><strong>${safeHtml(t.title)}</strong><small>${safeHtml(apiTabDetails[t.id]?.subtitle||'Reference information')}</small></span></button>`).join('')}</nav>`;
+  const calverTabDetails={
+   overview:{icon:'book',subtitle:'Purpose & reportable range'},
+   preparation:{icon:'clipboard-check',subtitle:'Materials & readiness'},
+   testing:{icon:'settings',subtitle:'Run & assess each level'},
+   filing:{icon:'file-text',subtitle:'Review & documentation'},
+   resources:{icon:'book',subtitle:'SOPs & requirements'}
+  };
+  const tabDetails=sec.id==='calver'?calverTabDetails:apiTabDetails;
+  h+=`<nav class="api-guide-tabs ${sec.id==='calver'?'calver-reference-tabs':''}" role="tablist" aria-label="${sec.id==='calver'?'Calibration verification reference sections':'Proficiency testing reference sections'}">${tabs.map(t=>`<button type="button" role="tab" aria-selected="${tab===t.id}" class="api-guide-tab ${tab===t.id?'is-selected':''}" data-gotab="${safeHtml(t.id)}" title="${safeHtml(t.title)}"><span class="api-guide-tab-icon">${svg(tabDetails[t.id]?.icon||'book')}</span><span class="api-guide-tab-copy"><strong>${safeHtml(t.title)}</strong><small>${safeHtml(tabDetails[t.id]?.subtitle||'Reference information')}</small></span></button>`).join('')}</nav>`;
  }else h+=`<div class="tab-strip${sec.id==='calver'?' calver-reference-tabs':sec.id==='supplies'?' supply-vendor-tabs':sec.id==='sendout'?' sendout-reference-tabs':(['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':'')}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}" aria-label="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
@@ -2241,8 +2250,8 @@ function sectionRender(sec,tab){
  // Keep the selected compliance tab in the visible portion of the scroll row.
  // Adjust only the horizontal strip so clicking a tab never jumps the page vertically.
  if(sec.id==='api'||sec.id==='calver'){
-  const strip=el('mainContent').querySelector(sec.id==='api'?'.api-guide-tabs':'.calver-reference-tabs');
-  const active=strip?.querySelector(sec.id==='api'?'.api-guide-tab.is-selected':'.tab.active');
+  const strip=el('mainContent').querySelector('.api-guide-tabs');
+  const active=strip?.querySelector('.api-guide-tab.is-selected');
   if(strip&&active&&strip.scrollWidth>strip.clientWidth){
    const stripBounds=strip.getBoundingClientRect();
    const activeBounds=active.getBoundingClientRect();
