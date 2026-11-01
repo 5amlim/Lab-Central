@@ -31,7 +31,8 @@
 .lc-page-scroll-cue>span,.lc-scroll-cue-bottom>span{padding:4px 8px}
 .lc-scroll-cue-frame{position:relative;width:100%;min-width:0}
 .lc-scroll-cue-frame>.pf-rack-scroll,.lc-scroll-cue-frame>.guide-stepper,.lc-scroll-cue-frame>.pf-qc-lane-list,.lc-scroll-cue-frame>.pfux-jump-options{box-sizing:border-box}
-.lc-scroll-cue-bottom,.lc-scroll-cue-right{position:absolute;z-index:12;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease}
+/* Keep guide scroll controls behind the sticky header (z-index:10). */
+.lc-scroll-cue-bottom,.lc-scroll-cue-right{position:absolute;z-index:8;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease}
 .lc-scroll-cue-bottom{left:1px;right:1px;bottom:-1px;height:45px;padding-bottom:2px;box-sizing:border-box;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.65) 48%,#fff 96%);border-radius:0 0 10px 10px}
 .lc-scroll-cue-frame.lc-has-horizontal-overflow{padding-bottom:29px;box-sizing:border-box}
 .lc-scroll-cue-right{
@@ -1094,7 +1095,7 @@
 /* Contextual horizontal cues shared by Compliance, instrument and procedure tabs.
    Keep both controls out of the row; show only the directions that can still scroll. */
 .lc-scroll-cue-left{
- position:absolute;z-index:12;left:4px;bottom:0;display:inline-flex;
+ position:absolute;z-index:8;left:4px;bottom:0;display:inline-flex;
  align-items:center;justify-content:center;min-height:27px;padding:0 11px;
  border:1px solid #bed8dd;border-radius:999px;
  background:#f0f8f9;color:#246f7d;font-family:inherit;font-size:11px;font-weight:800;line-height:1;
