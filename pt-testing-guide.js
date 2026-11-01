@@ -371,7 +371,7 @@ function materialPreview(id,st){
    (m.catalogNumber?'<small class="ptg-reference-catalog">API catalog · '+e(m.catalogNumber)+'</small>':"")+
    '</div>'+
   '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-sample-art">'+vialSvg(name,code,color)+
-   (m.samplesPerShipment?'<div class="ptg-sample-count" aria-label="'+e(m.samplesPerShipment)+' samples per shipment"><strong>'+e(m.samplesPerShipment)+'</strong><span>SAMPLES<small>PER SHIPMENT</small></span></div>':'')+'</div>'+
+   (m.samplesPerShipment?'<div class="ptg-sample-count" aria-label="'+e(m.samplesPerShipment)+' samples per event"><strong>'+e(m.samplesPerShipment)+'</strong><span>SAMPLES<small>PER EVENT</small></span></div>':'')+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
   '<p>'+e(note)+'</p></div></div></div>';
  const test=reagent?reagentReference(reagent,m.samplesPerShipment):"";
