@@ -143,6 +143,46 @@
 .quality-pt-card-label{font-size:9px;letter-spacing:.08em;font-weight:850;color:#6d8b9c}
 .quality-pt-assay-foot .quality-api-badge-group{margin-top:8px}
 
+/* CM is a single PT category with separate enrolled analytes per analyzer.
+   Use one shared layout in API Overview and the PT category reference. */
+.quality-api-tests-wrap{margin-top:10px}
+.quality-api-tests-wrap>.quality-api-badge-group{margin-top:0}
+.quality-pt-analyzer-tests{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ margin-top:9px;align-items:stretch
+}
+.quality-pt-analyzer-group{
+ display:flex;flex-direction:column;gap:8px;min-width:0;
+ padding:11px 12px;border:1px solid #d9e7ec;border-radius:10px;
+ background:#f7fbfc
+}
+.quality-pt-analyzer-group:first-child{
+ border-color:#d2e4f0;background:#f5faff
+}
+.quality-pt-analyzer-group:last-child{
+ border-color:#cde7df;background:#f5fcf9
+}
+.quality-pt-analyzer-title{
+ display:block;font-size:11px;font-weight:900;line-height:1.3;
+ color:#315b74;letter-spacing:.01em
+}
+.quality-pt-analyzer-group:last-child .quality-pt-analyzer-title{color:#197f73}
+.quality-pt-analyzer-group .quality-api-badge-group{
+ display:flex;flex-wrap:wrap;gap:6px;margin:0!important
+}
+.quality-pt-analyzer-group .quality-api-test-badge{
+ font-size:10px;padding:5px 7px;white-space:normal;overflow-wrap:anywhere
+}
+.quality-pt-assay-foot>.quality-pt-analyzer-tests{margin-top:9px}
+.quality-api-overview .quality-pt-analyzer-tests{margin-top:0}
+@media(max-width:700px){
+ .quality-pt-analyzer-tests{grid-template-columns:minmax(0,1fr)}
+ .quality-pt-analyzer-group{padding:10px}
+}
+@media print{
+ .quality-pt-analyzer-tests{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .quality-pt-analyzer-group{break-inside:avoid}
+}
 /* PT category cards use a static five-step workflow for every discipline. */
 .quality-pt-workflow{margin-top:20px;border:1px solid #d9e9e5;border-radius:14px;background:#f9fdfb;padding:18px 19px}
 .quality-pt-workflow-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
