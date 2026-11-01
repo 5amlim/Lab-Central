@@ -3,31 +3,31 @@
 "use strict";
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const programs={
- sysmex:{codes:"HSY",mode:"Patient run · green control-vial adapter",note:"Run as a patient sample, not QC. Use the green adapter to fit the small HSY PT vial.",steps:[
- ["Verify HSY and prepare vial","Match the exact HSY event, vial ID and testing instructions. Follow API material mixing, storage and preparation rather than assuming routine whole-blood collection directions."],
- ["Fit the green adapter","Insert the green pocH-100i control-vial adapter for the smaller PT vial. Seat the vial securely without forcing the holder or chamber. Check correct tube fit."],
- ["Run as a patient sample","Select the routine whole-blood patient-testing process, not a QC file. Enter the actual HSY sample number in the sample ID field; use PT Sample only if a separate name field exists."],
- ["Print and record","Verify the completed CBC and differential, flags, identifier and all reportable results. Print the analyzer report for the HSY specimen."]]},
- triage:{codes:"CM / PSC",mode:"Miscellaneous Test",note:"Use Miscellaneous Test for the PT run, while following the usual Triage assay and cartridge workflow.",steps:[
- ["Verify assigned cardiac assay","Confirm CM or PSC event, sample code, assigned troponin I and/or D-dimer assays, kit materials and current QC status."],
- ["Select Miscellaneous Test","Use the instrument Miscellaneous Test option. Enter the exact PT ID rather than any real patient MRN or identity."],
- ["Load and run routine cartridge","Prepare the PT material per API, then use the assigned patient-testing cartridge, sample volume and routine analytical procedure."],
- ["Print and reconcile results","Print each result. Reconcile unit labels, invalid flags, qualifiers and enrolled analytes with the API event before submission."]]},
- piccolo:{codes:"CH / CRP",mode:"Analyze → Control",note:"Use Control rather than Patient for the PT run. This is still PT, not routine QC.",steps:[
- ["Verify panel and event","Match the specified CH or CRP event with the correct chemistry disc, such as MetLyte + CRP or MetLac 12, and exact PT sample ID."],
- ["Prepare the disc","Prepare PT material per API and use the usual Piccolo sample port, transfer device and no-bubbles disc-loading process."],
- ["Run as Control","On Piccolo choose Analyze, load the disc, then select Control rather than Patient. Enter the actual program sample ID where supported."],
- ["Print and verify","Keep the completed disc report and check the requested analytes, units and flags. Do not judge the PT material against routine QC limits."]]},
- torch:{codes:"GIP",mode:"Patient GI workflow",note:"Run on TORCH like a patient GI specimen. Follow the API preparation instructions for the supplied PT matrix.",steps:[
- ["Confirm GI sample ID","Match the GIP event, pouch, individual vial and any reconstitution or temperature requirements. Do not assume PT material is already in Cary-Blair."],
- ["Prepare GI pouch as usual","Use the existing TORCH patient-testing steps for hydration, buffer, transfer, pouch loading and module setup, after preparing the material as the event instructs."],
- ["Enter the PT sample ID","Use the actual GIP sample number, not a patient MRN. Keep vial, pouch and analyzer run identifiers matched."],
- ["Print GI pathogen results","Verify run acceptance and internal controls; retain full output and report the enrolled organism targets requested by API."]]},
- poc:{codes:"HV",mode:"Routine rapid HIV testing",note:"Use the approved rapid HIV kit and routine read window. Photograph completed test devices and print the photos.",steps:[
- ["Match the HIV event","Verify the HV event, actual sample ID, material handling instructions and approved rapid HIV test kit."],
- ["Run the HIV test","Follow the normal rapid-test reagent, transfer, timing and interpretation instructions for the selected kit, adjusted only for supplied PT material."],
- ["Interpret at the correct read time","Check the required control and test line pattern, validity and event result categories. Record actual ID and read time."],
- ["Photograph and print","At the valid read time take legible photos of the completed device and control/test window. Print the photos and file with the interpreted result and PT packet."]]}
+ sysmex:{codes:"HSY",mode:"Patient sample · green vial adapter",note:"Run the HSY PT material as a routine patient sample, with the green adapter fitted for the smaller PT vial. Do not save the result under QC.",steps:[
+ ["Verify HSY event and prepare vial","Match the exact HSY event, assigned specimen ID and API instructions. Mix, prepare and handle the vial according to the PT insert, rather than assuming standard whole-blood collection directions."],
+ ["Fit the green adapter","Place the approved green pocH-100i control-vial adapter into the sample holder. Seat the smaller PT vial securely. Confirm the vial fits without forcing the holder or chamber."],
+ ["Run as a patient sample","Use the routine CBC patient-testing workflow, not the QC file. Enter the exact HSY sample number as the sample ID. Use PT Sample in a separate name field only if available."],
+ ["Review and print CBC results","Check the completed CBC, differential, flags, specimen ID and all reportable values. Print the analyzer report for every assigned HSY sample."]]},
+ triage:{codes:"CM / PSC",mode:"Miscellaneous Test",note:"Select Miscellaneous Test on the Triage MeterPro, then follow the normal assay-specific cartridge and patient-testing workflow.",steps:[
+ ["Confirm PT event and assay","Match the CM or PSC event and the exact vial ID. Verify the assigned troponin I and/or D-dimer assay, acceptable PT material preparation and cartridge readiness."],
+ ["Select Miscellaneous Test","Choose Miscellaneous Test (Misc Test), not a real patient record. Enter the exact PT sample ID in the available identifier field."],
+ ["Load and run the cartridge","Prepare the assigned PT specimen according to its insert. Use the usual cartridge, sample volume, analyzer prompts and routine patient-testing frequency."],
+ ["Review and print results","Check valid completion, any flags, reportable values and units. Print the original Triage reports and reconcile only the enrolled analytes with the API worksheet."]]},
+ piccolo:{codes:"CH / CRP",mode:"Analyze → Control",note:"For Piccolo Xpress select Control instead of Patient. PT material is still evaluated as proficiency testing, not against routine QC limits.",steps:[
+ ["Verify event and correct disc","Confirm the assigned CH or CRP program and PT sample ID. Select the required chemistry disc (such as MetLyte + CRP or MetLac 12), and check its lot and expiration."],
+ ["Prepare and load the disc","Prepare the PT material per its event instructions. Transfer material through the normal Piccolo sample port using the approved transfer device, avoiding bubbles."],
+ ["Choose Control and run","On Piccolo select Analyze, load and close the disc drawer, then choose Control instead of Patient. Enter the exact PT sample identifier where supported."],
+ ["Review and print analytes","Verify the panel, instrument flags, measured results, identifiers and reportable units. Print the full disc report for each assigned specimen."]]},
+ torch:{codes:"GIP",mode:"Routine GI patient run",note:"Run the assigned GIP material on BioFire TORCH using the GI patient-testing procedure, after the event-specific specimen preparation.",steps:[
+ ["Verify GIP event and sample","Confirm the assigned GIP vial ID, GI pouch, expiration, and event-specific reconstitution or handling. Do not assume the supplied PT specimen is already in Cary-Blair."],
+ ["Prepare the GI pouch","Use the established TORCH GI procedure for pouch hydration, GI sample buffer, specimen transfer and loading, after preparing the PT material exactly as directed."],
+ ["Run as a GI patient sample","Choose an available TORCH module and routine GI sample run. Enter the exact GIP specimen code instead of a patient MRN, then verify the pouch/sample match."],
+ ["Review and print the GI report","Confirm a valid run and internal controls. Print the complete GI pathogen report and reconcile each enrolled organism result with the API worksheet."]]},
+ poc:{codes:"HV",mode:"Routine rapid HIV test",note:"Use the approved rapid HIV test and normal read window. Photograph the completed device at the valid read time and print those photos.",steps:[
+ ["Match the HV event and kit","Confirm the exact HV sample ID, assigned HIV assay, kit lot/expiration and required PT material preparation. Use the actual manufacturer IFU."],
+ ["Perform the patient-equivalent test","Follow the approved rapid HIV transfer, reagent and timing instructions with the assigned PT material. Do not alter the routine patient read window."],
+ ["Read result and take photographs","At the authorized read time, confirm a valid control and interpret the HIV test result. Take clear photos showing the device, control/test area and correct PT specimen ID. Record the result and read time."],
+ ["Print photos and record interpretation","Print the valid-read-time photographs and record the interpretation for each HV sample. Verify the sample ID and event worksheet before submitting the result."]]}
 };
 const extra={
  pathfast:"Confirm the enrolled assay and PT material compatibility. Run the routine PATHFAST patient sample method, not a special QC pathway, unless the approved local SOP specifically requires otherwise.",
@@ -61,6 +61,55 @@ function figures(){
  '<figure><img loading="lazy" src="'+vialPhoto+'" alt="Example of a small blood sample vial next to pocH-100i; not the API vial"/><figcaption>Example small vial, not the HSY vial</figcaption></figure></div>'+
  '<a class="ptg-source" target="_blank" rel="noopener noreferrer" href="'+adapterUrl+'">Green adapter product reference ↗</a></section>';
 }
+/* PT guided view is independent of the standard patient-testing stepper.
+   Preserve the active PT step when the user navigates between instrument tabs. */
+const ptView=new Map();
+const ptSequences=new Map();
+function viewFor(id,total){
+ const previous=ptView.get(id)||{mode:"guided",step:0};
+ return {mode:previous.mode==="all"?"all":"guided",step:Math.max(0,Math.min(total-1,previous.step||0))};
+}
+function workflow(id,sequence){
+ const {mode,step}=viewFor(id,sequence.length);
+ ptView.set(id,{mode,step});
+ ptSequences.set(id,sequence);
+ const stage=(entry,i)=>'<article class="ptg-step'+(i===sequence.length-1?' ptg-filing-step':'')+'" aria-label="PT step '+(i+1)+' of '+sequence.length+'"><b>'+String(i+1).padStart(2,"0")+'</b><div><h3>'+e(entry[0])+'</h3><p>'+e(entry[1])+'</p></div></article>';
+ const choice=sequence.map((entry,i)=>'<button type="button" class="ptg-step-tab'+(i===step?' is-active':'')+'" data-ptg-step="'+i+'" aria-current="'+(i===step?'step':'false')+'" title="'+e(entry[0])+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+e(entry[0])+'</button>').join("");
+ const controls='<div class="ptg-controls" role="group" aria-label="PT procedure display mode"><button type="button" data-ptg-mode="guided" aria-pressed="'+(mode==="guided")+'" class="'+(mode==="guided"?'is-active':'')+'">Guided view</button><button type="button" data-ptg-mode="all" aria-pressed="'+(mode==="all")+'" class="'+(mode==="all"?'is-active':'')+'">All steps</button></div>';
+ const nav=mode==="guided"?'<div class="ptg-transport"><button type="button" data-ptg-step="'+(step-1)+'"'+(step===0?' disabled':'')+'>← Previous</button><button type="button" class="ptg-next" data-ptg-step="'+(step+1)+'"'+(step===sequence.length-1?' disabled':'')+'>'+(step===sequence.length-1?'All steps complete':'Next step →')+'</button></div>':'';
+ const selected=mode==="guided"?stage(sequence[step],step):'<div class="ptg-all-steps">'+sequence.map(stage).join("")+'</div>';
+ return '<div class="ptg-workflow-head"><div><span class="ptg-current-label">'+(mode==="guided"?'Step '+(step+1)+' of '+sequence.length:'Complete PT procedure · '+sequence.length+' steps')+'</span><strong>'+(mode==="guided"?e(sequence[step][0]):"All PT steps")+'</strong></div>'+controls+'</div>'+
+ '<div class="ptg-progress"><span style="width:'+((mode==="all"?sequence.length:step+1)/sequence.length*100)+'%"></span></div>'+
+ '<nav class="ptg-step-strip" aria-label="Jump to PT testing step">'+choice+'</nav>'+
+ '<div class="ptg-focused-stage" id="ptg-current-step" tabindex="-1">'+(mode==="guided"?'<div class="ptg-stage-top"><span>PT STEP '+String(step+1).padStart(2,"0")+'</span>'+nav+'</div>':'')+selected+'</div>'+
+ '<div class="ptg-print-only">'+sequence.map(stage).join("")+'</div>';
+}
+document.addEventListener("click",function(event){
+ const button=event.target.closest("[data-ptg-step], [data-ptg-mode]");
+ const panel=button?.closest(".ptg-page");
+ const host=panel?.querySelector("[data-ptg-workflow]");
+ if(!button||!host)return;
+ const id=host.getAttribute("data-ptg-workflow"),sequence=ptSequences.get(id);
+ if(!sequence?.length)return;
+ const before=viewFor(id,sequence.length);
+ if(button.hasAttribute("data-ptg-mode")){
+  const mode=button.getAttribute("data-ptg-mode");
+  if(mode!=="guided"&&mode!=="all")return;
+  ptView.set(id,{...before,mode});
+ }else{
+  const step=Number(button.getAttribute("data-ptg-step"));
+  if(!Number.isInteger(step)||step<0||step>=sequence.length)return;
+  ptView.set(id,{mode:"guided",step});
+ }
+ host.innerHTML=workflow(id,sequence);
+ const stage=host.querySelector("#ptg-current-step");
+ if(stage&&typeof stage.focus==="function")stage.focus({preventScroll:true});
+ const rect=stage?.getBoundingClientRect();
+ if(rect&&(rect.top<100||rect.top>window.innerHeight-150)){
+  stage.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+ }
+});
+
 function render(sec,groups){
  if(!supports(sec))return "";
  const c=programs[sec.id],sample=c?c.codes.split(" / ")[0]:"Actual event code",id=c?sample+"# (use assigned number)":"Assigned sample ID";
@@ -68,17 +117,19 @@ function render(sec,groups){
  ["Verify enrollment","Confirm that this clinic, instrument and assay actually have a PT event. A PT tab does not mean the analyzer is enrolled."],
  ["Prepare and identify","Follow the event instructions for PT material handling. Enter PT Sample for a supported name field, and the actual printed vial ID instead of a patient MRN."],
  ["Use the routine patient procedure",extra[sec.id]||"Follow the current analyzer patient testing procedure and approved site SOP. Test the same number of times as patient specimens."],
- ["Print and document","Retain the original result, instrument output, ID, units and any required event comments. Complete the API result submission and attestation."]
+ ["Review and print results","Verify the completed assay, assigned sample ID, result validity, units and reportable values. Print or retain each original analyzer report (or kit record) for the event."]
  ];
- const steps=sequence.map((v,i)=>'<article class="ptg-step"><b>'+String(i+1).padStart(2,"0")+'</b><div><h3>'+e(v[0])+'</h3><p>'+e(v[1])+'</p></div></article>').join("");
+ const filing=["Mount printouts, notify and file","Arrange all PT printouts (and printed HIV device photographs when applicable) on a blank sheet of paper. Secure each with double-sided tape without covering identifiers or results. Take a clear picture of the completed page, send the picture to the Lab Supervisor using the approved internal channel, then file the original page in the API binder."];
+ const fullSequence=[...sequence,filing];
+ const steps=fullSequence.map((v,i)=>'<article class="ptg-step"><b>'+String(i+1).padStart(2,"0")+'</b><div><h3>'+e(v[0])+'</h3><p>'+e(v[1])+'</p></div></article>').join("");
  const patient=patientGroup(sec,groups);
  return '<section class="ptg-page"><header class="ptg-head"><span>API · INSTRUMENT PROFICIENCY TESTING</span><div class="ptg-headline"><div><h2>PT testing</h2><p>Follow the patient-testing workflow and use the specific PT specimen identifier. The steps below highlight only PT differences and required documentation.</p></div><small>'+e(c?"PROGRAM REFERENCE · "+c.codes:"ONLY IF ENROLLED")+'</small></div></header>'+
  '<div class="ptg-identifiers"><div><span>NAME / PATIENT FIELD, IF AVAILABLE</span><strong>PT Sample</strong></div><div><span>SAMPLE ID INSTEAD OF MRN</span><strong>'+e(id)+'</strong></div></div>'+
  '<p class="ptg-identifiers-note">Use the exact code and number printed on the API vial or event sheet, such as an HSY sample identifier. If only one field is available, use the exact sample ID. Do not enter a real patient identity or a literal example ID.</p>'+
  '<div class="ptg-rule"><strong>Same method and frequency as patient testing</strong><p>Use routine patient personnel, workload, instrument and testing frequency. No grade-driven repeats, no PT referral to another lab, and no interlaboratory discussion of results before the deadline. Material reconstitution and storage follow the event instructions.</p></div>'+
  '<div class="ptg-mode"><div><span>'+e(c?"PT-SPECIFIC INSTRUMENT CHOICE":"ENROLLMENT REQUIRED")+'</span><strong>'+e(c?c.mode:"Only test when assigned")+'</strong><p>'+e(c?c.note:"This instrument is not listed as currently assigned in the Lab Central API program reference. Verify enrollment and an approved procedure before testing.")+'</p></div></div>'+
- '<div class="ptg-section-title"><span>REFERENCE PROCEDURE</span><h2>Run and document PT</h2><p>Use the linked patient instructions for the full testing sequence.</p></div>'+
- '<div class="ptg-steps">'+steps+'</div>'+(sec.id==="sysmex"?figures():"")+
+ '<div class="ptg-section-title"><span>GUIDED PT PROCEDURE</span><h2>Run, document and file PT</h2><p>Use the patient testing link for complete instrument instructions. Follow these PT-specific steps in order.</p></div>'+
+ '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,fullSequence)+'</div>'+(sec.id==="sysmex"?figures():"")+
  '<div class="ptg-actions"><div><strong>Related instructions</strong><p>Complete the routine run, then submit and file the PT event.</p></div><div class="ptg-links">'+
  (patient?action(null,patient,"Patient testing procedure",true):"")+
  action("api","pt-handling","API sample handling")+action("api","pt-categories","API PT categories")+action("api","submit-results","Submit PT results")+'</div></div>'+
