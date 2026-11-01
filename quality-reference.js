@@ -100,11 +100,7 @@ function apiOverview(){
  return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
  '<h2>Assessment types and assigned analyzers</h2>'+
  '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
- '<div class="quality-map-grid">'+[0,1].map(col=>
-  '<div class="quality-map-column">'+map.map((x,index)=>
-   index%2===col?apiOverviewCard(x,index):''
-  ).join('')+'</div>'
- ).join('')+'</div>'+
+ '<div class="quality-map-grid">'+map.map((x,index)=>apiOverviewCard(x,index)).join('')+'</div>'+
  '</section>';
 }
 function levelsVisual(){
