@@ -258,7 +258,11 @@ function render(page='daily'){
 }
 function rerender(){
  const page=document.querySelector('.dqc-page');
- if(page)page.outerHTML=render(currentPage);
+ if(!page)return;
+ const scrollLeft=page.querySelector('.dqc-view-switch')?.scrollLeft||0;
+ page.outerHTML=render(currentPage);
+ const strip=document.querySelector('.dqc-page .dqc-view-switch');
+ if(strip)strip.scrollLeft=scrollLeft;
 }
 function setLocationMenu(open,focusSelected=false,returnFocus=false){
  const picker=document.querySelector('.dqc-page .dqc-location-picker');
