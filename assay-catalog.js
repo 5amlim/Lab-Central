@@ -165,7 +165,7 @@ function shortLabel(id,name){
 /* Calculated Piccolo results are explained in plain language, not given status badges.
    Methods and limitations follow the manufacturer's assay IFU and analyzer manual. */
 const piccoloCalculationDetails={
- 'Estimated glomerular filtration rate':'Piccolo's displayed eGFR is calculated from creatinine with its built-in MDRD equation, which is different from the current race-free 2021 CKD-EPI creatinine estimate. For adults 18+, use the eGFR calculator tab to calculate a separate race-free estimate from valid creatinine, age, and the equation sex parameter. The calculator does not modify the analyzer result or report to the chart. N/C means the instrument could not calculate eGFR.',
+ 'Estimated glomerular filtration rate':'The displayed Piccolo eGFR is calculated from creatinine with its built-in MDRD equation, which is different from the current race-free 2021 CKD-EPI creatinine estimate. For adults 18+, use the eGFR calculator tab to calculate a separate race-free estimate from valid creatinine, age, and the equation sex parameter. The calculator does not modify the analyzer result or report to the chart. N/C means the instrument could not calculate eGFR.',
  'Cholesterol-to-high-density-lipoprotein ratio':'Total cholesterol ÷ HDL cholesterol.',
  'Non-high-density-lipoprotein cholesterol':'Total cholesterol − HDL cholesterol.',
  'Very-low-density lipoprotein cholesterol':'Triglycerides ÷ 5 (when concentrations are in mg/dL). This estimate is unreliable above 400 mg/dL triglycerides and in nonfasting samples.'
