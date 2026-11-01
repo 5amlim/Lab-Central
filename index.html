@@ -108,9 +108,25 @@
 
 /* Print options and compact procedure layout */
 .lc-print-anchor{position:relative;display:flex;align-items:center}
-.lc-print-trigger{display:inline-flex;align-items:center;gap:7px}
-.lc-print-chevron{font-size:13px;margin-left:2px;color:#7892a6}
-.lc-print-trigger[aria-expanded=true] .lc-print-chevron{transform:rotate(180deg)}
+.lc-print-trigger.text-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:9px;
+ min-height:38px;padding:8px 12px;border:1px solid #d3e3e9;border-radius:10px;
+ background:#fff;color:#365f73;font-size:12px;font-weight:750;line-height:1.2;
+ white-space:nowrap;transition:background .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease
+}
+.lc-print-trigger:hover{background:#f1f8f8;border-color:#a9d3d0;color:#146e73}
+.lc-print-trigger[aria-expanded=true]{background:#eaf6f3;border-color:#90c9c4;color:#176c6b;box-shadow:inset 0 0 0 1px #c9e8e3}
+.lc-print-trigger:focus-visible{outline:3px solid #87c8cb;outline-offset:2px}
+.lc-print-glyph{width:17px;height:17px;flex:none;display:block;stroke:currentColor}
+.lc-print-label{display:inline-block}
+.lc-print-chevron{
+ width:7px;height:7px;flex:none;display:inline-block;margin:-3px 1px 0 4px;
+ border-right:1.7px solid currentColor;border-bottom:1.7px solid currentColor;
+ transform:rotate(45deg);opacity:.75;transition:transform .16s ease,margin .16s ease
+}
+.lc-print-trigger[aria-expanded=true] .lc-print-chevron{transform:rotate(225deg);margin-top:3px}
+@media(max-width:620px){.lc-print-trigger.text-button{min-height:36px;padding:7px 10px;gap:7px}.lc-print-glyph{width:16px;height:16px}}
+@media(prefers-reduced-motion:reduce){.lc-print-trigger,.lc-print-chevron{transition:none}}
 .lc-print-options{position:absolute;z-index:500;right:0;top:calc(100% + 9px);width:min(335px,calc(100vw - 22px));padding:6px;background:white;border:1px solid #dce6ee;border-radius:13px;box-shadow:0 16px 35px rgba(22,46,73,.14)}
 .lc-print-options[hidden],.lc-print-options-help[hidden]{display:none!important}
 .lc-print-options button{display:flex;align-items:center;gap:11px;border:0;border-radius:9px;text-align:left;padding:12px 11px;width:100%;background:transparent;color:#2b445d;cursor:pointer;font-family:inherit}
@@ -274,7 +290,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
     <div class="workspace">
       <header class="topbar">
         <div class="topbar-left"><button id="openSidebar" type="button" class="icon-button menu-button" aria-label="Open menu"><span class="hamburger">☰</span></button><span class="breadcrumbs"><button type="button" id="homeCrumb">Lab Central</button><span class="crumb-sep">/</span><span id="currentCrumb">Overview</span></span></div>
-        <div class="topbar-actions"><span class="edition-pill">STAFF REFERENCE</span><div class="lc-print-anchor"><button id="printBtn" class="text-button lc-print-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="printOptions"><span class="print-icon">▤</span><span>Print page</span><span class="lc-print-chevron" aria-hidden="true">⌄</span></button><div id="printOptions" class="lc-print-options" hidden role="group" aria-label="Choose print format"><button type="button" data-lc-print="full"><span class="lc-print-option-icon" aria-hidden="true">▤</span><span><strong>Full page</strong><small>Current page with illustrations and details</small></span></button><button type="button" data-lc-print="compact" id="compactPrintChoice"><span class="lc-print-option-icon" aria-hidden="true">☷</span><span><strong>Compact SOP</strong><small id="compactPrintDescription">Full process with decisions and critical notes</small></span></button><p class="lc-print-options-help" id="compactPrintHelp" hidden>Select a workflow or procedure tab to print a compact SOP.</p></div></div></div>
+        <div class="topbar-actions"><span class="edition-pill">STAFF REFERENCE</span><div class="lc-print-anchor"><button id="printBtn" class="text-button lc-print-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="printOptions"><svg class="lc-print-glyph" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7zM17 11h.01"/></svg><span class="lc-print-label">Print page</span><span class="lc-print-chevron" aria-hidden="true"></span></button><div id="printOptions" class="lc-print-options" hidden role="group" aria-label="Choose print format"><button type="button" data-lc-print="full"><span class="lc-print-option-icon" aria-hidden="true">▤</span><span><strong>Full page</strong><small>Current page with illustrations and details</small></span></button><button type="button" data-lc-print="compact" id="compactPrintChoice"><span class="lc-print-option-icon" aria-hidden="true">☷</span><span><strong>Compact SOP</strong><small id="compactPrintDescription">Full process with decisions and critical notes</small></span></button><p class="lc-print-options-help" id="compactPrintHelp" hidden>Select a workflow or procedure tab to print a compact SOP.</p></div></div></div>
       </header>
       <main id="mainContent" class="main-content" tabindex="-1"></main>
       <footer class="global-footer"><span>Lab Central · Staff reference</span><span>Clinical instructions require confirmation against approved SOPs and current manufacturer instructions.</span></footer>
