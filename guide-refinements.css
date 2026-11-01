@@ -1089,3 +1089,51 @@
 @media(max-width:650px){
  .device-collection-guide .device-collection-stability-list{font-size:12px}
 }
+
+
+/* Contextual horizontal cues shared by Compliance, instrument and procedure tabs.
+   Keep both controls out of the row; show only the directions that can still scroll. */
+.lc-scroll-cue-left{
+ position:absolute;z-index:12;left:4px;bottom:0;display:inline-flex;
+ align-items:center;justify-content:center;min-height:27px;padding:0 11px;
+ border:1px solid #bed8dd;border-radius:999px;
+ background:#f0f8f9;color:#246f7d;font-family:inherit;font-size:11px;font-weight:800;line-height:1;
+ cursor:pointer;pointer-events:auto;appearance:none;white-space:nowrap;
+ opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease;
+}
+.lc-scroll-cue-left>span{display:inline-flex;align-items:center;gap:6px}
+.lc-scroll-cue-left>span>span{font-size:15px;line-height:1}
+.lc-scroll-cue-left:hover{background:#e2f2f4;border-color:#87bcc3}
+.lc-scroll-cue-left:focus-visible{outline:2px solid #2b8996;outline-offset:2px}
+.lc-scroll-cue-left[hidden]{display:none!important}
+.lc-scroll-cue-frame.lc-has-more-left>.lc-scroll-cue-left{opacity:1;visibility:visible}
+/* The same muted controls and subtle clipped-edge gradients on API, calibration,
+   daily/monthly QC, and competency tabs. No fade if there is no hidden content. */
+.lc-compliance-scroll-frame>.lc-scroll-cue-right,
+.lc-compliance-scroll-frame>.lc-scroll-cue-left{
+ width:auto;min-width:0;max-width:calc(50% - 6px);min-height:27px;
+ padding:0 12px;border-color:#b7d9d8;background:#edf7f5;color:#246f70;
+}
+.lc-compliance-scroll-frame>.lc-scroll-cue-right:hover,
+.lc-compliance-scroll-frame>.lc-scroll-cue-left:hover{background:#e1f2ee;border-color:#83bdb9}
+.lc-compliance-scroll-frame.lc-has-horizontal-overflow{padding-bottom:30px}
+.lc-compliance-scroll-frame.lc-has-more-right:not(.lc-has-more-left) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+ -webkit-mask-image:linear-gradient(to right,#000 0%,#000 calc(100% - 44px),transparent 100%);
+ mask-image:linear-gradient(to right,#000 0%,#000 calc(100% - 44px),transparent 100%);
+}
+.lc-compliance-scroll-frame.lc-has-more-left:not(.lc-has-more-right) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+ -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 100%);
+ mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 100%);
+}
+.lc-compliance-scroll-frame.lc-has-more-left.lc-has-more-right > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+ -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 calc(100% - 44px),transparent 100%);
+ mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 calc(100% - 44px),transparent 100%);
+}
+@media(prefers-reduced-motion:reduce){.lc-scroll-cue-left{transition:none}}
+@media print{
+ .lc-scroll-cue-left{display:none!important}
+ .lc-scroll-cue-frame.lc-has-horizontal-overflow{padding-bottom:0!important}
+ .lc-compliance-scroll-frame > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+  -webkit-mask-image:none!important;mask-image:none!important;
+ }
+}
