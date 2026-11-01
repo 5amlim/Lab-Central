@@ -19,7 +19,7 @@
 .egfr-field input,.egfr-field select{width:100%;height:43px;min-width:0;border:1px solid #ccdce4;border-radius:9px;padding:0 12px;background:#fff;color:#263e54;font:inherit;font-size:13px;box-sizing:border-box}
 .egfr-field input:focus,.egfr-field select:focus{outline:2px solid #8ac9d1;outline-offset:1px;border-color:#4297a5}
 .egfr-field-help{font-size:11px;line-height:1.6;margin:15px 0 18px;color:#667d90}
-.egfr-actions{display:flex;flex-wrap:wrap;gap:10px}
+.egfr-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
 .egfr-actions button,.egfr-return button{border-radius:9px;border:1px solid #c7dce4;padding:11px 16px;font:inherit;font-size:12px;font-weight:800}
 .egfr-actions .egfr-primary{color:#fff;border-color:#1d7682;background:#207a87}
 .egfr-actions .egfr-primary:hover{background:#176775}
