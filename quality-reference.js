@@ -84,9 +84,12 @@ function groups(sec){
 /* Two compact, independent columns prevent shorter PT categories from stretching
    to the height of their neighbors. Each event retains its direct analyzer links. */
 function apiOverviewCard(x, index){
+ // Show CH and CM as separate program badges; retain other category labels.
+ const codes=x.id==="chemistry-core"?["CH","CM"]:[x.badge];
  return '<article class="quality-map-card" data-pt-order="'+index+'" data-pt-category="'+esc(x.id)+'">'+
   '<div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
-   '<span>'+esc(x.badge)+'</span></div>'+
+   '<div class="quality-map-badges" aria-label="PT program codes">'+
+   codes.map(code=>'<span class="quality-map-code-badge">'+esc(code)+'</span>').join('')+'</div></div>'+
   '<ul class="quality-api-assessments">'+x.items.map(it=>
    '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
     '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
