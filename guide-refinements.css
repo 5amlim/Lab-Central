@@ -1193,3 +1193,17 @@
  .hiv-ifu-link{display:none}
  .ptg-hiv-step-visual .hiv-visual-reference{break-inside:avoid}
 }
+
+/* PATHFAST specimen labeling notice belongs in the collection card, not photo preview. */
+.device-collection-guide .device-collection-label-warning{
+ display:block;margin:12px 0 0;padding:10px 12px;
+ border:1px solid #f0dfbb;border-left:3px solid #c8913f;
+ border-radius:9px;background:#fffbf3;
+ color:#84662e;font-size:11.5px;line-height:1.55;
+}
+.device-collection-guide .device-collection-label-warning b{
+ color:#79551b;font-weight:850;
+}
+@media(max-width:600px){
+ .device-collection-guide .device-collection-label-warning{padding:9px 10px;font-size:11px}
+}
