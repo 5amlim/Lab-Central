@@ -59,6 +59,22 @@
 .quality-api-assessment-desc{margin:9px 0 0;color:#728a9a;font-size:11px;line-height:1.6}
 .quality-api-badge-group{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:11px}
 .quality-api-test-badge{display:inline-flex;align-items:center;padding:6px 8px;border:1px solid #cce2db;border-radius:7px;background:#edf7f3;color:#247468;line-height:1.3;font-size:10.5px;font-weight:800}
+
+/* Match the existing Piccolo disc and Triage cartridge palettes in PT Testing.
+   Only identified systems get specialized color; all other badges stay neutral. */
+.quality-api-test-badge--metlyte{
+ color:#846008;background:#fff0bb;border-color:#ead083
+}
+.quality-api-test-badge--metlac{
+ color:#304f9e;background:#e0ebff;border-color:#bbcef4
+}
+.quality-api-test-badge--triage-troponin{
+ color:#4462a5;background:#e5edfd;border-color:#c3d3f3
+}
+.quality-api-test-badge--triage-ddimer{
+ color:#8e6b08;background:#fff2c6;border-color:#ead38c
+}
+
 @media(max-width:700px){
  .quality-api-assessment-head{flex-wrap:wrap}
  .quality-api-overview .quality-api-assessment-head>.quality-api-instrument-link{margin-left:45px;max-width:calc(100% - 45px)}
