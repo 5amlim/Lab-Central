@@ -1033,7 +1033,146 @@ function renderHome(mode='home'){
  if(!search&&!isFav)h+=`<div class="section-head" style="margin-top:32px"><h2 class="section-title">Also available</h2></div><p class="lede">Discontinued instruments are kept under <strong>Archived</strong> for historical reference and excluded from the routine browse list.</p>`;
  el('mainContent').innerHTML=h;
 }
+
+/* Abbott Determine HIV-1/2 Ag/Ab Combo. Controlled instruction source:
+   https://www.fda.gov/media/86959/download
+   Illustrations are schematic; do not infer kit lot or result status from art. */
+const HIV_GUIDE=(()=>{
+ const IFU="https://www.fda.gov/media/86959/download";
+ const step=(title,...details)=>[ {type:"list",level:1,text:title}, ...details.map(text=>({type:"list",level:2,text})) ];
+ const patient=[
+  ...step("Verify order, patient, kit, and controls",
+   "Verify patient identifiers, Abbott Determine HIV-1/2 Ag/Ab Combo kit, expiry, storage at 2–30°C, and any required external QC. The Athena order name must match the combined Ag/Ab method, not just an HIV antibody-only assay.",
+   "Fingerstick whole blood is CLIA waived; venous whole blood, serum and EDTA plasma are moderate complexity. Do not use for patients under 12 or for blood donor screening. Do not test specimens from patients taking biotin because p24 detection can be inhibited."),
+  ...step("Prepare the strip and workstation",
+   "Bring test units, buffer and specimens to 15–30°C. Tear one strip from the card starting at the right side; return remaining units to the aluminum pouch with desiccant and seal it.",
+   "Remove the protective foil cover, place the strip flat in the disposable workstation or on a clean level surface, and begin the test within 2 hours. Do not touch the sample pad."),
+  ...step("Collect the approved specimen",
+   "Fingerstick: warm the hand, disinfect and dry the finger, lance, wipe away the first drop, then collect the second drop with the supplied capillary tube held HORIZONTALLY until its fill line. Do not squeeze the bulb while filling or milk the fingertip.",
+   "For venous whole blood or EDTA plasma use an EDTA specimen; for serum use blood collected without anticoagulant. Use a calibrated precision pipette for these non-fingerstick specimens. Test fingerstick whole blood immediately."),
+  ...step("Apply 50 µL to the sample pad",
+   "Touch the filled capillary tip (fingerstick) or calibrated pipette tip (venous blood, serum or plasma) to the arrow-marked pad and transfer the full 50 µL.",
+   "With the fingerstick capillary, gently squeeze the bulb to discharge without bubbles and keep its tip touching the pad until the sample is completely transferred."),
+  ...step("Add chase buffer for whole blood only",
+   "For fingerstick or venous WHOLE BLOOD: after complete sample transfer wait 1 minute, then add exactly ONE drop of Abbott chase buffer directly to the sample pad.",
+   "For SERUM or PLASMA: DO NOT add chase buffer. Never apply buffer before the sample or substitute water or another liquid."),
+  ...step("Read after 20 minutes and before 30 minutes",
+   "For whole blood start the 20–30 minute reading interval after adding chase buffer. For serum/plasma start the interval after applying the specimen.",
+   "Read in good lighting. Do not interpret before 20 minutes or after 30 minutes; outside-window readings may be inaccurate."),
+  ...step("Interpret, record and notify",
+   "A pink/red Control line is required. Control only = nonreactive; Control + Ag = preliminary HIV-1 p24 reactive; Control + Ab = preliminary HIV-1/2 antibody reactive; all three = both reactive; no Control = invalid.",
+   "Any visible Ag/Ab line counts. The Ab area does not distinguish HIV-1 from HIV-2. Document specimen type, read time, strip/lot, controls and findings; promptly notify the provider of preliminary reactive results and follow the confirmatory pathway. Dispose of biohazard waste per SOP.")
+ ];
+ const qc=[
+  ...step("Check external QC triggers",
+   "Run Abbott Determine controls for a new untrained operator, new kit lot, new shipment, storage excursion outside 2–30°C, testing excursion outside 15–30°C, and facility-defined intervals. Do not begin patient testing until acceptable QC is confirmed."),
+  ...step("Prepare four Abbott control vials and strips",
+   "Use only Abbott Determine HIV-1/2 Ag/Ab Combo Controls, catalog 7D2628: HIV-1 p24 antigen reactive, HIV-1 antibody reactive, HIV-2 antibody reactive, and nonreactive.",
+   "Check expiration and proper storage. Prepare a separate strip for each control and use a fresh control-kit disposable pipette or clean calibrated tip for each vial."),
+  ...step("Apply 50 µL control to each strip",
+   "Apply 50 µL of each control reagent to its own arrow-marked sample pad. Controls are plasma-based and are tested using the serum/plasma procedure; DO NOT add chase buffer.",
+   "Control-kit disposable pipettes are for controls ONLY, never patient specimens."),
+  ...step("Read controls between 20 and 30 minutes",
+   "HIV-1 p24 control: visible Control + Ag. HIV-1 antibody control: Control + Ab. HIV-2 antibody control: Control + Ab. Nonreactive: Control line only.",
+   "The Abbott Ab area does not discriminate HIV-1 from HIV-2. Verify the expected patterns in the current control insert and confirm an acceptable Control line for every device."),
+  ...step("Document QC and resolve failures",
+   "Record each of the four results, kit/control lots, expirations, operator, date, read time and any corrective action in the approved QC binder or log.",
+   "Do not test patients with failed controls. Review volume, timing, storage, lot and operator technique; repeat or escalate according to the approved SOP.")
+ ];
+ const groups=()=>[
+  {id:"patient-testing",title:"Patient testing",blocks:patient},
+  {id:"external-qc",title:"External QC",blocks:qc},
+  {id:"result-interpretation",title:"Result interpretation",blocks:[{type:"text",text:"Use the Abbott Control, Ag and Ab result areas; see the static interpretation reference."}]},
+  {id:"manufacturer-ifu",title:"Manufacturer IFU",blocks:[{type:"text",text:"FDA Abbott Determine HIV-1/2 Ag/Ab Combo package insert: "+IFU}]}
+ ];
+ const esc=v=>String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+ const text=(x,y,value,size=14,color="#375a6e",weight=700)=>'<text x="'+x+'" y="'+y+'" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="'+weight+'" fill="'+color+'">'+esc(value)+'</text>';
+ const strip=(x,y,scale=1,pattern="control")=>{
+  const C=pattern!=="invalid",Ag=/ag|both|p24/.test(pattern),Ab=/ab|both|hiv[12]/.test(pattern);
+  return '<g transform="translate('+x+' '+y+') scale('+scale+')">'+
+  '<rect x="0" y="0" width="82" height="199" rx="7" fill="#eff5f7" stroke="#aac1c9" stroke-width="3"/>'+
+  '<path d="M3 7H79V43H3Z" fill="#008d9d"/>'+text(9,22,"Determine",10,"#fff",800)+text(6,34,"HIV Ag/Ab",9,"#fff",700)+
+  '<rect x="10" y="49" width="62" height="108" rx="5" fill="#fff5ef" stroke="#d5c8be"/>'+
+  '<rect x="15" y="54" width="50" height="97" rx="2" fill="#f8e5d8" opacity=".65"/>'+
+  (C?'<path d="M17 66H64" stroke="#c24764" stroke-width="4"/>':'')+
+  (Ag?'<path d="M17 101H64" stroke="#c24764" stroke-width="4"/>':'')+
+  (Ab?'<path d="M17 137H64" stroke="#c24764" stroke-width="4"/>':'')+
+  text(42,62,"C",9,"#4c6d76")+text(42,97,"Ag",9,"#4c6d76")+text(42,133,"Ab",9,"#4c6d76")+
+  '<path d="M2 166H80V193H2Z" fill="#008d9d"/>'+text(16,176,"SAMPLE",9,"#fff",800)+
+  '<path d="M39 180V190M33 185L39 191L45 185" stroke="#fff" stroke-width="2" fill="none"/></g>';
+ };
+ const vial=(x,y,color,label)=>'<g transform="translate('+x+' '+y+')"><rect x="13" y="20" width="45" height="101" rx="10" fill="#fff" stroke="#a3bcc8" stroke-width="3"/><rect x="9" y="12" width="53" height="31" rx="7" fill="'+color+'"/><path d="M17 79H54V111H17Z" fill="#d9eff0"/><rect x="17" y="49" width="38" height="30" rx="4" fill="white" stroke="#dfecf0"/>'+text(23,66,label,11,"#28717b",800)+'</g>';
+ const pipette=(x,y)=>'<g transform="translate('+x+' '+y+') rotate(25)"><rect x="11" y="0" width="20" height="126" rx="8" fill="#e1edf2" stroke="#8daebe" stroke-width="2"/><rect x="9" y="0" width="24" height="20" rx="5" fill="#4d9fb0"/><rect x="17" y="123" width="8" height="40" fill="#dae8ec" stroke="#90b5c4"/><path d="M21 171Q11 154 21 150Q32 159 21 171" fill="#b74357"/></g>';
+ const timer=(x,y,label)=>'<g transform="translate('+x+' '+y+')"><circle cx="76" cy="76" r="70" fill="#f7fcfd" stroke="#89b3c2" stroke-width="5"/><circle cx="76" cy="76" r="56" fill="none" stroke="#d8e8ec" stroke-width="3"/><path d="M76 76L76 33M76 76L111 92" stroke="#168f87" stroke-width="6" stroke-linecap="round"/>'+text(37,135,label,16,"#1a7675",800)+'</g>';
+ const buffer=(x,y)=>'<g transform="translate('+x+' '+y+')"><rect x="21" y="45" width="75" height="105" rx="13" fill="#eff7fa" stroke="#9cb9ca" stroke-width="3"/><path d="M40 24H78V45H40Z" fill="#4e92b0"/><rect x="29" y="80" width="60" height="40" rx="4" fill="#fff" stroke="#d3e3ec"/>'+text(39,97,"CHASE",12,"#2d7792",800)+text(38,112,"BUFFER",12,"#2d7792",800)+'</g>';
+ const card=(x,y,title,caption,body)=>'<g transform="translate('+x+' '+y+')"><rect x="0" y="0" width="196" height="207" rx="13" fill="#ffffff" stroke="#cbdfe8" stroke-width="2"/>'+body+text(14,178,title,15,"#2b5168",800)+text(14,194,caption,10,"#6e8999",600)+'</g>';
+ function scene(title,body,caption){
+  return '<figure class="hiv-visual-reference"><div class="hiv-visual-head"><span>ABBOTT DETERMINE · '+esc(title)+'</span><span>SCHEMATIC</span></div>'+
+   '<svg viewBox="0 0 700 270" role="img" aria-label="'+esc(title)+' illustration for Abbott Determine HIV-1/2 Ag/Ab Combo">'+
+   '<rect x="1" y="1" width="698" height="268" rx="16" fill="#f6fafb" stroke="#d6e7ec"/>'+body+'</svg>'+
+   '<figcaption>'+esc(caption)+'</figcaption></figure>';
+ }
+ const patterns=(qcMode=false)=>{
+  const rows=qcMode?[["p24 +","ag"],["HIV-1 Ab","ab"],["HIV-2 Ab","ab"],["NEG","control"]]:[["Nonreactive","control"],["Ag reactive","ag"],["Ab reactive","ab"],["Both reactive","both"]];
+  return rows.map(([name,mode],i)=>'<g transform="translate('+(26+i*169)+' 15)"><rect width="157" height="235" rx="11" fill="#fff" stroke="#d5e5ea"/>'+strip(45,11,.85,mode)+text(9,221,name,12,"#31617a",800)+'</g>').join("");
+ };
+ function visual(title,groupId){
+  const t=title.toLowerCase(),qc=groupId==="external-qc",pt=groupId==="pt-testing";
+  if(qc){
+   if(/trigger/.test(t))return scene("QC triggers",card(30,35,"New lot / shipment","Operator + excursions",'<circle cx="98" cy="88" r="46" fill="#e6f4ef"/>'+text(76,99,"QC",32,"#19857a",900))+card(254,35,"Required intervals","Follow site SOP",timer(22,12,"CHECK"))+card(478,35,"No patient tests","Until QC passes",'<circle cx="97" cy="90" r="45" fill="#fff1e7" stroke="#e6bf9b"/>'+text(64,103,"HOLD",21,"#a86722",900)),"Check the manufacturer and local QC triggers before testing patients.");
+   if(/prepare/.test(t))return scene("4 Abbott external controls",["p24 Ag","HIV-1 Ab","HIV-2 Ab","NEG"].map((x,i)=>vial(68+i*157,45,["#daaa4c","#cf8595","#8a9fca","#79b5a5"][i],x.replace(" ",""))+text(56+i*157,214,x,15,"#345e73",800)).join(""),"Four manufacturer control materials, catalog 7D2628. Use a fresh strip and pipette for each.");
+   if(/apply/.test(t))return scene("Apply controls",vial(95,61,"#8da9c0","QC")+pipette(295,45)+strip(505,24,.95,"control")+text(306,225,"50 µL",24,"#0d918c",800),"Apply each plasma-based control to its own strip. No chase buffer.");
+   if(/read/.test(t))return scene("Expected QC patterns",patterns(true),"The HIV-1 and HIV-2 antibody controls both produce Ab lines; check the lot-specific control insert.");
+   return scene("QC documentation",card(65,35,"QC binder","Record four results",'<path d="M39 36H157V152H39Z" fill="#e5f3f5" stroke="#88b5c2" stroke-width="3"/>'+text(53,73,"LOT",16,"#397b8b")+text(53,102,"PASS / FAIL",13,"#397b8b"))+card(384,35,"Escalate failure","No patient testing",'<circle cx="97" cy="92" r="53" fill="#ffe7e2"/>'+text(75,102,"!",50,"#b75a54",900)),"Record lot, operator, date, read time, outcomes and corrective actions.");
+  }
+  if(pt){
+   if(/verify/.test(t))return scene("HV material + Abbott kit",vial(110,65,"#a98ba8","HV")+strip(355,24,.95,"control")+text(500,113,"API event",22,"#2e7087",800)+text(500,140,"Match ID + matrix",14),"Only use assigned PT material validated for this method.");
+   if(/prepare|apply/.test(t))return scene("Apply PT specimen",vial(80,70,"#a98ba8","HV")+pipette(295,35)+strip(507,22,.9,"control")+text(304,224,"50 µL",24,"#0d918c",800),"Confirm the specimen matrix. Whole blood requires one drop of chase buffer after 1 minute.");
+   if(/read/.test(t))return scene("Read PT device",strip(150,17,1,"both")+timer(355,60,"20–30")+text(355,234,"Control · Ag · Ab",16),"Photograph and document the valid pattern within the authorized window.");
+   return scene("Document and file",card(140,30,"PT record","Photo and specimen ID",'<rect x="28" y="25" width="140" height="123" rx="8" fill="#dff1f3" stroke="#8bb9c5"/>'+text(39,68,"HV  /  API",18))+card(385,30,"Event binder","File and notify",'<rect x="27" y="36" width="143" height="115" rx="6" fill="#dbe9f5" stroke="#7495ad"/>'+text(45,90,"FILE",25)),"Retain original PT documentation under the correct event and notify the lab supervisor.");
+  }
+  if(/verify/.test(t))return scene("Check approved supplies",card(48,35,"Abbott kit","Lot · expiration",strip(70,7,.64,"control"))+card(270,35,"Collection","Approved matrix",vial(64,18,"#88a8c1","EDTA"))+card(492,35,"Workstation","Timer + gloves",timer(21,12,"20–30")),"Check lot, storage, expiry, controls and the correct Ag/Ab Athena order.");
+  if(/prepare/.test(t))return scene("Open and prepare test",card(106,28,"Foil-covered card","Tear one strip",'<rect x="42" y="29" width="120" height="128" rx="5" fill="#dcebed" stroke="#84aeb9"/>'+text(60,90,"FOIL",22,"#467b90"))+card(397,28,"Uncovered strip","Lay flat",strip(63,3,.72,"control")),"Return unused strips to pouch with desiccant. Initiate the test within 2 hours.");
+  if(/collect/.test(t))return scene("Choose approved collection",card(70,32,"Fingerstick","Second blood drop",'<path d="M80 24C48 40 58 113 91 144C123 128 131 54 98 24Z" fill="#e7bca9" stroke="#c9917f" stroke-width="2"/><circle cx="116" cy="76" r="9" fill="#bb475a"/>')+card(370,32,"Venous / plasma","EDTA or serum",vial(61,15,"#a47cb3","EDTA")),"Fingerstick capillary held horizontally; other specimens use a calibrated pipette.");
+  if(/apply/.test(t))return scene("Transfer 50 µL",pipette(245,21)+strip(465,22,1,"control")+text(72,112,"50 µL",36,"#138c89",800)+text(68,141,"Sample pad",16,"#5b8191"),"Fill the approved collection device and dispense the complete 50 µL onto the arrow-marked pad.");
+  if(/buffer/.test(t))return scene("Buffer depends on matrix",buffer(88,48)+timer(330,52,"1 MIN")+text(510,111,"WHOLE BLOOD",16,"#1a7c84",800)+text(510,143,"1 drop buffer",16,"#2f6d7d")+text(510,187,"SERUM / PLASMA",16,"#9b5428",800)+text(510,208,"NO buffer",16,"#9b5428"),"Wait one minute before adding one drop for whole blood. Never add buffer to serum or plasma.");
+  if(/read/.test(t))return scene("Read between 20 and 30 min",strip(140,20,.95,"control")+timer(385,56,"20–30")+text(365,244,"Not before / after",13),"Timing starts after buffer for whole blood or specimen application for serum/plasma.");
+  return scene("Interpret Control · Ag · Ab",patterns(false),"A visible Control line is required; any visible Ag/Ab line is preliminary reactive.");
+ }
+ function reference(){
+  const row=(label,value)=>'<div class="hiv-ifu-row"><strong>'+label+'</strong><span>'+value+'</span></div>';
+  return '<section class="hiv-ifu-reference"><header><span>ABBOTT · CONTROLLED REFERENCE</span><h2>Manufacturer IFU</h2><p>Reference sheet only. The patient testing and External QC tabs contain the guided steps.</p></header>'+
+   '<div class="hiv-ifu-grid">'+
+   row("Assay","Determine HIV-1/2 Ag/Ab Combo · HIV-1 p24 Ag + combined HIV-1/2 Ab")+
+   row("Specimens","Fingerstick or venous whole blood, serum or EDTA plasma. 50 µL per strip.")+
+   row("CLIA complexity","Waived: fingerstick whole blood. Moderate: venous whole blood, serum and plasma.")+
+   row("Storage / operating","Store cards and buffer at 2–30°C; perform test at 15–30°C.")+
+   row("Chase buffer","One drop after a 1-minute wait for WHOLE BLOOD only. None for serum/plasma or external controls.")+
+   row("Read window","20–30 minutes. Whole blood: count after buffer. Serum/plasma or controls: count after sample.")+
+   row("Controls","Abbott controls 7D2628: p24 Ag, HIV-1 Ab, HIV-2 Ab, nonreactive; follow required QC triggers.")+
+   row("Interpretation","Control required. Ag = HIV-1 p24; Ab = HIV-1/2 antibodies without type differentiation.")+
+   row("Restrictions","Do not test specimens from patients taking biotin. Not for donors or children younger than 12.")+
+   '</div><p class="hiv-ifu-warning">A visible Control line does not prove that a specimen was applied. Follow the current site-approved SOP and package insert.</p>'+
+   '<a href="'+IFU+'" class="hiv-ifu-link" target="_blank" rel="noopener noreferrer">Read FDA manufacturer package insert ↗</a></section>';
+ }
+ function results(){
+  return '<section class="hiv-ifu-reference"><header><span>ABBOTT DETERMINE · INTERPRETATION</span><h2>Result interpretation</h2><p>Read only at 20–30 minutes and verify that sample was applied.</p></header>'+
+   '<div class="hiv-results-visual">'+patterns(false)+'</div>'+
+   '<div class="hiv-ifu-grid">'+
+   row("Nonreactive","Control only; no detectable HIV-1 p24 or HIV-1/2 antibodies. A negative result does not exclude very early infection.")+
+   row("Ag reactive","Control + Ag; preliminary HIV-1 p24 antigen reactive, potentially acute infection.")+
+   row("Ab reactive","Control + Ab; preliminary HIV-1/2 antibody reactive, not HIV-type-differentiated.")+
+   row("Both reactive","Control + Ag + Ab; both preliminarily reactive.")+
+   row("Invalid","No Control regardless of test lines; repeat with a new device per IFU.")+
+   '</div><p class="hiv-ifu-warning">Reactive findings require provider notification and appropriate confirmatory testing; do not treat this screen as a diagnosis.</p></section>';
+ }
+ function row(label,value){return '<div class="hiv-ifu-row"><strong>'+label+'</strong><span>'+value+'</span></div>';}
+ return {groups,visual,reference,results,IFU};
+})();
+window.LAB_HIV_GUIDE_ART=HIV_GUIDE;
+
 function buildGroups(section){
+ if(section.id==='hiv')return HIV_GUIDE.groups();
  const qualityGroups=window.LAB_QUALITY_GUIDE?.groups?.(section);
  if(qualityGroups)return qualityGroups;
  if(section.id==='torch'||section.id==='spotfire'){
@@ -1343,7 +1482,8 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  // The Piccolo QC walkthrough is the authoritative illustration for Run QC and QC record filing.
  // Keep the four screen cards visible instead of substituting the generic analyzer art.
  const piccoloQcWorkflowVisual=sec?.id==='piccolo'?(qcScreenVisual||qcPrintVisual):'';
- const priorityVisual=piccoloQcWorkflowVisual||triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
+ const hivVisual=sec?.id==='hiv'?HIV_GUIDE.visual(root.text,groupId):'';
+ const priorityVisual=hivVisual||piccoloQcWorkflowVisual||triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
  const informational=sec&&sec.id==='hemocue'&&/^(turnaround-time|available-locations|order-set)$/.test(groupId);
  const fallbackVisual=!priorityVisual&&!informational&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const displayedVisual=priorityVisual||fallbackVisual;
@@ -2280,6 +2420,8 @@ function sectionRender(sec,tab){
  else if(sec.id==='api'&&tab==='submit-results')h+=window.LAB_API_SUBMISSION.submission();
  else if(sec.id==='api'&&tab==='units-reporting')h+=window.LAB_API_SUBMISSION.unitsPage();
  else if(sec.id==='api'&&tab==='pt-exceptions')h+=window.LAB_API_SUBMISSION.exceptionsPage();
+ else if(sec.id==='hiv'&&tab==='manufacturer-ifu')h+=HIV_GUIDE.reference();
+ else if(sec.id==='hiv'&&tab==='result-interpretation')h+=HIV_GUIDE.results();
  else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(sec.id==='tubes'&&(tab==='general'||tab==='for-lockbox-pickups'))h+=tubeReferencePanel(tab);
  else if(sec.id==='supplies'&&tab!=='mckesson'&&tab!=='overview'&&tab!=='resources'){
