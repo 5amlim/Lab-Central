@@ -121,21 +121,12 @@ function ptCategoriesContent(){
       '<div class="quality-api-badge-group">'+it.tests.map(apiTestBadge).join('')+'</div></div>'+
    '</article>';
  }).join('');
- const instruments=category.machines.map(m=>apiInstrumentLink(m[0],m[1])).join('');
  return '<section class="quality-pt-category-detail" aria-label="'+esc(category.title)+' PT reference">'+
   '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span><h3>'+esc(category.title)+'</h3><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
     '<span class="quality-pt-program-badge" title="Program codes for reference; verify the active event">'+esc(category.badge)+'</span></header>'+
-  '<div class="quality-pt-category-instruments"><span>INSTRUMENT GUIDES</span><div>'+instruments+'</div></div>'+
+
   '<div class="quality-pt-assay-grid">'+details+'</div>'+
-  '<section class="quality-pt-workflow" aria-label="PT workflow for '+esc(category.title)+'"><div class="quality-pt-workflow-head"><div><span>STANDARD PT WORKFLOW</span><h4>From sample receipt to completed submission</h4><p>These five steps apply to every API PT category. Use the current event sheet for category-specific specimen preparation, tests and deadlines.</p></div><span class="quality-pt-workflow-count">5 steps</span></div>'+
-  '<div class="quality-pt-steps">'+[
-   {title:'Confirm the event',detail:'Match API program '+category.badge+', assigned event, sample IDs, enrolled analytes, kit contents and reporting deadline to the shipment sheet.',tag:'Before testing'},
-   {title:'Prepare and test',detail:'Follow the current kit instructions and approved SOP for preparation and instrument mode. Test with the same personnel, methods and routine frequency as patient specimens.',tag:'Patient-equivalent testing'},
-   {title:'Verify the results',detail:'Retain instrument output. Reconcile each sample ID, analyte, method, qualitative result or numeric value, units and any reportable-range qualifiers before entry.',tag:'Result review'},
-   {title:'Attest and submit',detail:'Enter and save results in API Paperless PT, complete the attestation and transmit before the event deadline. Saving results alone is not submission.',tag:'Final submission'},
-   {title:'Confirm and file',detail:'Verify receipt in API Event History. File original results, any conversions, the submission confirmation, signed attestation, evaluation and corrective action.',tag:'Records'}
-  ].map((item,i)=>'<article class="quality-pt-step"><div class="quality-pt-step-head"><span class="quality-pt-step-number">'+String(i+1).padStart(2,"0")+'</span><span class="quality-pt-step-phase">'+esc(item.tag)+'</span></div><h5>'+esc(item.title)+'</h5><p>'+esc(item.detail)+'</p></article>').join('')+
-  '</div><div class="quality-pt-workflow-foot"><span><strong>Never refer PT samples to another lab</strong> or repeat testing beyond routine patient practice.</span><div><button type="button" data-gotab="submit-results">Detailed submission guide →</button><button type="button" data-gotab="units-reporting">Unit conversions →</button></div></div></section>'+
+  '<div class="quality-pt-category-actions"><span>Only the assays on the active event are reportable.</span><div><button type="button" data-gotab="submit-results">Submit results →</button><button type="button" data-gotab="units-reporting">Reporting units →</button></div></div>'+
  '</section>';
 }
 function ptCategoriesReference(){
@@ -146,13 +137,13 @@ function ptCategoriesReference(){
   '</button>'
  ).join('');
  return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
-  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT categories</h2><p>Choose a program to see its test list and PT testing instructions.</p></header>'+
+  '<header class="quality-ref-head quality-pt-categories-head"><span>PROGRAM REFERENCE</span><h2>PT categories</h2><p>Select the category from your shipment sheet to see sample codes, enrolled test references and instrument guides.</p></header>'+
   '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the four program groups</span></div>'+
     '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span><small>'+esc(selected.badge)+'</small><span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
       '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
     '</details></div>'+
   '<div class="quality-pt-current">'+ptCategoriesContent()+'</div>'+
-  '<div class="quality-ref-footer"><strong>Use the current event as the source of truth:</strong> These cards are program references, not proof that each clinic has enrolled every analyzer or analyte. The API enrollment, shipment sheet and facility SOP determine the tests, methods and reporting units for each event.</div>'+
+  '<p class="quality-pt-event-note">Reference only. Confirm enrollment, instrument, specimen code and reporting units against the current API event.</p>'+
  '</section>';
 }
 document.addEventListener('click',function(event){
@@ -177,13 +168,23 @@ function ptHandlingReference(group){
   if(b.level===1)topics.push({title:b.text,details:[]});
   else if(b.level===2&&topics.length)topics[topics.length-1].details.push(b.text);
  }
+ const sections=[
+  {title:"Before testing",subtitle:"Confirm the event and prepare the material",steps:topics.slice(0,2)},
+  {title:"Run the assigned test",subtitle:"Use the approved analyzer and method",steps:topics.slice(2,3)},
+  {title:"After testing",subtitle:"Report, verify and retain the records",steps:topics.slice(3,5)}
+ ];
+ let counter=0;
  return '<section class="quality-ref quality-pt-reference" aria-label="PT sample handling reference">'+
-  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT sample handling</h2><p>Review each requirement in order for the current API event. All five topics are shown here for quick reference.</p></header>'+
-  '<div class="quality-ref-grid">'+topics.map((item,i)=>
-   '<article class="quality-ref-card"><div class="quality-ref-card-head"><span class="quality-ref-number">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(item.title)+'</h3></div>'+
-   item.details.map(d=>'<p>'+esc(d)+'</p>').join("")+'</article>'
+  '<header class="quality-ref-head quality-pt-handling-head"><span>API · PROFICIENCY TESTING</span><h2>PT sample handling</h2><p>Follow the current event instructions from receipt through testing and documentation.</p></header>'+
+  '<div class="quality-pt-handling-phases">'+sections.map((phase,i)=>
+   '<section class="quality-pt-handling-phase" aria-label="'+esc(phase.title)+'">'+
+    '<header class="quality-pt-handling-phase-head"><span>'+String(i+1).padStart(2,"0")+'</span><div><h3>'+esc(phase.title)+'</h3><p>'+esc(phase.subtitle)+'</p></div></header>'+
+    '<div class="quality-pt-handling-items">'+phase.steps.map(item=>{
+      const n=++counter;
+      return '<div class="quality-pt-handling-item"><span>'+String(n).padStart(2,"0")+'</span><div><strong>'+esc(item.title)+'</strong>'+
+       item.details.map(d=>'<p>'+esc(d)+'</p>').join("")+'</div></div>';
+    }).join("")+'</div></section>'
   ).join("")+'</div>'+
-  '<div class="quality-ref-footer"><strong>Before submitting:</strong> Verify the assigned tests, specimen IDs, reporting units, event deadline, and required records against the active event.</div>'+
   '</section>'+ptCategoriesReference();
 }
 
