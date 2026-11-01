@@ -53,8 +53,13 @@ function stateFor(id,length){
  return {...v,step:Math.max(0,Math.min(length-1,v.step))};
 }
 
-function fileStep(){
- return ["Print, notify, and file under the correct event","Tape all instrument printouts (and HIV photographs, if applicable) onto a blank sheet with double-sided tape, keeping IDs and results visible. Send a clear photo to the Lab Supervisor. File the original sheet in the API binder under the matching event tab (correct code, shipment, and year)."];
+function fileSteps(id){
+ return [
+  ["Capture original PT results",id==="hiv"?
+   "Photograph the actual Abbott strip at the 20–30 minute read time. Show the HV sample ID and Control, Ag and Ab areas. Record both Ag and Ab separately, including any invalid result.":
+   "Keep the original analyzer printout for every assigned test. Confirm specimen ID, all analyte values, units, flags and testing date. Do not use a patient MRN or replace source data with only transcribed values."],
+  ["Notify, file and verify API submission","Attach original printouts or labeled HIV photographs to blank paper with double-sided tape where needed, keeping IDs and results visible. Send a legible image to the Lab Supervisor, then file the original under the matching year, API event, kit/shipment and test code. Filing is separate from formal transmission to API."]
+ ];
 }
 function vialSvg(label,code,color){
  return '<svg class="ptg-vial-svg" viewBox="0 0 130 180" role="img" aria-label="Illustration of '+e(label)+' PT vial, not an actual API vial photo" xmlns="http://www.w3.org/2000/svg">'+
@@ -364,8 +369,47 @@ function adapterReference(){
  return '<div class="ptg-adapter"><div><strong>Green pocH adapter</strong><p>For the smaller HSY PT vial. Confirm the actual vial fits before running.</p><img loading="lazy" src="'+adapter+'" alt="Reference photo of the green Sysmex adapter"/><a href="'+adapterPage+'" target="_blank" rel="noopener noreferrer">Adapter reference ↗</a></div></div>';
 }
 
-function documentation(){
- return '<div class="ptg-fileline"><span><b>01</b> Tape printouts to blank paper</span><span><b>02</b> Send photo to Lab Supervisor</span><span><b>03</b> File under the matching API event tab</span></div>';
+function documentation(id,phase){
+ const capture=phase==="capture";
+ const cards=capture?(id==="hiv"?[
+  ["Photo","Actual test strip, HV specimen ID, Control / Ag / Ab areas and valid read time."],
+  ["Interpret","Record antigen and antibody separately. Missing Control = invalid, not negative."],
+  ["Identify","Include testing date, operator, test lot and API event on the record."]
+ ]:[
+  ["Print","Original result for each assigned test, including instrument flags and units."],
+  ["Match","Specimen ID on each report matches the current API event worksheet."],
+  ["Identify","Keep date, operator, instrument and reagent/lot information."]
+ ]):[
+  ["Prepare","Mount printouts or labeled photos without hiding identifiers or results."],
+  ["Notify","Send a clear image to the Lab Supervisor using the approved channel."],
+  ["Retain","Binder tab: year, event, kit/shipment, test code. Add the signed attestation, transmitted forms and later evaluation."]
+ ];
+ return '<div class="ptg-fileline ptg-fileline-detail">'+cards.map((c,i)=>
+  '<div class="ptg-file-instruction"><b>'+String(i+1).padStart(2,"0")+'</b><div><strong>'+e(c[0])+'</strong><p>'+e(c[1])+'</p></div></div>').join('')+'</div>';
+}
+function recordVisual(id,phase){
+ const capture=phase==="capture",hiv=id==="hiv";
+ return '<figure class="ptg-record-visual"><div class="ptg-record-top"><b>'+(capture?"ORIGINAL TEST EVIDENCE":"API EVENT BINDER")+'</b><span>Illustration only</span></div>'+
+ '<div class="ptg-record-area"><div class="ptg-record-page"><strong>'+(capture?(hiv?"HIV RESULT PHOTO":"ANALYZER PRINTOUT"):"PT EVENT RECORD")+'</strong>'+
+ '<p>Year / event / kit: _________</p><p>PT sample ID: __________</p>'+
+ (capture&&hiv?'<div class="ptg-record-hiv"><span>Control</span><span>Ag</span><span>Ab</span></div>':'<div class="ptg-record-rows"><i></i><i></i><i></i></div>')+
+ '<p>Date / operator: ________</p></div>'+
+ '<div class="ptg-record-explain"><strong>'+(capture?(hiv?"Photograph the actual strip":"Keep the unedited output"):"File under the correct event tab")+'</strong>'+
+ '<p>'+(capture?(hiv?"These labels show result areas only, not an expected PT result. Capture the real lines within the correct window.":"Keep all raw analytes, numerical values, reportable units, sample IDs and flags."):
+ "The official API submission, signed attestation and later evaluation belong with the original testing evidence. Records must be retained at least 2 years.")+'</p></div></div></figure>';
+}
+function neutralHivReading(){
+ return '<figure class="ptg-record-visual"><div class="ptg-record-top"><b>ABBOTT DETERMINE · RESULT AREAS</b><span>Not a PT result</span></div>'+
+ '<div class="ptg-result-areas"><div class="ptg-result-strip"><b>DETERMINE HIV Ag/Ab</b>'+
+ '<div class="ptg-result-window"><span>Control</span><span>Ag</span><span>Ab</span></div><small>SAMPLE ↓</small></div>'+
+ '<div><strong>Read between 20 and 30 minutes</strong><p>The Control line must be present. Assess p24 Ag and combined HIV-1/2 Ab separately. The drawn labels are positions only, not reactive lines. Do not read after 30 minutes.</p></div></div></figure>';
+}
+function ptVisual(id,i,length,item){
+ if(i===length-2)return recordVisual(id,"capture");
+ if(i===length-1)return recordVisual(id,"file");
+ if(id==="hiv"&&i===3)return neutralHivReading();
+ if(id==="hiv"&&window.LAB_HIV_GUIDE_ART?.visual)return '<div class="ptg-hiv-step-visual">'+window.LAB_HIV_GUIDE_ART.visual(item[0],"pt-testing")+'</div>';
+ return "";
 }
 function workflow(id,sequence){
  const st=stateFor(id,sequence.length);
@@ -391,9 +435,9 @@ function workflow(id,sequence){
    (focused?nav:"")+'</header>'+
    '<div class="ptg-stage-body"><p class="ptg-stage-description">'+e(desc)+'</p>'+
    (i===0?materialPreview(id,st):"")+
-   (id==="hiv"&&window.LAB_HIV_GUIDE_ART?.visual?'<div class="ptg-hiv-step-visual">'+window.LAB_HIV_GUIDE_ART.visual(item[0],"pt-testing")+'</div>':"")+
+   ptVisual(id,i,sequence.length,item)+
    (i===1&&id==="sysmex"?adapterReference():"")+
-   (i===sequence.length-1?documentation():"")+
+   (i>=sequence.length-2?documentation(id,i===sequence.length-2?"capture":"file"):"")+
    '</div></article>';
  };
  const strip=sequence.map((item,i)=>
@@ -416,13 +460,13 @@ function workflow(id,sequence){
 function actions(patient){
  return '<div class="ptg-links">'+(patient?'<button type="button" data-gotab="'+e(patient)+'">Patient testing ↗</button>':'')+
  '<button type="button" data-go="api" data-target-tab="pt-handling">API handling & categories ↗</button>'+
- '<button type="button" data-go="api" data-target-tab="submit-results">Submit results ↗</button></div>';
+ '<button type="button" data-go="api" data-target-tab="submit-results">Submit and verify API results ↗</button></div>';
 }
 function render(sec,groups){
  if(!supports(sec))return "";
  const cfg=configs[sec.id];
  if(!cfg)return ""; // Safety check: never invent a PT workflow for other instruments.
- const full=[...cfg.steps,fileStep()];
+ const full=[...cfg.steps,...fileSteps(sec.id)];
  const patient=patientGroup(sec,groups);
  const st=stateFor(sec.id,full.length);
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
@@ -430,7 +474,7 @@ function render(sec,groups){
   '<div class="ptg-heading-picker'+((materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
-  '<p class="ptg-foot">Code badges identify sample prefixes or guide assay shorthand, not API catalog numbers. Always match the actual kit, event worksheet and enrollment. Test PT as patient specimens, without grading-driven repeats or referral. File under the correct event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
+  '<p class="ptg-foot">Code badges identify sample prefixes or guide assay shorthand, not API catalog numbers. Always match the actual kit, event worksheet and enrollment. Test PT as patient specimens, without grading-driven repeats or referral. File under the correct event tab and retain records for at least two years. Photos and binder filing do not submit results to API; verify transmission in Event History. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
 }
 function refresh(host,id,field){
  const seq=stepsSaved.get(id);
