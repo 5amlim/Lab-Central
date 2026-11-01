@@ -15,7 +15,7 @@ const configs={
  ["Select Miscellaneous Test","On the Triage MeterPro select MISC. TEST and enter the exact CM PT specimen ID. Use the normal sample-testing workflow, not QC mode."],
  ["Run both assays and print","Run Troponin I and D-dimer using their separate cartridges. Confirm each result's units, flags, and sample ID, then print both reports for the CM event."]]},
  piccolo:{label:"CH / CRP",mode:"Analyze → Control",steps:[
- ["Identify the two PT sample types","CH is the chemistry PT material; CRP is the separate C-reactive protein PT material. Confirm each vial and the assigned disc before testing."],
+ ["Identify the two PT sample types","CH identifies the Chemistry - Comprehensive PT sample (API #122); CRP is the separate C-reactive protein PT material (API #431). Confirm each vial and the assigned disc before testing."],
  ["Prepare and choose Control","Load the appropriate disc as usual, avoiding bubbles. In Analyze, select Control instead of Patient and enter the assigned PT sample ID."],
  ["Review and print","Run the assigned disc for each material, verify the requested analytes and units, then print every result. Do not treat PT as routine QC grading."]]},
  torch:{label:"GIP",mode:"GI patient-testing run",steps:[
@@ -76,8 +76,8 @@ function vialSvg(label,code,color){
 const materials={
  pathfast:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#5c91a3",note:"The CM sample is used for hs-Troponin I, D-dimer and NT-proBNP on PATHFAST. Confirm the exact specimen ID, preparation and reporting units against the active API event."}],
  piccolo:[
-  {id:"CH",name:"CH · Chemistry Core PT sample",code:"CH",color:"#598f9e",note:"Run the CH chemistry sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix, not a catalog number."},
-  {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
+  {id:"CH",name:"CH · Chemistry - Comprehensive",code:"CH",catalogNumber:"CH #122",color:"#598f9e",note:"Run the CH Chemistry - Comprehensive PT sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix; API catalog #122 identifies the program, not the vial."},
+  {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",catalogNumber:"CRP #431",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
  sysmex:[{id:"HSY",name:"HSY · Hematology - 3S PT sample",code:"HSY",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
  triage:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
@@ -104,20 +104,21 @@ function staticPicker(o){
 }
 function pickerRow(label,field,options,value,aria){
  const selected=options.find(o=>o.value===value);
- const menuOptions=options.map(o=>({value:o.value,label:o.label,badge:o.badge}));
+ const menuOptions=options.map(o=>({value:o.value,label:o.label,badge:o.badge,catalogNumber:o.catalogNumber}));
  return '<div class="ptg-picker-field"><span class="ptg-picker-caption">'+e(label)+'</span>'+
  '<button type="button" class="ptg-picker-trigger'+(selected?' has-selection':'')+'"'+
  ' data-ptg-dropdown-trigger="'+e(field)+'" data-ptg-value="'+e(selected?.value||"")+'"'+
  ' data-ptg-options="'+e(JSON.stringify(menuOptions))+'" aria-haspopup="listbox" aria-expanded="false"'+
  ' aria-label="'+e(aria)+'">'+
  (selected?'<span class="ptg-picker-code">'+e(selected.badge||selected.value)+'</span>':'')+
- '<span class="ptg-picker-value'+(selected?'':' is-placeholder')+'">'+e(selected?.label||label+"…")+'</span>'+
+ '<span class="ptg-picker-value'+(selected?'':' is-placeholder')+'">'+e(selected?.label||label+"…")+'</span>'+ 
+  (selected?.catalogNumber?'<small class="ptg-picker-catalog">API catalog · '+e(selected.catalogNumber)+'</small>':'')+
  '<span class="ptg-picker-chevron" aria-hidden="true"></span></button></div>';
 }
 function materialPicker(id,st){
  const options=materials[id]||[{id:"EVENT",name:"Assigned PT sample",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
  if(options.length===1)return staticPicker(options[0]);
- const choices=options.map(o=>({value:o.id,badge:o.code||o.id,label:sampleLabel(o)}));
+ const choices=options.map(o=>({value:o.id,badge:o.code||o.id,label:sampleLabel(o),catalogNumber:o.catalogNumber}));
  return '<div class="ptg-header-controls">'+
   pickerRow("Choose PT sample","material",choices,st.material,"Choose PT sample for "+id)+'</div>';
 }
@@ -354,7 +355,9 @@ function materialPreview(id,st){
  name=sampleLabel(m);code=m.code;color=m.color;note=m.note;
  small="Check the actual vial, sample code and preparation against the API event.";
  const reagent=reagentFor(id,st);
- const sample='<div class="ptg-reference-tile ptg-sample-tile"><span class="ptg-reference-eyebrow">01 · PT SAMPLE</span>'+
+ const sample='<div class="ptg-reference-tile ptg-sample-tile"><div class="ptg-reference-top"><span class="ptg-reference-eyebrow">01 · PT SAMPLE</span>'+
+   (m.catalogNumber?'<small class="ptg-reference-catalog">API catalog · '+e(m.catalogNumber)+'</small>':"")+
+   '</div>'+
   '<div class="ptg-reference-layout"><div class="ptg-reference-art">'+vialSvg(name,code,color)+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
   '<p>'+e(note)+'</p></div></div></div>';
@@ -435,7 +438,7 @@ function workflow(id,sequence){
  const stepTitle=(item,i)=>{
   if(id!=="piccolo"||i!==0)return item[0];
   const v=selectedMaterial(id,st);
-  return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
+  return v?(v.id==="CH"?"Confirm CH · Chemistry - Comprehensive":"Confirm "+v.id+" PT sample"):"Choose PT sample";
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
@@ -565,7 +568,8 @@ function openPickerPortal(trigger){
    '<button type="button" role="option" class="ptg-picker-option'+(selected===o.value?' is-selected':'')+'"'+
    ' data-ptg-option-value="'+e(o.value)+'" data-ptg-option-field="'+e(field)+'" aria-selected="'+(selected===o.value)+'">'+
    '<span class="ptg-picker-code">'+e(o.badge||o.value)+'</span>'+
-   '<span class="ptg-picker-option-label">'+e(o.label)+'</span>'+
+   '<span class="ptg-picker-option-label">'+e(o.label)+'</span>'+ 
+    (o.catalogNumber?'<small class="ptg-picker-option-catalog">API catalog · '+e(o.catalogNumber)+'</small>':'')+
    (selected===o.value?'<span class="ptg-picker-option-check" aria-hidden="true">✓</span>':'')+'</button>'
  ).join("");
  document.body.appendChild(menu);
