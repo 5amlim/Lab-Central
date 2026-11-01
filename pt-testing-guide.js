@@ -26,10 +26,10 @@ const configs={
  ["Check HIV event and kit","Match the HV vial ID, approved rapid HIV test kit, and API preparation instructions."],
  ["Run and read","Follow the normal kit timing and patient-testing procedure. At the valid read time, check the control and interpret the test."],
  ["Photograph and print","Take clear photos of the completed device and assigned HV ID within the valid read window. Print the photos and record each result."]]},
- pathfast:{label:"VERIFY EVENT CODE",mode:"Routine PATHFAST SAMPLE run",steps:[
- ["Choose analyte and vial code","Select the assigned PATHFAST analyte and program code below. Match the actual API vial, sample number, and event sheet; the code is not automatically assigned to any assay."],
- ["Prepare and run SAMPLE","Prepare PT material according to its insert. Use PATHFAST's normal patient SAMPLE workflow, select the correct assay, and enter the exact PT sample ID."],
- ["Review and print","Confirm completed hs-Troponin I, D-dimer or NT-proBNP results, units and flags. Print all assigned results and compare to the API worksheet."]]}
+ pathfast:{label:"CM / PSC",mode:"Routine PATHFAST SAMPLE run",steps:[
+ ["Choose PT sample","Choose the assigned PATHFAST PT sample above. Match the vial code, exact specimen ID and current API event worksheet before running any assay."],
+ ["Prepare and run SAMPLE","Prepare the selected PT material according to its insert. Use the normal PATHFAST patient SAMPLE workflow and the exact PT specimen ID. For CM, run hs-Troponin I, D-dimer and NT-proBNP with their respective cartridges; verify any site-specific event instructions."],
+ ["Review and print","Check the assigned hs-Troponin I, D-dimer and NT-proBNP results, units and flags as applicable. Print each completed report and match it to the API worksheet before submission."]]}
 };
 const other={
  clinitek:"Use the correct UA or hCG patient-test mode. Follow the event's PT-material preparation.",
@@ -48,7 +48,7 @@ function patientGroup(sec,groups){
  return x?(sec.id==="clinitek"?"ua-strip":x.id):null;
 }
 function stateFor(id,length){
- const v=remembered.get(id)||{step:0,mode:"guided",assay:"",code:"",material:""};
+ const v=remembered.get(id)||{step:0,mode:"guided",code:"",material:""};
  return {...v,step:Math.max(0,Math.min(length-1,v.step))};
 }
 
@@ -127,19 +127,13 @@ function pickerRow(label,field,options,value,aria){
 }
 function materialPicker(id,st){
  if(id==="pathfast"){
-  const assays=[
-   {value:"troponin",badge:"hs-TnI",label:"High-sensitivity Troponin I"},
-   {value:"ddimer",badge:"DD",label:"D-dimer"},
-   {value:"ntprobnp",badge:"NT-proBNP",label:"NT-proBNP"}
-  ];
   const codes=[
    {value:"CM",badge:"CM",label:"Cardiac markers"},
    {value:"PSC",badge:"PSC",label:"Verify assigned PSC event"},
-   {value:"other",badge:"OTHER",label:"Other event on shipment"}
+   {value:"other",badge:"OTHER",label:"Other sample on shipment"}
   ];
-  return '<div class="ptg-header-controls ptg-dual-picker">'+
-   pickerRow("Choose PT analyte","assay",assays,st.assay,"Choose PATHFAST PT analyte")+
-   pickerRow("Choose API event code","code",codes,st.code,"Choose PATHFAST API event code")+'</div>';
+  return '<div class="ptg-header-controls">'+
+   pickerRow("Choose PT sample","code",codes,st.code,"Choose PATHFAST PT sample")+'</div>';
  }
  const options=materials[id]||[{id:"EVENT",name:"Assigned PT sample",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
  if(options.length===1)return staticPicker(options[0]);
@@ -151,16 +145,23 @@ function materialPicker(id,st){
 function reagentFor(id,st){
  const mat=selectedMaterial(id,st)?.id;
  if(id==="sysmex")return null; // HSY uses an adapter, not a reagent cartridge.
- if(id==="pathfast"&&!st.assay)return null;
+ if(id==="pathfast"&&!st.code)return null;
  if(id!=="pathfast"&&(materials[id]||[]).length>1&&!mat)return null;
  if(id==="pathfast"){
-  const assays={
-   troponin:["hs-Troponin I","PATHFAST test cartridge","Use the hs-Troponin I cartridge matching the installed assay. Verify the actual package label; do not substitute a conventional cTnI assay."],
-   ddimer:["D-dimer","PATHFAST test cartridge","Use the PATHFAST D-dimer cartridge, and check the event's reporting units."],
-   ntprobnp:["NT-proBNP","PATHFAST test cartridge","Use the PATHFAST NT-proBNP cartridge, not a BNP-only test."]
+  if(st.code==="CM")return {
+   kind:"multi",type:"PATHFAST test cartridges",
+   name:"Three cardiac marker cartridges",badge:"ALL 3 CARTRIDGES",style:"pathfast",
+   note:"CM: run hs-Troponin I, D-dimer and NT-proBNP using the corresponding PATHFAST assay cartridges. Match each result and reporting unit to the actual API event worksheet.",
+   items:[
+    {name:"hs-Troponin I",badge:"hs-TnI",tone:"troponin",art:"pathfast",note:"High-sensitivity Troponin I"},
+    {name:"D-dimer",badge:"D-DIMER",tone:"ddimer",art:"pathfast",note:"Verify reporting units"},
+    {name:"NT-proBNP",badge:"NT-proBNP",tone:"ntprobnp",art:"pathfast",note:"Not the same as BNP"}
+   ]
   };
-  const a=assays[st.assay]||assays.troponin;
-  return {name:a[0],type:a[1],note:a[2],art:"pathfast"};
+  return {
+   name:"Event-assigned PATHFAST cartridge(s)",type:"PATHFAST test cartridge",art:"pathfast",
+   note:"For "+(st.code==="PSC"?"PSC":"other event samples")+", confirm the actual event's enrolled assay or assays before choosing cartridges. CM's three-cartridge requirement must not be assumed for this sample."
+  };
  }
  if(id==="piccolo"){
   if(mat==="CRP")return {
@@ -257,9 +258,9 @@ function reagentSvg(kind,name,tone){
 }
 function reagentReference(reagent){
  if(reagent.kind==="multi"){
-  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi">'+
+  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi'+(reagent.style==="pathfast"?' ptg-pathfast-multi':'')+'">'+
    '<span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
-   '<div class="ptg-multi-reagent-head"><div><span class="ptg-reference-badge ptg-reagent-badge">BOTH DISCS REQUIRED</span>'+
+   '<div class="ptg-multi-reagent-head"><div><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.badge||"BOTH DISCS REQUIRED")+'</span>'+
    '<strong class="ptg-multi-reagent-title">'+e(reagent.name)+'</strong></div></div>'+
    '<div class="ptg-multi-reagent-grid">'+reagent.items.map(item=>
      '<div class="ptg-mini-reagent ptg-mini-reagent--'+e(item.tone)+'">'+
@@ -275,22 +276,23 @@ function reagentReference(reagent){
   '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>';
 }
 function materialPreview(id,st){
- const requiresChoice=id==="pathfast"?!st.assay:(materials[id]||[]).length>1&&!selectedMaterial(id,st);
+ const requiresChoice=id==="pathfast"?!st.code:(materials[id]||[]).length>1&&!selectedMaterial(id,st);
  if(requiresChoice){
-  const prompt=id==="pathfast"?"Choose PT analyte above to view the vial and matching test cartridge.":"Choose PT sample above to view the vial and matching test reagent.";
+  const prompt=id==="pathfast"?"Choose PT sample above to view its vial and assigned PATHFAST cartridges.":"Choose PT sample above to view the vial and matching test reagent.";
   return '<section class="ptg-specimen-reference" aria-label="PT sample selection required">'+
    '<div class="ptg-specimen-label">PT sample &amp; test reagent</div>'+
    '<div class="ptg-selection-prompt"><span class="ptg-selection-prompt-mark">?</span><p>'+e(prompt)+'</p></div></section>';
  }
  let name,code,color,note,small;
  if(id==="pathfast"){
-  const assays={troponin:["hs-Troponin I","#5c91a3","Verify the PT event reporting units for hs-Troponin I."],
-   ddimer:["D-dimer","#6d9b83","Check the D-dimer unit type and required API reporting unit."],
-   ntprobnp:["NT-proBNP","#a58cad","PATHFAST measures NT-proBNP, not BNP."]};
-  const a=assays[st.assay]||assays.troponin;
-  name=a[0]+" PT sample";code=st.code==="other"?"EVENT":st.code||"PT";color=a[1];
-  note=a[2]+" Match the event sample number, preparation and specimen type to the shipment.";
-  small="CM and PSC are code references, not proof of assay enrollment.";
+  const samples={
+   CM:["Cardiac markers PT sample","#5c91a3","Use the assigned CM specimen for hs-Troponin I, D-dimer and NT-proBNP. Confirm exact API specimen ID and event reporting units."],
+   PSC:["PSC PT sample","#a58cad","The PSC program and enrolled assays must be verified from the shipment. Do not assume all CM assays apply."],
+   other:["Event-assigned PT sample","#839aa0","Match the specimen ID, preparation and analytes to the actual shipment and enrollment."]
+  };
+  const a=samples[st.code]||samples.other;
+  name=a[0];code=st.code==="other"?"EVENT":st.code;color=a[1];note=a[2];
+  small="Sample codes are identifiers, not automatic proof of assay enrollment. Verify the kit and API event.";
  }else{
   const m=selectedMaterial(id,st)||{name:"Assigned PT material",code:"PT",color:"#79989c",note:"Confirm the event sheet."};
   name=m.name.replace(/^[^·]+ · /,"");code=m.code;color=m.color;note=m.note;
@@ -324,13 +326,18 @@ function workflow(id,sequence){
   (st.step<sequence.length-1?'<button type="button" class="ptg-next" data-ptg-step="'+(st.step+1)+'" aria-label="Next PT step">Next step →</button>':
    '<button type="button" class="ptg-next" data-ptg-mode="all">View all steps ↗</button>')+'</div>';
  const stepTitle=(item,i)=>{
+  if(i===0&&id==="pathfast")return st.code?"Confirm "+(st.code==="other"?"assigned":st.code)+" PT sample":"Choose PT sample";
   if(id!=="piccolo"||i!==0)return item[0];
   const v=selectedMaterial(id,st);
   return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
-  const desc=id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
+  const desc=id==="pathfast"&&i===0?
+   (!st.code?"Select the assigned PT sample above to display the vial and corresponding cartridge reference.":
+    st.code==="CM"?"Match the CM vial and ID to the event. Prepare the specimen for hs-Troponin I, D-dimer and NT-proBNP cartridges.":
+    "Match the selected vial and ID to the event sheet. Confirm which PATHFAST assays are assigned before testing."):
+   id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
    "Match the CRP proficiency vial to the API event and prepare the CRP-capable disc specified on its worksheet.":
    "Match the CH chemistry vial to the API event. Prepare and run both MetLyte Plus CRP and MetLac 12 reagent discs as assigned."):item[1];
   return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'">'+
@@ -478,7 +485,6 @@ function choosePickerOption(button){
  const seq=stepsSaved.get(id);
  if(!seq){closePickerPortal();return;}
  const value=button.getAttribute("data-ptg-option-value");
- if(field==="assay"&&(id!=="pathfast"||!["troponin","ddimer","ntprobnp"].includes(value)))return;
  if(field==="code"&&(id!=="pathfast"||!["CM","PSC","other"].includes(value)))return;
  if(field==="material"&&(id==="pathfast"||!(materials[id]||[]).some(o=>o.id===value)))return;
  const st=stateFor(id,seq.length);
