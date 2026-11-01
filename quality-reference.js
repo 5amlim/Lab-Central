@@ -38,10 +38,10 @@ function groups(sec){
     ...step("Document and submit the results","Record the PT identifier, instrument, raw result, units and any required corrective notes. Review before submitting to API within the event window."),
     ...step("Retain the event records","File the completed submission, analyzer printouts, reports and corrective action in the proficiency testing binder; do not enter a real patient MRN.")
    ]},
+   {id:"pt-categories",title:"PT Categories",blocks:[]},
    {id:"submit-results",title:"Submit results",blocks:[]},
    {id:"units-reporting",title:"Units & reporting",blocks:[]},
-   {id:"pt-exceptions",title:"Rules & exceptions",blocks:[]},
-   {id:"pt-categories",title:"PT categories",blocks:[]}
+   {id:"pt-exceptions",title:"Rules & exceptions",blocks:[]}
   ];
  }
  if(sec.id==="calver"){
