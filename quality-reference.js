@@ -41,11 +41,7 @@ function groups(sec){
    {id:"submit-results",title:"Submit results",blocks:[]},
    {id:"units-reporting",title:"Units & reporting",blocks:[]},
    {id:"pt-exceptions",title:"Rules & exceptions",blocks:[]},
-   ...map.map(x=>({id:x.id,title:x.title,blocks:[
-     ...step("Check the assigned program","API code: "+x.badge+". The event paperwork determines the exact analyte set and material."),
-     ...x.items.map(it=>step(it.code+" · "+it.title+" · "+it.instrument,it.description+" Required test menu: "+it.tests.join(", ")+".")).flat(),
-     ...step("Review and file the event","Verify units, analyzer/test identification and acceptance of submitted results; retain the event packet and any follow-up.")
-   ]}))
+   {id:"pt-categories",title:"PT categories",blocks:[]}
   ];
  }
  if(sec.id==="calver"){
@@ -107,6 +103,64 @@ function calverOverview(){
  '<div class="quality-followup"><strong>Before returning to testing</strong><p>Compare each result with predefined acceptability limits, document out-of-limit findings and have the appropriate reviewer approve the verification. The former local guide specified three replicates per level; follow your currently approved procedure.</p></div></section>';
 }
 
+
+/* A single API PT categories tab replaces the four guided category procedures.
+   Keep the selection within the portal without requiring navigation or a page reload. */
+let selectedPtCategory="chemistry-core";
+function setPtCategory(id){
+ if(map.some(category=>category.id===id))selectedPtCategory=id;
+}
+function ptCategoriesContent(){
+ const category=map.find(item=>item.id===selectedPtCategory)||map[0];
+ const details=category.items.map(function(it){
+  return '<article class="quality-pt-assay-card">'+
+    '<div class="quality-pt-assay-top"><span class="quality-api-code">'+esc(it.code)+'</span>'+
+      '<h4>'+esc(it.title)+'</h4>'+apiInstrumentLink(it.instrument,it.route)+'</div>'+
+    '<p>'+esc(it.description)+'</p>'+
+    '<div class="quality-pt-assay-foot"><span class="quality-pt-card-label">ENROLLED TEST REFERENCE</span>'+
+      '<div class="quality-api-badge-group">'+it.tests.map(apiTestBadge).join('')+'</div></div>'+
+   '</article>';
+ }).join('');
+ const instruments=category.machines.map(m=>apiInstrumentLink(m[0],m[1])).join('');
+ return '<section class="quality-pt-category-detail" aria-label="'+esc(category.title)+' PT reference">'+
+  '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span><h3>'+esc(category.title)+'</h3><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
+    '<span class="quality-pt-program-badge" title="Program codes for reference; verify the active event">'+esc(category.badge)+'</span></header>'+
+  '<div class="quality-pt-category-instruments"><span>INSTRUMENT GUIDES</span><div>'+instruments+'</div></div>'+
+  '<div class="quality-pt-assay-grid">'+details+'</div>'+
+  '<div class="quality-pt-requirements"><article><span class="quality-pt-rule-num">01</span><div><h4>Before testing</h4><p>Verify API program '+esc(category.badge)+', assigned event, sample identifiers, specimen material and enrolled analytes against the current shipment sheet.</p></div></article>'+
+   '<article><span class="quality-pt-rule-num">02</span><div><h4>Review and file</h4><p>Verify original analyzer results, instrument/method, units, required entries and submission confirmation. Retain event records and any corrective action.</p></div></article></div>'+
+ '</section>';
+}
+function ptCategoriesReference(){
+ const selected=map.find(item=>item.id===selectedPtCategory)||map[0];
+ const options=map.map(item=>
+  '<button type="button" class="quality-pt-option'+(item.id===selected.id?' is-selected':'')+'" data-api-pt-category="'+esc(item.id)+'" aria-current="'+(item.id===selected.id?'true':'false')+'">'+
+   '<span>'+esc(item.title)+'</span><small>'+esc(item.badge)+'</small>'+
+  '</button>'
+ ).join('');
+ return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
+  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT categories</h2><p>Select the program category to view the complete assay reference. No step-by-step navigation is required.</p></header>'+
+  '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the four program groups</span></div>'+
+    '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span><small>'+esc(selected.badge)+'</small><span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
+      '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
+    '</details></div>'+
+  '<div class="quality-pt-current">'+ptCategoriesContent()+'</div>'+
+  '<div class="quality-ref-footer"><strong>Use the current event as the source of truth:</strong> These cards summarize potential program assignments. The API enrollment, shipment sheet and facility SOP determine the tests, methods and reporting units for each event.</div>'+
+ '</section>';
+}
+document.addEventListener('click',function(event){
+ const button=event.target.closest('[data-api-pt-category]');
+ if(!button)return;
+ const section=button.closest('.quality-pt-categories');
+ if(!section)return;
+ const next=button.getAttribute('data-api-pt-category');
+ if(!map.some(item=>item.id===next))return;
+ setPtCategory(next);
+ section.outerHTML=ptCategoriesReference();
+ const picker=document.querySelector('.quality-pt-categories .quality-pt-selector summary');
+ if(picker)picker.focus({preventScroll:true});
+});
+
 /* API PT sample handling is a reference checklist, not a guided procedure.
    Show all five topics together without the stepper, toggle or progress controls. */
 function ptHandlingReference(group){
@@ -162,5 +216,5 @@ function visual(id,title){
  if(/print|file in calibration/.test(lower))return '<section class="quality-step-visual quality-report"><div class="quality-step-visual-head">VERIFICATION REPORT</div><div class="quality-report-sheet"><strong>CALIBRATION VERIFICATION</strong><div>Analyzer · Lot · Date · Operator</div><div>Low &nbsp; ✓ &nbsp; Midpoint &nbsp; ✓ &nbsp; High &nbsp; ✓</div><div>Assigned value · Observed value · Limits</div><span>Reviewer approval → Calibration Verification Binder</span></div></section>';
  return "";
 }
-window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,ptHandlingReference,visual};
+window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,ptHandlingReference,ptCategoriesReference,setPtCategory,visual};
 })();
