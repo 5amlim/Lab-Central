@@ -225,3 +225,14 @@
 
 /* Hide interactive compliance navigation in printouts. */
 @media print{.api-guide-tabs{display:none!important}.calver-reference-tabs{display:none!important}}
+
+/* PT categories now live inside Sample Handling, with direct PT workflow links. */
+.quality-pt-reference+.quality-pt-categories{border-top:1px solid #dce8e9;padding-top:24px;margin-top:26px}
+.quality-pt-card-links,.quality-api-assessment-links{display:flex;align-items:flex-start;justify-content:flex-end;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.quality-pt-card-links{flex:0 1 auto;max-width:58%;margin-left:auto}
+.quality-api-overview .quality-api-assessment-links{flex:0 1 auto;max-width:55%}
+.quality-pt-card-links .quality-api-instrument-link,.quality-api-assessment-links .quality-api-instrument-link{flex:none;font-size:10.5px;white-space:normal;text-align:right}
+@media(max-width:740px){
+ .quality-pt-card-links,.quality-api-overview .quality-api-assessment-links{max-width:100%;flex:1 1 100%;justify-content:flex-start;margin-left:45px}
+ .quality-pt-card-links .quality-api-instrument-link,.quality-api-assessment-links .quality-api-instrument-link{text-align:left}
+}
