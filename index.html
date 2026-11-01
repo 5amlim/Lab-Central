@@ -156,10 +156,10 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="flow-navigation.css?v=20261031-poc-static-reference-v47" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261031-febridx-collection-v4" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261031-sendout-logistics-layout-v1" media="all">
-<link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-separate-monthly-checklist-v10" media="all">
-<link rel="stylesheet" href="training-competency.css?v=20261101-portal-clinic-dropdown-v1" media="all">
+<link rel="stylesheet" href="socal-daily-checklist.css?v=20261101-compliance-scroll-v1" media="all">
+<link rel="stylesheet" href="training-competency.css?v=20261101-compliance-scroll-v1" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
-  <link rel="stylesheet" href="quality-reference.css?v=20261101-api-steps-tiles-v2" media="all">
+  <link rel="stylesheet" href="quality-reference.css?v=20261101-compliance-scroll-v1" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-api-market-and-phases-v2" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
@@ -385,8 +385,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="quality-reference.js?v=20261101-pt-category-dropdown-v1"></script>
 <script src="api-submission.js?v=20261101-api-market-and-phases-v2"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
-<script src="socal-daily-checklist.js?v=20261031-separate-monthly-checklist-v10"></script>
-<script src="training-competency.js?v=20261101-portal-clinic-dropdown-v1"></script>
+<script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
+<script src="training-competency.js?v=20261101-compliance-scroll-v1"></script>
 <script src="instrument-qc-overview.js?v=20261031-sysmex-shutdown-v4"></script>
 <script src="pathfast-calibration.js?v=20261031-compact-and-full-print-v1"></script>
 <script src="pathfast-screen-guide.js?v=20261029-pink-status-tap-lane-v5"></script>
@@ -2191,7 +2191,7 @@ function sectionRender(sec,tab){
    'pt-exceptions':{icon:'shield-check',subtitle:'Rules & follow-up'}
   };
   h+=`<nav class="api-guide-tabs" role="tablist" aria-label="Proficiency testing reference sections">${tabs.map(t=>`<button type="button" role="tab" aria-selected="${tab===t.id}" class="api-guide-tab ${tab===t.id?'is-selected':''}" data-gotab="${safeHtml(t.id)}" title="${safeHtml(t.title)}"><span class="api-guide-tab-icon">${svg(apiTabDetails[t.id]?.icon||'book')}</span><span class="api-guide-tab-copy"><strong>${safeHtml(t.title)}</strong><small>${safeHtml(apiTabDetails[t.id]?.subtitle||'Reference information')}</small></span></button>`).join('')}</nav>`;
- }else h+=`<div class="tab-strip${sec.id==='supplies'?' supply-vendor-tabs':sec.id==='sendout'?' sendout-reference-tabs':(['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':'')}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}" aria-label="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
+ }else h+=`<div class="tab-strip${sec.id==='calver'?' calver-reference-tabs':sec.id==='supplies'?' supply-vendor-tabs':sec.id==='sendout'?' sendout-reference-tabs':(['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':'')}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}" aria-label="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
  if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
@@ -2238,6 +2238,18 @@ function sectionRender(sec,tab){
  h+='</div>';
  if(sec.id==='sendout')h+='</div>';
  el('mainContent').innerHTML=h;
+ // Keep the selected compliance tab in the visible portion of the scroll row.
+ // Adjust only the horizontal strip so clicking a tab never jumps the page vertically.
+ if(sec.id==='api'||sec.id==='calver'){
+  const strip=el('mainContent').querySelector(sec.id==='api'?'.api-guide-tabs':'.calver-reference-tabs');
+  const active=strip?.querySelector(sec.id==='api'?'.api-guide-tab.is-selected':'.tab.active');
+  if(strip&&active&&strip.scrollWidth>strip.clientWidth){
+   const stripBounds=strip.getBoundingClientRect();
+   const activeBounds=active.getBoundingClientRect();
+   const center=(stripBounds.width-activeBounds.width)/2;
+   strip.scrollLeft+=activeBounds.left-stripBounds.left-center;
+  }
+ }
 }
 function renderContainerGallery(){
  el('currentCrumb').textContent='Lab Container Gallery';
