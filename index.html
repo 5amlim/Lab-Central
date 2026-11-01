@@ -439,27 +439,41 @@ if(hivIndex>=0&&!all.some(section=>section.id==='hiv')){
   {type:'list',level:1,text:heading},
   {type:'list',level:2,text:body}
  ];
+ const fdaInsert='https://www.fda.gov/media/86959/download';
  all.splice(hivIndex,0,{
-  id:'hiv',title:'HIV Antigen/Antibody',subtitle:'Rapid HIV-1/2 Ag/Ab testing',
+  id:'hiv',title:'Abbott Determine HIV-1/2 Ag/Ab Combo',
+  subtitle:'HIV-1 p24 antigen · HIV-1/2 antibodies',
   category:'Point of care',icon:'shield-check',
-  sample:'Kit-approved whole blood / serum / plasma',
-  qc:'External QC per product IFU and site SOP',
-  sourceTitle:'Abbott Determine HIV-1/2 Ag/Ab Combo training',
+  sample:'50 µL fingerstick/venous whole blood, serum, or EDTA plasma',
+  qc:'Abbott external controls at new operator, kit lot, shipment, excursions and site intervals',
+  sourceTitle:'Abbott Determine HIV-1/2 Ag/Ab Combo · FDA package insert',
   archived:false,
   blocks:[
    {type:'list',level:0,text:'Patient testing'},
-   ...hivStep('Confirm order, approved kit and specimen','Verify the patient identifiers, applicable Athena order and the exact HIV Ag/Ab kit, lot and expiry. The approved specimen type and CLIA category depend on the stocked test system and its current IFU.'),
-   ...hivStep('Check controls and specimen compatibility','Confirm required lot/shipment QC is acceptable. Collect the manufacturer-approved fingerstick or venous specimen. Do not substitute specimen types or use an unapproved transport medium.'),
-   ...hivStep('Run the test per the kit IFU','Use the specified specimen volume, sample application location, reagent/buffer steps and timing for the exact product. Follow the validated patient-testing method, not an assumed universal rapid-test sequence.'),
-   ...hivStep('Interpret and document the result','Verify the control indicator, HIV-1 p24 antigen and HIV-1/2 antibody reading areas as applicable to the exact kit. Record results only within the manufacturer read window, and follow the confirmatory-testing and provider-notification pathway for reactive results. Invalid controls require an approved repeat/escalation process.'),
+   ...hivStep('Verify the correct test, order and patient','Use Abbott Determine HIV-1/2 Ag/Ab Combo, not an HIV antibody-only rapid kit. Match the approved Athena order and patient identifiers to the actual Ag/Ab assay; the existing HIV (1+2) Ab order title must be verified before use. Follow required patient notification/consent procedures and site SOP. FDA IFU: '+fdaInsert),
+   ...hivStep('Confirm specimen and CLIA method','Fingerstick whole blood is CLIA waived; venous whole blood, serum, or EDTA plasma are CLIA moderate. Use only the specimen type authorized by the site. Collect 50 µL; serum must not contain anticoagulant. Do not use other anticoagulants for plasma or venous whole blood. Do not use in patients under 12 or for blood donor screening.'),
+   ...hivStep('Prepare the strip and workstation','Check kit lot and expiry, acceptable external controls and storage 2–30°C. Bring materials to testing temperature 15–30°C. Separate one test unit from the card, reseal unused units in the original aluminum pouch with desiccant, remove the foil cover, and lay the strip flat. Start within 2 hours of removing foil; do not touch the sample pad.'),
+   ...hivStep('Apply 50 µL of sample','For fingerstick: clean and fully dry the finger, discard the first drop, then fill the Abbott supplied horizontal capillary to its marked fill line without squeezing the bulb. Transfer the entire volume to the arrow-marked sample pad. For venous whole blood, serum, or EDTA plasma: pipette exactly 50 µL using a precision pipette.'),
+   ...hivStep('Add chase buffer only for whole blood','For fingerstick OR venous whole blood, wait 1 minute after the blood is completely transferred, then add ONE drop of Abbott chase buffer to the sample pad. For serum or plasma DO NOT add chase buffer. Never add buffer before the sample or use another liquid.'),
+   ...hivStep('Time the 20–30 minute read window','Read in good lighting from 20 through 30 minutes. For whole blood, start timing when chase buffer is added; for serum or plasma, start when the sample is added. Do not read earlier than 20 minutes or later than 30 minutes.'),
+   ...hivStep('Interpret Control, Ag, and Ab lines','A visible pink/red Control line is mandatory. Ag-only line = preliminary HIV-1 p24 reactive; Ab-only line = preliminary HIV-1/2 antibody reactive; both = both reactive; Control alone = nonreactive; absent Control = INVALID even with an Ag or Ab line. Any visible test line counts, regardless of intensity. The Ab line does NOT distinguish HIV-1 from HIV-2.'),
+   ...hivStep('Document, notify, and follow confirmation pathway','Record the result(s), lot, operator, specimen type, collection/read times, and valid Control line per SOP. Reactive findings are preliminary, require provider notification and the approved confirmatory diagnostic algorithm. Never treat a rapid reactive line as a final diagnosis. Dispose of used strip and workstation as biohazard.'),
    {type:'list',level:0,text:'External QC'},
-   ...hivStep('Check whether external controls are required','Use the required positive/negative control materials at the intervals specified by the approved IFU, site SOP and applicable CLIA requirements, including new lots/shipments when required.'),
-   ...hivStep('Run and evaluate controls','Test approved control material using the specified method and read window. Verify control and test-zone patterns against the kit insert; do not perform patient testing with unacceptable controls.'),
-   ...hivStep('Document QC','Record the kit and control lots, expiry, date, operator, results and follow-up in the designated QC log. Document troubleshooting and supervisory review as required.')
+   ...hivStep('Use the four Abbott Determine controls','Use Abbott Determine HIV-1/2 Ag/Ab Combo Controls (catalog 7D2628): HIV-1 p24 antigen reactive, HIV-1 antibody reactive, HIV-2 antibody reactive, and nonreactive. The Ab result area detects antibodies to HIV-1/2 together, without differentiating type.'),
+   ...hivStep('Know when controls are required','Run the controls prior to patient testing for a new untrained operator, new test kit LOT, new shipment, storage temperature outside 2–30°C, testing temperature outside 15–30°C, and at site-defined periodic intervals. Follow the current IFU and approved QC SOP.'),
+   ...hivStep('Apply control and read 20–30 minutes','Use a fresh disposable pipette from the Abbott control kit or calibrated 50 µL precision pipette for EACH control. Add 50 µL directly to the sample pad, with NO chase buffer for control plasma. Read 20–30 minutes after application; compare the expected Control/Ag/Ab line pattern with each control insert.'),
+   ...hivStep('Resolve failures and document','Do not perform or release patient tests if external QC fails. Check storage, lot, expiration, technique, timing and sample volume, then follow the SOP escalation/retest pathway. Record all four control results, operator, kit/control lots, date/time and corrective action in the designated QC binder/log.'),
+   {type:'list',level:0,text:'Result interpretation'},
+   ...hivStep('Control only · nonreactive','A Control line must be visible with no Ag or Ab line. This means no detectable HIV-1 p24 antigen or HIV-1/2 antibody in the tested sample; a nonreactive result does not rule out very early infection.'),
+   ...hivStep('Control + Ag · antigen reactive','An Ag line and valid Control line indicate a preliminary HIV-1 p24 reactive test. This may represent acute HIV-1 infection, particularly if the Ab line is absent. Follow confirmatory testing guidance.'),
+   ...hivStep('Control + Ab · antibody reactive','An Ab line and valid Control line indicate preliminary HIV-1/2 antibody reactivity. Determine does not tell HIV-1 versus HIV-2 antibody apart; follow the clinical differentiation algorithm.'),
+   ...hivStep('Control + Ag + Ab · both reactive','Both test lines with a visible Control line indicate preliminary antigen and antibody reactivity. Confirm according to the clinical diagnostic algorithm.'),
+   ...hivStep('Missing Control · invalid','No visible Control line means INVALID regardless of Ag or Ab lines. Do not report positive or negative; repeat with a new device per IFU and escalate persistent failures.'),
+   {type:'list',level:0,text:'Manufacturer IFU'},
+   {type:'text',text:'FDA-approved package insert for Abbott Determine HIV-1/2 Ag/Ab Combo: '+fdaInsert+'. Verify the current lot-specific insert and approved Sollis SOP before patient or PT testing.'}
   ]
  });
 }
-
 // Training and competency is a dedicated Quality & compliance page.
 all.push({id:'training-competency',title:'Training & Competency',subtitle:'Initial training, six-month and annual competency',category:'Quality & compliance',icon:'clipboard-check',blocks:[]});
 const sendoutLogistics=all.find(s=>s.id==='sendout');
