@@ -26,18 +26,28 @@ const map=[
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
-function apiTestBadge(test){
- return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
+/* Reuse established Piccolo disc and Triage cartridge colors from the PT
+   training reference; leave unrelated tests neutral rather than implying
+   that they share a manufacturer's color-coded test system. */
+function apiTestBadge(test, instrument=""){
+ const label=String(test||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+ const analyzer=String(instrument||"").toLowerCase();
+ let tone="";
+ if(label==="metlyte plus crp"||label==="metlyte crp")tone="metlyte";
+ else if(label==="metlac 12")tone="metlac";
+ else if(analyzer.includes("triage")&&label==="troponin i")tone="triage-troponin";
+ else if(analyzer.includes("triage")&&label==="d dimer")tone="triage-ddimer";
+ return '<span class="quality-api-test-badge'+(tone?' quality-api-test-badge--'+tone:'')+'">'+esc(test)+'</span>';
 }
 /* The CM sample serves different enrolled assay sets on Triage and PATHFAST.
    Keep each instrument's tests together in the same card, not a second CHECK card. */
 function apiTestGroups(item){
- if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(apiTestBadge).join('')+'</div>';
+ if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(test=>apiTestBadge(test,item.instrument)).join('')+'</div>';
  return '<div class="quality-pt-analyzer-tests">'+item.testGroups.map(group=>
   '<div class="quality-pt-analyzer-group">'+
    '<strong class="quality-pt-analyzer-title">'+esc(group.instrument)+'</strong>'+
    '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned analytes">'+
-    group.tests.map(apiTestBadge).join('')+'</div>'+
+    group.tests.map(test=>apiTestBadge(test,group.instrument)).join('')+'</div>'+
   '</div>'
  ).join('')+'</div>';
 }
