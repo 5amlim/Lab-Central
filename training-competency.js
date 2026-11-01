@@ -173,7 +173,13 @@ function render(){
 }
 function rerenderTraining(){
  const root=document.querySelector('.tc-portal');
- if(root){root.outerHTML=render();const input=document.querySelector('.tc-portal [data-tc-start]');if(input){input.value=plannerStart;updatePlanner();}}
+ if(!root)return;
+ const scrollLeft=root.querySelector('.tc-view-switch')?.scrollLeft||0;
+ root.outerHTML=render();
+ const strip=document.querySelector('.tc-portal .tc-view-switch');
+ if(strip)strip.scrollLeft=scrollLeft;
+ const input=document.querySelector('.tc-portal [data-tc-start]');
+ if(input){input.value=plannerStart;updatePlanner();}
 }
 
 document.addEventListener('input',e=>{if(e.target&&e.target.matches('[data-tc-start]')){plannerStart=e.target.value;updatePlanner();}});
