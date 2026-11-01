@@ -60,21 +60,6 @@
 .quality-api-badge-group{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:11px}
 .quality-api-test-badge{display:inline-flex;align-items:center;padding:6px 8px;border:1px solid #cce2db;border-radius:7px;background:#edf7f3;color:#247468;line-height:1.3;font-size:10.5px;font-weight:800}
 
-/* Match the existing Piccolo disc and Triage cartridge palettes in PT Testing.
-   Only identified systems get specialized color; all other badges stay neutral. */
-.quality-api-test-badge--metlyte{
- color:#846008;background:#fff0bb;border-color:#ead083
-}
-.quality-api-test-badge--metlac{
- color:#304f9e;background:#e0ebff;border-color:#bbcef4
-}
-.quality-api-test-badge--triage-troponin{
- color:#4462a5;background:#e5edfd;border-color:#c3d3f3
-}
-.quality-api-test-badge--triage-ddimer{
- color:#8e6b08;background:#fff2c6;border-color:#ead38c
-}
-
 @media(max-width:700px){
  .quality-api-assessment-head{flex-wrap:wrap}
  .quality-api-overview .quality-api-assessment-head>.quality-api-instrument-link{margin-left:45px;max-width:calc(100% - 45px)}
@@ -398,10 +383,12 @@
 .quality-api-overview .quality-map-top strong{
  font-size:16px;line-height:1.3;font-weight:850;letter-spacing:-.025em;color:var(--pt-accent)
 }
-.quality-api-overview .quality-map-badges{
+.quality-api-overview .quality-map-badges,
+.quality-pt-categories .quality-map-badges{
  display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;min-width:0
 }
-.quality-api-overview .quality-map-badges .quality-map-code-badge{
+.quality-api-overview .quality-map-badges .quality-map-code-badge,
+.quality-pt-categories .quality-map-badges .quality-map-code-badge{
  flex:none;display:inline-flex;align-items:center;justify-content:center;
  padding:7px 10px;border-radius:8px;font-size:10px;font-weight:850;line-height:1.2;
  letter-spacing:.045em;white-space:nowrap;
@@ -456,3 +443,81 @@
 @media print{
  .quality-api-overview .quality-map-card{box-shadow:none;break-inside:avoid}
 }
+
+/* Selected PT category matches the overview category accent and vertical event layout. */
+.quality-pt-categories .quality-pt-category-detail{
+ --pt-accent:#226b79;--pt-tint:#f4f9fb;--pt-border:#d5e4eb;--pt-chip:#e7f2f5;
+ padding:18px 20px;border:1px solid var(--pt-border);border-left:4px solid var(--pt-accent);
+ border-radius:15px;background:linear-gradient(115deg,var(--pt-tint),#fff 94%);
+ box-shadow:0 3px 12px rgba(32,72,93,.035)
+}
+.quality-pt-categories .quality-pt-category-detail[data-pt-category="chemistry-core"]{
+ --pt-accent:#18796e;--pt-tint:#eff9f5;--pt-border:#cbe7dd;--pt-chip:#e0f2eb
+}
+.quality-pt-categories .quality-pt-category-detail[data-pt-category="hematology"]{
+ --pt-accent:#2f6595;--pt-tint:#f1f7fc;--pt-border:#d2e2f0;--pt-chip:#e4f0f9
+}
+.quality-pt-categories .quality-pt-category-detail[data-pt-category="microbiology"]{
+ --pt-accent:#6e5693;--pt-tint:#f7f4fc;--pt-border:#ded6ee;--pt-chip:#eee8f8
+}
+.quality-pt-categories .quality-pt-category-detail[data-pt-category="immunology"]{
+ --pt-accent:#8a632e;--pt-tint:#fefaf2;--pt-border:#eadfc8;--pt-chip:#f7eddc
+}
+.quality-pt-categories .quality-pt-category-head{
+ align-items:center;margin-bottom:13px;padding-bottom:14px;gap:12px;border-bottom:1px solid #e1ebef
+}
+.quality-pt-categories .quality-pt-eyebrow{color:var(--pt-accent)}
+.quality-pt-categories .quality-pt-category-head h3{
+ margin:6px 0 4px;font-size:16px;line-height:1.3;color:var(--pt-accent)
+}
+.quality-pt-categories .quality-api-assessments{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+ padding:0;margin:0;list-style:none
+}
+.quality-pt-categories .quality-api-assessments>li{
+ display:block;min-width:0;padding:14px 15px;border:1px solid #dfe9ee;
+ border-radius:11px;background:#fff;box-shadow:0 1px 2px rgba(20,64,80,.02)
+}
+.quality-pt-categories .quality-api-assessment-head{
+ display:flex;align-items:flex-start;justify-content:space-between;gap:8px 12px;flex-wrap:wrap
+}
+.quality-pt-categories .quality-api-assessment-name{
+ display:flex;flex:1 1 215px;align-items:center;min-width:0;gap:9px
+}
+.quality-pt-categories .quality-api-assessment-name b{
+ font-size:12.5px;line-height:1.4;font-weight:820;color:#284a61
+}
+.quality-pt-categories .quality-api-assessment-links{
+ display:flex;justify-content:flex-end;flex:0 1 auto;max-width:100%;
+ gap:4px 10px;margin-left:auto
+}
+.quality-pt-categories .quality-api-assessment-links .quality-api-instrument-link{
+ display:inline-flex;min-height:25px;align-items:center;white-space:nowrap;
+ font-size:10.5px;font-weight:800;line-height:1.3;text-align:right;padding:3px 0
+}
+.quality-pt-categories .quality-api-assessment-desc{
+ margin:9px 0 0;font-size:11.5px;line-height:1.65;color:#688496
+}
+.quality-pt-categories .quality-api-tests-wrap{margin-top:10px}
+.quality-pt-categories .quality-api-test-badge{font-size:10px;border-radius:7px;padding:6px 9px}
+.quality-pt-categories .quality-pt-analyzer-tests{gap:9px}
+.quality-pt-categories .quality-pt-analyzer-group{padding:11px 12px}
+.quality-pt-categories :is(.quality-pt-selector,.quality-pt-option) .quality-map-badges{
+ --pt-accent:#3e8991;--pt-chip:#edf7f6;--pt-border:#d1e9e5;gap:5px
+}
+.quality-pt-categories :is(.quality-pt-selector,.quality-pt-option) .quality-map-code-badge{
+ padding:5px 7px;font-size:10px
+}
+@media(max-width:1040px){
+ .quality-pt-categories .quality-api-assessment-links{
+  flex:1 1 100%;margin-left:45px;justify-content:flex-start
+ }
+ .quality-pt-categories .quality-api-assessment-links .quality-api-instrument-link{text-align:left}
+}
+@media(max-width:670px){
+ .quality-pt-categories .quality-pt-category-detail{padding:13px}
+ .quality-pt-categories .quality-api-assessments>li{padding:12px}
+ .quality-pt-categories .quality-api-assessment-links{margin-left:0}
+ .quality-pt-categories .quality-pt-analyzer-tests{grid-template-columns:1fr}
+}
+@media print{.quality-pt-categories .quality-api-assessments>li{break-inside:avoid}}
