@@ -55,7 +55,7 @@ function updatePlanner(){
   'Illustrative planning targets based on the first date of patient testing for this test system. Confirm the approved facility calendar and any earlier assessment deadlines.':
   'Enter the first patient-testing date to calculate planning targets. This browser tool does not save staff information or send reminders.';
 }
-function render(){
+function renderSchedule(){
  const timeline=[
   {stage:'01',when:'Before testing',title:'Initial training',detail:'Complete method-specific instruction, demonstrations and supervised practice. Record training and authorization before independent patient testing.',tip:'Training and initial authorization'},
   {stage:'02',when:'First 6 months',title:'6-month competency',detail:'Document the first semiannual assessment of the person’s nonwaived testing competency.',tip:'First-year assessment 1'},
@@ -82,11 +82,107 @@ function render(){
   '<section class="tc-section"><h2>Documentation and reassessment</h2><ul><li>Record test system, assessment dates, method evidence, results and corrective action.</li><li>Keep assessor identity, qualifications/authorization and staff sign-off on the approved record.</li><li>Retest or retrain when performance gaps are identified, and document resolution.</li><li>When equipment or methodology changes, retrain and reassess before patient-result reporting.</li><li>A technical consultant/supervisor or properly qualified and authorized designee must conduct competency assessments per complexity and applicable regulations.</li></ul></section></div>'+
   '<footer class="tc-reference"><strong>Regulatory references</strong><p>General guidance for nonwaived laboratory testing. Follow the approved laboratory director/technical consultant or supervisor policy, your accreditation requirements and state law.</p><div class="tc-source-links">'+sourceLinks.map(x=>'<a target="_blank" rel="noopener noreferrer" href="'+esc(x.url)+'">'+esc(x.name)+' ↗</a>').join('')+'</div></footer></div>';
 }
-document.addEventListener('input',e=>{if(e.target&&e.target.matches('[data-tc-start]'))updatePlanner()});
+
+/* Portal navigation mirrors the market and clinic structure used by Lab checklists.
+   Training forms are method-specific and do not replace formal competency records. */
+const trainingMarkets=[
+ {id:'socal',short:'SoCal',name:'Southern California',clinics:[['bh','Beverly Hills'],['bh-satellite','Beverly Hills Satellite'],['sm','Santa Monica'],['mb','Manhattan Beach']]},
+ {id:'norcal',short:'NorCal',name:'Northern California',clinics:[['sf','San Francisco'],['pa','Palo Alto']]},
+ {id:'ny',short:'New York',name:'New York',clinics:[['ues','Upper East Side'],['tribeca','Tribeca'],['hamptons','Hamptons'],['fifth','5th Avenue'],['gramercy','Gramercy'],['hy','Hudson Yards']]},
+ {id:'fl',short:'Florida',name:'Florida',clinics:[['boca','Boca Raton'],['palm','Palm Beach'],['cg','Coral Gables']]}
+];
+const trainingDocuments=[
+ {name:'SPOTFIRE Respiratory / Sore Throat',file:'BioFire_SPOTFIRE_RST_Training.pdf',group:'Analyzer training',tone:'teal',note:'Manufacturer checklist and knowledge review',available:true},
+ {name:'BioFire FilmArray TORCH',file:'BioFire_TORCH_Training.pdf',group:'Analyzer training',tone:'teal',note:'Instrument operation, software and maintenance checklist',available:true},
+ {name:'Piccolo Xpress',file:'Piccolo_Training.pdf',group:'Analyzer training',tone:'teal',note:'Analyzer setup, maintenance, QC and patient testing',available:true},
+ {name:'Sysmex pocH-100i',file:'Sysmex_pocH_100i_Training.pdf',group:'Analyzer training',tone:'teal',note:'CBC analyzer training and quality control checklist',available:false},
+ {name:'Clinitek Status+ Urinalysis',file:'Clinitek_Status_UA_Training.pdf',group:'Analyzer training',tone:'teal',note:'Urinalysis strip testing and instrument QC',available:true},
+ {name:'Clinitek Status+ Urine hCG',file:'Clinitek_Status_Urine_hCG_Training.pdf',group:'Analyzer training',tone:'teal',note:'Urine hCG cassette testing and QC',available:true},
+ {name:'Sofia 2',file:'Sofia 2 Training Checklist.docx',group:'Analyzer training',tone:'teal',note:'Analyte selection, 30-day calibration check and controls',available:false},
+ {name:'Abbott HIV Combo',file:'Abbott_HIV_Combo_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Test performance, QC levels and interpretation',available:true},
+ {name:'Coag-Sense',file:'Coag_Sense_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Coagulation test operation and control procedures',available:true},
+ {name:'McKesson Mononucleosis',file:'McKesson_Consult_Mononucleosis_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Mono cassette handling, controls and results',available:true},
+ {name:'McKesson Drugs of Abuse Cup',file:'McKesson_Drugs_of_Abuse_Test_Cup_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Urine test cup handling and internal QC',available:true},
+ {name:'QuickVue Influenza A/B',file:'Quidel_QuickVue_Influenza_AB_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Flu A/B rapid test training checklist',available:false},
+ {name:'QuickVue RSV',file:'Quidel_QuickVue_RSV_Training.pdf',group:'Rapid POC training',tone:'blue',note:'RSV rapid test training checklist',available:false},
+ {name:'QuickVue SARS Antigen',file:'Quidel_QuickVue_SARS_Antigen_Training.pdf',group:'Rapid POC training',tone:'blue',note:'SARS antigen rapid test training checklist',available:false},
+ {name:'QuickVue Strep A',file:'Quidel_QuickVue_Strep_A_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Strep A rapid test training checklist',available:false},
+ {name:'General Laboratory Procedure Package',file:'Sollis_Health_Procedure_Package.pdf',group:'General lab training',tone:'amber',note:'Bloodborne pathogens and core procedure acknowledgments',available:false}
+];
+let selectedTrainingMarket='socal';
+let selectedTrainingView='schedule';
+const trainingClinicByMarket=Object.fromEntries(trainingMarkets.map(m=>[m.id,m.clinics[0][0]]));
+let plannerStart='';
+const trainingTabs=[
+ {id:'schedule',title:'Training Schedule',subtitle:'Initial, 6 months, 12 months, annual',icon:'calendar',tone:'teal'},
+ {id:'templates',title:'Training Templates',subtitle:'Method-specific checklists',icon:'file',tone:'blue'},
+ {id:'records',title:'Competency Records',subtitle:'Assessment methods and tracking',icon:'shield',tone:'amber'}
+];
+function trainingMarket(){return trainingMarkets.find(m=>m.id===selectedTrainingMarket)||trainingMarkets[0]}
+function trainingClinic(market){return market.clinics.find(c=>c[0]===trainingClinicByMarket[market.id])||market.clinics[0]}
+function sourceLink(file){return 'assets/training-checklists/'+encodeURIComponent(file)}
+function trainingTemplateCards(items){
+ return items.map(t=>{
+  const link=t.available?'<a class="tc-document-link" href="'+esc(sourceLink(t.file))+'" target="_blank" rel="noopener noreferrer">Open original '+(t.file.endsWith('.docx')?'Word':'PDF')+' <span aria-hidden="true">↗</span></a>'
+   :'<span class="tc-document-unavailable">Source file awaiting publication</span>';
+  return '<article class="tc-document-card" data-tone="'+esc(t.tone)+'">'+
+    '<div class="tc-document-heading"><span class="tc-document-icon">'+ico('file')+'</span><span class="tc-document-format">'+(t.file.endsWith('.docx')?'DOCX':'PDF')+'</span></div>'+
+    '<h3>'+esc(t.name)+'</h3><p>'+esc(t.note)+'</p>'+
+    '<div class="tc-document-footer">'+link+'<span class="tc-document-category">'+esc(t.group)+'</span></div>'+
+   '</article>';
+ }).join('');
+}
+function renderTrainingTemplates(market,clinic){
+ const groups=['Analyzer training','Rapid POC training','General lab training'];
+ return '<section class="tc-route-panel tc-templates-panel" role="tabpanel" id="tc-panel-templates" aria-labelledby="tc-tab-templates">'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.length+' source documents</span></div>'+
+ '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.</div>'+
+ groups.map((g,i)=>{
+  const items=trainingDocuments.filter(t=>t.group===g);
+  const tone=i===0?'teal':i===1?'blue':'amber';
+  return '<section class="tc-template-group" aria-label="'+esc(g)+'"><header class="tc-template-group-title" data-tone="'+tone+'"><h3>'+esc(g)+'</h3><span>'+items.length+' documents</span></header><div class="tc-document-grid">'+trainingTemplateCards(items)+'</div></section>';
+ }).join('')+
+ '<p class="tc-template-footnote">The procedure package covers more than instrument training. Completed individual checklists and assessment forms belong in the approved staff training file. Avoid uploading completed personnel records to this public reference site.</p></section>';
+}
+function renderCompetencyRecords(){
+ return '<section class="tc-route-panel tc-records-panel" role="tabpanel" id="tc-panel-records" aria-labelledby="tc-tab-records">'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-amber">'+ico('shield')+'</span><div><h2>Competency Documentation</h2><p>Use competency evidence and sign-off independently of initial method training.</p></div></div>'+
+ '<div class="tc-information-accent tc-information-accent-amber"><strong>Assessment cycle:</strong> At least twice in the first year for nonwaived testing, then annually. Documentation is per staff member and relevant test system. Waived-only tests follow applicable facility and accreditation policy.</div>'+
+ '<div class="tc-record-grid"><a href="training-competency-record.html?form=training" target="_blank" rel="noopener noreferrer"><span class="tc-record-icon">'+ico('clipboard')+'</span><strong>Initial Training Record</strong><small>Trainer and trainee sign-off</small><span>Open form ↗</span></a>'+
+ '<a href="training-competency-record.html?form=competency" target="_blank" rel="noopener noreferrer"><span class="tc-record-icon">'+ico('shield')+'</span><strong>Competency Assessment Form</strong><small>Six assessment methods and assessor decision</small><span>Open form ↗</span></a>'+
+ '<a href="assets/lab-templates/training-competency-tracker.csv" download><span class="tc-record-icon">'+ico('calendar')+'</span><strong>Competency Tracking Sheet</strong><small>Blank staff and test-system tracking CSV</small><span>Download CSV ↓</span></a></div>'+
+ '<div class="tc-section tc-competency-methods"><h2>Six methods of nonwaived competency assessment</h2><div class="tc-six-grid">'+methods.map(x=>'<article><span>'+esc(x[0])+'</span><div><h3>'+esc(x[1])+'</h3><p>'+esc(x[2])+'</p></div></article>').join('')+'</div></div></section>';
+}
+function render(){
+ const market=trainingMarket(),clinic=trainingClinic(market);
+ return '<div class="lc-competency tc-portal">'+
+ '<div class="tc-page-heading"><span class="tc-page-overline">TRAINING &amp; COMPETENCY / '+esc(market.short).toUpperCase()+'</span><h1>'+esc(clinic[1])+'</h1><p>'+esc(market.name)+' · Follow the approved training, competency and documentation policies for the tests installed at this clinic.</p></div>'+
+ '<div class="tc-market-picker"><span class="tc-picker-label">MARKET</span><div class="tc-market-buttons">'+trainingMarkets.map(m=>'<button type="button" data-tc-market="'+esc(m.id)+'" class="tc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+esc(m.short)+'</button>').join('')+'</div></div>'+
+ '<div class="tc-location-bar"><label for="tc-clinic-select">Clinic location</label><select id="tc-clinic-select" data-tc-clinic>'+market.clinics.map(c=>'<option value="'+esc(c[0])+'"'+(c[0]===clinic[0]?' selected':'')+'>'+esc(c[1])+'</option>').join('')+'</select><span>Choose a clinic to view its training reference</span></div>'+
+ '<nav class="tc-view-switch" role="tablist" aria-label="Training and competency sections">'+trainingTabs.map(t=>'<button type="button" id="tc-tab-'+t.id+'" role="tab" aria-selected="'+(selectedTrainingView===t.id)+'" aria-controls="tc-panel-'+t.id+'" tabindex="'+(selectedTrainingView===t.id?'0':'-1')+'" class="tc-view-button'+(selectedTrainingView===t.id?' is-selected':'')+'" data-tc-view="'+t.id+'" data-tone="'+t.tone+'"><span class="tc-view-icon">'+ico(t.icon)+'</span><span class="tc-view-copy"><strong>'+esc(t.title)+'</strong><small>'+esc(t.subtitle)+'</small></span></button>').join('')+'</nav>'+
+ '<div id="tc-panel-schedule" role="tabpanel" aria-labelledby="tc-tab-schedule" class="tc-route-panel tc-schedule-panel"'+(selectedTrainingView==='schedule'?'':' hidden')+'>'+renderSchedule()+'</div>'+
+ '<div'+(selectedTrainingView==='templates'?'':' hidden')+'>'+renderTrainingTemplates(market,clinic)+'</div>'+
+ '<div'+(selectedTrainingView==='records'?'':' hidden')+'>'+renderCompetencyRecords()+'</div>'+
+ '<footer class="tc-market-footer">Training and competency are tracked in the approved staff record, not saved on this page. For clinic-specific instrument coverage, follow the market SOP and contact laboratory leadership about missing training forms.</footer>'+
+ '</div>';
+}
+function rerenderTraining(){
+ const root=document.querySelector('.tc-portal');
+ if(root){root.outerHTML=render();const input=document.querySelector('.tc-portal [data-tc-start]');if(input){input.value=plannerStart;updatePlanner();}}
+}
+
+document.addEventListener('input',e=>{if(e.target&&e.target.matches('[data-tc-start]')){plannerStart=e.target.value;updatePlanner();}});
+document.addEventListener('change',e=>{
+ if(e.target&&e.target.matches('[data-tc-clinic]')){trainingClinicByMarket[selectedTrainingMarket]=e.target.value;rerenderTraining();}
+});
 document.addEventListener('click',e=>{
+ const market=e.target&&e.target.closest('[data-tc-market]');
+ if(market){selectedTrainingMarket=market.dataset.tcMarket;rerenderTraining();return;}
+ const view=e.target&&e.target.closest('[data-tc-view]');
+ if(view){selectedTrainingView=view.dataset.tcView;rerenderTraining();return;}
  if(e.target&&e.target.closest('[data-tc-clear]')){
-  const date=document.querySelector('.lc-competency [data-tc-start]');
-  if(date){date.value='';updatePlanner();date.focus();}
+  const date=document.querySelector('.tc-portal [data-tc-start]');
+  if(date){plannerStart='';date.value='';updatePlanner();date.focus();}
  }
 });
 window.LAB_TRAINING_COMPETENCY={render,addMonths:dueDate};
