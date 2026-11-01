@@ -2251,6 +2251,10 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=sec.id==='poc'?renderPocStaticReference(group):renderGuidedProcedure(group,sec);
  }
+ // A contextual shortcut on routine patient testing pages leads to the PT differences.
+ if(window.LAB_PT_TESTING?.supports(sec)&&tab!=='pt-testing'&&/^(patient|patient-testing|ua-strip|hcg-cassette|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))/.test(tab)){
+  h+='<div class="ptg-patient-shortcut"><div><span>PROFICIENCY TESTING</span><strong>Working with an API PT sample?</strong><p>Use the same patient procedure, with the PT-specific ID, instrument mode, materials and documentation requirements.</p></div><button type="button" data-gotab="pt-testing">PT testing differences <span aria-hidden="true">→</span></button></div>';
+ }
  if(sec.id!=='pathfast')h+=tab==='pt-testing'?'<p class="source-footnote">For PT testing, use only the actual PT sample ID, never a real patient MRN. Verify the assigned kit, site SOP, and API event instructions.</p>':`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
  if(sec.id==='sendout')h+='</div>';
