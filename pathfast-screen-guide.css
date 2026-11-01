@@ -223,3 +223,16 @@
 @media(max-width:700px){.pf-serial-visual{grid-template-columns:1fr;padding:10px;gap:10px}.pf-serial-tube-card{display:grid;grid-template-columns:minmax(95px,1fr) 115px minmax(90px,1fr);align-items:center}.pf-serial-tube-top{height:100%;display:flex;flex-direction:column;justify-content:center}.pf-serial-tube-card svg{width:105px}.pf-serial-time{height:100%;justify-content:center;border-top:0;border-left:1px solid #e8f0f3}.pf-serial-safety{padding:13px}}
 @media(max-width:390px){.pf-serial-tube-card{grid-template-columns:1fr 95px 1fr}.pf-serial-tube-card svg{width:95px}.pf-serial-time strong{font-size:13px}.pf-serial-tube-top strong{font-size:13px}}
 @media print{.pf-serial-tube-card,.pf-serial-safety{break-inside:avoid}.pf-serial-visual{grid-template-columns:repeat(3,minmax(0,1fr));-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Result-review reminder: same-tube plasma retest for suspected fibrin interference. */
+.pf-review-interference{margin:16px 0 4px;padding:16px 18px 13px;background:#f5fafb;border:1px solid #c9dfe5;border-left:4px solid #2c8890;border-radius:12px;color:#4f7080;font-size:12px;line-height:1.6}
+.pf-review-interference-head{display:flex;align-items:flex-start;gap:11px;margin-bottom:8px}
+.pf-review-interference-mark{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:9px;background:#dceff0;color:#216e78;font-size:17px;font-weight:900}
+.pf-review-interference-head strong{display:block;font-size:13.5px;color:#275e72}
+.pf-review-interference-head span:not(.pf-review-interference-mark){display:block;margin-top:3px;color:#638392}
+.pf-review-interference ol{margin:9px 0 0;padding-left:20px}
+.pf-review-interference li+li{margin-top:5px}
+.pf-review-interference b{color:#315e72}
+.pf-review-interference p{margin:10px 0 0;padding-top:9px;border-top:1px solid #d8e8eb}
+@media(max-width:650px){.pf-review-interference{padding:12px 13px;font-size:11.5px}}
+@media print{.pf-review-interference{break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
