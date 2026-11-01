@@ -24,12 +24,14 @@
       (female ? 1.012 : 1);
   }
   function band(value) {
-    if (value >= 90) return ["G1", "90 or greater", "Normal or high estimate"];
-    if (value >= 60) return ["G2", "60–89", "Mildly decreased estimate"];
-    if (value >= 45) return ["G3a", "45–59", "Mild to moderately decreased estimate"];
-    if (value >= 30) return ["G3b", "30–44", "Moderately to severely decreased estimate"];
-    if (value >= 15) return ["G4", "15–29", "Severely decreased estimate"];
-    return ["G5", "Below 15", "Kidney failure range; urgent clinician interpretation"];
+    const g12Note = " alone does not indicate CKD. Assess other markers of kidney damage and clinical history.";
+    const chronicityNote = "A single result does not establish CKD. Assess persistence for at least 3 months, other kidney markers and clinical history.";
+    if (value >= 90) return ["G1", "≥90", "Normal or high", "G1" + g12Note];
+    if (value >= 60) return ["G2", "60–89", "Mildly decreased", "G2" + g12Note];
+    if (value >= 45) return ["G3a", "45–59", "Mildly to moderately decreased", chronicityNote];
+    if (value >= 30) return ["G3b", "30–44", "Moderately to severely decreased", chronicityNote];
+    if (value >= 15) return ["G4", "15–29", "Severely decreased", chronicityNote];
+    return ["G5", "<15", "Kidney failure range", "Prompt clinician interpretation is needed. A single result does not establish chronicity."];
   }
 
   // Match the in-portal location selector used elsewhere in Lab Central.
@@ -201,7 +203,10 @@
       status.textContent = "Calculated from the values entered above · CKD-EPI 2021, no race coefficient.";
       result.dataset.state = "valid";
       interpretation.hidden = false;
-      interpretation.innerHTML = '<div><span>GFR reference range</span><strong>'+esc(category[0])+' · '+esc(category[1])+' mL/min/1.73 m²</strong></div><p>'+esc(category[2])+'. This is a numerical category, not a CKD diagnosis.</p>';
+      interpretation.innerHTML = '<div class="egfr-category-eyebrow">GFR CATEGORY</div>'+ 
+        '<strong class="egfr-category-title">'+esc(category[0])+' · '+esc(category[2])+'</strong>'+
+        '<div class="egfr-category-range">'+esc(category[1])+' mL/min/1.73 m²</div>'+
+        '<p>'+esc(category[3])+'</p>';
     }
     form.addEventListener("submit", calculateFromForm);
     form.addEventListener("reset", function () {
