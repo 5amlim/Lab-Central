@@ -135,14 +135,14 @@ function trainingTemplateCards(items){
 function renderTrainingTemplates(market,clinic){
  const groups=['Analyzer training','Rapid POC training','General lab training'];
  return '<section class="tc-route-panel tc-templates-panel" role="tabpanel" id="tc-panel-templates" aria-labelledby="tc-tab-templates">'+
- '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.length+' source documents</span></div>'+
- '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.</div>'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.filter(t=>t.available).length+' of '+trainingDocuments.length+' online</span></div>'+
+ '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.'+(market.id==='socal'?' <strong>SoCal:</strong> Follow the local monthly and event-triggered Clinitek external QC schedule.':' <strong>'+esc(market.short)+':</strong> Follow the local daily Clinitek external QC schedule.')+'</div>'+
  groups.map((g,i)=>{
   const items=trainingDocuments.filter(t=>t.group===g);
   const tone=i===0?'teal':i===1?'blue':'amber';
   return '<section class="tc-template-group" aria-label="'+esc(g)+'"><header class="tc-template-group-title" data-tone="'+tone+'"><h3>'+esc(g)+'</h3><span>'+items.length+' documents</span></header><div class="tc-document-grid">'+trainingTemplateCards(items)+'</div></section>';
  }).join('')+
- '<p class="tc-template-footnote">The procedure package covers more than instrument training. Completed individual checklists and assessment forms belong in the approved staff training file. Avoid uploading completed personnel records to this public reference site.</p></section>';
+ '<p class="tc-template-footnote">The procedure package covers more than instrument training. Seven source files are still being transferred to the public site and remain visible as awaiting publication. Completed individual checklists and assessment forms belong in the approved staff training file. Avoid uploading completed personnel records to this public reference site.</p></section>';
 }
 function renderCompetencyRecords(){
  return '<section class="tc-route-panel tc-records-panel" role="tabpanel" id="tc-panel-records" aria-labelledby="tc-tab-records">'+
