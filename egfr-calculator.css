@@ -41,8 +41,9 @@
 .egfr-result[data-state="invalid"] p{color:#946321}
 .egfr-result-band{margin-top:12px;padding:13px 15px;border:1px solid #d6e5ed;border-radius:11px;background:#f8fbfc}
 .egfr-category-eyebrow{font-size:10px;font-weight:850;letter-spacing:.09em;color:#638093}
+.egfr-category-line{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;column-gap:12px;row-gap:0}
 .egfr-category-title{display:block;margin-top:5px;color:#1d6471;font-size:15px;line-height:1.4;font-weight:800}
-.egfr-category-range{margin-top:4px;color:#557687;font-size:12px;font-weight:700}
+.egfr-category-range{margin-top:4px;margin-left:auto;color:#557687;font-size:12px;font-weight:700;white-space:nowrap}
 .egfr-result-band p{font-size:11px;line-height:1.6;margin:9px 0 0;color:#697f90}
 .egfr-output-foot{border-top:1px solid #e2edf1;margin-top:auto;padding-top:20px}
 .egfr-output-foot strong{font-size:12px;color:#385e70}
