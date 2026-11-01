@@ -209,7 +209,7 @@ function ptHandlingReference(group){
   '<header class="quality-ref-head quality-pt-handling-head"><span>API · PROFICIENCY TESTING</span><h2>PT sample handling</h2><p>Follow the current event instructions from receipt through testing and documentation.</p></header>'+
   '<div class="quality-pt-handling-phases">'+sections.map((phase,i)=>
    '<section class="quality-pt-handling-phase" aria-label="'+esc(phase.title)+'">'+
-    '<header class="quality-pt-handling-phase-head"><span>'+String(i+1).padStart(2,"0")+'</span><div><h3>'+esc(phase.title)+'</h3><p>'+esc(phase.subtitle)+'</p></div></header>'+
+    '<header class="quality-pt-handling-phase-head"><span>'+["I","II","III"][i]+'</span><div><h3>'+esc(phase.title)+'</h3><p>'+esc(phase.subtitle)+'</p></div></header>'+
     '<div class="quality-pt-handling-items">'+phase.steps.map(item=>{
       const n=++counter;
       return '<div class="quality-pt-handling-item"><span>'+String(n).padStart(2,"0")+'</span><div><strong>'+esc(item.title)+'</strong>'+
