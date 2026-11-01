@@ -1207,3 +1207,22 @@
 @media(max-width:600px){
  .device-collection-guide .device-collection-label-warning{padding:9px 10px;font-size:11px}
 }
+
+/* Piccolo eGFR tab accent: distinct, subtle light-blue reference tool. */
+.tab-strip.instrument-matched-tabs .tab[data-gotab="egfr-calculator"]{
+ background:#edf6ff;
+ border-color:#bfdaef;
+ color:#28699c;
+}
+.tab-strip.instrument-matched-tabs .tab[data-gotab="egfr-calculator"]:hover{
+ background:#e3f1ff;
+ border-color:#96c5e7;
+ color:#205d90;
+}
+.tab-strip.instrument-matched-tabs .tab[data-gotab="egfr-calculator"].active,
+.tab-strip.instrument-matched-tabs .tab[data-gotab="egfr-calculator"][aria-selected="true"]{
+ background:#dceeff;
+ border-color:#5da8dc;
+ color:#155988;
+ box-shadow:inset 0 0 0 1px #80bee6;
+}
