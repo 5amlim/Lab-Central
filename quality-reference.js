@@ -103,6 +103,25 @@ function calverOverview(){
  '<div class="quality-followup"><strong>Before returning to testing</strong><p>Compare each result with predefined acceptability limits, document out-of-limit findings and have the appropriate reviewer approve the verification. The former local guide specified three replicates per level; follow your currently approved procedure.</p></div></section>';
 }
 
+/* API PT sample handling is a reference checklist, not a guided procedure.
+   Show all five topics together without the stepper, toggle or progress controls. */
+function ptHandlingReference(group){
+ const topics=[];
+ for(const b of group.blocks||[]){
+  if(b.type!=="list")continue;
+  if(b.level===1)topics.push({title:b.text,details:[]});
+  else if(b.level===2&&topics.length)topics[topics.length-1].details.push(b.text);
+ }
+ return '<section class="quality-ref quality-pt-reference" aria-label="PT sample handling reference">'+
+  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT sample handling</h2><p>Review each requirement in order for the current API event. All five topics are shown here for quick reference.</p></header>'+
+  '<div class="quality-ref-grid">'+topics.map((item,i)=>
+   '<article class="quality-ref-card"><div class="quality-ref-card-head"><span class="quality-ref-number">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(item.title)+'</h3></div>'+
+   item.details.map(d=>'<p>'+esc(d)+'</p>').join("")+'</article>'
+  ).join("")+'</div>'+
+  '<div class="quality-ref-footer"><strong>Before submitting:</strong> Follow the current API event instructions and approved laboratory SOP. Verify the enrolled tests, assigned specimens, reporting units, submission deadlines and required records.</div>'+
+  '</section>';
+}
+
 /* Calibration verification is a reference checklist, not a click-through
    instrument procedure. Keep its separate Overview unchanged. */
 function calverReference(group){
@@ -139,5 +158,5 @@ function visual(id,title){
  if(/print|file in calibration/.test(lower))return '<section class="quality-step-visual quality-report"><div class="quality-step-visual-head">VERIFICATION REPORT</div><div class="quality-report-sheet"><strong>CALIBRATION VERIFICATION</strong><div>Analyzer · Lot · Date · Operator</div><div>Low &nbsp; ✓ &nbsp; Midpoint &nbsp; ✓ &nbsp; High &nbsp; ✓</div><div>Assigned value · Observed value · Limits</div><span>Reviewer approval → Calibration Verification Binder</span></div></section>';
  return "";
 }
-window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,visual};
+window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,ptHandlingReference,visual};
 })();
