@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs";
+const targets=".pf-rack-scroll, .guide-stepper, .ptg-step-strip, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
@@ -12,7 +12,7 @@ cue.querySelector('button').addEventListener('click',function(){window.scrollBy(
    Keys are scoped to the active guide; instrument tabs share their position
    across tabs for the same analyzer. Nothing is stored across browser sessions. */
 const scrollSelectors=[
- ".pfux-stage-track",".guide-stepper",".pf-rack-scroll",".pf-qc-lane-list",
+ ".pfux-stage-track",".guide-stepper",".ptg-step-strip",".pf-rack-scroll",".pf-qc-lane-list",
  ".pfux-jump-options",".qc-screen-gallery--scroll",
  ".tab-strip.instrument-matched-tabs",".pfux-primary-nav",".tab-strip.order-workflow-tabs",
  ".api-guide-tabs",".dqc-page .dqc-view-switch",".tc-portal .tc-view-switch",".sendout-reference-layout .sendout-reference-tabs"
@@ -77,7 +77,7 @@ function setup(node){
  bottom.setAttribute("aria-hidden","true");bottom.innerHTML="<span>Scroll for more ↓</span>";
  const right=document.createElement("button");right.className="lc-scroll-cue-right";
  right.type="button";right.hidden=true;
- const steps=node.matches(".pfux-stage-track, .guide-stepper");
+ const steps=node.matches(".pfux-stage-track, .guide-stepper, .ptg-step-strip");
  const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs");
  right.setAttribute("aria-label",steps?"Show more procedure steps to the right":tabs?"Show more instrument sections to the right":"Show more items to the right");
  right.innerHTML="<span>"+(steps?"More steps":tabs?"More sections":"More")+" <span aria-hidden=\"true\">→</span></span>";
