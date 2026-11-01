@@ -94,7 +94,7 @@
         return;
       }
       const rounded = Math.round(value);
-      const category = band(value);
+      const category = band(rounded);
       number.textContent = String(rounded);
       status.textContent = "Calculated from the values entered above · CKD-EPI 2021, no race coefficient.";
       result.dataset.state = "valid";
