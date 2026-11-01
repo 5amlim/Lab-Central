@@ -23,21 +23,22 @@ const map=[
   {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
-/* 2026 API catalog program numbers (not the CH/CM/HSY specimen prefixes).
-   Multiple options require checking the clinic's actual enrollment and event. */
+/* Catalog numbers taken from the supplied API order, not merely the
+   general 2026 catalog. The GIP program is not shown on that order. */
 const apiCatalogNumbers={
- "chemistry-core":"CH #121 / #122 · CM #140",
+ "chemistry-core":"CH #122 · CM #140",
  hematology:"HSY #227",
- microbiology:"GIP #369",
- immunology:"HV #432 / #433 · CRP #431"
+ microbiology:"GIP · Not listed on supplied order",
+ immunology:"HV #433 · CRP #431"
 };
 function apiCatalogLabel(category){
- const description=category.id==="chemistry-core"
-  ?"2026 API catalog: Basic Chemistry 121 or Comprehensive Chemistry 122; Cardiac Markers 140. Confirm the enrolled chemistry program."
-  :category.id==="immunology"
-   ?"2026 API catalog: Rapid HIV 432 (5 samples) or 433 (waived, 2 samples; not scored for CMS); C-Reactive Protein 431. Confirm actual enrollment."
-   :"2026 API catalog program number. Verify against the clinic's current enrollment.";
- return '<small class="quality-api-catalog" title="'+esc(description)+'">API catalog · '+esc(apiCatalogNumbers[category.id]||"Verify enrollment")+'</small>';
+ const descriptions={
+  "chemistry-core":"Per supplied API order: Chemistry - Comprehensive, catalog 122; Cardiac Markers, catalog 140.",
+  hematology:"Per supplied API order: Hematology - 3S, catalog 227.",
+  microbiology:"The supplied API order does not list GIP. Verify any separate microbiology enrollment before testing or submitting PT results.",
+  immunology:"Per supplied API order: Rapid HIV - 2 samples, catalog 433; C-Reactive Protein, catalog 431."
+ };
+ return '<small class="quality-api-catalog" title="'+esc(descriptions[category.id]||"Confirm current API enrollment")+'">API catalog · '+esc(apiCatalogNumbers[category.id]||"Verify enrollment")+'</small>';
 }
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
