@@ -45,13 +45,15 @@ const tests={
   {title:'Respiratory syncytial virus',complexity:'waived',color:'#ef7e16',tint:'#fff1e2',deep:'#a94d06',boxColor:'Orange box',groups:{'Virus':A('Respiratory syncytial virus')}},
   {title:'Group A Streptococcus',complexity:'waived',color:'#af2447',tint:'#fae9ed',deep:'#8c1737',boxColor:'Red box',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
+ hiv:[
+  {title:'Human immunodeficiency virus antigen / antibody test',complexity:'conditional',groups:{'Antigen':A('Human immunodeficiency virus type 1 p24 antigen'),'Antibodies':A('Human immunodeficiency virus type 1 antibodies|Human immunodeficiency virus type 2 antibodies')},note:'CLIA complexity depends on the exact product and specimen. For example, Abbott Determine HIV-1/2 Ag/Ab Combo is waived for fingerstick whole blood but moderate for venous whole blood, serum or plasma. Verify the current kit IFU.'}
+ ],
  poc:[
   {title:'Rapid influenza test',complexity:'waived',note:'CLIA waived for the Quidel QuickVue Influenza A+B test with its approved nasal or nasopharyngeal specimens. Verify the exact stocked kit and current IFU.',source:'https://www.quidelortho.com/us/en/products/quickvue-rapid-lateral-flow-tests/quickvue-influenza-a-b-test',groups:{'Viruses':A('Influenza A virus|Influenza B virus')}},
   {title:'Rapid SARS-CoV-2 test',complexity:'waived',note:'CLIA waived for the authorized Quidel QuickVue SARS Antigen test using its approved anterior nasal swab and testing conditions. Verify the exact stocked kit and current authorization or clearance.',source:'https://www.quidelortho.com/us/en/products/quickvue-rapid-lateral-flow-tests/quickvue-sars-antigen-test',groups:{'Virus':A('Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2)')}},
   {title:'Rapid respiratory syncytial virus test',complexity:'waived',note:'CLIA waived for the Quidel QuickVue RSV test with the specimen types and intended population specified in its IFU. Confirm the stocked kit before testing.',source:'https://www.accessdata.fda.gov/SCRIPTS/CDRH/CFDOCS/CFCLIA/Results.cfm?Analyte_Name=Respiratory+syncytial+virus&Clia_Analyte_Specialty=&Clia_Complexity=waived&Document_Number=&Effective_Date_FROM=&Effective_Date_TO=&Exempt_510k=&PAGENUM=10&Qualifier=&SortColumn=ded&Test_System_Name=&start_search=31',groups:{'Virus':A('Respiratory syncytial virus')}},
   {title:'Rapid group A Streptococcus test',complexity:'waived',note:'CLIA waived for the Quidel QuickVue Strep A rapid test with the approved throat swab collection procedure. Verify the stocked product and IFU.',source:'https://www.quidelortho.com/global/en/products/quickvue-rapid-lateral-flow-tests/quickvue-dipstick-strep-a-test',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}},
   {title:'Conjunctivitis rapid test',complexity:'conditional',note:'CLIA status depends on the exact assay. FDA-waived Quidel QuickVue Adenoviral Conjunctivitis and AdenoPlus tests use tear fluid. Confirm the actual site kit before identifying it as waived.',source:'https://www.accessdata.fda.gov/SCRIPTS/CDRH/CFDOCS/cfClia/Results.cfm?Document_Number=K110722&SortColumn=ded&start_search=1',groups:{'Target (assay-dependent)':A('Adenovirus antigen, if using an adenovirus-specific conjunctivitis test')}},
-  {title:'Human immunodeficiency virus antigen / antibody test',complexity:'conditional',groups:{'Antigen':A('Human immunodeficiency virus type 1 p24 antigen'),'Antibodies':A('Human immunodeficiency virus type 1 antibodies|Human immunodeficiency virus type 2 antibodies')},note:'CLIA complexity depends on the exact product and specimen. For example, Abbott Determine HIV-1/2 Ag/Ab Combo is waived for fingerstick whole blood but moderate for venous whole blood, serum or plasma. Verify the current kit IFU.'},
   {title:'Infectious mononucleosis rapid test',complexity:'waived',note:'The McKesson Consult rapid mono cassette is CLIA waived for whole blood only; serum or plasma testing is moderate complexity. Verify the site kit and specimen.',source:'https://www.accessdata.fda.gov/SCRIPTS/CDRH/CFDOCS/cfClia/Results.cfm?Analyte_Name=&Clia_Analyte_Specialty=&Clia_Complexity=&Document_Number=K961024&Effective_Date_FROM=&Effective_Date_TO=&Exempt_510k=&PAGENUM=10&Qualifier=&SortColumn=ded&Test_System_Name=&start_search=11',groups:{'Antibodies':A('Heterophile antibodies (not direct Epstein-Barr virus detection)')}},
   {title:'McKesson 14-panel urine drug screen',complexity:'waived',groups:{'Drug classes and compounds':A('Amphetamine|Barbiturates|Benzodiazepines|Buprenorphine|Cocaine metabolite|3,4-Methylenedioxymethamphetamine (MDMA)|Methadone|Methamphetamine|Morphine / opiates|Oxycodone|Phencyclidine|Propoxyphene|Tetrahydrocannabinol (THC) metabolite|Tricyclic antidepressants')},note:'CLIA waived only for an FDA-waived 14-panel urine cup configuration. Confirm the exact manufacturer and catalog number, each listed drug target, cutoffs and reading time against the stocked cup IFU. This entry matches the separate 14-panel workflow.'}
  ],
@@ -113,10 +115,12 @@ const printoutAbbreviations={
  febridx:{'Myxovirus resistance protein A':'MxA','C-reactive protein':'CRP'},
  hemocue:{'Hemoglobin':'Hb'},
  coagsense:{'Prothrombin time':'PT','International normalized ratio':'INR'},
- poc:{
+ hiv:{
   'Human immunodeficiency virus type 1 p24 antigen':'HIV-1 p24',
   'Human immunodeficiency virus type 1 antibodies':'HIV-1 Ab',
-  'Human immunodeficiency virus type 2 antibodies':'HIV-2 Ab',
+  'Human immunodeficiency virus type 2 antibodies':'HIV-2 Ab'
+ },
+ poc:{
   'Heterophile antibodies (not direct Epstein-Barr virus detection)':'Mono / heterophile Ab',
   'Adenovirus antigen, if using an adenovirus-specific conjunctivitis test':'AdV'
  },
