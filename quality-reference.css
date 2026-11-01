@@ -570,3 +570,11 @@
  .quality-api-overview .quality-api-heading,
  .quality-pt-categories .quality-api-heading{align-items:flex-start;gap:3px 8px}
 }
+
+/* Individual CH and CM API catalog references sit at the far right of their PT cards. */
+.quality-api-overview .quality-api-assessment-head .quality-api-assessment-catalog,
+.quality-pt-categories .quality-api-assessment-head .quality-api-assessment-catalog{
+ display:inline-block;flex:0 0 auto;align-self:center;margin-left:auto;
+ text-align:right;font-size:10px;font-weight:550;letter-spacing:0;line-height:1.45;
+ color:#8697a4;white-space:nowrap
+}
