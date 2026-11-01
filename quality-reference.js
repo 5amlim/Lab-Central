@@ -5,10 +5,11 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 /* Current API reference: waived respiratory, former drug screen and unassigned
    coagulation PT categories are intentionally excluded from this menu. */
 const map=[
- {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"]],items:[
+ {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
   {code:"CH",title:"Comprehensive chemistry",instrument:"Piccolo Xpress",route:"piccolo",description:"Follow the actual CH shipment. Select the prescribed Piccolo reagent disc and report only its enrolled analytes.",tests:["MetLyte + C-reactive protein","MetLac 12"]},
-  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",description:"Use the enrolled cardiac marker panel and verify the assay-specific reporting units on the API event.",tests:["Cardiac troponin I","D-dimer"]},
-  {code:"PSC",title:"Cardiac markers pilot",instrument:"Triage MeterPro",route:"triage",description:"Run the assigned pilot panel and report only the markers listed on the shipment sheet.",tests:["Cardiac troponin I","D-dimer"]}
+  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"Match the CM event to the assigned analyzer and enrolled assays. PATHFAST can test hs-Troponin I, D-dimer and NT-proBNP when assigned.",tests:["Cardiac troponin I","D-dimer"]},
+  {code:"PSC",title:"Cardiac markers pilot",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"Use the assigned PSC shipment and verify the analyzer. Do not assume every cardiac assay is enrolled.",tests:["Cardiac troponin I","D-dimer"]},
+  {code:"CHECK",title:"BNP / NT-proBNP",instrument:"PATHFAST",route:"pathfast",description:"PATHFAST measures NT-proBNP, not BNP. Confirm the event-specific program code and analyte assignment before testing or reporting.",tests:["NT-proBNP · PATHFAST","BNP · other enrolled methods"]}
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
   {code:"HSY",title:"Complete blood count",instrument:"Sysmex pocH-100i",route:"sysmex",description:"Run the hematology proficiency specimen under the correct PT identifier and report the specific enrolled CBC results.",tests:["Complete blood count","Three-part white cell differential"]}
@@ -22,7 +23,7 @@ const map=[
  ]}
 ];
 function apiInstrumentLink(name,route){
- return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
+ return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' · PT Testing <span aria-hidden="true">↗</span></a>';
 }
 function apiTestBadge(test){
  return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
@@ -115,7 +116,7 @@ function ptCategoriesContent(){
  const details=category.items.map(function(it){
   return '<article class="quality-pt-assay-card">'+
     '<div class="quality-pt-assay-top"><span class="quality-api-code">'+esc(it.code)+'</span>'+
-      '<h4>'+esc(it.title)+'</h4>'+apiInstrumentLink(it.instrument,it.route)+'</div>'+
+      '<h4>'+esc(it.title)+'</h4><div class="quality-pt-card-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
     '<p>'+esc(it.description)+'</p>'+
     '<div class="quality-pt-assay-foot"><span class="quality-pt-card-label">ENROLLED TEST REFERENCE</span>'+
       '<div class="quality-api-badge-group">'+it.tests.map(apiTestBadge).join('')+'</div></div>'+
@@ -152,7 +153,7 @@ function ptCategoriesReference(){
       '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
     '</details></div>'+
   '<div class="quality-pt-current">'+ptCategoriesContent()+'</div>'+
-  '<div class="quality-ref-footer"><strong>Use the current event as the source of truth:</strong> These cards summarize potential program assignments. The API enrollment, shipment sheet and facility SOP determine the tests, methods and reporting units for each event.</div>'+
+  '<div class="quality-ref-footer"><strong>Use the current event as the source of truth:</strong> These cards are program references, not proof that each clinic has enrolled every analyzer or analyte. The API enrollment, shipment sheet and facility SOP determine the tests, methods and reporting units for each event.</div>'+
  '</section>';
 }
 document.addEventListener('click',function(event){
@@ -183,8 +184,8 @@ function ptHandlingReference(group){
    '<article class="quality-ref-card"><div class="quality-ref-card-head"><span class="quality-ref-number">'+String(i+1).padStart(2,"0")+'</span><h3>'+esc(item.title)+'</h3></div>'+
    item.details.map(d=>'<p>'+esc(d)+'</p>').join("")+'</article>'
   ).join("")+'</div>'+
-  '<div class="quality-ref-footer"><strong>Before submitting:</strong> Follow the current API event instructions and approved laboratory SOP. Verify the enrolled tests, assigned specimens, reporting units, submission deadlines and required records.</div>'+
-  '</section>';
+  '<div class="quality-ref-footer"><strong>Before submitting:</strong> Verify the assigned tests, specimen IDs, reporting units, event deadline, and required records against the active event.</div>'+
+  '</section>'+ptCategoriesReference();
 }
 
 /* Calibration verification is a reference checklist, not a click-through
