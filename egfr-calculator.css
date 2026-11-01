@@ -49,3 +49,11 @@
 @media(max-width:780px){.egfr-layout,.egfr-method{grid-template-columns:1fr}.egfr-hero{flex-direction:column}.egfr-method-tag{align-self:flex-start}}
 @media(max-width:420px){.egfr-fields{grid-template-columns:1fr}.egfr-panel{padding:18px}.egfr-hero{padding:21px}.egfr-hero h2{font-size:24px}}
 @media print{.egfr-actions,.egfr-return{display:none}.egfr-page{max-width:none}.egfr-panel,.egfr-hero,.egfr-method{break-inside:avoid;box-shadow:none}}
+
+/* Contextual shortcut within the Piccolo printout reference. */
+.pxr-egfr-alert{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#f3fafb;border-color:#cee4e8;color:#345b6b}
+.pxr-egfr-alert>div{flex:1;min-width:0;font-size:12px;line-height:1.65}
+.pxr-egfr-alert button{flex:none;border:1px solid #9bcbd0;border-radius:9px;background:#fff;color:#206f80;padding:11px 14px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.pxr-egfr-alert button:hover{background:#e5f5f6}
+@media(max-width:720px){.pxr-egfr-alert{flex-direction:column;align-items:stretch}.pxr-egfr-alert button{align-self:flex-start}}
+@media print{.pxr-egfr-alert button{display:none}}
