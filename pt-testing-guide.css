@@ -7,6 +7,12 @@
 .ptg-title h2{margin:7px 0 9px;font-size:25px;font-weight:850;letter-spacing:-.03em;color:#25485d}
 .ptg-title p{margin:0;max-width:790px;font-size:12.5px;line-height:1.65;color:#678698}
 .ptg-heading-picker{flex:0 1 530px;max-width:100%;min-width:255px}
+/* A single assigned PT sample is displayed as information, never as an inactive select. */
+.ptg-heading-picker.ptg-heading-static{flex:0 1 auto;min-width:0;max-width:100%}
+.ptg-static-sample{display:flex;flex-direction:column;gap:7px;min-width:0}
+.ptg-static-sample-row{display:flex;align-items:center;gap:10px;min-height:43px;padding:5px 12px 5px 5px;background:#f7fbfc;border:1px solid #dce9ed;border-radius:11px}
+.ptg-static-sample-row .ptg-picker-code{margin:0}
+.ptg-static-sample-row strong{color:#315e71;font-size:12px;font-weight:820;white-space:nowrap}
 .ptg-header-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
 .ptg-header-controls.ptg-dual-picker{grid-template-columns:repeat(2,minmax(0,1fr))}
 .ptg-picker-field{display:flex;flex-direction:column;min-width:0;gap:7px}
