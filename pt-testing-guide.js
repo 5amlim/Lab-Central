@@ -274,11 +274,12 @@ function reagentSvg(kind,name,tone){
  if(kind==="triage")return triagePtCartridgeSvg(tone);
  if(kind==="gi-pouch")return giPtPouchSvg();
  if(kind==="disc"){
-  const ring=tone==="metlyte"?"#1b9a8d":tone==="metlac"?"#7970b2":"#8fb4c4";
-  const port=tone==="metlyte"?"#4cb6aa":tone==="metlac"?"#9888ca":"#4c8e9f";
+  const ring=tone==="metlyte"?"#e9b41e":tone==="metlac"?"#4b4da5":"#8fb4c4";
+  const port=tone==="metlyte"?"#dfb429":tone==="metlac"?"#586cb9":"#4c8e9f";
+  const wellStroke=tone==="metlyte"?"#e5c76f":tone==="metlac"?"#9fb4e2":"#a9c6d1";
   const wells=Array.from({length:24},(_,i)=>{
    const a=i*Math.PI/12,x=112+67*Math.cos(a),y=83+67*Math.sin(a);
-   return '<rect x="'+(x-4).toFixed(1)+'" y="'+(y-9).toFixed(1)+'" width="8" height="18" rx="2" fill="#e8f1f4" stroke="#a9c6d1" stroke-width="1.2" transform="rotate('+(i*15+90)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>';
+   return '<rect x="'+(x-4).toFixed(1)+'" y="'+(y-9).toFixed(1)+'" width="8" height="18" rx="2" fill="#e8f1f4" stroke="'+wellStroke+'" stroke-width="1.2" transform="rotate('+(i*15+90)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>';
   }).join("");
   return '<svg viewBox="0 0 230 165" role="img" aria-label="Schematic of Piccolo reagent disc for '+safe+'">'+
    '<ellipse cx="113" cy="155" rx="94" ry="7" fill="#dbe7ec"/><circle cx="112" cy="83" r="76" fill="#fcffff" stroke="'+ring+'" stroke-width="4"/>'+
@@ -345,7 +346,7 @@ function reagentReference(reagent){
    '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong>'+
    '<p>'+e(reagent.note)+'</p></div></div>';
  }
- return '<div class="ptg-reference-tile ptg-reagent-tile"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
+ return '<div class="ptg-reference-tile ptg-reagent-tile'+(reagent.tone==="metlyte"?' ptg-reagent-tile--metlyte':reagent.tone==="metlac"?' ptg-reagent-tile--metlac':'')+'"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
   '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name,reagent.tone)+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
   '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>';
