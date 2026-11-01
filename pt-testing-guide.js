@@ -26,7 +26,7 @@ const configs={
  ["Check HIV event and kit","Match the HV vial ID, approved rapid HIV test kit, and API preparation instructions."],
  ["Run and read","Follow the normal kit timing and patient-testing procedure. At the valid read time, check the control and interpret the test."],
  ["Photograph and print","Take clear photos of the completed device and assigned HV ID within the valid read window. Print the photos and record each result."]]},
- pathfast:{label:"CM / PSC / event code",mode:"Routine PATHFAST SAMPLE run",steps:[
+ pathfast:{label:"VERIFY EVENT CODE",mode:"Routine PATHFAST SAMPLE run",steps:[
  ["Choose analyte and vial code","Select the assigned PATHFAST analyte and program code below. Match the actual API vial, sample number, and event sheet; the code is not automatically assigned to any assay."],
  ["Prepare and run SAMPLE","Prepare PT material according to its insert. Use PATHFAST's normal patient SAMPLE workflow, select the correct assay, and enter the exact PT sample ID."],
  ["Review and print","Confirm completed hs-Troponin I, D-dimer or NT-proBNP results, units and flags. Print all assigned results and compare to the API worksheet."]]}
