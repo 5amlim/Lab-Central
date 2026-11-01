@@ -104,6 +104,89 @@ document.addEventListener('keydown',event=>{
  if(next){event.preventDefault();next.focus();}
 });
 
+
+/* Calibration verification uses the same site list and accessible selector patterns as API.
+   Each compliance page tracks its selected clinic independently. */
+let selectedCalverMarket='socal';
+const clinicByCalverMarket=Object.fromEntries(ptMarkets.map(m=>[m.id,m.clinics[0].id]));
+function selectedCalverSite(){
+ const market=ptMarkets.find(m=>m.id===selectedCalverMarket)||ptMarkets[0];
+ return {market,clinic:market.clinics.find(c=>c.id===clinicByCalverMarket[market.id])||market.clinics[0]};
+}
+function calverMarketSelector(){
+ const {market,clinic}=selectedCalverSite();
+ return '<section class="calver2-site-selector" aria-label="Calibration verification market and clinic reference">'+
+  '<nav class="dqc-market-picker" aria-label="Select calibration verification market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+
+  ptMarkets.map(m=>'<button type="button" data-calver2-market="'+x(m.id)+'" class="dqc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+x(m.short)+'</button>').join('')+'</div></nav>'+
+  '<div class="dqc-location-bar"><span class="dqc-location-label" id="calver2-clinic-label">Clinic location</span>'+
+  '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-calver2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="calver2-location-options" aria-labelledby="calver2-clinic-label calver2-clinic-value">'+
+  '<span id="calver2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
+  '<div class="dqc-location-options" id="calver2-location-options" role="listbox" aria-labelledby="calver2-clinic-label" hidden>'+
+  market.clinics.map(c=>'<button type="button" role="option" data-calver2-clinic="'+x(c.id)+'" class="dqc-location-option'+(c.id===clinic.id?' is-selected':'')+'" aria-selected="'+(c.id===clinic.id)+'" tabindex="-1">'+x(c.name)+(c.id===clinic.id?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
+  '</div></div><span class="dqc-location-hint">Choose a clinic to view its calibration verification reference</span></div>'+
+  '<div class="dqc-market-heading"><div><span class="dqc-market-overline">CALIBRATION VERIFICATION / '+x(market.short).toUpperCase()+'</span>'+
+  '<h2>'+x(clinic.name)+'</h2><p>'+x(market.name)+' · Confirm this clinic’s analyzer-specific verification plan, acceptance limits, and documentation requirements before testing.</p></div></div>'+
+  '</section>';
+}
+function rerenderCalverSite(returnFocus=false){
+ const root=document.querySelector('.calver2-site-selector');
+ if(!root)return;
+ root.outerHTML=calverMarketSelector();
+ if(returnFocus)document.querySelector('.calver2-site-selector [data-calver2-location-toggle]')?.focus();
+}
+function setCalverSiteMenu(open,focusSelected=false,returnFocus=false){
+ const picker=document.querySelector('.calver2-site-selector .dqc-location-picker');
+ if(!picker)return;
+ const trigger=picker.querySelector('[data-calver2-location-toggle]');
+ const list=picker.querySelector('[role="listbox"]');
+ if(!trigger||!list)return;
+ list.hidden=!open;
+ trigger.setAttribute('aria-expanded',String(open));
+ picker.classList.toggle('is-open',open);
+ if(open&&focusSelected)(list.querySelector('[aria-selected="true"]')||list.querySelector('[role="option"]'))?.focus();
+ if(!open&&returnFocus)trigger.focus();
+}
+document.addEventListener('click',event=>{
+ const button=event.target?.closest('.calver2-site-selector [data-calver2-market]');
+ if(button){
+  const next=button.getAttribute('data-calver2-market');
+  if(ptMarkets.some(m=>m.id===next)&&next!==selectedCalverMarket){selectedCalverMarket=next;rerenderCalverSite();}
+  return;
+ }
+ const trigger=event.target?.closest('.calver2-site-selector [data-calver2-location-toggle]');
+ if(trigger){setCalverSiteMenu(trigger.getAttribute('aria-expanded')!=='true');return;}
+ const choice=event.target?.closest('.calver2-site-selector [data-calver2-clinic]');
+ if(choice){
+  const {market}=selectedCalverSite(),id=choice.getAttribute('data-calver2-clinic');
+  if(market.clinics.some(c=>c.id===id)){clinicByCalverMarket[market.id]=id;rerenderCalverSite(true);}
+  return;
+ }
+ if(!event.target?.closest('.calver2-site-selector .dqc-location-picker'))setCalverSiteMenu(false);
+});
+document.addEventListener('keydown',event=>{
+ const trigger=event.target?.closest('.calver2-site-selector [data-calver2-location-toggle]');
+ if(trigger&&['ArrowDown','ArrowUp','Enter',' '].includes(event.key)){
+  event.preventDefault();setCalverSiteMenu(true,true);
+  if(event.key==='ArrowUp'){
+   const options=Array.from(document.querySelectorAll('.calver2-site-selector [data-calver2-clinic]'));
+   options[options.length-1]?.focus();
+  }
+  return;
+ }
+ if(trigger&&event.key==='Escape'){event.preventDefault();setCalverSiteMenu(false,false,true);return;}
+ const choice=event.target?.closest('.calver2-site-selector [data-calver2-clinic]');
+ if(!choice)return;
+ if(event.key==='Escape'){event.preventDefault();setCalverSiteMenu(false,false,true);return;}
+ if(event.key==='Tab'){setCalverSiteMenu(false);return;}
+ const options=Array.from(document.querySelectorAll('.calver2-site-selector [data-calver2-clinic]'));
+ const idx=options.indexOf(choice);let next;
+ if(event.key==='ArrowDown')next=options[(idx+1)%options.length];
+ else if(event.key==='ArrowUp')next=options[(idx-1+options.length)%options.length];
+ else if(event.key==='Home')next=options[0];
+ else if(event.key==='End')next=options[options.length-1];
+ if(next){event.preventDefault();next.focus();}
+});
+
 const steps=[
  {title:"Open the correct API event",stage:"Portal",tone:"blue",desc:"Sign in to Paperless Proficiency Testing, choose Enter Results, then select the active event on Current Events. Match the event year, category, event number, kit and site before entering anything.",hint:"Instructions & Worksheets is available alongside the event. The event deadline is on the current event paperwork.",ui:"Enter Results → Current Events → Event name"},
  {title:"Review enrolled tests and methods",stage:"Setup",tone:"blue",desc:"Select the test name under Enter or Review Test Results. Confirm the Sample IDs, analytes, instrument/method and all additional reportable analytes. Previous-event methods may carry forward and need verification.",hint:"Never assume that every assay on an instrument is enrolled. Report only what your facility performs and what the event requests.",ui:"Enter or Review Test Results → Test name"},
@@ -196,5 +279,5 @@ function overviewCta(){
  ["03","Transmit & file","Confirm Event History timestamp and signed records."]
  ].map(v=>'<div><span>'+v[0]+'</span><strong>'+v[1]+'</strong><p>'+v[2]+'</p></div>').join('')+'</div>';
 }
-window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,overviewCta,marketSelector};
+window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,overviewCta,marketSelector,calverMarketSelector};
 })();
