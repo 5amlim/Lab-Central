@@ -158,7 +158,12 @@ function render(){
  return '<div class="lc-competency tc-portal">'+
  '<div class="tc-page-heading"><span class="tc-page-overline">TRAINING &amp; COMPETENCY / '+esc(market.short).toUpperCase()+'</span><h1>'+esc(clinic[1])+'</h1><p>'+esc(market.name)+' · Follow the approved training, competency and documentation policies for the tests installed at this clinic.</p></div>'+
  '<div class="tc-market-picker"><span class="tc-picker-label">MARKET</span><div class="tc-market-buttons">'+trainingMarkets.map(m=>'<button type="button" data-tc-market="'+esc(m.id)+'" class="tc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+esc(m.short)+'</button>').join('')+'</div></div>'+
- '<div class="tc-location-bar"><label for="tc-clinic-select">Clinic location</label><select id="tc-clinic-select" data-tc-clinic>'+market.clinics.map(c=>'<option value="'+esc(c[0])+'"'+(c[0]===clinic[0]?' selected':'')+'>'+esc(c[1])+'</option>').join('')+'</select><span>Choose a clinic to view its training reference</span></div>'+
+ '<div class="tc-location-bar"><span class="tc-location-label" id="tc-clinic-label">Clinic location</span>'+
+ '<div class="tc-location-picker"><button type="button" class="tc-location-trigger" data-tc-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="tc-location-options" aria-labelledby="tc-clinic-label tc-location-value">'+
+ '<span id="tc-location-value">'+esc(clinic[1])+'</span><span class="tc-location-chevron" aria-hidden="true"></span></button>'+
+ '<div class="tc-location-options" id="tc-location-options" role="listbox" aria-labelledby="tc-clinic-label" hidden>'+
+ market.clinics.map(c=>'<button type="button" role="option" data-tc-clinic-option="'+esc(c[0])+'" class="tc-location-option'+(c[0]===clinic[0]?' is-selected':'')+'" aria-selected="'+(c[0]===clinic[0])+'" tabindex="-1">'+esc(c[1])+(c[0]===clinic[0]?'<span class="tc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
+ '</div></div><span class="tc-location-hint">Choose a clinic to view its training reference</span></div>'+
  '<nav class="tc-view-switch" role="tablist" aria-label="Training and competency sections">'+trainingTabs.map(t=>'<button type="button" id="tc-tab-'+t.id+'" role="tab" aria-selected="'+(selectedTrainingView===t.id)+'" aria-controls="tc-panel-'+t.id+'" tabindex="'+(selectedTrainingView===t.id?'0':'-1')+'" class="tc-view-button'+(selectedTrainingView===t.id?' is-selected':'')+'" data-tc-view="'+t.id+'" data-tone="'+t.tone+'"><span class="tc-view-icon">'+ico(t.icon)+'</span><span class="tc-view-copy"><strong>'+esc(t.title)+'</strong><small>'+esc(t.subtitle)+'</small></span></button>').join('')+'</nav>'+
  '<div id="tc-panel-schedule" role="tabpanel" aria-labelledby="tc-tab-schedule" class="tc-route-panel tc-schedule-panel"'+(selectedTrainingView==='schedule'?'':' hidden')+'>'+renderSchedule()+'</div>'+
  '<div'+(selectedTrainingView==='templates'?'':' hidden')+'>'+renderTrainingTemplates(market,clinic)+'</div>'+
@@ -172,18 +177,74 @@ function rerenderTraining(){
 }
 
 document.addEventListener('input',e=>{if(e.target&&e.target.matches('[data-tc-start]')){plannerStart=e.target.value;updatePlanner();}});
-document.addEventListener('change',e=>{
- if(e.target&&e.target.matches('[data-tc-clinic]')){trainingClinicByMarket[selectedTrainingMarket]=e.target.value;rerenderTraining();}
-});
+function setTrainingClinicMenu(open,focusSelected=false,returnFocus=false){
+ const picker=document.querySelector('.tc-portal .tc-location-picker');
+ if(!picker)return;
+ const trigger=picker.querySelector('[data-tc-location-toggle]');
+ const list=picker.querySelector('[role="listbox"]');
+ if(!trigger||!list)return;
+ list.hidden=!open;
+ trigger.setAttribute('aria-expanded',String(open));
+ picker.classList.toggle('is-open',open);
+ if(open&&focusSelected)(list.querySelector('[aria-selected="true"]')||list.querySelector('[role="option"]'))?.focus();
+ if(!open&&returnFocus)trigger.focus();
+}
 document.addEventListener('click',e=>{
- const market=e.target&&e.target.closest('[data-tc-market]');
- if(market){selectedTrainingMarket=market.dataset.tcMarket;rerenderTraining();return;}
- const view=e.target&&e.target.closest('[data-tc-view]');
+ const market=e.target?.closest('.tc-portal [data-tc-market]');
+ if(market){
+  const next=market.getAttribute('data-tc-market');
+  if(trainingMarkets.some(m=>m.id===next)&&selectedTrainingMarket!==next){
+   selectedTrainingMarket=next;
+   rerenderTraining();
+  }
+  return;
+ }
+ const toggle=e.target?.closest('.tc-portal [data-tc-location-toggle]');
+ if(toggle){setTrainingClinicMenu(toggle.getAttribute('aria-expanded')!=='true');return;}
+ const option=e.target?.closest('.tc-portal [data-tc-clinic-option]');
+ if(option){
+  const next=option.getAttribute('data-tc-clinic-option');
+  const market=trainingMarket();
+  if(market.clinics.some(c=>c[0]===next)){
+   trainingClinicByMarket[market.id]=next;
+   rerenderTraining();
+   document.querySelector('.tc-portal [data-tc-location-toggle]')?.focus();
+  }
+  return;
+ }
+ const view=e.target?.closest('.tc-portal [data-tc-view]');
  if(view){selectedTrainingView=view.dataset.tcView;rerenderTraining();return;}
- if(e.target&&e.target.closest('[data-tc-clear]')){
+ if(e.target?.closest('.tc-portal [data-tc-clear]')){
   const date=document.querySelector('.tc-portal [data-tc-start]');
   if(date){plannerStart='';date.value='';updatePlanner();date.focus();}
+  return;
  }
+ if(!e.target?.closest('.tc-portal .tc-location-picker'))setTrainingClinicMenu(false);
+});
+document.addEventListener('keydown',e=>{
+ const trigger=e.target?.closest('.tc-portal [data-tc-location-toggle]');
+ if(trigger&&['ArrowDown','ArrowUp','Enter',' '].includes(e.key)){
+  e.preventDefault();
+  setTrainingClinicMenu(true,true);
+  if(e.key==='ArrowUp'){
+   const options=Array.from(document.querySelectorAll('.tc-portal [data-tc-clinic-option]'));
+   options[options.length-1]?.focus();
+  }
+  return;
+ }
+ if(trigger&&e.key==='Escape'){e.preventDefault();setTrainingClinicMenu(false,false,true);return;}
+ const option=e.target?.closest('.tc-portal [data-tc-clinic-option]');
+ if(!option)return;
+ if(e.key==='Escape'){e.preventDefault();setTrainingClinicMenu(false,false,true);return;}
+ if(e.key==='Tab'){setTrainingClinicMenu(false);return;}
+ const options=Array.from(document.querySelectorAll('.tc-portal [data-tc-clinic-option]'));
+ const index=options.indexOf(option);
+ let next=null;
+ if(e.key==='ArrowDown')next=options[(index+1)%options.length];
+ else if(e.key==='ArrowUp')next=options[(index-1+options.length)%options.length];
+ else if(e.key==='Home')next=options[0];
+ else if(e.key==='End')next=options[options.length-1];
+ if(next){e.preventDefault();next.focus();}
 });
 window.LAB_TRAINING_COMPETENCY={render,addMonths:dueDate};
 })();
