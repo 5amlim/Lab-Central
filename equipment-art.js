@@ -823,6 +823,34 @@ const collectionStabilitySources={
  sofia:[["Flu + SARS IFU","https://www.fda.gov/media/142704/download"],["Strep A+ reference","https://maxanim.com/content/quidel/sofia-strepa-faq.PDF"],["RSV reference","https://maxanim.com/content/quidel/sofia-rsv-fia-faq.PDF"]],
  hemocue:[["FDA device instructions","https://www.accessdata.fda.gov/CDRH510K/K032203.pdf"]]
 };
+/* Label boundaries for the shared stability card.
+   Keep the source sentences intact and change only the HTML presentation. */
+const collectionStabilityLabels={
+ sysmex:["EDTA blood:"],
+ piccolo:["Whole blood:","Separated serum/plasma:"],
+ pathfast:["Whole blood:","Heparin plasma:"],
+ triage:["Troponin I / D-dimer:","BNP:"],
+ clinitek:["Urinalysis:","hCG urine:"],
+ torch:["GI stool in Cary-Blair:"],
+ spotfire:["R/ST swabs:"],
+ febridx:["Fresh fingerstick only."],
+ "drug-screen":["Test urine promptly."],
+ coagsense:["Fresh fingerstick blood:"],
+ poc:["Test promptly."],
+ hemocue:["Hb 201 microcuvette:"]
+};
+function collectionStabilityBullets(id){
+ const original=collectionTestWindows[id];
+ const labels=collectionStabilityLabels[id]||[];
+ if(!original||!labels.length)return '<p>'+visualEsc(original||"")+'</p>';
+ const starts=labels.map(label=>original.indexOf(label));
+ if(starts[0]!==0||starts.some((start,i)=>start<0||(i>0&&start<=starts[i-1])))
+  return '<p>'+visualEsc(original)+'</p>';
+ return '<ul class="device-collection-stability-list">'+labels.map((label,i)=>{
+  const part=original.slice(starts[i],i+1<labels.length?starts[i+1]:original.length).trim();
+  return '<li><b>'+visualEsc(label)+'</b>'+visualEsc(part.slice(label.length))+'</li>';
+ }).join('')+'</ul>';
+}
 function collectionTestWindow(sec){
  if(sec.archived||!collectionTestWindows[sec.id])return "";
  const refs=(collectionStabilitySources[sec.id]||[]).map(x=>
@@ -833,7 +861,7 @@ function collectionTestWindow(sec){
    '<li><b>RSV:</b> ≤24 h in validated transport medium.</li>'+
    '<li><b>Strep A+:</b> Dry throat swabs, ≤24 h at room temperature or ≤48 h refrigerated.</li>'+
    '</ul><p class="device-collection-stability-note">Check the current kit IFU.</p>'
-  :'<p>'+visualEsc(collectionTestWindows[sec.id])+'</p>';
+  :collectionStabilityBullets(sec.id);
  return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong>'+details+
   (refs?'<div class="device-collection-stability-sources">'+refs+'</div>':'')+'</aside>';
 }
