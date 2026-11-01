@@ -22,7 +22,7 @@ const configs={
  ["Verify GIP material","Match the GI PT sample ID and pouch. Prepare the material per the current event sheet."],
  ["Prepare and run GI pouch","Use the regular TORCH GI patient steps for hydration, buffer, transfer and pouch loading. Enter the actual GIP code as the sample ID."],
  ["Review and print","Confirm a valid run and internal controls. Print the complete GI pathogen report for each sample."]]},
- poc:{label:"HV",mode:"Routine rapid HIV test",steps:[
+ hiv:{label:"HV",mode:"Routine rapid HIV test",steps:[
  ["Check HIV event and kit","Match the HV vial ID, approved rapid HIV test kit, and API preparation instructions."],
  ["Run and read","Follow the normal kit timing and patient-testing procedure. At the valid read time, check the control and interpret the test."],
  ["Photograph and print","Take clear photos of the completed device and assigned HV ID within the valid read window. Print the photos and record each result."]]},
@@ -42,7 +42,7 @@ const other={
 };
 const remembered=new Map();
 const stepsSaved=new Map();
-function supports(sec){return !!sec&&!sec.archived&&["Analyzers","Point of care"].includes(sec.category);}
+function supports(sec){return !!sec&&!sec.archived&&sec.id!=="poc"&&["Analyzers","Point of care"].includes(sec.category);}
 function patientGroup(sec,groups){
  const x=(groups||[]).find(g=>/^(patient|patient-testing|ua-strip|running-samples|running-patient-samples|running-tests)(-|$)/i.test(g.id)||/^Running (Patient )?Samples|^Running tests|^Patient testing/i.test(g.title));
  return x?(sec.id==="clinitek"?"ua-strip":x.id):null;
@@ -76,7 +76,7 @@ const materials={
  sysmex:[{id:"HSY",name:"HSY · Hematology - 3S PT sample",code:"HSY",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
  triage:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
  torch:[{id:"GIP",name:"GIP · GI pathogen PT sample",code:"GIP",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
- poc:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HIV PT specimen with the clinic's approved rapid HIV test. Observe the test-specific read window and reporting instructions."}],
+ hiv:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
  clinitek:[
   {id:"UA",name:"Urinalysis PT sample",code:"UA",color:"#649a9b",note:"Match the actual UA specimen to the assigned urinalysis event. API offers an Urinalysis & HCG program, but confirm this clinic's exact enrollment."},
   {id:"HCG",name:"Urine hCG PT sample",code:"hCG",color:"#9c88a9",note:"Confirm whether hCG is covered by the assigned Urinalysis & HCG program or a separate urine hCG event before testing."}
@@ -172,7 +172,7 @@ function reagentFor(id,st){
  }
  const named={
   torch:{name:"BIOFIRE FILMARRAY GI Panel pouch",type:"BioFire TORCH · GI Panel",note:"Single-use clear FilmArray GI pouch with a barcode label, reagent fitment and PCR array. Confirm the printed panel/version and lot match the GIP event before loading it into TORCH.",art:"gi-pouch"},
-  poc:{name:"Approved rapid HIV test kit",type:"HIV testing",note:"Use the clinic's approved rapid HIV test device. Match the event and read window to the kit.",art:"cassette"},
+  hiv:{name:"HIV-1/2 Ag/Ab rapid test device",type:"HIV Antigen/Antibody",note:"Use the approved test kit, confirm the HV specimen and specimen compatibility, and read antigen and antibody indicators as directed by the product IFU. Illustration only; actual device design depends on the kit.",art:"cassette"},
   febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
   hemocue:{name:"Hemoglobin microcuvette",type:"HemoCue",note:"Use the compatible microcuvette for the installed HemoCue model.",art:"cuvette"},
   coagsense:{name:"PT/INR test strip",type:"Coag-Sense",note:"Check compatibility of the assigned PT material before using the instrument's strip.",art:"strip"},
