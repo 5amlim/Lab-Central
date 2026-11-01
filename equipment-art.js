@@ -884,6 +884,7 @@ function specimenGuide(sec){
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
  '<div class="device-collection-frame"><div class="device-collection-main"><div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item">'+collectionPhotoMarkup(sec,x[0],x[1])+'<div class="device-collection-copy"><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span>'+
+ (sec.id==='pathfast'?'<p class="device-collection-label-warning"><b>Label at collection:</b> Include two patient identifiers, collection date, exact draw time and collector initials. For serial hs-Troponin I, identify the 0 h, 1 h or authorized 2 h specimen.</p>':'')+
  (sec.id==='spotfire'?'<div class="device-collection-panels" aria-label="Compatible SPOTFIRE panel options">'+
   (x[0]==='utm'?'<span class="device-collection-panel">Respiratory panel</span><span class="device-collection-panel">Respiratory mini panel</span>':
    '<span class="device-collection-panel">Sore throat panel <b>NY only</b></span><span class="device-collection-panel">Sore throat mini panel</span>')+
