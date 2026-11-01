@@ -1,0 +1,51 @@
+/* Piccolo race-free eGFR calculator. Scoped to the eGFR page. */
+.egfr-page{max-width:1100px;margin:0 auto;color:#24445c;line-height:1.58}
+.egfr-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:25px 27px;border:1px solid #dbe8ee;background:linear-gradient(135deg,#f0f8fa 0%,#fff 75%);border-radius:19px}
+.egfr-kicker,.egfr-panel-title>span,.egfr-method>div>span{display:block;color:#267d8b;letter-spacing:.12em;font-size:10px;font-weight:850}
+.egfr-hero h2{font-size:26px;letter-spacing:-.025em;margin:7px 0 8px}
+.egfr-hero p{max-width:660px;color:#5c7588;margin:0;font-size:13px}
+.egfr-method-tag{flex:none;border:1px solid #a5d6d2;background:#eaf7f4;color:#226f6b;padding:8px 11px;border-radius:999px;font-size:10px;font-weight:850;letter-spacing:.07em}
+.egfr-message{display:flex;gap:12px;align-items:flex-start;padding:15px 18px;margin:16px 0 19px;border:1px solid #c9dfe8;border-radius:12px;background:#f4f9fc}
+.egfr-message>span{height:22px;width:22px;flex:none;background:#dceff3;border-radius:50%;font-size:14px;font-weight:800;text-align:center;color:#316d82}
+.egfr-message p{font-size:12px;line-height:1.65;color:#4b6478;margin:0}
+.egfr-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:17px}
+.egfr-panel{background:#fff;border:1px solid #dce7ed;border-radius:17px;min-width:0;padding:24px;box-shadow:0 5px 17px rgba(30,65,88,.035)}
+.egfr-panel-title h3{font-size:19px;letter-spacing:-.02em;margin:5px 0 5px}
+.egfr-panel-title p{font-size:12px;line-height:1.55;color:#708498;margin:0 0 19px}
+.egfr-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.egfr-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.egfr-field>span{font-weight:750;font-size:12px;color:#365c73}
+.egfr-field small{font-weight:500;color:#8495a2}
+.egfr-field input,.egfr-field select{width:100%;height:43px;min-width:0;border:1px solid #ccdce4;border-radius:9px;padding:0 12px;background:#fff;color:#263e54;font:inherit;font-size:13px;box-sizing:border-box}
+.egfr-field input:focus,.egfr-field select:focus{outline:2px solid #8ac9d1;outline-offset:1px;border-color:#4297a5}
+.egfr-field-help{font-size:11px;line-height:1.6;margin:15px 0 18px;color:#667d90}
+.egfr-actions{display:flex;flex-wrap:wrap;gap:10px}
+.egfr-actions button,.egfr-return button{border-radius:9px;border:1px solid #c7dce4;padding:11px 16px;font:inherit;font-size:12px;font-weight:800}
+.egfr-actions .egfr-primary{color:#fff;border-color:#1d7682;background:#207a87}
+.egfr-actions .egfr-primary:hover{background:#176775}
+.egfr-actions .egfr-clear{color:#416982;background:#f5f9fb}
+.egfr-output{display:flex;flex-direction:column;background:linear-gradient(180deg,#fff 30%,#f9fcfd)}
+.egfr-result{border:1px solid #d6e8eb;background:#f3faf9;padding:20px;border-radius:13px}
+.egfr-result-number{display:block;color:#1a6774;font-size:49px;font-weight:790;letter-spacing:-.05em;line-height:1.13;font-variant-numeric:tabular-nums}
+.egfr-result-unit{font-size:13px;color:#4a7880;font-weight:750}
+.egfr-result p{margin:12px 0 0;font-size:12px;color:#67818d}
+.egfr-result[data-state="invalid"]{background:#fff9f0;border-color:#ebd5aa}
+.egfr-result[data-state="invalid"] p{color:#946321}
+.egfr-result-band{margin-top:12px;padding:13px 15px;border:1px solid #d6e5ed;border-radius:11px;background:#f8fbfc}
+.egfr-result-band>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:7px;font-size:12px}
+.egfr-result-band span{color:#638093}.egfr-result-band strong{color:#1d6471}
+.egfr-result-band p{font-size:11px;line-height:1.6;margin:8px 0 0;color:#697f90}
+.egfr-output-foot{border-top:1px solid #e2edf1;margin-top:auto;padding-top:20px}
+.egfr-output-foot strong{font-size:12px;color:#385e70}
+.egfr-output-foot p{font-size:12px;color:#6b8190;line-height:1.65;margin:6px 0 0}
+.egfr-method{margin-top:17px;padding:21px 24px;border:1px solid #e0eaee;border-radius:16px;background:#fff;display:grid;grid-template-columns:1.5fr 1fr;gap:25px}
+.egfr-method h3{margin:4px 0 9px;font-size:17px}
+.egfr-method p{font-size:12px;color:#657f8f;line-height:1.7;margin:0 0 9px}
+.egfr-links{display:flex;flex-direction:column;gap:9px;justify-content:center}
+.egfr-links a{display:block;padding:10px 13px;border:1px solid #cfe0e7;border-radius:10px;font-size:12px;font-weight:750;color:#22738b;background:#f6fafc;text-decoration:none}
+.egfr-links a:hover{background:#ecf7fa}
+.egfr-return{margin-top:16px;text-align:right}
+.egfr-return button{background:#fff;color:#2b7187;cursor:pointer}
+@media(max-width:780px){.egfr-layout,.egfr-method{grid-template-columns:1fr}.egfr-hero{flex-direction:column}.egfr-method-tag{align-self:flex-start}}
+@media(max-width:420px){.egfr-fields{grid-template-columns:1fr}.egfr-panel{padding:18px}.egfr-hero{padding:21px}.egfr-hero h2{font-size:24px}}
+@media print{.egfr-actions,.egfr-return{display:none}.egfr-page{max-width:none}.egfr-panel,.egfr-hero,.egfr-method{break-inside:avoid;box-shadow:none}}
