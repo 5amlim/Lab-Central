@@ -162,6 +162,24 @@
  display:block;font-size:11px;font-weight:900;line-height:1.3;
  color:#315b74;letter-spacing:.01em
 }
+
+/* PT analyzer names are now the only links to their instrument's PT guide.
+   Preserve the panel-specific heading colors while making them interactive. */
+.quality-pt-analyzer-title .quality-api-instrument-link{
+ display:inline-flex;align-items:center;justify-content:flex-start;gap:6px;
+ padding:0;font:inherit;line-height:inherit;color:inherit;text-align:left;
+ text-decoration:none;border-bottom:1px solid transparent
+}
+.quality-pt-analyzer-title .quality-api-instrument-link span{
+ font-size:12px;line-height:1;opacity:.7
+}
+.quality-pt-analyzer-title .quality-api-instrument-link:hover{
+ color:inherit;text-decoration:none;border-bottom-color:currentColor
+}
+.quality-pt-analyzer-title .quality-api-instrument-link:focus-visible{
+ outline:2px solid #64b5b0;outline-offset:3px;border-radius:2px
+}
+
 .quality-pt-analyzer-group[data-pt-panel="triage"]{border-color:#d2e4f0;background:#f5faff}
 .quality-pt-analyzer-group[data-pt-panel="pathfast"]{border-color:#cde7df;background:#f5fcf9}
 .quality-pt-analyzer-group[data-pt-panel="pathfast"] .quality-pt-analyzer-title{color:#197f73}
