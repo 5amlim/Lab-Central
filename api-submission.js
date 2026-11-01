@@ -120,9 +120,23 @@ function submission(){
  return '<section class="api2-page api2-submission">'+
  '<header class="api2-intro"><div class="api2-overline">API · PAPERLESS PROFICIENCY TESTING</div><h2>Submit PT results</h2><p>Follow the actual API screens from event selection through confirmed transmission. The steps below use API’s documented portal labels, not a simulated login or result-entry system.</p><div class="api2-intro-actions">'+link(url.portal,"Open API Paperless PT","api2-primary")+link(url.guide,"Official 7-page API entry guide")+'</div></header>'+
  '<div class="api2-alert api2-alert-critical"><strong>Saving is not submitting.</strong><p>A result is only received after the attestation is completed, results are transmitted, and the submitted event appears in Event History.</p></div>'+
- rail(["Choose event","Enter results","Save & verify","Attest & transmit","Confirm & file"],"Online submission phases")+
- '<div class="api2-section-head"><div><h3>Online submission, step by step</h3><p>Work from the current API event instructions and the original instrument results.</p></div>'+badge("9 steps","neutral")+'</div>'+
- '<div class="api2-step-grid">'+steps.map((s,i)=>'<article class="api2-step api2-tone-'+s.tone+'"><div class="api2-step-top"><span class="api2-num">'+String(i+1).padStart(2,"0")+'</span>'+badge(s.stage,s.tone)+'</div><h4>'+x(s.title)+'</h4><p>'+x(s.desc)+'</p><div class="api2-screen"><span>IN API PORTAL</span><b>'+x(s.ui)+'</b></div><div class="api2-step-note">'+x(s.hint)+'</div></article>').join('')+'</div>'+
+ rail(["Prepare","Enter & review","Attest & submit","Confirm & file"],"Online submission phases")+
+ '<div class="api2-section-head api2-flow-title"><div><h3>Online submission, step by step</h3><p>Follow each phase in order. Expand the page by scrolling; no separate guided mode is needed.</p></div>'+badge("9 steps · 4 phases","neutral")+'</div>'+
+ '<div class="api2-phase-list">'+[
+  {index:'01',title:'Prepare the event',caption:'Identify the right event and confirm the assays you are enrolled to perform.',tone:'blue',start:0,end:2},
+  {index:'02',title:'Enter and review results',caption:'Match every sample, method and unit, then verify what was saved.',tone:'teal',start:2,end:6},
+  {index:'03',title:'Attest and submit',caption:'Complete the required personnel attestation, then transmit to API.',tone:'amber',start:6,end:8},
+  {index:'04',title:'Confirm receipt and file',caption:'Confirm API received the event and archive the complete records.',tone:'blue',start:8,end:9}
+ ].map(phase=>
+  '<section class="api2-phase api2-phase-'+phase.tone+'" aria-label="'+x(phase.title)+'">'+
+   '<header class="api2-phase-heading"><span class="api2-phase-number">'+x(phase.index)+'</span><div><span class="api2-phase-kicker">PHASE '+x(phase.index)+'</span><h4>'+x(phase.title)+'</h4><p>'+x(phase.caption)+'</p></div><span class="api2-phase-count">'+(phase.end-phase.start)+' '+(phase.end-phase.start===1?'step':'steps')+'</span></header>'+
+   '<div class="api2-step-grid">'+steps.slice(phase.start,phase.end).map((item,i)=>
+    '<article class="api2-step api2-tone-'+item.tone+'"><div class="api2-step-top"><span class="api2-num">'+String(phase.start+i+1).padStart(2,"0")+'</span>'+badge(item.stage,item.tone)+'</div>'+
+    '<h5>'+x(item.title)+'</h5><p>'+x(item.desc)+'</p>'+
+    '<div class="api2-screen"><span>IN API PORTAL</span><b>'+x(item.ui)+'</b></div>'+
+    '<div class="api2-step-note"><strong>CHECK BEFORE CONTINUING</strong><span>'+x(item.hint)+'</span></div></article>'
+   ).join('')+'</div></section>'
+ ).join('')+'</div>'+
  '<div class="api2-twin"><section class="api2-panel"><h3>Before you click Transmit</h3><ul class="api2-checklist"><li>Correct CLIA site, event, kit and sample IDs</li><li>All performed analytes entered, with the correct method</li><li>Numeric units, qualifiers, decimals and qualitative choices verified</li><li>Analyzer printouts reconciled with the saved result screen</li><li>Attestation lists all persons who actually performed testing</li><li>Submission deadline has not passed</li></ul></section><section class="api2-panel"><h3>Submission proof</h3><p>Use <strong>Enter Results → Event History</strong> to download the submitted results and electronic attestation. Keep the dated submission timestamp with the signed records and analyzer outputs.</p><div class="api2-mini-callout">API’s electronic attestation still needs the required personnel signatures in the retained laboratory record.</div>'+link(url.confirm,"API: verify submitted results")+'</section></div>'+
  '<section class="api2-sources"><strong>Official guidance</strong><div>'+link(url.guide,"API entering results")+link(url.attest,"API attestation")+link(url.cms,"CMS PT requirements")+'</div></section></section>';
 }
