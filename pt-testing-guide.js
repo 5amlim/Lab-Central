@@ -404,12 +404,25 @@ function neutralHivReading(){
  '<div class="ptg-result-window"><span>Control</span><span>Ag</span><span>Ab</span></div><small>SAMPLE ↓</small></div>'+
  '<div><strong>Read between 20 and 30 minutes</strong><p>The Control line must be present. Assess p24 Ag and combined HIV-1/2 Ab separately. The drawn labels are positions only, not reactive lines. Do not read after 30 minutes.</p></div></div></figure>';
 }
+function methodVisual(id,i){
+ const flow={
+  sysmex:[null,["HSY vial","Green pocH adapter","Routine patient CBC"],["Actual HSY ID","CBC + differential","Original printed reports"]],
+  triage:[null,["CM sample","MISC. TEST mode","Patient-style test"],["CM sample ID","Troponin I + D-dimer","Two cartridge reports"]],
+  piccolo:[null,["CH or CRP vial","Assigned Piccolo disc","Analyze → Control"],["Correct PT identifier","Assigned CH / CRP panels","Original disc printouts"]],
+  torch:[null,["GIP sample ID","GI pouch + hydration","Routine patient run"],["GI run / internal controls","Requested pathogens","Complete GI report"]],
+  pathfast:[null,["CM sample ID","SAMPLE run","Patient-style testing"],["hs-TnI / D-dimer / NT-proBNP","Results + units + flags","Original assay printouts"]]
+ }[id]?.[i];
+ if(!flow)return "";
+ return '<figure class="ptg-method-visual"><div class="ptg-record-top"><b>ASSAY-SPECIFIC TEST SEQUENCE</b><span>Workflow reference, not an analyzer screenshot</span></div>'+
+ '<div class="ptg-method-steps">'+flow.map((x,j)=>'<div class="ptg-method-step"><b>'+String(j+1).padStart(2,"0")+'</b><span>'+e(x)+'</span></div>').join('<div class="ptg-method-chevron" aria-hidden="true">→</div>')+
+ '</div></figure>';
+}
 function ptVisual(id,i,length,item){
  if(i===length-2)return recordVisual(id,"capture");
  if(i===length-1)return recordVisual(id,"file");
  if(id==="hiv"&&i===3)return neutralHivReading();
  if(id==="hiv"&&window.LAB_HIV_GUIDE_ART?.visual)return '<div class="ptg-hiv-step-visual">'+window.LAB_HIV_GUIDE_ART.visual(item[0],"pt-testing")+'</div>';
- return "";
+ return methodVisual(id,i);
 }
 function workflow(id,sequence){
  const st=stateFor(id,sequence.length);
