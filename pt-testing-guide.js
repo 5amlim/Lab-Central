@@ -23,9 +23,10 @@ const configs={
  ["Prepare and run GI pouch","Use the regular TORCH GI patient steps for hydration, buffer, transfer and pouch loading. Enter the actual GIP code as the sample ID."],
  ["Review and print","Confirm a valid run and internal controls. Print the complete GI pathogen report for each sample."]]},
  hiv:{label:"HV",mode:"Abbott Determine HIV-1/2 Ag/Ab Combo",steps:[
- ["Verify HV sample and Abbott test","Match the HV specimen ID, sample matrix and event worksheet. Use Abbott Determine HIV-1/2 Ag/Ab Combo, not an antibody-only device. Verify any PT sample preparation and approval for this method before testing."],
- ["Apply PT sample using Abbott instructions","Prepare the strip and test the assigned PT sample through the routine method: 50 µL on the sample pad. If compatible whole blood, wait 1 minute then add 1 drop chase buffer; for serum/plasma, no chase buffer. Follow the IFU for the actual PT matrix."],
- ["Read and photograph at 20–30 minutes","Read 20–30 minutes after buffer for whole blood or sample for serum/plasma. Check valid Control line plus separate Ag (HIV-1 p24) and Ab (HIV-1/2 antibodies) lines. Take a clear picture within the valid window, with HV ID visible; Ab does not distinguish HIV-1 from HIV-2."]] },
+ ["Verify HV event, specimen and Abbott kit","Match the HV vial ID, current API event sheet, specimen type, preparation and permitted Abbott Determine HIV-1/2 Ag/Ab Combo method. Do not assume an unknown PT matrix is compatible. Verify kit expiry and acceptable controls."],
+ ["Prepare test strip and PT specimen","Separate the Abbott test strip, reseal unused test units in the original pouch with desiccant, remove the foil, and lay the device flat. Prepare the PT material exactly as the API worksheet specifies and confirm the approved matrix."],
+ ["Apply 50 µL and follow matrix-specific buffer rule","Apply precisely 50 µL to the arrow-marked pad. For compatible WHOLE BLOOD, wait 1 minute after complete transfer then add one drop of chase buffer. For SERUM or EDTA PLASMA add NO buffer. Do not change specimen preparation to obtain a preferred result."],
+ ["Read and photograph between 20 and 30 minutes","Start timing after buffer for whole blood or after the specimen for serum/plasma. At 20–30 minutes verify Control, Ag and Ab lines; record both Ag and combined Ab results, and photograph the valid result with the HV sample ID. The Ab line does not distinguish HIV-1 from HIV-2."]] },
  pathfast:{label:"CM",mode:"Routine PATHFAST SAMPLE run",steps:[
  ["Confirm CM PT sample","Match the CM cardiac markers vial and exact specimen ID to the current API event sheet. Prepare the assigned sample as directed before testing."],
  ["Prepare and run SAMPLE","Use the routine PATHFAST patient SAMPLE workflow with the exact CM specimen ID. Run hs-Troponin I, D-dimer and NT-proBNP using their respective test cartridges, following the active event and SOP."],
@@ -390,6 +391,7 @@ function workflow(id,sequence){
    (focused?nav:"")+'</header>'+
    '<div class="ptg-stage-body"><p class="ptg-stage-description">'+e(desc)+'</p>'+
    (i===0?materialPreview(id,st):"")+
+   (id==="hiv"&&window.LAB_HIV_GUIDE_ART?.visual?'<div class="ptg-hiv-step-visual">'+window.LAB_HIV_GUIDE_ART.visual(item[0],"pt-testing")+'</div>':"")+
    (i===1&&id==="sysmex"?adapterReference():"")+
    (i===sequence.length-1?documentation():"")+
    '</div></article>';
@@ -424,8 +426,7 @@ function render(sec,groups){
  const patient=patientGroup(sec,groups);
  const st=stateFor(sec.id,full.length);
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
-  '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.'+
-  +'</p></div>'+
+  '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.</p></div>'+
   '<div class="ptg-heading-picker'+((materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
