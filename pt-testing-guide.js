@@ -74,15 +74,15 @@ function vialSvg(label,code,color){
 /* Program names are reference choices, not evidence of enrollment.
    Never equate a drawing's cap color or shape with the shipped PT material. */
 const materials={
- pathfast:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#5c91a3",note:"The CM sample is used for hs-Troponin I, D-dimer and NT-proBNP on PATHFAST. Confirm the exact specimen ID, preparation and reporting units against the active API event."}],
+ pathfast:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",color:"#5c91a3",note:"The CM sample is used for hs-Troponin I, D-dimer and NT-proBNP on PATHFAST. Confirm the exact specimen ID, preparation and reporting units against the active API event."}],
  piccolo:[
   {id:"CH",name:"CH · Chemistry - Comprehensive",code:"CH",catalogNumber:"CH #122",color:"#598f9e",note:"Run the CH Chemistry - Comprehensive PT sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix; API catalog #122 identifies the program, not the vial."},
   {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",catalogNumber:"CRP #431",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
- sysmex:[{id:"HSY",name:"HSY · Hematology - 3S PT sample",code:"HSY",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
- triage:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
- torch:[{id:"GIP",name:"GIP · GI pathogen PT sample",code:"GIP",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
- hiv:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
+ sysmex:[{id:"HSY",name:"HSY · Hematology - 3S",code:"HSY",catalogNumber:"HSY #227",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
+ triage:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
+ torch:[{id:"GIP",name:"GIP · Gastrointestinal Pathogens",code:"GIP",catalogNumber:"GIP #369",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
+ hiv:[{id:"HV",name:"HV · HIV Antigen/Antibody Rapid Test",code:"HV",catalogNumber:"HV #433",color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
 
 };
 function selectedMaterial(id,st){
@@ -100,7 +100,8 @@ function staticPicker(o){
  return '<div class="ptg-static-sample" aria-label="PT sample: '+e(o.code||"PT")+', '+e(sampleLabel(o))+'">'+
  '<span class="ptg-picker-caption">PT sample</span>'+
  '<div class="ptg-static-sample-row"><span class="ptg-picker-code">'+e(o.code||"PT")+'</span>'+
- '<strong>'+e(sampleLabel(o))+'</strong></div></div>';
+ '<strong>'+e(sampleLabel(o))+'</strong>'+ 
+ (o.catalogNumber?'<small class="ptg-picker-catalog ptg-static-catalog">API catalog · '+e(o.catalogNumber)+'</small>':'')+'</div></div>';
 }
 function pickerRow(label,field,options,value,aria){
  const selected=options.find(o=>o.value===value);
@@ -436,9 +437,11 @@ function workflow(id,sequence){
   (st.step<sequence.length-1?'<button type="button" class="ptg-next" data-ptg-step="'+(st.step+1)+'" aria-label="Next PT step">Next step →</button>':
    '<button type="button" class="ptg-next" data-ptg-mode="all">View all steps ↗</button>')+'</div>';
  const stepTitle=(item,i)=>{
-  if(id!=="piccolo"||i!==0)return item[0];
+  if(i!==0)return item[0];
   const v=selectedMaterial(id,st);
-  return v?(v.id==="CH"?"Confirm CH · Chemistry - Comprehensive":"Confirm "+v.id+" PT sample"):"Choose PT sample";
+  if(id==="piccolo")return v?"Confirm "+v.id+" · "+sampleLabel(v):"Choose PT sample";
+  if(id==="hiv"||!v)return item[0]; // Keep the HIV specimen and Abbott-kit verification title.
+  return (id==="torch"?"Verify ":"Confirm ")+v.id+" · "+sampleLabel(v);
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
