@@ -22,7 +22,7 @@ const map=[
  ]}
 ];
 function apiInstrumentLink(name,route){
- return '<a class="quality-api-instrument-link" href="#'+esc(route)+'" title="Open '+esc(name)+' instrument guide" aria-label="Open '+esc(name)+' instrument guide">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
+ return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
 function apiTestBadge(test){
  return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
