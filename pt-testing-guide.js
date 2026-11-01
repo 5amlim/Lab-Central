@@ -7,7 +7,7 @@ const adapter="https://imgcdn.mckesson.com/CumulusWeb/Images/Item_Detail/1086170
 const adapterPage="https://mms.mckesson.com/product/1086170/Sysmex-America-44230512";
 const configs={
  sysmex:{label:"HSY",mode:"Patient run · green adapter",steps:[
- ["Confirm HSY sample","Match the vial ID and event. Mix and prepare the PT vial exactly as instructed by API."],
+ ["Confirm HSY hematology sample","Match the HSY specimen ID to the assigned API Hematology - 3S event. Prepare the simulated whole-blood sample exactly as directed by the current kit instructions."],
  ["Fit green adapter","Seat the small PT vial in the approved green pocH adapter. Check the fit before closing the holder."],
  ["Run and print","Run the usual CBC patient test, not QC. Enter the actual HSY sample ID, check CBC/differential and flags, then print all reports."]]},
  triage:{label:"CM / PSC",mode:"Miscellaneous Test",steps:[
@@ -69,33 +69,33 @@ function vialSvg(label,code,color){
    Never equate a drawing's cap color or shape with the shipped PT material. */
 const materials={
  piccolo:[
-  {id:"CH",name:"CH · Chemistry PT sample",code:"CH",color:"#598f9e",note:"Run the CH chemistry sample on both MetLyte Plus CRP and MetLac 12 discs. Verify the event's requested analytes and units."},
+  {id:"CH",name:"CH · Chemistry Core PT sample",code:"CH",color:"#598f9e",note:"Run the CH chemistry sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix, not a catalog number."},
   {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
- sysmex:[{id:"HSY",name:"HSY · CBC PT sample",code:"HSY",color:"#a47f9a",note:"Small specimen vial. The approved green adapter is shown in the next step."}],
+ sysmex:[{id:"HSY",name:"HSY · Hematology - 3S PT sample",code:"HSY",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
  triage:[
-  {id:"CM",name:"CM · Cardiac marker sample",code:"CM",color:"#548fa2",note:"Check which cardiac assays and units are actually listed for this CM event."},
-  {id:"PSC",name:"PSC · Cardiac pilot sample",code:"PSC",color:"#8b9b78",note:"Use only the assays assigned for the current pilot shipment."}
+  {id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Cardiac Markers is an API program (catalog 140). Confirm which cardiac assays, sample numbers and units are actually assigned to this CM event."},
+  {id:"PSC",name:"PSC · Assigned PT sample",code:"PSC",color:"#8b9b78",note:"PSC is an event/sample reference. Its exact program description could not be independently confirmed. Check the current API shipping sheet for the enrolled assays and units."}
  ],
- torch:[{id:"GIP",name:"GIP · GI PT material",code:"GIP",color:"#598fa0",note:"Prepare the GI PT material per the event sheet. Do not assume the shipped vial is already in Cary-Blair."}],
- poc:[{id:"HV",name:"HV · Rapid HIV PT material",code:"HV",color:"#a27a97",note:"Use the assigned rapid HIV test and read within its specified time window."}],
+ torch:[{id:"GIP",name:"GIP · GI pathogen PT sample",code:"GIP",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
+ poc:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HIV PT specimen with the clinic's approved rapid HIV test. Observe the test-specific read window and reporting instructions."}],
  clinitek:[
-  {id:"UA",name:"Urinalysis PT material",code:"UA",color:"#649a9b",note:"Only if the clinic has an assigned UA event and compatible testing material."},
-  {id:"HCG",name:"Pregnancy hCG PT material",code:"hCG",color:"#9c88a9",note:"Confirm the actual event, pregnancy test system and compatible PT material."}
+  {id:"UA",name:"Urinalysis PT sample",code:"UA",color:"#649a9b",note:"Match the actual UA specimen to the assigned urinalysis event. API offers an Urinalysis & HCG program, but confirm this clinic's exact enrollment."},
+  {id:"HCG",name:"Urine hCG PT sample",code:"hCG",color:"#9c88a9",note:"Confirm whether hCG is covered by the assigned Urinalysis & HCG program or a separate urine hCG event before testing."}
  ],
  spotfire:[
-  {id:"RESP",name:"Respiratory panel PT material",code:"R",color:"#668ea8",note:"Confirm the assigned respiratory panel, sample type and event preparation."},
-  {id:"ST",name:"Sore-throat panel PT material",code:"ST",color:"#a4879e",note:"Confirm the assigned sore-throat panel, sample type and event preparation."}
+  {id:"RESP",name:"Respiratory panel PT sample",code:"R",color:"#668ea8",note:"Respiratory-panel shorthand in this guide. Confirm the actual API sample ID, assigned panel and preparation before testing."},
+  {id:"ST",name:"Sore-throat panel PT sample",code:"ST",color:"#a4879e",note:"Sore-throat-panel shorthand in this guide. Confirm the actual API sample ID, assigned panel and preparation before testing."}
  ],
  sofia:[
-  {id:"FLU-COVID",name:"Flu + COVID PT material",code:"F/C",color:"#5d96a3",note:"Confirm the actual Sofia 2 assay, approved specimen and event."},
-  {id:"RSV",name:"RSV PT material",code:"RSV",color:"#7d9f84",note:"Only if an RSV event is assigned to this clinic."},
-  {id:"STREP",name:"Strep A PT material",code:"ST",color:"#a284a7",note:"Only if a Strep A event is assigned to this clinic."}
+  {id:"FLU-COVID",name:"Flu + COVID PT sample",code:"F/C",color:"#5d96a3",note:"F/C is a guide shorthand, not a verified API vial prefix. Check the actual assay, specimen ID and event."},
+  {id:"RSV",name:"RSV PT sample",code:"RSV",color:"#7d9f84",note:"RSV denotes the assay in this guide. Test only when the clinic is enrolled and the current shipment identifies a compatible specimen."},
+  {id:"STREP",name:"Strep A PT sample",code:"ST",color:"#a284a7",note:"ST denotes the assay in this guide. Test only when the clinic is enrolled and the current shipment identifies a compatible specimen."}
  ],
- febridx:[{id:"FEBRIDX",name:"FebriDx PT material",code:"PT",color:"#8a9b9d",note:"Confirm an approved fingerstick-compatible PT specimen exists before testing."}],
- hemocue:[{id:"HGB",name:"Hemoglobin PT material",code:"HGB",color:"#a87989",note:"Confirm the approved matrix and event for the instrument."}],
- coagsense:[{id:"INR",name:"PT/INR proficiency material",code:"INR",color:"#688ca5",note:"Confirm the actual event material is compatible with Coag-Sense."}],
- "drug-screen":[{id:"DRUG",name:"Urine drug screen PT material",code:"PT",color:"#8b9b9f",note:"Use only an enrolled event and the approved kit-specific testing method."}]
+ febridx:[{id:"FEBRIDX",name:"FebriDx PT sample",code:"PT",color:"#8a9b9d",note:"Confirm the assigned FebriDx proficiency material is approved for the analyzer method; PT is a generic badge here, not a verified vial code."}],
+ hemocue:[{id:"HGB",name:"Hemoglobin PT sample",code:"HGB",color:"#a87989",note:"Confirm the HemoCue model, approved hemolysate specimen and event. HGB is an analyte shorthand unless printed on the vial."}],
+ coagsense:[{id:"INR",name:"Coagulation (PT/INR) sample",code:"INR",color:"#688ca5",note:"Verify the assigned event's specimen compatibility with Coag-Sense. INR is an analyte shorthand, not a verified API vial code."}],
+ "drug-screen":[{id:"DRUG",name:"Urine drug screen PT sample",code:"PT",color:"#8b9b9f",note:"Use only an enrolled event and kit-specific method. PT is a generic guide badge, not a verified API specimen prefix."}]
 };
 function selectedMaterial(id,st){
  const options=materials[id]||[];
@@ -134,7 +134,7 @@ function materialPicker(id,st){
   ];
   const codes=[
    {value:"CM",badge:"CM",label:"Cardiac markers"},
-   {value:"PSC",badge:"PSC",label:"Cardiac pilot"},
+   {value:"PSC",badge:"PSC",label:"Verify assigned PSC event"},
    {value:"other",badge:"OTHER",label:"Other event on shipment"}
   ];
   return '<div class="ptg-header-controls ptg-dual-picker">'+
@@ -382,7 +382,7 @@ function render(sec,groups){
   '<div class="ptg-heading-picker'+(sec.id!=="pathfast"&&(materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
-  '<p class="ptg-foot">Test PT as patient specimens. Do not perform extra grading-driven repeats or refer PT specimens. File under the matching event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
+  '<p class="ptg-foot">Code badges identify sample prefixes or guide assay shorthand, not API catalog numbers. Always match the actual kit, event worksheet and enrollment. Test PT as patient specimens, without grading-driven repeats or referral. File under the correct event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
 }
 function refresh(host,id,field){
  const seq=stepsSaved.get(id);
