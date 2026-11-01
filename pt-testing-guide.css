@@ -204,6 +204,42 @@
  .ptg-pathfast-multi .ptg-mini-reagent-art svg{margin:auto;max-width:90px}
  .ptg-pathfast-multi .ptg-mini-reagent-info strong{font-size:12px}
 }
+/* Triage PT: manufacturer-style vertical cartridge silhouettes with actual
+   blue Troponin I and yellow D-dimer identification stripes. */
+.ptg-triage-multi{border-color:#cbdfe8;background:linear-gradient(145deg,#fff 40%,#f8fbfd)}
+.ptg-triage-multi .ptg-multi-reagent-head{margin-top:9px}
+.ptg-triage-multi .ptg-multi-reagent-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:13px}
+.ptg-triage-multi .ptg-mini-reagent{
+ display:flex;flex-direction:column;align-items:center;justify-content:start;gap:9px;
+ min-width:0;padding:13px 10px 12px;border-width:1px;border-top-width:4px;
+ text-align:center;min-height:232px
+}
+.ptg-triage-multi .ptg-mini-reagent--triage-troponin{border-color:#c4d5ee;border-top-color:#6a87c3;background:linear-gradient(180deg,#f2f6fe,#fcfdff)}
+.ptg-triage-multi .ptg-mini-reagent--triage-ddimer{border-color:#e8d99d;border-top-color:#e3b92b;background:linear-gradient(180deg,#fffbee,#fffefa)}
+.ptg-triage-multi .ptg-mini-reagent-art{flex:none;display:flex;align-items:center;justify-content:center;width:100%;min-height:145px}
+.ptg-triage-multi .ptg-mini-reagent-art svg{display:block;width:auto;max-width:90px;height:155px;max-height:155px;object-fit:contain}
+.ptg-triage-multi .ptg-mini-reagent-info{width:100%;text-align:center;align-self:center}
+.ptg-triage-multi .ptg-mini-reagent-info strong{font-size:15px;line-height:1.25;letter-spacing:-.018em}
+.ptg-triage-multi .ptg-mini-reagent-info p{font-size:10.5px;line-height:1.4;margin:6px 0 0}
+.ptg-triage-multi .ptg-mini-reagent-code{font-size:9px;font-weight:900;letter-spacing:.04em}
+.ptg-triage-multi .ptg-mini-reagent--triage-troponin .ptg-mini-reagent-code{color:#4462a5;background:#e5edfd;border-color:#c3d3f3}
+.ptg-triage-multi .ptg-mini-reagent--triage-ddimer .ptg-mini-reagent-code{color:#8e6b08;background:#fff2c6;border-color:#ead38c}
+.ptg-triage-multi .ptg-multi-reagent-note{margin-top:11px}
+@media(max-width:650px){
+ .ptg-triage-multi .ptg-multi-reagent-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .ptg-triage-multi .ptg-mini-reagent{padding:9px 6px;min-height:205px}
+ .ptg-triage-multi .ptg-mini-reagent-art{min-height:120px}
+ .ptg-triage-multi .ptg-mini-reagent-art svg{height:124px;max-height:124px;max-width:70px}
+ .ptg-triage-multi .ptg-mini-reagent-info strong{font-size:13px}
+ .ptg-triage-multi .ptg-mini-reagent-info p{font-size:10px}
+}
+@media print{
+ .ptg-triage-multi .ptg-multi-reagent-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .ptg-triage-multi .ptg-mini-reagent{min-height:0;padding:7px;break-inside:avoid}
+ .ptg-triage-multi .ptg-mini-reagent-art{min-height:100px}
+ .ptg-triage-multi .ptg-mini-reagent-art svg{height:105px;max-height:105px}
+ .ptg-triage-multi .ptg-mini-reagent-info strong{font-size:12px}
+}
 .ptg-reference-disclaimer{color:#849ba7;font-size:10.5px;line-height:1.5;margin:0;padding:0 17px 13px}
 .ptg-stage-final .ptg-stage-head{border-left-color:#248c80;background:linear-gradient(95deg,#eef9f6,#fff 86%)}
 .ptg-fileline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
