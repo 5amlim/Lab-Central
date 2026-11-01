@@ -1117,15 +1117,15 @@
 .lc-compliance-scroll-frame>.lc-scroll-cue-right:hover,
 .lc-compliance-scroll-frame>.lc-scroll-cue-left:hover{background:#e1f2ee;border-color:#83bdb9}
 .lc-compliance-scroll-frame.lc-has-horizontal-overflow{padding-bottom:30px}
-.lc-compliance-scroll-frame.lc-has-more-right:not(.lc-has-more-left) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+.lc-compliance-scroll-frame.lc-has-more-right:not(.lc-has-more-left) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch,.sendout-reference-tabs){
  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 calc(100% - 44px),transparent 100%);
  mask-image:linear-gradient(to right,#000 0%,#000 calc(100% - 44px),transparent 100%);
 }
-.lc-compliance-scroll-frame.lc-has-more-left:not(.lc-has-more-right) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+.lc-compliance-scroll-frame.lc-has-more-left:not(.lc-has-more-right) > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch,.sendout-reference-tabs){
  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 100%);
  mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 100%);
 }
-.lc-compliance-scroll-frame.lc-has-more-left.lc-has-more-right > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+.lc-compliance-scroll-frame.lc-has-more-left.lc-has-more-right > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch,.sendout-reference-tabs){
  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 calc(100% - 44px),transparent 100%);
  mask-image:linear-gradient(to right,transparent 0%,#000 44px,#000 calc(100% - 44px),transparent 100%);
 }
@@ -1133,7 +1133,16 @@
 @media print{
  .lc-scroll-cue-left{display:none!important}
  .lc-scroll-cue-frame.lc-has-horizontal-overflow{padding-bottom:0!important}
- .lc-compliance-scroll-frame > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch){
+ .lc-compliance-scroll-frame > :is(.api-guide-tabs,.dqc-view-switch,.tc-view-switch,.sendout-reference-tabs){
   -webkit-mask-image:none!important;mask-image:none!important;
  }
+}
+
+/* Final scroll-control geometry: single clean pill instead of a nested label,
+   including stage navigation and non-compliance horizontal strips. */
+.lc-scroll-cue-frame > .lc-scroll-cue-right{
+ width:auto;min-width:0;max-width:calc(50% - 6px);
+}
+.lc-scroll-cue-frame > .lc-scroll-cue-right > span{
+ background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;
 }
