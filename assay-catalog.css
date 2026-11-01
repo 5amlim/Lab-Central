@@ -248,3 +248,15 @@
 .assay-catalog .ac-grid--pathfast .ac-group ul {
   grid-template-columns:minmax(0,1fr);
 }
+
+/* Abbott HIV guide: one full-width card, single-column analyte readouts.
+   Use the available space without splitting Ag/Ab sections into side columns. */
+.assay-catalog .ac-grid--hiv{grid-template-columns:minmax(0,1fr)}
+.assay-catalog .ac-grid--hiv .ac-card{grid-column:1/-1;width:100%;max-width:none}
+.assay-catalog .ac-grid--hiv .ac-group ul{grid-template-columns:minmax(0,1fr);gap:9px}
+.assay-catalog .ac-grid--hiv .ac-group li{width:100%;max-width:none}
+.assay-catalog .ac-grid--hiv .ac-card-head{min-height:74px}
+@media print{
+ .assay-catalog .ac-grid--hiv{grid-template-columns:minmax(0,1fr)!important}
+ .assay-catalog .ac-grid--hiv .ac-group ul{grid-template-columns:minmax(0,1fr)!important}
+}
