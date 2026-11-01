@@ -99,6 +99,7 @@ const materials={
 };
 function selectedMaterial(id,st){
  const options=materials[id]||[];
+ if(st.material==="OTHER")return {id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."};
  return options.find(o=>o.id===st.material)||options[0]||null;
 }
 function materialReference(id,st){
