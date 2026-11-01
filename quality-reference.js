@@ -5,13 +5,12 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 /* Current API reference: waived respiratory, former drug screen and unassigned
    coagulation PT categories are intentionally excluded from this menu. */
 const map=[
- {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
+ {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
   {code:"CH",title:"Chemistry Core PT sample",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
   {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
    {instrument:"Triage MeterPro",tests:["Troponin I","D-dimer"]},
    {instrument:"PATHFAST",tests:["hs-Troponin I","D-dimer","NT-proBNP"]}
   ]},
-  {code:"PSC",title:"PSC sample (verify event)",instrument:"Triage MeterPro",route:"triage",description:"PSC is a displayed PT sample reference. Its precise program name is not independently verified. Confirm the actual shipment, analyzer, assigned analytes and units rather than assuming CM's assay list.",tests:["Verify event analytes","Verify enrolled method"]},
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
   {code:"HSY",title:"Hematology - 3S PT sample",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
