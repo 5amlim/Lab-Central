@@ -57,3 +57,46 @@
 .pxr-egfr-alert button:hover{background:#e5f5f6}
 @media(max-width:720px){.pxr-egfr-alert{flex-direction:column;align-items:stretch}.pxr-egfr-alert button{align-self:flex-start}}
 @media print{.pxr-egfr-alert button{display:none}}
+
+
+/* Portal-style chevron selectors, consistent with clinic/location pickers. */
+.egfr-picker{position:relative;width:100%;min-width:0;z-index:1}
+.egfr-picker.is-open{z-index:60}
+.egfr-picker input[type="hidden"]{display:none}
+.egfr-picker-trigger{
+ box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:14px;
+ width:100%;height:43px;padding:9px 14px;background:#f8fbfc;
+ border:1px solid #cedfe7;border-radius:9px;color:#2f566b;
+ font:inherit;font-size:13px;font-weight:750;text-align:left;cursor:pointer;
+}
+.egfr-picker-trigger:hover{border-color:#8abfbe;background:#f3faf8}
+.egfr-picker-trigger:focus-visible,.egfr-picker-option:focus-visible{
+ outline:3px solid #87c7bd;outline-offset:2px;
+}
+.egfr-picker.is-open .egfr-picker-trigger{
+ border-color:#288d85;background:#f7fcfa;border-radius:9px 9px 0 0;
+}
+.egfr-picker-value{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.egfr-picker-value.is-placeholder{color:#8194a1;font-weight:600}
+.egfr-picker-chevron{
+ flex:none;width:9px;height:9px;border-right:2px solid #427389;
+ border-bottom:2px solid #427389;transform:rotate(45deg);
+ margin-top:-5px;margin-right:3px;transition:transform .18s ease;
+}
+.egfr-picker.is-open .egfr-picker-chevron{transform:rotate(225deg);margin-top:5px}
+.egfr-picker-list{
+ box-sizing:border-box;position:absolute;left:0;right:0;top:calc(100% - 1px);
+ max-height:240px;overflow-y:auto;background:#fff;border:1px solid #b9dadb;
+ border-radius:0 0 10px 10px;padding:5px;
+ box-shadow:0 15px 28px rgba(30,69,88,.14);z-index:45;
+}
+.egfr-picker-list[hidden]{display:none!important}
+.egfr-picker-option{
+ box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;
+ gap:10px;width:100%;min-height:39px;padding:9px 11px;background:transparent;border:0;
+ border-radius:7px;color:#3d6277;font:inherit;font-size:12px;font-weight:700;
+ text-align:left;cursor:pointer;
+}
+.egfr-picker-option:hover,.egfr-picker-option:focus-visible{background:#eef8f6;color:#146d69}
+.egfr-picker-option.is-selected{background:#e6f4ef;color:#17776f;font-weight:850}
+.egfr-picker-check{color:#16827a;font-size:15px;font-weight:900}
