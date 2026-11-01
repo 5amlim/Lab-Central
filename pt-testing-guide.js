@@ -73,7 +73,7 @@ function workflow(id,sequence){
  const {mode,step}=viewFor(id,sequence.length);
  ptView.set(id,{mode,step});
  ptSequences.set(id,sequence);
- const stage=(entry,i)=>'<article class="ptg-step'+(i===sequence.length-1?' ptg-filing-step':'')+'" aria-label="PT step '+(i+1)+' of '+sequence.length+'"><b>'+String(i+1).padStart(2,"0")+'</b><div><h3>'+e(entry[0])+'</h3><p>'+e(entry[1])+'</p></div></article>';
+ const stage=(entry,i)=>'<article class="ptg-step'+(i===sequence.length-1?' ptg-filing-step':'')+'" aria-label="PT step '+(i+1)+' of '+sequence.length+'"><b>'+String(i+1).padStart(2,"0")+'</b><div><h3>'+e(entry[0])+'</h3><p>'+e(entry[1])+'</p></div></article>'+(id==="sysmex"&&i===1?figures():"");
  const choice=sequence.map((entry,i)=>'<button type="button" class="ptg-step-tab'+(i===step?' is-active':'')+'" data-ptg-step="'+i+'" aria-current="'+(i===step?'step':'false')+'" title="'+e(entry[0])+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+e(entry[0])+'</button>').join("");
  const controls='<div class="ptg-controls" role="group" aria-label="PT procedure display mode"><button type="button" data-ptg-mode="guided" aria-pressed="'+(mode==="guided")+'" class="'+(mode==="guided"?'is-active':'')+'">Guided view</button><button type="button" data-ptg-mode="all" aria-pressed="'+(mode==="all")+'" class="'+(mode==="all"?'is-active':'')+'">All steps</button></div>';
  const nav=mode==="guided"?'<div class="ptg-transport"><button type="button" data-ptg-step="'+(step-1)+'"'+(step===0?' disabled':'')+'>← Previous</button><button type="button" class="ptg-next" data-ptg-step="'+(step+1)+'"'+(step===sequence.length-1?' disabled':'')+'>'+(step===sequence.length-1?'All steps complete':'Next step →')+'</button></div>':'';
@@ -129,7 +129,7 @@ function render(sec,groups){
  '<div class="ptg-rule"><strong>Same method and frequency as patient testing</strong><p>Use routine patient personnel, workload, instrument and testing frequency. No grade-driven repeats, no PT referral to another lab, and no interlaboratory discussion of results before the deadline. Material reconstitution and storage follow the event instructions.</p></div>'+
  '<div class="ptg-mode"><div><span>'+e(c?"PT-SPECIFIC INSTRUMENT CHOICE":"ENROLLMENT REQUIRED")+'</span><strong>'+e(c?c.mode:"Only test when assigned")+'</strong><p>'+e(c?c.note:"This instrument is not listed as currently assigned in the Lab Central API program reference. Verify enrollment and an approved procedure before testing.")+'</p></div></div>'+
  '<div class="ptg-section-title"><span>GUIDED PT PROCEDURE</span><h2>Run, document and file PT</h2><p>Use the patient testing link for complete instrument instructions. Follow these PT-specific steps in order.</p></div>'+
- '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,fullSequence)+'</div>'+(sec.id==="sysmex"?figures():"")+
+ '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,fullSequence)+'</div>'+
  '<div class="ptg-actions"><div><strong>Related instructions</strong><p>Complete the routine run, then submit and file the PT event.</p></div><div class="ptg-links">'+
  (patient?action(null,patient,"Patient testing procedure",true):"")+
  action("api","pt-handling","API sample handling")+action("api","pt-categories","API PT categories")+action("api","submit-results","Submit PT results")+'</div></div>'+
