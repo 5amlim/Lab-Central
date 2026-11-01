@@ -98,3 +98,72 @@
 @media(max-width:1100px){.api2-step-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.api2-note-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.api2-step-grid,.api2-twin,.api2-exception-grid,.api2-note-grid{grid-template-columns:1fr}.api2-intro{padding:18px!important}.api2-overview-callout{display:block;padding:18px}.api2-overview-callout button{margin-top:14px;width:100%;white-space:normal}.api2-overview-quick{grid-template-columns:1fr}.api2-rail{grid-template-columns:1fr;gap:4px}.api2-rail>div{border:1px solid #dae8ec;border-radius:7px!important;padding:9px}.api2-section-head{align-items:flex-start}.api2-page .api2-panel{padding:16px}}
 @media print{.api2-step,.api2-exception,.api2-panel{break-inside:avoid;box-shadow:none}.api2-intro-actions,.api2-overview-callout button{display:none}.api2-rail{display:none}.api2-step-grid,.api2-exception-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* API site selector shares the actual Daily/Monthly checklist control classes. */
+.api2-site-selector{position:relative;isolation:isolate;margin:17px 0 23px;z-index:3}
+.api2-site-selector .dqc-market-picker{margin:0 0 13px}
+.api2-site-selector .dqc-location-bar{margin:0 0 17px}
+.api2-site-selector .dqc-market-heading{margin-bottom:0}
+.api2-site-selector .dqc-market-heading h2{font-size:22px}
+.api2-site-selector .dqc-market-heading p{font-size:11.8px}
+.api2-site-selector .dqc-location-picker{z-index:15}
+@media(max-width:740px){
+ .api2-site-selector .dqc-market-picker{display:block;padding:13px}
+ .api2-site-selector .dqc-picker-label{display:block;margin-bottom:9px}
+ .api2-site-selector .dqc-market-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .api2-site-selector .dqc-market-choice{width:100%;min-width:0;padding:10px 6px}
+ .api2-site-selector .dqc-location-bar{align-items:stretch}
+ .api2-site-selector .dqc-location-picker{width:100%;min-width:0;flex:1}
+ .api2-site-selector .dqc-location-hint{margin-left:0}
+}
+@media(max-width:440px){
+ .api2-site-selector .dqc-location-bar{display:grid;grid-template-columns:minmax(0,1fr)}
+ .api2-site-selector .dqc-location-picker{width:100%}
+}
+@media print{.api2-site-selector .dqc-market-picker,.api2-site-selector .dqc-location-bar{display:none!important}}
+
+/* Submission cards grouped into four scannable phases instead of one nine-card wall. */
+.api2-submission .api2-rail{grid-template-columns:repeat(4,minmax(0,1fr));margin:17px 0 24px}
+.api2-submission .api2-flow-title{margin:0 0 15px}
+.api2-phase-list{display:grid;gap:18px}
+.api2-phase{--phase-color:#3188a6;--phase-soft:#eaf6fb;border:1px solid #dbe7ec;border-radius:15px;background:#fff;overflow:hidden}
+.api2-phase-blue{--phase-color:#3688ad;--phase-soft:#edf6fa}
+.api2-phase-teal{--phase-color:#18887e;--phase-soft:#e9f7f3}
+.api2-phase-amber{--phase-color:#ac7b3f;--phase-soft:#fff6e8}
+.api2-phase-heading{display:flex;align-items:center;gap:14px;padding:17px 19px;border-bottom:1px solid #e1eaec;background:linear-gradient(105deg,var(--phase-soft),#fff 76%)}
+.api2-phase-number{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:11px;background:var(--phase-color);color:#fff;font-size:14px;font-weight:900}
+.api2-phase-heading>div{flex:1;min-width:0}
+.api2-phase-kicker{font-size:9px;font-weight:900;letter-spacing:.13em;color:var(--phase-color)}
+.api2-phase-heading h4{font-size:16px;line-height:1.35;color:#2e5367;margin:3px 0 3px;font-weight:860}
+.api2-phase-heading p{font-size:11.4px;line-height:1.55;color:#688697;margin:0}
+.api2-phase-count{flex:none;border:1px solid #d9e7e9;border-radius:999px;color:#688494;background:#fff;font-size:10px;font-weight:820;padding:6px 10px;white-space:nowrap}
+.api2-phase .api2-step-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:15px}
+.api2-phase .api2-step{padding:17px;box-shadow:none;min-height:0;border-top:1px solid #dce8ec;border-left:3px solid var(--accent)}
+.api2-phase .api2-step h5{font-size:13.5px;font-weight:850;line-height:1.4;color:#2c5266;margin:0 0 8px}
+.api2-phase .api2-step>p{font-size:11.7px;line-height:1.67;margin-bottom:14px}
+.api2-phase .api2-step-top{margin-bottom:10px}
+.api2-phase .api2-screen{margin-bottom:0;padding:10px 12px}
+.api2-phase .api2-step-note{display:grid;gap:4px;padding-top:10px;margin-top:11px}
+.api2-phase .api2-step-note strong{font-size:9px;letter-spacing:.09em;color:var(--accent);font-weight:890}
+.api2-phase .api2-step-note span{color:#708b98;font-size:10.9px;line-height:1.6}
+.api2-phase:last-child .api2-step-grid{grid-template-columns:1fr}
+.api2-phase:last-child .api2-step{max-width:none}
+@media(max-width:800px){
+ .api2-phase .api2-step-grid{grid-template-columns:1fr}
+ .api2-submission .api2-rail{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .api2-submission .api2-rail>div{border:1px solid #dae8ec;border-radius:8px;padding:11px}
+}
+@media(max-width:530px){
+ .api2-phase-heading{padding:14px;gap:10px;align-items:flex-start;flex-wrap:wrap}
+ .api2-phase-heading p{font-size:10.8px}
+ .api2-phase .api2-step-grid{padding:10px}
+ .api2-phase .api2-step{padding:13px}
+ .api2-phase-count{margin-left:auto}
+ .api2-submission .api2-rail{grid-template-columns:1fr}
+}
+@media print{
+ .api2-phase{break-inside:auto}
+ .api2-phase-heading{print-color-adjust:exact}
+ .api2-phase .api2-step-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .api2-phase .api2-step{break-inside:avoid}
+}
