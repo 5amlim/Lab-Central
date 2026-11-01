@@ -144,8 +144,8 @@
 .quality-pt-card-label{font-size:9px;letter-spacing:.08em;font-weight:850;color:#6d8b9c}
 .quality-pt-assay-foot .quality-api-badge-group{margin-top:8px}
 
-/* CM is a single PT category with separate enrolled analytes per analyzer.
-   Use one shared layout in API Overview and the PT category reference. */
+/* Every API panel uses the same compact tinted card as Triage MeterPro.
+   Tints identify the instrument/disc; neutral green test badges are unchanged. */
 .quality-api-tests-wrap{margin-top:10px}
 .quality-api-tests-wrap>.quality-api-badge-group{margin-top:0}
 .quality-pt-analyzer-tests{
@@ -157,17 +157,24 @@
  padding:11px 12px;border:1px solid #d9e7ec;border-radius:10px;
  background:#f7fbfc
 }
-.quality-pt-analyzer-group:first-child{
- border-color:#d2e4f0;background:#f5faff
-}
-.quality-pt-analyzer-group:last-child{
- border-color:#cde7df;background:#f5fcf9
-}
+.quality-pt-analyzer-group:only-child{grid-column:1/-1}
 .quality-pt-analyzer-title{
  display:block;font-size:11px;font-weight:900;line-height:1.3;
  color:#315b74;letter-spacing:.01em
 }
-.quality-pt-analyzer-group:last-child .quality-pt-analyzer-title{color:#197f73}
+.quality-pt-analyzer-group[data-pt-panel="triage"]{border-color:#d2e4f0;background:#f5faff}
+.quality-pt-analyzer-group[data-pt-panel="pathfast"]{border-color:#cde7df;background:#f5fcf9}
+.quality-pt-analyzer-group[data-pt-panel="pathfast"] .quality-pt-analyzer-title{color:#197f73}
+.quality-pt-analyzer-group[data-pt-panel="metlyte"]{border-color:#ebcd7d;background:#fffbec}
+.quality-pt-analyzer-group[data-pt-panel="metlyte"] .quality-pt-analyzer-title{color:#846008}
+.quality-pt-analyzer-group[data-pt-panel="metlac"]{border-color:#b4c6ee;background:#f2f7ff}
+.quality-pt-analyzer-group[data-pt-panel="metlac"] .quality-pt-analyzer-title{color:#304f9e}
+.quality-pt-analyzer-group[data-pt-panel="sysmex"]{border-color:#cddfec;background:#f2f8fc}
+.quality-pt-analyzer-group[data-pt-panel="sysmex"] .quality-pt-analyzer-title{color:#34647f}
+.quality-pt-analyzer-group[data-pt-panel="torch"]{border-color:#ded6ef;background:#f8f5fc}
+.quality-pt-analyzer-group[data-pt-panel="torch"] .quality-pt-analyzer-title{color:#6e5693}
+.quality-pt-analyzer-group[data-pt-panel="hiv"]{border-color:#ebd4e2;background:#fdf6fa}
+.quality-pt-analyzer-group[data-pt-panel="hiv"] .quality-pt-analyzer-title{color:#8d5475}
 .quality-pt-analyzer-group .quality-api-badge-group{
  display:flex;flex-wrap:wrap;gap:6px;margin:0!important
 }
