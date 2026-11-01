@@ -13,7 +13,7 @@ const map=[
   ]},
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
-  {code:"HSY",title:"Hematology - 3S",catalogNumber:"HSY #227",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
+  {code:"HSY",title:"Hematology - 3S",catalogNumber:"HSY #227",samplesPerShipment:5,instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
   {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
@@ -116,7 +116,7 @@ function groups(sec){
 /* Overview and selected category use identical PT sample content. */
 function apiAssessmentCard(it){
  const catalog=it.catalogNumber?
-  '<small class="quality-api-catalog quality-api-assessment-catalog" title="'+esc(it.catalogNote||"API proficiency testing program catalog number")+'">API catalog · '+esc(it.catalogNumber)+'</small>':"";
+  '<small class="quality-api-catalog quality-api-assessment-catalog" title="'+esc(it.catalogNote||"API proficiency testing program catalog number")+'">API catalog · '+esc(it.catalogNumber)+(it.samplesPerShipment?' · '+esc(it.samplesPerShipment)+' samples per shipment':'')+'</small>':"";
  return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
  '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+catalog+
  '</div>'+
