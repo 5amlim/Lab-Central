@@ -130,7 +130,7 @@ function reagentFor(id,st){
  if((materials[id]||[]).length>1&&!mat)return null;
  if(id==="pathfast")return {
    kind:"multi",type:"PATHFAST test cartridges",
-   name:"Three cardiac marker cartridges",badge:"ALL 3 CARTRIDGES",style:"pathfast",
+   name:"Three types of cardiac marker cartridges",badge:"ALL 3 TYPES OF CARTRIDGES",style:"pathfast",
    note:"CM: run hs-Troponin I, D-dimer and NT-proBNP using the corresponding PATHFAST assay cartridges. Match each result and reporting unit to the actual API event worksheet.",
    items:[
     {name:"hs-Troponin I",badge:"hs-TnI",tone:"troponin",art:"pathfast",note:"High-sensitivity Troponin I"},
