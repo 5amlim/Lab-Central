@@ -33,14 +33,34 @@ function apiProgramBadges(category){
  category.items.map(item=>'<span class="quality-map-code-badge">'+esc(item.code)+'</span>').join('')+
  '</div>';
 }
-/* The CM sample serves different enrolled assay sets on Triage and PATHFAST.
-   Keep each instrument's tests together in the same card, not a second CHECK card. */
+/* One shared panel-card pattern for every API assessment.
+   Piccolo CH has two distinct reagent discs, so each disc gets its own
+   container and its established yellow or blue manufacturer-reference tint.
+   Test/analyte badges remain neutral inside the colored containers. */
+function apiPanelTone(item, group){
+ const name=String(group.instrument||"").toLowerCase();
+ const first=String((group.tests||[])[0]||"").toLowerCase();
+ if(name.includes("piccolo")&&first.includes("metlyte"))return "metlyte";
+ if(name.includes("piccolo")&&first.includes("metlac"))return "metlac";
+ if(name.includes("triage"))return "triage";
+ if(name.includes("pathfast"))return "pathfast";
+ if(name.includes("sysmex"))return "sysmex";
+ if(name.includes("torch"))return "torch";
+ if(item.code==="HV")return "hiv";
+ return "neutral";
+}
 function apiTestGroups(item){
- if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(apiTestBadge).join('')+'</div>';
- return '<div class="quality-pt-analyzer-tests">'+item.testGroups.map(group=>
-  '<div class="quality-pt-analyzer-group">'+
+ let groups=item.testGroups;
+ if(!groups){
+  // The CH sample is tested on two differently color-coded Piccolo discs.
+  groups=item.code==="CH"
+   ?(item.tests||[]).map(test=>({instrument:item.instrument,tests:[test]}))
+   :[{instrument:item.instrument,tests:item.tests||[]}];
+ }
+ return '<div class="quality-pt-analyzer-tests">'+groups.map(group=>
+  '<div class="quality-pt-analyzer-group" data-pt-panel="'+apiPanelTone(item,group)+'">'+
    '<strong class="quality-pt-analyzer-title">'+esc(group.instrument)+'</strong>'+
-   '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned analytes">'+
+   '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned tests">'+
     group.tests.map(apiTestBadge).join('')+'</div>'+
   '</div>'
  ).join('')+'</div>';
