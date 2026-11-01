@@ -10,10 +10,10 @@ const configs={
  ["Confirm HSY hematology sample","Match the HSY specimen ID to the assigned API Hematology - 3S event. Prepare the simulated whole-blood sample exactly as directed by the current kit instructions."],
  ["Fit green adapter","Seat the small PT vial in the approved green pocH adapter. Check the fit before closing the holder."],
  ["Run and print","Run the usual CBC patient test, not QC. Enter the actual HSY sample ID, check CBC/differential and flags, then print all reports."]]},
- triage:{label:"CM / PSC",mode:"Miscellaneous Test",steps:[
- ["Confirm cardiac PT sample","Match the CM or PSC vial ID to the API event and prepare the material as instructed. CM is tested with separate Troponin I and D-dimer cartridges; verify PSC assignments on its event sheet."],
- ["Select Miscellaneous Test","On the Triage MeterPro select MISC. TEST and enter the exact PT specimen ID. Use the instrument's normal sample-test workflow, not the QC mode."],
- ["Run assigned assays and print","For CM, run both the Troponin I and D-dimer test cartridges as separate tests. Confirm the reported units and any flags, then print both results. For PSC, test only the assays assigned on the current event sheet."]]},
+ triage:{label:"CM",mode:"Miscellaneous Test",steps:[
+ ["Confirm CM PT sample","Match the CM cardiac markers vial and exact sample ID to the current API event sheet. Prepare the specimen as instructed."],
+ ["Select Miscellaneous Test","On the Triage MeterPro select MISC. TEST and enter the exact CM PT specimen ID. Use the normal sample-testing workflow, not QC mode."],
+ ["Run both assays and print","Run Troponin I and D-dimer using their separate cartridges. Confirm each result's units, flags, and sample ID, then print both reports for the CM event."]]},
  piccolo:{label:"CH / CRP",mode:"Analyze → Control",steps:[
  ["Identify the two PT sample types","CH is the chemistry PT material; CRP is the separate C-reactive protein PT material. Confirm each vial and the assigned disc before testing."],
  ["Prepare and choose Control","Load the appropriate disc as usual, avoiding bubbles. In Analyze, select Control instead of Patient and enter the assigned PT sample ID."],
@@ -74,10 +74,7 @@ const materials={
   {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
  sysmex:[{id:"HSY",name:"HSY · Hematology - 3S PT sample",code:"HSY",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
- triage:[
-  {id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Cardiac Markers is an API program (catalog 140). Confirm which cardiac assays, sample numbers and units are actually assigned to this CM event."},
-  {id:"PSC",name:"PSC · Assigned PT sample",code:"PSC",color:"#8b9b78",note:"PSC is an event/sample reference. Its exact program description could not be independently confirmed. Check the current API shipping sheet for the enrolled assays and units."}
- ],
+ triage:[{id:"CM",name:"CM · Cardiac markers PT sample",code:"CM",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
  torch:[{id:"GIP",name:"GIP · GI pathogen PT sample",code:"GIP",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
  poc:[{id:"HV",name:"HV · HIV PT sample",code:"HV",color:"#a27a97",note:"Use the assigned HIV PT specimen with the clinic's approved rapid HIV test. Observe the test-specific read window and reporting instructions."}],
  clinitek:[
@@ -99,7 +96,7 @@ const materials={
  "drug-screen":[{id:"DRUG",name:"Urine drug screen PT sample",code:"PT",color:"#8b9b9f",note:"Use only an enrolled event and kit-specific method. PT is a generic guide badge, not a verified API specimen prefix."}]
 };
 function selectedMaterial(id,st){
- if(id==="pathfast")return materials.pathfast[0]; // Ignore any old stored PSC or other selections.
+ if(id==="pathfast"||id==="triage")return materials[id][0]; // Ignore prior saved PSC or other selections for CM-only instruments.
  const options=materials[id]||[];
  if(st.material==="OTHER")return {id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."};
  return options.find(o=>o.id===st.material)||(options.length===1?options[0]:null);
@@ -149,20 +146,15 @@ function reagentFor(id,st){
     {name:"NT-proBNP",badge:"NT-proBNP",tone:"ntprobnp",art:"pathfast",note:"Not the same as BNP"}
    ]
   };
- if(id==="triage"){
-  if(mat==="CM"||mat==="PSC")return {
+ if(id==="triage")return {
    kind:"multi",type:"Triage MeterPro test cartridges",style:"triage",
-   name:"Troponin I + D-dimer",badge:mat==="CM"?"TWO CARTRIDGES":"VERIFY EVENT ASSAYS",
-   note:mat==="CM"?
-    "For CM, run and print results from both cartridges. Match the PT specimen ID and result units to the API event worksheet.":
-    "Troponin I and D-dimer are illustrated as the two Triage assays used by the clinic. For PSC, confirm the current shipment requires each assay before testing or submitting results.",
+   name:"Troponin I + D-dimer",badge:"TWO CARTRIDGES",
+   note:"For CM, run and print results from both cartridges. Match the PT specimen ID and result units to the API event worksheet.",
    items:[
     {name:"Troponin I",badge:"TROPONIN I",tone:"triage-troponin",art:"triage",note:"Blue identification stripe · separate assay device"},
     {name:"D-dimer",badge:"D-DIMER",tone:"triage-ddimer",art:"triage",note:"Yellow identification stripe · separate assay device"}
    ]
   };
-  return null;
- }
  if(id==="piccolo"){
   if(mat==="CRP")return {
    name:"MetLyte Plus CRP",type:"Piccolo reagent disc",tone:"metlyte",
@@ -398,21 +390,13 @@ function workflow(id,sequence){
   (st.step<sequence.length-1?'<button type="button" class="ptg-next" data-ptg-step="'+(st.step+1)+'" aria-label="Next PT step">Next step →</button>':
    '<button type="button" class="ptg-next" data-ptg-mode="all">View all steps ↗</button>')+'</div>';
  const stepTitle=(item,i)=>{
-  if(id==="triage"&&i===0){
-   const v=selectedMaterial(id,st);
-   return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
-  }
   if(id!=="piccolo"||i!==0)return item[0];
   const v=selectedMaterial(id,st);
   return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
-  const desc=id==="triage"&&i===0?
-   (!choice?"Choose the assigned CM or PSC sample above to display the vial and two Triage cartridge references.":
-    choice.id==="CM"?"Match the CM vial to the API event. Prepare the specimen for separate Troponin I and D-dimer cartridges.":
-    "Match the PSC vial to the API event. Verify whether Troponin I and D-dimer are both assigned for this shipment."):
-   id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
+  const desc=id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
    "Match the CRP proficiency vial to the API event and prepare the CRP-capable disc specified on its worksheet.":
    "Match the CH chemistry vial to the API event. Prepare and run both MetLyte Plus CRP and MetLac 12 reagent discs as assigned."):item[1];
   return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'">'+
