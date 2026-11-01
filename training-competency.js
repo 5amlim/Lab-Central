@@ -95,19 +95,19 @@ const trainingDocuments=[
  {name:'SPOTFIRE Respiratory / Sore Throat',file:'BioFire_SPOTFIRE_RST_Training.pdf',group:'Analyzer training',tone:'teal',note:'Manufacturer checklist and knowledge review',available:true},
  {name:'BioFire FilmArray TORCH',file:'BioFire_TORCH_Training.pdf',group:'Analyzer training',tone:'teal',note:'Instrument operation, software and maintenance checklist',available:true},
  {name:'Piccolo Xpress',file:'Piccolo_Training.pdf',group:'Analyzer training',tone:'teal',note:'Analyzer setup, maintenance, QC and patient testing',available:true},
- {name:'Sysmex pocH-100i',file:'Sysmex_pocH_100i_Training.pdf',group:'Analyzer training',tone:'teal',note:'CBC analyzer training and quality control checklist',available:false},
+ {name:'Sysmex pocH-100i',file:'Sysmex_pocH_100i_Training.pdf',group:'Analyzer training',tone:'teal',note:'CBC analyzer training and quality control checklist',available:true},
  {name:'Clinitek Status+ Urinalysis',file:'Clinitek_Status_UA_Training.pdf',group:'Analyzer training',tone:'teal',note:'Urinalysis strip testing and instrument QC',available:true},
  {name:'Clinitek Status+ Urine hCG',file:'Clinitek_Status_Urine_hCG_Training.pdf',group:'Analyzer training',tone:'teal',note:'Urine hCG cassette testing and QC',available:true},
- {name:'Sofia 2',file:'Sofia 2 Training Checklist.docx',group:'Analyzer training',tone:'teal',note:'Analyte selection, 30-day calibration check and controls',available:false},
+ {name:'Sofia 2',file:'Sofia 2 Training Checklist.docx',group:'Analyzer training',tone:'teal',note:'Analyte selection, 30-day calibration check and controls',available:true},
  {name:'Abbott HIV Combo',file:'Abbott_HIV_Combo_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Test performance, QC levels and interpretation',available:true},
  {name:'Coag-Sense',file:'Coag_Sense_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Coagulation test operation and control procedures',available:true},
  {name:'McKesson Mononucleosis',file:'McKesson_Consult_Mononucleosis_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Mono cassette handling, controls and results',available:true},
  {name:'McKesson Drugs of Abuse Cup',file:'McKesson_Drugs_of_Abuse_Test_Cup_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Urine test cup handling and internal QC',available:true},
- {name:'QuickVue Influenza A/B',file:'Quidel_QuickVue_Influenza_AB_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Flu A/B rapid test training checklist',available:false},
- {name:'QuickVue RSV',file:'Quidel_QuickVue_RSV_Training.pdf',group:'Rapid POC training',tone:'blue',note:'RSV rapid test training checklist',available:false},
- {name:'QuickVue SARS Antigen',file:'Quidel_QuickVue_SARS_Antigen_Training.pdf',group:'Rapid POC training',tone:'blue',note:'SARS antigen rapid test training checklist',available:false},
- {name:'QuickVue Strep A',file:'Quidel_QuickVue_Strep_A_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Strep A rapid test training checklist',available:false},
- {name:'General Laboratory Procedure Package',file:'Sollis_Health_Procedure_Package.pdf',group:'General lab training',tone:'amber',note:'Bloodborne pathogens and core procedure acknowledgments',available:false}
+ {name:'QuickVue Influenza A/B',file:'Quidel_QuickVue_Influenza_AB_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Flu A/B rapid test training checklist',available:true},
+ {name:'QuickVue RSV',file:'Quidel_QuickVue_RSV_Training.pdf',group:'Rapid POC training',tone:'blue',note:'RSV rapid test training checklist',available:true},
+ {name:'QuickVue SARS Antigen',file:'Quidel_QuickVue_SARS_Antigen_Training.pdf',group:'Rapid POC training',tone:'blue',note:'SARS antigen rapid test training checklist',available:true},
+ {name:'QuickVue Strep A',file:'Quidel_QuickVue_Strep_A_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Strep A rapid test training checklist',available:true},
+ {name:'General Laboratory Procedure Package',file:'Sollis_Health_Procedure_Package.pdf',group:'General lab training',tone:'amber',note:'Bloodborne pathogens and core procedure acknowledgments',available:true}
 ];
 let selectedTrainingMarket='socal';
 let selectedTrainingView='schedule';
@@ -124,7 +124,7 @@ function sourceLink(file){return 'assets/training-checklists/'+encodeURIComponen
 function trainingTemplateCards(items){
  return items.map(t=>{
   const link=t.available?'<a class="tc-document-link" href="'+esc(sourceLink(t.file))+'" target="_blank" rel="noopener noreferrer">Open original '+(t.file.endsWith('.docx')?'Word':'PDF')+' <span aria-hidden="true">↗</span></a>'
-   :'<span class="tc-document-unavailable">Source file awaiting publication</span>';
+   :'<span class="tc-document-unavailable">Document not available</span>';
   return '<article class="tc-document-card" data-tone="'+esc(t.tone)+'">'+
     '<div class="tc-document-heading"><span class="tc-document-icon">'+ico('file')+'</span><span class="tc-document-format">'+(t.file.endsWith('.docx')?'DOCX':'PDF')+'</span></div>'+
     '<h3>'+esc(t.name)+'</h3><p>'+esc(t.note)+'</p>'+
@@ -135,14 +135,14 @@ function trainingTemplateCards(items){
 function renderTrainingTemplates(market,clinic){
  const groups=['Analyzer training','Rapid POC training','General lab training'];
  return '<section class="tc-route-panel tc-templates-panel" role="tabpanel" id="tc-panel-templates" aria-labelledby="tc-tab-templates">'+
- '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.filter(t=>t.available).length+' of '+trainingDocuments.length+' online</span></div>'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.length+' documents</span></div>'+
  '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.'+(market.id==='socal'?' <strong>SoCal:</strong> Follow the local monthly and event-triggered Clinitek external QC schedule.':' <strong>'+esc(market.short)+':</strong> Follow the local daily Clinitek external QC schedule.')+'</div>'+
  groups.map((g,i)=>{
   const items=trainingDocuments.filter(t=>t.group===g);
   const tone=i===0?'teal':i===1?'blue':'amber';
   return '<section class="tc-template-group" aria-label="'+esc(g)+'"><header class="tc-template-group-title" data-tone="'+tone+'"><h3>'+esc(g)+'</h3><span>'+items.length+' documents</span></header><div class="tc-document-grid">'+trainingTemplateCards(items)+'</div></section>';
  }).join('')+
- '<p class="tc-template-footnote">The procedure package covers more than instrument training. Seven source files are still being transferred to the public site and remain visible as awaiting publication. Completed individual checklists and assessment forms belong in the approved staff training file. Avoid uploading completed personnel records to this public reference site.</p></section>';
+ '<p class="tc-template-footnote">The procedure package covers more than instrument training. All source documents in this collection are now available as PDF or Word files. Completed individual checklists and assessment forms belong in the approved staff training file. Avoid uploading completed personnel records to this public reference site.</p></section>';
 }
 function renderCompetencyRecords(){
  return '<section class="tc-route-panel tc-records-panel" role="tabpanel" id="tc-panel-records" aria-labelledby="tc-tab-records">'+
