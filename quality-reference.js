@@ -127,8 +127,15 @@ function ptCategoriesContent(){
     '<span class="quality-pt-program-badge" title="Program codes for reference; verify the active event">'+esc(category.badge)+'</span></header>'+
   '<div class="quality-pt-category-instruments"><span>INSTRUMENT GUIDES</span><div>'+instruments+'</div></div>'+
   '<div class="quality-pt-assay-grid">'+details+'</div>'+
-  '<div class="quality-pt-requirements"><article><span class="quality-pt-rule-num">01</span><div><h4>Before testing</h4><p>Verify API program '+esc(category.badge)+', assigned event, sample identifiers, specimen material and enrolled analytes against the current shipment sheet.</p></div></article>'+
-   '<article><span class="quality-pt-rule-num">02</span><div><h4>Review and file</h4><p>Verify original analyzer results, instrument/method, units, required entries and submission confirmation. Retain event records and any corrective action.</p></div></article></div>'+
+  '<section class="quality-pt-workflow" aria-label="PT workflow for '+esc(category.title)+'"><div class="quality-pt-workflow-head"><div><span>STANDARD PT WORKFLOW</span><h4>From sample receipt to completed submission</h4><p>These five steps apply to every API PT category. Use the current event sheet for category-specific specimen preparation, tests and deadlines.</p></div><span class="quality-pt-workflow-count">5 steps</span></div>'+
+  '<div class="quality-pt-steps">'+[
+   {title:'Confirm the event',detail:'Match API program '+category.badge+', assigned event, sample IDs, enrolled analytes, kit contents and reporting deadline to the shipment sheet.',tag:'Before testing'},
+   {title:'Prepare and test',detail:'Follow the current kit instructions and approved SOP for preparation and instrument mode. Test with the same personnel, methods and routine frequency as patient specimens.',tag:'Patient-equivalent testing'},
+   {title:'Verify the results',detail:'Retain instrument output. Reconcile each sample ID, analyte, method, qualitative result or numeric value, units and any reportable-range qualifiers before entry.',tag:'Result review'},
+   {title:'Attest and submit',detail:'Enter and save results in API Paperless PT, complete the attestation and transmit before the event deadline. Saving results alone is not submission.',tag:'Final submission'},
+   {title:'Confirm and file',detail:'Verify receipt in API Event History. File original results, any conversions, the submission confirmation, signed attestation, evaluation and corrective action.',tag:'Records'}
+  ].map((item,i)=>'<article class="quality-pt-step"><div class="quality-pt-step-head"><span class="quality-pt-step-number">'+String(i+1).padStart(2,"0")+'</span><span class="quality-pt-step-phase">'+esc(item.tag)+'</span></div><h5>'+esc(item.title)+'</h5><p>'+esc(item.detail)+'</p></article>').join('')+
+  '</div><div class="quality-pt-workflow-foot"><span><strong>Never refer PT samples to another lab</strong> or repeat testing beyond routine patient practice.</span><div><button type="button" data-gotab="submit-results">Detailed submission guide →</button><button type="button" data-gotab="units-reporting">Unit conversions →</button></div></div></section>'+
  '</section>';
 }
 function ptCategoriesReference(){
