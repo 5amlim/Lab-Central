@@ -26,28 +26,22 @@ const map=[
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
-/* Reuse established Piccolo disc and Triage cartridge colors from the PT
-   training reference; leave unrelated tests neutral rather than implying
-   that they share a manufacturer's color-coded test system. */
-function apiTestBadge(test, instrument=""){
- const label=String(test||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
- const analyzer=String(instrument||"").toLowerCase();
- let tone="";
- if(label==="metlyte plus crp"||label==="metlyte crp")tone="metlyte";
- else if(label==="metlac 12")tone="metlac";
- else if(analyzer.includes("triage")&&label==="troponin i")tone="triage-troponin";
- else if(analyzer.includes("triage")&&label==="d dimer")tone="triage-ddimer";
- return '<span class="quality-api-test-badge'+(tone?' quality-api-test-badge--'+tone:'')+'">'+esc(test)+'</span>';
+/* Panel/analyte badges stay neutral across the API reference. */
+function apiTestBadge(test){return '<span class="quality-api-test-badge">'+esc(test)+'</span>';}
+function apiProgramBadges(category){
+ return '<div class="quality-map-badges" aria-label="PT program codes">'+
+ category.items.map(item=>'<span class="quality-map-code-badge">'+esc(item.code)+'</span>').join('')+
+ '</div>';
 }
 /* The CM sample serves different enrolled assay sets on Triage and PATHFAST.
    Keep each instrument's tests together in the same card, not a second CHECK card. */
 function apiTestGroups(item){
- if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(test=>apiTestBadge(test,item.instrument)).join('')+'</div>';
+ if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(apiTestBadge).join('')+'</div>';
  return '<div class="quality-pt-analyzer-tests">'+item.testGroups.map(group=>
   '<div class="quality-pt-analyzer-group">'+
    '<strong class="quality-pt-analyzer-title">'+esc(group.instrument)+'</strong>'+
    '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned analytes">'+
-    group.tests.map(test=>apiTestBadge(test,group.instrument)).join('')+'</div>'+
+    group.tests.map(apiTestBadge).join('')+'</div>'+
   '</div>'
  ).join('')+'</div>';
 }
@@ -93,21 +87,18 @@ function groups(sec){
 }
 /* Two compact, independent columns prevent shorter PT categories from stretching
    to the height of their neighbors. Each event retains its direct analyzer links. */
+/* Overview and selected category use identical PT sample content. */
+function apiAssessmentCard(it){
+ return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
+ '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
+ '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
+ '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
+ '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+apiTestGroups(it)+'</div></li>';
+}
 function apiOverviewCard(x, index){
- // Show CH and CM as separate program badges; retain other category labels.
- const codes=x.id==="chemistry-core"?["CH","CM"]:[x.badge];
  return '<article class="quality-map-card" data-pt-order="'+index+'" data-pt-category="'+esc(x.id)+'">'+
-  '<div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
-   '<div class="quality-map-badges" aria-label="PT program codes">'+
-   codes.map(code=>'<span class="quality-map-code-badge">'+esc(code)+'</span>').join('')+'</div></div>'+
-  '<ul class="quality-api-assessments">'+x.items.map(it=>
-   '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
-    '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
-    '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
-    '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
-    '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+
-     apiTestGroups(it)+'</div></li>'
-  ).join('')+'</ul></article>';
+ '<div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+apiProgramBadges(x)+'</div>'+
+ '<ul class="quality-api-assessments">'+x.items.map(apiAssessmentCard).join('')+'</ul></article>';
 }
 function apiOverview(){
  return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
@@ -141,34 +132,26 @@ function setPtCategory(id){
 }
 function ptCategoriesContent(){
  const category=map.find(item=>item.id===selectedPtCategory)||map[0];
- const details=category.items.map(function(it){
-  return '<article class="quality-pt-assay-card">'+
-    '<div class="quality-pt-assay-top"><span class="quality-api-code">'+esc(it.code)+'</span>'+
-      '<h4>'+esc(it.title)+'</h4><div class="quality-pt-card-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
-    '<p>'+esc(it.description)+'</p>'+
-    '<div class="quality-pt-assay-foot"><span class="quality-pt-card-label">'+(it.testGroups?'TESTS BY ANALYZER':'ENROLLED TEST REFERENCE')+'</span>'+
-      apiTestGroups(it)+'</div>'+
-   '</article>';
- }).join('');
- return '<section class="quality-pt-category-detail" aria-label="'+esc(category.title)+' PT reference">'+
-  '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span><h3>'+esc(category.title)+'</h3><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
-    '<span class="quality-pt-program-badge" title="Program codes for reference; verify the active event">'+esc(category.badge)+'</span></header>'+
-
-  '<div class="quality-pt-assay-grid">'+details+'</div>'+
-  '<div class="quality-pt-category-actions"><span>Only the assays on the active event are reportable.</span><div><button type="button" data-gotab="submit-results">Submit results →</button><button type="button" data-gotab="units-reporting">Reporting units →</button></div></div>'+
- '</section>';
+ return '<section class="quality-pt-category-detail" data-pt-category="'+esc(category.id)+'" aria-label="'+esc(category.title)+' PT reference">'+
+ '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span>'+
+ '<h3>'+esc(category.title)+'</h3><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
+ apiProgramBadges(category)+'</header>'+
+ '<ul class="quality-api-assessments">'+category.items.map(apiAssessmentCard).join('')+'</ul>'+
+ '<div class="quality-pt-category-actions"><span>Only the assays on the active event are reportable.</span><div>'+
+ '<button type="button" data-gotab="submit-results">Submit results →</button>'+
+ '<button type="button" data-gotab="units-reporting">Reporting units →</button></div></div></section>';
 }
 function ptCategoriesReference(){
  const selected=map.find(item=>item.id===selectedPtCategory)||map[0];
  const options=map.map(item=>
   '<button type="button" class="quality-pt-option'+(item.id===selected.id?' is-selected':'')+'" data-api-pt-category="'+esc(item.id)+'" aria-current="'+(item.id===selected.id?'true':'false')+'">'+
-   '<span>'+esc(item.title)+'</span><small>'+esc(item.badge)+'</small>'+
+   '<span>'+esc(item.title)+'</span>'+apiProgramBadges(item)+''+
   '</button>'
  ).join('');
  return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
   '<header class="quality-ref-head quality-pt-categories-head"><span>PROGRAM REFERENCE</span><h2>PT categories</h2><p>Select the category from your shipment sheet to see sample codes, enrolled test references and instrument guides.</p></header>'+
   '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the four program groups</span></div>'+
-    '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span><small>'+esc(selected.badge)+'</small><span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
+    '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span>'+apiProgramBadges(selected)+'<span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
       '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
     '</details></div>'+
   '<div class="quality-pt-current">'+ptCategoriesContent()+'</div>'+
