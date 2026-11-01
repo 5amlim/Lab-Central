@@ -112,6 +112,11 @@ function pickerRow(label,field,code,options,value,aria){
  '</select><span class="ptg-picker-chevron" aria-hidden="true"></span></span></label>';
 }
 function materialPicker(id,st){
+ if(id==="sysmex"){
+  return '<div class="ptg-static-sample" aria-label="PT sample: HSY, CBC PT sample">'+
+   '<span class="ptg-picker-caption">PT sample</span><div class="ptg-static-sample-row">'+
+   '<span class="ptg-picker-code">HSY</span><strong>CBC PT sample</strong></div></div>';
+ }
  if(id==="pathfast"){
   const assays=[["troponin","High-sensitivity Troponin I"],["ddimer","D-dimer"],["ntprobnp","NT-proBNP"]];
   const codes=[["","Select from shipment"],["CM","Cardiac markers"],["PSC","Cardiac pilot"],["other","Other assigned event"]];
@@ -323,7 +328,7 @@ function render(sec,groups){
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
   '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.'+
   (cfg?'':' Only test if this assay and site are enrolled.')+'</p></div>'+
-  '<div class="ptg-heading-picker" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
+  '<div class="ptg-heading-picker'+(sec.id==="sysmex"?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
   '<p class="ptg-foot">Test PT as patient specimens. Do not perform extra grading-driven repeats or refer PT specimens. File under the matching event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
