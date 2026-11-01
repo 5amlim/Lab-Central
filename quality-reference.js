@@ -38,6 +38,9 @@ function groups(sec){
     ...step("Document and submit the results","Record the PT identifier, instrument, raw result, units and any required corrective notes. Review before submitting to API within the event window."),
     ...step("Retain the event records","File the completed submission, analyzer printouts, reports and corrective action in the proficiency testing binder; do not enter a real patient MRN.")
    ]},
+   {id:"submit-results",title:"Submit results",blocks:[]},
+   {id:"units-reporting",title:"Units & reporting",blocks:[]},
+   {id:"pt-exceptions",title:"Rules & exceptions",blocks:[]},
    ...map.map(x=>({id:x.id,title:x.title,blocks:[
      ...step("Check the assigned program","API code: "+x.badge+". The event paperwork determines the exact analyte set and material."),
      ...x.items.map(it=>step(it.code+" · "+it.title+" · "+it.instrument,it.description+" Required test menu: "+it.tests.join(", ")+".")).flat(),
@@ -72,6 +75,7 @@ function apiOverview(){
  return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
  '<h2>Assessment types and assigned analyzers</h2>'+
  '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
+ window.LAB_API_SUBMISSION.overviewCta()+
  '<div class="quality-map-grid">'+map.map(x=>
   '<article class="quality-map-card"><div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
   '<span>'+esc(x.badge)+'</span></div>'+
