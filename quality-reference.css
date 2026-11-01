@@ -171,3 +171,26 @@
 @media(max-width:800px){.quality-pt-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:530px){.quality-pt-steps{grid-template-columns:1fr}.quality-pt-step{padding:13px}.quality-pt-workflow-head{flex-wrap:wrap}.quality-pt-workflow-foot{align-items:flex-start}}
 @media print{.quality-pt-select-row{display:none}.quality-pt-category-detail{break-inside:auto}.quality-pt-assay-card,.quality-pt-step{break-inside:avoid}.quality-pt-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* API program metadata and navigation match the Daily / Monthly checklist tiles. */
+.meta-bar.api-meta-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:23px}
+.api-meta-bar .meta-chip{display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;min-height:76px;padding:16px 18px;border:1px solid #dce8ed;border-radius:13px;background:#fff}
+.api-meta-bar .meta-chip:last-child{grid-column:auto;flex:initial}
+.api-meta-bar .meta-chip small{font-size:10px;font-weight:850;letter-spacing:.11em;color:#7894a2;text-transform:uppercase}
+.api-meta-bar .meta-chip span{font-size:12px;font-weight:770;line-height:1.5;color:#34576b}
+.api-guide-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:24px 0 0;padding:0;border:0;overflow:visible}
+.api-guide-tab{box-sizing:border-box;display:flex;align-items:center;gap:12px;min-width:0;min-height:74px;padding:13px 16px;text-align:left;background:#fff;border:1px solid #dce8ed;border-radius:13px;color:#345a6c;font:inherit;cursor:pointer}
+.api-guide-tab:hover{border-color:#8bc7be;background:#fcfefe}
+.api-guide-tab:focus-visible{outline:3px solid #91cbc1;outline-offset:2px}
+.api-guide-tab.is-selected{border-color:#269589;box-shadow:inset 0 0 0 1px #269589;background:#e9f6f1}
+.api-guide-tab-icon{flex:none;width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:#e7f1f4;color:#498095}
+.api-guide-tab-icon svg{width:20px;height:20px;stroke:currentColor}
+.api-guide-tab.is-selected .api-guide-tab-icon{background:#cdeae0;color:#167c74}
+.api-guide-tab-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.api-guide-tab-copy strong{font-size:12.5px;font-weight:850;line-height:1.35;color:#31566b}
+.api-guide-tab.is-selected .api-guide-tab-copy strong{color:#156e68}
+.api-guide-tab-copy small{font-size:10.5px;line-height:1.4;color:#7d97a5}
+@media(max-width:1050px){.api-guide-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:740px){.meta-bar.api-meta-bar{grid-template-columns:1fr 1fr}.api-meta-bar .meta-chip:last-child{grid-column:span 2}}
+@media(max-width:530px){.api-guide-tabs{grid-template-columns:1fr}.meta-bar.api-meta-bar{grid-template-columns:1fr}.api-meta-bar .meta-chip:last-child{grid-column:auto}}
+@media print{.api-guide-tabs{display:none}.api-meta-bar .meta-chip{break-inside:avoid}}
