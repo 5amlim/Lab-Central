@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch";
+const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
@@ -15,7 +15,7 @@ const scrollSelectors=[
  ".pfux-stage-track",".guide-stepper",".pf-rack-scroll",".pf-qc-lane-list",
  ".pfux-jump-options",".qc-screen-gallery--scroll",
  ".tab-strip.instrument-matched-tabs",".pfux-primary-nav",".tab-strip.order-workflow-tabs",
- ".api-guide-tabs",".dqc-page .dqc-view-switch",".tc-portal .tc-view-switch"
+ ".api-guide-tabs",".dqc-page .dqc-view-switch",".tc-portal .tc-view-switch",".sendout-reference-layout .sendout-reference-tabs"
 ];
 const remembered=new Map();
 const selectorFor=node=>scrollSelectors.find(selector=>node.matches(selector));
@@ -70,7 +70,7 @@ function updatePage(){
 function setup(node){
  if(!node||initialized.has(node)||!node.parentNode)return;
  initialized.add(node);
- const compliance=node.matches(".api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch");
+ const compliance=node.matches(".api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs");
  const frame=document.createElement("div");frame.className="lc-scroll-cue-frame"+(compliance?" lc-compliance-scroll-frame":"");
  node.parentNode.insertBefore(frame,node);frame.appendChild(node);
  const bottom=document.createElement("div");bottom.className="lc-scroll-cue-bottom";
@@ -78,7 +78,7 @@ function setup(node){
  const right=document.createElement("button");right.className="lc-scroll-cue-right";
  right.type="button";right.hidden=true;
  const steps=node.matches(".pfux-stage-track, .guide-stepper");
- const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch");
+ const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs");
  right.setAttribute("aria-label",steps?"Show more procedure steps to the right":tabs?"Show more instrument sections to the right":"Show more items to the right");
  right.innerHTML="<span>"+(steps?"More steps":tabs?"More sections":"More")+" <span aria-hidden=\"true\">→</span></span>";
  right.addEventListener("click",function(){
