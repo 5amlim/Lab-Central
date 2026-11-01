@@ -228,6 +228,16 @@ document.addEventListener('click',e=>{
  if(!e.target?.closest('.tc-portal .tc-location-picker'))setTrainingClinicMenu(false);
 });
 document.addEventListener('keydown',e=>{
+ const view=e.target?.closest('.tc-portal [data-tc-view]');
+ if(view&&['ArrowRight','ArrowLeft','Home','End'].includes(e.key)){
+  e.preventDefault();
+  const order=trainingTabs.map(tab=>tab.id);
+  const index=order.indexOf(view.getAttribute('data-tc-view'));
+  const next=e.key==='Home'?order[0]:e.key==='End'?order[order.length-1]:order[(index+(e.key==='ArrowRight'?1:-1)+order.length)%order.length];
+  if(next!==selectedTrainingView){selectedTrainingView=next;rerenderTraining();}
+  document.querySelector('.tc-portal [data-tc-view="'+next+'"]')?.focus();
+  return;
+ }
  const trigger=e.target?.closest('.tc-portal [data-tc-location-toggle]');
  if(trigger&&['ArrowDown','ArrowUp','Enter',' '].includes(e.key)){
   e.preventDefault();
