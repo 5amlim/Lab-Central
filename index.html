@@ -383,7 +383,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
-<script src="quality-reference.js?v=20261101-pt-instrument-links-v2"></script>
+<script src="quality-reference.js?v=20261101-pt-handling-cardlinks-v4"></script>
 <script src="pt-testing-guide.js?v=20261101-pt-guided-filing-v5"></script>
 <script src="api-submission.js?v=20261101-api-calver-nav-v3"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
@@ -2139,6 +2139,10 @@ function sectionRender(sec,tab){
   const patientIndex=tabs.findIndex(t=>/^(patient-testing|patient|ua-strip|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))$/.test(t.id)||/^(?:Patient testing|Running (?:Patient )?Samples|Running tests)(?:\b|\s|$)/i.test(t.fullTitle||t.title));
   if(patientIndex>1)tabs.splice(1,0,tabs.splice(patientIndex,1)[0]);
  }
+ if(sec.id==='api'){
+  const oldCategory=tabs.findIndex(t=>t.id==='pt-categories');
+  if(oldCategory>=0)tabs.splice(oldCategory,1);
+ }
  // Clinitek's combined QC tab is the visible QC entry; add it before positioning PT.
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  // Keep PT testing directly after the LAST QC tab (daily, external, monthly, or calibration).
@@ -2156,9 +2160,12 @@ function sectionRender(sec,tab){
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(sec.id==='febridx'&&tab==='general')tab='reference-notes';
  // Preserve bookmarks to the four former API category tabs and select their category in the new reference.
- if(sec.id==='api'&&['chemistry-core','hematology','microbiology','immunology'].includes(tab)){
+ if(sec.id==='api'&&['chemistry-core','hematology','microbiology','immunology','pt-categories'].includes(tab)){
+  if(tab==='pt-categories')tab='pt-handling';
+  else {
   window.LAB_QUALITY_GUIDE.setPtCategory(tab);
-  tab='pt-categories';
+  tab='pt-handling';
+  }
  }
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
@@ -2197,8 +2204,7 @@ function sectionRender(sec,tab){
  }else if(sec.id==='api'||sec.id==='calver'){
   const apiTabDetails={
    overview:{icon:'book',subtitle:'Program & analyzers'},
-   'pt-handling':{icon:'package',subtitle:'Receipt & handling'},
-   'pt-categories':{icon:'clipboard-check',subtitle:'Programs & reportable tests'},
+   'pt-handling':{icon:'package',subtitle:'Handling & PT categories'},
    'submit-results':{icon:'file-text',subtitle:'Entry & attestation'},
    'units-reporting':{icon:'settings',subtitle:'Units & result limits'},
    'pt-exceptions':{icon:'shield-check',subtitle:'Rules & follow-up'}
@@ -2225,7 +2231,6 @@ function sectionRender(sec,tab){
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(sec.id==='calver'&&['preparation','testing','filing'].includes(tab))h+=window.LAB_QUALITY_GUIDE.calverReference(groups.find(g=>g.id===tab));
  else if(sec.id==='api'&&tab==='pt-handling')h+=window.LAB_QUALITY_GUIDE.ptHandlingReference(groups.find(g=>g.id==='pt-handling'));
- else if(sec.id==='api'&&tab==='pt-categories')h+=window.LAB_QUALITY_GUIDE.ptCategoriesReference();
  else if(sec.id==='api'&&tab==='submit-results')h+=window.LAB_API_SUBMISSION.submission();
  else if(sec.id==='api'&&tab==='units-reporting')h+=window.LAB_API_SUBMISSION.unitsPage();
  else if(sec.id==='api'&&tab==='pt-exceptions')h+=window.LAB_API_SUBMISSION.exceptionsPage();
