@@ -5,8 +5,10 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 /* Current API reference: waived respiratory, former drug screen and unassigned
    coagulation PT categories are intentionally excluded from this menu. */
 const map=[
- {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
-  {code:"CH",title:"Chemistry Core PT sample",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
+ {id:"chemistry-core",title:"Chemistry Core",badge:"CH",machines:[["Piccolo Xpress","piccolo"]],items:[
+  {code:"CH",title:"Chemistry Core PT sample",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]}
+ ]},
+ {id:"cardiac-markers",title:"Cardiac Markers",badge:"CM",machines:[["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
   {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
    {instrument:"Triage MeterPro",tests:["Troponin I","D-dimer"]},
    {instrument:"PATHFAST",tests:["hs-Troponin I","D-dimer","NT-proBNP"]}
@@ -26,14 +28,16 @@ const map=[
 /* Catalog numbers taken from the supplied API order, not merely the
    general 2026 catalog. The GIP program is not shown on that order. */
 const apiCatalogNumbers={
- "chemistry-core":"CH #122 · CM #140",
+ "chemistry-core":"CH #122",
+ "cardiac-markers":"CM #140",
  hematology:"HSY #227",
  microbiology:"GIP · Not listed on supplied order",
  immunology:"HV #433 · CRP #431"
 };
 function apiCatalogLabel(category){
  const descriptions={
-  "chemistry-core":"Per supplied API order: Chemistry - Comprehensive, catalog 122; Cardiac Markers, catalog 140.",
+  "chemistry-core":"Per supplied API order: Chemistry - Comprehensive, catalog 122.",
+  "cardiac-markers":"Per supplied API order: Cardiac Markers, catalog 140.",
   hematology:"Per supplied API order: Hematology - 3S, catalog 227.",
   microbiology:"The supplied API order does not list GIP. Verify any separate microbiology enrollment before testing or submitting PT results.",
   immunology:"Per supplied API order: Rapid HIV - 2 samples, catalog 433; C-Reactive Protein, catalog 431."
@@ -193,7 +197,7 @@ function ptCategoriesReference(){
  ).join('');
  return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
   '<header class="quality-ref-head quality-pt-categories-head"><span>PROGRAM REFERENCE</span><h2>PT categories</h2><p>Select the category from your shipment sheet to see sample codes, enrolled test references and instrument guides.</p></header>'+
-  '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the four program groups</span></div>'+
+  '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the five program groups</span></div>'+
     '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span>'+apiProgramBadges(selected)+'<span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
       '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
     '</details></div>'+
