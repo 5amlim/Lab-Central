@@ -23,6 +23,22 @@ const map=[
   {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
+/* 2026 API catalog program numbers (not the CH/CM/HSY specimen prefixes).
+   Multiple options require checking the clinic's actual enrollment and event. */
+const apiCatalogNumbers={
+ "chemistry-core":"CH #121 / #122 · CM #140",
+ hematology:"HSY #227",
+ microbiology:"GIP #369",
+ immunology:"HV #432 / #433 · CRP #431"
+};
+function apiCatalogLabel(category){
+ const description=category.id==="chemistry-core"
+  ?"2026 API catalog: Basic Chemistry 121 or Comprehensive Chemistry 122; Cardiac Markers 140. Confirm the enrolled chemistry program."
+  :category.id==="immunology"
+   ?"2026 API catalog: Rapid HIV 432 (5 samples) or 433 (waived, 2 samples; not scored for CMS); C-Reactive Protein 431. Confirm actual enrollment."
+   :"2026 API catalog program number. Verify against the clinic's current enrollment.";
+ return '<small class="quality-api-catalog" title="'+esc(description)+'">API catalog · '+esc(apiCatalogNumbers[category.id]||"Verify enrollment")+'</small>';
+}
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
@@ -123,7 +139,7 @@ function apiAssessmentCard(it){
 }
 function apiOverviewCard(x, index){
  return '<article class="quality-map-card" data-pt-order="'+index+'" data-pt-category="'+esc(x.id)+'">'+
- '<div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+apiProgramBadges(x)+'</div>'+
+ '<div class="quality-map-top"><div class="quality-api-heading"><strong>'+esc(x.title)+'</strong>'+apiCatalogLabel(x)+'</div>'+apiProgramBadges(x)+'</div>'+
  '<ul class="quality-api-assessments">'+x.items.map(apiAssessmentCard).join('')+'</ul></article>';
 }
 function apiOverview(){
@@ -160,7 +176,7 @@ function ptCategoriesContent(){
  const category=map.find(item=>item.id===selectedPtCategory)||map[0];
  return '<section class="quality-pt-category-detail" data-pt-category="'+esc(category.id)+'" aria-label="'+esc(category.title)+' PT reference">'+
  '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span>'+
- '<h3>'+esc(category.title)+'</h3><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
+ '<div class="quality-api-heading"><h3>'+esc(category.title)+'</h3>'+apiCatalogLabel(category)+'</div><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
  apiProgramBadges(category)+'</header>'+
  '<ul class="quality-api-assessments">'+category.items.map(apiAssessmentCard).join('')+'</ul>'+
  '<div class="quality-pt-category-actions"><span>Only the assays on the active event are reportable.</span><div>'+
