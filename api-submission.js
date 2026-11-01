@@ -210,7 +210,7 @@ function submission(){
  ["02","Enter & review","entry"],
  ["03","Attest & submit","attest"],
  ["04","Confirm & file","confirm"]
- ].map(v=>'<a href="#api-submit-'+v[2]+'" aria-label="Jump to phase '+v[0]+': '+v[1]+'"><span>'+v[0]+'</span>'+x(v[1])+'</a>').join('')+'</nav>'+
+ ].map(v=>'<button type="button" data-api-phase="'+v[2]+'" aria-label="Jump to phase '+v[0]+': '+v[1]+'"><span>'+v[0]+'</span>'+x(v[1])+'</button>').join('')+'</nav>'+
  '<div class="api2-phase-list">'+[
   {index:'01',id:'prepare',title:'Prepare the event',caption:'Identify the active event and enrolled methods.',tone:'blue',start:0,end:2},
   {index:'02',id:'entry',title:'Enter and review',caption:'Enter the results, match units and check saved entries.',tone:'teal',start:2,end:6},
@@ -278,5 +278,15 @@ function exceptionsPage(){
  '<section class="api2-sources"><strong>Official references</strong><div>'+link(url.cms,"CMS PT & referral brochure")+link(url.correction,"API correction window")+link(url.comment,"API sample problem comments")+link(url.attest,"API attestation")+'</div></section></section>';
 }
 
+document.addEventListener("click",function(event){
+ const button=event.target.closest("[data-api-phase]");
+ if(!button)return;
+ const page=button.closest(".api2-submission");
+ if(!page)return;
+ const phase=button.getAttribute("data-api-phase");
+ if(!["prepare","entry","attest","confirm"].includes(phase))return;
+ const target=page.querySelector("#api-submit-"+phase);
+ if(target)target.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+});
 window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,marketSelector,calverMarketSelector};
 })();
