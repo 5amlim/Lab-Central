@@ -50,6 +50,13 @@ function apiPanelTone(item, group){
  if(item.code==="HV")return "hiv";
  return "neutral";
 }
+/* The clickable instrument title replaces the repeated link above each PT panel.
+   For combined CM events, route each analyzer to its own PT guide. */
+function apiPanelHeading(item,group){
+ const route=group.instrument===item.instrument?item.route:
+  ((item.also||[]).find(ref=>ref[0]===group.instrument)||[])[1];
+ return route?apiInstrumentLink(group.instrument,route):esc(group.instrument);
+}
 function apiTestGroups(item){
  let groups=item.testGroups;
  if(!groups){
@@ -58,7 +65,7 @@ function apiTestGroups(item){
  }
  return '<div class="quality-pt-analyzer-tests">'+groups.map(group=>
   '<div class="quality-pt-analyzer-group" data-pt-panel="'+apiPanelTone(item,group)+'">'+
-   '<strong class="quality-pt-analyzer-title">'+esc(group.instrument)+'</strong>'+
+   '<strong class="quality-pt-analyzer-title">'+apiPanelHeading(item,group)+'</strong>'+
    '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned tests">'+
     group.tests.map(apiTestBadge).join('')+'</div>'+
   '</div>'
@@ -110,7 +117,7 @@ function groups(sec){
 function apiAssessmentCard(it){
  return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
  '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
- '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
+ '</div>'+
  '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
  '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+apiTestGroups(it)+'</div></li>';
 }
