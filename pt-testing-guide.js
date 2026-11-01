@@ -193,7 +193,7 @@ function reagentFor(id,st){
   return null;
  }
  const named={
-  torch:{name:"Gastrointestinal (GI) panel pouch",type:"BioFire TORCH",note:"Use the GI pouch required for the assigned GIP event.",art:"pouch"},
+  torch:{name:"BIOFIRE FILMARRAY GI Panel pouch",type:"BioFire TORCH · GI Panel",note:"Single-use clear FilmArray GI pouch with a barcode label, reagent fitment and PCR array. Confirm the printed panel/version and lot match the GIP event before loading it into TORCH.",art:"gi-pouch"},
   poc:{name:"Approved rapid HIV test kit",type:"HIV testing",note:"Use the clinic's approved rapid HIV test device. Match the event and read window to the kit.",art:"cassette"},
   febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
   hemocue:{name:"Hemoglobin microcuvette",type:"HemoCue",note:"Use the compatible microcuvette for the installed HemoCue model.",art:"cuvette"},
@@ -241,9 +241,60 @@ function triagePtCartridgeSvg(assay){
  '<ellipse cx="81" cy="320" rx="30" ry="10" fill="#e4eef1" stroke="#93aab5" stroke-width="2"/>'+
  '<path d="M28 305 H43 L37 298 V312 Z" fill="#b10c67"/></svg>';
 }
+/* The TORCH GI cartridge is a translucent, horizontal FILMARRAY pouch, not a
+   small square cassette. Original vector drawing informed by the manufacturer's
+   FilmArray GI pouch diagram and physical pouch references; never identify a
+   reagent lot or panel version from the illustration alone. */
+function giPtPouchSvg(){
+ const wells=Array.from({length:12},(_,i)=>{
+  const x=98+i*38;
+  return '<g><rect x="'+x+'" y="151" width="31" height="38" rx="15" fill="#f1f5f3" fill-opacity=".65" stroke="#bdc8c9" stroke-width="2"/>'+
+   '<path d="M'+(x+5)+' 165v16M'+(x+11)+' 160v23" stroke="#fff" stroke-width="3" opacity=".8"/>'+
+   '<path d="M'+(x+15)+' 188v22" stroke="#9eafb5" stroke-width="3" fill="none" opacity=".75"/></g>';
+ }).join("");
+ const barcode=Array.from({length:29},(_,i)=>{
+  const x=480+i*3.4,w=i%5===0?2.5:i%3===0?1.9:1.0;
+  return '<rect x="'+x.toFixed(1)+'" y="76" width="'+w+'" height="24" fill="#35444a"/>';
+ }).join("");
+ const array=Array.from({length:9},(_,row)=>Array.from({length:9},(_,col)=>{
+  const x=512+col*8.9,y=225+row*7.3,dx=col-4,dy=row-4;
+  return dx*dx+dy*dy<21?'<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2.4" fill="#f7fcfc" opacity="'+(0.87+(row%3)*.04)+'"/>':"";
+ }).join("")).join("");
+ return '<svg class="ptg-gi-pouch-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 355" role="img" aria-label="Realistic schematic of BioFire FilmArray GI Panel translucent, wide reagent pouch. White barcode label across the top, twelve clear reagent blisters, red sample-mix and blue hydration markings, transparent fluid chambers and black PCR array on the right.">'+
+ '<defs><linearGradient id="ptg-gi-shell" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f8fbfa" stop-opacity=".98"/><stop offset=".48" stop-color="#e5eeec" stop-opacity=".80"/><stop offset="1" stop-color="#c7d5d4" stop-opacity=".8"/></linearGradient>'+
+ '<linearGradient id="ptg-gi-fluid" x1="0" x2=".8" y1="0" y2="1"><stop stop-color="#f9fdfb"/><stop offset=".55" stop-color="#e5eeed"/><stop offset="1" stop-color="#b2c6c8"/></linearGradient>'+
+ '<linearGradient id="ptg-gi-foil" x1="0" x2="1"><stop stop-color="#fbfdfc"/><stop offset=".4" stop-color="#e8eeeb"/><stop offset="1" stop-color="#edf2ef"/></linearGradient></defs>'+
+ '<ellipse cx="338" cy="324" rx="298" ry="13" fill="#d8e6e9" opacity=".68"/>'+
+ '<path d="M67 52H607Q619 52 622 66L642 277Q642 294 627 302H56Q42 295 45 277L54 68Q55 53 67 52Z" fill="url(#ptg-gi-shell)" stroke="#a8b9be" stroke-width="3"/>'+
+ '<path d="M66 119H614L630 280Q630 292 617 293H67Q56 292 58 282Z" fill="#f0f7f4" fill-opacity=".43" stroke="#c8d7d5" stroke-width="2"/>'+
+ '<path d="M78 134H609M75 291H623" fill="none" stroke="#fff" stroke-width="4" opacity=".86"/>'+
+ '<rect x="76" y="60" width="530" height="53" rx="8" fill="#fff" stroke="#c7d0d1" stroke-width="2"/>'+
+ '<text x="92" y="81" font-size="16" font-family="Arial,sans-serif" fill="#263f4b" font-weight="800">FilmArray GI Panel</text>'+
+ '<text x="93" y="99" font-size="9.5" font-family="Arial,sans-serif" fill="#627d88">BIOFIRE  •  VERIFY PANEL / LOT ON ACTUAL POUCH</text>'+
+ barcode+
+ '<rect x="95" y="120" width="145" height="14" rx="2" fill="#d84654"/><text x="167" y="131" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="9" font-weight="800">SAMPLE MIX</text>'+
+ '<rect x="435" y="120" width="148" height="14" rx="2" fill="#3199c6"/><text x="509" y="131" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="9" font-weight="800">HYDRATION SOLUTION</text>'+
+ '<path d="M87 150H582" stroke="#d5e2e0" stroke-width="7" opacity=".5"/>'+
+ wells+
+ '<path d="M115 209v15h61v12h48M235 208v24h87M356 209v24h70M468 209v20h60" stroke="#aabcc0" stroke-width="4" opacity=".7" fill="none" stroke-linecap="round"/>'+
+ '<path d="M82 220L165 220 190 288H92Z" fill="url(#ptg-gi-fluid)" stroke="#b6c8c8" stroke-width="2.5"/>'+
+ '<ellipse cx="246" cy="247" rx="34" ry="31" fill="url(#ptg-gi-fluid)" stroke="#aebfc1" stroke-width="3"/>'+
+ '<ellipse cx="316" cy="270" rx="29" ry="26" fill="#ebf2ef" stroke="#abbcc1" stroke-width="3"/>'+
+ '<ellipse cx="388" cy="248" rx="35" ry="31" fill="url(#ptg-gi-fluid)" stroke="#aec0c2" stroke-width="3"/>'+
+ '<ellipse cx="435" cy="284" rx="24" ry="18" fill="#e0eaeb" stroke="#b0c0c0" stroke-width="2"/>'+
+ '<path d="M186 245l26 0M280 254l21 7M347 260l7-5M422 261l20 10M421 242l45 0" stroke="#a9b9bb" stroke-width="4" opacity=".75"/>'+
+ '<rect x="469" y="210" width="133" height="95" rx="10" fill="#252d33" stroke="#72858c" stroke-width="3"/>'+
+ '<rect x="479" y="220" width="113" height="75" rx="6" fill="#0c141a" stroke="#526571" stroke-width="2"/>'+
+ array+
+ '<circle cx="483" cy="292" r="3" fill="#f4f9fa"/><circle cx="589" cy="292" r="3" fill="#f4f9fa"/>'+
+ '<path d="M76 137Q67 210 75 278" fill="none" stroke="#fff" stroke-width="5" opacity=".7"/>'+
+ '<path d="M620 137Q630 206 626 278" fill="none" stroke="#fff" stroke-width="4" opacity=".75"/>'+
+ '</svg>';
+}
 function reagentSvg(kind,name,tone){
  const safe=e(name);
  if(kind==="triage")return triagePtCartridgeSvg(tone);
+ if(kind==="gi-pouch")return giPtPouchSvg();
  if(kind==="disc"){
   const ring=tone==="metlyte"?"#1b9a8d":tone==="metlac"?"#7970b2":"#8fb4c4";
   const port=tone==="metlyte"?"#4cb6aa":tone==="metlac"?"#9888ca":"#4c8e9f";
@@ -307,6 +358,14 @@ function reagentReference(reagent){
        '<strong>'+e(item.name)+'</strong><p>'+e(item.note)+'</p></div></div>'
     ).join('')+'</div>'+
    '<p class="ptg-multi-reagent-note">'+e(reagent.note)+'</p></div>';
+ }
+ if(reagent.art==="gi-pouch"){
+  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-torch-gi-reagent">'+
+   '<span class="ptg-reference-eyebrow">02 · BIOFIRE GI PANEL POUCH</span>'+
+   '<div class="ptg-torch-gi-visual">'+reagentSvg("gi-pouch",reagent.name)+'</div>'+
+   '<div class="ptg-torch-gi-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
+   '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong>'+
+   '<p>'+e(reagent.note)+'</p></div></div>';
  }
  return '<div class="ptg-reference-tile ptg-reagent-tile"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
   '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name,reagent.tone)+'</div>'+
