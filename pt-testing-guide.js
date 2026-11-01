@@ -102,25 +102,42 @@ function selectedMaterial(id,st){
  if(st.material==="OTHER")return {id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."};
  return options.find(o=>o.id===st.material)||options[0]||null;
 }
-function materialReference(id,st){
+/* Keep the sample selector in the PT page heading at every guided step.
+   The selected vial reference belongs to the first procedure step only. */
+function materialPicker(id,st){
+ if(id==="pathfast"){
+  const assays=[["troponin","hs-Troponin I"],["ddimer","D-dimer"],["ntprobnp","NT-proBNP"]];
+  const codes=[["","Select code on shipment"],["CM","CM · Cardiac markers"],["PSC","PSC · Cardiac pilot"],["other","Other event code"]];
+  return '<div class="ptg-header-controls">'+
+   '<label>PT analyte<select data-ptg-field="assay" aria-label="Choose PATHFAST PT analyte">'+
+   assays.map(a=>'<option value="'+a[0]+'"'+(st.assay===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label>'+
+   '<label>API event code<select data-ptg-field="code" aria-label="Choose PATHFAST API event code">'+
+   codes.map(a=>'<option value="'+a[0]+'"'+(st.code===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label></div>';
+ }
+ const options=materials[id]||[{id:"EVENT",name:"PT material assigned to this instrument",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
+ const selected=selectedMaterial(id,st)||options[0];
+ const other=id!=="piccolo";
+ const choices=[...options,...(other?[{id:"OTHER",name:"Other assigned PT material"}]:[])];
+ return '<div class="ptg-header-controls"><label>Choose PT sample<select data-ptg-field="material" aria-label="Choose PT sample type for '+e(id)+'">'+
+  choices.map(o=>'<option value="'+e(o.id)+'"'+(o.id===selected.id?' selected':'')+'>'+e(o.name)+'</option>').join('')+
+  '</select></label></div>';
+}
+function materialPreview(id,st){
  if(id==="pathfast"){
   const assays=[["troponin","hs-Troponin I","#5c91a3"],["ddimer","D-dimer","#6d9b83"],["ntprobnp","NT-proBNP","#a58cad"]];
-  const codes=[["","Select code on shipment"],["CM","CM · Cardiac markers"],["PSC","PSC · Cardiac pilot"],["other","Other code on event"]];
-  const selected=assays.find(a=>a[0]===st.assay)||assays[0];
-  const label=st.code==="other"?"EVENT":st.code||"PT";
-  const notes={troponin:"Use the result units required by the event for hs-Troponin I.",ddimer:"Check D-dimer unit type before result entry.",ntprobnp:"PATHFAST measures NT-proBNP, not BNP."};
-  return '<section class="ptg-specimen-reference" aria-label="PATHFAST PT material reference">'+
-   '<div class="ptg-assay-picker"><label>PT analyte<select data-ptg-field="assay" aria-label="Select PATHFAST analyte">'+assays.map(a=>'<option value="'+a[0]+'"'+(st.assay===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label>'+
-   '<label>Code on API event<select data-ptg-field="code" aria-label="Select API event code">'+codes.map(a=>'<option value="'+a[0]+'"'+(st.code===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label></div>'+
-   '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(selected[1],label,selected[2])+'</div><div class="ptg-specimen-copy"><strong>'+e(selected[1])+' · '+e(st.code||"Verify event code")+'</strong><p>'+e(notes[st.assay]||notes.troponin)+' Match the exact sample number, material type and preparation to the shipment.</p><small>Illustration only. Program code does not confirm enrollment for this analyte.</small></div></div></section>';
+  const a=assays.find(v=>v[0]===st.assay)||assays[0];
+  const code=st.code==="other"?"EVENT":st.code||"PT";
+  const notes={troponin:"Verify the PT event reporting units for hs-Troponin I.",ddimer:"Check the D-dimer unit type and required API reporting unit.",ntprobnp:"PATHFAST measures NT-proBNP, not BNP."};
+  return '<section class="ptg-specimen-reference" aria-label="PATHFAST PT vial reference"><div class="ptg-specimen-label">PT sample reference</div>'+
+    '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(a[1],code,a[2])+'</div><div class="ptg-specimen-copy">'+
+    '<strong>'+e(a[1])+' · '+e(st.code||"Confirm event code")+'</strong><p>'+e(notes[st.assay]||notes.troponin)+' Match the event sample number, preparation and specimen type to the shipment.</p>'+
+    '<small>Illustration only. CM and PSC are code references, not proof of assay enrollment.</small></div></div></section>';
  }
- const options=materials[id]||[{id:"EVENT",name:"PT material assigned to this instrument",code:"PT",color:"#79989c",note:"Check the current event for the correct sample type and analyzer method."}];
- const selected=selectedMaterial(id,st)||options[0];
- const other=id!=="piccolo"&&id!=="pathfast";
- const choice=[...options,...(other?[{id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."}]:[])];
- return '<section class="ptg-specimen-reference" aria-label="PT sample selection">'+
- '<div class="ptg-assay-picker"><label>Choose PT sample<select data-ptg-field="material" aria-label="Choose PT sample type">'+choice.map(o=>'<option value="'+e(o.id)+'"'+(st.material===o.id||(!st.material&&selected.id===o.id)?' selected':'')+'>'+e(o.name)+'</option>').join('')+'</select></label></div>'+
- '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(selected.name,selected.code,selected.color)+'</div><div class="ptg-specimen-copy"><strong>'+e(selected.name)+'</strong><p>'+e(selected.note)+'</p><small>Illustration only, not an actual API vial. Verify the material and specimen ID against the shipment.</small></div></div></section>';
+ const selected=selectedMaterial(id,st)||{id:"EVENT",name:"Assigned PT material",code:"PT",color:"#79989c",note:"Confirm the event sheet."};
+ return '<section class="ptg-specimen-reference" aria-label="PT vial reference"><div class="ptg-specimen-label">PT sample reference</div>'+
+   '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(selected.name,selected.code,selected.color)+'</div>'+
+   '<div class="ptg-specimen-copy"><strong>'+e(selected.name)+'</strong><p>'+e(selected.note)+'</p>'+
+   '<small>Illustration only. Verify the actual vial, sample code and preparation with the API event.</small></div></div></section>';
 }
 function adapterReference(){
  return '<div class="ptg-adapter"><div><strong>Green pocH adapter</strong><p>For the smaller HSY PT vial. Confirm the actual vial fits before running.</p><img loading="lazy" src="'+adapter+'" alt="Reference photo of the green Sysmex adapter"/><a href="'+adapterPage+'" target="_blank" rel="noopener noreferrer">Adapter reference ↗</a></div></div>';
@@ -132,26 +149,47 @@ function documentation(){
 function workflow(id,sequence){
  const st=stateFor(id,sequence.length);
  remembered.set(id,st);stepsSaved.set(id,sequence);
- const stage=(item,i)=>{
-  const choice=selectedMaterial(id,st);
-  const title=id==="piccolo"&&i===0?"Confirm "+(choice?.id||"CH")+" PT sample":item[0];
-  const description=id==="piccolo"&&i===0?((choice?.id==="CRP")?
-   "Use the separate CRP proficiency specimen and the CRP-capable disc assigned for this event. Match the CRP vial ID and preparation instructions before loading.":
-   "Use the CH chemistry proficiency specimen and the chemistry disc(s) assigned for this event. Match the CH vial ID and preparation instructions before loading."):item[1];
-  return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'"><span class="ptg-number">'+String(i+1).padStart(2,"0")+'</span><div><h3>'+e(title)+'</h3><p>'+e(description)+'</p></div></article>'+
-   (i===0?materialReference(id,st):"")+
-   (i===1&&id==="sysmex"?adapterReference():"")+
-   (i===sequence.length-1?documentation():"");
- };
- const strips=sequence.map((s,i)=>'<button type="button" data-ptg-step="'+i+'" class="ptg-step-tab'+(st.step===i?' is-active':'')+'" aria-current="'+(st.step===i?'step':'false')+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+e(s[0])+'</button>').join("");
  const all=st.mode==="all";
- const buttons='<div class="ptg-controls"><button type="button" data-ptg-mode="guided" aria-pressed="'+!all+'" class="'+(!all?'is-active':'')+'">Guided</button><button type="button" data-ptg-mode="all" aria-pressed="'+all+'" class="'+(all?'is-active':'')+'">All steps</button></div>';
- const nav='<div class="ptg-transport"><button type="button" data-ptg-step="'+(st.step-1)+'"'+(st.step===0?' disabled':'')+'>← Previous</button><button type="button" class="ptg-next" data-ptg-step="'+(st.step+1)+'"'+(st.step===sequence.length-1?' disabled':'')+'>'+(st.step===sequence.length-1?'Complete':'Next →')+'</button></div>';
- return '<div class="ptg-workflow-head"><strong>'+(all?'Complete PT procedure':'Step '+(st.step+1)+' of '+sequence.length)+'</strong>'+buttons+'</div>'+
- '<div class="ptg-progress"><span style="width:'+((all?sequence.length:st.step+1)/sequence.length*100)+'%"></span></div>'+
- '<nav class="ptg-step-strip" aria-label="Jump to PT step">'+strips+'</nav>'+
- '<div class="ptg-focused-stage" id="ptg-current-step" tabindex="-1">'+(all?'<div class="ptg-all-steps">'+sequence.map(stage).join('')+'</div>':'<div class="ptg-stage-nav">'+nav+'</div>'+stage(sequence[st.step],st.step))+'</div>'+
- '<div class="ptg-print-only">'+sequence.map(stage).join('')+'</div>';
+ const nav='<div class="ptg-transport" role="group" aria-label="PT step navigation">'+
+  '<button type="button" data-ptg-step="'+(st.step-1)+'"'+(st.step===0?' disabled':'')+' aria-label="Previous PT step">← Previous</button>'+
+  (st.step<sequence.length-1?'<button type="button" class="ptg-next" data-ptg-step="'+(st.step+1)+'" aria-label="Next PT step">Next step →</button>':
+   '<button type="button" class="ptg-next" data-ptg-mode="all">View all steps ↗</button>')+'</div>';
+ const stepTitle=(item,i)=>{
+  if(id!=="piccolo"||i!==0)return item[0];
+  const v=selectedMaterial(id,st);
+  return "Confirm "+(v?.id==="CRP"?"CRP":"CH")+" PT sample";
+ };
+ const stage=(item,i,focused=false)=>{
+  const choice=selectedMaterial(id,st);
+  const desc=id==="piccolo"&&i===0?(choice?.id==="CRP"?
+   "Match the CRP proficiency vial to the API event and prepare the CRP-capable disc specified on its worksheet.":
+   "Match the CH chemistry vial to the API event and confirm the prescribed chemistry disc(s) and specimen preparation."):item[1];
+  return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'">'+
+   '<header class="ptg-stage-head"><span class="ptg-number">'+String(i+1).padStart(2,"0")+'</span>'+
+   '<div class="ptg-stage-heading"><span class="ptg-stage-kicker">STEP '+(i+1)+' OF '+sequence.length+'</span><h3>'+e(stepTitle(item,i))+'</h3></div>'+
+   (focused?nav:"")+'</header>'+
+   '<div class="ptg-stage-body"><p class="ptg-stage-description">'+e(desc)+'</p>'+
+   (i===0?materialPreview(id,st):"")+
+   (i===1&&id==="sysmex"?adapterReference():"")+
+   (i===sequence.length-1?documentation():"")+
+   '</div></article>';
+ };
+ const strip=sequence.map((item,i)=>
+  '<button type="button" data-ptg-step="'+i+'" class="ptg-step-tab'+(st.step===i&&!all?' is-active':'')+'" '+
+  (st.step===i&&!all?'aria-current="step"':'')+
+  ' title="'+e(stepTitle(item,i))+'" aria-label="Step '+(i+1)+': '+e(stepTitle(item,i))+'">'+
+  '<span class="ptg-step-num">'+String(i+1).padStart(2,"0")+'</span><span class="ptg-step-name">'+e(stepTitle(item,i))+'</span></button>').join("");
+ const controls='<div class="ptg-controls" role="group" aria-label="PT procedure display mode">'+
+  '<button type="button" data-ptg-mode="guided" aria-pressed="'+(!all)+'" class="'+(!all?'is-active':'')+'">Guided view</button>'+
+  '<button type="button" data-ptg-mode="all" aria-pressed="'+all+'" class="'+(all?'is-active':'')+'">All steps</button></div>';
+ return '<div class="ptg-workflow-head"><div class="ptg-workflow-status"><span class="ptg-status-dot" aria-hidden="true"></span><strong>'+
+  sequence.length+' steps · '+(all?'Complete procedure':'Focused step view')+'</strong></div>'+controls+'</div>'+
+  '<nav class="ptg-step-strip" aria-label="Jump to a PT step">'+strip+'</nav>'+
+  '<div class="ptg-progress" role="progressbar" aria-label="PT procedure progress" aria-valuemin="0" aria-valuemax="'+sequence.length+'" aria-valuenow="'+(all?sequence.length:st.step+1)+'">'+
+  '<span style="width:'+((all?sequence.length:st.step+1)/sequence.length*100)+'%"></span></div>'+
+  '<div class="ptg-focused-stage" id="ptg-current-step" tabindex="-1">'+
+  (all?'<div class="ptg-all-steps">'+sequence.map((item,i)=>stage(item,i)).join('')+'</div>':stage(sequence[st.step],st.step,true))+'</div>'+
+  '<div class="ptg-print-only">'+sequence.map((item,i)=>stage(item,i)).join('')+'</div>';
 }
 function actions(patient){
  return '<div class="ptg-links">'+(patient?'<button type="button" data-gotab="'+e(patient)+'">Patient testing ↗</button>':'')+
@@ -162,28 +200,39 @@ function render(sec,groups){
  if(!supports(sec))return "";
  const cfg=configs[sec.id];
  const sequence=cfg?cfg.steps:[
- ["Confirm assignment","Check the clinic's actual API enrollment, specimen ID, assay and event instructions before testing."],
- ["Test as a patient sample",other[sec.id]||"Use the regular patient testing procedure, including its usual specimen and instrument requirements."],
- ["Review and print","Verify result, specimen ID and any flags; print or retain the original report for each assigned sample."]
+  ["Confirm assignment","Check the clinic's actual API enrollment, specimen ID, assay and event instructions before testing."],
+  ["Test as a patient sample",other[sec.id]||"Use the approved patient testing procedure for the assigned PT material."],
+  ["Review and print","Verify the result, specimen ID and any flags, then print the original result for each assigned sample."]
  ];
  const full=[...sequence,fileStep()];
  const patient=patientGroup(sec,groups);
- return '<section class="ptg-page"><header class="ptg-head"><div><span>API · PROFICIENCY TESTING</span><h2>PT testing</h2><p>Run like a patient specimen using the assigned PT material and exact event sample ID. '+(cfg?'':'Only test if this assay and site are enrolled.')+'</p></div><small>'+e(cfg?cfg.label:"ONLY IF ENROLLED")+'</small></header>'+
- (sec.id==='piccolo'?'':'<div class="ptg-keyline"><strong>'+(cfg?e(cfg.mode):"Current approved patient method")+'</strong><span>Use <b>PT Sample</b> only if there is a separate name field. Use the actual vial ID instead of an MRN.</span></div>')+
- '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
- actions(patient)+
- '<p class="ptg-foot">Use the actual PT event instructions and routine testing frequency. Do not perform extra grading-driven repeats or refer PT material to another lab. Retain the complete event records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
+ const st=stateFor(sec.id,full.length);
+ return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
+  '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.'+
+  (cfg?'':' Only test if this assay and site are enrolled.')+'</p></div>'+
+  '<div class="ptg-heading-picker" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
+  '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
+  actions(patient)+
+  '<p class="ptg-foot">Test PT as patient specimens. Do not perform extra grading-driven repeats or refer PT specimens. File under the matching event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
 }
 function refresh(host,id,field){
- const sequence=stepsSaved.get(id);
- if(!sequence)return;
- host.innerHTML=workflow(id,sequence);
+ const seq=stepsSaved.get(id);
+ if(!seq)return;
+ const page=host.closest(".ptg-page");
+ const heading=page?.querySelector("[data-ptg-picker]");
+ if(field&&heading)heading.innerHTML=materialPicker(id,stateFor(id,seq.length));
+ host.innerHTML=workflow(id,seq);
  if(field){
-  const select=host.querySelector('[data-ptg-field="'+field+'"]');
-  if(select)select.focus({preventScroll:true});
+  const select=heading?.querySelector('[data-ptg-field="'+field+'"]');
+  if(select&&typeof select.focus==="function")select.focus({preventScroll:true});
  }else{
   const stage=host.querySelector("#ptg-current-step");
-  if(stage){stage.focus({preventScroll:true});const b=stage.getBoundingClientRect();if((b.top<90||b.top>window.innerHeight-140)&&typeof stage.scrollIntoView==="function")stage.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});}
+  if(stage&&typeof stage.focus==="function"){
+   stage.focus({preventScroll:true});
+   const b=stage.getBoundingClientRect();
+   if((b.top<90||b.top>window.innerHeight-140)&&typeof stage.scrollIntoView==="function")
+    stage.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+  }
  }
 }
 document.addEventListener("click",event=>{
