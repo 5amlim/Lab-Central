@@ -201,18 +201,23 @@ const steps=[
 const rail=(items,aria)=>'<div class="api2-rail" aria-label="'+x(aria)+'">'+items.map((s,i)=>'<div><span>'+String(i+1).padStart(2,"0")+'</span><strong>'+x(s)+'</strong></div>').join('')+'</div>';
 function submission(){
  return '<section class="api2-page api2-submission">'+
- '<header class="api2-intro"><div class="api2-overline">API · PAPERLESS PROFICIENCY TESTING</div><h2>Submit PT results</h2><p>Follow the actual API screens from event selection through confirmed transmission. The steps below use API’s documented portal labels, not a simulated login or result-entry system.</p><div class="api2-intro-actions">'+link(url.guide,"Official 7-page API entry guide")+'</div></header>'+
- overviewCta()+
- '<div class="api2-alert api2-alert-critical"><strong>Saving is not submitting.</strong><p>A result is only received after the attestation is completed, results are transmitted, and the submitted event appears in Event History.</p></div>'+
- rail(["Prepare","Enter & review","Attest & submit","Confirm & file"],"Online submission phases")+
- '<div class="api2-section-head api2-flow-title"><div><h3>Online submission, step by step</h3><p>Follow each phase in order. Expand the page by scrolling; no separate guided mode is needed.</p></div>'+badge("9 steps · 4 phases","neutral")+'</div>'+
+ '<header class="api2-intro api2-submission-hero"><div class="api2-submission-hero-copy"><div class="api2-overline">API · PAPERLESS PROFICIENCY TESTING</div><h2>Submit PT results</h2><p>Enter, review, attest and transmit the current PT event. Follow the real API portal screens and verify receipt before filing.</p></div>'+
+ '<div class="api2-submission-hero-actions"><a href="'+x(url.portal)+'" class="api2-submission-portal" target="_blank" rel="noopener noreferrer">Open API Paperless PT <span aria-hidden="true">↗</span></a>'+link(url.guide,"Official API entry guide")+'</div></header>'+
+ '<div class="api2-submit-alert" role="note"><strong>Saving is not submitting.</strong><span>Complete the attestation, transmit to API, then confirm the event appears in Event History.</span></div>'+
+ '<div class="api2-section-head api2-flow-title"><div><h3>Submission procedure</h3><p>Follow these nine steps in order. Choose a phase below to jump to it.</p></div>'+badge("9 steps · 4 phases","neutral")+'</div>'+
+ '<nav class="api2-phase-nav" aria-label="Jump to a submission phase">'+[
+ ["01","Prepare event","prepare"],
+ ["02","Enter & review","entry"],
+ ["03","Attest & submit","attest"],
+ ["04","Confirm & file","confirm"]
+ ].map(v=>'<a href="#api-submit-'+v[2]+'" aria-label="Jump to phase '+v[0]+': '+v[1]+'"><span>'+v[0]+'</span>'+x(v[1])+'</a>').join('')+'</nav>'+
  '<div class="api2-phase-list">'+[
-  {index:'01',title:'Prepare the event',caption:'Identify the right event and confirm the assays you are enrolled to perform.',tone:'blue',start:0,end:2},
-  {index:'02',title:'Enter and review results',caption:'Match every sample, method and unit, then verify what was saved.',tone:'teal',start:2,end:6},
-  {index:'03',title:'Attest and submit',caption:'Complete the required personnel attestation, then transmit to API.',tone:'amber',start:6,end:8},
-  {index:'04',title:'Confirm receipt and file',caption:'Confirm API received the event and archive the complete records.',tone:'blue',start:8,end:9}
+  {index:'01',id:'prepare',title:'Prepare the event',caption:'Identify the active event and enrolled methods.',tone:'blue',start:0,end:2},
+  {index:'02',id:'entry',title:'Enter and review',caption:'Enter the results, match units and check saved entries.',tone:'teal',start:2,end:6},
+  {index:'03',id:'attest',title:'Attest and submit',caption:'Attest, then transmit to API.',tone:'amber',start:6,end:8},
+  {index:'04',id:'confirm',title:'Confirm and file',caption:'Verify receipt and retain the complete packet.',tone:'blue',start:8,end:9}
  ].map(phase=>
-  '<section class="api2-phase api2-phase-'+phase.tone+'" aria-label="'+x(phase.title)+'">'+
+  '<section id="api-submit-'+phase.id+'" class="api2-phase api2-phase-'+phase.tone+'" aria-label="'+x(phase.title)+'">'+
    '<header class="api2-phase-heading"><span class="api2-phase-number">'+x(phase.index)+'</span><div><span class="api2-phase-kicker">PHASE '+x(phase.index)+'</span><h4>'+x(phase.title)+'</h4><p>'+x(phase.caption)+'</p></div><span class="api2-phase-count">'+(phase.end-phase.start)+' '+(phase.end-phase.start===1?'step':'steps')+'</span></header>'+
    '<div class="api2-step-grid">'+steps.slice(phase.start,phase.end).map((item,i)=>
     '<article class="api2-step api2-tone-'+item.tone+'"><div class="api2-step-top"><span class="api2-num">'+String(phase.start+i+1).padStart(2,"0")+'</span>'+badge(item.stage,item.tone)+'</div>'+
@@ -272,13 +277,6 @@ function exceptionsPage(){
  '<section class="api2-panel"><h3>API assistance</h3><p><strong>Technical Support:</strong> sample, reporting or evaluation concerns. <strong>Customer Service:</strong> shipment, account and website issues.</p><div class="api2-contact"><strong>800-333-0958</strong><small>API business hours, Eastern Time. Do not assume support can reopen an event after its deadline.</small></div>'+link(url.support,"API contact details")+'</section></div>'+
  '<section class="api2-sources"><strong>Official references</strong><div>'+link(url.cms,"CMS PT & referral brochure")+link(url.correction,"API correction window")+link(url.comment,"API sample problem comments")+link(url.attest,"API attestation")+'</div></section></section>';
 }
-function overviewCta(){
- return '<div class="api2-overview-callout"><div><span>API PAPERLESS PT</span><h3>Submit results correctly, from entry to confirmation</h3><p>Step-by-step portal guide, unit conversions, attestation, handling of repeats and exceptions.</p></div><a class="api2-overview-open" href="'+x(url.portal)+'" target="_blank" rel="noopener noreferrer">Open API Paperless PT <span aria-hidden="true">↗</span></a></div>'+
- '<div class="api2-overview-quick">'+[
- ["01","Prepare & enter","Verify event, sample IDs, method and units."],
- ["02","Review & attest","Reconcile entries and identify testing personnel."],
- ["03","Transmit & file","Confirm Event History timestamp and signed records."]
- ].map(v=>'<div><span>'+v[0]+'</span><strong>'+v[1]+'</strong><p>'+v[2]+'</p></div>').join('')+'</div>';
-}
-window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,overviewCta,marketSelector,calverMarketSelector};
+
+window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,marketSelector,calverMarketSelector};
 })();
