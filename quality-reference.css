@@ -166,11 +166,10 @@
 .quality-pt-analyzer-group[data-pt-panel="pathfast"]{border-color:#cde7df;background:#f5fcf9}
 .quality-pt-analyzer-group[data-pt-panel="pathfast"] .quality-pt-analyzer-title{color:#197f73}
 .quality-pt-analyzer-group[data-pt-panel="piccolo-combo"]{
- border-color:#d7d5e6;
- border-left:3px solid #ebcd7d;
- border-right:3px solid #b4c6ee;
- background:linear-gradient(105deg,#fffbec 0%,#fffef9 45%,#f2f7ff 100%)
+ border-color:#ebcd7d;
+ background:#fffbec
 }
+.quality-pt-analyzer-group[data-pt-panel="piccolo-combo"] .quality-pt-analyzer-title{color:#846008}
 .quality-pt-analyzer-group[data-pt-panel="metlyte"]{border-color:#ebcd7d;background:#fffbec}
 .quality-pt-analyzer-group[data-pt-panel="metlyte"] .quality-pt-analyzer-title{color:#846008}
 .quality-pt-analyzer-group[data-pt-panel="metlac"]{border-color:#b4c6ee;background:#f2f7ff}
