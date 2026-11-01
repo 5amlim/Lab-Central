@@ -69,7 +69,7 @@ function vialSvg(label,code,color){
    Never equate a drawing's cap color or shape with the shipped PT material. */
 const materials={
  piccolo:[
-  {id:"CH",name:"CH · Chemistry PT sample",code:"CH",color:"#598f9e",note:"Use the CH vial and the chemistry disc(s) specified on that event. Check every requested analyte and panel."},
+  {id:"CH",name:"CH · Chemistry PT sample",code:"CH",color:"#598f9e",note:"Run the CH chemistry sample on both MetLyte Plus CRP and MetLac 12 discs. Verify the event's requested analytes and units."},
   {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
  sysmex:[{id:"HSY",name:"HSY · CBC PT sample",code:"HSY",color:"#a47f9a",note:"Small specimen vial. The approved green adapter is shown in the next step."}],
@@ -163,9 +163,19 @@ function reagentFor(id,st){
   return {name:a[0],type:a[1],note:a[2],art:"pathfast"};
  }
  if(id==="piccolo"){
-  return mat==="CRP"?
-   {name:"MetLyte Plus CRP",type:"Piccolo reagent disc",note:"Use this CRP-capable disc for the separate CRP PT vial. Check the event worksheet and required CRP units.",art:"disc"}:
-   {name:"Event-assigned chemistry disc(s)",type:"Piccolo reagent disc",note:"CH can require more than one chemistry panel. Match the disc(s) and enrolled analytes to the current API event.",art:"disc"};
+  if(mat==="CRP")return {
+   name:"MetLyte Plus CRP",type:"Piccolo reagent disc",tone:"metlyte",
+   note:"Use the MetLyte Plus CRP disc for the separate CRP proficiency sample. Confirm reporting units on the API event worksheet.",art:"disc"
+  };
+  if(mat==="CH")return {
+   kind:"multi",type:"Piccolo reagent discs",
+   name:"Both CH reagent discs",note:"Use both discs for the CH chemistry proficiency sample. Check the assigned analytes and reporting units on the API event worksheet.",
+   items:[
+    {name:"MetLyte Plus CRP",badge:"METLYTE + CRP",tone:"metlyte",art:"disc",note:"Chemistry / CRP disc"},
+    {name:"MetLac 12",badge:"METLAC 12",tone:"metlac",art:"disc",note:"Chemistry / lactate disc"}
+   ]
+  };
+  return null;
  }
  const named={
   triage:{name:"Assigned cardiac test cartridge",type:"Triage MeterPro",note:"Use the cartridge and cardiac analytes listed for this CM or PSC event. Do not assume all analytes are enrolled.",art:"cassette"},
@@ -193,19 +203,21 @@ function reagentFor(id,st){
  return named[id]||null;
 }
 /* Compact, intentionally schematic test consumables. Never use artwork for product identification. */
-function reagentSvg(kind,name){
+function reagentSvg(kind,name,tone){
  const safe=e(name);
  if(kind==="disc"){
+  const ring=tone==="metlyte"?"#1b9a8d":tone==="metlac"?"#7970b2":"#8fb4c4";
+  const port=tone==="metlyte"?"#4cb6aa":tone==="metlac"?"#9888ca":"#4c8e9f";
   const wells=Array.from({length:24},(_,i)=>{
    const a=i*Math.PI/12,x=112+67*Math.cos(a),y=83+67*Math.sin(a);
    return '<rect x="'+(x-4).toFixed(1)+'" y="'+(y-9).toFixed(1)+'" width="8" height="18" rx="2" fill="#e8f1f4" stroke="#a9c6d1" stroke-width="1.2" transform="rotate('+(i*15+90)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>';
   }).join("");
   return '<svg viewBox="0 0 230 165" role="img" aria-label="Schematic of Piccolo reagent disc for '+safe+'">'+
-   '<ellipse cx="113" cy="155" rx="94" ry="7" fill="#dbe7ec"/><circle cx="112" cy="83" r="76" fill="#fcffff" stroke="#8fb4c4" stroke-width="4"/>'+
+   '<ellipse cx="113" cy="155" rx="94" ry="7" fill="#dbe7ec"/><circle cx="112" cy="83" r="76" fill="#fcffff" stroke="'+ring+'" stroke-width="4"/>'+
    wells+'<circle cx="112" cy="83" r="48" fill="#edf6f9" stroke="#bbd3dd" stroke-width="3"/>'+
    '<circle cx="112" cy="83" r="24" fill="#e2eef2" stroke="#97b6c4" stroke-width="3"/>'+
    '<circle cx="112" cy="83" r="10" fill="#cce0e8" stroke="#8eb0bf" stroke-width="2"/>'+
-   '<circle cx="144" cy="68" r="7" fill="#b7d8e1" stroke="#4c8e9f" stroke-width="2"/></svg>';
+   '<circle cx="144" cy="68" r="7" fill="#b7d8e1" stroke="'+port+'" stroke-width="2"/></svg>';
  }
  if(kind==="pathfast"){
   return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of PATHFAST test reagent cartridge for '+safe+'">'+
@@ -243,6 +255,25 @@ function reagentSvg(kind,name){
   '<rect x="35" y="59" width="87" height="28" rx="5" fill="#e5f2f5" stroke="#adcbd3" stroke-width="2"/>'+
   '<path d="M68 66v14M86 66v14" stroke="#b25d82" stroke-width="3"/><circle cx="169" cy="74" r="12" fill="#dfecf1" stroke="#9fbecb" stroke-width="2"/></svg>';
 }
+function reagentReference(reagent){
+ if(reagent.kind==="multi"){
+  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi">'+
+   '<span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
+   '<div class="ptg-multi-reagent-head"><div><span class="ptg-reference-badge ptg-reagent-badge">BOTH DISCS REQUIRED</span>'+
+   '<strong class="ptg-multi-reagent-title">'+e(reagent.name)+'</strong></div></div>'+
+   '<div class="ptg-multi-reagent-grid">'+reagent.items.map(item=>
+     '<div class="ptg-mini-reagent ptg-mini-reagent--'+e(item.tone)+'">'+
+      '<div class="ptg-mini-reagent-art">'+reagentSvg(item.art,item.name,item.tone)+'</div>'+
+      '<div class="ptg-mini-reagent-info"><span class="ptg-mini-reagent-code">'+e(item.badge)+'</span>'+
+       '<strong>'+e(item.name)+'</strong><p>'+e(item.note)+'</p></div></div>'
+    ).join('')+'</div>'+
+   '<p class="ptg-multi-reagent-note">'+e(reagent.note)+'</p></div>';
+ }
+ return '<div class="ptg-reference-tile ptg-reagent-tile"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
+  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name,reagent.tone)+'</div>'+
+  '<div class="ptg-reference-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
+  '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>';
+}
 function materialPreview(id,st){
  const requiresChoice=id==="pathfast"?!st.assay:(materials[id]||[]).length>1&&!selectedMaterial(id,st);
  if(requiresChoice){
@@ -270,10 +301,7 @@ function materialPreview(id,st){
   '<div class="ptg-reference-layout"><div class="ptg-reference-art">'+vialSvg(name,code,color)+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
   '<p>'+e(note)+'</p></div></div></div>';
- const test=reagent?'<div class="ptg-reference-tile ptg-reagent-tile"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
-  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name)+'</div>'+
-  '<div class="ptg-reference-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
-  '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>':"";
+ const test=reagent?reagentReference(reagent):"";
  return '<section class="ptg-specimen-reference" aria-label="PT vial and reagent reference">'+
   '<div class="ptg-specimen-label">'+(reagent?'PT sample &amp; test reagent':'PT sample reference')+'</div>'+
   '<div class="ptg-reference-grid'+(reagent?' has-reagent':' sample-only')+'">'+sample+test+'</div>'+
@@ -304,7 +332,7 @@ function workflow(id,sequence){
   const choice=selectedMaterial(id,st);
   const desc=id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
    "Match the CRP proficiency vial to the API event and prepare the CRP-capable disc specified on its worksheet.":
-   "Match the CH chemistry vial to the API event and confirm the prescribed chemistry disc(s) and specimen preparation."):item[1];
+   "Match the CH chemistry vial to the API event. Prepare and run both MetLyte Plus CRP and MetLac 12 reagent discs as assigned."):item[1];
   return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'">'+
    '<header class="ptg-stage-head"><span class="ptg-number">'+String(i+1).padStart(2,"0")+'</span>'+
    '<div class="ptg-stage-heading"><span class="ptg-stage-kicker">STEP '+(i+1)+' OF '+sequence.length+'</span><h3>'+e(stepTitle(item,i))+'</h3></div>'+
