@@ -94,3 +94,42 @@
  .ptg-vial-svg{height:98px;width:85px}
  .ptg-foot{margin-top:15px}
 }
+
+
+/* Select one PT material; show only the corresponding vial concept.
+   These diagrams are reference labels, never manufacturer or API packaging. */
+.ptg-specimen-reference{
+ display:grid;gap:10px;min-width:0;
+ padding:15px 16px;margin:10px 0 16px;
+ border:1px solid #dce9e9;border-radius:12px;background:#f9fcfc;
+}
+.ptg-specimen-reference .ptg-assay-picker{margin:0;gap:11px}
+.ptg-specimen-reference .ptg-assay-picker label{flex:1 1 220px;font-size:11px}
+.ptg-specimen-preview{
+ display:flex;align-items:center;gap:16px;min-width:0;
+ padding:11px 15px;border:1px solid #e0eced;border-radius:10px;background:#fff;
+}
+.ptg-specimen-art{
+ flex:0 0 95px;display:flex;align-items:center;justify-content:center;
+ min-height:120px;
+}
+.ptg-specimen-art .ptg-vial-svg{width:95px;height:125px}
+.ptg-specimen-copy{min-width:0;flex:1}
+.ptg-specimen-copy strong{display:block;color:#315f70;font-size:13px;line-height:1.4}
+.ptg-specimen-copy p{font-size:11.8px;color:#637e8b;line-height:1.65;margin:6px 0 7px}
+.ptg-specimen-copy small{display:block;font-size:10.5px;line-height:1.55;color:#8599a3}
+.ptg-page .ptg-specimen-reference select:hover{border-color:#76bdb1}
+.ptg-page .ptg-adapter{padding:13px 16px}
+.ptg-page .ptg-adapter>div:last-child{flex:1 1 280px}
+@media(max-width:590px){
+ .ptg-specimen-reference{padding:12px}
+ .ptg-specimen-preview{gap:7px;padding:9px 11px}
+ .ptg-specimen-art{flex-basis:76px;min-height:100px}
+ .ptg-specimen-art .ptg-vial-svg{width:76px;height:103px}
+ .ptg-specimen-copy strong{font-size:12px}
+ .ptg-specimen-copy p{font-size:11px}
+}
+@media print{
+ .ptg-specimen-reference,.ptg-specimen-preview{break-inside:avoid}
+ .ptg-specimen-art .ptg-vial-svg{width:65px;height:85px}
+}
