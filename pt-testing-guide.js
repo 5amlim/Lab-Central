@@ -22,10 +22,10 @@ const configs={
  ["Verify GIP material","Match the GI PT sample ID and pouch. Prepare the material per the current event sheet."],
  ["Prepare and run GI pouch","Use the regular TORCH GI patient steps for hydration, buffer, transfer and pouch loading. Enter the actual GIP code as the sample ID."],
  ["Review and print","Confirm a valid run and internal controls. Print the complete GI pathogen report for each sample."]]},
- hiv:{label:"HV",mode:"Routine rapid HIV test",steps:[
- ["Check HIV event and kit","Match the HV vial ID, approved rapid HIV test kit, and API preparation instructions."],
- ["Run and read","Follow the normal kit timing and patient-testing procedure. At the valid read time, check the control and interpret the test."],
- ["Photograph and print","Take clear photos of the completed device and assigned HV ID within the valid read window. Print the photos and record each result."]]},
+ hiv:{label:"HV",mode:"Abbott Determine HIV-1/2 Ag/Ab Combo",steps:[
+ ["Verify HV sample and Abbott test","Match the HV specimen ID, sample matrix and event worksheet. Use Abbott Determine HIV-1/2 Ag/Ab Combo, not an antibody-only device. Verify any PT sample preparation and approval for this method before testing."],
+ ["Apply PT sample using Abbott instructions","Prepare the strip and test the assigned PT sample through the routine method: 50 µL on the sample pad. If compatible whole blood, wait 1 minute then add 1 drop chase buffer; for serum/plasma, no chase buffer. Follow the IFU for the actual PT matrix."],
+ ["Read and photograph at 20–30 minutes","Read 20–30 minutes after buffer for whole blood or sample for serum/plasma. Check valid Control line plus separate Ag (HIV-1 p24) and Ab (HIV-1/2 antibodies) lines. Take a clear picture within the valid window, with HV ID visible; Ab does not distinguish HIV-1 from HIV-2."]] },
  pathfast:{label:"CM",mode:"Routine PATHFAST SAMPLE run",steps:[
  ["Confirm CM PT sample","Match the CM cardiac markers vial and exact specimen ID to the current API event sheet. Prepare the assigned sample as directed before testing."],
  ["Prepare and run SAMPLE","Use the routine PATHFAST patient SAMPLE workflow with the exact CM specimen ID. Run hs-Troponin I, D-dimer and NT-proBNP using their respective test cartridges, following the active event and SOP."],
@@ -172,7 +172,7 @@ function reagentFor(id,st){
  }
  const named={
   torch:{name:"BIOFIRE FILMARRAY GI Panel pouch",type:"BioFire TORCH · GI Panel",note:"Single-use clear FilmArray GI pouch with a barcode label, reagent fitment and PCR array. Confirm the printed panel/version and lot match the GIP event before loading it into TORCH.",art:"gi-pouch"},
-  hiv:{name:"HIV-1/2 Ag/Ab rapid test device",type:"HIV Antigen/Antibody",note:"Use the approved test kit, confirm the HV specimen and specimen compatibility, and read antigen and antibody indicators as directed by the product IFU. Illustration only; actual device design depends on the kit.",art:"cassette"},
+  hiv:{name:"Abbott Determine HIV-1/2 Ag/Ab Combo",type:"Abbott rapid Ag/Ab test strip",note:"Use the Abbott Determine strip with its distinct Control, Ag and Ab readout areas. Confirm that the HV material is compatible with the kit and its 50 µL method. Read results at 20–30 minutes.",art:"abbott-hiv"},
   febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
   hemocue:{name:"Hemoglobin microcuvette",type:"HemoCue",note:"Use the compatible microcuvette for the installed HemoCue model.",art:"cuvette"},
   coagsense:{name:"PT/INR test strip",type:"Coag-Sense",note:"Check compatibility of the assigned PT material before using the instrument's strip.",art:"strip"},
@@ -273,6 +273,24 @@ function reagentSvg(kind,name,tone){
  const safe=e(name);
  if(kind==="triage")return triagePtCartridgeSvg(tone);
  if(kind==="gi-pouch")return giPtPouchSvg();
+ if(kind==="abbott-hiv"){
+  return '<svg viewBox="0 0 200 260" role="img" aria-label="Schematic Abbott Determine HIV-1/2 Ag/Ab Combo rapid strip with separate Control Ag and Ab line areas and sample pad">'+
+   '<ellipse cx="100" cy="251" rx="62" ry="5" fill="#dce8e9"/>'+
+   '<rect x="73" y="6" width="54" height="237" rx="5" fill="#f2f8f7" stroke="#9bbac0" stroke-width="2"/>'+
+   '<rect x="76" y="6" width="48" height="33" rx="3" fill="#0a9ca8"/>'+
+   '<text x="100" y="19" font-size="7.5" text-anchor="middle" fill="#fff" font-weight="700">Determine</text>'+
+   '<text x="100" y="30" font-size="7" text-anchor="middle" fill="#fff">HIV Ag/Ab</text>'+
+   '<rect x="82" y="45" width="36" height="135" fill="#fff4f2" stroke="#cdd8d6"/>'+
+   '<path d="M84 64H116" stroke="#cd5963" stroke-width="3"/>'+
+   '<path d="M84 104H116" stroke="#cd5963" stroke-width="3"/>'+
+   '<path d="M84 149H116" stroke="#cd5963" stroke-width="3"/>'+
+   '<g fill="#316e76" font-size="11" font-weight="700" font-family="Arial,sans-serif" text-anchor="middle"><text x="100" y="58">C</text><text x="100" y="98">Ag</text><text x="100" y="142">Ab</text></g>'+
+   '<rect x="77" y="195" width="46" height="41" fill="#0a9ca8"/>'+
+   '<text x="100" y="211" font-size="8" text-anchor="middle" fill="#fff">SAMPLE</text>'+
+   '<path d="M100 216v13" stroke="#fff" stroke-width="2"/><path d="M95 223l5 6 5-6" stroke="#fff" stroke-width="2" fill="none"/>'+
+   '</svg>';
+ }
+ 
  if(kind==="disc"){
   const ring=tone==="metlyte"?"#e9b41e":tone==="metlac"?"#4b4da5":"#8fb4c4";
   const port=tone==="metlyte"?"#dfb429":tone==="metlac"?"#586cb9":"#4c8e9f";
