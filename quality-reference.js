@@ -23,7 +23,7 @@ const map=[
  ]}
 ];
 function apiInstrumentLink(name,route){
- return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' · PT Testing <span aria-hidden="true">↗</span></a>';
+ return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
 function apiTestBadge(test){
  return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
@@ -72,7 +72,6 @@ function apiOverview(){
  return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
  '<h2>Assessment types and assigned analyzers</h2>'+
  '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
- window.LAB_API_SUBMISSION.overviewCta()+
  '<div class="quality-map-grid">'+map.map(x=>
   '<article class="quality-map-card"><div class="quality-map-top"><strong>'+esc(x.title)+'</strong>'+
   '<span>'+esc(x.badge)+'</span></div>'+
