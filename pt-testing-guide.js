@@ -104,40 +104,153 @@ function selectedMaterial(id,st){
 }
 /* Keep the sample selector in the PT page heading at every guided step.
    The selected vial reference belongs to the first procedure step only. */
+function pickerRow(label,field,code,options,value,aria){
+ return '<label class="ptg-picker-field"><span class="ptg-picker-caption">'+e(label)+'</span>'+
+ '<span class="ptg-picker-shell"><span class="ptg-picker-code" aria-hidden="true">'+e(code)+'</span>'+
+ '<select data-ptg-field="'+e(field)+'" aria-label="'+e(aria)+'">'+
+ options.map(o=>'<option value="'+e(o[0])+'"'+(value===o[0]?' selected':'')+'>'+e(o[1])+'</option>').join('')+
+ '</select><span class="ptg-picker-chevron" aria-hidden="true"></span></span></label>';
+}
 function materialPicker(id,st){
  if(id==="pathfast"){
-  const assays=[["troponin","hs-Troponin I"],["ddimer","D-dimer"],["ntprobnp","NT-proBNP"]];
-  const codes=[["","Select code on shipment"],["CM","CM · Cardiac markers"],["PSC","PSC · Cardiac pilot"],["other","Other event code"]];
-  return '<div class="ptg-header-controls">'+
-   '<label>PT analyte<select data-ptg-field="assay" aria-label="Choose PATHFAST PT analyte">'+
-   assays.map(a=>'<option value="'+a[0]+'"'+(st.assay===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label>'+
-   '<label>API event code<select data-ptg-field="code" aria-label="Choose PATHFAST API event code">'+
-   codes.map(a=>'<option value="'+a[0]+'"'+(st.code===a[0]?' selected':'')+'>'+a[1]+'</option>').join('')+'</select></label></div>';
+  const assays=[["troponin","High-sensitivity Troponin I"],["ddimer","D-dimer"],["ntprobnp","NT-proBNP"]];
+  const codes=[["","Select from shipment"],["CM","Cardiac markers"],["PSC","Cardiac pilot"],["other","Other assigned event"]];
+  const badges={troponin:"hs-TnI",ddimer:"DD",ntprobnp:"NT-proBNP"};
+  return '<div class="ptg-header-controls ptg-dual-picker">'+
+   pickerRow("PT analyte","assay",badges[st.assay]||"hs-TnI",assays,st.assay,"Choose PATHFAST PT analyte")+
+   pickerRow("API event code","code",st.code?(st.code==="other"?"OTHER":st.code):"CODE",codes,st.code,"Choose PATHFAST API event code")+'</div>';
  }
- const options=materials[id]||[{id:"EVENT",name:"PT material assigned to this instrument",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
+ const options=materials[id]||[{id:"EVENT",name:"Assigned PT sample",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
  const selected=selectedMaterial(id,st)||options[0];
- const other=id!=="piccolo";
- const choices=[...options,...(other?[{id:"OTHER",name:"Other assigned PT material"}]:[])];
- return '<div class="ptg-header-controls"><label>Choose PT sample<select data-ptg-field="material" aria-label="Choose PT sample type for '+e(id)+'">'+
-  choices.map(o=>'<option value="'+e(o.id)+'"'+(o.id===selected.id?' selected':'')+'>'+e(o.name)+'</option>').join('')+
-  '</select></label></div>';
+ const choices=[...options,...(id!=="piccolo"?[{id:"OTHER",name:"Other assigned PT material",code:"OTHER"}]:[])];
+ const textFor=o=>o.name.replace(/^[^·]+ · /,"");
+ return '<div class="ptg-header-controls">'+
+  pickerRow("PT sample","material",selected.code||"PT",choices.map(o=>[o.id,textFor(o)]),selected.id,"Choose PT sample type for "+id)+
+  '</div>';
+}
+/* The vial is a reference illustration. Reagent selection follows the actual assigned event. */
+function reagentFor(id,st){
+ const mat=selectedMaterial(id,st)?.id;
+ if(id==="sysmex")return null; // HSY uses an adapter, not a reagent cartridge.
+ if(id==="pathfast"){
+  const assays={
+   troponin:["hs-Troponin I","PATHFAST test cartridge","Use the hs-Troponin I cartridge matching the installed assay. Verify the actual package label; do not substitute a conventional cTnI assay."],
+   ddimer:["D-dimer","PATHFAST test cartridge","Use the PATHFAST D-dimer cartridge, and check the event's reporting units."],
+   ntprobnp:["NT-proBNP","PATHFAST test cartridge","Use the PATHFAST NT-proBNP cartridge, not a BNP-only test."]
+  };
+  const a=assays[st.assay]||assays.troponin;
+  return {name:a[0],type:a[1],note:a[2],art:"pathfast"};
+ }
+ if(id==="piccolo"){
+  return mat==="CRP"?
+   {name:"MetLyte Plus CRP",type:"Piccolo reagent disc",note:"Use this CRP-capable disc for the separate CRP PT vial. Check the event worksheet and required CRP units.",art:"disc"}:
+   {name:"Event-assigned chemistry disc(s)",type:"Piccolo reagent disc",note:"CH can require more than one chemistry panel. Match the disc(s) and enrolled analytes to the current API event.",art:"disc"};
+ }
+ const named={
+  triage:{name:"Assigned cardiac test cartridge",type:"Triage MeterPro",note:"Use the cartridge and cardiac analytes listed for this CM or PSC event. Do not assume all analytes are enrolled.",art:"cassette"},
+  torch:{name:"Gastrointestinal (GI) panel pouch",type:"BioFire TORCH",note:"Use the GI pouch required for the assigned GIP event.",art:"pouch"},
+  poc:{name:"Approved rapid HIV test kit",type:"HIV testing",note:"Use the clinic's approved rapid HIV test device. Match the event and read window to the kit.",art:"cassette"},
+  febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
+  hemocue:{name:"Hemoglobin microcuvette",type:"HemoCue",note:"Use the compatible microcuvette for the installed HemoCue model.",art:"cuvette"},
+  coagsense:{name:"PT/INR test strip",type:"Coag-Sense",note:"Check compatibility of the assigned PT material before using the instrument's strip.",art:"strip"},
+  "drug-screen":{name:"Assigned drug-screen test panel",type:"Rapid POC test",note:"Use the same approved panel and read window as the enrolled patient method.",art:"cassette"}
+ };
+ if(id==="clinitek")return mat==="HCG"?
+  {name:"hCG test cassette",type:"Clinitek Status+",note:"Use the approved hCG cassette and its routine patient procedure.",art:"cassette"}:
+  {name:"Urinalysis reagent strip",type:"Clinitek Status+",note:"Use the clinic's assigned UA reagent strip and confirm tested analytes.",art:"strip"};
+ if(id==="spotfire")return mat==="ST"?
+  {name:"Assigned sore-throat panel pouch",type:"BioFire SpotFire",note:"Check the event's exact ST panel version and preparation.",art:"pouch"}:
+  {name:"Assigned respiratory panel pouch",type:"BioFire SpotFire",note:"Check whether the event requires the full or mini respiratory panel.",art:"pouch"};
+ if(id==="sofia"){
+  const m={
+   "FLU-COVID":["Flu + COVID test cassette","Use the assigned Flu + COVID assay kit."],
+   RSV:["RSV test cassette","Use the assigned RSV kit only when enrolled."],
+   STREP:["Strep A test cassette","Use the assigned Strep A test kit only when enrolled."]
+  }[mat]||["Assigned Sofia test cassette","Check the event's kit"];
+  return {name:m[0],type:"Sofia 2",note:m[1]+" Follow the kit-specific read timing.",art:"cassette"};
+ }
+ return named[id]||null;
+}
+/* Compact, intentionally schematic test consumables. Never use artwork for product identification. */
+function reagentSvg(kind,name){
+ const safe=e(name);
+ if(kind==="disc"){
+  const wells=Array.from({length:24},(_,i)=>{
+   const a=i*Math.PI/12,x=112+67*Math.cos(a),y=83+67*Math.sin(a);
+   return '<rect x="'+(x-4).toFixed(1)+'" y="'+(y-9).toFixed(1)+'" width="8" height="18" rx="2" fill="#e8f1f4" stroke="#a9c6d1" stroke-width="1.2" transform="rotate('+(i*15+90)+' '+x.toFixed(1)+' '+y.toFixed(1)+')"/>';
+  }).join("");
+  return '<svg viewBox="0 0 230 165" role="img" aria-label="Schematic of Piccolo reagent disc for '+safe+'">'+
+   '<ellipse cx="113" cy="155" rx="94" ry="7" fill="#dbe7ec"/><circle cx="112" cy="83" r="76" fill="#fcffff" stroke="#8fb4c4" stroke-width="4"/>'+
+   wells+'<circle cx="112" cy="83" r="48" fill="#edf6f9" stroke="#bbd3dd" stroke-width="3"/>'+
+   '<circle cx="112" cy="83" r="24" fill="#e2eef2" stroke="#97b6c4" stroke-width="3"/>'+
+   '<circle cx="112" cy="83" r="10" fill="#cce0e8" stroke="#8eb0bf" stroke-width="2"/>'+
+   '<circle cx="144" cy="68" r="7" fill="#b7d8e1" stroke="#4c8e9f" stroke-width="2"/></svg>';
+ }
+ if(kind==="pathfast"){
+  return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of PATHFAST test reagent cartridge for '+safe+'">'+
+   '<ellipse cx="114" cy="122" rx="101" ry="7" fill="#dbe7ec"/>'+
+   '<path d="M17 66L204 47L217 83L32 105Z" fill="#24323b" stroke="#102a37" stroke-width="3"/>'+
+   '<path d="M29 68L204 51L209 60L34 78Z" fill="#526773"/>'+
+   [0,1,2,3,4,5].map(i=>'<rect x="'+(63+i*22)+'" y="'+(66-i*2)+'" width="13" height="20" rx="4" transform="rotate(-6 '+(69+i*22)+' '+(76-i*2)+')" fill="#dcecf1" stroke="#99bbc9" stroke-width="1.6"/>').join("")+
+   '<path d="M19 67L40 65L49 101L28 106Z" fill="#e6f2f6" stroke="#8eafbf" stroke-width="2"/>'+
+   '<path d="M30 78L43 75L46 95L33 99Z" fill="#bf5162"/><path d="M196 48L207 47L221 82L211 86Z" fill="#a53e53"/></svg>';
+ }
+ if(kind==="pouch"){
+  return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of '+safe+' pouch">'+
+   '<ellipse cx="116" cy="135" rx="78" ry="6" fill="#dce8ed"/>'+
+   '<rect x="53" y="14" width="125" height="116" rx="8" fill="#eaf5f8" stroke="#8fb7c8" stroke-width="3"/>'+
+   '<path d="M55 32H176M55 113H176" stroke="#9abdc9" stroke-width="5" stroke-dasharray="4 4"/>'+
+   '<rect x="71" y="48" width="88" height="47" rx="6" fill="#fff" stroke="#b7cdd7"/>'+
+   '<circle cx="113" cy="71" r="15" fill="#e1f1f4" stroke="#81b4c0" stroke-width="2"/>'+
+   '<path d="M105 71h16M113 63v16" stroke="#277f8e" stroke-width="3"/></svg>';
+ }
+ if(kind==="strip"){
+  return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of '+safe+' test strip">'+
+   '<ellipse cx="112" cy="128" rx="93" ry="7" fill="#dbe8ed"/>'+
+   '<rect x="21" y="63" width="186" height="22" rx="6" fill="#fff" stroke="#89acbb" stroke-width="2.5"/>'+
+   [0,1,2,3,4,5].map(i=>'<rect x="'+(35+i*22)+'" y="66" width="17" height="16" rx="2" fill="'+["#a5c7ac","#e0c3b7","#dfd2a0","#aabdd5","#d2bacf","#a8cecf"][i]+'"/>').join("")+
+   '<rect x="174" y="64" width="25" height="20" rx="3" fill="#dceaf1"/></svg>';
+ }
+ if(kind==="cuvette"){
+  return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of '+safe+'">'+
+   '<ellipse cx="115" cy="128" rx="75" ry="5" fill="#dbe8ed"/><path d="M71 25H159V92H128V115H100V92H71Z" fill="#eaf5f8" stroke="#7daabd" stroke-width="4"/>'+
+   '<rect x="89" y="45" width="51" height="23" rx="3" fill="#b7d9e2" stroke="#85b1c0" stroke-width="2"/></svg>';
+ }
+ return '<svg viewBox="0 0 230 150" role="img" aria-label="Schematic of '+safe+' test cassette">'+
+  '<ellipse cx="113" cy="121" rx="104" ry="7" fill="#dce9ed"/>'+
+  '<rect x="12" y="45" width="206" height="58" rx="13" fill="#f9fcfe" stroke="#9ebecb" stroke-width="3"/>'+
+  '<rect x="35" y="59" width="87" height="28" rx="5" fill="#e5f2f5" stroke="#adcbd3" stroke-width="2"/>'+
+  '<path d="M68 66v14M86 66v14" stroke="#b25d82" stroke-width="3"/><circle cx="169" cy="74" r="12" fill="#dfecf1" stroke="#9fbecb" stroke-width="2"/></svg>';
 }
 function materialPreview(id,st){
+ let name,code,color,note,small;
  if(id==="pathfast"){
-  const assays=[["troponin","hs-Troponin I","#5c91a3"],["ddimer","D-dimer","#6d9b83"],["ntprobnp","NT-proBNP","#a58cad"]];
-  const a=assays.find(v=>v[0]===st.assay)||assays[0];
-  const code=st.code==="other"?"EVENT":st.code||"PT";
-  const notes={troponin:"Verify the PT event reporting units for hs-Troponin I.",ddimer:"Check the D-dimer unit type and required API reporting unit.",ntprobnp:"PATHFAST measures NT-proBNP, not BNP."};
-  return '<section class="ptg-specimen-reference" aria-label="PATHFAST PT vial reference"><div class="ptg-specimen-label">PT sample reference</div>'+
-    '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(a[1],code,a[2])+'</div><div class="ptg-specimen-copy">'+
-    '<strong>'+e(a[1])+' · '+e(st.code||"Confirm event code")+'</strong><p>'+e(notes[st.assay]||notes.troponin)+' Match the event sample number, preparation and specimen type to the shipment.</p>'+
-    '<small>Illustration only. CM and PSC are code references, not proof of assay enrollment.</small></div></div></section>';
+  const assays={troponin:["hs-Troponin I","#5c91a3","Verify the PT event reporting units for hs-Troponin I."],
+   ddimer:["D-dimer","#6d9b83","Check the D-dimer unit type and required API reporting unit."],
+   ntprobnp:["NT-proBNP","#a58cad","PATHFAST measures NT-proBNP, not BNP."]};
+  const a=assays[st.assay]||assays.troponin;
+  name=a[0]+" PT sample";code=st.code==="other"?"EVENT":st.code||"PT";color=a[1];
+  note=a[2]+" Match the event sample number, preparation and specimen type to the shipment.";
+  small="CM and PSC are code references, not proof of assay enrollment.";
+ }else{
+  const m=selectedMaterial(id,st)||{name:"Assigned PT material",code:"PT",color:"#79989c",note:"Confirm the event sheet."};
+  name=m.name.replace(/^[^·]+ · /,"");code=m.code;color=m.color;note=m.note;
+  small="Check the actual vial, sample code and preparation against the API event.";
  }
- const selected=selectedMaterial(id,st)||{id:"EVENT",name:"Assigned PT material",code:"PT",color:"#79989c",note:"Confirm the event sheet."};
- return '<section class="ptg-specimen-reference" aria-label="PT vial reference"><div class="ptg-specimen-label">PT sample reference</div>'+
-   '<div class="ptg-specimen-preview"><div class="ptg-specimen-art">'+vialSvg(selected.name,selected.code,selected.color)+'</div>'+
-   '<div class="ptg-specimen-copy"><strong>'+e(selected.name)+'</strong><p>'+e(selected.note)+'</p>'+
-   '<small>Illustration only. Verify the actual vial, sample code and preparation with the API event.</small></div></div></section>';
+ const reagent=reagentFor(id,st);
+ const sample='<div class="ptg-reference-tile ptg-sample-tile"><span class="ptg-reference-eyebrow">01 · PT SAMPLE</span>'+
+  '<div class="ptg-reference-layout"><div class="ptg-reference-art">'+vialSvg(name,code,color)+'</div>'+
+  '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
+  '<p>'+e(note)+'</p></div></div></div>';
+ const test=reagent?'<div class="ptg-reference-tile ptg-reagent-tile"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
+  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name)+'</div>'+
+  '<div class="ptg-reference-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
+  '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>':"";
+ return '<section class="ptg-specimen-reference" aria-label="PT vial and reagent reference">'+
+  '<div class="ptg-specimen-label">'+(reagent?'PT sample &amp; test reagent':'PT sample reference')+'</div>'+
+  '<div class="ptg-reference-grid'+(reagent?' has-reagent':' sample-only')+'">'+sample+test+'</div>'+
+  '<p class="ptg-reference-disclaimer">Illustrations only. '+e(small)+
+  (reagent?' Confirm the cartridge or disc label before loading.':'')+'</p></section>';
 }
 function adapterReference(){
  return '<div class="ptg-adapter"><div><strong>Green pocH adapter</strong><p>For the smaller HSY PT vial. Confirm the actual vial fits before running.</p><img loading="lazy" src="'+adapter+'" alt="Reference photo of the green Sysmex adapter"/><a href="'+adapterPage+'" target="_blank" rel="noopener noreferrer">Adapter reference ↗</a></div></div>';
