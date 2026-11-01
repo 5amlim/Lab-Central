@@ -159,7 +159,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="socal-daily-checklist.css?v=20261031-separate-monthly-checklist-v10" media="all">
 <link rel="stylesheet" href="training-competency.css?v=20261031-all-training-forms-v3" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
-  <link rel="stylesheet" href="quality-reference.css?v=20261031-calver-static-cards-v2" media="all">
+  <link rel="stylesheet" href="quality-reference.css?v=20261101-pt-category-dropdown-v1" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-api-submission-v1" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
@@ -382,7 +382,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
-<script src="quality-reference.js?v=20261101-pt-handling-reference-v1"></script>
+<script src="quality-reference.js?v=20261101-pt-category-dropdown-v1"></script>
 <script src="api-submission.js?v=20261101-api-submission-v1"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261031-separate-monthly-checklist-v10"></script>
@@ -2144,6 +2144,11 @@ function sectionRender(sec,tab){
  if(sec.id==='clinitek'&&(tab==='ua-qc'||tab==='hcg-qc')){state.clinitekQc=tab;tab='combined-qc';}
  if(sec.id==='clinitek'&&tab==='monthly-qc')tab='combined-qc';
  if(sec.id==='febridx'&&tab==='general')tab='reference-notes';
+ // Preserve bookmarks to the four former API category tabs and select their category in the new reference.
+ if(sec.id==='api'&&['chemistry-core','hematology','microbiology','immunology'].includes(tab)){
+  window.LAB_QUALITY_GUIDE.setPtCategory(tab);
+  tab='pt-categories';
+ }
  if(!tabs.find(x=>x.id===tab))tab='overview';state.tab=tab;
  el('currentCrumb').textContent=sec.title;
  // Show the same CLIA badge style as assay cards, based on the actual tests in this guide.
@@ -2187,6 +2192,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(sec.id==='calver'&&['preparation','testing','filing'].includes(tab))h+=window.LAB_QUALITY_GUIDE.calverReference(groups.find(g=>g.id===tab));
  else if(sec.id==='api'&&tab==='pt-handling')h+=window.LAB_QUALITY_GUIDE.ptHandlingReference(groups.find(g=>g.id==='pt-handling'));
+ else if(sec.id==='api'&&tab==='pt-categories')h+=window.LAB_QUALITY_GUIDE.ptCategoriesReference();
  else if(sec.id==='api'&&tab==='submit-results')h+=window.LAB_API_SUBMISSION.submission();
  else if(sec.id==='api'&&tab==='units-reporting')h+=window.LAB_API_SUBMISSION.unitsPage();
  else if(sec.id==='api'&&tab==='pt-exceptions')h+=window.LAB_API_SUBMISSION.exceptionsPage();
