@@ -13,35 +13,16 @@ const map=[
   ]},
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
-  {code:"HSY",title:"Hematology - 3S PT sample",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
+  {code:"HSY",title:"Hematology - 3S PT sample",catalogNumber:"HSY #227",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
-  {code:"GIP",title:"Gastrointestinal pathogens",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
+  {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"Not listed on supplied order",catalogNote:"The supplied API order does not list GIP. Verify enrollment before testing or submitting results.",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
  {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machines:[["HIV Antigen/Antibody","hiv"],["Piccolo Xpress","piccolo"]],items:[
-  {code:"HV",title:"HIV antigen / antibody rapid test",instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
-  {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
+  {code:"HV",title:"HIV antigen / antibody rapid test",catalogNumber:"HV #433",instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
+  {code:"CRP",title:"C-reactive protein",catalogNumber:"CRP #431",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
-/* Catalog numbers taken from the supplied API order, not merely the
-   general 2026 catalog. The GIP program is not shown on that order. */
-const apiCatalogNumbers={
- "chemistry-core":"CH #122 · CM #140",
- hematology:"HSY #227",
- microbiology:"GIP · Not listed on supplied order",
- immunology:"HV #433 · CRP #431"
-};
-function apiCatalogLabel(category){
- // CH and CM have separate catalog references within their own cards.
- if(category.id==="chemistry-core")return "";
- const descriptions={
-  "chemistry-core":"Per supplied API order: Chemistry - Comprehensive, catalog 122; Cardiac Markers, catalog 140.",
-  hematology:"Per supplied API order: Hematology - 3S, catalog 227.",
-  microbiology:"The supplied API order does not list GIP. Verify any separate microbiology enrollment before testing or submitting PT results.",
-  immunology:"Per supplied API order: Rapid HIV - 2 samples, catalog 433; C-Reactive Protein, catalog 431."
- };
- return '<small class="quality-api-catalog" title="'+esc(descriptions[category.id]||"Confirm current API enrollment")+'">API catalog · '+esc(apiCatalogNumbers[category.id]||"Verify enrollment")+'</small>';
-}
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
@@ -135,7 +116,7 @@ function groups(sec){
 /* Overview and selected category use identical PT sample content. */
 function apiAssessmentCard(it){
  const catalog=it.catalogNumber?
-  '<small class="quality-api-catalog quality-api-assessment-catalog" title="API proficiency testing program catalog number">API catalog · '+esc(it.catalogNumber)+'</small>':"";
+  '<small class="quality-api-catalog quality-api-assessment-catalog" title="'+esc(it.catalogNote||"API proficiency testing program catalog number")+'">API catalog · '+esc(it.catalogNumber)+'</small>':"";
  return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
  '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+catalog+
  '</div>'+
@@ -144,7 +125,7 @@ function apiAssessmentCard(it){
 }
 function apiOverviewCard(x, index){
  return '<article class="quality-map-card" data-pt-order="'+index+'" data-pt-category="'+esc(x.id)+'">'+
- '<div class="quality-map-top"><div class="quality-api-heading"><strong>'+esc(x.title)+'</strong>'+apiCatalogLabel(x)+'</div>'+apiProgramBadges(x)+'</div>'+
+ '<div class="quality-map-top"><div class="quality-api-heading"><strong>'+esc(x.title)+'</strong></div>'+apiProgramBadges(x)+'</div>'+
  '<ul class="quality-api-assessments">'+x.items.map(apiAssessmentCard).join('')+'</ul></article>';
 }
 function apiOverview(){
@@ -181,7 +162,7 @@ function ptCategoriesContent(){
  const category=map.find(item=>item.id===selectedPtCategory)||map[0];
  return '<section class="quality-pt-category-detail" data-pt-category="'+esc(category.id)+'" aria-label="'+esc(category.title)+' PT reference">'+
  '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span>'+
- '<div class="quality-api-heading"><h3>'+esc(category.title)+'</h3>'+apiCatalogLabel(category)+'</div><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
+ '<div class="quality-api-heading"><h3>'+esc(category.title)+'</h3></div><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
  apiProgramBadges(category)+'</header>'+
  '<ul class="quality-api-assessments">'+category.items.map(apiAssessmentCard).join('')+'</ul>'+
  '<div class="quality-pt-category-actions"><span>Only the assays on the active event are reportable.</span><div>'+
