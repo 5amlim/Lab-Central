@@ -164,7 +164,7 @@ function patientStep(i){
    '<div class="pf-review-interference-head"><span class="pf-review-interference-mark" aria-hidden="true">!</span><div><strong>Suspected clot / fibrin interference?</strong><span>Use the original specimen for a plasma retest if permitted by the approved SOP.</span></div></div>'+
    '<ol>'+
     '<li><b>Hold and assess.</b> If the result is unexpectedly elevated or discordant, inspect the original lithium-heparin tube and notify the provider. Do not assume the first result is false.</li>'+
-    '<li><b>Spin the same tube for 10 minutes</b> using the validated centrifuge settings, if the specimen is acceptable and the local procedure authorizes a plasma retest. Do not automatically spin a visibly clotted specimen.</li>'+
+    '<li><b>Spin the same tube for 10 minutes</b> using the validated centrifuge settings.</li>'+
     '<li><b>Repeat PATHFAST on plasma</b> from the original tube, avoiding the cell layer or fibrin. Compare both results and document/escalate discrepancies before reporting or correcting any result.</li>'+
    '</ol>'+
    '<p><b>Visible clot, unsuitable specimen or persistent discrepancy?</b> Follow the specimen rejection/redraw and provider-notification SOP. A plasma retest on the same tube is an interference check, <b>not</b> a new timed serial troponin draw.</p>'+
