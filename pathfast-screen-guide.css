@@ -196,3 +196,30 @@
 .pfs-rebuilt .pfs-lane.pfs-lane-tap-example .pfs-lane-number.pfs-click-target{background:#e3faee!important;border:3px solid #16b96e!important;box-shadow:0 0 0 3px #15b76a22!important;color:#136951}
 .pfs-rebuilt .pfs-lane-tap-example .pfs-lane-number .pfs-target-cue{background:#05774e!important;color:#fff!important;font-size:8px!important;padding:4px 6px!important;white-space:nowrap}
 @media(max-width:680px){.pfs-rebuilt .pfs-pink-status-caption{align-items:flex-start}.pfs-pink-status-caption span:last-child{flex-basis:100%}}
+
+/* Verify serial specimen identity and collection time before PATHFAST setup. */
+.pf-serial-figure .pf-action-heading{font-size:11px}
+.pf-serial-visual{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;padding:19px;background:linear-gradient(140deg,#f3f9fa,#fff)}
+.pf-serial-tube-card{display:flex;flex-direction:column;align-items:center;border:1px solid #d5e4e9;border-radius:13px;background:#fff;min-width:0;overflow:hidden;box-shadow:0 3px 12px rgba(38,90,108,.04)}
+.pf-serial-tube-card.baseline{border-color:#b6d9d3}
+.pf-serial-tube-card.repeat{border-color:#9ed7c9}
+.pf-serial-tube-card.fallback{border-color:#ecd9ba}
+.pf-serial-tube-top{padding:13px 12px 10px;width:100%;text-align:center;background:#edf7f5}
+.pf-serial-tube-card.fallback .pf-serial-tube-top{background:#fff8ed}
+.pf-serial-tube-top strong{font-size:15px;display:block;font-weight:900;color:#126e66}
+.pf-serial-tube-card.fallback .pf-serial-tube-top strong{color:#98702b}
+.pf-serial-tube-top span{display:block;margin-top:3px;color:#537585;font-size:11px;font-weight:650}
+.pf-serial-tube-card svg{width:100%;max-width:170px;display:block;margin:0 auto}
+.pf-serial-time{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 7px 13px;background:#fbfdfd;border-top:1px solid #e8f0f3}
+.pf-serial-time span{font-size:10px;color:#7b919d}
+.pf-serial-time strong{font-size:16px;color:#2a5c73;font-weight:850}
+.pf-serial-figure figcaption strong{color:#266c79}
+.pf-serial-safety{margin-top:13px;border:1px solid #cce3e5;border-radius:12px;background:#f6fbfb;padding:17px 20px;color:#426b7b;font-size:12px;line-height:1.68}
+.pf-serial-safety>strong{display:block;color:#216a76;font-size:13px;margin-bottom:8px}
+.pf-serial-safety ul{margin:0;padding-left:20px}
+.pf-serial-safety li+li{margin-top:6px}
+.pf-serial-safety b{color:#29566e}
+.pf-serial-safety p{margin:12px 0 0;padding-top:10px;border-top:1px solid #d9e8ea;font-size:11.5px}
+@media(max-width:700px){.pf-serial-visual{grid-template-columns:1fr;padding:10px;gap:10px}.pf-serial-tube-card{display:grid;grid-template-columns:minmax(95px,1fr) 115px minmax(90px,1fr);align-items:center}.pf-serial-tube-top{height:100%;display:flex;flex-direction:column;justify-content:center}.pf-serial-tube-card svg{width:105px}.pf-serial-time{height:100%;justify-content:center;border-top:0;border-left:1px solid #e8f0f3}.pf-serial-safety{padding:13px}}
+@media(max-width:390px){.pf-serial-tube-card{grid-template-columns:1fr 95px 1fr}.pf-serial-tube-card svg{width:95px}.pf-serial-time strong{font-size:13px}.pf-serial-tube-top strong{font-size:13px}}
+@media print{.pf-serial-tube-card,.pf-serial-safety{break-inside:avoid}.pf-serial-visual{grid-template-columns:repeat(3,minmax(0,1fr));-webkit-print-color-adjust:exact;print-color-adjust:exact}}
