@@ -39,9 +39,10 @@ function apiProgramBadges(category){
    Test/analyte badges remain neutral inside the colored containers. */
 function apiPanelTone(item, group){
  const name=String(group.instrument||"").toLowerCase();
- const first=String((group.tests||[])[0]||"").toLowerCase();
- if(name.includes("piccolo")&&first.includes("metlyte"))return "metlyte";
- if(name.includes("piccolo")&&first.includes("metlac"))return "metlac";
+ const tests=(group.tests||[]).map(test=>String(test).toLowerCase());
+ if(name.includes("piccolo")&&tests.some(t=>t.includes("metlyte"))&&tests.some(t=>t.includes("metlac")))return "piccolo-combo";
+ if(name.includes("piccolo")&&tests.some(t=>t.includes("metlyte")))return "metlyte";
+ if(name.includes("piccolo")&&tests.some(t=>t.includes("metlac")))return "metlac";
  if(name.includes("triage"))return "triage";
  if(name.includes("pathfast"))return "pathfast";
  if(name.includes("sysmex"))return "sysmex";
@@ -52,10 +53,8 @@ function apiPanelTone(item, group){
 function apiTestGroups(item){
  let groups=item.testGroups;
  if(!groups){
-  // The CH sample is tested on two differently color-coded Piccolo discs.
-  groups=item.code==="CH"
-   ?(item.tests||[]).map(test=>({instrument:item.instrument,tests:[test]}))
-   :[{instrument:item.instrument,tests:item.tests||[]}];
+  // Keep one Piccolo Xpress card for both CH discs; the discs remain separate badges.
+  groups=[{instrument:item.instrument,tests:item.tests||[]}];
  }
  return '<div class="quality-pt-analyzer-tests">'+groups.map(group=>
   '<div class="quality-pt-analyzer-group" data-pt-panel="'+apiPanelTone(item,group)+'">'+
