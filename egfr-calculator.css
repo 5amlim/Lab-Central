@@ -40,9 +40,10 @@
 .egfr-result[data-state="invalid"]{background:#fff9f0;border-color:#ebd5aa}
 .egfr-result[data-state="invalid"] p{color:#946321}
 .egfr-result-band{margin-top:12px;padding:13px 15px;border:1px solid #d6e5ed;border-radius:11px;background:#f8fbfc}
-.egfr-result-band>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:7px;font-size:12px}
-.egfr-result-band span{color:#638093}.egfr-result-band strong{color:#1d6471}
-.egfr-result-band p{font-size:11px;line-height:1.6;margin:8px 0 0;color:#697f90}
+.egfr-category-eyebrow{font-size:10px;font-weight:850;letter-spacing:.09em;color:#638093}
+.egfr-category-title{display:block;margin-top:5px;color:#1d6471;font-size:15px;line-height:1.4;font-weight:800}
+.egfr-category-range{margin-top:4px;color:#557687;font-size:12px;font-weight:700}
+.egfr-result-band p{font-size:11px;line-height:1.6;margin:9px 0 0;color:#697f90}
 .egfr-output-foot{border-top:1px solid #e2edf1;margin-top:auto;padding-top:20px}
 .egfr-output-foot strong{font-size:12px;color:#385e70}
 .egfr-output-foot p{font-size:12px;color:#6b8190;line-height:1.65;margin:6px 0 0}
