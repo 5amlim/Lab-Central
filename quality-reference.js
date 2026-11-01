@@ -18,7 +18,7 @@ const map=[
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
   {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
- {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machines:[["HIV Antigen/Antibody","hiv"],["Piccolo Xpress","piccolo"]],items:[
+ {id:"immunology",title:"Immunology",badge:"HV / CRP",machines:[["HIV Antigen/Antibody","hiv"],["Piccolo Xpress","piccolo"]],items:[
   {code:"HV",title:"HIV antigen / antibody rapid test",catalogNumber:"HV #433",instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
   {code:"CRP",title:"C-reactive protein",catalogNumber:"CRP #431",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
