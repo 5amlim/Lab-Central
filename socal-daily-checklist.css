@@ -420,3 +420,24 @@
 .dqc-monthly-safety-heading span{font-size:10px;font-weight:800;color:#318176;background:#edf7f4;border:1px solid #d3e8df;border-radius:999px;padding:5px 10px}
 .dqc-monthly-safety>p{color:#6c8796;font-size:11.5px;line-height:1.6;margin:0 0 13px}
 .dqc-monthly-safety .dqc-monthly-grid{max-width:none}
+
+
+/* Horizontal section carousel shared by Daily and Monthly Checklists. */
+.dqc-page .dqc-view-switch{
+ display:flex;flex-wrap:nowrap;align-items:stretch;gap:10px;
+ overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+ scroll-snap-type:x proximity;scroll-padding-inline:4px;
+ scrollbar-width:thin;scrollbar-color:#aecbd2 #eff6f7;
+ -webkit-overflow-scrolling:touch;padding:0 0 11px;
+}
+.dqc-page .dqc-view-button{
+ flex:0 0 clamp(265px,27%,330px);scroll-snap-align:start;
+ min-height:72px;min-width:0;
+}
+.dqc-page .dqc-view-switch::-webkit-scrollbar{height:7px}
+.dqc-page .dqc-view-switch::-webkit-scrollbar-thumb{background:#afcbd1;border-radius:999px}
+.dqc-page .dqc-view-switch::-webkit-scrollbar-track{background:#edf5f6;border-radius:999px}
+@media(max-width:600px){
+ .dqc-page .dqc-view-switch{display:flex;gap:9px}
+ .dqc-page .dqc-view-button{flex-basis:235px;min-height:70px}
+}
