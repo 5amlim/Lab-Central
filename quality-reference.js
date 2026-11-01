@@ -85,7 +85,7 @@ function apiOverview(){
     '<div class="quality-api-badge-group" aria-label="Tests or panels for '+esc(it.code)+'">'+
     it.tests.map(apiTestBadge).join('')+'</div></li>').join('')+'</ul></article>'
  ).join('')+'</div>'+
- '<div class="quality-followup"><strong>For every API event</strong><p>Use only the enrolled test system and assay list on the shipment sheet. Verify the assigned material, units and reporting method; retain submission records and corrective action documentation.</p></div></section>';
+ '</section>';
 }
 function levelsVisual(){
  const vals=[["LOW","#d6edf5"],["MID","#88c9de"],["HIGH","#2b879b"]];
