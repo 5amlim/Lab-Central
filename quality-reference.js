@@ -145,7 +145,7 @@ function ptCategoriesReference(){
  const selected=map.find(item=>item.id===selectedPtCategory)||map[0];
  const options=map.map(item=>
   '<button type="button" class="quality-pt-option'+(item.id===selected.id?' is-selected':'')+'" data-api-pt-category="'+esc(item.id)+'" aria-current="'+(item.id===selected.id?'true':'false')+'">'+
-   '<span>'+esc(item.title)+'</span>'+apiProgramBadges(item)+''+
+   '<span>'+esc(item.title)+'</span>'+apiProgramBadges(item)+
   '</button>'
  ).join('');
  return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
