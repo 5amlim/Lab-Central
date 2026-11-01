@@ -419,3 +419,11 @@
 .ptg-reference-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px 10px}
 .ptg-reference-catalog{margin-left:auto;text-align:right}
 @media(max-width:600px){.ptg-picker-catalog{display:none}.ptg-picker-option-catalog{white-space:normal;max-width:105px}}
+
+/* Single-program PT selectors show the same muted catalog label as Piccolo, aligned right. */
+.ptg-static-sample-row strong{min-width:0;flex:1 1 auto}
+.ptg-static-sample-row .ptg-static-catalog{margin-left:auto;text-align:right}
+@media(max-width:600px){
+ .ptg-static-sample-row{flex-wrap:wrap}
+ .ptg-static-sample-row .ptg-static-catalog{display:inline-block;white-space:normal;max-width:100%;font-size:9.5px}
+}
