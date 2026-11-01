@@ -408,3 +408,14 @@
  .ptg-file-instruction{break-inside:avoid}
  .ptg-record-visual,.ptg-method-visual{break-inside:avoid}
 }
+
+/* Match the muted, right-aligned program references used in API PT overview cards. */
+.ptg-picker-catalog,.ptg-picker-option-catalog,.ptg-reference-catalog{
+ flex:none;color:#8697a4;font-size:10px;font-weight:550;letter-spacing:0;line-height:1.4;white-space:nowrap
+}
+.ptg-picker-catalog{margin-left:auto;text-align:right}
+.ptg-picker-chevron{margin-left:2px}
+.ptg-picker-option-catalog{margin-left:auto;text-align:right}
+.ptg-reference-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px 10px}
+.ptg-reference-catalog{margin-left:auto;text-align:right}
+@media(max-width:600px){.ptg-picker-catalog{display:none}.ptg-picker-option-catalog{white-space:normal;max-width:105px}}
