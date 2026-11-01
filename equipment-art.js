@@ -855,7 +855,11 @@ function specimenGuide(sec){
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
- '<div class="device-collection-frame"><div class="device-collection-main"><div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item">'+collectionPhotoMarkup(sec,x[0],x[1])+'<div class="device-collection-copy"><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span></div></article>').join('')+'</div>'+
+ '<div class="device-collection-frame"><div class="device-collection-main"><div class="device-collection-list">'+items.map(x=>'<article class="device-collection-item">'+collectionPhotoMarkup(sec,x[0],x[1])+'<div class="device-collection-copy"><strong>'+visualEsc(x[1])+'</strong><span>'+visualEsc(x[2])+'</span>'+
+ (sec.id==='spotfire'?'<div class="device-collection-panels" aria-label="Compatible SPOTFIRE panel options">'+
+  (x[0]==='utm'?'<span class="device-collection-panel">Respiratory panel</span><span class="device-collection-panel">Respiratory mini panel</span>':
+   '<span class="device-collection-panel">Sore throat panel <b>NY only</b></span><span class="device-collection-panel">Sore throat mini panel</span>')+
+ '</div>':'')+'</div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
  '</div>'+collectionTestWindow(sec)+'</div></section>';
 }
