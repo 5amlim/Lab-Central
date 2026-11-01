@@ -349,14 +349,11 @@
 }
 
 
-/* API overview: compact staggered columns, no stretched empty category cards.
-   Instrument links are attached to their PT event instead of duplicated above. */
+/* API overview: one full-width column in program order.
+   Each card contains its own PT events and direct analyzer links. */
 .quality-api-overview .quality-map-grid{
- display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+ display:grid;grid-template-columns:minmax(0,1fr);gap:14px;
  align-items:start
-}
-.quality-api-overview .quality-map-column{
- display:flex;flex-direction:column;gap:14px;min-width:0
 }
 .quality-api-overview .quality-map-card{
  align-self:stretch;min-width:0;padding:18px;border:1px solid #d9e7eb;
@@ -417,14 +414,7 @@
  }
  .quality-api-overview .quality-api-assessment-links .quality-api-instrument-link{text-align:left}
 }
-@media(max-width:820px){
- .quality-api-overview .quality-map-grid{display:flex;flex-direction:column;gap:12px}
- .quality-api-overview .quality-map-column{display:contents}
- .quality-api-overview .quality-map-card[data-pt-order="0"]{order:0}
- .quality-api-overview .quality-map-card[data-pt-order="1"]{order:1}
- .quality-api-overview .quality-map-card[data-pt-order="2"]{order:2}
- .quality-api-overview .quality-map-card[data-pt-order="3"]{order:3}
-}
+
 @media(max-width:600px){
  .quality-api-overview .quality-map-card{padding:13px}
  .quality-api-overview .quality-api-assessments li{padding:12px}
@@ -432,6 +422,5 @@
  .quality-api-overview .quality-pt-analyzer-tests{grid-template-columns:1fr}
 }
 @media print{
- .quality-api-overview .quality-map-column{break-inside:auto}
  .quality-api-overview .quality-map-card{box-shadow:none;break-inside:avoid}
 }
