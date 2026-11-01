@@ -397,6 +397,9 @@
 .quality-api-overview .quality-map-card[data-pt-category="chemistry-core"]{
  --pt-accent:#18796e;--pt-tint:#eff9f5;--pt-border:#cbe7dd;--pt-chip:#e0f2eb
 }
+.quality-api-overview .quality-map-card[data-pt-category="cardiac-markers"]{
+ --pt-accent:#a45a62;--pt-tint:#fdf5f5;--pt-border:#eed7da;--pt-chip:#f9e9ec
+}
 .quality-api-overview .quality-map-card[data-pt-category="hematology"]{
  --pt-accent:#2f6595;--pt-tint:#f1f7fc;--pt-border:#d2e2f0;--pt-chip:#e4f0f9
 }
@@ -483,6 +486,9 @@
 }
 .quality-pt-categories .quality-pt-category-detail[data-pt-category="chemistry-core"]{
  --pt-accent:#18796e;--pt-tint:#eff9f5;--pt-border:#cbe7dd;--pt-chip:#e0f2eb
+}
+.quality-pt-categories .quality-pt-category-detail[data-pt-category="cardiac-markers"]{
+ --pt-accent:#a45a62;--pt-tint:#fdf5f5;--pt-border:#eed7da;--pt-chip:#f9e9ec
 }
 .quality-pt-categories .quality-pt-category-detail[data-pt-category="hematology"]{
  --pt-accent:#2f6595;--pt-tint:#f1f7fc;--pt-border:#d2e2f0;--pt-chip:#e4f0f9
