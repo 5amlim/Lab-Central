@@ -316,7 +316,18 @@ function reagentSvg(kind,name,tone){
   '<rect x="35" y="59" width="87" height="28" rx="5" fill="#e5f2f5" stroke="#adcbd3" stroke-width="2"/>'+
   '<path d="M68 66v14M86 66v14" stroke="#b25d82" stroke-width="3"/><circle cx="169" cy="74" r="12" fill="#dfecf1" stroke="#9fbecb" stroke-width="2"/></svg>';
 }
-function reagentReference(reagent){
+/* One single-use test consumable per assigned sample and assay.
+   These counts are minimum planned quantities, subject to the current event. */
+function reagentCountBadge(count,unit){
+ if(!Number.isInteger(count)||count<=0||!unit)return "";
+ const title="Minimum for one run per assigned PT sample on this assay. Verify the current API event and approved SOP.";
+ return '<div class="ptg-sample-count ptg-reagent-count" title="'+e(title)+'" aria-label="'+e(count)+' '+e(unit.toLowerCase())+' needed for the assigned PT event">'+
+  '<strong>'+e(count)+'</strong><span>'+e(unit)+'<small>NEEDED</small></span></div>';
+}
+function reagentReference(reagent,count){
+ const unit=reagent.kind==="multi"?
+   (reagent.type==="Piccolo reagent discs"?"DISCS":"CARTRIDGES"):
+   (reagent.art==="gi-pouch"?"POUCHES":reagent.art==="abbott-hiv"?"STRIPS":"DISCS");
  if(reagent.kind==="multi"){
   return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi'+(reagent.style==="pathfast"?' ptg-pathfast-multi':reagent.style==="triage"?' ptg-triage-multi':'')+'">'+
    '<span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
@@ -324,7 +335,7 @@ function reagentReference(reagent){
    '<strong class="ptg-multi-reagent-title">'+e(reagent.name)+'</strong></div></div>'+
    '<div class="ptg-multi-reagent-grid">'+reagent.items.map(item=>
      '<div class="ptg-mini-reagent ptg-mini-reagent--'+e(item.tone)+'">'+
-      '<div class="ptg-mini-reagent-art">'+reagentSvg(item.art,item.name,item.tone)+'</div>'+
+      '<div class="ptg-mini-reagent-art">'+reagentSvg(item.art,item.name,item.tone)+reagentCountBadge(count,unit)+'</div>'+
       '<div class="ptg-mini-reagent-info"><span class="ptg-mini-reagent-code">'+e(item.badge)+'</span>'+
        '<strong>'+e(item.name)+'</strong><p>'+e(item.note)+'</p></div></div>'
     ).join('')+'</div>'+
@@ -333,13 +344,13 @@ function reagentReference(reagent){
  if(reagent.art==="gi-pouch"){
   return '<div class="ptg-reference-tile ptg-reagent-tile ptg-torch-gi-reagent">'+
    '<span class="ptg-reference-eyebrow">02 · BIOFIRE GI PANEL POUCH</span>'+
-   '<div class="ptg-torch-gi-visual">'+reagentSvg("gi-pouch",reagent.name)+'</div>'+
+   '<div class="ptg-torch-gi-visual">'+reagentSvg("gi-pouch",reagent.name)+reagentCountBadge(count,unit)+'</div>'+
    '<div class="ptg-torch-gi-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
    '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong>'+
    '<p>'+e(reagent.note)+'</p></div></div>';
  }
  return '<div class="ptg-reference-tile ptg-reagent-tile'+(reagent.tone==="metlyte"?' ptg-reagent-tile--metlyte':reagent.tone==="metlac"?' ptg-reagent-tile--metlac':'')+'"><span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
-  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name,reagent.tone)+'</div>'+
+  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-reagent-art">'+reagentSvg(reagent.art,reagent.name,reagent.tone)+reagentCountBadge(count,unit)+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.type)+'</span>'+
   '<strong class="ptg-reagent-name">'+e(reagent.name)+'</strong><p>'+e(reagent.note)+'</p></div></div></div>';
 }
@@ -363,7 +374,7 @@ function materialPreview(id,st){
    (m.samplesPerShipment?'<div class="ptg-sample-count" aria-label="'+e(m.samplesPerShipment)+' samples per shipment"><strong>'+e(m.samplesPerShipment)+'</strong><span>SAMPLES<small>PER SHIPMENT</small></span></div>':'')+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
   '<p>'+e(note)+'</p></div></div></div>';
- const test=reagent?reagentReference(reagent):"";
+ const test=reagent?reagentReference(reagent,m.samplesPerShipment):"";
  return '<section class="ptg-specimen-reference" aria-label="PT vial and reagent reference">'+
   '<div class="ptg-specimen-label">'+(reagent?'PT sample &amp; test reagent':'PT sample reference')+'</div>'+
   '<div class="ptg-reference-grid'+(reagent?' has-reagent':' sample-only')+'">'+sample+test+'</div>'+
