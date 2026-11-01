@@ -7,19 +7,21 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
 const map=[
  {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM / PSC",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
   {code:"CH",title:"Chemistry Core PT sample",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
-  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"Match the CM event to the assigned analyzer and enrolled assays. PATHFAST can test hs-Troponin I, D-dimer and NT-proBNP when assigned.",tests:["Cardiac troponin I","D-dimer"]},
-  {code:"PSC",title:"PSC sample (verify event)",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"PSC is a displayed PT sample reference. Its precise program name is not independently verified. Confirm the actual shipment, analyzer, assigned analytes and units instead of assuming it is a cardiac pilot.",tests:["Verify event analytes","Verify enrolled method"]},
-  {code:"CHECK",title:"BNP / NT-proBNP",instrument:"PATHFAST",route:"pathfast",description:"PATHFAST measures NT-proBNP, not BNP. Confirm the event-specific program code and analyte assignment before testing or reporting.",tests:["NT-proBNP · PATHFAST","BNP · other enrolled methods"]}
+  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
+   {instrument:"Triage MeterPro",tests:["Troponin I","D-dimer"]},
+   {instrument:"PATHFAST",tests:["hs-Troponin I","D-dimer","NT-proBNP"]}
+  ]},
+  {code:"PSC",title:"PSC sample (verify event)",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"PSC is a displayed PT sample reference. Its precise program name is not independently verified. Confirm the actual shipment, analyzer, assigned analytes and units rather than assuming CM's assay list.",tests:["Verify event analytes","Verify enrolled method"]},
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
-  {code:"HSY",title:"Hematology - 3S PT sample",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["Hematology - 3S","Three-part white cell differential"]}
+  {code:"HSY",title:"Hematology - 3S PT sample",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
   {code:"GIP",title:"Gastrointestinal pathogens",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
  {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machines:[["Rapid POC tests","poc"],["Piccolo Xpress","piccolo"]],items:[
   {code:"HV",title:"Rapid human immunodeficiency virus test",instrument:"Rapid POC tests",route:"poc",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["Human immunodeficiency virus antigen / antibody"]},
-  {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["C-reactive protein","MetLyte Plus CRP"]}
+  {code:"CRP",title:"C-reactive protein",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
 function apiInstrumentLink(name,route){
@@ -27,6 +29,18 @@ function apiInstrumentLink(name,route){
 }
 function apiTestBadge(test){
  return '<span class="quality-api-test-badge">'+esc(test)+'</span>';
+}
+/* The CM sample serves different enrolled assay sets on Triage and PATHFAST.
+   Keep each instrument's tests together in the same card, not a second CHECK card. */
+function apiTestGroups(item){
+ if(!item.testGroups)return '<div class="quality-api-badge-group">'+(item.tests||[]).map(apiTestBadge).join('')+'</div>';
+ return '<div class="quality-pt-analyzer-tests">'+item.testGroups.map(group=>
+  '<div class="quality-pt-analyzer-group">'+
+   '<strong class="quality-pt-analyzer-title">'+esc(group.instrument)+'</strong>'+
+   '<div class="quality-api-badge-group" aria-label="'+esc(group.instrument)+' assigned analytes">'+
+    group.tests.map(apiTestBadge).join('')+'</div>'+
+  '</div>'
+ ).join('')+'</div>';
 }
 const step=(title,description)=>[{type:"list",level:1,text:title},{type:"list",level:2,text:description}];
 function groups(sec){
@@ -82,8 +96,8 @@ function apiOverview(){
     '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
     '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
     '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
-    '<div class="quality-api-badge-group" aria-label="Tests or panels for '+esc(it.code)+'">'+
-    it.tests.map(apiTestBadge).join('')+'</div></li>').join('')+'</ul></article>'
+    '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+
+    apiTestGroups(it)+'</div></li>').join('')+'</ul></article>'
  ).join('')+'</div>'+
  '</section>';
 }
@@ -117,8 +131,8 @@ function ptCategoriesContent(){
     '<div class="quality-pt-assay-top"><span class="quality-api-code">'+esc(it.code)+'</span>'+
       '<h4>'+esc(it.title)+'</h4><div class="quality-pt-card-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
     '<p>'+esc(it.description)+'</p>'+
-    '<div class="quality-pt-assay-foot"><span class="quality-pt-card-label">ENROLLED TEST REFERENCE</span>'+
-      '<div class="quality-api-badge-group">'+it.tests.map(apiTestBadge).join('')+'</div></div>'+
+    '<div class="quality-pt-assay-foot"><span class="quality-pt-card-label">'+(it.testGroups?'TESTS BY ANALYZER':'ENROLLED TEST REFERENCE')+'</span>'+
+      apiTestGroups(it)+'</div>'+
    '</article>';
  }).join('');
  return '<section class="quality-pt-category-detail" aria-label="'+esc(category.title)+' PT reference">'+
