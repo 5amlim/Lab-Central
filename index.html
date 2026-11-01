@@ -160,7 +160,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="training-competency.css?v=20261101-compliance-scroll-v1" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261101-pt-linked-handling-v5" media="all">
-  <link rel="stylesheet" href="pt-testing-guide.css?v=20261101-sample-select-v7" media="all">
+  <link rel="stylesheet" href="pt-testing-guide.css?v=20261101-pt-patient-style-v8" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-submit-overview-v4" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
@@ -384,7 +384,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
 <script src="quality-reference.js?v=20261101-api-types-only-v6"></script>
-<script src="pt-testing-guide.js?v=20261101-sample-select-v7"></script>
+<script src="pt-testing-guide.js?v=20261101-pt-patient-style-v8"></script>
 <script src="api-submission.js?v=20261101-submit-overview-v4"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
@@ -2265,7 +2265,7 @@ function sectionRender(sec,tab){
  if(window.LAB_PT_TESTING?.supports(sec)&&tab!=='pt-testing'&&/^(patient|patient-testing|ua-strip|hcg-cassette|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))/.test(tab)){
   h+='<div class="ptg-patient-shortcut"><div><span>PROFICIENCY TESTING</span><strong>Working with an API PT sample?</strong><p>Use the same patient procedure, with the PT-specific ID, instrument mode, materials and documentation requirements.</p></div><button type="button" data-gotab="pt-testing">PT testing differences <span aria-hidden="true">→</span></button></div>';
  }
- if(sec.id!=='pathfast')h+=tab==='pt-testing'?'<p class="source-footnote">For PT testing, use only the actual PT sample ID, never a real patient MRN. Verify the assigned kit, site SOP, and API event instructions.</p>':`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
+ if(sec.id!=='pathfast'&&tab!=='pt-testing')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
  if(sec.id==='sendout')h+='</div>';
  el('mainContent').innerHTML=h;
