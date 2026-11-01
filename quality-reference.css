@@ -551,3 +551,22 @@
  .quality-pt-categories .quality-pt-analyzer-tests{grid-template-columns:1fr}
 }
 @media print{.quality-pt-categories .quality-api-assessments>li{break-inside:avoid}}
+
+
+/* Small, muted API catalog reference beside the PT discipline heading.
+   These are catalog program numbers, not the short specimen IDs. */
+.quality-api-overview .quality-api-heading,
+.quality-pt-categories .quality-api-heading{
+ display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 12px;min-width:0
+}
+.quality-api-overview .quality-api-heading>strong{display:inline}
+.quality-api-overview .quality-api-heading .quality-api-catalog,
+.quality-pt-categories .quality-api-heading .quality-api-catalog{
+ display:inline;font-size:10px;font-weight:550;letter-spacing:0;line-height:1.45;
+ color:#8697a4;white-space:normal
+}
+.quality-pt-categories .quality-api-heading h3{margin:6px 0 4px}
+@media(max-width:600px){
+ .quality-api-overview .quality-api-heading,
+ .quality-pt-categories .quality-api-heading{align-items:flex-start;gap:3px 8px}
+}
