@@ -99,6 +99,7 @@ const materials={
  "drug-screen":[{id:"DRUG",name:"Urine drug screen PT sample",code:"PT",color:"#8b9b9f",note:"Use only an enrolled event and kit-specific method. PT is a generic guide badge, not a verified API specimen prefix."}]
 };
 function selectedMaterial(id,st){
+ if(id==="pathfast")return materials.pathfast[0]; // Ignore any old stored PSC or other selections.
  const options=materials[id]||[];
  if(st.material==="OTHER")return {id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."};
  return options.find(o=>o.id===st.material)||(options.length===1?options[0]:null);
