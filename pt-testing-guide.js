@@ -11,9 +11,9 @@ const configs={
  ["Fit green adapter","Seat the small PT vial in the approved green pocH adapter. Check the fit before closing the holder."],
  ["Run and print","Run the usual CBC patient test, not QC. Enter the actual HSY sample ID, check CBC/differential and flags, then print all reports."]]},
  triage:{label:"CM / PSC",mode:"Miscellaneous Test",steps:[
- ["Verify cardiac PT material","Match the event code, vial ID and assigned Triage cartridge/analytes. Prepare the vial per API instructions."],
- ["Select Miscellaneous Test","Choose Misc Test rather than a patient record. Enter the exact PT specimen ID."],
- ["Run and print","Process with the routine patient cartridge workflow. Check flags and units; print all enrolled cardiac results."]]},
+ ["Confirm cardiac PT sample","Match the CM or PSC vial ID to the API event and prepare the material as instructed. CM is tested with separate Troponin I and D-dimer cartridges; verify PSC assignments on its event sheet."],
+ ["Select Miscellaneous Test","On the Triage MeterPro select MISC. TEST and enter the exact PT specimen ID. Use the instrument's normal sample-test workflow, not the QC mode."],
+ ["Run assigned assays and print","For CM, run both the Troponin I and D-dimer test cartridges as separate tests. Confirm the reported units and any flags, then print both results. For PSC, test only the assays assigned on the current event sheet."]]},
  piccolo:{label:"CH / CRP",mode:"Analyze → Control",steps:[
  ["Identify the two PT sample types","CH is the chemistry PT material; CRP is the separate C-reactive protein PT material. Confirm each vial and the assigned disc before testing."],
  ["Prepare and choose Control","Load the appropriate disc as usual, avoiding bubbles. In Analyze, select Control instead of Patient and enter the assigned PT sample ID."],
@@ -163,6 +163,20 @@ function reagentFor(id,st){
    note:"For "+(st.code==="PSC"?"PSC":"other event samples")+", confirm the actual event's enrolled assay or assays before choosing cartridges. CM's three-cartridge requirement must not be assumed for this sample."
   };
  }
+ if(id==="triage"){
+  if(mat==="CM"||mat==="PSC")return {
+   kind:"multi",type:"Triage MeterPro test cartridges",style:"triage",
+   name:"Troponin I + D-dimer",badge:mat==="CM"?"TWO CARTRIDGES":"VERIFY EVENT ASSAYS",
+   note:mat==="CM"?
+    "For CM, run and print results from both cartridges. Match the PT specimen ID and result units to the API event worksheet.":
+    "Troponin I and D-dimer are illustrated as the two Triage assays used by the clinic. For PSC, confirm the current shipment requires each assay before testing or submitting results.",
+   items:[
+    {name:"Troponin I",badge:"TROPONIN I",tone:"triage-troponin",art:"triage",note:"Blue identification stripe · separate assay device"},
+    {name:"D-dimer",badge:"D-DIMER",tone:"triage-ddimer",art:"triage",note:"Yellow identification stripe · separate assay device"}
+   ]
+  };
+  return null;
+ }
  if(id==="piccolo"){
   if(mat==="CRP")return {
    name:"MetLyte Plus CRP",type:"Piccolo reagent disc",tone:"metlyte",
@@ -179,7 +193,6 @@ function reagentFor(id,st){
   return null;
  }
  const named={
-  triage:{name:"Assigned cardiac test cartridge",type:"Triage MeterPro",note:"Use the cartridge and cardiac analytes listed for this CM or PSC event. Do not assume all analytes are enrolled.",art:"cassette"},
   torch:{name:"Gastrointestinal (GI) panel pouch",type:"BioFire TORCH",note:"Use the GI pouch required for the assigned GIP event.",art:"pouch"},
   poc:{name:"Approved rapid HIV test kit",type:"HIV testing",note:"Use the clinic's approved rapid HIV test device. Match the event and read window to the kit.",art:"cassette"},
   febridx:{name:"FebriDx test device",type:"Rapid test",note:"Only use PT material approved for the FebriDx fingerstick method.",art:"cassette"},
@@ -204,8 +217,33 @@ function reagentFor(id,st){
  return named[id]||null;
 }
 /* Compact, intentionally schematic test consumables. Never use artwork for product identification. */
+/* Keep the Triage PT devices consistent with the detailed physical cartridge
+   illustration in the main Triage training page. Render a self-contained
+   cartridge if that guide script has not initialized yet. */
+function triagePtCartridgeSvg(assay){
+ const id=assay==="triage-ddimer"?"ddimer":"troponin";
+ const existing=window.LAB_TRIAGE_VISUAL?.cassetteSvg?.(id,false);
+ if(existing)return existing;
+ const dd=id==="ddimer",label=dd?"D-dimer":"Troponin I",band=dd?"#f0c631":"#8b9fcf";
+ return '<svg viewBox="0 0 160 375" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of Quidel Triage '+e(label)+' cartridge, with vertical magenta label, '+(dd?'yellow':'blue')+' identification stripe and lower sample well">'+
+ '<defs><linearGradient id="ptg-tri-case-'+id+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset=".55" stop-color="#f5f8f9"/><stop offset="1" stop-color="#dce3e7"/></linearGradient></defs>'+
+ '<ellipse cx="80" cy="367" rx="67" ry="6" fill="#d6e1e5"/>'+
+ '<path d="M77 12 Q22 13 18 63 L18 311 Q18 345 53 351 H106 Q141 349 142 314 V64 Q138 13 87 12 Z" fill="url(#ptg-tri-case-'+id+')" stroke="#b9c6cc" stroke-width="2.5"/>'+
+ '<path d="M30 84 L80 25 L130 84 H105 V269 H55 V84 Z" fill="#9b005e"/>'+
+ '<rect x="70" y="48" width="20" height="213" rx="9" fill="#edf3f5" stroke="#acbbc3" stroke-width="2"/>'+
+ '<rect x="76" y="56" width="8" height="197" rx="4" fill="#c6d2d7"/>'+
+ '<rect x="44" y="91" width="30" height="168" rx="2" fill="#9b005e"/>'+
+ '<text x="0" y="0" transform="translate(65 225) rotate(-90)" fill="white" font-size="22" font-family="Arial,sans-serif" font-weight="700">'+e(label)+'</text>'+
+ '<path d="M113 96 V254" stroke="#9b005e" stroke-width="6" stroke-linecap="round"/>'+
+ '<text x="80" y="279" text-anchor="middle" fill="#9b005e" font-size="16" font-weight="700" font-family="Arial,sans-serif">Triage</text>'+
+ '<path d="M30 287 H130" stroke="'+band+'" stroke-width="7"/>'+
+ '<path d="M38 315 Q80 288 124 315 L112 334 Q80 345 49 333 Z" fill="none" stroke="#b10c67" stroke-width="5"/>'+
+ '<ellipse cx="81" cy="320" rx="30" ry="10" fill="#e4eef1" stroke="#93aab5" stroke-width="2"/>'+
+ '<path d="M28 305 H43 L37 298 V312 Z" fill="#b10c67"/></svg>';
+}
 function reagentSvg(kind,name,tone){
  const safe=e(name);
+ if(kind==="triage")return triagePtCartridgeSvg(tone);
  if(kind==="disc"){
   const ring=tone==="metlyte"?"#1b9a8d":tone==="metlac"?"#7970b2":"#8fb4c4";
   const port=tone==="metlyte"?"#4cb6aa":tone==="metlac"?"#9888ca":"#4c8e9f";
@@ -258,7 +296,7 @@ function reagentSvg(kind,name,tone){
 }
 function reagentReference(reagent){
  if(reagent.kind==="multi"){
-  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi'+(reagent.style==="pathfast"?' ptg-pathfast-multi':'')+'">'+
+  return '<div class="ptg-reference-tile ptg-reagent-tile ptg-reagent-multi'+(reagent.style==="pathfast"?' ptg-pathfast-multi':reagent.style==="triage"?' ptg-triage-multi':'')+'">'+
    '<span class="ptg-reference-eyebrow">02 · TEST CARTRIDGE / REAGENT</span>'+
    '<div class="ptg-multi-reagent-head"><div><span class="ptg-reference-badge ptg-reagent-badge">'+e(reagent.badge||"BOTH DISCS REQUIRED")+'</span>'+
    '<strong class="ptg-multi-reagent-title">'+e(reagent.name)+'</strong></div></div>'+
@@ -327,13 +365,21 @@ function workflow(id,sequence){
    '<button type="button" class="ptg-next" data-ptg-mode="all">View all steps ↗</button>')+'</div>';
  const stepTitle=(item,i)=>{
   if(i===0&&id==="pathfast")return st.code?"Confirm "+(st.code==="other"?"assigned":st.code)+" PT sample":"Choose PT sample";
+  if(id==="triage"&&i===0){
+   const v=selectedMaterial(id,st);
+   return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
+  }
   if(id!=="piccolo"||i!==0)return item[0];
   const v=selectedMaterial(id,st);
   return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
-  const desc=id==="pathfast"&&i===0?
+  const desc=id==="triage"&&i===0?
+   (!choice?"Choose the assigned CM or PSC sample above to display the vial and two Triage cartridge references.":
+    choice.id==="CM"?"Match the CM vial to the API event. Prepare the specimen for separate Troponin I and D-dimer cartridges.":
+    "Match the PSC vial to the API event. Verify whether Troponin I and D-dimer are both assigned for this shipment."):
+   id==="pathfast"&&i===0?
    (!st.code?"Select the assigned PT sample above to display the vial and corresponding cartridge reference.":
     st.code==="CM"?"Match the CM vial and ID to the event. Prepare the specimen for hs-Troponin I, D-dimer and NT-proBNP cartridges.":
     "Match the selected vial and ID to the event sheet. Confirm which PATHFAST assays are assigned before testing."):
