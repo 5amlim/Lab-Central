@@ -116,7 +116,7 @@ function groups(sec){
 /* Overview and selected category use identical PT sample content. */
 function apiAssessmentCard(it){
  const catalog=it.catalogNumber?
-  '<small class="quality-api-catalog quality-api-assessment-catalog" title="'+esc(it.catalogNote||"API proficiency testing program catalog number")+'">API catalog · '+esc(it.catalogNumber)+(it.samplesPerShipment?' · '+esc(it.samplesPerShipment)+' samples per shipment':'')+'</small>':"";
+  '<small class="quality-api-catalog quality-api-assessment-catalog" title="'+esc(it.catalogNote||"API proficiency testing program catalog number")+'">API catalog · '+esc(it.catalogNumber)+(it.samplesPerShipment?' · '+esc(it.samplesPerShipment)+' samples per event':'')+'</small>':"";
  return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
  '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+catalog+
  '</div>'+
