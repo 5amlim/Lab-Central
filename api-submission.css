@@ -167,3 +167,27 @@
  .api2-phase .api2-step-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .api2-phase .api2-step{break-inside:avoid}
 }
+
+/* Calibration verification shares the API and Daily/Monthly location selector design. */
+.calver2-site-selector{position:relative;isolation:isolate;margin:17px 0 23px;z-index:3}
+.calver2-site-selector .dqc-market-picker{margin:0 0 13px}
+.calver2-site-selector .dqc-location-bar{margin:0 0 17px}
+.calver2-site-selector .dqc-market-heading{margin-bottom:0}
+.calver2-site-selector .dqc-market-heading h2{font-size:22px}
+.calver2-site-selector .dqc-market-heading p{font-size:11.8px}
+.calver2-site-selector .dqc-location-picker{z-index:15}
+@media(max-width:740px){
+ .calver2-site-selector .dqc-market-picker{display:block;padding:13px}
+ .calver2-site-selector .dqc-picker-label{display:block;margin-bottom:9px}
+ .calver2-site-selector .dqc-market-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .calver2-site-selector .dqc-market-choice{width:100%;min-width:0;padding:10px 6px}
+ .calver2-site-selector .dqc-location-bar{align-items:stretch}
+ .calver2-site-selector .dqc-location-picker{width:100%;min-width:0;flex:1}
+ .calver2-site-selector .dqc-location-hint{margin-left:0}
+}
+@media(max-width:440px){
+ .calver2-site-selector .dqc-location-bar{display:grid;grid-template-columns:minmax(0,1fr)}
+ .calver2-site-selector .dqc-location-picker{width:100%}
+}
+@media print{.calver2-site-selector .dqc-market-picker,.calver2-site-selector .dqc-location-bar{display:none!important}}
+
