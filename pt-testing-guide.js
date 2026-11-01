@@ -48,7 +48,7 @@ function patientGroup(sec,groups){
  return x?(sec.id==="clinitek"?"ua-strip":x.id):null;
 }
 function stateFor(id,length){
- const v=remembered.get(id)||{step:0,mode:"guided",assay:"troponin",code:"",material:""};
+ const v=remembered.get(id)||{step:0,mode:"guided",assay:"",code:"",material:""};
  return {...v,step:Math.max(0,Math.min(length-1,v.step))};
 }
 
@@ -100,43 +100,59 @@ const materials={
 function selectedMaterial(id,st){
  const options=materials[id]||[];
  if(st.material==="OTHER")return {id:"OTHER",name:"Other assigned PT material",code:"EVENT",color:"#839aa0",note:"Use the actual specimen ID, test and preparation from the current shipment."};
- return options.find(o=>o.id===st.material)||options[0]||null;
+ return options.find(o=>o.id===st.material)||(options.length===1?options[0]:null);
 }
-/* Keep the sample selector in the PT page heading at every guided step.
-   The selected vial reference belongs to the first procedure step only. */
-function pickerRow(label,field,code,options,value,aria){
- return '<label class="ptg-picker-field"><span class="ptg-picker-caption">'+e(label)+'</span>'+
- '<span class="ptg-picker-shell"><span class="ptg-picker-code" aria-hidden="true">'+e(code)+'</span>'+
- '<select data-ptg-field="'+e(field)+'" aria-label="'+e(aria)+'">'+
- options.map(o=>'<option value="'+e(o[0])+'"'+(value===o[0]?' selected':'')+'>'+e(o[1])+'</option>').join('')+
- '</select><span class="ptg-picker-chevron" aria-hidden="true"></span></span></label>';
+function sampleLabel(o){
+ return String(o.name||"PT sample").replace(/^[^·]+ · /,"");
+}
+/* The PT sample chooser is shared by every instrument. Single assigned samples
+   use the same visual language as the dropdown trigger but are not interactive. */
+function staticPicker(o){
+ return '<div class="ptg-static-sample" aria-label="PT sample: '+e(o.code||"PT")+', '+e(sampleLabel(o))+'">'+
+ '<span class="ptg-picker-caption">PT sample</span>'+
+ '<div class="ptg-static-sample-row"><span class="ptg-picker-code">'+e(o.code||"PT")+'</span>'+
+ '<strong>'+e(sampleLabel(o))+'</strong></div></div>';
+}
+function pickerRow(label,field,options,value,aria){
+ const selected=options.find(o=>o.value===value);
+ const menuOptions=options.map(o=>({value:o.value,label:o.label,badge:o.badge}));
+ return '<div class="ptg-picker-field"><span class="ptg-picker-caption">'+e(label)+'</span>'+
+ '<button type="button" class="ptg-picker-trigger'+(selected?' has-selection':'')+'"'+
+ ' data-ptg-dropdown-trigger="'+e(field)+'" data-ptg-value="'+e(selected?.value||"")+'"'+
+ ' data-ptg-options="'+e(JSON.stringify(menuOptions))+'" aria-haspopup="listbox" aria-expanded="false"'+
+ ' aria-label="'+e(aria)+'">'+
+ (selected?'<span class="ptg-picker-code">'+e(selected.badge||selected.value)+'</span>':'')+
+ '<span class="ptg-picker-value'+(selected?'':' is-placeholder')+'">'+e(selected?.label||label+"…")+'</span>'+
+ '<span class="ptg-picker-chevron" aria-hidden="true"></span></button></div>';
 }
 function materialPicker(id,st){
- if(id==="sysmex"){
-  return '<div class="ptg-static-sample" aria-label="PT sample: HSY, CBC PT sample">'+
-   '<span class="ptg-picker-caption">PT sample</span><div class="ptg-static-sample-row">'+
-   '<span class="ptg-picker-code">HSY</span><strong>CBC PT sample</strong></div></div>';
- }
  if(id==="pathfast"){
-  const assays=[["troponin","High-sensitivity Troponin I"],["ddimer","D-dimer"],["ntprobnp","NT-proBNP"]];
-  const codes=[["","Select from shipment"],["CM","Cardiac markers"],["PSC","Cardiac pilot"],["other","Other assigned event"]];
-  const badges={troponin:"hs-TnI",ddimer:"DD",ntprobnp:"NT-proBNP"};
+  const assays=[
+   {value:"troponin",badge:"hs-TnI",label:"High-sensitivity Troponin I"},
+   {value:"ddimer",badge:"DD",label:"D-dimer"},
+   {value:"ntprobnp",badge:"NT-proBNP",label:"NT-proBNP"}
+  ];
+  const codes=[
+   {value:"CM",badge:"CM",label:"Cardiac markers"},
+   {value:"PSC",badge:"PSC",label:"Cardiac pilot"},
+   {value:"other",badge:"OTHER",label:"Other event on shipment"}
+  ];
   return '<div class="ptg-header-controls ptg-dual-picker">'+
-   pickerRow("PT analyte","assay",badges[st.assay]||"hs-TnI",assays,st.assay,"Choose PATHFAST PT analyte")+
-   pickerRow("API event code","code",st.code?(st.code==="other"?"OTHER":st.code):"CODE",codes,st.code,"Choose PATHFAST API event code")+'</div>';
+   pickerRow("Choose PT analyte","assay",assays,st.assay,"Choose PATHFAST PT analyte")+
+   pickerRow("Choose API event code","code",codes,st.code,"Choose PATHFAST API event code")+'</div>';
  }
  const options=materials[id]||[{id:"EVENT",name:"Assigned PT sample",code:"PT",color:"#79989c",note:"Verify the event instructions and sample code."}];
- const selected=selectedMaterial(id,st)||options[0];
- const choices=[...options,...(id!=="piccolo"?[{id:"OTHER",name:"Other assigned PT material",code:"OTHER"}]:[])];
- const textFor=o=>o.name.replace(/^[^·]+ · /,"");
+ if(options.length===1)return staticPicker(options[0]);
+ const choices=options.map(o=>({value:o.id,badge:o.code||o.id,label:sampleLabel(o)}));
  return '<div class="ptg-header-controls">'+
-  pickerRow("PT sample","material",selected.code||"PT",choices.map(o=>[o.id,textFor(o)]),selected.id,"Choose PT sample type for "+id)+
-  '</div>';
+  pickerRow("Choose PT sample","material",choices,st.material,"Choose PT sample for "+id)+'</div>';
 }
 /* The vial is a reference illustration. Reagent selection follows the actual assigned event. */
 function reagentFor(id,st){
  const mat=selectedMaterial(id,st)?.id;
  if(id==="sysmex")return null; // HSY uses an adapter, not a reagent cartridge.
+ if(id==="pathfast"&&!st.assay)return null;
+ if(id!=="pathfast"&&(materials[id]||[]).length>1&&!mat)return null;
  if(id==="pathfast"){
   const assays={
    troponin:["hs-Troponin I","PATHFAST test cartridge","Use the hs-Troponin I cartridge matching the installed assay. Verify the actual package label; do not substitute a conventional cTnI assay."],
@@ -228,6 +244,13 @@ function reagentSvg(kind,name){
   '<path d="M68 66v14M86 66v14" stroke="#b25d82" stroke-width="3"/><circle cx="169" cy="74" r="12" fill="#dfecf1" stroke="#9fbecb" stroke-width="2"/></svg>';
 }
 function materialPreview(id,st){
+ const requiresChoice=id==="pathfast"?!st.assay:(materials[id]||[]).length>1&&!selectedMaterial(id,st);
+ if(requiresChoice){
+  const prompt=id==="pathfast"?"Choose PT analyte above to view the vial and matching test cartridge.":"Choose PT sample above to view the vial and matching test reagent.";
+  return '<section class="ptg-specimen-reference" aria-label="PT sample selection required">'+
+   '<div class="ptg-specimen-label">PT sample &amp; test reagent</div>'+
+   '<div class="ptg-selection-prompt"><span class="ptg-selection-prompt-mark">?</span><p>'+e(prompt)+'</p></div></section>';
+ }
  let name,code,color,note,small;
  if(id==="pathfast"){
   const assays={troponin:["hs-Troponin I","#5c91a3","Verify the PT event reporting units for hs-Troponin I."],
@@ -275,11 +298,11 @@ function workflow(id,sequence){
  const stepTitle=(item,i)=>{
   if(id!=="piccolo"||i!==0)return item[0];
   const v=selectedMaterial(id,st);
-  return "Confirm "+(v?.id==="CRP"?"CRP":"CH")+" PT sample";
+  return v?"Confirm "+v.id+" PT sample":"Choose PT sample";
  };
  const stage=(item,i,focused=false)=>{
   const choice=selectedMaterial(id,st);
-  const desc=id==="piccolo"&&i===0?(choice?.id==="CRP"?
+  const desc=id==="piccolo"&&i===0?(!choice?"Choose CH or CRP above. Match the selected PT vial and reagent disc to the current API event sheet.":choice.id==="CRP"?
    "Match the CRP proficiency vial to the API event and prepare the CRP-capable disc specified on its worksheet.":
    "Match the CH chemistry vial to the API event and confirm the prescribed chemistry disc(s) and specimen preparation."):item[1];
   return '<article class="ptg-stage'+(i===sequence.length-1?' ptg-stage-final':'')+'">'+
@@ -328,7 +351,7 @@ function render(sec,groups){
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
   '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.'+
   (cfg?'':' Only test if this assay and site are enrolled.')+'</p></div>'+
-  '<div class="ptg-heading-picker'+(sec.id==="sysmex"?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
+  '<div class="ptg-heading-picker'+(sec.id!=="pathfast"&&(materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
   '<p class="ptg-foot">Test PT as patient specimens. Do not perform extra grading-driven repeats or refer PT specimens. File under the matching event tab and retain records for at least two years. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
@@ -341,8 +364,8 @@ function refresh(host,id,field){
  if(field&&heading)heading.innerHTML=materialPicker(id,stateFor(id,seq.length));
  host.innerHTML=workflow(id,seq);
  if(field){
-  const select=heading?.querySelector('[data-ptg-field="'+field+'"]');
-  if(select&&typeof select.focus==="function")select.focus({preventScroll:true});
+  const trigger=heading?.querySelector('[data-ptg-dropdown-trigger="'+field+'"]');
+  if(trigger&&typeof trigger.focus==="function")trigger.focus({preventScroll:true});
  }else{
   const stage=host.querySelector("#ptg-current-step");
   if(stage&&typeof stage.focus==="function"){
@@ -353,7 +376,104 @@ function refresh(host,id,field){
   }
  }
 }
+
+/* Portal-level chooser: appends to body, beyond clipped pages, with code badges
+   visible beside every option. Accessible through keyboard, pointer and touch. */
+let activePickerPortal=null;
+function closePickerPortal(refocus=false){
+ if(!activePickerPortal)return;
+ const {trigger,menu}=activePickerPortal;
+ activePickerPortal=null;
+ if(trigger){
+  trigger.setAttribute("aria-expanded","false");
+  trigger.removeAttribute("aria-controls");
+  trigger.classList.remove("is-open");
+ }
+ if(menu?.parentNode)menu.parentNode.removeChild(menu);
+ if(refocus&&trigger?.isConnected)trigger.focus({preventScroll:true});
+}
+function positionPickerPortal(){
+ if(!activePickerPortal)return;
+ const {trigger,menu}=activePickerPortal;
+ if(!trigger?.isConnected){closePickerPortal();return;}
+ const r=trigger.getBoundingClientRect();
+ const h=window.innerHeight||document.documentElement.clientHeight;
+ const w=window.innerWidth||document.documentElement.clientWidth;
+ const margin=8, gap=7;
+ const availableBelow=h-r.bottom-margin-gap;
+ const availableAbove=r.top-margin-gap;
+ const above=availableBelow<190&&availableAbove>availableBelow;
+ const space=Math.max(110,above?availableAbove:availableBelow);
+ menu.style.width=Math.max(0,Math.min(r.width,w-2*margin))+"px";
+ menu.style.maxHeight=Math.min(320,space)+"px";
+ const menuHeight=menu.getBoundingClientRect().height;
+ menu.style.left=Math.round(Math.max(margin,Math.min(r.left,w-margin-menu.getBoundingClientRect().width)))+"px";
+ menu.style.top=Math.round(Math.max(margin,Math.min(above?r.top-gap-menuHeight:r.bottom+gap,h-margin-menuHeight)))+"px";
+}
+function openPickerPortal(trigger){
+ if(activePickerPortal?.trigger===trigger){closePickerPortal(true);return;}
+ closePickerPortal();
+ let options=[];
+ try{options=JSON.parse(trigger.getAttribute("data-ptg-options")||"[]");}catch(_){return;}
+ if(!Array.isArray(options)||!options.length)return;
+ const page=trigger.closest(".ptg-page");
+ const host=page?.querySelector("[data-ptg-workflow]");
+ if(!host)return;
+ const id=host.getAttribute("data-ptg-workflow");
+ const field=trigger.getAttribute("data-ptg-dropdown-trigger");
+ const selected=trigger.getAttribute("data-ptg-value")||"";
+ const menu=document.createElement("div");
+ const menuId="ptg-portal-listbox";
+ menu.className="ptg-picker-portal";
+ menu.id=menuId;
+ menu.setAttribute("role","listbox");
+ menu.setAttribute("aria-label",trigger.getAttribute("aria-label")||"PT choices");
+ menu.innerHTML=options.map(o=>
+   '<button type="button" role="option" class="ptg-picker-option'+(selected===o.value?' is-selected':'')+'"'+
+   ' data-ptg-option-value="'+e(o.value)+'" data-ptg-option-field="'+e(field)+'" aria-selected="'+(selected===o.value)+'">'+
+   '<span class="ptg-picker-code">'+e(o.badge||o.value)+'</span>'+
+   '<span class="ptg-picker-option-label">'+e(o.label)+'</span>'+
+   (selected===o.value?'<span class="ptg-picker-option-check" aria-hidden="true">✓</span>':'')+'</button>'
+ ).join("");
+ document.body.appendChild(menu);
+ activePickerPortal={trigger,menu,id,host,field};
+ trigger.classList.add("is-open");
+ trigger.setAttribute("aria-expanded","true");
+ trigger.setAttribute("aria-controls",menuId);
+ positionPickerPortal();
+ const current=menu.querySelector('.ptg-picker-option.is-selected')||menu.querySelector('.ptg-picker-option');
+ current?.focus({preventScroll:true});
+}
+function choosePickerOption(button){
+ if(!activePickerPortal)return;
+ const {host,id,field}=activePickerPortal;
+ const seq=stepsSaved.get(id);
+ if(!seq){closePickerPortal();return;}
+ const value=button.getAttribute("data-ptg-option-value");
+ if(field==="assay"&&(id!=="pathfast"||!["troponin","ddimer","ntprobnp"].includes(value)))return;
+ if(field==="code"&&(id!=="pathfast"||!["CM","PSC","other"].includes(value)))return;
+ if(field==="material"&&(id==="pathfast"||!(materials[id]||[]).some(o=>o.id===value)))return;
+ const st=stateFor(id,seq.length);
+ st[field]=value;
+ st.step=0;
+ remembered.set(id,st);
+ closePickerPortal();
+ refresh(host,id,field);
+}
 document.addEventListener("click",event=>{
+ const option=event.target.closest("[data-ptg-option-value]");
+ if(option&&activePickerPortal?.menu.contains(option)){
+  event.preventDefault();
+  choosePickerOption(option);
+  return;
+ }
+ const trigger=event.target.closest("[data-ptg-dropdown-trigger]");
+ if(trigger){
+  event.preventDefault();
+  openPickerPortal(trigger);
+  return;
+ }
+ if(activePickerPortal)closePickerPortal();
  const btn=event.target.closest("[data-ptg-step],[data-ptg-mode]");
  if(!btn)return;
  const host=btn.closest(".ptg-page")?.querySelector("[data-ptg-workflow]");
@@ -372,27 +492,29 @@ document.addEventListener("click",event=>{
  }
  remembered.set(id,st);refresh(host,id);
 });
-document.addEventListener("change",event=>{
- const sel=event.target.closest("[data-ptg-field]");
- const host=sel?.closest(".ptg-page")?.querySelector("[data-ptg-workflow]");
- if(!sel||!host)return;
- const id=host.getAttribute("data-ptg-workflow"),seq=stepsSaved.get(id);
- if(!seq)return;
- const field=sel.getAttribute("data-ptg-field");
- const value=sel.value;
- if(field==="assay"){
-  if(id!=="pathfast"||!["troponin","ddimer","ntprobnp"].includes(value))return;
- }else if(field==="code"){
-  if(id!=="pathfast"||!["","CM","PSC","other"].includes(value))return;
- }else if(field==="material"){
-  if(id==="pathfast")return;
-  const valid=(materials[id]||[]).some(v=>v.id===value)||value==="OTHER";
-  if(!valid)return;
- }else return;
- const st=stateFor(id,seq.length);
- st[field]=value;
- remembered.set(id,st);
- refresh(host,id,field);
+document.addEventListener("keydown",event=>{
+ if(!activePickerPortal)return;
+ if(event.key==="Escape"){
+  event.preventDefault();
+  closePickerPortal(true);
+  return;
+ }
+ const {menu}=activePickerPortal;
+ const items=Array.from(menu.querySelectorAll(".ptg-picker-option"));
+ if(!items.length)return;
+ const active=items.indexOf(document.activeElement);
+ if(event.key==="ArrowDown"||event.key==="ArrowUp"){
+  event.preventDefault();
+  items[(active+(event.key==="ArrowDown"?1:-1)+items.length)%items.length].focus();
+ }else if(event.key==="Home"){
+  event.preventDefault();items[0].focus();
+ }else if(event.key==="End"){
+  event.preventDefault();items[items.length-1].focus();
+ }else if(event.key==="Tab"){
+  closePickerPortal();
+ }
 });
+window.addEventListener("resize",positionPickerPortal);
+document.addEventListener("scroll",positionPickerPortal,true);
 window.LAB_PT_TESTING={supports,render,patientGroup};
 })();
