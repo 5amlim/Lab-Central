@@ -31,6 +31,27 @@
     if (value >= 15) return ["G4", "15–29", "Severely decreased estimate"];
     return ["G5", "Below 15", "Kidney failure range; urgent clinician interpretation"];
   }
+
+  // Match the in-portal location selector used elsewhere in Lab Central.
+  // The hidden value preserves the existing calculation and unit conversion logic.
+  function picker(id, label, options, initialValue) {
+    const current = options.find(option => option[0] === initialValue);
+    const optionRows = options.map(([value, title]) => {
+      const selected = value === initialValue;
+      return '<button type="button" class="egfr-picker-option'+(selected?' is-selected':'')+'" role="option" '+
+        'tabindex="-1" data-egfr-option="'+esc(value)+'" aria-selected="'+selected+'">'+
+        '<span>'+esc(title)+'</span><span class="egfr-picker-check" aria-hidden="true">'+(selected?'✓':'')+'</span></button>';
+    }).join('');
+    return '<div class="egfr-field"><span id="'+id+'-label">'+esc(label)+'</span>'+
+      '<div class="egfr-picker" data-egfr-picker="'+id+'">'+
+      '<input type="hidden" id="'+id+'" name="'+(id==='egfr-unit'?'unit':'sex')+'" value="'+esc(initialValue)+'">'+
+      '<button type="button" class="egfr-picker-trigger" aria-haspopup="listbox" aria-expanded="false" '+
+      'aria-controls="'+id+'-options" aria-labelledby="'+id+'-label '+id+'-current">'+
+      '<span class="egfr-picker-value'+(current?'':' is-placeholder')+'" id="'+id+'-current">'+esc(current?current[1]:'Select')+'</span>'+
+      '<span class="egfr-picker-chevron" aria-hidden="true"></span></button>'+
+      '<div id="'+id+'-options" class="egfr-picker-list" role="listbox" aria-labelledby="'+id+'-label" hidden>'+
+      optionRows+'</div></div></div>';
+  }
   function render() {
     return '<section class="egfr-page" aria-label="2021 CKD-EPI race-free eGFR calculator">'+
       '<header class="egfr-hero"><div><span class="egfr-kicker">PICCOLO XPRESS · CLINICAL REFERENCE</span>'+
@@ -40,9 +61,9 @@
       '<div class="egfr-layout"><section class="egfr-panel egfr-entry"><div class="egfr-panel-title"><span>01 · ENTER VALUES</span><h3>Calculate from creatinine</h3><p>Use the completed Piccolo creatinine result only if it is numeric, valid and reportable. Do not enter a suppressed or invalid result.</p></div>'+
       '<form id="egfr-form" novalidate><div class="egfr-fields">'+
       '<label class="egfr-field"><span>Creatinine <small>required</small></span><input id="egfr-creatinine" name="creatinine" type="number" min="0.01" step="any" inputmode="decimal" placeholder="e.g., 1.0" autocomplete="off" required /></label>'+
-      '<label class="egfr-field"><span>Creatinine units</span><select id="egfr-unit" name="unit"><option value="mgdl">mg/dL</option><option value="umol">µmol/L</option></select></label>'+
+      picker('egfr-unit','Creatinine units',[['mgdl','mg/dL'],['umol','µmol/L']],'mgdl')+
       '<label class="egfr-field"><span>Age <small>18–120 years</small></span><input id="egfr-age" name="age" type="number" min="18" max="120" step="1" inputmode="numeric" placeholder="Age in years" autocomplete="off" required /></label>'+
-      '<label class="egfr-field"><span>Sex variable used by equation</span><select id="egfr-sex" name="sex" required><option value="">Select</option><option value="female">Female</option><option value="male">Male</option></select></label>'+
+      picker('egfr-sex','Sex variable used by equation',[['female','Female'],['male','Male']],'')+
       '</div><p class="egfr-field-help">No race entry or race correction. For patients for whom the binary sex coefficient may not be appropriate, seek clinician guidance and consider confirmatory assessment.</p>'+
       '<div class="egfr-actions"><button type="reset" class="egfr-clear">Clear</button><button type="submit" class="egfr-primary">Calculate race-free eGFR</button></div>'+
       '</form></section>'+
@@ -69,6 +90,87 @@
     const number = document.getElementById("egfr-result-number");
     const status = document.getElementById("egfr-result-status");
     const interpretation = document.getElementById("egfr-interpretation");
+
+    const pickers = Array.from(form.querySelectorAll(".egfr-picker"));
+    function syncPicker(picker) {
+      const field = picker.querySelector('input[type="hidden"]');
+      const options = Array.from(picker.querySelectorAll(".egfr-picker-option"));
+      const selected = options.find(item => item.dataset.egfrOption === field.value);
+      const display = picker.querySelector(".egfr-picker-value");
+      display.textContent = selected ? selected.querySelector("span").textContent : "Select";
+      display.classList.toggle("is-placeholder", !selected);
+      for (const option of options) {
+        const chosen = option === selected;
+        option.classList.toggle("is-selected", chosen);
+        option.setAttribute("aria-selected", String(chosen));
+        option.querySelector(".egfr-picker-check").textContent = chosen ? "✓" : "";
+      }
+    }
+    function setPickerOpen(target, open, focusOption = false, returnFocus = false) {
+      for (const picker of pickers) {
+        const active = picker === target && open;
+        picker.classList.toggle("is-open", active);
+        picker.querySelector(".egfr-picker-list").hidden = !active;
+        const trigger = picker.querySelector(".egfr-picker-trigger");
+        trigger.setAttribute("aria-expanded", String(active));
+        if (active && focusOption) {
+          (picker.querySelector(".egfr-picker-option.is-selected") ||
+           picker.querySelector(".egfr-picker-option"))?.focus();
+        }
+        if (picker === target && !active && returnFocus) trigger.focus();
+      }
+    }
+    function choosePickerOption(option) {
+      const picker = option.closest(".egfr-picker");
+      const input = picker.querySelector('input[type="hidden"]');
+      const changed = input.value !== option.dataset.egfrOption;
+      input.value = option.dataset.egfrOption;
+      syncPicker(picker);
+      setPickerOpen(picker, false, false, true);
+      // Reuse the same unit-conversion or result-clearing handlers.
+      if (changed) input.dispatchEvent(new Event("change", {bubbles: true}));
+    }
+    form.addEventListener("click", function (event) {
+      const trigger = event.target.closest(".egfr-picker-trigger");
+      if (trigger) {
+        const picker = trigger.closest(".egfr-picker");
+        setPickerOpen(picker, !picker.classList.contains("is-open"));
+        return;
+      }
+      const option = event.target.closest(".egfr-picker-option");
+      if (option) choosePickerOption(option);
+    });
+    form.addEventListener("keydown", function (event) {
+      const trigger = event.target.closest(".egfr-picker-trigger");
+      if (trigger && ["ArrowDown","ArrowUp"].includes(event.key)) {
+        event.preventDefault();
+        const picker = trigger.closest(".egfr-picker");
+        setPickerOpen(picker, true, true);
+        if (event.key === "ArrowUp") picker.querySelector(".egfr-picker-option:last-child")?.focus();
+        return;
+      }
+      const option = event.target.closest(".egfr-picker-option");
+      if (option) {
+        const picker = option.closest(".egfr-picker");
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setPickerOpen(picker, false, false, true);
+          return;
+        }
+        if (event.key === "Tab") {setPickerOpen(picker, false);return;}
+        const options = Array.from(picker.querySelectorAll(".egfr-picker-option"));
+        const index = options.indexOf(option);
+        const next = event.key === "ArrowDown" ? options[(index+1)%options.length] :
+          event.key === "ArrowUp" ? options[(index-1+options.length)%options.length] :
+          event.key === "Home" ? options[0] : event.key === "End" ? options[options.length-1] : null;
+        if (next) {event.preventDefault();next.focus();}
+        return;
+      }
+      if (event.key === "Escape") pickers.forEach(p => {
+        if (p.classList.contains("is-open")) setPickerOpen(p, false, false, true);
+      });
+    });
+
     function clearResult() {
       number.textContent = "—";
       result.dataset.state = "empty";
@@ -106,6 +208,7 @@
       window.requestAnimationFrame(function () {
         unit.dataset.previous = "mgdl";
         creatinine.placeholder = "e.g., 1.0";
+        pickers.forEach(p => {syncPicker(p);setPickerOpen(p, false);});
         clearResult();
       });
     });
@@ -129,5 +232,15 @@
       input.addEventListener("change", clearResult);
     });
   }
+
+  // One document-level handler, including after a portal tab rerender.
+  document.addEventListener("click", function (event) {
+    if (event.target.closest(".egfr-picker")) return;
+    document.querySelectorAll(".egfr-picker.is-open").forEach(picker => {
+      picker.classList.remove("is-open");
+      picker.querySelector(".egfr-picker-list").hidden = true;
+      picker.querySelector(".egfr-picker-trigger").setAttribute("aria-expanded", "false");
+    });
+  });
   window.LAB_EGFR_CALCULATOR = {render, bind, calculate};
 })();
