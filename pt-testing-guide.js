@@ -74,15 +74,15 @@ function vialSvg(label,code,color){
 /* Program names are reference choices, not evidence of enrollment.
    Never equate a drawing's cap color or shape with the shipped PT material. */
 const materials={
- pathfast:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",color:"#5c91a3",note:"The CM sample is used for hs-Troponin I, D-dimer and NT-proBNP on PATHFAST. Confirm the exact specimen ID, preparation and reporting units against the active API event."}],
+ pathfast:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",samplesPerShipment:5,color:"#5c91a3",note:"The CM sample is used for hs-Troponin I, D-dimer and NT-proBNP on PATHFAST. Confirm the exact specimen ID, preparation and reporting units against the active API event."}],
  piccolo:[
-  {id:"CH",name:"CH · Chemistry - Comprehensive",code:"CH",catalogNumber:"CH #122",color:"#598f9e",note:"Run the CH Chemistry - Comprehensive PT sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix; API catalog #122 identifies the program, not the vial."},
-  {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",catalogNumber:"CRP #431",color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
+  {id:"CH",name:"CH · Chemistry - Comprehensive",code:"CH",catalogNumber:"CH #122",samplesPerShipment:5,color:"#598f9e",note:"Run the CH Chemistry - Comprehensive PT sample on both MetLyte Plus CRP and MetLac 12 discs, following this site's assigned event and analytes. CH is the sample prefix; API catalog #122 identifies the program, not the vial."},
+  {id:"CRP",name:"CRP · C-reactive protein PT sample",code:"CRP",catalogNumber:"CRP #431",samplesPerShipment:2,color:"#927aa7",note:"This is a separate CRP PT specimen. Use the assigned CRP-capable disc and event worksheet."}
  ],
- sysmex:[{id:"HSY",name:"HSY · Hematology - 3S",code:"HSY",catalogNumber:"HSY #227",color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
- triage:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
- torch:[{id:"GIP",name:"GIP · Gastrointestinal Pathogens",code:"GIP",catalogNumber:"GIP #369",color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
- hiv:[{id:"HV",name:"HV · HIV Antigen/Antibody Rapid Test",code:"HV",catalogNumber:"HV #433",color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
+ sysmex:[{id:"HSY",name:"HSY · Hematology - 3S",code:"HSY",catalogNumber:"HSY #227",samplesPerShipment:5,color:"#a47f9a",note:"API Hematology - 3S (catalog 227) is the program listed for Sysmex pocH-100i. HSY is the specimen ID prefix, not the program name. Use the approved green adapter shown in the next step."}],
+ triage:[{id:"CM",name:"CM · Cardiac Markers",code:"CM",catalogNumber:"CM #140",samplesPerShipment:5,color:"#548fa2",note:"Use the CM vial for Troponin I and D-dimer on Triage MeterPro. Match the specimen ID and reporting units to the current API event sheet."}],
+ torch:[{id:"GIP",name:"GIP · Gastrointestinal Pathogens",code:"GIP",catalogNumber:"GIP #369",samplesPerShipment:5,color:"#598fa0",note:"Use the assigned gastrointestinal pathogen event and pouch. Prepare the sample per the event sheet; do not assume it arrives in Cary-Blair."}],
+ hiv:[{id:"HV",name:"HV · HIV Antigen/Antibody Rapid Test",code:"HV",catalogNumber:"HV #433",samplesPerShipment:2,color:"#a27a97",note:"Use the assigned HV proficiency specimen with the clinic's approved HIV Ag/Ab test kit. Verify sample preparation, method compatibility, read window and reportable results against the event and product insert."}],
 
 };
 function selectedMaterial(id,st){
@@ -359,7 +359,8 @@ function materialPreview(id,st){
  const sample='<div class="ptg-reference-tile ptg-sample-tile"><div class="ptg-reference-top"><span class="ptg-reference-eyebrow">01 · PT SAMPLE</span>'+
    (m.catalogNumber?'<small class="ptg-reference-catalog">API catalog · '+e(m.catalogNumber)+'</small>':"")+
    '</div>'+
-  '<div class="ptg-reference-layout"><div class="ptg-reference-art">'+vialSvg(name,code,color)+'</div>'+
+  '<div class="ptg-reference-layout"><div class="ptg-reference-art ptg-sample-art">'+vialSvg(name,code,color)+
+   (m.samplesPerShipment?'<div class="ptg-sample-count" aria-label="'+e(m.samplesPerShipment)+' samples per shipment"><strong>'+e(m.samplesPerShipment)+'</strong><span>SAMPLES<small>PER SHIPMENT</small></span></div>':'')+'</div>'+
   '<div class="ptg-reference-copy"><span class="ptg-reference-badge">'+e(code)+'</span><strong>'+e(name)+'</strong>'+
   '<p>'+e(note)+'</p></div></div></div>';
  const test=reagent?reagentReference(reagent):"";
