@@ -450,3 +450,40 @@
  .ptg-sample-count span{font-size:7.5px}
  .ptg-sample-count small{font-size:7px}
 }
+
+/* Reagent quantity: mirrors the sample vial count, under each pictured item. */
+.ptg-reagent-count{
+ display:inline-flex;flex:none;max-width:100%;text-align:left;
+ background:#e8f7f2;border-color:#b6dfd7
+}
+.ptg-reagent-art{
+ height:auto;min-height:183px;flex-direction:column;gap:7px;justify-content:center
+}
+.ptg-reagent-art svg{flex:0 0 auto}
+.ptg-mini-reagent{grid-template-columns:minmax(104px,116px) minmax(0,1fr)}
+.ptg-mini-reagent-art{
+ flex-direction:column;gap:6px;min-width:0;align-items:center
+}
+.ptg-mini-reagent-art .ptg-reagent-count{
+ width:max-content;max-width:100%;gap:5px;padding:5px 6px
+}
+.ptg-mini-reagent-art .ptg-reagent-count strong{font-size:15px}
+.ptg-mini-reagent-art .ptg-reagent-count span{font-size:7.2px}
+.ptg-mini-reagent-art .ptg-reagent-count small{font-size:7px}
+.ptg-pathfast-multi .ptg-mini-reagent{grid-template-columns:minmax(104px,116px) minmax(0,1fr)}
+.ptg-triage-multi .ptg-mini-reagent-art{flex-direction:column;gap:6px}
+.ptg-triage-multi .ptg-mini-reagent-art .ptg-reagent-count{flex:none}
+.ptg-torch-gi-visual{flex-direction:column;gap:8px}
+.ptg-torch-gi-visual .ptg-gi-pouch-svg{flex:0 1 auto}
+.ptg-torch-gi-visual .ptg-reagent-count{flex:0 0 auto}
+@media(max-width:650px){
+ .ptg-reagent-art{min-height:155px}
+ .ptg-mini-reagent{grid-template-columns:minmax(88px,100px) minmax(0,1fr)}
+ .ptg-pathfast-multi .ptg-mini-reagent{grid-template-columns:minmax(88px,100px) minmax(0,1fr)}
+ .ptg-mini-reagent-art .ptg-reagent-count{gap:3px;padding:5px}
+ .ptg-mini-reagent-art .ptg-reagent-count span{font-size:7px}
+}
+@media print{
+ .ptg-mini-reagent-art .ptg-reagent-count{padding:4px;gap:4px}
+ .ptg-torch-gi-visual{gap:5px}
+}
