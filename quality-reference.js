@@ -16,7 +16,7 @@ const map=[
   {code:"HSY",title:"Hematology - 3S PT sample",catalogNumber:"HSY #227",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
-  {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"Not listed on supplied order",catalogNote:"The supplied API order does not list GIP. Verify enrollment before testing or submitting results.",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
+  {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
  {id:"immunology",title:"Immunology / Immunohematology",badge:"HV / CRP",machines:[["HIV Antigen/Antibody","hiv"],["Piccolo Xpress","piccolo"]],items:[
   {code:"HV",title:"HIV antigen / antibody rapid test",catalogNumber:"HV #433",instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
