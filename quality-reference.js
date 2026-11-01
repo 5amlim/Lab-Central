@@ -13,7 +13,7 @@ const map=[
   ]},
  ]},
  {id:"hematology",title:"Hematology",badge:"HSY",machines:[["Sysmex pocH-100i","sysmex"]],items:[
-  {code:"HSY",title:"Hematology - 3S PT sample",catalogNumber:"HSY #227",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
+  {code:"HSY",title:"Hematology - 3S",catalogNumber:"HSY #227",instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
   {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
