@@ -222,3 +222,6 @@
  scroll-snap-type:x proximity;scroll-padding-inline:8px;
 }
 .calver-reference-tabs .tab{flex:none;scroll-snap-align:start}
+
+/* Hide interactive compliance navigation in printouts. */
+@media print{.api-guide-tabs{display:none!important}.calver-reference-tabs{display:none!important}}
