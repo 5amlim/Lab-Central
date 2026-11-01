@@ -131,7 +131,7 @@ function specimenVerificationArt(){
 
 function physicalStep(i){
  const stages=[
-  ["02","VERIFY THE CORRECT TUBE AND DRAW TIME","Before preparing cartridges, match the labeled lithium-heparin tube to the patient, ordered assay and documented collection time. For serial hs-Troponin I, verify baseline versus the 1-hour repeat or provider-authorized 2-hour fallback.","verify-tube"],
+  ["01","VERIFY THE CORRECT TUBE AND DRAW TIME","Before preparing cartridges, match the labeled lithium-heparin tube to the patient, ordered assay and documented collection time. For serial hs-Troponin I, verify baseline versus the 1-hour repeat or provider-authorized 2-hour fallback.","verify-tube"],
   ["02","RETRIEVE CARTRIDGES AND PREPARE SPECIMEN","Bring out only the needed assay cartridges when ready; check the assay and expiration. Gently mix the collected lithium-heparin specimen and inspect for clots.","retrieve"],
   ["03","PREPARE METAL RACK AND LOAD CARTRIDGES","Remove the metal six-slot rack from the idle analyzer, set it securely in the clear loading base, then push each required cartridge into its matching rack lane until fully seated.","setup"],
   ["04","DISPENSE PATIENT SAMPLE","Use the correct assay volume and transfer pipette. Deliver mixed lithium-heparin whole blood or plasma into the clear front sample well, confirm specimen fills the molded dome at the bottom to the fill mark, and avoid bubbles. Never add specimen to the round detection well.","dispense"],
