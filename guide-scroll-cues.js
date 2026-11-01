@@ -1,7 +1,7 @@
 /* Lab Calculator-style scroll cue for all genuinely overflowing guide panes. */
 (function(){
 "use strict";
-const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav";
+const targets=".pf-rack-scroll, .guide-stepper, .pf-qc-lane-list, .pfux-stage-track, .pfux-jump-options, .qc-screen-gallery--scroll, .tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch";
 const cue=document.createElement("div");
 cue.className="lc-page-scroll-cue";
 cue.hidden=true;
@@ -14,7 +14,8 @@ cue.querySelector('button').addEventListener('click',function(){window.scrollBy(
 const scrollSelectors=[
  ".pfux-stage-track",".guide-stepper",".pf-rack-scroll",".pf-qc-lane-list",
  ".pfux-jump-options",".qc-screen-gallery--scroll",
- ".tab-strip.instrument-matched-tabs",".pfux-primary-nav",".tab-strip.order-workflow-tabs"
+ ".tab-strip.instrument-matched-tabs",".pfux-primary-nav",".tab-strip.order-workflow-tabs",
+ ".api-guide-tabs",".dqc-page .dqc-view-switch",".tc-portal .tc-view-switch"
 ];
 const remembered=new Map();
 const selectorFor=node=>scrollSelectors.find(selector=>node.matches(selector));
@@ -69,21 +70,30 @@ function updatePage(){
 function setup(node){
  if(!node||initialized.has(node)||!node.parentNode)return;
  initialized.add(node);
- const frame=document.createElement("div");frame.className="lc-scroll-cue-frame";
+ const compliance=node.matches(".api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch");
+ const frame=document.createElement("div");frame.className="lc-scroll-cue-frame"+(compliance?" lc-compliance-scroll-frame":"");
  node.parentNode.insertBefore(frame,node);frame.appendChild(node);
  const bottom=document.createElement("div");bottom.className="lc-scroll-cue-bottom";
  bottom.setAttribute("aria-hidden","true");bottom.innerHTML="<span>Scroll for more ↓</span>";
  const right=document.createElement("button");right.className="lc-scroll-cue-right";
  right.type="button";right.hidden=true;
  const steps=node.matches(".pfux-stage-track, .guide-stepper");
- const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav");
+ const tabs=node.matches(".tab-strip.instrument-matched-tabs, .pfux-primary-nav, .tab-strip.order-workflow-tabs, .api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch");
  right.setAttribute("aria-label",steps?"Show more procedure steps to the right":tabs?"Show more instrument sections to the right":"Show more items to the right");
  right.innerHTML="<span>"+(steps?"More steps":tabs?"More sections":"More")+" <span aria-hidden=\"true\">→</span></span>";
  right.addEventListener("click",function(){
   const distance=Math.max(240,Math.round(node.clientWidth*.72));
   node.scrollBy({left:distance,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
  });
- frame.append(bottom,right);
+ const left=document.createElement("button");left.className="lc-scroll-cue-left";
+ left.type="button";left.hidden=true;
+ left.setAttribute("aria-label",steps?"Show earlier procedure steps":tabs?"Show earlier sections":"Show earlier items");
+ left.innerHTML="<span><span aria-hidden=\"true\">←</span> "+(steps?"Earlier steps":tabs?"Earlier sections":"Earlier")+"</span>";
+ left.addEventListener("click",function(){
+  const distance=Math.max(240,Math.round(node.clientWidth*.72));
+  node.scrollBy({left:-distance,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+ });
+ frame.append(bottom,left,right);
  let queued=false;
  function update(){
   queued=false;if(!node.isConnected)return;
@@ -93,12 +103,15 @@ function setup(node){
   const moreRight=/(auto|scroll)/.test(style.overflowX)&&node.clientWidth>100&&
     node.scrollWidth>node.clientWidth+12&&node.scrollLeft+node.clientWidth<node.scrollWidth-8;
   const horizontal=/(auto|scroll)/.test(style.overflowX)&&node.scrollWidth>node.clientWidth+12;
+  const moreLeft=horizontal&&node.scrollLeft>8;
   const onCardControls=node.matches(".qc-screen-gallery--scroll");
   frame.classList.toggle("lc-has-horizontal-overflow",horizontal);
   frame.classList.toggle("lc-has-more-below",below);
   frame.classList.toggle("lc-has-more-right",moreRight&&!onCardControls);
+  frame.classList.toggle("lc-has-more-left",moreLeft&&!onCardControls);
   right.hidden=!moreRight||onCardControls;
-  if((below||moreRight)&&!node.hasAttribute("tabindex"))node.tabIndex=0;
+  left.hidden=!moreLeft||onCardControls;
+  if((below||horizontal)&&!node.hasAttribute("tabindex"))node.tabIndex=0;
  }
  function schedule(){
   if(queued)return;queued=true;requestAnimationFrame(update);
