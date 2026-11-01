@@ -191,3 +191,69 @@
 }
 @media print{.calver2-site-selector .dqc-market-picker,.calver2-site-selector .dqc-location-bar{display:none!important}}
 
+
+
+/* API submission: one clear entry point and one four-phase procedure. */
+.api2-submission .api2-submission-hero{
+ display:flex;justify-content:space-between;align-items:center;gap:18px 28px;
+ padding:22px 25px;margin:0 0 12px;min-width:0;
+}
+.api2-submission-hero-copy{flex:1 1 410px;min-width:0}
+.api2-submission .api2-submission-hero h2{margin:6px 0}
+.api2-submission .api2-submission-hero p{font-size:12.5px;max-width:720px}
+.api2-submission-hero-actions{display:flex;flex:0 1 300px;flex-direction:column;align-items:stretch;gap:9px;max-width:100%}
+.api2-submission-portal{
+ display:inline-flex;gap:8px;align-items:center;justify-content:center;
+ min-height:42px;padding:11px 16px;border-radius:10px;
+ background:#19877e;color:#fff;text-decoration:none;
+ font-size:12px;font-weight:850;white-space:nowrap
+}
+.api2-submission-portal:hover{background:#116f67}
+.api2-submission-hero-actions .api2-link{justify-content:center;min-height:28px;font-size:11px}
+.api2-submit-alert{
+ display:flex;align-items:center;flex-wrap:wrap;gap:5px 11px;
+ padding:11px 15px;margin:0 0 19px;
+ border-radius:9px;border:1px solid #eedbc8;border-left:3px solid #be854c;
+ background:#fffbf7;color:#795a45;font-size:11.8px;line-height:1.65;
+}
+.api2-submit-alert strong{font-weight:900;color:#966038;white-space:nowrap}
+.api2-submit-alert span{color:#6e7e87}
+.api2-submission .api2-flow-title{margin:8px 0 12px}
+.api2-submission .api2-flow-title h3{font-size:17px}
+.api2-phase-nav{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;
+ margin:0 0 19px;
+}
+.api2-phase-nav button{
+ display:flex;align-items:center;gap:10px;min-width:0;min-height:47px;
+ border:1px solid #d7e7eb;border-radius:10px;background:#fff;
+ padding:10px 13px;text-align:left;color:#31596f;
+ font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;
+}
+.api2-phase-nav button span{
+ display:grid;place-items:center;flex:none;min-width:28px;height:28px;
+ border-radius:8px;background:#e5f4f1;color:#1b897e;font-size:10.5px;font-weight:900
+}
+.api2-phase-nav button:hover{background:#f1f9f7;border-color:#8ac4b9}
+.api2-phase-nav button:focus-visible{outline:3px solid #6ab7aa;outline-offset:2px}
+.api2-submission .api2-phase{scroll-margin-top:120px}
+.api2-submission .api2-phase-list{gap:15px}
+.api2-submission .api2-phase-heading{padding:16px 19px}
+.api2-submission .api2-phase .api2-step-grid{gap:10px}
+.api2-submission .api2-sources{margin-top:20px}
+@media(max-width:950px){
+ .api2-phase-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ .api2-submission .api2-submission-hero{display:block;padding:18px}
+ .api2-submission-hero-actions{max-width:none;margin-top:16px}
+ .api2-phase-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .api2-phase-nav button{font-size:10.5px;padding:9px 10px}
+}
+@media(max-width:400px){
+ .api2-phase-nav{grid-template-columns:1fr}
+}
+@media print{
+ .api2-phase-nav,.api2-submission-hero-actions{display:none!important}
+ .api2-submission .api2-phase{scroll-margin-top:0}
+}
