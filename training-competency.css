@@ -190,3 +190,24 @@
 @media(max-width:700px){.tc-portal .tc-view-switch{grid-template-columns:1fr}.tc-portal .tc-document-grid,.tc-portal .tc-record-grid{grid-template-columns:1fr}.tc-portal .tc-document-card{min-height:170px}.tc-portal .tc-location-bar{align-items:stretch}.tc-portal .tc-location-hint{margin-left:0}.tc-portal .tc-location-picker{width:100%;min-width:0;flex:1}.tc-portal .tc-route-head{flex-wrap:wrap}.tc-portal .tc-page-count{margin-left:0}.tc-portal .tc-market-picker{gap:9px}.tc-portal .tc-market-choice{padding:9px 11px}}
 @media(max-width:440px){.tc-portal .tc-location-bar{display:grid;grid-template-columns:minmax(0,1fr)}.tc-portal .tc-location-picker{width:100%}}
 @media print{.tc-portal .tc-market-picker,.tc-portal .tc-view-switch,.tc-portal .tc-location-bar{display:none!important}.tc-portal .tc-document-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tc-portal .tc-document-card{break-inside:avoid}}
+
+
+/* Compliance navigation: training sections scroll in the same row as QC/API. */
+.tc-portal .tc-view-switch{
+ display:flex;flex-wrap:nowrap;align-items:stretch;gap:11px;
+ overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+ scroll-snap-type:x proximity;scroll-padding-inline:4px;
+ scrollbar-width:thin;scrollbar-color:#aecbd2 #eff6f7;
+ -webkit-overflow-scrolling:touch;padding:0 0 12px;
+}
+.tc-portal .tc-view-button{
+ flex:0 0 clamp(265px,30%,335px);min-width:0;
+ scroll-snap-align:start;
+}
+.tc-portal .tc-view-switch::-webkit-scrollbar{height:7px}
+.tc-portal .tc-view-switch::-webkit-scrollbar-thumb{background:#afcbd1;border-radius:999px}
+.tc-portal .tc-view-switch::-webkit-scrollbar-track{background:#edf5f6;border-radius:999px}
+@media(max-width:600px){
+ .tc-portal .tc-view-switch{display:flex;gap:9px}
+ .tc-portal .tc-view-button{flex-basis:235px;min-height:70px}
+}
