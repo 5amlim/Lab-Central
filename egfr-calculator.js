@@ -44,7 +44,7 @@
       '<label class="egfr-field"><span>Age <small>18–120 years</small></span><input id="egfr-age" name="age" type="number" min="18" max="120" step="1" inputmode="numeric" placeholder="Age in years" autocomplete="off" required /></label>'+
       '<label class="egfr-field"><span>Sex variable used by equation</span><select id="egfr-sex" name="sex" required><option value="">Select</option><option value="female">Female</option><option value="male">Male</option></select></label>'+
       '</div><p class="egfr-field-help">No race entry or race correction. For patients for whom the binary sex coefficient may not be appropriate, seek clinician guidance and consider confirmatory assessment.</p>'+
-      '<div class="egfr-actions"><button type="submit" class="egfr-primary">Calculate race-free eGFR</button><button type="reset" class="egfr-clear">Clear</button></div>'+
+      '<div class="egfr-actions"><button type="reset" class="egfr-clear">Clear</button><button type="submit" class="egfr-primary">Calculate race-free eGFR</button></div>'+
       '</form></section>'+
       '<section class="egfr-panel egfr-output" aria-live="polite" aria-atomic="true"><div class="egfr-panel-title"><span>02 · ESTIMATE</span><h3>2021 CKD-EPI (creatinine)</h3><p>Standardized to body surface area of 1.73 m².</p></div>'+
       '<div id="egfr-result" class="egfr-result" data-state="empty"><strong class="egfr-result-number" id="egfr-result-number">—</strong><span class="egfr-result-unit">mL/min/1.73 m²</span><p id="egfr-result-status">Enter all required values, then calculate.</p></div>'+
