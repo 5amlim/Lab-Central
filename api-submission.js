@@ -16,6 +16,94 @@ const url={
 };
 const link=(u,text,cl)=>'<a class="'+(cl||"api2-link")+'" href="'+x(u)+'" target="_blank" rel="noopener noreferrer">'+x(text)+' <span aria-hidden="true">↗</span></a>';
 const badge=(text,tone)=>'<span class="api2-badge '+(tone||"")+'">'+x(text)+'</span>';
+/* Clinic reference selector. Uses the same market, clinic and custom listbox conventions
+   as Daily/Monthly Checklists. Selection never changes the external API account. */
+const ptMarkets=[
+ {id:'socal',short:'SoCal',name:'Southern California',clinics:[{id:'bh',name:'Beverly Hills'},{id:'bh-satellite',name:'Beverly Hills Satellite'},{id:'sm',name:'Santa Monica'},{id:'mb',name:'Manhattan Beach'}]},
+ {id:'norcal',short:'NorCal',name:'Northern California',clinics:[{id:'sf',name:'San Francisco'},{id:'palo-alto',name:'Palo Alto'}]},
+ {id:'ny',short:'New York',name:'New York',clinics:[{id:'ues',name:'Upper East Side'},{id:'tribeca',name:'Tribeca'},{id:'hamptons',name:'Hamptons'},{id:'fifth',name:'5th Avenue'},{id:'gramercy',name:'Gramercy'},{id:'hudson-yards',name:'Hudson Yards'}]},
+ {id:'fl',short:'Florida',name:'Florida',clinics:[{id:'boca',name:'Boca Raton'},{id:'palm-beach',name:'Palm Beach'},{id:'coral-gables',name:'Coral Gables'}]}
+];
+let selectedPtMarket='socal';
+const clinicByPtMarket=Object.fromEntries(ptMarkets.map(m=>[m.id,m.clinics[0].id]));
+function selectedPtSite(){
+ const market=ptMarkets.find(m=>m.id===selectedPtMarket)||ptMarkets[0];
+ return {market,clinic:market.clinics.find(c=>c.id===clinicByPtMarket[market.id])||market.clinics[0]};
+}
+function marketSelector(){
+ const {market,clinic}=selectedPtSite();
+ return '<section class="api2-site-selector" aria-label="API market and clinic reference">'+
+  '<nav class="dqc-market-picker" aria-label="Select API PT market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+
+  ptMarkets.map(m=>'<button type="button" data-api2-market="'+x(m.id)+'" class="dqc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+x(m.short)+'</button>').join('')+'</div></nav>'+
+  '<div class="dqc-location-bar"><span class="dqc-location-label" id="api2-clinic-label">Clinic location</span>'+
+  '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-api2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="api2-location-options" aria-labelledby="api2-clinic-label api2-clinic-value">'+
+  '<span id="api2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
+  '<div class="dqc-location-options" id="api2-location-options" role="listbox" aria-labelledby="api2-clinic-label" hidden>'+
+  market.clinics.map(c=>'<button type="button" role="option" data-api2-clinic="'+x(c.id)+'" class="dqc-location-option'+(c.id===clinic.id?' is-selected':'')+'" aria-selected="'+(c.id===clinic.id)+'" tabindex="-1">'+x(c.name)+(c.id===clinic.id?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
+  '</div></div><span class="dqc-location-hint">Choose a clinic to view its PT reference</span></div>'+
+  '<div class="dqc-market-heading"><div><span class="dqc-market-overline">PROFICIENCY TESTING / '+x(market.short).toUpperCase()+'</span>'+
+  '<h2>'+x(clinic.name)+'</h2><p>'+x(market.name)+' · Verify the current enrollment, API account and approved PT procedures for this clinic.</p></div></div>'+
+  '</section>';
+}
+function rerenderPtSite(returnFocus=false){
+ const root=document.querySelector('.api2-site-selector');
+ if(!root)return;
+ root.outerHTML=marketSelector();
+ if(returnFocus)document.querySelector('.api2-site-selector [data-api2-location-toggle]')?.focus();
+}
+function setPtSiteMenu(open,focusSelected=false,returnFocus=false){
+ const picker=document.querySelector('.api2-site-selector .dqc-location-picker');
+ if(!picker)return;
+ const trigger=picker.querySelector('[data-api2-location-toggle]');
+ const list=picker.querySelector('[role="listbox"]');
+ if(!trigger||!list)return;
+ list.hidden=!open;
+ trigger.setAttribute('aria-expanded',String(open));
+ picker.classList.toggle('is-open',open);
+ if(open&&focusSelected)(list.querySelector('[aria-selected="true"]')||list.querySelector('[role="option"]'))?.focus();
+ if(!open&&returnFocus)trigger.focus();
+}
+document.addEventListener('click',event=>{
+ const button=event.target?.closest('.api2-site-selector [data-api2-market]');
+ if(button){
+  const next=button.getAttribute('data-api2-market');
+  if(ptMarkets.some(m=>m.id===next)&&next!==selectedPtMarket){selectedPtMarket=next;rerenderPtSite();}
+  return;
+ }
+ const trigger=event.target?.closest('.api2-site-selector [data-api2-location-toggle]');
+ if(trigger){setPtSiteMenu(trigger.getAttribute('aria-expanded')!=='true');return;}
+ const choice=event.target?.closest('.api2-site-selector [data-api2-clinic]');
+ if(choice){
+  const {market}=selectedPtSite(),id=choice.getAttribute('data-api2-clinic');
+  if(market.clinics.some(c=>c.id===id)){clinicByPtMarket[market.id]=id;rerenderPtSite(true);}
+  return;
+ }
+ if(!event.target?.closest('.api2-site-selector .dqc-location-picker'))setPtSiteMenu(false);
+});
+document.addEventListener('keydown',event=>{
+ const trigger=event.target?.closest('.api2-site-selector [data-api2-location-toggle]');
+ if(trigger&&['ArrowDown','ArrowUp','Enter',' '].includes(event.key)){
+  event.preventDefault();setPtSiteMenu(true,true);
+  if(event.key==='ArrowUp'){
+   const options=Array.from(document.querySelectorAll('.api2-site-selector [data-api2-clinic]'));
+   options[options.length-1]?.focus();
+  }
+  return;
+ }
+ if(trigger&&event.key==='Escape'){event.preventDefault();setPtSiteMenu(false,false,true);return;}
+ const choice=event.target?.closest('.api2-site-selector [data-api2-clinic]');
+ if(!choice)return;
+ if(event.key==='Escape'){event.preventDefault();setPtSiteMenu(false,false,true);return;}
+ if(event.key==='Tab'){setPtSiteMenu(false);return;}
+ const options=Array.from(document.querySelectorAll('.api2-site-selector [data-api2-clinic]'));
+ const idx=options.indexOf(choice);let next;
+ if(event.key==='ArrowDown')next=options[(idx+1)%options.length];
+ else if(event.key==='ArrowUp')next=options[(idx-1+options.length)%options.length];
+ else if(event.key==='Home')next=options[0];
+ else if(event.key==='End')next=options[options.length-1];
+ if(next){event.preventDefault();next.focus();}
+});
+
 const steps=[
  {title:"Open the correct API event",stage:"Portal",tone:"blue",desc:"Sign in to Paperless Proficiency Testing, choose Enter Results, then select the active event on Current Events. Match the event year, category, event number, kit and site before entering anything.",hint:"Instructions & Worksheets is available alongside the event. The event deadline is on the current event paperwork.",ui:"Enter Results → Current Events → Event name"},
  {title:"Review enrolled tests and methods",stage:"Setup",tone:"blue",desc:"Select the test name under Enter or Review Test Results. Confirm the Sample IDs, analytes, instrument/method and all additional reportable analytes. Previous-event methods may carry forward and need verification.",hint:"Never assume that every assay on an instrument is enrolled. Report only what your facility performs and what the event requests.",ui:"Enter or Review Test Results → Test name"},
@@ -94,5 +182,5 @@ function overviewCta(){
  ["03","Transmit & file","Confirm Event History timestamp and signed records."]
  ].map(v=>'<div><span>'+v[0]+'</span><strong>'+v[1]+'</strong><p>'+v[2]+'</p></div>').join('')+'</div>';
 }
-window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,overviewCta};
+window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,overviewCta,marketSelector};
 })();
