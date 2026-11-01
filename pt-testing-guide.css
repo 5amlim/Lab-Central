@@ -240,6 +240,33 @@
  .ptg-triage-multi .ptg-mini-reagent-art svg{height:105px;max-height:105px}
  .ptg-triage-multi .ptg-mini-reagent-info strong{font-size:12px}
 }
+/* TORCH GI: a large, recognisable translucent FilmArray pouch reference rather
+   than the generic square assay pouch icon. Color on the physical drawing is
+   limited to the sample mix (red) and hydration (blue) label locations. */
+.ptg-torch-gi-reagent{border-color:#c9e0df;background:linear-gradient(150deg,#ffffff 30%,#f7fcfb)}
+.ptg-torch-gi-reagent>.ptg-reference-eyebrow{color:#25867f}
+.ptg-torch-gi-visual{display:flex;align-items:center;justify-content:center;margin:9px auto 5px;
+ width:100%;min-height:173px;padding:4px 5px;
+ background:linear-gradient(180deg,#f6fafb,#eef5f6);border:1px solid #e0ebed;border-radius:11px}
+.ptg-torch-gi-visual .ptg-gi-pouch-svg{display:block;width:100%;height:auto;max-width:480px;max-height:245px;object-fit:contain;flex:0 1 auto}
+.ptg-torch-gi-copy{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:4px 3px 2px}
+.ptg-torch-gi-copy .ptg-reagent-name{font-size:18px;line-height:1.22;color:#216d70;font-weight:870;letter-spacing:-.02em}
+.ptg-torch-gi-copy .ptg-reference-badge{margin-bottom:2px}
+.ptg-torch-gi-copy p{font-size:11.4px;line-height:1.55;color:#60808c;margin:4px 0 0}
+@media(max-width:900px){
+ .ptg-torch-gi-visual .ptg-gi-pouch-svg{max-width:520px}
+ .ptg-torch-gi-visual{min-height:160px}
+}
+@media(max-width:650px){
+ .ptg-torch-gi-visual{min-height:125px;padding:3px}
+ .ptg-torch-gi-visual .ptg-gi-pouch-svg{max-height:180px}
+ .ptg-torch-gi-copy .ptg-reagent-name{font-size:16px}
+}
+@media print{
+ .ptg-torch-gi-visual{min-height:0;padding:2px;break-inside:avoid}
+ .ptg-torch-gi-visual .ptg-gi-pouch-svg{max-height:175px}
+ .ptg-torch-gi-copy .ptg-reagent-name{font-size:14px}
+}
 .ptg-reference-disclaimer{color:#849ba7;font-size:10.5px;line-height:1.5;margin:0;padding:0 17px 13px}
 .ptg-stage-final .ptg-stage-head{border-left-color:#248c80;background:linear-gradient(95deg,#eef9f6,#fff 86%)}
 .ptg-fileline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
