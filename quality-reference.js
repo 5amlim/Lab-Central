@@ -6,8 +6,8 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
    coagulation PT categories are intentionally excluded from this menu. */
 const map=[
  {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
-  {code:"CH",title:"Chemistry Core PT sample",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
-  {code:"CM",title:"Cardiac markers",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
+  {code:"CH",title:"Chemistry - Comprehensive",catalogNumber:"CH #122",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
+  {code:"CM",title:"Cardiac markers",catalogNumber:"CM #140",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
    {instrument:"Triage MeterPro",tests:["Troponin I","D-dimer"]},
    {instrument:"PATHFAST",tests:["hs-Troponin I","D-dimer","NT-proBNP"]}
   ]},
@@ -32,6 +32,8 @@ const apiCatalogNumbers={
  immunology:"HV #433 · CRP #431"
 };
 function apiCatalogLabel(category){
+ // CH and CM have separate catalog references within their own cards.
+ if(category.id==="chemistry-core")return "";
  const descriptions={
   "chemistry-core":"Per supplied API order: Chemistry - Comprehensive, catalog 122; Cardiac Markers, catalog 140.",
   hematology:"Per supplied API order: Hematology - 3S, catalog 227.",
@@ -132,8 +134,10 @@ function groups(sec){
    to the height of their neighbors. Each event retains its direct analyzer links. */
 /* Overview and selected category use identical PT sample content. */
 function apiAssessmentCard(it){
+ const catalog=it.catalogNumber?
+  '<small class="quality-api-catalog quality-api-assessment-catalog" title="API proficiency testing program catalog number">API catalog · '+esc(it.catalogNumber)+'</small>':"";
  return '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
- '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
+ '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+catalog+
  '</div>'+
  '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
  '<div class="quality-api-tests-wrap" aria-label="Tests or panels for '+esc(it.code)+'">'+apiTestGroups(it)+'</div></li>';
