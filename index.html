@@ -160,6 +160,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="training-competency.css?v=20261101-compliance-scroll-v1" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261031-reference-links-right-v3" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261101-compliance-scroll-v1" media="all">
+  <link rel="stylesheet" href="pt-testing-guide.css?v=20261101-pt-guide-v1" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-api-calver-nav-v3" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
@@ -382,7 +383,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=20261028-regional-forms"></script>
 <script src="sendout-visual.js?v=20261029-photo-anchor-v3"></script>
-<script src="quality-reference.js?v=20261101-pt-category-dropdown-v1"></script>
+<script src="quality-reference.js?v=20261101-pt-instrument-links-v2"></script>
+<script src="pt-testing-guide.js?v=20261101-pt-guide-v1"></script>
 <script src="api-submission.js?v=20261101-api-calver-nav-v3"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
@@ -2137,6 +2139,11 @@ function sectionRender(sec,tab){
   const patientIndex=tabs.findIndex(t=>/^(patient-testing|patient|ua-strip|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))$/.test(t.id)||/^(?:Patient testing|Running (?:Patient )?Samples|Running tests)(?:\b|\s|$)/i.test(t.fullTitle||t.title));
   if(patientIndex>1)tabs.splice(1,0,tabs.splice(patientIndex,1)[0]);
  }
+ // PT testing follows the routine patient procedure for every active analyzer and POC guide.
+ if(window.LAB_PT_TESTING?.supports(sec)){
+  const patient=tabs.findIndex(t=>/^(patient|patient-testing|ua-strip|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))/.test(t.id)||/^Patient testing|^Running (?:Patient )?Samples|^Running tests/i.test(t.title));
+  tabs.splice(patient>=0?patient+1:1,0,{id:'pt-testing',title:'PT testing',fullTitle:'Proficiency testing'});
+ }
  if(sec.id==='clinitek')tabs.splice(tabs.findIndex(x=>x.id==='ua-qc'),0,{id:'combined-qc',title:'Monthly QC'});
  if(sec.id==='pathfast'&&(tab==='calibration'||tab==='qc'))tab='cal-qc';
  if(tab==='visuals'){const patientGroup=groups.find(g=>/running|patient|sample|test/i.test(g.title))||groups[0];tab=patientGroup?patientGroup.id:'overview';}
@@ -2202,7 +2209,8 @@ function sectionRender(sec,tab){
   h+=`<nav class="api-guide-tabs ${sec.id==='calver'?'calver-reference-tabs':''}" role="tablist" aria-label="${sec.id==='calver'?'Calibration verification reference sections':'Proficiency testing reference sections'}">${tabs.map(t=>`<button type="button" role="tab" aria-selected="${tab===t.id}" class="api-guide-tab ${tab===t.id?'is-selected':''}" data-gotab="${safeHtml(t.id)}" title="${safeHtml(t.title)}"><span class="api-guide-tab-icon">${svg(tabDetails[t.id]?.icon||'book')}</span><span class="api-guide-tab-copy"><strong>${safeHtml(t.title)}</strong><small>${safeHtml(tabDetails[t.id]?.subtitle||'Reference information')}</small></span></button>`).join('')}</nav>`;
  }else h+=`<div class="tab-strip${sec.id==='calver'?' calver-reference-tabs':sec.id==='supplies'?' supply-vendor-tabs':sec.id==='sendout'?' sendout-reference-tabs':(['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':'')}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}" aria-label="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
- if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
+ if(tab==='pt-testing'&&window.LAB_PT_TESTING?.supports(sec))h+=window.LAB_PT_TESTING.render(sec,groups);
+ else if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
  else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
@@ -2243,7 +2251,7 @@ function sectionRender(sec,tab){
   const group=groups.find(g=>g.id===tab);
   if(group)h+=sec.id==='poc'?renderPocStaticReference(group):renderGuidedProcedure(group,sec);
  }
- if(sec.id!=='pathfast')h+=`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
+ if(sec.id!=='pathfast')h+=tab==='pt-testing'?'<p class="source-footnote">For PT testing, use only the actual PT sample ID, never a real patient MRN. Verify the assigned kit, site SOP, and API event instructions.</p>':`<p class="source-footnote">${instrumentCategories.includes(sec.category)?'Verify procedures against the approved SOP and manufacturer IFU. For patient testing, confirm patient identifiers against the order and enter the MRN where prompted by the instrument.':'Verify operational instructions against the current approved policy, vendor requirements and local procedures.'}</p>`;
  h+='</div>';
  if(sec.id==='sendout')h+='</div>';
  el('mainContent').innerHTML=h;
