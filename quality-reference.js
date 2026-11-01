@@ -6,8 +6,8 @@ const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>
    coagulation PT categories are intentionally excluded from this menu. */
 const map=[
  {id:"chemistry-core",title:"Chemistry Core",badge:"CH / CM",machines:[["Piccolo Xpress","piccolo"],["Triage MeterPro","triage"],["PATHFAST","pathfast"]],items:[
-  {code:"CH",title:"Chemistry - Comprehensive",catalogNumber:"CH #122",instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
-  {code:"CM",title:"Cardiac markers",catalogNumber:"CM #140",instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
+  {code:"CH",title:"Chemistry - Comprehensive",catalogNumber:"CH #122",samplesPerShipment:5,instrument:"Piccolo Xpress",route:"piccolo",description:"CH identifies the chemistry proficiency sample, not a catalog number. Use the clinic-assigned MetLyte Plus CRP and MetLac 12 discs and report only enrolled analytes.",tests:["MetLyte Plus CRP","MetLac 12"]},
+  {code:"CM",title:"Cardiac markers",catalogNumber:"CM #140",samplesPerShipment:5,instrument:"Triage MeterPro",route:"triage",also:[["PATHFAST","pathfast"]],description:"The CM event covers different assays by instrument. Run and report only the analytes assigned to each analyzer on the current API event. PATHFAST uses NT-proBNP, not BNP.",testGroups:[
    {instrument:"Triage MeterPro",tests:["Troponin I","D-dimer"]},
    {instrument:"PATHFAST",tests:["hs-Troponin I","D-dimer","NT-proBNP"]}
   ]},
@@ -16,11 +16,11 @@ const map=[
   {code:"HSY",title:"Hematology - 3S",catalogNumber:"HSY #227",samplesPerShipment:5,instrument:"Sysmex pocH-100i",route:"sysmex",description:"API lists Sysmex pocH-100i under Hematology - 3S (catalog 227). HSY is the specimen ID prefix; report the specific enrolled hematology parameters from the patient method.",tests:["CBC","Three-part white cell differential"]}
  ]},
  {id:"microbiology",title:"Microbiology",badge:"GIP",machines:[["BioFire TORCH","torch"]],items:[
-  {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
+  {code:"GIP",title:"Gastrointestinal pathogens",catalogNumber:"GIP #369",samplesPerShipment:5,instrument:"BioFire TORCH",route:"torch",description:"Run the assigned gastrointestinal proficiency pouch and report only pathogen targets requested by the API event.",tests:["Gastrointestinal pathogen panel"]}
  ]},
  {id:"immunology",title:"Immunology",badge:"HV / CRP",machines:[["HIV Antigen/Antibody","hiv"],["Piccolo Xpress","piccolo"]],items:[
-  {code:"HV",title:"HIV antigen / antibody rapid test",catalogNumber:"HV #433",instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
-  {code:"CRP",title:"C-reactive protein",catalogNumber:"CRP #431",instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
+  {code:"HV",title:"HIV antigen / antibody rapid test",catalogNumber:"HV #433",samplesPerShipment:2,instrument:"HIV Antigen/Antibody",route:"hiv",description:"Use the approved rapid HIV test and its enrolled proficiency instructions; confirm the test-specific reporting format.",tests:["HIV Antigen/Antibody"]},
+  {code:"CRP",title:"C-reactive protein",catalogNumber:"CRP #431",samplesPerShipment:2,instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
 function apiInstrumentLink(name,route){
