@@ -81,7 +81,7 @@ function apiOverview(){
   '<ul class="quality-api-assessments">'+x.items.map(it=>
    '<li><div class="quality-api-assessment-head"><div class="quality-api-assessment-name">'+
     '<span class="quality-api-code">'+esc(it.code)+'</span><b>'+esc(it.title)+'</b></div>'+
-    apiInstrumentLink(it.instrument,it.route)+'</div>'+
+    '<div class="quality-api-assessment-links">'+apiInstrumentLink(it.instrument,it.route)+(it.also||[]).map(m=>apiInstrumentLink(m[0],m[1])).join('')+'</div></div>'+
     '<p class="quality-api-assessment-desc">'+esc(it.description)+'</p>'+
     '<div class="quality-api-badge-group" aria-label="Tests or panels for '+esc(it.code)+'">'+
     it.tests.map(apiTestBadge).join('')+'</div></li>').join('')+'</ul></article>'
@@ -105,7 +105,7 @@ function calverOverview(){
 }
 
 
-/* A single API PT categories tab replaces the four guided category procedures.
+/* API PT categories are included below the sample-handling reference.
    Keep the selection within the portal without requiring navigation or a page reload. */
 let selectedPtCategory="chemistry-core";
 function setPtCategory(id){
@@ -147,7 +147,7 @@ function ptCategoriesReference(){
   '</button>'
  ).join('');
  return '<section class="quality-ref quality-pt-categories" aria-label="PT category reference">'+
-  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT categories</h2><p>Select the program category to view the complete assay reference. No step-by-step navigation is required.</p></header>'+
+  '<header class="quality-ref-head"><span>API · PROFICIENCY TESTING</span><h2>PT categories</h2><p>Choose a program to see its test list and PT testing instructions.</p></header>'+
   '<div class="quality-pt-select-row"><div class="quality-pt-select-label"><strong>PT CATEGORY</strong><span>Choose one of the four program groups</span></div>'+
     '<details class="quality-pt-selector"><summary aria-label="Select a proficiency testing category"><span class="quality-pt-selector-title">'+esc(selected.title)+'</span><small>'+esc(selected.badge)+'</small><span class="quality-pt-chevron" aria-hidden="true"></span></summary>'+
       '<div class="quality-pt-menu" role="group" aria-label="Available PT categories">'+options+'</div>'+
