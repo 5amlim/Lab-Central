@@ -178,6 +178,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261101-api-catalog-labels-v18" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261101-pt-evidence-accurate-v12" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-api-tidy-v7" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261102-market-molecular-v1" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261031-spotfire-insert-screen-v7" media="all">
@@ -405,6 +406,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="quality-reference.js?v=20261101-enrollment-confirmed-v23"></script>
 <script src="pt-testing-guide.js?v=20261101-piccolo-selected-v18"></script>
 <script src="api-submission.js?v=20261101-api-tidy-v7"></script>
+<script src="lab-calculators-guide.js?v=20261102-market-molecular-v1"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
 <script src="training-competency.js?v=20261101-compliance-scroll-v1"></script>
@@ -573,7 +575,7 @@ function showNav(){
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${navIconSvg('home','book')}</span>Overview</button>`;
  if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators <span class="nav-end">3</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators/guides <span class="nav-end" id="calc2-nav-count">${window.LAB_CALCULATORS_GUIDE?.count()||3}</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
@@ -1032,7 +1034,7 @@ function renderHome(mode='home'){
  if(!search&&!isFav){
  h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Lab operations reference</h1><p class="lede">Instrument procedures, collection and send-out workflows, training, and order references.</p>`;
  h+=noticeText();
- h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars &amp; Labcorp</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${navIconSvg('orders','clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
+ h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators/guides</strong><small>Collection calculators &amp; molecular sendouts</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${navIconSvg('orders','clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${navIconSvg('outside','droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${navIconSvg('specimen-dropoff','clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${navIconSvg('sendout-log','file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
   h+=`<div class="featured"><button type="button" class="feature-primary has-featured-art" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span>${homepageEquipmentArt(all.find(s=>s.id==="pathfast"),true)}</button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${navIconSvg('sendout','truck')}</span><span><strong>Lab Sendout Logistics</strong><small>Containers, pickups &amp; transport</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${navIconSvg('pathfast','heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
  }
@@ -1641,12 +1643,18 @@ function calculatorLogo(){
  '</g></svg>';
 }
 function calculatorCards(){
- return `<div class="calculator-grid">${calculators.map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-tag">${safeHtml(c.tag)}</span></div><div class="calculator-brand-title">${calculatorLogo()}<h2>${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'}</h2></div><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'} <span>↗</span></a></article>`).join('')}</div>`;
+ return `<div class="calculator-grid">${calculators.filter(c=>window.LAB_CALCULATORS_GUIDE?.allows(c.accent)!==false).map((c,i)=>`<article class="calculator-card ${c.accent}"><div class="calculator-top"><span class="calculator-tag">${safeHtml(c.tag)}</span></div><div class="calculator-brand-title">${calculatorLogo()}<h2>${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'}</h2></div><p>${safeHtml(c.note)}</p>${c.extra?`<a class="calculator-extra" href="${safeHtml(c.extra)}" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>`:'' }<a class="calculator-go" href="${safeHtml(c.url)}" target="_blank" rel="noopener noreferrer">Open ${safeHtml(c.name)} ${c.accent==='cedars'?'lab guide':'calculator'} <span>↗</span></a></article>`).join('')}</div>`;
 }
+document.addEventListener('lc-calculators-change',()=>{if(sectionFromHash().id==='calculators')renderCalculators();});
 function renderCalculators(){
- el('currentCrumb').textContent='Lab calculators';
- let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators','Enter your test codes, add all requested tests, then print or save the calculator as a PDF.');
+ const calcMarket=window.LAB_CALCULATORS_GUIDE?.market()||'socal';
+ el('currentCrumb').textContent='Lab calculators/guides';
+ let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select your market and clinic to find receiving lab calculators, collection guides and molecular sendout references.');
+ h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
+ h+='<div class="calc2-tool-heading"><div><span class="calc-guide-eyebrow">SPECIMEN COLLECTION</span><h2>Calculators &amp; collection guides</h2><p>Verify test codes, collection containers and transport requirements with the receiving lab.</p></div></div>';
  h+=calculatorCards();
+ h+=window.LAB_CALCULATORS_GUIDE?.molecular()||'';
+ h+='<p class="calc2-calculator-workflow-note"><strong>Calculator workflow:</strong> The six steps below apply to Quest, Labcorp and Cedars (SoCal only). For HealthTrackRx or PathMD, use the dedicated sendout guide and the approved kit-specific instructions.</p>';
  h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
   <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
   <div class="calc-guide-roadmap" aria-label="Workflow overview"><span>Build the order</span><b aria-hidden="true">›</b><span>Verify requirements</span><b aria-hidden="true">›</b><span>Finalize sendout</span></div>
@@ -1657,13 +1665,13 @@ function renderCalculators(){
         <article class="calc-guide-card">
           <span class="calc-guide-step">01</span>
           <div><h3>Select the receiving lab</h3>
-            <ul><li>Open <strong>Quest, Cedars or Labcorp</strong>. Use <strong>Select Lab</strong> to switch.</li><li>Confirm the lab first. Specimen requirements vary by laboratory.</li></ul>
+            <ul><li>Open <strong>${calcMarket==='socal'?'Quest, Cedars or Labcorp':'Quest or Labcorp'}</strong>. Use <strong>Select Lab</strong> to switch.</li><li>Confirm the lab first. Specimen requirements vary by laboratory.</li></ul>
           </div>
         </article>
         <article class="calc-guide-card">
           <span class="calc-guide-step">02</span>
           <div><h3>Find and add the tests</h3>
-            <ul><li>Use <strong>Smart Search</strong> by code, name or shorthand (CBC, GFR). <strong>Review suggested matches</strong>; use <strong>Filters</strong> or Cedars <strong>Group by</strong> as needed.</li><li><strong>Multiple tests:</strong> Add Tests → enter one per line → Review matches → verify → Add best matches.</li><li><strong>Missing test?</strong> Check Do not perform and the official directory first. Use Add Missing Test only for eligible Quest or Labcorp tests; Cedars manual entries are unavailable.</li></ul>
+            <ul><li>Use <strong>Smart Search</strong> by code, name or shorthand (CBC, GFR). <strong>Review suggested matches</strong>; use <strong>Filters</strong>${calcMarket==='socal'?' or Cedars <strong>Group by</strong>':''} as needed.</li><li><strong>Multiple tests:</strong> Add Tests → enter one per line → Review matches → verify → Add best matches.</li><li><strong>Missing test?</strong> Check Do not perform and the official directory first. Use Add Missing Test only for eligible Quest or Labcorp tests.${calcMarket==='socal'?' Cedars manual entries are unavailable.':''}</li></ul>
           </div>
         </article>
       </div>
