@@ -134,6 +134,7 @@ function htrxReference(){
  '</div></div>'+
  '</section>';
 }
+/* Shared panel shell across Quest, Cedars, Labcorp, HealthTrackRx and PathMD. */
 function panel(calculators,logo){
  const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
  const molecular=id==="htrx"||id==="pathmd";
@@ -143,18 +144,40 @@ function panel(calculators,logo){
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-sendout="'+id+'">Open '+E(names[id])+' sendout guide <span aria-hidden="true">↗</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
- const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>':'';
- const sendout=!molecular?'<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout guide ↗</button>':'';
+ const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Container guide <span aria-hidden="true">↗</span></a>':'';
+ const sendout=!molecular?'<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout guide <span aria-hidden="true">↗</span></button>':'';
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
- '<span class="calc2-panel-icon">'+logo+'</span>';
+  '<span class="calc2-panel-icon">'+logo+'</span>';
+ const quickSteps='<section class="calc2-panel-steps" aria-label="Quick start for '+E(names[id])+'">'+
+  '<div class="calc2-panel-steps-heading"><h4>Before specimen collection</h4><span>3 checkpoints</span></div>'+
+  '<div class="calc2-step-grid">'+item.steps.map((step,i)=>
+   '<div class="calc2-step"><span class="calc2-step-number">'+String(i+1).padStart(2,"0")+'</span>'+
+   '<div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join("")+
+  '</div></section>';
  return '<section id="calc2-lab-panel" role="tabpanel" aria-labelledby="calc2-tab-'+id+'" tabindex="0" class="calc2-panel calc2-panel-'+id+'">'+
- '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span>'+E(m.short)+' · '+E(c[1])+'</span></div>'+
- '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
- '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
- (pathmdContent||htrxContent||('<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
- '<div class="calc2-step-grid">'+item.steps.map((step,i)=>'<div class="calc2-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join('')+'</div></div>'))+
- '<p class="calc2-panel-footnote">'+(molecular?'Verify active site approval, approved panels, kits and courier arrangements before collection or dispatch.':'Follow the current test directory and clinic SOP for final collection and transport requirements.')+'</p>'+
- '</section>';
+  '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span class="calc2-selected-site">'+E(m.short)+' <i aria-hidden="true">·</i> '+E(c[1])+'</span></div>'+
+  '<div class="calc2-panel-intro">'+
+   '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
+   '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
+  '</div>'+
+  (pathmdContent||htrxContent||quickSteps)+
+  '<p class="calc2-panel-footnote">'+(molecular?
+    'Before collection or dispatch, verify this clinic is activated and confirm approved panels, collection devices and transport arrangements.':
+    'Always verify the current test directory, exact specimen requirements and local SOP before collection.')+'</p>'+
+  '</section>';
+}
+/* One relevant continuation area replaces the two competing sendout callouts. */
+function nextActions(){
+ const molecular=!isCalculator();
+ const text=molecular?
+  'After packaging, record the specimen handoff and pickup or tracking information.':
+  'Use the correct order workflow, then document collection and specimen handoff.';
+ return '<section class="calc2-next-area" aria-label="Next steps after collection">'+
+  '<div class="calc2-next-copy"><span class="calc-guide-eyebrow">NEXT STEPS</span><h3>'+(molecular?'Finish the molecular sendout':'Continue the sendout')+'</h3><p>'+text+'</p></div>'+
+  '<div class="calc2-next-buttons">'+
+   (molecular?'':'<button type="button" class="calc2-next-secondary" data-go="orders"><span>Order &amp; upload workflow</span><span aria-hidden="true">→</span></button>')+
+   '<button type="button" class="calc2-next-primary" data-go="sendout-log"><span>Sendout Log instructions</span><span aria-hidden="true">→</span></button>'+
+  '</div></section>';
 }
 function setMenu(open,focusSelected=false,restore=false){
  const picker=document.querySelector('#calc2-site-selector .dqc-location-picker');
@@ -236,5 +259,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,isCalculator,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,nextActions,isCalculator,allows,market,count};
 })();
