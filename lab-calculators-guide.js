@@ -209,6 +209,7 @@ function finderResults(){
   (all>shown.length?'<p class="calc2-finder-more">Showing the first '+shown.length+' matching panels. Refine your search to narrow the list.</p>':'');
 }
 function molecularFinder(){
+ if(!availableLabs().includes("htrx")&&!availableLabs().includes("pathmd"))return "";
  return '<section class="calc2-finder" id="calc2-finder" aria-label="Search molecular sendout pathogens">'+
   '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search HealthTrackRx and PathMD panel targets together</span></div><span class="calc2-finder-labs">2 labs</span></div>'+
   '<div class="calc2-finder-input"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>'+
