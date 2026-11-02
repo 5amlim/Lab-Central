@@ -967,6 +967,27 @@ function searchPanelCard({section,panel,targets,hits}){
   '<details class="lab-panel-all-targets"><summary>See all '+targets.length+' analytes / pathogens in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
   '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
 }
+/* Molecular sendout reference matches share the global panel results grid.
+ * No Athena order is inferred from a vendor pathogen panel.
+ */
+function searchSendoutPanelCard(item,query){
+ const name=safeHtml(item.name),lab=safeHtml(item.labName);
+ const hits=[...new Set(item.hits||[])];
+ const chips=hits.slice(0,6).map(target=>'<span class="lab-panel-target-match">'+safeHtml(target)+'</span>').join('');
+ const more=hits.length>6?'<span class="lab-panel-target-more">+'+(hits.length-6)+' more</span>':'';
+ const label={bacterial:'Bacterial',viral:'Viral',fungal:'Fungal / yeast',parasitic:'Parasitic',resistance:'Resistance markers'};
+ const groups=Object.entries(item.groups||{}).map(([key,targets])=>
+  '<div class="lab-panel-target-group"><strong>'+safeHtml(label[key]||key)+'</strong><p>'+
+  targets.map(target=>'<span>'+safeHtml(target)+'</span>').join('')+'</p></div>').join('');
+ return '<article class="lab-panel-search-result lab-panel-sendout-result lab-panel-sendout-'+safeHtml(item.lab)+'">'+
+  '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-kind">MOLECULAR SENDOUT</span></small>'+
+  '<h3>'+name+'</h3>'+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
+  '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'">Open test menu <span aria-hidden="true">→</span></button></div>'+
+  (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
+  '<p class="lab-panel-sendout-context">Vendor molecular test menu · Confirm panel activation, specimen source and current requisition. No Athena order is implied.</p>'+
+  '<details class="lab-panel-all-targets"><summary>See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
+  '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
+}
 // Reuse the instrument guide illustrations in compact cards without altering card dimensions.
 function homepageEquipmentArt(sec,featured=false){
  if(!sec||!window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id))return '';
@@ -1045,14 +1066,18 @@ function renderHome(mode='home'){
  h+=`<div class="section-head"><h2 class="section-title">${search?'Matching references':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${filtered.length} guides</span></div>`;
  const cats=['All',...categories.filter(c=>c!=='Archived'),...(search?['Archived']:[])];
  h+=`<div class="filters" role="group" aria-label="Filter guide categories">${cats.map(c=>`<button type="button" data-filter="${safeHtml(c)}" class="filter-chip ${c===state.filter?'active':''}">${safeHtml(c)}</button>`).join('')}</div>`;
+ let panelMatchCount=0;
  if(search){
   const panelResults=searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter));
-  if(panelResults.length){
-   h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelResults.length} panels</span></div>`;
-   h+=`<p class="lab-panel-search-description">Find panels containing the searched analyte or pathogen, with the corresponding verified Athena order where available. Panel orders may include additional targets.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}</div>`;
+  const sendoutResults=(state.filter==='All'||state.filter==='Send-outs')
+   ?window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[]:[];
+  panelMatchCount=panelResults.length+sendoutResults.length;
+  if(panelMatchCount){
+   h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelMatchCount} panels</span></div>`;
+   h+=`<p class="lab-panel-search-description">Find analyzers and molecular sendout panels containing the searched analyte or pathogen. Verified Athena orders appear where available; sendout references do not imply an Athena order.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}${sendoutResults.map(item=>searchSendoutPanelCard(item,search)).join('')}</div>`;
   }
  }
- h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:`<div class="empty-state" style="margin-top:17px">No matching guides. Try searching a different term or choose another category.</div>`;
+ h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:(panelMatchCount?'':`<div class="empty-state" style="margin-top:17px">No matching guides or panels. Try a different term or choose another category.</div>`);
  if(!search&&!isFav)h+=`<div class="section-head" style="margin-top:32px"><h2 class="section-title">Also available</h2></div><p class="lede">Discontinued instruments are kept under <strong>Archived</strong> for historical reference and excluded from the routine browse list.</p>`;
  el('mainContent').innerHTML=h;
 }
@@ -2599,6 +2624,12 @@ document.addEventListener('click',e=>{
    state.guideMode=modeButton.dataset.guideMode;render();
    const top=el('procedureTop');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
   }
+  return;
+ }
+ const sendoutSearch=e.target.closest('[data-calc2-search-lab]');
+ if(sendoutSearch){
+  const lab=sendoutSearch.dataset.calc2SearchLab,term=sendoutSearch.dataset.calc2SearchQuery;
+  if(window.LAB_CALCULATORS_GUIDE?.selectSendoutSearchResult?.(lab,term))navigate('calculators');
   return;
  }
  const nav=e.target.closest('[data-go]');if(nav){navigate(nav.dataset.go,nav.dataset.targetTab||'overview');return}
