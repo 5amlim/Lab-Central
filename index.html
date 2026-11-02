@@ -1080,11 +1080,11 @@ function renderHome(mode='home'){
  }
  if(isFav)h=`<div class="eyebrow">SAVED REFERENCES</div><h1 class="page-h1">Saved guides</h1><p class="lede">Bookmarks are saved in this browser only.</p>`;
  if(search)h=`<div class="eyebrow">FIND A PROCEDURE</div><h1 class="page-h1">Search the lab guide</h1><p class="lede">Results for “${safeHtml(search)}” across analytes, pathogens, clinical abbreviations, instrument panels and Athena orders.</p>`;
- h+=`<div class="section-head"><h2 class="section-title">${search?'Search results':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${search?totalSearchMatches+' matches':filtered.length+' guides'}</span></div>`;
+ h+=`<div class="section-head"><h2 class="section-title">${search?'Search results':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${search?totalSearchMatches+' '+(totalSearchMatches===1?'match':'matches'):filtered.length+' guides'}</span></div>`;
  const cats=['All',...categories.filter(c=>c!=='Archived'),...(search?['Archived']:[])];
  h+=`<div class="filters" role="group" aria-label="Filter guide categories">${cats.map(c=>`<button type="button" data-filter="${safeHtml(c)}" class="filter-chip ${c===state.filter?'active':''}">${safeHtml(c)}</button>`).join('')}</div>`;
  if(search&&panelMatchCount){
-  h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelMatchCount} panels</span></div>`;
+  h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelMatchCount} panel${panelMatchCount===1?'':'s'}</span></div>`;
   h+=`<p class="lab-panel-search-description">Results are grouped by laboratory. Matching organisms appear on each card; expand a panel to review all targets. Athena orders appear only for verified in-house panels.</p>`;
   h+='<div class="lab-search-sources">'+
    labSearchResultGroup('inhouse','In-house testing','On-site analyzer and point-of-care panels',panelResults.map(searchPanelCard).join(''),panelResults.length)+
