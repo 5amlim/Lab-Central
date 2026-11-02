@@ -66,7 +66,7 @@ const rates=[
 const categoryOptions=["All","Respiratory","Gastrointestinal","Urinary","Sexual health","Wound","Fungal","Other"];
 const tabOptions=[["menu","Test menu"],["ordering","Ordering"],["shipping","Collection & shipping"],["results","Results"],["rates","Cash-pay rates"]];
 const groupNames={bacterial:"Bacterial",viral:"Viral",fungal:"Fungal / yeast",parasitic:"Parasite / protozoal",resistance:"Resistance markers"};
-let tab="menu",category="All",query="";
+let tab="menu",category="All",query="",selectedPanelId="";
 let selectedMarket="socal",selectedClinic="bh";
 function setLocation(market,clinic){selectedMarket=market;selectedClinic=clinic;}
 
@@ -166,7 +166,7 @@ function menuCards(){
  const arr=filtered();
  return '<div class="pmd-results-count" id="pmd-result-count"><strong>'+arr.length+'</strong> of '+panels.length+' menus'+(query?' matching “'+e(query)+'”':'')+'</div>'+
  (arr.length?'<div class="pmd-menu-grid">'+arr.map(p=>
-   '<details class="pmd-menu-card" '+(query.trim().length>1&&arr.length===1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
+   '<details class="pmd-menu-card'+(selectedPanelId===p.id?' is-targeted':'')+'" data-pmd-panel-id="'+e(p.id)+'" '+(selectedPanelId? (selectedPanelId===p.id?'open':''):(query.trim().length>1&&arr.length===1?'open':''))+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
    '<div class="pmd-menu-body">'+pmdTargetSection(p)+pmdCollection(p)+'</div></details>').join("")+'</div>':
  '<div class="pmd-no-results"><strong>No matching test menus</strong><p>Try a pathogen name, panel name or category, or clear the search.</p><button type="button" data-pmd-clear>Clear search &amp; filters</button></div>');
 }
@@ -273,12 +273,13 @@ document.addEventListener("click",event=>{
   return;
  }
  const filter=event.target.closest("#pathmd-reference [data-pmd-category]");
- if(filter){category=filter.dataset.pmdCategory;refresh();document.querySelector('[data-pmd-category="'+CSS.escape(category)+'"]')?.focus({preventScroll:true});return;}
- if(event.target.closest("#pathmd-reference [data-pmd-clear]")){query="";category="All";refresh();document.querySelector("#pmd-test-search")?.focus({preventScroll:true});}
+ if(filter){selectedPanelId="";category=filter.dataset.pmdCategory;refresh();document.querySelector('[data-pmd-category="'+CSS.escape(category)+'"]')?.focus({preventScroll:true});return;}
+ if(event.target.closest("#pathmd-reference [data-pmd-clear]")){selectedPanelId="";query="";category="All";refresh();document.querySelector("#pmd-test-search")?.focus({preventScroll:true});}
 });
 document.addEventListener("input",event=>{
  if(event.target?.id!=="pmd-test-search")return;
  query=event.target.value;
+ selectedPanelId="";
  const results=document.getElementById("pmd-menu-results");
  if(results)results.innerHTML=menuCards();
 });
@@ -291,16 +292,30 @@ document.addEventListener("keydown",event=>{
  refresh(true);
 });
 function searchForPathogen(term){
+ selectedPanelId="";
  query=String(term||"");
  category="All";
  tab="menu";
 }
 function openMenu(){
+ selectedPanelId="";
  tab="menu";
  const root=document.getElementById("pathmd-reference");
  if(root)refresh(false);
  const target=document.getElementById("pmd-test-search")||document.getElementById("pathmd-reference");
  target?.scrollIntoView?.({behavior:"smooth",block:"start"});
 }
-window.LAB_PATHMD_REFERENCE={render,openMenu,setLocation,searchForPathogen,panels,prices:rates};
+function selectPanel(id,term){
+ const chosen=panels.find(p=>p.id===String(id||""));
+ if(!chosen)return false;
+ selectedPanelId=chosen.id;
+ category="All";
+ query=String(term||"");
+ // Preserve the originating search when it matches the PathMD menu's own index.
+ // Otherwise show all menus so the selected card remains visible.
+ if(query&&!searchText(chosen).includes(safeSearch(query.trim())))query="";
+ tab="menu";
+ return true;
+}
+window.LAB_PATHMD_REFERENCE={render,openMenu,setLocation,searchForPathogen,selectPanel,panels,prices:rates};
 })();
