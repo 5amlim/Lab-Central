@@ -593,3 +593,67 @@
   print-color-adjust:exact;
  }
 }
+
+
+/* One enclosing section for each laboratory and all its matching search cards. */
+.lab-search-source{
+ border:1px solid var(--source-line);
+ border-radius:15px;
+ overflow:hidden;
+ background:#fff;
+ box-shadow:0 3px 17px rgba(35,58,84,.035);
+}
+.lab-search-source-header{
+ margin:0;
+ padding:17px 20px 17px 16px;
+ border:0;
+ border-left:4px solid var(--source-accent);
+ border-bottom:1px solid var(--source-line);
+ border-radius:0;
+ background:linear-gradient(108deg,var(--source-soft) 0%,color-mix(in srgb,var(--source-soft) 47%,#fff) 73%,#fff 100%);
+}
+.lab-search-source-heading{gap:12px}
+.lab-search-source-heading h3{font-size:15px}
+.lab-search-source-heading p{font-size:11px}
+.lab-search-source-mark{width:39px;height:39px;border-radius:11px}
+.lab-search-source-count{font-size:10.5px;padding:8px 12px;border-radius:999px}
+.lab-search-source-items{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ gap:10px;
+ padding:14px 16px 16px;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--source-soft) 23%,#fff) 0%,#fff 75%);
+}
+.lab-search-source .lab-panel-search-result{
+ border:1px solid #e2e8ee;
+ border-left:3px solid var(--source-accent);
+ border-radius:10px;
+ background:#fff;
+ box-shadow:0 2px 6px rgba(39,67,85,.025);
+}
+.lab-search-source .lab-panel-search-result:hover{
+ border-color:var(--source-line);
+ border-left-color:var(--source-accent);
+ box-shadow:0 3px 10px rgba(45,65,98,.06);
+}
+.lab-search-source-pathmd .lab-panel-open{
+ color:#6b4b98;
+ background:#f8f5fc;
+ border-color:#dfd5ed;
+}
+.lab-search-source-pathmd .lab-panel-open:hover{
+ color:#593781;
+ background:#eee6f8;
+ border-color:#cbb9e3;
+}
+@media(max-width:520px){
+ .lab-search-source{border-radius:12px}
+ .lab-search-source-header{padding:13px 12px;gap:9px}
+ .lab-search-source-mark{width:33px;height:33px}
+ .lab-search-source-heading h3{font-size:13.5px}
+ .lab-search-source-items{padding:10px;gap:8px}
+}
+@media print{
+ .lab-search-source{box-shadow:none;break-inside:auto}
+ .lab-search-source-header{break-after:avoid}
+}
