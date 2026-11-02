@@ -188,7 +188,7 @@ function panel(calculators,logo){
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
    '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
   '</div>'+
-  (pathmdContent||htrxContent||quickSteps)+pickup+
+  pickup+(pathmdContent||htrxContent||quickSteps)+
   '<p class="calc2-panel-footnote">'+(molecular?
     'Before collection or dispatch, verify this clinic is activated and confirm approved panels, collection devices and transport arrangements.':
     'Always verify the current test directory, exact specimen requirements and local SOP before collection.')+'</p>'+
