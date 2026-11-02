@@ -259,5 +259,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,nextActions,isCalculator,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,nextActions,isCalculator,selectedLab,allows,market,count};
 })();
