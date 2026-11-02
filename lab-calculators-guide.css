@@ -520,3 +520,63 @@
  .calc2-htrx-menu-row{flex-wrap:wrap}
  .calc2-htrx-menu-tube{margin-left:auto}
 }
+
+
+/* 2026-11-02: Unified sendout pathogen search */
+.calc2-finder{margin:13px 0 17px;border:1px solid #dce8ed;border-radius:13px;background:#fff;padding:14px 16px}
+.calc2-finder-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.calc2-finder-head>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 12px}
+.calc2-finder-head strong{font-size:12px;color:#34576b}
+.calc2-finder-head span{font-size:10.5px;color:#8294a3}
+.calc2-finder-labs{border:1px solid #e1ebed;border-radius:100px;padding:5px 9px;background:#f6fafb;color:#478184!important;font-weight:760;white-space:nowrap}
+.calc2-finder-input{display:flex;align-items:center;gap:9px;border:1px solid #d8e4e9;border-radius:9px;background:#f9fbfd;padding:0 12px}
+.calc2-finder-input:focus-within{border-color:#83b8b9;box-shadow:0 0 0 3px #e5f1f1;background:#fff}
+.calc2-finder-input svg{flex:none;color:#7d94a3}
+.calc2-finder-input input{border:0;outline:0;background:transparent;width:100%;height:40px;min-width:0;color:#34546a;font-size:11.5px}
+.calc2-finder-results{margin-top:9px}
+.calc2-finder-hint{display:block;font-size:10px;color:#90a0ab;line-height:1.5}
+.calc2-finder-count{font-size:10.5px;color:#647f90;margin:0 0 9px;font-weight:720}
+.calc2-finder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.calc2-finder-hit{display:flex;align-items:center;min-width:0;gap:10px;text-align:left;border:1px solid #dfe8ee;background:#fbfcfe;border-radius:9px;padding:11px 12px}
+.calc2-finder-hit:hover{background:#f2f9fa;border-color:#b6d6d6}
+.calc2-finder-hit:focus-visible{outline:2px solid #83b7b8;outline-offset:2px}
+.calc2-finder-lab{min-width:82px;flex:none;text-align:center;font-size:9px;line-height:1.5;font-weight:850;border-radius:6px;padding:6px 7px}
+.calc2-finder-lab.htrx{color:#1c7175;background:#e5f4f3}
+.calc2-finder-lab.pathmd{color:#706596;background:#f0eef9}
+.calc2-finder-info{flex:1;min-width:0}
+.calc2-finder-info strong{font-size:11px;color:#34536d;display:block;line-height:1.35}
+.calc2-finder-info small{display:block;font-size:10px;line-height:1.4;color:#788e9d;margin-top:4px;overflow-wrap:anywhere}
+.calc2-finder-arrow{font-size:15px;color:#76919f}
+.calc2-finder-empty{padding:13px;text-align:center;color:#7891a1;background:#f7fafb;border-radius:8px;font-size:11px}
+.calc2-finder-more{font-size:10px;color:#859aa5;margin:8px 0 0}
+@media(max-width:770px){.calc2-finder-grid{grid-template-columns:1fr}}
+@media(max-width:520px){
+ .calc2-finder{padding:12px}
+ .calc2-finder-head{align-items:flex-start}
+ .calc2-finder-lab{min-width:70px}
+}
+/* Expand HTRX vendor menu rows with exact searchable pathogen targets */
+.calc2-htrx-menu-items{align-items:start}
+.calc2-htrx-menu-row{display:block;padding:0;overflow:hidden}
+.calc2-htrx-menu-row summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px}
+.calc2-htrx-menu-row summary::-webkit-details-marker{display:none}
+.calc2-htrx-menu-row summary:hover{background:#f3faf9}
+.calc2-htrx-menu-code{min-width:52px;flex:none;text-align:center;background:#e8f5f3;border-radius:6px;color:#24747a;font-size:10px;font-weight:850;padding:7px 8px}
+.calc2-htrx-menu-desc{min-width:0;flex:1}
+.calc2-htrx-menu-desc b{display:block;color:#34556a;font-size:11px;line-height:1.4}
+.calc2-htrx-menu-desc small{display:block;font-size:10px;line-height:1.5;color:#7b90a0;margin-top:3px}
+.calc2-htrx-menu-row summary .calc2-htrx-menu-tube{flex:none}
+.calc2-htrx-menu-chevron{width:8px;height:8px;flex:none;border-right:2px solid #7995a1;border-bottom:2px solid #7995a1;transform:rotate(45deg);transition:transform .15s;margin:0 3px}
+.calc2-htrx-menu-row[open] .calc2-htrx-menu-chevron{transform:rotate(225deg)}
+.calc2-htrx-pathogens{display:flex;flex-direction:column;gap:12px;border-top:1px solid #e3edf0;padding:12px;background:#fff}
+.calc2-htrx-pathogen-group>strong{display:flex;align-items:center;justify-content:space-between;border-radius:6px;background:#eaf5f3;color:#327d77;font-size:10px;padding:6px 8px;margin-bottom:7px}
+.calc2-htrx-pathogen-group>strong small{opacity:.8}
+.calc2-htrx-pathogen-group:nth-child(2)>strong{background:#edf3fc;color:#4a79a4}
+.calc2-htrx-pathogen-group:nth-child(3)>strong{background:#f4eefa;color:#8e6ca3}
+.calc2-htrx-pathogen-group:nth-child(4)>strong{background:#faecef;color:#a36877}
+.calc2-htrx-pathogen-group>div{display:flex;flex-wrap:wrap;gap:5px}
+.calc2-htrx-pathogen{padding:5px 7px;border:1px solid #e2eaf0;border-radius:6px;background:#fdfefe;font-size:10px;line-height:1.4;color:#4e6b7b}
+.calc2-htrx-pathogen.is-match{background:#fff2cf;border-color:#f0dda3;color:#806427}
+.calc2-htrx-menu-count{border-radius:99px;border:1px solid #d7e7ea;background:#eef7f6;color:#397b78;padding:6px 9px;font-size:10px;font-weight:850;white-space:nowrap}
+.calc2-htrx-no-results{padding:18px;color:#7c8c9c;font-size:11px;text-align:center;grid-column:1/-1}
+#calc2-htrx-menu{scroll-margin-top:90px}
