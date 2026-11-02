@@ -109,24 +109,24 @@ function menu(){
 const sequence=(arr)=>'<ol class="pmd-steps">'+arr.map(([heading,body],i)=>
  '<li><span class="pmd-step-number">'+String(i+1).padStart(2,"0")+'</span><div><strong>'+e(heading)+'</strong><p>'+e(body)+'</p></div></li>').join('')+'</ol>';
 function ordering(){
- const portal=[
-  ["Create requisition","Log in and choose Create Requisition. Confirm the correct clinic location and provider."],
-  ["Add patient","+ Patient: complete all required fields, then Save & Exit."],
-  ["Add insurance","Enter primary insurance and subscriber ID, then Save & Exit."],
-  ["Record diagnosis and timing","Enter one or two ICD-10 codes and confirm specimen collection date and time."],
-  ["Select one test menu","Choose Add Test and select the single approved PathMD test menu."],
-  ["Specify source and site","Enter specimen source and collection site, such as swab / throat or nasal."],
-  ["Complete and print","Review, choose Save & Exit, then Yes. Print the requisition and patient demographic sheet for the specimen bag."]
- ];
- const paper=[
-  ["Confirm provider and patient","Select the correct provider, then enter patient's first and last name and date of birth."],
-  ["Document clinical details","Write the appropriate ICD-10 code(s), collection date and swab source / collection site."],
-  ["Choose one menu only","Mark one approved test menu, not multiple panels on the same requisition."]
- ];
- return '<div class="pmd-section-lead"><h4>Prepare the PathMD requisition</h4><p>Choose the clinic-approved ordering method. Follow the source guide for all mandatory fields.</p></div>'+
- '<div class="pmd-two-column"><section class="pmd-subcard"><div class="pmd-subcard-heading"><span class="pmd-mini-label">PORTAL</span><h5>Electronic requisition</h5></div>'+sequence(portal)+'</section>'+
- '<section class="pmd-subcard"><div class="pmd-subcard-heading"><span class="pmd-mini-label">BACKUP</span><h5>Paper requisition</h5></div>'+sequence(paper)+
- '<div class="pmd-mini-notice">Use the location and provider authorized for this clinic. Do not place patient information into this reference site.</div></section></div>';
+ return '<div class="pmd-section-lead"><h4>Submit a PathMD sample</h4><p>Current Sollis workflow: submit an Athena aftercare order, then complete a paper requisition for the specimen.</p></div>'+
+ '<div class="pmd-current-flow"><span class="pmd-current-label">CURRENT WORKFLOW</span><strong>Athena aftercare order + paper requisition</strong><span>2 steps</span></div>'+
+ '<div class="pmd-ordering-grid">'+
+  '<section class="pmd-ordering-card"><div class="pmd-order-card-top"><span class="pmd-order-step">01</span><div><span class="pmd-mini-label">ATHENA</span><h5>Place an aftercare order</h5></div></div>'+
+   '<p>In the patient chart, submit an <strong>Aftercare</strong> order to follow up on the requested PathMD panel.</p>'+
+   '<div class="pmd-order-example"><span>AFTERCARE ORDER</span><strong>Follow up on &ldquo;[Panel Name]&rdquo;</strong></div>'+
+   '<p class="pmd-order-hint">Use the ordered panel name so the follow-up instruction clearly identifies the test.</p>'+
+  '</section>'+
+  '<section class="pmd-ordering-card"><div class="pmd-order-card-top"><span class="pmd-order-step">02</span><div><span class="pmd-mini-label">PATHMD</span><h5>Complete the paper requisition</h5></div></div>'+
+   '<ul class="pmd-order-checklist">'+
+    '<li><strong>Full patient name &amp; DOB</strong><small>Apply the Dymo label</small></li>'+
+    '<li><strong>Provider name &amp; signature</strong><small>Dr. B by default</small></li>'+
+    '<li><strong>Order / panel name</strong><small>Select one test menu only</small></li>'+
+    '<li><strong>ICD-10 diagnosis code(s)</strong></li>'+
+    '<li><strong>Date of collection &amp; specimen source</strong></li>'+
+   '</ul>'+
+  '</section></div>'+
+ '<p class="pmd-order-footer">After completing both steps, follow the approved PathMD specimen labeling, packaging and clinic courier workflow under <strong>Collection &amp; shipping</strong>.</p>';
 }
 function shipping(){
  const local=selectedMarket==="socal";
@@ -154,15 +154,15 @@ function shipping(){
  optional;
 }
 function results(){
- return '<div class="pmd-section-lead"><h4>Find and review results</h4><p>Based on the PathMD portal and results quick guide.</p></div>'+
- '<div class="pmd-two-column"><section class="pmd-subcard"><h5>Result retrieval</h5>'+sequence([
-  ["Watch for the final report","The provided guide describes a result notification by email and fax after finalization."],
-  ["Open the PathMD portal","Go to All Requisitions, open the correct patient record and select Preview Result."],
-  ["Review the report","Check detected pathogens and any reported resistance markers against the ordered panel."]
- ])+'</section>'+
- '<section class="pmd-subcard"><h5>Antibiotic recommendations</h5><p class="pmd-paragraph">The vendor guide groups antibiotic recommendations by line: first-line options at the top, then second-line, and third-line if present.</p>'+
- '<p class="pmd-paragraph">If multiple pathogens are detected, compare the individual pathogen rows and candidate options. The result is decision support, not an automatic prescription.</p>'+
- '<div class="pmd-mini-notice"><strong>Clinical caution:</strong> Treatment decisions require the provider’s assessment of symptoms, specimen source, allergies, local guidance and culture or susceptibility testing when indicated. Resistance-marker detection alone does not establish the full susceptibility profile.</div></section></div>';
+ return '<div class="pmd-section-lead"><h4>Aftercare &amp; results</h4><p>PathMD results flow back to the patient’s chart through Athena.</p></div>'+
+ '<div class="pmd-aftercare-flow">'+
+  '<section class="pmd-aftercare-card"><span class="pmd-aftercare-icon" aria-hidden="true">1</span><div><span class="pmd-mini-label">RESULT DELIVERY</span><h5>Automatically faxed via Athena</h5><p>Final PathMD results are automatically received by fax through Athena.</p></div></section>'+
+  '<section class="pmd-aftercare-card"><span class="pmd-aftercare-icon" aria-hidden="true">2</span><div><span class="pmd-mini-label">CHART MATCHING</span><h5>Matched to the patient chart</h5><p>Athena matches the faxed result to the correct patient chart using the <strong>patient’s full name and date of birth</strong>. Ensure these identifiers are correct on the requisition.</p></div></section>'+
+ '</div>'+
+ '<div class="pmd-aftercare-note"><strong>Aftercare follow-up:</strong> Confirm the result is attached to the correct chart and follow up on the ordered panel as directed by the provider.</div>'+
+ '<details class="pmd-aftercare-reference"><summary>Vendor report interpretation reference <span aria-hidden="true">⌄</span></summary>'+
+ '<div><p>The vendor guide organizes antibiotic recommendations by first-line, second-line and, when applicable, third-line options. Multiple detected pathogens should be reviewed individually.</p>'+
+ '<p>These are decision-support suggestions, not automatic treatment orders. Clinical decisions depend on the provider’s assessment, specimen source, allergies and any relevant susceptibility testing.</p></div></details>';
 }
 function pricing(){
  return '<div class="pmd-cap-policy"><div><span>CLINIC CASH-PAY CAP</span><strong>$150 <small>/ test maximum</small></strong></div><p>The current Sollis PathMD cash-pay charge is capped at <strong>$150 per test</strong>. This is a maximum, not the price of every individual assay. Confirm the actual charge and patient eligibility with the billing owner before quoting.</p></div>'+
@@ -174,11 +174,11 @@ function pricing(){
 function renderContent(){return tab==="menu"?menu():tab==="ordering"?ordering():tab==="shipping"?shipping():tab==="results"?results():pricing();}
 function render(){
  return '<section class="pmd-reference" id="pathmd-reference" aria-label="PathMD searchable laboratory reference">'+
- '<div class="pmd-reference-head"><div><span class="pmd-overline">PATHMD REFERENCE LIBRARY</span><h3>Test menus &amp; workflows</h3><p>Search targets and panels, or open a focused guide for ordering, shipping, results and patient cash-pay rates.</p></div><span class="pmd-source-chip">2026 vendor guides</span></div>'+
+ '<div class="pmd-reference-head"><div><span class="pmd-overline">PATHMD REFERENCE LIBRARY</span><h3>Test menus &amp; workflows</h3><p>Search panels and pathogens, or review the current Athena aftercare, paper requisition, courier and results workflow.</p></div><span class="pmd-source-chip">2026 vendor guides</span></div>'+
  '<div class="pmd-reference-stats"><span><strong>15</strong> test menus</span><span><strong>3</strong> source documents</span><span><strong>5</strong> reference sections</span></div>'+
  '<div class="pmd-downloads"><div class="pmd-downloads-heading"><strong>Quick-reference summaries</strong><small>These are shortened Lab Central reference sheets, not the original PathMD documents</small></div>'+
  '<div class="pmd-download-grid">'+
- '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-order-shipping-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Ordering &amp; shipping</strong><small>Portal, labeling, FedEx, results</small></span><span aria-hidden="true">↗</span></a>'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-order-shipping-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Vendor quick-guide summary</strong><small>Legacy portal &amp; FedEx reference, not the current Sollis ordering workflow</small></span><span aria-hidden="true">↗</span></a>'+
  '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-test-menu-index.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Molecular menu index</strong><small>15 panels by clinical category</small></span><span aria-hidden="true">↗</span></a>'+
  '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-cash-pay-cap-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Cash-pay cap</strong><small>$150 maximum per test</small></span><span aria-hidden="true">↗</span></a>'+
  '</div></div>'+
