@@ -506,3 +506,90 @@
  .lab-panel-athena{transition:none}
  .lab-panel-athena:hover{transform:none}
 }
+
+
+/* Laboratory search groups: distinct source accents while keeping result cards legible. */
+.lab-search-source{
+ --source-ink:#367894;
+ --source-soft:#ecf6fb;
+ --source-line:#d4e6ef;
+ --source-accent:#367f9e;
+ --source-deep:#2f667f;
+ min-width:0;
+}
+.lab-search-source-inhouse{
+ --source-ink:#357995;
+ --source-soft:#eaf4f9;
+ --source-line:#cfe2ee;
+ --source-accent:#3a88a6;
+ --source-deep:#2e6b84;
+}
+.lab-search-source-htrx{
+ --source-ink:#247c69;
+ --source-soft:#e7f6ef;
+ --source-line:#cfe8dd;
+ --source-accent:#279279;
+ --source-deep:#236e61;
+}
+.lab-search-source-pathmd{
+ --source-ink:#745998;
+ --source-soft:#f2ecfa;
+ --source-line:#e1d5f0;
+ --source-accent:#8461b3;
+ --source-deep:#654a8c;
+}
+.lab-search-source-header{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:10px 16px;
+ padding:13px 15px;
+ margin:0 0 13px;
+ background:linear-gradient(105deg,var(--source-soft) 0%,#fff 96%);
+ border:1px solid var(--source-line);
+ border-left:4px solid var(--source-accent);
+ border-radius:12px;
+}
+.lab-search-source-heading h3{color:var(--source-deep)}
+.lab-search-source-heading p{color:#748c9a}
+.lab-search-source-mark{
+ display:grid;
+ place-items:center;
+ width:35px;
+ height:35px;
+ flex:none;
+ color:#fff;
+ background:var(--source-accent);
+ border-radius:10px;
+ box-shadow:inset 0 -2px 0 rgba(25,45,65,.08);
+}
+.lab-search-source-count{
+ color:var(--source-deep);
+ background:var(--source-soft);
+ border:1px solid var(--source-line);
+ border-radius:999px;
+ padding:7px 11px;
+ font-weight:850;
+}
+.lab-search-source .lab-panel-search-result{
+ border-color:#e1e8ed;
+ border-left-color:var(--source-accent);
+}
+.lab-search-source .lab-panel-search-result:hover{
+ border-color:var(--source-line);
+ border-left-color:var(--source-accent);
+}
+@media(max-width:520px){
+ .lab-search-source-header{padding:11px 12px;gap:9px}
+ .lab-search-source-mark{width:31px;height:31px}
+ .lab-search-source-count{padding:6px 9px}
+}
+@media print{
+ .lab-search-source-header,
+ .lab-search-source-mark,
+ .lab-search-source-count{
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+ }
+}
