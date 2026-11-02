@@ -276,7 +276,6 @@ function panel(calculators,logo){
   '<button type="button" class="calc2-primary-action" data-calc2-open-menu="'+id+'">Open '+E(names[id])+' test menu <span aria-hidden="true">↓</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
  const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Container guide <span aria-hidden="true">↗</span></a>':'';
- const sendout='<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout workflow <span aria-hidden="true">↗</span></button>';
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
   '<span class="calc2-panel-icon">'+logo+'</span>';
  const cedarsPayerNote=id==="cedars"?
@@ -291,7 +290,7 @@ function panel(calculators,logo){
   '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span class="calc2-selected-site">'+E(m.short)+' <i aria-hidden="true">·</i> '+E(c[1])+'</span></div>'+
   '<div class="calc2-panel-intro">'+
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
-   '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
+   '<div class="calc2-panel-actions">'+action+extra+'</div>'+
   '</div>'+
   pickup+cedarsPayerNote+(pathmdContent||htrxContent||quickSteps)+
   '<p class="calc2-panel-footnote">'+(molecular?
