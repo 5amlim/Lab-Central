@@ -75,6 +75,8 @@ function setMenu(open,focusSelected=false,restore=false){
 }
 function updatePage(focusClinic=false){
  document.dispatchEvent(new CustomEvent('lc-calculators-change'));
+ const counter=document.getElementById('calc2-nav-count');
+ if(counter)counter.textContent=String(count());
  if(focusClinic)document.querySelector('#calc2-site-selector [data-calc2-toggle]')?.focus();
 }
 document.addEventListener('click',event=>{
@@ -95,7 +97,7 @@ document.addEventListener('click',event=>{
  const sendout=event.target.closest('[data-calc2-sendout]');
  if(sendout){
   const {market:m,clinic:c}=current();
-  window.LAB_SENDOUT_MARKETS?.select?.(m.id,c[0]);
+  window.LAB_SENDOUT_MARKETS?.select?.(m.id,c[0],sendout.dataset.calc2Sendout);
   location.hash='#sendout';
   return;
  }
