@@ -407,7 +407,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="quality-reference.js?v=20261101-enrollment-confirmed-v23"></script>
 <script src="pt-testing-guide.js?v=20261101-piccolo-selected-v18"></script>
 <script src="api-submission.js?v=20261101-api-tidy-v7"></script>
-<script src="lab-calculators-guide.js?v=20261102-tubes-pdfs-v3"></script>
+<script src="lab-calculators-guide.js?v=20261102-layout-redesign-v4"></script>
 <script src="pathmd-reference.js?v=20261102-cap-pdfs-v3"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
@@ -1656,7 +1656,7 @@ function renderCalculators(){
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.panel(calculators,calculatorLogo())||'';
  if(window.LAB_CALCULATORS_GUIDE?.isCalculator()){
- h+='<details class="calc2-workflow-collapse"><summary><span><strong>Detailed calculator workflow</strong><small>6 steps · Build the order, verify requirements and finalize sendout</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>';
+ h+='<details class="calc2-workflow-collapse"><summary><span><strong>Detailed collection workflow</strong><small>6 steps across 3 phases · Expand for instructions</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>';
  h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
   <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
   <div class="calc-guide-roadmap" aria-label="Workflow overview"><span>Build the order</span><b aria-hidden="true">›</b><span>Verify requirements</span><b aria-hidden="true">›</b><span>Finalize sendout</span></div>
@@ -1723,12 +1723,8 @@ function renderCalculators(){
   <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory.</p>
 </section>`;
  h+='</details>';
- h+=`<div class="tool-bottom-link"><span>Need the full intake, upload and scheduling instructions?</span><button type="button" data-go="orders">Open sendout order workflows <span>→</span></button></div>`;
- h+=`<div class="calculator-sendout-guide"><span class="calculator-sendout-icon">${svg('package')}</span><div><strong>Ready to send specimens?</strong><p>RN collects using the calculator. Lab tech processes, packages and submits the electronic log.</p></div><button type="button" data-go="sendout-log">Sendout Log instructions →</button></div>`;
- }else{
- h+='<div class="calc2-molecular-next"><div><strong>Ready to send your molecular specimen?</strong><p>Confirm the lab-specific kit and courier procedure in the selected sendout guide, then document the handoff.</p></div><button type="button" data-go="sendout-log">Sendout Log instructions →</button></div>';
  }
- h+=`<p class="source-footnote">Confirm test-specific collection and transport requirements in the receiving laboratory directory.</p>`;
+ h+=window.LAB_CALCULATORS_GUIDE?.nextActions()||'';
  el('mainContent').innerHTML=h;
 }
 
