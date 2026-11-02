@@ -108,11 +108,38 @@ function tabs(){
  labs.map(id=>'<button type="button" role="tab" id="calc2-tab-'+id+'" data-calc2-lab="'+id+'" aria-controls="calc2-lab-panel" aria-selected="'+(id===active)+'" tabindex="'+(id===active?'0':'-1')+'" class="calc2-tab calc2-tab-'+id+(id===active?' is-selected':'')+'"><span class="calc2-tab-mark" aria-hidden="true"></span>'+E(names[id])+'</button>').join('')+
  '</div>';
 }
+/* HTRX is intentionally restricted to the two clinic-approved transport tube types. */
+function htrxTubeIllustration(color){
+ const cap=color==="green"?"#479c75":"#f2f4f7";
+ return '<svg viewBox="0 0 80 135" width="74" height="124" role="img" aria-label="'+(color==="green"?"Green-top molecular transport tube":"White-top molecular transport tube")+' illustration">'+
+ '<rect x="22" y="22" width="36" height="98" rx="10" fill="#f7fbfe" stroke="#9cb5c2" stroke-width="2"/>'+
+ '<rect x="19" y="11" width="42" height="25" rx="6" fill="'+cap+'" stroke="#93a8b5" stroke-width="2"/>'+
+ '<path d="M26 76h28v33c0 9-28 9-28 0z" fill="#deedf4"/>'+
+ '<rect x="25" y="49" width="30" height="36" rx="4" fill="white" stroke="#dce5eb"/>'+
+ '<path d="M29 59h22M29 65h16M29 71h19" stroke="#a9b9c7" stroke-width="1.5"/>'+
+ '</svg>';
+}
+function htrxReference(){
+ return '<section class="calc2-htrx-reference" aria-label="HealthTrackRx approved collection reference">'+
+ '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">APPROVED COLLECTION DEVICES</span><h4>Only two tube types</h4><p>Choose by ordered test menu and specimen source. Other vendor tube types are not part of this workflow.</p></div></div>'+
+ '<div class="calc2-htrx-tube-grid">'+
+ '<article class="calc2-htrx-tube calc2-htrx-white"><div class="calc2-htrx-tube-art">'+htrxTubeIllustration("white")+'</div><div class="calc2-htrx-tube-copy"><span class="calc2-htrx-top-badge">WHITE TOP</span><h5>Molecular PCR menus</h5><p>Use for approved HealthTrackRx respiratory, genitourinary and specialty molecular tests assigned to the white tube.</p><span class="calc2-htrx-tube-note">Verify the requested menu and source before collection.</span></div></article>'+
+ '<article class="calc2-htrx-tube calc2-htrx-green"><div class="calc2-htrx-tube-art">'+htrxTubeIllustration("green")+'</div><div class="calc2-htrx-tube-copy"><span class="calc2-htrx-top-badge">GREEN TOP</span><h5>Throat GC / CT-GC</h5><p>For <strong>oral or throat Chlamydia/Gonorrhea (CG)</strong> testing. The vendor lists <strong>CGGY</strong> for vaginal, rectal and oral sources using the green-top tube.</p><span class="calc2-htrx-tube-note">Confirm oral/throat collection site on the order.</span></div></article>'+
+ '</div>'+
+ '<div class="calc2-htrx-checklist"><strong>Before pickup</strong><div><span>1. One tube per menu; check source and submit order.</span><span>2. Label name, DOB and collection site; do not obscure the barcode.</span><span>3. Seal the tube and bag; verify manifest and approved clinic courier.</span></div></div>'+
+ '<p class="calc2-htrx-restriction">Yellow-top urine CG/CGT and gray-top urine culture collection tubes are intentionally excluded from this clinic reference.</p>'+
+ '<div class="calc2-pdf-library"><div class="calc2-pdf-library-heading"><strong>PDF collection references</strong><small>Concise PDFs adapted from the uploaded 2026 HealthTrackRx documents</small></div><div class="calc2-pdf-links">'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/healthtrackrx-collection-reference.pdf"><span class="calc2-pdf-icon">PDF</span><span><strong>Collection &amp; tube guide</strong><small>White and green tubes · labeling · transport</small></span><span class="calc2-pdf-arrow">↗</span></a>'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/healthtrackrx-menu-reference.pdf"><span class="calc2-pdf-icon">PDF</span><span><strong>Selected menu reference</strong><small>RTI, pharyngitis, FCRSV, CGGY and more</small></span><span class="calc2-pdf-arrow">↗</span></a>'+
+ '</div></div>'+
+ '</section>';
+}
 function panel(calculators,logo){
  const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
  const molecular=id==="htrx"||id==="pathmd";
  const calc=(calculators||[]).find(v=>v.accent===id);
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
+ const htrxContent=id==="htrx"?htrxReference():"";
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-sendout="'+id+'">Open '+E(names[id])+' sendout guide <span aria-hidden="true">↗</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
@@ -124,7 +151,7 @@ function panel(calculators,logo){
  '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span>'+E(m.short)+' · '+E(c[1])+'</span></div>'+
  '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
  '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
- (pathmdContent||('<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
+ (pathmdContent||htrxContent||('<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
  '<div class="calc2-step-grid">'+item.steps.map((step,i)=>'<div class="calc2-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join('')+'</div></div>'))+
  '<p class="calc2-panel-footnote">'+(molecular?'Verify active site approval, approved panels, kits and courier arrangements before collection or dispatch.':'Follow the current test directory and clinic SOP for final collection and transport requirements.')+'</p>'+
  '</section>';
