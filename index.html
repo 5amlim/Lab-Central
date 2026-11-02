@@ -178,7 +178,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261101-api-catalog-labels-v18" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261101-pt-evidence-accurate-v12" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261101-api-tidy-v7" media="all">
-<link rel="stylesheet" href="lab-calculators-guide.css?v=20261102-workflow-padding-v3" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261102-layout-redesign-v4" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261102-cap-pdfs-v3" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261031-poch-bold-reminder-v2" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261028-action-cues" media="all">
@@ -1650,6 +1650,16 @@ function calculatorCards(){
 document.addEventListener('lc-calculators-change',()=>{if(sectionFromHash().id==='calculators')renderCalculators();});
 function renderCalculators(){
  const calcMarket=window.LAB_CALCULATORS_GUIDE?.market()||'socal';
+ const calcLab=window.LAB_CALCULATORS_GUIDE?.selectedLab?.()||'quest';
+ const calcLabName=calcLab==='cedars'?'Cedars lab guide':calcLab==='labcorp'?'Labcorp calculator':'Quest calculator';
+ const calcLabSearch=calcLab==='cedars'
+  ?'<li>Use the Cedars test and collection guide to find the requested test. Check specimen source, collection media and any special handling.</li><li><strong>Container guide:</strong> Use the illustrated reference for dedicated media and tubes.</li><li><strong>Missing test?</strong> Verify directly with the Cedars directory and receiving lab. Manual entries are not available in the Cedars guide.</li>'
+  :'<li>Use <strong>Smart Search</strong> by code, name or shorthand and verify the exact match.</li><li><strong>Multiple tests:</strong> Add Tests → enter one per line → Review matches → verify → Add best matches.</li><li><strong>Missing test?</strong> Check Do not perform and the official directory first, then use Add Missing Test only when appropriate.</li>';
+ const calcLabStat=calcLab==='quest'
+  ?'<li>Choose the appropriate STAT receiving lab, then <strong>Show STAT tests</strong>.</li>'
+  :calcLab==='labcorp'
+  ?'<li>Check <strong>STAT routing info</strong> and the selected clinic\'s available STAT menu.</li>'
+  :'<li>Confirm urgent or STAT acceptance and courier cutoff with Cedars. Do not assume a routine test is available as STAT.</li>';
  el('currentCrumb').textContent='Lab calculators/guides';
  let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select your market and clinic to find receiving lab calculators, collection guides and molecular sendout references.');
  h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
@@ -1658,7 +1668,7 @@ function renderCalculators(){
  if(window.LAB_CALCULATORS_GUIDE?.isCalculator()){
  h+='<details class="calc2-workflow-collapse"><summary><span><strong>Detailed collection workflow</strong><small>6 steps across 3 phases · Expand for instructions</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>';
  h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
-  <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
+  <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use ${calcLab==='cedars'?'the lab guide':'the calculator'}</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
   <div class="calc-guide-roadmap" aria-label="Workflow overview"><span>Build the order</span><b aria-hidden="true">›</b><span>Verify requirements</span><b aria-hidden="true">›</b><span>Finalize sendout</span></div>
   <div class="calc-guide-phases calc-guide-simplified">
     <section class="calc-guide-phase" aria-label="Find and add tests">
@@ -1667,13 +1677,13 @@ function renderCalculators(){
         <article class="calc-guide-card">
           <span class="calc-guide-step">01</span>
           <div><h3>Select the receiving lab</h3>
-            <ul><li>Open <strong>${calcMarket==='socal'?'Quest, Cedars or Labcorp':'Quest or Labcorp'}</strong>. Use <strong>Select Lab</strong> to switch.</li><li>Confirm the lab first. Specimen requirements vary by laboratory.</li></ul>
+            <ul><li>Open <strong>${calcLabName}</strong> using the button above.</li><li>Confirm the lab first. Specimen requirements vary by laboratory.</li></ul>
           </div>
         </article>
         <article class="calc-guide-card">
           <span class="calc-guide-step">02</span>
           <div><h3>Find and add the tests</h3>
-            <ul><li>Use <strong>Smart Search</strong> by code, name or shorthand (CBC, GFR). <strong>Review suggested matches</strong>; use <strong>Filters</strong>${calcMarket==='socal'?' or Cedars <strong>Group by</strong>':''} as needed.</li><li><strong>Multiple tests:</strong> Add Tests → enter one per line → Review matches → verify → Add best matches.</li><li><strong>Missing test?</strong> Check Do not perform and the official directory first. Use Add Missing Test only for eligible Quest or Labcorp tests.${calcMarket==='socal'?' Cedars manual entries are unavailable.':''}</li></ul>
+            <ul>${calcLabSearch}</ul>
           </div>
         </article>
       </div>
@@ -1684,7 +1694,7 @@ function renderCalculators(){
         <article class="calc-guide-card calc-guide-card-stat">
           <span class="calc-guide-step">03</span>
           <div><h3>Check STAT eligibility <span class="calc-guide-optional">(if requested)</span></h3>
-            <ul><li><strong>Quest:</strong> Choose the STAT receiving lab, then <strong>Show STAT tests</strong>. <strong>Labcorp:</strong> Check <strong>STAT routing info</strong>.</li><li>Only select STAT when the <strong>test code and receiving location</strong> are eligible. Confirm current availability.</li></ul>
+            <ul>${calcLabStat}<li>Only select STAT when the <strong>test code and receiving location</strong> are eligible. Confirm current availability.</li></ul>
           </div>
         </article>
         <article class="calc-guide-card">
@@ -1718,7 +1728,7 @@ function renderCalculators(){
   <div class="calc-extra-grid">
     <div class="calc-extra-card"><span class="calc-extra-icon">${svg('scan')}</span><div><strong>Missing or restricted tests</strong><p>Check the <strong>Do not perform</strong> list before collection. Need a test added to the calculator? <strong>Contact Sam</strong> with the receiving lab, test name, and code. Confirm collection requirements before proceeding.</p></div></div>
     <div class="calc-extra-card"><span class="calc-extra-icon">${svg('settings')}</span><div><strong>Clinical and specimen filters</strong><p>Category browsing is a search aid, not a substitute for the correct order code. Some tests have multiple categories or additional collection restrictions.</p></div></div>
-    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('file-text')}</span><div><strong>Lab-specific references</strong><p>Cedars includes a separate illustrated <strong>container guide</strong>. Labcorp also offers Quest-to-Labcorp comparisons, but suggested matches must be verified before ordering.</p></div></div>
+    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('file-text')}</span><div><strong>Lab-specific references</strong><p>${calcLab==='cedars'?'Open the illustrated Cedars container guide to verify specialized media and specimen kits.':calcLab==='labcorp'?'Labcorp offers Quest-to-Labcorp comparisons. Verify suggested matches and codes before ordering.':'Use Quest-specific test directory entries, STAT eligibility and processing instructions. Confirm all requirements before collection.'}</p></div></div>
   </div>
   <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory.</p>
 </section>`;
