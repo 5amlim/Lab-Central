@@ -162,6 +162,7 @@ function panel(calculators,logo){
  const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
  const molecular=id==="htrx"||id==="pathmd";
  const calc=(calculators||[]).find(v=>v.accent===id);
+ if(id==="pathmd")window.LAB_PATHMD_REFERENCE?.setLocation?.(m.id,c[0]);
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const htrxContent=id==="htrx"?htrxReference():"";
  const pickup=(id==="pathmd"&&m.id==="socal")?
