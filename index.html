@@ -407,8 +407,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="quality-reference.js?v=20261101-enrollment-confirmed-v23"></script>
 <script src="pt-testing-guide.js?v=20261101-piccolo-selected-v18"></script>
 <script src="api-submission.js?v=20261101-api-tidy-v7"></script>
-<script src="lab-calculators-guide.js?v=20261102-cedars-reference-v11"></script>
-<script src="pathmd-reference.js?v=20261102-targets-first-v10"></script>
+<script src="lab-calculators-guide.js?v=20261102-selected-panel-v12"></script>
+<script src="pathmd-reference.js?v=20261102-selected-panel-v11"></script>
 <script src="operations-guides.js?v=20261031-patient-call-clinic-v6"></script>
 <script src="socal-daily-checklist.js?v=20261101-compliance-scroll-v1"></script>
 <script src="training-competency.js?v=20261101-compliance-scroll-v1"></script>
@@ -981,7 +981,7 @@ function searchSendoutPanelCard(item,query){
  return '<article class="lab-panel-search-result lab-panel-sendout-result lab-panel-sendout-'+safeHtml(item.lab)+'">'+
   '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-kind">MOLECULAR SENDOUT</span></small>'+
   '<h3>'+name+'</h3>'+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
-  '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'">Open test menu <span aria-hidden="true">→</span></button></div>'+
+  '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'"'+(item.lab==="pathmd"&&item.id?' data-calc2-search-panel="'+safeHtml(item.id)+'"':'')+'>'+(item.lab==="pathmd"?'Open test details':'Open test menu')+' <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
 
   '<details class="lab-panel-all-targets"><summary>See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
@@ -2662,7 +2662,8 @@ document.addEventListener('click',e=>{
  const sendoutSearch=e.target.closest('[data-calc2-search-lab]');
  if(sendoutSearch){
   const lab=sendoutSearch.dataset.calc2SearchLab,term=sendoutSearch.dataset.calc2SearchQuery;
-  if(window.LAB_CALCULATORS_GUIDE?.selectSendoutSearchResult?.(lab,term))navigate('calculators');
+  const panelId=sendoutSearch.dataset.calc2SearchPanel||"";
+  if(window.LAB_CALCULATORS_GUIDE?.selectSendoutSearchResult?.(lab,term,panelId))navigate('calculators');
   return;
  }
  const nav=e.target.closest('[data-go]');if(nav){navigate(nav.dataset.go,nav.dataset.targetTab||'overview');return}
