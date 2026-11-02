@@ -187,7 +187,7 @@ function molecularMatches(query=molecularQuery){
  const pathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>
   normHTRX([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" ")).includes(q)
  ).map(p=>({
-  lab:"pathmd",labName:"PathMD",name:p.name,code:"",targets:Object.values(p.groups).flat(),
+  lab:"pathmd",labName:"PathMD",id:p.id,name:p.name,code:"",targets:Object.values(p.groups).flat(),
   groups:p.groups,specimen:"PathMD white-top tube; swab collection depends on specimen source",
   text:[p.name,p.category,p.terms].join(" ")
  }));
@@ -196,24 +196,30 @@ function molecularMatches(query=molecularQuery){
   return {...p,matched:hits[0]||"",hits};
  });
 }
-let pendingSendoutSearchScroll="";
-function selectSendoutSearchResult(lab,term){
+let pendingSendoutSearchScroll=null;
+function selectSendoutSearchResult(lab,term,panelId=""){
  if(lab!=="htrx"&&lab!=="pathmd")return false;
  if(!availableLabs().includes(lab))activeMarket="socal";
  rememberedLab[activeMarket]=lab;
  const query=String(term||"");
+ let selectedId="";
  if(lab==="htrx")htrxQuery=query;
+ else if(panelId&&window.LAB_PATHMD_REFERENCE?.selectPanel?.(panelId,query))selectedId=panelId;
  else window.LAB_PATHMD_REFERENCE?.searchForPathogen?.(query);
- pendingSendoutSearchScroll=lab;
+ pendingSendoutSearchScroll={lab,panelId:selectedId};
  return true;
 }
 function scrollToSearchResult(){
  if(!pendingSendoutSearchScroll)return;
- const lab=pendingSendoutSearchScroll;
- pendingSendoutSearchScroll="";
+ const {lab,panelId}=pendingSendoutSearchScroll;
+ pendingSendoutSearchScroll=null;
  requestAnimationFrame(()=>{
-  const target=document.getElementById(lab==="htrx"?"calc2-htrx-menu":"pmd-test-search");
-  target?.scrollIntoView?.({behavior:"smooth",block:"start"});
+  const target=lab==="pathmd"&&panelId
+   ?document.querySelector("#pathmd-reference .pmd-menu-card.is-targeted")
+   :document.getElementById(lab==="htrx"?"calc2-htrx-menu":"pmd-test-search");
+  const destination=target||document.getElementById(lab==="htrx"?"calc2-htrx-menu":"pmd-test-search");
+  destination?.scrollIntoView?.({behavior:"smooth",block:"start"});
+  if(target&&panelId)target.querySelector("summary")?.focus({preventScroll:true});
  });
 }
 function finderResults(){
