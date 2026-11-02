@@ -47,7 +47,7 @@ function molecular(){
  const {market:m,clinic:c}=current();
  const entries=[
   {id:"htrx",name:"HealthTrackRx",tag:"HEALTHTRACKRX",title:"Molecular testing guide",tone:"htrx",desc:"Molecular sendout specimen collection, kit selection, manifest and handoff.",tips:["Check the ordered panel, specimen source and HTRX-approved kit.","Match patient identifiers, requisition and specimen collection date/time.","Confirm the site’s current UPS or courier schedule and manifest process."]},
-  {id:"pathmd",name:"PathMD",tag:"PATHMD",title:"Molecular testing guide",tone:"pathmd",desc:"Molecular test collection and routing reference. Site activation may still be pending.",tips:["Confirm the selected clinic is activated and the panel is approved.","Verify PathMD-specific collection media, requisition and kit instructions.","Use the approved PathMD pickup and tracking process, not an assumed HTRX courier."]}
+  {id:"pathmd",name:"PathMD",tag:"PATHMD",title:"Molecular testing guide",tone:"pathmd",desc:"White-top tube collection, illustrated panel instructions and courier routing. Site activation may still be pending.",tips:["Use one PathMD white-top tube for the ordered panel and confirm the approved specimen source.","For urine, mix the thick swab in a sterile cup 10 times; for GI, collect stool on the thick swab. No transfer pipette for urine.","Label tubes with patient identifiers, date and time, specimen source, and collector initials."]}
  ];
  return '<section class="calc2-molecular-section" aria-labelledby="calc2-molecular-heading">'+
   '<div class="calc2-section-heading"><div><span class="calc-guide-eyebrow">SPECIALTY SENDOUTS</span><h2 id="calc2-molecular-heading">Molecular testing</h2><p>HealthTrackRx and PathMD references for '+E(m.name)+'. Check clinic-specific activation before use.</p></div><span class="calc2-category-tag">2 guides</span></div>'+
@@ -188,7 +188,7 @@ function molecularMatches(query=molecularQuery){
   normHTRX([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" ")).includes(q)
  ).map(p=>({
   lab:"pathmd",labName:"PathMD",name:p.name,code:"",targets:Object.values(p.groups).flat(),
-  groups:p.groups,specimen:"Confirm PathMD-specific collection requirements",
+  groups:p.groups,specimen:"PathMD white-top tube; swab collection depends on specimen source",
   text:[p.name,p.category,p.terms].join(" ")
  }));
  return [...htrx,...pathmd].map(p=>{
