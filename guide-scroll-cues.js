@@ -62,10 +62,13 @@ document.addEventListener("keydown",function(e){
 const initialized=new WeakSet();
 function updatePage(){
  const main=document.getElementById("mainContent");
- const active=main&&main.querySelector(".procedure-flow, .pf-calibration-guide, .pfux-cal-nested, .pfux-patient, .pf-rack-scroll");
  const page=document.scrollingElement||document.documentElement;
- cue.hidden=!active||page.scrollHeight<window.innerHeight+140||
-   window.scrollY+window.innerHeight>=page.scrollHeight-75;
+ const viewport=window.innerHeight||document.documentElement.clientHeight;
+ const remaining=page.scrollHeight-page.scrollTop-viewport;
+ // Show on any page with genuinely more vertical content, not only instrument flows.
+ // Suppress the cue near the end and while a modal is open.
+ cue.hidden=!main||!main.firstElementChild||remaining<=64||
+   !!document.querySelector("dialog[open]");
 }
 function setup(node){
  if(!node||initialized.has(node)||!node.parentNode)return;
@@ -143,5 +146,11 @@ if(root&&typeof MutationObserver!=="undefined"){
  const observer=new MutationObserver(scan);
  observer.observe(root,{subtree:true,childList:true});
 }
+// Recheck when images, expanded cards, and other asynchronous content change page height.
+if(root&&typeof ResizeObserver!=="undefined"){
+ const pageObserver=new ResizeObserver(updatePage);
+ pageObserver.observe(root);
+}
+window.addEventListener("load",scan,{once:true});
 scan();
 })();
