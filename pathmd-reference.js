@@ -155,12 +155,19 @@ function pmdCollection(p){
   '</section>';
 }
 
+function pmdTargetSection(p){
+ const targetCount=Object.values(p.groups).reduce((sum,items)=>sum+items.length,0);
+ return '<section class="pmd-panel-target-section" aria-label="Pathogens and markers in '+e(p.name)+'">'+
+  '<header class="pmd-panel-target-header"><div><span class="pmd-mini-label">TEST MENU</span><h4>Pathogens &amp; markers</h4><p>Organisms and resistance markers included in this panel</p></div>'+
+  '<span class="pmd-panel-target-count">'+targetCount+' targets</span></header>'+
+  '<div class="pmd-panel-target-list">'+groupHtml(p.groups)+'</div></section>';
+}
 function menuCards(){
  const arr=filtered();
  return '<div class="pmd-results-count" id="pmd-result-count"><strong>'+arr.length+'</strong> of '+panels.length+' menus'+(query?' matching “'+e(query)+'”':'')+'</div>'+
  (arr.length?'<div class="pmd-menu-grid">'+arr.map(p=>
    '<details class="pmd-menu-card" '+(query.trim().length>1&&arr.length===1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
-   '<div class="pmd-menu-body">'+pmdCollection(p)+groupHtml(p.groups)+'</div></details>').join("")+'</div>':
+   '<div class="pmd-menu-body">'+pmdTargetSection(p)+pmdCollection(p)+'</div></details>').join("")+'</div>':
  '<div class="pmd-no-results"><strong>No matching test menus</strong><p>Try a pathogen name, panel name or category, or clear the search.</p><button type="button" data-pmd-clear>Clear search &amp; filters</button></div>');
 }
 function menu(){
