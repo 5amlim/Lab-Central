@@ -4,8 +4,8 @@
 const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const markets={
  socal:{name:"Southern California",sites:[["bh","Beverly Hills Flagship"],["annex","Beverly Hills Annex"],["sm","Santa Monica"],["mb","Manhattan Beach"]],labs:["quest","labcorp","cedars","htrx","pathmd"]},
- norcal:{name:"Northern California",sites:[["sf","San Francisco"],["pa","Palo Alto"]],labs:["quest","labcorp"]},
- fl:{name:"Florida",sites:[["boca","Boca Raton"],["palm","Palm Beach"],["coral","Coral Gables"]],labs:["quest","labcorp"]},
+ norcal:{name:"Northern California",sites:[["sf","San Francisco"],["pa","Palo Alto"]],labs:["quest","labcorp","htrx","pathmd"]},
+ fl:{name:"Florida",sites:[["boca","Boca Raton"],["palm","Palm Beach"],["coral","Coral Gables"]],labs:["quest","labcorp","htrx","pathmd"]},
  ny:{name:"New York",sites:[["ues","Upper East Side"],["tribeca","Tribeca"],["hamptons","Hamptons"],["fifth","5th Avenue"],["gramercy","Gramercy"]],labs:["quest","labcorp"]}
 };
 const labs={
@@ -87,5 +87,14 @@ document.addEventListener("click",e=>{
  if(open&&!e.target.closest(".lc-select-box")){open="";refresh();}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open){open="";refresh();}});
-window.LAB_SENDOUT_MARKETS={render};
+function select(nextMarket,nextClinic){
+ if(!markets[nextMarket])return false;
+ const ids={"bh-satellite":"annex","palo-alto":"pa","palm-beach":"palm","coral-gables":"coral"};
+ market=nextMarket;
+ const preferred=ids[nextClinic]||nextClinic;
+ site=markets[market].sites.some(c=>c[0]===preferred)?preferred:markets[market].sites[0][0];
+ open="";
+ return true;
+}
+window.LAB_SENDOUT_MARKETS={render,select};
 })();
