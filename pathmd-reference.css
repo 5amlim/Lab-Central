@@ -101,3 +101,5 @@
  .pmd-menu-card,.pmd-menu-body{break-inside:avoid}
  .pmd-menu-card .pmd-menu-body{display:flex}
 }
+
+.pmd-match{background:#fff1cb;color:#765b22;padding:0 1px;border-radius:2px;font-weight:800}
