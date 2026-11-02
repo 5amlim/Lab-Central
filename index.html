@@ -951,8 +951,7 @@ function searchPanelCard({section,panel,targets,hits}){
    '<li class="lab-panel-athena-order"><span class="lab-panel-athena-kind '+((order.kind||'set')==='poc'?'lab-panel-athena-kind--poc':'')+'">'+((order.kind||'set')==='poc'?'POC Test':'Order Set')+'</span>'+
     '<span class="lab-panel-athena-name">'+safeHtml(order.name)+(order.note?' <small>· '+safeHtml(order.note)+'</small>':'')+'</span></li>'
   ).join('')+'</ul>'+
-  (section.id==='pathfast'&&panel.title==='High-sensitivity cardiac troponin I'?'<p class="lab-panel-athena-note">Follow the approved 0/1-hour pathway, or 0/2 hours when indicated. Timepoint order names are not separate pathways.</p>':
-   '<p class="lab-panel-athena-note">This orders the panel, not the individual matching target. Confirm the current Athena selection.</p>')+
+  (section.id==='pathfast'&&panel.title==='High-sensitivity cardiac troponin I'?'<p class="lab-panel-athena-note">Follow the approved 0/1-hour pathway, or 0/2 hours when indicated. Timepoint order names are not separate pathways.</p>':'')+
   '</div>':'';
  const groups=Object.entries(panel.groups||{}).map(([group,arr])=>
   '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
@@ -984,9 +983,20 @@ function searchSendoutPanelCard(item,query){
   '<h3>'+name+'</h3>'+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
   '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'">Open test menu <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
-  '<p class="lab-panel-sendout-context">Vendor molecular test menu · Confirm panel activation, specimen source and current requisition. No Athena order is implied.</p>'+
+
   '<details class="lab-panel-all-targets"><summary>See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
   '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
+}
+/* Group matching test panels by receiving lab instead of interleaving unlike results. */
+function labSearchResultGroup(kind,title,description,cards,count){
+ if(!count)return '';
+ const type=kind==='inhouse'?'IH':kind==='htrx'?'HT':'PM';
+ return '<section class="lab-search-source lab-search-source-'+kind+'" aria-label="'+safeHtml(title)+' matches">'+
+  '<div class="lab-search-source-header"><div class="lab-search-source-heading">'+
+   '<span class="lab-search-source-mark" aria-hidden="true">'+type+'</span>'+
+   '<div><h3>'+safeHtml(title)+'</h3><p>'+safeHtml(description)+'</p></div></div>'+
+   '<span class="lab-search-source-count">'+count+' panel'+(count===1?'':'s')+'</span></div>'+
+  '<div class="lab-search-source-items">'+cards+'</div></section>';
 }
 // Reuse the instrument guide illustrations in compact cards without altering card dimensions.
 function homepageEquipmentArt(sec,featured=false){
@@ -1052,6 +1062,13 @@ function renderHome(mode='home'){
  const matches=(isFav?all.filter(s=>favs.includes(s.id)):directory);
  let filtered=matches.filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));
  if(search){filtered=[...directory,...all.filter(s=>s.category==='Archived')].filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));}
+ const panelResults=search?searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter)):[];
+ const sendoutResults=search&&(state.filter==='All'||state.filter==='Send-outs')
+  ?window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[]:[];
+ const htrxResults=sendoutResults.filter(item=>item.lab==='htrx');
+ const pathmdResults=sendoutResults.filter(item=>item.lab==='pathmd');
+ const panelMatchCount=panelResults.length+sendoutResults.length;
+ const totalSearchMatches=panelMatchCount+filtered.length;
  el('currentCrumb').textContent=search?'Search':isFav?'Favorites':'Overview';
  let h='';
  if(!search&&!isFav){
@@ -1063,20 +1080,19 @@ function renderHome(mode='home'){
  }
  if(isFav)h=`<div class="eyebrow">SAVED REFERENCES</div><h1 class="page-h1">Saved guides</h1><p class="lede">Bookmarks are saved in this browser only.</p>`;
  if(search)h=`<div class="eyebrow">FIND A PROCEDURE</div><h1 class="page-h1">Search the lab guide</h1><p class="lede">Results for “${safeHtml(search)}” across analytes, pathogens, clinical abbreviations, instrument panels and Athena orders.</p>`;
- h+=`<div class="section-head"><h2 class="section-title">${search?'Matching references':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${filtered.length} guides</span></div>`;
+ h+=`<div class="section-head"><h2 class="section-title">${search?'Search results':isFav?'Saved guides':'Explore the guide'}</h2><span class="result-count">${search?totalSearchMatches+' matches':filtered.length+' guides'}</span></div>`;
  const cats=['All',...categories.filter(c=>c!=='Archived'),...(search?['Archived']:[])];
  h+=`<div class="filters" role="group" aria-label="Filter guide categories">${cats.map(c=>`<button type="button" data-filter="${safeHtml(c)}" class="filter-chip ${c===state.filter?'active':''}">${safeHtml(c)}</button>`).join('')}</div>`;
- let panelMatchCount=0;
- if(search){
-  const panelResults=searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter));
-  const sendoutResults=(state.filter==='All'||state.filter==='Send-outs')
-   ?window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[]:[];
-  panelMatchCount=panelResults.length+sendoutResults.length;
-  if(panelMatchCount){
-   h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelMatchCount} panels</span></div>`;
-   h+=`<p class="lab-panel-search-description">Find analyzers and molecular sendout panels containing the searched analyte or pathogen. Verified Athena orders appear where available; sendout references do not imply an Athena order.</p><div class="lab-panel-results-grid">${panelResults.map(searchPanelCard).join('')}${sendoutResults.map(item=>searchSendoutPanelCard(item,search)).join('')}</div>`;
-  }
+ if(search&&panelMatchCount){
+  h+=`<div class="section-head lab-panel-results-heading"><h2 class="section-title">Matching panels &amp; tests</h2><span class="result-count">${panelMatchCount} panels</span></div>`;
+  h+=`<p class="lab-panel-search-description">Results are grouped by laboratory. Matching organisms appear on each card; expand a panel to review all targets. Athena orders appear only for verified in-house panels.</p>`;
+  h+='<div class="lab-search-sources">'+
+   labSearchResultGroup('inhouse','In-house testing','On-site analyzer and point-of-care panels',panelResults.map(searchPanelCard).join(''),panelResults.length)+
+   labSearchResultGroup('htrx','HealthTrackRx','Molecular sendout test menus',htrxResults.map(item=>searchSendoutPanelCard(item,search)).join(''),htrxResults.length)+
+   labSearchResultGroup('pathmd','PathMD','Molecular sendout test menus',pathmdResults.map(item=>searchSendoutPanelCard(item,search)).join(''),pathmdResults.length)+
+  '</div>';
  }
+ if(search&&filtered.length)h+=`<div class="section-head lab-search-guides-heading"><h2 class="section-title">Related guides</h2><span class="result-count">${filtered.length} guide${filtered.length===1?'':'s'}</span></div>`;
  h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:(panelMatchCount?'':`<div class="empty-state" style="margin-top:17px">No matching guides or panels. Try a different term or choose another category.</div>`);
  if(!search&&!isFav)h+=`<div class="section-head" style="margin-top:32px"><h2 class="section-title">Also available</h2></div><p class="lede">Discontinued instruments are kept under <strong>Archived</strong> for historical reference and excluded from the routine browse list.</p>`;
  el('mainContent').innerHTML=h;
