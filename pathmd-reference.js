@@ -163,7 +163,7 @@ function render(){
  return '<section class="pmd-reference" id="pathmd-reference" aria-label="PathMD searchable laboratory reference">'+
  '<div class="pmd-reference-head"><div><span class="pmd-overline">PATHMD REFERENCE LIBRARY</span><h3>Test menus &amp; workflows</h3><p>Search targets and panels, or open a focused guide for ordering, shipping, results and patient cash-pay rates.</p></div><span class="pmd-source-chip">2026 vendor guides</span></div>'+
  '<div class="pmd-reference-stats"><span><strong>15</strong> test menus</span><span><strong>3</strong> source documents</span><span><strong>5</strong> reference sections</span></div>'+
- '<div class="pmd-downloads"><div class="pmd-downloads-heading"><strong>PDF reference guides</strong><small>Quick-reference PDFs adapted from the supplied vendor documents</small></div>'+
+ '<div class="pmd-downloads"><div class="pmd-downloads-heading"><strong>Quick-reference summaries</strong><small>These are shortened Lab Central reference sheets, not the original PathMD documents</small></div>'+
  '<div class="pmd-download-grid">'+
  '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-order-shipping-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Ordering &amp; shipping</strong><small>Portal, labeling, FedEx, results</small></span><span aria-hidden="true">↗</span></a>'+
  '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-test-menu-index.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Molecular menu index</strong><small>15 panels by clinical category</small></span><span aria-hidden="true">↗</span></a>'+
