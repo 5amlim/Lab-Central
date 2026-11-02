@@ -176,23 +176,34 @@ function htrxMenu(){
 }
 /* Cross-vendor molecular pathogen search, available regardless of selected lab tab. */
 let molecularQuery="";
-function molecularMatches(){
- const q=normHTRX(molecularQuery.trim());
+function molecularMatches(query=molecularQuery){
+ const q=normHTRX(String(query||"").trim());
  if(q.length<2)return [];
  const htrx=htrxRecords.filter(p=>normHTRX(htrxText(p)).includes(q)).map(p=>({
   lab:"htrx",labName:"HealthTrackRx",name:p.name,code:p.code,
-  targets:Object.values(p.groups).flat(),text:[p.name,p.code,p.specimen,p.aliases].join(" ")
+  targets:Object.values(p.groups).flat(),groups:p.groups,specimen:p.specimen,
+  text:[p.name,p.code,p.specimen,p.aliases].join(" ")
  }));
  const pathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>
   normHTRX([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" ")).includes(q)
  ).map(p=>({
   lab:"pathmd",labName:"PathMD",name:p.name,code:"",targets:Object.values(p.groups).flat(),
+  groups:p.groups,specimen:"Confirm PathMD-specific collection requirements",
   text:[p.name,p.category,p.terms].join(" ")
  }));
  return [...htrx,...pathmd].map(p=>{
-  const target=p.targets.find(t=>normHTRX(t).includes(q));
-  return {...p,matched:target||""};
+  const hits=p.targets.filter(t=>normHTRX(t).includes(q));
+  return {...p,matched:hits[0]||"",hits};
  });
+}
+function selectSendoutSearchResult(lab,term){
+ if(lab!=="htrx"&&lab!=="pathmd")return false;
+ if(!availableLabs().includes(lab))activeMarket="socal";
+ rememberedLab[activeMarket]=lab;
+ const query=String(term||"");
+ if(lab==="htrx")htrxQuery=query;
+ else window.LAB_PATHMD_REFERENCE?.searchForPathogen?.(query);
+ return true;
 }
 function finderResults(){
  const q=normHTRX(molecularQuery.trim()),matches=molecularMatches();
@@ -403,5 +414,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,panel,nextActions,isCalculator,selectedLab,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,panel,nextActions,isCalculator,selectedLab,allows,market,count};
 })();
