@@ -152,15 +152,23 @@ function results(){
  '<div class="pmd-mini-notice"><strong>Clinical caution:</strong> Treatment decisions require the provider’s assessment of symptoms, specimen source, allergies, local guidance and culture or susceptibility testing when indicated. Resistance-marker detection alone does not establish the full susceptibility profile.</div></section></div>';
 }
 function pricing(){
- return '<div class="pmd-section-lead"><h4>2026 patient cash-pay schedule</h4><p>Reference rates transcribed from the uploaded PathMD schedule. These names are billing categories and are not necessarily identical to the molecular menu titles.</p></div>'+
- '<div class="pmd-rate-list">'+rates.map(([name,price])=>'<div class="pmd-rate-row"><span>'+e(name)+'</span><strong>'+e(price)+'</strong></div>').join("")+'</div>'+
- '<div class="pmd-critical pmd-rate-warning"><strong>Eligibility and payment</strong><p>The 2026 document restricts cash rates to uninsured, self-pay patients. Patients with active insurance are ineligible under the vendor’s stated policy. Payment is required at the time of service. Confirm current pricing and approved payment procedures with PathMD; do not store or enter card information in Lab Central. Vendor billing phone listed on the supplied schedule: (323) 648-3211.</p></div>';
+ return '<div class="pmd-cap-policy"><div><span>CLINIC CASH-PAY CAP</span><strong>$150 <small>/ test maximum</small></strong></div><p>The current Sollis PathMD cash-pay charge is capped at <strong>$150 per test</strong>. This is a maximum, not the price of every individual assay. Confirm the actual charge and patient eligibility with the billing owner before quoting.</p></div>'+
+ '<details class="pmd-vendor-rates"><summary><span><strong>2026 vendor rate sheet</strong><small>Historical vendor list prices, not the Sollis cash-pay rate</small></span><span class="pmd-vendor-chevron" aria-hidden="true"></span></summary>'+
+ '<div class="pmd-vendor-price-note">These are vendor list prices from the uploaded schedule. Amounts over $150 are NOT the clinic rate and do not override the per-test cap.</div>'+
+ '<div class="pmd-rate-list">'+rates.map(([name,price])=>'<div class="pmd-rate-row"><span>'+e(name)+'</span><strong>'+e(price)+'</strong></div>').join("")+'</div></details>'+
+ '<div class="pmd-inline-note"><strong>Eligibility:</strong> The vendor schedule describes uninsured/self-pay eligibility and states payment is due at service. Confirm clinic-approved payment instructions and applicable billing terms. Do not store payment card details here.</div>';
 }
 function renderContent(){return tab==="menu"?menu():tab==="ordering"?ordering():tab==="shipping"?shipping():tab==="results"?results():pricing();}
 function render(){
  return '<section class="pmd-reference" id="pathmd-reference" aria-label="PathMD searchable laboratory reference">'+
  '<div class="pmd-reference-head"><div><span class="pmd-overline">PATHMD REFERENCE LIBRARY</span><h3>Test menus &amp; workflows</h3><p>Search targets and panels, or open a focused guide for ordering, shipping, results and patient cash-pay rates.</p></div><span class="pmd-source-chip">2026 vendor guides</span></div>'+
  '<div class="pmd-reference-stats"><span><strong>15</strong> test menus</span><span><strong>3</strong> source documents</span><span><strong>5</strong> reference sections</span></div>'+
+ '<div class="pmd-downloads"><div class="pmd-downloads-heading"><strong>PDF reference guides</strong><small>Quick-reference PDFs adapted from the supplied vendor documents</small></div>'+
+ '<div class="pmd-download-grid">'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-order-shipping-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Ordering &amp; shipping</strong><small>Portal, labeling, FedEx, results</small></span><span aria-hidden="true">↗</span></a>'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-test-menu-index.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Molecular menu index</strong><small>15 panels by clinical category</small></span><span aria-hidden="true">↗</span></a>'+
+ '<a target="_blank" rel="noopener noreferrer" href="assets/reference-pdfs/pathmd-cash-pay-cap-reference.pdf"><span class="pmd-download-icon">PDF</span><span><strong>Cash-pay cap</strong><small>$150 maximum per test</small></span><span aria-hidden="true">↗</span></a>'+
+ '</div></div>'+
  '<div class="pmd-tabs" role="tablist" aria-label="PathMD reference sections">'+tabOptions.map(([id,label])=>
   '<button type="button" role="tab" id="pmd-tab-'+id+'" data-pmd-tab="'+id+'" aria-selected="'+(id===tab)+'" aria-controls="pmd-tab-panel" tabindex="'+(tab===id?'0':'-1')+'" class="pmd-tab'+(tab===id?' is-active':'')+'">'+e(label)+'</button>').join("")+'</div>'+
  '<div id="pmd-tab-panel" role="tabpanel" aria-labelledby="pmd-tab-'+tab+'" tabindex="0" class="pmd-tab-panel">'+renderContent()+'</div>'+
