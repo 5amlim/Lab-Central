@@ -17,7 +17,7 @@ function current(){
 }
 function allows(vendor){return vendor!=="cedars"||activeMarket==="socal";}
 function market(){return activeMarket;}
-function count(){return activeMarket==="socal"?5:activeMarket==="ny"?2:4;}
+function count(){return availableLabs().length;}
 function selector(){
  const {market:m,clinic:c}=current();
  return '<section id="calc2-site-selector" class="calc2-site-selector" aria-label="Lab calculators and guides market and clinic">'+
@@ -62,6 +62,72 @@ function molecular(){
   '<p class="calc2-molecular-warning">Availability is not confirmed by this directory. Never substitute collection kits, specimens or courier instructions between molecular laboratories.</p>'+
  '</section>';
 }
+
+/* Focused laboratory tabs. One lab's instructions are visible at a time. */
+const labOrder={
+ socal:["quest","cedars","labcorp","htrx","pathmd"],
+ norcal:["quest","labcorp","htrx","pathmd"],
+ fl:["quest","labcorp","htrx","pathmd"],
+ ny:["quest","labcorp"]
+};
+const rememberedLab={socal:"quest",norcal:"quest",fl:"quest",ny:"quest"};
+const names={quest:"Quest",cedars:"Cedars",labcorp:"Labcorp",htrx:"HealthTrackRx",pathmd:"PathMD"};
+const labData={
+ quest:{tag:"QUEST DIAGNOSTICS",title:"Quest calculator",kind:"Collection calculator",desc:"Test selection, tubes, processing and collection instructions.",steps:[
+ ["Find the exact test","Search by code or name and verify the selection."],
+ ["Check requirements","Confirm containers, minimum volume, handling and STAT eligibility."],
+ ["Prepare the sendout","Review bag separation and save the final LAB FLOWSHEET."]]},
+ cedars:{tag:"CEDARS-SINAI",title:"Cedars lab guide",kind:"Collection guide · SoCal",desc:"Cedars-specific specimen collection, container and submission guidance.",steps:[
+ ["Confirm the test","Verify Cedars acceptance, specimen and requisition."],
+ ["Check the container","Review the illustrated container guide and specific handling."],
+ ["Confirm courier","Check the local Cedars or Apollo handoff procedure."]]},
+ labcorp:{tag:"LABCORP",title:"Labcorp calculator",kind:"Collection calculator",desc:"Test-code lookup, specimen handling and sendout instructions.",steps:[
+ ["Find the code","Select the exact Labcorp test from the directory."],
+ ["Review processing","Confirm collection container, volume, centrifugation and temperature."],
+ ["Finalize the flowsheet","Verify STAT routing and bag separation before printing."]]},
+ htrx:{tag:"HEALTHTRACKRX",title:"HealthTrackRx",kind:"Molecular sendout guide",desc:"Molecular specimen collection, kit selection, manifest and handoff.",steps:[
+ ["Choose the approved kit","Confirm panel eligibility and the specimen source."],
+ ["Verify identifiers","Check requisition, label and collection date/time."],
+ ["Arrange the shipment","Confirm HTRX-specific manifest, shipping label and site courier."]]},
+ pathmd:{tag:"PATHMD",title:"PathMD",kind:"Molecular sendout guide · Trial",desc:"Molecular specimen collection and routing reference. Activation may be pending.",steps:[
+ ["Confirm site approval","Verify the selected clinic and panel are activated."],
+ ["Use PathMD supplies","Check collection media and requisition. Never substitute an HTRX kit."],
+ ["Record the handoff","Confirm PathMD-specific courier method and tracking."]]}
+};
+function availableLabs(){return labOrder[activeMarket]||labOrder.socal;}
+function selectedLab(){
+ const options=availableLabs();
+ if(!options.includes(rememberedLab[activeMarket]))rememberedLab[activeMarket]=options[0];
+ return rememberedLab[activeMarket];
+}
+function isCalculator(){return ["quest","cedars","labcorp"].includes(selectedLab());}
+function tabs(){
+ const active=selectedLab(),labs=availableLabs();
+ return '<div class="calc2-tab-heading"><div><span class="calc-guide-eyebrow">RECEIVING LAB</span><h2>Choose a laboratory</h2><p>Select one lab to see its tools and instructions.</p></div><span class="calc2-tab-count">'+labs.length+' labs</span></div>'+
+ '<div class="calc2-tabs" role="tablist" aria-label="Receiving laboratories">'+
+ labs.map(id=>'<button type="button" role="tab" id="calc2-tab-'+id+'" data-calc2-lab="'+id+'" aria-controls="calc2-lab-panel" aria-selected="'+(id===active)+'" tabindex="'+(id===active?'0':'-1')+'" class="calc2-tab calc2-tab-'+id+(id===active?' is-selected':'')+'"><span class="calc2-tab-mark" aria-hidden="true"></span>'+E(names[id])+'</button>').join('')+
+ '</div>';
+}
+function panel(calculators,logo){
+ const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
+ const molecular=id==="htrx"||id==="pathmd";
+ const calc=(calculators||[]).find(v=>v.accent===id);
+ const action=molecular?
+  '<button type="button" class="calc2-primary-action" data-calc2-sendout="'+id+'">Open '+E(names[id])+' sendout guide <span aria-hidden="true">↗</span></button>':
+  calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
+ const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Cedars container guide ↗</a>':'';
+ const sendout=!molecular?'<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout guide ↗</button>':'';
+ const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
+ '<span class="calc2-panel-icon">'+logo+'</span>';
+ return '<section id="calc2-lab-panel" role="tabpanel" aria-labelledby="calc2-tab-'+id+'" tabindex="0" class="calc2-panel calc2-panel-'+id+'">'+
+ '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span>'+E(m.short)+' · '+E(c[1])+'</span></div>'+
+ '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
+ '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
+ '<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
+ '<div class="calc2-step-grid">'+item.steps.map((step,i)=>'<div class="calc2-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join('')+'</div></div>'+
+ '<p class="calc2-panel-footnote">'+(molecular?'Verify active site approval, approved panels, kits and courier arrangements before collection or dispatch.':'Follow the current test directory and clinic SOP for final collection and transport requirements.')+'</p>'+
+ '</section>';
+}
 function setMenu(open,focusSelected=false,restore=false){
  const picker=document.querySelector('#calc2-site-selector .dqc-location-picker');
  if(!picker)return;
@@ -73,11 +139,12 @@ function setMenu(open,focusSelected=false,restore=false){
  if(open&&focusSelected)(list.querySelector('[aria-selected="true"]')||list.querySelector('[role="option"]'))?.focus();
  if(!open&&restore)trigger.focus();
 }
-function updatePage(focusClinic=false){
+function updatePage(focus=""){
  document.dispatchEvent(new CustomEvent('lc-calculators-change'));
  const counter=document.getElementById('calc2-nav-count');
  if(counter)counter.textContent=String(count());
- if(focusClinic)document.querySelector('#calc2-site-selector [data-calc2-toggle]')?.focus();
+ if(focus==="clinic")document.querySelector('#calc2-site-selector [data-calc2-toggle]')?.focus({preventScroll:true});
+ if(focus==="tab")document.querySelector('.calc2-tab.is-selected')?.focus({preventScroll:true});
 }
 document.addEventListener('click',event=>{
  const btn=event.target.closest('#calc2-site-selector [data-calc2-market]');
@@ -91,7 +158,13 @@ document.addEventListener('click',event=>{
  const clinic=event.target.closest('#calc2-site-selector [data-calc2-clinic]');
  if(clinic){
   const m=current().market,id=clinic.dataset.calc2Clinic;
-  if(m.clinics.some(c=>c[0]===id)){selectedClinics[m.id]=id;updatePage(true);}
+  if(m.clinics.some(c=>c[0]===id)){selectedClinics[m.id]=id;updatePage('clinic');}
+  return;
+ }
+ const tab=event.target.closest('[data-calc2-lab]');
+ if(tab){
+  const id=tab.dataset.calc2Lab;
+  if(availableLabs().includes(id)&&id!==selectedLab()){rememberedLab[activeMarket]=id;updatePage("tab");}
   return;
  }
  const sendout=event.target.closest('[data-calc2-sendout]');
@@ -104,6 +177,16 @@ document.addEventListener('click',event=>{
  if(!event.target.closest('#calc2-site-selector .dqc-location-picker'))setMenu(false);
 });
 document.addEventListener('keydown',event=>{
+ const tab=event.target.closest('.calc2-tab');
+ if(tab&&['ArrowLeft','ArrowRight','Home','End'].includes(event.key)){
+  event.preventDefault();
+  const options=availableLabs(),i=options.indexOf(tab.dataset.calc2Lab);
+  const id=event.key==='ArrowRight'?options[(i+1)%options.length]:
+   event.key==='ArrowLeft'?options[(i-1+options.length)%options.length]:
+   event.key==='Home'?options[0]:options[options.length-1];
+  rememberedLab[activeMarket]=id;updatePage("tab");
+  return;
+ }
  const toggle=event.target.closest('#calc2-site-selector [data-calc2-toggle]');
  if(toggle&&['ArrowDown','ArrowUp','Enter',' '].includes(event.key)){
   event.preventDefault();setMenu(true,true);
@@ -125,5 +208,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,molecular,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,isCalculator,allows,market,count};
 })();
