@@ -944,15 +944,15 @@ function searchPanelCard({section,panel,targets,hits}){
   :'';
  const spotfireContext=spotfireMenu?'<div class="lab-panel-menu-context">'+safeHtml(spotfireMenu)+
   (panel.marketNote?'<span class="lab-panel-market-tag">'+safeHtml(panel.marketNote)+' only</span>':'')+'</div>':'';
- const athena=orders.length?'<div class="lab-panel-athena">'+
-  '<div class="lab-panel-athena-head"><strong><span class="athena-accent">ATHENA</span> ORDER FOR THIS PANEL</strong>'+
-  '<button type="button" class="lab-panel-athena-open" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets">View <span class="athena-accent">Athena</span> orders <span aria-hidden="true">→</span></button></div>'+
-  '<ul class="lab-panel-athena-orders">'+orders.map(order=>
-   '<li class="lab-panel-athena-order"><span class="lab-panel-athena-kind '+((order.kind||'set')==='poc'?'lab-panel-athena-kind--poc':'')+'">'+((order.kind||'set')==='poc'?'POC Test':'Order Set')+'</span>'+
-    '<span class="lab-panel-athena-name">'+safeHtml(order.name)+(order.note?' <small>· '+safeHtml(order.note)+'</small>':'')+'</span></li>'
-  ).join('')+'</ul>'+
-  (section.id==='pathfast'&&panel.title==='High-sensitivity cardiac troponin I'?'<p class="lab-panel-athena-note">Follow the approved 0/1-hour pathway, or 0/2 hours when indicated. Timepoint order names are not separate pathways.</p>':'')+
-  '</div>':'';
+ const athena=orders.length?'<button type="button" class="lab-panel-athena" data-go="'+safeHtml(section.id)+'" data-target-tab="order-sets" aria-label="Open Athena orders for '+safeHtml(panel.title)+'">'+
+  '<span class="lab-panel-athena-head"><span class="lab-panel-athena-brand"><span class="lab-panel-athena-mark" aria-hidden="true">A</span><span class="lab-panel-athena-title"><strong>Athena</strong><span>ORDER FOR THIS PANEL</span></span></span>'+
+  '<span class="lab-panel-athena-open">View Athena orders <span aria-hidden="true">→</span></span></span>'+
+  '<span class="lab-panel-athena-orders">'+orders.map(order=>
+   '<span class="lab-panel-athena-order"><span class="lab-panel-athena-kind '+((order.kind||'set')==='poc'?'lab-panel-athena-kind--poc':'')+'">'+((order.kind||'set')==='poc'?'POC Test':'Order Set')+'</span>'+
+    '<span class="lab-panel-athena-name">'+safeHtml(order.name)+(order.note?' <small>· '+safeHtml(order.note)+'</small>':'')+'</span></span>'
+  ).join('')+'</span>'+
+  (section.id==='pathfast'&&panel.title==='High-sensitivity cardiac troponin I'?'<span class="lab-panel-athena-note">Follow the approved 0/1-hour pathway, or 0/2 hours when indicated. Timepoint order names are not separate pathways.</span>':'')+
+  '</button>':'';
  const groups=Object.entries(panel.groups||{}).map(([group,arr])=>
   '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
   arr.map(n=>'<span>'+(window.LAB_ASSAY_CATALOG?.formatPanelTarget?.(section.id,panel,n)||safeHtml(n))+'</span>').join('')+'</p></div>').join('');
