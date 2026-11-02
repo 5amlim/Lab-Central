@@ -89,10 +89,10 @@ const labData={
  ["Choose the approved kit","Confirm panel eligibility and the specimen source."],
  ["Verify identifiers","Check requisition, label and collection date/time."],
  ["Arrange the shipment","Confirm HTRX-specific manifest, shipping label and site courier."]]},
- pathmd:{tag:"PATHMD",title:"PathMD",kind:"Molecular sendout guide · Trial",desc:"Molecular specimen collection and routing reference. Activation may be pending.",steps:[
- ["Confirm site approval","Verify the selected clinic and panel are activated."],
- ["Use PathMD supplies","Check collection media and requisition. Never substitute an HTRX kit."],
- ["Record the handoff","Confirm PathMD-specific courier method and tracking."]]}
+ pathmd:{tag:"PATHMD",title:"PathMD",kind:"Molecular sendout guide · Trial",desc:"Athena aftercare, paper requisition, molecular collection and local sendout guidance.",steps:[
+ ["Place Athena aftercare order","Follow up on the exact PathMD panel name."],
+ ["Complete paper requisition","Dymo patient name and DOB; provider name and signature (Dr. B by default); one panel, ICD-10, date and specimen source."],
+ ["Package and document","Follow the clinic courier procedure. Results fax through Athena and match by name and DOB."]]}
 };
 function availableLabs(){return labOrder[activeMarket]||labOrder.socal;}
 function selectedLab(){
