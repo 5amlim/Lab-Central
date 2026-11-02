@@ -119,6 +119,28 @@ function htrxTubeIllustration(color){
  '<path d="M29 59h22M29 65h16M29 71h19" stroke="#a9b9c7" stroke-width="1.5"/>'+
  '</svg>';
 }
+function htrxMenu(){
+ const menus=[
+ ["RTI","Respiratory tract infection","White top","Nasopharynx/nares, oropharynx/throat/oral, cough sputum"],
+ ["RTIPROAO","RTI - persistent add-on","White top","RTI sources; additional bacterial targets"],
+ ["RTITHRAO","RTI - atypical pharyngitis","White top","Oropharynx/throat/oral only"],
+ ["PHAR","Pharyngitis","White top","Oropharynx/throat/oral"],
+ ["PHARRECAO","Pharyngitis - persistent add-on","White top","Oropharynx/throat/oral"],
+ ["FCRSV","Flu, COVID, RSV","White top","Nasopharynx/nares"],
+ ["UTI","Urinary tract infection","White top","Urine, voided or catheter, per guide"],
+ ["CGGY","Chlamydia / Gonorrhea (throat/oral)","Green top","Oral/throat swab, green collection device"]
+ ];
+ return '<section class="calc2-htrx-menu" id="calc2-htrx-menu" aria-label="HealthTrackRx molecular test menu">'+
+  '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">HEALTHTRACKRX / MENU</span><h4>Test menu</h4><p>Selected white-top panels and the approved green-top oral/throat CG test.</p></div></div>'+
+  '<label class="calc2-htrx-menu-search-label" for="calc2-htrx-search">Search by panel name, code or specimen</label>'+
+  '<input id="calc2-htrx-search" data-calc2-htrx-search type="search" placeholder="Search RTI, throat, CGGY, FCRSV..." autocomplete="off">'+
+  '<div class="calc2-htrx-menu-items">'+menus.map(p=>
+   '<article class="calc2-htrx-menu-row" data-calc2-htrx-entry="'+E(p.join(" ").toLowerCase())+'"><strong>'+E(p[0])+'</strong>'+
+    '<div><b>'+E(p[1])+'</b><small>'+E(p[3])+'</small></div><span class="calc2-htrx-menu-tube '+(p[2]==="Green top"?"green":"white")+'">'+E(p[2])+'</span></article>'
+   ).join("")+'</div>'+
+  '<p class="calc2-htrx-menu-foot">Selected clinic menu. Confirm current HealthTrackRx test activation, panel details and approved specimen instructions before collection.</p>'+
+ '</section>';
+}
 function htrxReference(){
  return '<section class="calc2-htrx-reference" aria-label="HealthTrackRx approved collection reference">'+
  '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">APPROVED COLLECTION DEVICES</span><h4>Only two tube types</h4><p>Choose by ordered test menu and specimen source. Other vendor tube types are not part of this workflow.</p></div></div>'+
@@ -126,6 +148,7 @@ function htrxReference(){
  '<article class="calc2-htrx-tube calc2-htrx-white"><div class="calc2-htrx-tube-art">'+htrxTubeIllustration("white")+'</div><div class="calc2-htrx-tube-copy"><span class="calc2-htrx-top-badge">WHITE TOP</span><h5>Molecular PCR menus</h5><p>Use for approved HealthTrackRx respiratory, genitourinary and specialty molecular tests assigned to the white tube.</p><span class="calc2-htrx-tube-note">Verify the requested menu and source before collection.</span></div></article>'+
  '<article class="calc2-htrx-tube calc2-htrx-green"><div class="calc2-htrx-tube-art">'+htrxTubeIllustration("green")+'</div><div class="calc2-htrx-tube-copy"><span class="calc2-htrx-top-badge">GREEN TOP</span><h5>Throat GC / CT-GC</h5><p>For <strong>oral or throat Chlamydia/Gonorrhea (CG)</strong> testing. The vendor lists <strong>CGGY</strong> for vaginal, rectal and oral sources using the green-top tube.</p><span class="calc2-htrx-tube-note">Confirm oral/throat collection site on the order.</span></div></article>'+
  '</div>'+
+ htrxMenu()+
  '<div class="calc2-htrx-checklist"><strong>Before pickup</strong><div><span>1. One tube per menu; check source and submit order.</span><span>2. Label name, DOB and collection site; do not obscure the barcode.</span><span>3. Seal the tube and bag; verify manifest and approved clinic courier.</span></div></div>'+
  '<p class="calc2-htrx-restriction">Yellow-top urine CG/CGT and gray-top urine culture collection tubes are intentionally excluded from this clinic reference.</p>'+
  '<div class="calc2-pdf-library"><div class="calc2-pdf-library-heading"><strong>PDF collection references</strong><small>Concise PDFs adapted from the uploaded 2026 HealthTrackRx documents</small></div><div class="calc2-pdf-links">'+
@@ -142,10 +165,10 @@ function panel(calculators,logo){
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const htrxContent=id==="htrx"?htrxReference():"";
  const action=molecular?
-  '<button type="button" class="calc2-primary-action" data-calc2-sendout="'+id+'">Open '+E(names[id])+' sendout guide <span aria-hidden="true">↗</span></button>':
+  '<button type="button" class="calc2-primary-action" data-calc2-open-menu="'+id+'">Open '+E(names[id])+' test menu <span aria-hidden="true">↓</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
  const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Container guide <span aria-hidden="true">↗</span></a>':'';
- const sendout=!molecular?'<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout guide <span aria-hidden="true">↗</span></button>':'';
+ const sendout='<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout workflow <span aria-hidden="true">↗</span></button>';
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
   '<span class="calc2-panel-icon">'+logo+'</span>';
  const quickSteps='<section class="calc2-panel-steps" aria-label="Quick start for '+E(names[id])+'">'+
@@ -218,6 +241,12 @@ document.addEventListener('click',event=>{
   if(availableLabs().includes(id)&&id!==selectedLab()){rememberedLab[activeMarket]=id;updatePage("tab");}
   return;
  }
+ const menuButton=event.target.closest('[data-calc2-open-menu]');
+ if(menuButton){
+  if(menuButton.dataset.calc2OpenMenu==="pathmd")window.LAB_PATHMD_REFERENCE?.openMenu?.();
+  else if(menuButton.dataset.calc2OpenMenu==="htrx")document.getElementById("calc2-htrx-menu")?.scrollIntoView({behavior:"smooth",block:"start"});
+  return;
+ }
  const sendout=event.target.closest('[data-calc2-sendout]');
  if(sendout){
   const {market:m,clinic:c}=current();
@@ -226,6 +255,13 @@ document.addEventListener('click',event=>{
   return;
  }
  if(!event.target.closest('#calc2-site-selector .dqc-location-picker'))setMenu(false);
+});
+document.addEventListener("input",event=>{
+ if(!event.target?.matches?.("[data-calc2-htrx-search]"))return;
+ const needle=event.target.value.toLowerCase().trim();
+ document.querySelectorAll("[data-calc2-htrx-entry]").forEach(row=>{
+  row.hidden=Boolean(needle)&&!row.dataset.calc2HtrxEntry.includes(needle);
+ });
 });
 document.addEventListener('keydown',event=>{
  const tab=event.target.closest('.calc2-tab');
