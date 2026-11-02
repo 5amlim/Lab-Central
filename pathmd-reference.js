@@ -90,12 +90,77 @@ function groupHtml(groups){
   '<section class="pmd-analyte-group pmd-analyte-'+e(kind)+'"><h5>'+e(groupNames[kind])+' <small>'+values.length+'</small></h5><div class="pmd-targets">'+
    values.map(value=>'<span class="pmd-target">'+highlighted(value)+'</span>').join("")+'</div></section>').join('');
 }
+
+/* Visual collection instructions reused on every PathMD panel. */
+function pmdPicture(kind){
+ const bg='<svg viewBox="0 0 190 118" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect width="190" height="118" rx="12" fill="#f4f8fc"/><ellipse cx="95" cy="103" rx="63" ry="5" fill="#dce7ee" opacity=".7"/>';
+ const cup='<path d="M52 37h86l-9 56a7 7 0 0 1-7 6H68a7 7 0 0 1-7-6z" fill="#fff" stroke="#9eb5c4" stroke-width="2"/><rect x="47" y="31" width="96" height="8" rx="4" fill="#fff" stroke="#9eb5c4" stroke-width="2"/>';
+ const urine=cup+'<path d="M62 70h66l-4 23H67z" fill="#f5d775" opacity=".75"/><path d="M63 71q16-5 32 0t32 0" stroke="#e4b64b" stroke-width="2" fill="none"/>';
+ const stool=cup+'<path d="M64 82q14-11 23-4 12-13 25-1 14-3 15 14H66z" fill="#a57a5d"/><path d="M76 87q10-6 20-4m3 5q10-6 19-3" stroke="#805d48" stroke-width="2" fill="none"/>';
+ const tube='<rect x="76" y="31" width="38" height="65" rx="8" fill="#fff" stroke="#93abba" stroke-width="2"/><path d="M81 71h28v18a5 5 0 0 1-5 5H86a5 5 0 0 1-5-5z" fill="#d9f3ee"/><rect x="71" y="22" width="48" height="18" rx="5" fill="#fff" stroke="#839dab" stroke-width="2"/><path d="M79 26v10m8-10v10m8-10v10m8-10v10m8-10v10" stroke="#d9e2e8" stroke-width="1.5"/>';
+ const swab='<path d="M43 22L101 74" stroke="#b8a38a" stroke-width="5" stroke-linecap="round"/><ellipse cx="105" cy="78" rx="7" ry="10" transform="rotate(-41 105 78)" fill="#fff" stroke="#9cafbf" stroke-width="2"/>';
+ let art='';
+ if(kind==="urine-cup")art=urine+'<path d="M87 16v13" stroke="#c6a64b" stroke-width="3" stroke-linecap="round"/><path d="M82 23l5 6 5-6" fill="none" stroke="#c6a64b" stroke-width="2"/>';
+ else if(kind==="urine-mix")art=urine+'<path d="M83 22l17 63" stroke="#b8a38a" stroke-width="5" stroke-linecap="round"/><ellipse cx="101" cy="87" rx="6" ry="8" fill="#fff" stroke="#abc0c9" stroke-width="1.5"/><path d="M110 52q19 11 2 27" stroke="#739fa8" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M117 78l-6 2 1-7" fill="#739fa8"/><rect x="124" y="11" width="52" height="25" rx="12" fill="#e6f3f1" stroke="#b6dcd4"/><text x="150" y="28" text-anchor="middle" fill="#24776b" font-family="Arial,sans-serif" font-size="13" font-weight="bold">× 10</text>';
+ else if(kind==="stool-cup")art=stool+'<path d="M85 16v12" stroke="#9c7b5d" stroke-width="2.5" stroke-linecap="round"/><path d="M80 23l5 6 5-6" fill="none" stroke="#9c7b5d" stroke-width="2"/>';
+ else if(kind==="stool-swab")art=stool+'<path d="M55 17l55 63" stroke="#b8a38a" stroke-width="5" stroke-linecap="round"/><ellipse cx="111" cy="82" rx="8" ry="11" transform="rotate(-40 111 82)" fill="#987359" stroke="#785741" stroke-width="1.6"/><circle cx="119" cy="78" r="3" fill="#b18b6d"/>';
+ else if(kind==="collect-swab")art=swab+'<path d="M123 39c10 5 16 14 18 23m-13-30c14 7 23 20 25 33" stroke="#8cb6af" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="154" cy="26" r="7" fill="#e1f2ee"/><path d="M154 22v8m-4-4h8" stroke="#538e82" stroke-width="2"/>';
+ else if(kind==="swab-tube")art=tube+'<path d="M95 2v54" stroke="#ae9b82" stroke-width="4" stroke-linecap="round"/><ellipse cx="95" cy="58" rx="6" ry="9" fill="#fff" stroke="#9db5c3" stroke-width="1.5"/><path d="M130 58h28m-8-6 8 6-8 6" fill="none" stroke="#789eaa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+ else if(kind==="stool-tube")art=tube+'<path d="M95 2v54" stroke="#ae9b82" stroke-width="4" stroke-linecap="round"/><ellipse cx="95" cy="58" rx="7" ry="10" fill="#9d7559" stroke="#775844" stroke-width="1.5"/><circle cx="91" cy="55" r="2" fill="#c39b79"/><circle cx="99" cy="61" r="2" fill="#c39b79"/>';
+ else if(kind==="label")art=tube+'<rect x="76" y="42" width="38" height="34" rx="3" fill="#f7f3fe" stroke="#a79ac3"/><path d="M81 48h28m-28 6h22m-22 6h28m-28 6h20m-20 5h25" stroke="#9181b4" stroke-width="2" stroke-linecap="round"/><rect x="121" y="28" width="57" height="53" rx="7" fill="#fff" stroke="#d9cfe8"/><path d="M129 41h40m-40 9h34m-34 9h40m-40 9h30" stroke="#bcafd4" stroke-width="2" stroke-linecap="round"/>';
+ else if(kind==="seal")art=tube+'<circle cx="146" cy="64" r="20" fill="#e3f5ec" stroke="#b8dcca"/><path d="m136 64 7 7 13-16" fill="none" stroke="#3d9470" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+ return bg+art+'</svg>';
+}
+const pmdLabels='<strong>Label the tube itself:</strong> patient first and last name, DOB, collection <strong>date and time</strong>, <strong>specimen source</strong> and <strong>collector initials</strong>. Keep the barcode readable.';
+function pmdCollectionMode(p){
+ if(p.id==="gi"||p.id==="gi-plus")return "stool";
+ if(p.id==="uti"||p.id==="prostatitis")return "urine";
+ if(p.id==="sti"||p.id==="sti-vaginitis")return "urine-or-swab";
+ return "swab";
+}
+function pmdCollectionSteps(mode){
+ if(mode==="urine")return [
+  ["Collect urine","Collect the urine specimen in a sterile cup.","urine-cup"],
+  ["Mix with the thick swab","Place the thick swab into the urine in the sterile cup and mix 10 times.","urine-mix"],
+  ["Place swab into white-top tube","Place the urine-exposed thick swab into the PathMD white-top tube. No transfer pipette is needed.","swab-tube"]
+ ];
+ if(mode==="stool")return [
+  ["Collect stool","Collect the stool specimen in a sterile cup.","stool-cup"],
+  ["Load the thick swab","Pick up a good amount of stool with the thick swab, leaving a visible stool specimen on the tip.","stool-swab"],
+  ["Place swab into white-top tube","Insert the thick swab WITH the collected stool on it into the PathMD white-top tube.","stool-tube"]
+ ];
+ return [
+  ["Collect the ordered swab specimen","Use the approved swab and collection procedure for the anatomical source ordered on the panel.","collect-swab"],
+  ["Place swab into white-top tube","Place the collected swab into the PathMD white-top tube following the approved kit instructions.","swab-tube"]
+ ];
+}
+function pmdStepCards(mode){
+ return '<div class="pmd-collection-steps">'+pmdCollectionSteps(mode).map(([title,description,picture],index)=>
+  '<div class="pmd-collection-step"><div class="pmd-step-picture">'+pmdPicture(picture)+'</div><div class="pmd-collection-step-copy"><span class="pmd-collection-step-no">STEP '+String(index+1).padStart(2,"0")+'</span><strong>'+e(title)+'</strong><p>'+e(description)+'</p></div></div>').join('')+'</div>';
+}
+function pmdCollection(p){
+ const mode=pmdCollectionMode(p);
+ const note=mode==="urine"?"URINE · THICK SWAB × 10":mode==="stool"?"STOOL · THICK SWAB":mode==="urine-or-swab"?"URINE OR SITE SWAB":"APPROVED SITE SWAB";
+ const paths=mode==="urine-or-swab"?
+  '<div class="pmd-collection-path"><h5>Urine specimen</h5><p>When urine is the approved specimen source for the ordered panel:</p>'+pmdStepCards("urine")+'</div>'+
+  '<div class="pmd-collection-path"><h5>Swab specimen</h5><p>When a site-specific swab is the approved specimen source:</p>'+pmdStepCards("swab")+'</div>':
+  pmdStepCards(mode);
+ return '<section class="pmd-collection" aria-label="Specimen collection instructions for '+e(p.name)+'">'+
+  '<div class="pmd-collection-heading"><div><span class="pmd-mini-label">SPECIMEN COLLECTION</span><h4>How to collect</h4></div>'+
+  '<div class="pmd-collection-tags"><span>1 WHITE-TOP TUBE</span><span>'+note+'</span></div></div>'+
+  '<p class="pmd-collection-intro">Use one PathMD white-top transport tube for this panel. Confirm the ordered specimen source is approved before collection.</p>'+
+  paths+
+  '<div class="pmd-label-instruction"><div class="pmd-label-art">'+pmdPicture("label")+'</div><div><span class="pmd-collection-step-no">REQUIRED ON EVERY TUBE</span><p>'+pmdLabels+'</p></div></div>'+
+  '<div class="pmd-collection-foot">Close the tube securely. Match the tube with the completed paper requisition and follow the clinic-approved PathMD pickup procedure.</div>'+
+  '</section>';
+}
+
 function menuCards(){
  const arr=filtered();
  return '<div class="pmd-results-count" id="pmd-result-count"><strong>'+arr.length+'</strong> of '+panels.length+' menus'+(query?' matching “'+e(query)+'”':'')+'</div>'+
  (arr.length?'<div class="pmd-menu-grid">'+arr.map(p=>
    '<details class="pmd-menu-card" '+(query.trim().length>1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
-   '<div class="pmd-menu-body">'+groupHtml(p.groups)+'</div></details>').join("")+'</div>':
+   '<div class="pmd-menu-body">'+pmdCollection(p)+groupHtml(p.groups)+'</div></details>').join("")+'</div>':
  '<div class="pmd-no-results"><strong>No matching test menus</strong><p>Try a pathogen name, panel name or category, or clear the search.</p><button type="button" data-pmd-clear>Clear search &amp; filters</button></div>');
 }
 function menu(){
@@ -104,7 +169,7 @@ function menu(){
   '<div class="pmd-filter-list" aria-label="Filter PathMD test panels">'+categoryOptions.map(c=>
     '<button type="button" data-pmd-category="'+e(c)+'" aria-pressed="'+(category===c)+'" class="pmd-filter'+(category===c?' is-selected':'')+'">'+e(c)+'</button>').join("")+'</div>'+
   '<div id="pmd-menu-results">'+menuCards()+'</div>'+
-  '<p class="pmd-reference-warning"><strong>Collection requirements:</strong> The supplied molecular menu lists detectable targets, not test-specific specimen media, volumes, stability or order codes. Confirm these with PathMD and the current approved SOP before collection. A detected resistance gene is not the same as a phenotypic susceptibility result.</p>';
+  '<p class="pmd-reference-warning"><strong>Collection reference:</strong> Use one white-top PathMD tube per panel, with the specimen-source technique shown inside each menu. Confirm approved sources, collection details and handling with the current PathMD SOP. Resistance genes are not the same as phenotypic susceptibility results.</p>';
 }
 const sequence=(arr)=>'<ol class="pmd-steps">'+arr.map(([heading,body],i)=>
  '<li><span class="pmd-step-number">'+String(i+1).padStart(2,"0")+'</span><div><strong>'+e(heading)+'</strong><p>'+e(body)+'</p></div></li>').join('')+'</ol>';
@@ -131,8 +196,8 @@ function ordering(){
 function shipping(){
  const local=selectedMarket==="socal";
  const base=[
-  ["Collect the approved specimen","Follow the exact PathMD test menu's approved collection device and specimen source."],
-  ["Label the tube","Write the patient's first and last name AND date of birth directly on the tube."],
+  ["Collect into a PathMD white-top tube","Use one white-top tube for the ordered panel. For urine, mix the thick swab in a sterile urine cup 10 times and place the swab in the tube, without a pipette. For GI, collect stool on the thick swab and put the swab with stool into the tube. See each test menu for illustrated steps."],
+  ["Label the tube","Write patient first and last name, DOB, collection date and time, specimen source, and collector initials directly on the tube. Do not cover the barcode."],
   ["Prepare specimen bag","Secure the tube and include the approved requisition and demographic documentation."],
   ["Verify transport conditions","Confirm the temperature-control and packaging instructions for the clinic's approved PathMD service."]
  ];
