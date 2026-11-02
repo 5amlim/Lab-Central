@@ -372,3 +372,137 @@
  .lab-search-source{break-inside:auto}
  .lab-search-source .lab-panel-search-result{break-inside:avoid;box-shadow:none}
 }
+
+
+/* Athena: full-card link to the actual instrument order-set tab. */
+.lab-panel-athena,
+.lab-search-source .lab-panel-athena{
+ appearance:none;
+ box-sizing:border-box;
+ width:calc(100% - 34px);
+ display:flex;
+ flex-direction:column;
+ align-items:stretch;
+ gap:10px;
+ text-align:left;
+ font-family:inherit;
+ cursor:pointer;
+ padding:13px 15px;
+ border:1px solid #c9b6e8;
+ border-left:4px solid #8050be;
+ border-radius:11px;
+ color:#423a58;
+ background:linear-gradient(120deg,#f2eafa 0%,#faf7fe 76%,#fdfbff 100%);
+ box-shadow:0 2px 9px rgba(102,65,159,.06);
+ transition:background .17s,border-color .17s,box-shadow .17s,transform .17s;
+}
+.lab-search-source .lab-panel-athena{width:calc(100% - 30px);margin:0 15px 12px;padding:13px 15px}
+.lab-panel-athena:hover,
+.lab-search-source .lab-panel-athena:hover{
+ border-color:#9c7bcc;
+ border-left-color:#6f3db5;
+ background:linear-gradient(120deg,#eae0f9 0%,#f5effe 76%,#fbf8ff 100%);
+ box-shadow:0 4px 16px rgba(102,65,159,.12);
+ transform:translateY(-1px);
+}
+.lab-panel-athena:focus-visible,
+.lab-search-source .lab-panel-athena:focus-visible{
+ outline:3px solid #8152c6;
+ outline-offset:3px;
+}
+.lab-panel-athena:active{transform:translateY(0)}
+.lab-panel-athena-head,
+.lab-search-source .lab-panel-athena-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:9px 16px;
+ width:100%;
+ margin:0;
+}
+.lab-panel-athena-brand{display:inline-flex;align-items:center;gap:9px;min-width:0}
+.lab-panel-athena-mark{
+ flex:none;
+ display:grid;
+ place-items:center;
+ width:32px;height:32px;
+ border-radius:9px;
+ background:#7741b7;color:#fff;
+ font-size:20px;font-weight:850;line-height:1;
+ box-shadow:inset 0 -2px 0 rgba(40,18,78,.14);
+}
+.lab-panel-athena-title{display:flex;flex-direction:column;gap:2px;min-width:0}
+.lab-panel-athena-title strong{color:#6637a4;font-size:13px;font-weight:850;line-height:1.2;letter-spacing:-.015em}
+.lab-panel-athena-title>span{color:#735b93;font-size:9px;font-weight:850;line-height:1.35;letter-spacing:.065em}
+.lab-panel-athena-open,
+.lab-search-source .lab-panel-athena-open{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px;
+ border:1px solid #d4c4ea;
+ border-radius:8px;
+ padding:8px 11px;
+ background:#fff;
+ color:#6d3eab;
+ font-size:10.5px;
+ font-weight:850;
+ text-decoration:none;
+ white-space:nowrap;
+ box-shadow:0 1px 2px rgba(64,33,110,.04);
+}
+.lab-panel-athena-open span{font-size:15px;line-height:1}
+.lab-panel-athena:hover .lab-panel-athena-open{
+ border-color:#a889d3;
+ background:#7042b3;
+ color:#fff;
+ text-decoration:none;
+}
+.lab-panel-athena-orders,
+.lab-search-source .lab-panel-athena-orders{
+ flex:none;
+ display:flex;
+ flex-direction:column;
+ gap:6px;
+ min-width:0;
+ width:100%;
+ margin:0;
+ padding:0;
+}
+.lab-panel-athena-order,
+.lab-search-source .lab-panel-athena-order{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ min-width:0;
+ padding:9px 11px;
+ border:1px solid #e1d7ee;
+ border-radius:8px;
+ background:rgba(255,255,255,.87);
+}
+.lab-panel-athena-name,
+.lab-search-source .lab-panel-athena-name{
+ color:#513879;
+ font-size:11.5px;
+ font-weight:800;
+ line-height:1.45;
+}
+.lab-panel-athena-kind{background:#eae1f8;color:#6d4c99}
+.lab-panel-athena-kind--poc{background:#e2f1ed;color:#267367}
+.lab-panel-athena-note,
+.lab-search-source .lab-panel-athena-note{flex-basis:auto;display:block;margin:0 2px;color:#796b91}
+@media(max-width:750px){
+ .lab-search-source .lab-panel-athena{display:flex}
+ .lab-search-source .lab-panel-athena-orders{margin-top:0}
+}
+@media(max-width:520px){
+ .lab-panel-athena,.lab-search-source .lab-panel-athena{padding:11px 12px}
+ .lab-search-source .lab-panel-athena{width:calc(100% - 24px);margin:0 12px 10px}
+ .lab-panel-athena-open{width:100%;box-sizing:border-box}
+ .lab-panel-athena-order{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+ .lab-panel-athena{transition:none}
+ .lab-panel-athena:hover{transform:none}
+}
