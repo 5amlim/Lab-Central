@@ -77,9 +77,9 @@ const labData={
  ["Find the exact test","Search by code or name and verify the selection."],
  ["Check requirements","Confirm containers, minimum volume, handling and STAT eligibility."],
  ["Prepare the sendout","Review bag separation and save the final LAB FLOWSHEET."]]},
- cedars:{tag:"CEDARS-SINAI",title:"Cedars lab guide",kind:"Collection guide · SoCal",desc:"Cedars-specific specimen collection, container and submission guidance.",steps:[
- ["Confirm the test","Verify Cedars acceptance, specimen and requisition."],
- ["Check the container","Review the illustrated container guide and specific handling."],
+ cedars:{tag:"CEDARS-SINAI",title:"Cedars lab guide",kind:"Test & container reference · SoCal",desc:"Use the Cedars lab guide to look up tests and confirm the appropriate collection containers.",steps:[
+ ["Look up the test","Use the Cedars lab guide to confirm the requested test and its ordering details."],
+ ["Check the container","Verify the specimen source, approved collection container and special handling."],
  ["Confirm courier","Check the local Cedars or Apollo handoff procedure."]]},
  labcorp:{tag:"LABCORP",title:"Labcorp calculator",kind:"Collection calculator",desc:"Test-code lookup, specimen handling and sendout instructions.",steps:[
  ["Find the code","Select the exact Labcorp test from the directory."],
@@ -273,6 +273,8 @@ function panel(calculators,logo){
  const sendout='<button type="button" class="calc2-secondary-action" data-calc2-sendout="'+id+'">Sendout workflow <span aria-hidden="true">↗</span></button>';
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
   '<span class="calc2-panel-icon">'+logo+'</span>';
+ const cedarsPayerNote=id==="cedars"?
+  '<aside class="calc2-cedars-payer-note" aria-label="Cedars insurance eligibility"><strong>Insurance eligibility</strong><span>Cedars does not accept HMO patients.</span></aside>':"";
  const quickSteps='<section class="calc2-panel-steps" aria-label="Quick start for '+E(names[id])+'">'+
   '<div class="calc2-panel-steps-heading"><h4>Before specimen collection</h4><span>3 checkpoints</span></div>'+
   '<div class="calc2-step-grid">'+item.steps.map((step,i)=>
@@ -285,7 +287,7 @@ function panel(calculators,logo){
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
    '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
   '</div>'+
-  pickup+(pathmdContent||htrxContent||quickSteps)+
+  pickup+cedarsPayerNote+(pathmdContent||htrxContent||quickSteps)+
   '<p class="calc2-panel-footnote">'+(molecular?
     'Before collection or dispatch, verify this clinic is activated and confirm approved panels, collection devices and transport arrangements.':
     'Always verify the current test directory, exact specimen requirements and local SOP before collection.')+'</p>'+
@@ -293,14 +295,15 @@ function panel(calculators,logo){
 }
 /* One relevant continuation area replaces the two competing sendout callouts. */
 function nextActions(){
- const molecular=!isCalculator();
+ const molecular=!isCalculator(),cedars=selectedLab()==="cedars";
  const text=molecular?
   'After packaging, record the specimen handoff and pickup or tracking information.':
+  cedars?'Confirm the appropriate collection container and arrange the approved Cedars or Apollo specimen handoff.':
   'Use the correct order workflow, then document collection and specimen handoff.';
  return '<section class="calc2-next-area" aria-label="Next steps after collection">'+
   '<div class="calc2-next-copy"><span class="calc-guide-eyebrow">NEXT STEPS</span><h3>'+(molecular?'Finish the molecular sendout':'Continue the sendout')+'</h3><p>'+text+'</p></div>'+
   '<div class="calc2-next-buttons">'+
-   (molecular?'':'<button type="button" class="calc2-next-secondary" data-go="orders" data-target-tab="in-house"><span>Order &amp; upload workflow</span><span aria-hidden="true">→</span></button>')+
+   (molecular||cedars?'':'<button type="button" class="calc2-next-secondary" data-go="orders" data-target-tab="in-house"><span>Order &amp; upload workflow</span><span aria-hidden="true">→</span></button>')+
    '<button type="button" class="calc2-next-primary" data-go="sendout-log"><span>Sendout Log instructions</span><span aria-hidden="true">→</span></button>'+
   '</div></section>';
 }
