@@ -236,7 +236,7 @@ function nextActions(){
  return '<section class="calc2-next-area" aria-label="Next steps after collection">'+
   '<div class="calc2-next-copy"><span class="calc-guide-eyebrow">NEXT STEPS</span><h3>'+(molecular?'Finish the molecular sendout':'Continue the sendout')+'</h3><p>'+text+'</p></div>'+
   '<div class="calc2-next-buttons">'+
-   (molecular?'':'<button type="button" class="calc2-next-secondary" data-go="orders"><span>Order &amp; upload workflow</span><span aria-hidden="true">→</span></button>')+
+   (molecular?'':'<button type="button" class="calc2-next-secondary" data-go="orders" data-target-tab="in-house"><span>Order &amp; upload workflow</span><span aria-hidden="true">→</span></button>')+
    '<button type="button" class="calc2-next-primary" data-go="sendout-log"><span>Sendout Log instructions</span><span aria-hidden="true">→</span></button>'+
   '</div></section>';
 }
