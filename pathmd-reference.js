@@ -218,6 +218,11 @@ document.addEventListener("keydown",event=>{
  tab=event.key==="ArrowRight"?ids[(i+1)%ids.length]:event.key==="ArrowLeft"?ids[(i-1+ids.length)%ids.length]:event.key==="Home"?ids[0]:ids[ids.length-1];
  refresh(true);
 });
+function searchForPathogen(term){
+ query=String(term||"");
+ category="All";
+ tab="menu";
+}
 function openMenu(){
  tab="menu";
  const root=document.getElementById("pathmd-reference");
@@ -225,5 +230,5 @@ function openMenu(){
  const target=document.getElementById("pmd-test-search")||document.getElementById("pathmd-reference");
  target?.scrollIntoView?.({behavior:"smooth",block:"start"});
 }
-window.LAB_PATHMD_REFERENCE={render,openMenu,setLocation,panels,prices:rates};
+window.LAB_PATHMD_REFERENCE={render,openMenu,setLocation,searchForPathogen,panels,prices:rates};
 })();
