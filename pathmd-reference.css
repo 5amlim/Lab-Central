@@ -329,3 +329,25 @@
 @media print{
  .pmd-panel-target-section{break-inside:avoid}
 }
+
+
+/* Specific PathMD menu selected from global search. */
+.pmd-menu-card.is-targeted{
+ border:1px solid #a88bd1;
+ box-shadow:0 5px 22px rgba(112,79,160,.10);
+ scroll-margin-top:108px;
+}
+.pmd-menu-card.is-targeted>summary{
+ background:linear-gradient(105deg,#f4effb 0%,#fff 90%);
+ border-left:4px solid #8062b3;
+ padding-left:12px;
+}
+.pmd-menu-card.is-targeted .pmd-panel-heading strong{color:#60428c}
+.pmd-menu-card.is-targeted .pmd-panel-category{color:#7c60a4}
+.pmd-menu-card.is-targeted>summary:focus-visible{
+ outline:3px solid #946cc7;
+ outline-offset:-3px;
+}
+@media(prefers-reduced-motion:reduce){
+ .pmd-menu-card.is-targeted{scroll-behavior:auto}
+}
