@@ -70,7 +70,7 @@ let tab="menu",category="All",query="";
 let selectedMarket="socal",selectedClinic="bh";
 function setLocation(market,clinic){selectedMarket=market;selectedClinic=clinic;}
 
-function safeSearch(s){return String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"");}
+function safeSearch(s){return String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/\be\.?\s*coli\b/g,"escherichia coli").replace(/\bstrep a\b/g,"streptococcus pyogenes");}
 function searchText(p){
  return safeSearch([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" "));
 }
