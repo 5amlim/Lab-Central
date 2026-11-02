@@ -1707,7 +1707,22 @@ function renderCalculators(){
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.panel(calculators,calculatorLogo())||'';
+
  if(window.LAB_CALCULATORS_GUIDE?.isCalculator()){
+  if(calcLab==='cedars'){
+   h+='<details class="calc2-workflow-collapse calc2-cedars-reference"><summary><span><strong>Using the Cedars lab guide</strong><small>3 reference steps · Expand for instructions</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>'+
+   '<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="cedars-reference-heading">'+
+   '<div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">CEDARS-SINAI · LAB GUIDE</span><h2 class="section-title" id="cedars-reference-heading">Test &amp; container reference</h2><p>Use the Cedars lab guide to find the requested test and verify the correct specimen container and collection requirements.</p></div><span class="calc-guide-count">3 steps</span></div>'+
+   '<div class="calc-guide-phases calc-guide-simplified"><section class="calc-guide-phase" aria-label="Using the Cedars guide">'+
+   '<div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">REFERENCE</span><div><strong>Before specimen collection</strong><span class="calc-guide-phase-descriptor">Review test details and container requirements.</span></div><span class="calc-guide-phase-range">STEPS 01–03</span></div>'+
+   '<div class="calc-guide-grid calc2-cedars-guide-grid">'+
+   '<article class="calc-guide-card"><span class="calc-guide-step">01</span><div><h3>Find the requested test</h3><ul><li>Open the <strong>Cedars lab guide</strong> above and look up the requested test.</li><li>Confirm the test, specimen source and ordering details.</li></ul></div></article>'+
+   '<article class="calc-guide-card"><span class="calc-guide-step">02</span><div><h3>Check the collection container</h3><ul><li>Use the <strong>Container guide</strong> to identify the correct tube, swab or collection kit.</li><li>Confirm minimum volume, processing, temperature and any special handling.</li></ul></div></article>'+
+   '<article class="calc-guide-card"><span class="calc-guide-step">03</span><div><h3>Confirm courier handoff</h3><ul><li>Check the applicable Cedars or Apollo pickup route and cutoff before collection.</li><li>Follow the clinic’s approved specimen packaging and handoff procedure.</li></ul></div></article>'+
+   '</div></section></div>'+
+   '<p class="calc-guide-safety"><strong>Reference:</strong> Follow the current Cedars test directory and local SOP for test-specific requirements.</p>'+
+   '</section></details>';
+  }else{
  h+='<details class="calc2-workflow-collapse"><summary><span><strong>Detailed collection workflow</strong><small>6 steps across 3 phases · Expand for instructions</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>';
  h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
   <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use ${calcLab==='cedars'?'the lab guide':'the calculator'}</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
@@ -1775,6 +1790,7 @@ function renderCalculators(){
   <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory.</p>
 </section>`;
  h+='</details>';
+  }
  }
  h+=window.LAB_CALCULATORS_GUIDE?.nextActions()||'';
  el('mainContent').innerHTML=h;
