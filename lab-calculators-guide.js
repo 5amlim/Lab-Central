@@ -152,7 +152,7 @@ const htrxRecords=[
  {code:"CGGY",name:"Chlamydia / Gonorrhea (throat/oral)",tube:"Green top",specimen:"Oral/throat swab (green collection device)",groups:{bacterial:splitTargets("Chlamydia trachomatis|Neisseria gonorrhoeae")},aliases:"throat GC CT GC gonococcus chlamydia gonorrhea"}
 ];
 let htrxQuery="";
-const normHTRX=s=>String(s||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const normHTRX=s=>String(s||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\be\.?\s*coli\b/g,"escherichia coli").replace(/\bstrep a\b/g,"streptococcus pyogenes");
 const htrxText=p=>[p.code,p.name,p.tube,p.specimen,p.aliases,...Object.values(p.groups).flat()].join(" ");
 function htrxMenu(){
  const needle=normHTRX(htrxQuery.trim());
