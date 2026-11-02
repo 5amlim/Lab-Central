@@ -1,0 +1,57 @@
+/* Calculator directory and molecular sendout options. API PT selector parity. */
+.calc2-site-selector{position:relative;isolation:isolate;margin:23px 0 22px;z-index:3}
+.calc2-site-selector .dqc-market-picker{margin:0 0 13px}
+.calc2-site-selector .dqc-location-bar{margin:0 0 17px}
+.calc2-site-selector .dqc-market-heading{margin:0}
+.calc2-site-selector .dqc-market-heading h2{font-size:22px}
+.calc2-site-selector .dqc-market-heading p{max-width:850px;font-size:11.8px}
+.calc2-site-selector .dqc-location-picker{z-index:15}
+.calc2-tool-heading,.calc2-section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:20px 0 14px}
+.calc2-tool-heading h2,.calc2-section-heading h2{color:#294860;font-size:19px;letter-spacing:-.035em;margin:4px 0 3px}
+.calc2-tool-heading p,.calc2-section-heading p{color:#7b8f9f;font-size:12px;line-height:1.65;margin:0}
+.calc2-tool-heading + .calculator-grid{margin-top:0}
+.calc2-molecular-section{margin-top:32px}
+.calc2-category-tag{flex:none;font-size:10px;font-weight:800;border-radius:999px;padding:7px 10px;color:#267d79;border:1px solid #d6e9e7;background:#edf7f4}
+.calc2-molecular-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}
+.calculator-card.htrx{--calc-ink:#146a70;--calc-accent:#176b70;--calc-soft:#e4f4f3;--calc-stripe:#238e91}
+.calculator-card.pathmd{--calc-ink:#554c83;--calc-accent:#565080;--calc-soft:#f0edfa;--calc-stripe:#8175ac}
+.calc2-molecular-card{min-height:290px}
+.calc2-molecular-card .calculator-top{align-items:center}
+.calc2-molecular-card .calculator-brand-title{margin-top:12px}
+.calc2-molecule-icon{width:44px;height:44px;display:grid;place-items:center;background:var(--calc-soft);color:var(--calc-ink);border-radius:11px;flex:none}
+.calc2-type-badge{font-size:9px;font-weight:850;letter-spacing:.075em;color:var(--calc-ink);background:var(--calc-soft);border-radius:6px;padding:6px 8px}
+.calc2-molecular-card p{margin-bottom:12px}
+.calc2-clinic-note{display:flex;gap:5px;flex-direction:column;border:1px solid #dce9ed;border-radius:9px;background:#f8fbfc;padding:10px 12px;margin-bottom:12px;font-size:11px;line-height:1.5}
+.calc2-clinic-note strong{color:#334e65;font-size:11.5px}
+.calc2-clinic-note span{color:#697f90}
+.calc2-guide-details{border:1px solid #dce8ed;border-radius:9px;background:#fff;overflow:hidden;margin-bottom:14px}
+.calc2-guide-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;color:#3f6478;gap:10px;font-weight:750;font-size:11px;padding:11px 12px}
+.calc2-guide-details summary::-webkit-details-marker{display:none}
+.calc2-guide-details summary:hover{background:#f5fafb}
+.calc2-detail-chevron{width:8px;height:8px;border-right:2px solid #64808d;border-bottom:2px solid #64808d;transform:rotate(45deg);transition:transform .15s;flex:none}
+.calc2-guide-details[open] .calc2-detail-chevron{transform:rotate(225deg)}
+.calc2-guide-details ol{border-top:1px solid #e6edef;margin:0;padding:12px 18px 12px 30px;color:#536d7e;font-size:11px;line-height:1.7}
+.calc2-guide-details li+li{margin-top:6px}
+.calc2-molecular-go{width:100%;border:0;text-align:left}
+.calc2-molecular-warning{margin:11px 0 0;color:#7a8796;font-size:11px;line-height:1.6}
+.calc2-calculator-workflow-note{font-size:11px;line-height:1.7;color:#607a8a;background:#f7fbfc;border:1px solid #dce9ed;border-radius:10px;padding:12px 15px;margin:13px 0 3px}
+@media(max-width:740px){
+ .calc2-site-selector .dqc-market-picker{display:block;padding:13px}
+ .calc2-site-selector .dqc-picker-label{display:block;margin-bottom:9px}
+ .calc2-site-selector .dqc-market-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .calc2-site-selector .dqc-market-choice{width:100%;min-width:0;padding:10px 6px}
+ .calc2-site-selector .dqc-location-bar{align-items:stretch}
+ .calc2-site-selector .dqc-location-picker{width:100%;min-width:0;flex:1}
+ .calc2-site-selector .dqc-location-hint{margin-left:0}
+ .calc2-molecular-grid{grid-template-columns:1fr}
+}
+@media(max-width:440px){
+ .calc2-site-selector .dqc-location-bar{display:grid;grid-template-columns:minmax(0,1fr)}
+ .calc2-site-selector .dqc-location-picker{width:100%}
+ .calc2-tool-heading,.calc2-section-heading{align-items:flex-start;flex-direction:column}
+}
+@media print{
+ .calc2-site-selector .dqc-market-picker,.calc2-site-selector .dqc-location-bar{display:none!important}
+ .calc2-guide-details ol{display:block}
+ .calc2-molecular-go{display:none}
+}
