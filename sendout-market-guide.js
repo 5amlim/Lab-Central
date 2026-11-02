@@ -20,7 +20,7 @@ const htrxTimes={
  sm:"Monday to Friday: UPS 3–4 PM. Saturday: UPS 3–4 PM. Sunday: no pickup; send Monday.",
  mb:"Monday to Friday: UPS 4–5 PM. Saturday: UPS 4–5 PM. Sunday: no pickup; send Monday."
 };
-let market="socal",site="bh",open="";
+let market="socal",site="bh",open="",focusedLab=null;
 const validSite=()=>markets[market].sites.some(x=>x[0]===site);
 const selectedSite=()=>markets[market].sites.find(x=>x[0]===site)?.[1]||"Select location";
 const form=()=>window.LAB_SENDOUT_FORMS?.[market];
@@ -48,7 +48,7 @@ function labInfo(l){
  if(regional&&l==="labcorp")extra='<div class="lc-site-note"><strong>Labcorp timing</strong><p>Verify pickup before 5 PM or the current site-specific scheduled time.</p></div>';
  if(regional&&l==="quest")extra='<div class="lc-site-note"><strong>Quest handoff</strong><p>'+(site==="bh"?"Use Beverly Hills evening pickup and check the lockbox.":site==="sm"?"Confirm the Santa Monica evening pickup and lockbox.":site==="mb"?"Manhattan Beach may require calling for pickup; verify the lockbox and cold bags.":"Annex pickups are not established. Confirm account readiness and courier before use.")+'</p></div>';
  if(!regional)extra='<div class="lc-site-note"><strong>Site verification required</strong><p>This market’s courier windows and activated receiving labs are not confirmed here. Use the current local SOP and vendor directory; do not assume SoCal pickup times apply.</p></div>';
- return '<details class="lc-lab-detail" '+(l===markets[market].labs[0]?'open':'')+'><summary><span class="lc-lab-sign">'+E(m.eyebrow)+'</span><span class="lc-lab-heading"><strong>'+E(m.title)+'</strong><small>'+E(m.desc)+'</small></span><span class="lc-lab-chevron">'+chevron+'</span></summary><div class="lc-lab-content">'+
+ return '<details class="lc-lab-detail" '+(l===(focusedLab||markets[market].labs[0])?'open':'')+'><summary><span class="lc-lab-sign">'+E(m.eyebrow)+'</span><span class="lc-lab-heading"><strong>'+E(m.title)+'</strong><small>'+E(m.desc)+'</small></span><span class="lc-lab-chevron">'+chevron+'</span></summary><div class="lc-lab-content">'+
  '<ol>'+m.steps.map(v=>'<li>'+E(v)+'</li>').join("")+'</ol>'+extra+
  (m.href?'<a class="lc-lab-resource" target="_blank" rel="noopener noreferrer" href="'+m.href+'">Open receiving lab directory ↗</a>':'')+
  '</div></details>';
@@ -87,13 +87,14 @@ document.addEventListener("click",e=>{
  if(open&&!e.target.closest(".lc-select-box")){open="";refresh();}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open){open="";refresh();}});
-function select(nextMarket,nextClinic){
+function select(nextMarket,nextClinic,nextLab){
  if(!markets[nextMarket])return false;
  const ids={"bh-satellite":"annex","palo-alto":"pa","palm-beach":"palm","coral-gables":"coral"};
  market=nextMarket;
  const preferred=ids[nextClinic]||nextClinic;
  site=markets[market].sites.some(c=>c[0]===preferred)?preferred:markets[market].sites[0][0];
  open="";
+ focusedLab=markets[market].labs.includes(nextLab)?nextLab:null;
  return true;
 }
 window.LAB_SENDOUT_MARKETS={render,select};
