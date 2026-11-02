@@ -196,6 +196,7 @@ function molecularMatches(query=molecularQuery){
   return {...p,matched:hits[0]||"",hits};
  });
 }
+let pendingSendoutSearchScroll="";
 function selectSendoutSearchResult(lab,term){
  if(lab!=="htrx"&&lab!=="pathmd")return false;
  if(!availableLabs().includes(lab))activeMarket="socal";
@@ -203,7 +204,17 @@ function selectSendoutSearchResult(lab,term){
  const query=String(term||"");
  if(lab==="htrx")htrxQuery=query;
  else window.LAB_PATHMD_REFERENCE?.searchForPathogen?.(query);
+ pendingSendoutSearchScroll=lab;
  return true;
+}
+function scrollToSearchResult(){
+ if(!pendingSendoutSearchScroll)return;
+ const lab=pendingSendoutSearchScroll;
+ pendingSendoutSearchScroll="";
+ requestAnimationFrame(()=>{
+  const target=document.getElementById(lab==="htrx"?"calc2-htrx-menu":"pmd-test-search");
+  target?.scrollIntoView?.({behavior:"smooth",block:"start"});
+ });
 }
 function finderResults(){
  const q=normHTRX(molecularQuery.trim()),matches=molecularMatches();
@@ -414,5 +425,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,panel,nextActions,isCalculator,selectedLab,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,allows,market,count};
 })();
