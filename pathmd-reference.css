@@ -228,3 +228,44 @@
  .pmd-ordering-card,.pmd-aftercare-card{padding:14px}
  .pmd-current-flow{align-items:flex-start}
 }
+
+
+/* PathMD collection visuals live in every expanded test menu panel. */
+.pmd-menu-card[open]{grid-column:1/-1}
+.pmd-collection{border:1px solid #dde4ef;border-radius:12px;background:#fff;overflow:hidden}
+.pmd-collection-heading{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;padding:15px 17px 10px}
+.pmd-collection-heading h4{margin:4px 0 0;font-size:15px;color:#39566b;letter-spacing:-.02em}
+.pmd-collection-tags{display:flex;gap:7px;flex-wrap:wrap}
+.pmd-collection-tags span{border:1px solid #d5d0e6;border-radius:6px;background:#f3f0fa;padding:6px 9px;color:#665b92;font-size:9px;font-weight:850;letter-spacing:.05em}
+.pmd-collection-tags span+span{background:#edf7f5;border-color:#d0e7df;color:#357c70}
+.pmd-collection-intro{font-size:11px;line-height:1.6;color:#657d8d;margin:0;padding:0 17px 14px}
+.pmd-collection-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0 14px 14px}
+.pmd-collection-step{display:flex;flex-direction:column;min-width:0;border:1px solid #e3e9ef;border-radius:10px;overflow:hidden;background:#fff}
+.pmd-step-picture{padding:9px 10px;background:#f5f9fc;border-bottom:1px solid #edf0f5}
+.pmd-step-picture svg{display:block;width:100%;height:112px;max-width:210px;margin:auto}
+.pmd-collection-step-copy{padding:11px 12px 13px}
+.pmd-collection-step-no{display:block;color:#7971a3;font-size:9px;letter-spacing:.08em;font-weight:860;margin-bottom:6px}
+.pmd-collection-step-copy>strong{display:block;color:#3d5e74;font-size:11.5px;line-height:1.45}
+.pmd-collection-step-copy>p{color:#71889a;font-size:10.7px;line-height:1.6;margin:5px 0 0}
+.pmd-collection-path{padding-top:10px;border-top:1px solid #e9edf2}
+.pmd-collection-path h5{font-size:12px;margin:0 17px 3px;color:#415f77}
+.pmd-collection-path>p{font-size:10.7px;color:#8191a0;margin:0 17px 12px;line-height:1.5}
+.pmd-collection-path+.pmd-collection-path{margin-top:3px}
+.pmd-label-instruction{display:flex;align-items:center;gap:13px;padding:12px 16px;background:#f4f1fa;border-top:1px solid #e2d9f0}
+.pmd-label-art{width:115px;min-width:115px}
+.pmd-label-art svg{display:block;width:100%;height:auto}
+.pmd-label-instruction p{font-size:11.2px;line-height:1.65;color:#5f5879;margin:0}
+.pmd-label-instruction p strong{color:#574d79}
+.pmd-collection-foot{border-top:1px solid #e6eaf0;padding:11px 16px;font-size:10.5px;line-height:1.65;color:#6e8494;background:#fbfcfe}
+@media(max-width:810px){.pmd-collection-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){
+ .pmd-collection-steps{grid-template-columns:1fr}
+ .pmd-collection-heading{align-items:flex-start}
+ .pmd-step-picture svg{height:114px}
+ .pmd-label-art{width:82px;min-width:82px}
+ .pmd-label-instruction{gap:8px;padding:10px}
+}
+@media print{
+ .pmd-menu-card{grid-column:1/-1}
+ .pmd-collection-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
