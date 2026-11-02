@@ -205,5 +205,12 @@ document.addEventListener("keydown",event=>{
  tab=event.key==="ArrowRight"?ids[(i+1)%ids.length]:event.key==="ArrowLeft"?ids[(i-1+ids.length)%ids.length]:event.key==="Home"?ids[0]:ids[ids.length-1];
  refresh(true);
 });
-window.LAB_PATHMD_REFERENCE={render,panels,prices:rates};
+function openMenu(){
+ tab="menu";
+ const root=document.getElementById("pathmd-reference");
+ if(root)refresh(false);
+ const target=document.getElementById("pmd-test-search")||document.getElementById("pathmd-reference");
+ target?.scrollIntoView?.({behavior:"smooth",block:"start"});
+}
+window.LAB_PATHMD_REFERENCE={render,openMenu,panels,prices:rates};
 })();
