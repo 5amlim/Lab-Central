@@ -1,0 +1,62 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2513 >>
+stream
+BT /F2 18 Tf 49 746 Td (PATHMD ORDERING AND SENDOUT REFERENCE) Tj ET
+BT /F1 10 Tf 49 723 Td (Adapted from the supplied PathMD Quick Guide / November 2026) Tj ET
+BT /F2 11 Tf 49 696 Td (PORTAL ORDERING) Tj ET
+BT /F1 9 Tf 49 677 Td (Log in, choose Create Requisition, and verify location and provider. Enter required patient) Tj ET
+BT /F1 9 Tf 49 663 Td (information and primary insurance or payer details as applicable.) Tj ET
+BT /F1 9 Tf 49 641 Td (Enter one or two ICD-10 diagnosis codes; verify specimen collection date/time. Select one) Tj ET
+BT /F1 9 Tf 49 627 Td (approved PathMD test menu.) Tj ET
+BT /F1 9 Tf 49 605 Td (Enter the actual swab source and anatomical site. Save and print the requisition and patient) Tj ET
+BT /F1 9 Tf 49 591 Td (demographic sheet.) Tj ET
+BT /F2 11 Tf 49 569 Td (PAPER REQUISITION) Tj ET
+BT /F1 9 Tf 49 550 Td (Write the correct provider; patient first name, last name and date of birth; ICD-10) Tj ET
+BT /F1 9 Tf 49 536 Td (diagnosis; collection date; swab source and collection site. Mark only one approved panel.) Tj ET
+BT /F2 11 Tf 49 514 Td (PACKAGING AND FEDEX) Tj ET
+BT /F1 9 Tf 49 495 Td (Collect in the approved PathMD collection device; write patient first and last name AND date) Tj ET
+BT /F1 9 Tf 49 481 Td (of birth directly on the tube. Missing either is an automatic rejection per the quick guide.) Tj ET
+BT /F1 9 Tf 49 459 Td (Place specimen tube in a specimen bag with printed requisition and demographic sheet.) Tj ET
+BT /F1 9 Tf 49 437 Td (Put the bag in the silver temperature-control bag and add two frozen ice packs. Close silver) Tj ET
+BT /F1 9 Tf 49 423 Td (bag, place inside labeled FedEx shipping bag, and seal for the scheduled pickup.) Tj ET
+BT /F1 9 Tf 49 401 Td (Record shipping information in the Lab Sendout Log. Verify all collection and shipment) Tj ET
+BT /F1 9 Tf 49 387 Td (instructions for the clinic.) Tj ET
+BT /F2 11 Tf 49 365 Td (RESULTS) Tj ET
+BT /F1 9 Tf 49 346 Td (The guide describes finalized results delivered by email/fax. In the portal choose All) Tj ET
+BT /F1 9 Tf 49 332 Td (Requisitions > patient > Preview Result.) Tj ET
+BT /F1 9 Tf 49 310 Td (Review each detected pathogen and reported resistance marker. Antibiotic option tiers are) Tj ET
+BT /F1 9 Tf 49 296 Td (decision support for the treating clinician, not an automatic prescribing instruction.) Tj ET
+BT /F1 8 Tf 49 274 Td (Prepared as a quick reference from the supplied vendor materials. Current approved SOP governs.) Tj ET
+BT /F1 8 Tf 49 35 Td (Page 1 of 1) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000185 00000 n 
+0000000260 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2960
+%%EOF
