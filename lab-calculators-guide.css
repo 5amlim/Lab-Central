@@ -492,3 +492,31 @@
  .calc2-next-area{display:none}
  .calc2-panel{box-shadow:none;break-inside:avoid}
 }
+
+
+/* Molecular menu shortcuts and clinic-specific courier guidance. */
+.calc2-htrx-menu{margin:18px 0 16px;scroll-margin-top:82px;border:1px solid #dbe8ec;border-radius:12px;background:#fff;padding:16px}
+.calc2-htrx-menu .calc2-vendor-section-heading{margin-bottom:12px}
+.calc2-htrx-menu-search-label{display:block;color:#537589;font-size:10.5px;font-weight:800;margin-bottom:7px}
+.calc2-htrx-menu input{width:100%;box-sizing:border-box;padding:12px 13px;background:#fafcfd;border:1px solid #cfdfe6;border-radius:8px;color:#315064;font:inherit;font-size:12px}
+.calc2-htrx-menu input:focus{outline:2px solid #a2d7d2;outline-offset:1px}
+.calc2-htrx-menu-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}
+.calc2-htrx-menu-row{display:flex;align-items:center;gap:11px;min-width:0;border:1px solid #e1e9ed;background:#fbfdfe;border-radius:9px;padding:11px 12px}
+.calc2-htrx-menu-row[hidden]{display:none!important}
+.calc2-htrx-menu-row>strong{flex:none;background:#e8f5f3;border-radius:6px;color:#24747a;font-size:10px;letter-spacing:.02em;min-width:51px;text-align:center;padding:7px 8px}
+.calc2-htrx-menu-row>div{flex:1;min-width:0}
+.calc2-htrx-menu-row b{display:block;font-size:11px;color:#33586d;line-height:1.4}
+.calc2-htrx-menu-row small{display:block;font-size:10px;color:#78909e;line-height:1.5;margin-top:3px}
+.calc2-htrx-menu-tube{flex:none;font-size:9px;font-weight:850;color:#60798c;background:#eff3f7;border-radius:5px;padding:6px 7px;white-space:nowrap}
+.calc2-htrx-menu-tube.green{color:#258154;background:#e4f4e9}
+.calc2-htrx-menu-foot{margin:13px 0 0;color:#8193a0;font-size:10.5px;line-height:1.65}
+.calc2-pickup-note{margin:15px 24px 0;background:#f7fafc;border:1px solid #dce7ed;border-left:3px solid var(--panel-accent);border-radius:9px;padding:12px 15px}
+.calc2-pickup-note>strong{display:block;margin:5px 0 2px;color:#36586e;font-size:12px}
+.calc2-pickup-note p{margin:4px 0 0;font-size:11px;color:#647f90;line-height:1.65}
+@media(max-width:900px){.calc2-htrx-menu-items{grid-template-columns:1fr}}
+@media(max-width:650px){
+ .calc2-pickup-note{margin-left:15px;margin-right:15px}
+ .calc2-htrx-menu{padding:12px}
+ .calc2-htrx-menu-row{flex-wrap:wrap}
+ .calc2-htrx-menu-tube{margin-left:auto}
+}
