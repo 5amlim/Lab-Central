@@ -580,3 +580,40 @@
 .calc2-htrx-menu-count{border-radius:99px;border:1px solid #d7e7ea;background:#eef7f6;color:#397b78;padding:6px 9px;font-size:10px;font-weight:850;white-space:nowrap}
 .calc2-htrx-no-results{padding:18px;color:#7c8c9c;font-size:11px;text-align:center;grid-column:1/-1}
 #calc2-htrx-menu{scroll-margin-top:90px}
+
+
+/* Shared search results: vendor molecular menus, alongside analyzer panels. */
+.lab-panel-sendout-result{
+ --sendout-color:#257d80;
+ border-color:#b9dedb;
+ border-top:3px solid #278f91;
+ background:#fff;
+}
+.lab-panel-sendout-result.lab-panel-sendout-pathmd{
+ --sendout-color:#7768a2;
+ border-color:#d7d0e9;
+ border-top-color:#8b7bb0;
+}
+.lab-panel-sendout-kind{
+ display:inline-block;margin-left:8px;letter-spacing:.07em;font-size:9px;
+ font-weight:850;color:var(--sendout-color);background:#edf6f5;
+ padding:4px 6px;border-radius:5px;vertical-align:middle;
+}
+.lab-panel-sendout-pathmd .lab-panel-sendout-kind{background:#f2eff9}
+.lab-panel-sendout-result .lab-panel-target-match{
+ background:#e8f5f2;color:#276f71;border-color:#d5eae5;
+}
+.lab-panel-sendout-pathmd .lab-panel-target-match{
+ background:#f1eefa;color:#726092;border-color:#e1daef;
+}
+.lab-panel-sendout-context{
+ font-size:11px;line-height:1.6;color:#73899c;margin:13px 16px 14px;
+}
+.lab-panel-sendout-result .lab-panel-open{
+ font-weight:800;white-space:nowrap;
+}
+.lab-panel-sendout-result .lab-panel-all-targets{margin-top:0}
+@media(max-width:620px){
+ .lab-panel-sendout-kind{margin-left:0;margin-top:5px}
+ .lab-panel-sendout-result .lab-panel-search-top{gap:12px}
+}
