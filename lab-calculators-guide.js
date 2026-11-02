@@ -112,6 +112,7 @@ function panel(calculators,logo){
  const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
  const molecular=id==="htrx"||id==="pathmd";
  const calc=(calculators||[]).find(v=>v.accent===id);
+ const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-sendout="'+id+'">Open '+E(names[id])+' sendout guide <span aria-hidden="true">↗</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
@@ -123,8 +124,8 @@ function panel(calculators,logo){
  '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span>'+E(m.short)+' · '+E(c[1])+'</span></div>'+
  '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
  '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
- '<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
- '<div class="calc2-step-grid">'+item.steps.map((step,i)=>'<div class="calc2-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join('')+'</div></div>'+
+ (pathmdContent||('<div class="calc2-panel-steps"><h4>'+(molecular?'Molecular collection &amp; sendout checkpoints':'Before specimen collection')+'</h4>'+
+ '<div class="calc2-step-grid">'+item.steps.map((step,i)=>'<div class="calc2-step"><span>'+String(i+1).padStart(2,'0')+'</span><div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join('')+'</div></div>'))+
  '<p class="calc2-panel-footnote">'+(molecular?'Verify active site approval, approved panels, kits and courier arrangements before collection or dispatch.':'Follow the current test directory and clinic SOP for final collection and transport requirements.')+'</p>'+
  '</section>';
 }
