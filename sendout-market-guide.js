@@ -80,8 +80,8 @@ document.addEventListener("click",e=>{
  if(trigger){const field=trigger.dataset.lcSelect;open=open===field?"":field;refresh();const b=document.querySelector('[data-lc-select="'+field+'"]');if(b)b.focus();return;}
  if(choice){
   const field=choice.dataset.lcChoice,val=choice.dataset.lcValue;
-  if(field==="market"&&markets[val]){market=val;site=markets[market].sites[0][0];}
-  if(field==="site"&&markets[market].sites.some(x=>x[0]===val))site=val;
+  if(field==="market"&&markets[val]){market=val;site=markets[market].sites[0][0];focusedLab=null;}
+  if(field==="site"&&markets[market].sites.some(x=>x[0]===val)){site=val;focusedLab=null;}
   open="";refresh();return;
  }
  if(open&&!e.target.closest(".lc-select-box")){open="";refresh();}
