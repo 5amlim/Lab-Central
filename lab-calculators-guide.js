@@ -174,6 +174,47 @@ function htrxMenu(){
   '<p class="calc2-htrx-menu-foot">Panel targets from the June 2026 HealthTrackRx syndromic menu. Add-on panels include base targets. Confirm activated panels, specimen source and current vendor instructions before collection.</p>'+
  '</section>';
 }
+/* Cross-vendor molecular pathogen search, available regardless of selected lab tab. */
+let molecularQuery="";
+function molecularMatches(){
+ const q=normHTRX(molecularQuery.trim());
+ if(q.length<2)return [];
+ const htrx=htrxRecords.filter(p=>normHTRX(htrxText(p)).includes(q)).map(p=>({
+  lab:"htrx",labName:"HealthTrackRx",name:p.name,code:p.code,
+  targets:Object.values(p.groups).flat(),text:[p.name,p.code,p.specimen,p.aliases].join(" ")
+ }));
+ const pathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>
+  normHTRX([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" ")).includes(q)
+ ).map(p=>({
+  lab:"pathmd",labName:"PathMD",name:p.name,code:"",targets:Object.values(p.groups).flat(),
+  text:[p.name,p.category,p.terms].join(" ")
+ }));
+ return [...htrx,...pathmd].map(p=>{
+  const target=p.targets.find(t=>normHTRX(t).includes(q));
+  return {...p,matched:target||""};
+ });
+}
+function finderResults(){
+ const q=normHTRX(molecularQuery.trim()),matches=molecularMatches();
+ if(q.length<2)return '<span class="calc2-finder-hint">Try an organism such as RSV, Group A Strep, E. coli or Candida.</span>';
+ const all=matches.length,shown=matches.slice(0,18);
+ if(!all)return '<div class="calc2-finder-empty">No panels found for “'+E(molecularQuery)+'”. Check the spelling or search the full vendor menu.</div>';
+ return '<div class="calc2-finder-count">'+all+' matching panel'+(all===1?'':'s')+' across HealthTrackRx and PathMD</div>'+
+  '<div class="calc2-finder-grid">'+shown.map(p=>
+   '<button type="button" class="calc2-finder-hit" data-calc2-pick-molecular="'+p.lab+'" data-calc2-pick-target="'+E(molecularQuery)+'">'+
+   '<span class="calc2-finder-lab '+p.lab+'">'+E(p.labName)+'</span>'+
+   '<span class="calc2-finder-info"><strong>'+E(p.name)+'</strong><small>'+(p.matched?'Contains: '+E(p.matched):'Matching panel or description')+'</small></span>'+
+   '<span class="calc2-finder-arrow" aria-hidden="true">↗</span></button>'
+  ).join("")+'</div>'+
+  (all>shown.length?'<p class="calc2-finder-more">Showing the first '+shown.length+' matching panels. Refine your search to narrow the list.</p>':'');
+}
+function molecularFinder(){
+ return '<section class="calc2-finder" id="calc2-finder" aria-label="Search molecular sendout pathogens">'+
+  '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search HealthTrackRx and PathMD panel targets together</span></div><span class="calc2-finder-labs">2 labs</span></div>'+
+  '<div class="calc2-finder-input"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>'+
+  '<input id="calc2-molecular-search" type="search" data-calc2-molecular-search autocomplete="off" placeholder="Search pathogen, panel or resistance marker..." value="'+E(molecularQuery)+'"></div>'+
+  '<div class="calc2-finder-results" id="calc2-finder-results">'+finderResults()+'</div></section>';
+}
 function htrxReference(){
  return '<section class="calc2-htrx-reference" aria-label="HealthTrackRx approved collection reference">'+
  '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">APPROVED COLLECTION DEVICES</span><h4>Only two tube types</h4><p>Choose by ordered test menu and specimen source. Other vendor tube types are not part of this workflow.</p></div></div>'+
@@ -285,6 +326,20 @@ document.addEventListener('click',event=>{
   else if(menuButton.dataset.calc2OpenMenu==="htrx")document.getElementById("calc2-htrx-menu")?.scrollIntoView({behavior:"smooth",block:"start"});
   return;
  }
+ const pick=event.target.closest('[data-calc2-pick-molecular]');
+ if(pick){
+  const lab=pick.dataset.calc2PickMolecular;
+  const term=pick.dataset.calc2PickTarget||molecularQuery;
+  if(availableLabs().includes(lab)){
+   rememberedLab[activeMarket]=lab;
+   if(lab==="htrx")htrxQuery=term;
+   else window.LAB_PATHMD_REFERENCE?.searchForPathogen?.(term);
+   updatePage("tab");
+   const target=document.getElementById(lab==="htrx"?"calc2-htrx-menu":"pmd-test-search");
+   target?.scrollIntoView?.({behavior:"smooth",block:"center"});
+  }
+  return;
+ }
  const sendout=event.target.closest('[data-calc2-sendout]');
  if(sendout){
   const {market:m,clinic:c}=current();
@@ -293,6 +348,12 @@ document.addEventListener('click',event=>{
   return;
  }
  if(!event.target.closest('#calc2-site-selector .dqc-location-picker'))setMenu(false);
+});
+document.addEventListener("input",event=>{
+ if(!event.target?.matches?.("[data-calc2-molecular-search]"))return;
+ molecularQuery=event.target.value;
+ const results=document.getElementById("calc2-finder-results");
+ if(results)results.innerHTML=finderResults();
 });
 document.addEventListener("input",event=>{
  if(!event.target?.matches?.("[data-calc2-htrx-search]"))return;
@@ -341,5 +402,5 @@ document.addEventListener('keydown',event=>{
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,panel,nextActions,isCalculator,selectedLab,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,panel,nextActions,isCalculator,selectedLab,allows,market,count};
 })();
