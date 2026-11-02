@@ -159,7 +159,7 @@ function menuCards(){
  const arr=filtered();
  return '<div class="pmd-results-count" id="pmd-result-count"><strong>'+arr.length+'</strong> of '+panels.length+' menus'+(query?' matching “'+e(query)+'”':'')+'</div>'+
  (arr.length?'<div class="pmd-menu-grid">'+arr.map(p=>
-   '<details class="pmd-menu-card" '+(query.trim().length>1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
+   '<details class="pmd-menu-card" '+(query.trim().length>1&&arr.length===1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
    '<div class="pmd-menu-body">'+pmdCollection(p)+groupHtml(p.groups)+'</div></details>').join("")+'</div>':
  '<div class="pmd-no-results"><strong>No matching test menus</strong><p>Try a pathogen name, panel name or category, or clear the search.</p><button type="button" data-pmd-clear>Clear search &amp; filters</button></div>');
 }
