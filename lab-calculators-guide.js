@@ -119,26 +119,59 @@ function htrxTubeIllustration(color){
  '<path d="M29 59h22M29 65h16M29 71h19" stroke="#a9b9c7" stroke-width="1.5"/>'+
  '</svg>';
 }
+/* Vendor: HealthTrackRx June 2026 syndromic menu. Limit this clinic view to previously selected panels.
+ * Add-on codes include the entire base panel plus listed additional organisms.
+ */
+const splitTargets=s=>s.split("|").map(x=>x.trim()).filter(Boolean);
+const htrxResp={
+ bacterial:splitTargets("Bordetella pertussis|Bordetella parapertussis|Bordetella bronchiseptica|Chlamydia pneumoniae|Mycoplasma pneumoniae"),
+ viral:splitTargets("Adenovirus|Coronavirus 229E|Coronavirus NL63|Coronavirus HKU1|Coronavirus OC43|SARS-CoV-2 (COVID-19)|Enterovirus D68|Human metapneumovirus|Influenza A|Influenza B|Parainfluenza 1|Parainfluenza 2|Parainfluenza 3|Parainfluenza 4|Respiratory syncytial virus (RSV)|Rhinovirus/Enterovirus")
+};
+const htrxPhar={
+ bacterial:splitTargets("Chlamydia pneumoniae|Mycoplasma pneumoniae|Streptococcus pyogenes (Group A Strep)"),
+ viral:htrxResp.viral
+};
+const htrxPersistent={
+ bacterial:splitTargets("Fusobacterium nucleatum|Fusobacterium necrophorum|Streptococcus dysgalactiae (Group C/G Strep)"),
+ viral:splitTargets("Epstein-Barr virus (EBV / HHV-4)")
+};
+const htrxUTI={
+ bacterial:splitTargets("Acinetobacter baumannii|Citrobacter freundii|Enterobacter cloacae complex|Klebsiella aerogenes|Enterococcus faecalis|Enterococcus faecium|Escherichia coli|Klebsiella pneumoniae|Klebsiella oxytoca|Morganella morganii|Proteus mirabilis|Proteus vulgaris|Pseudomonas aeruginosa|Serratia marcescens|Staphylococcus aureus|Staphylococcus epidermidis|Staphylococcus haemolyticus|Staphylococcus lugdunensis|Staphylococcus saprophyticus|Streptococcus agalactiae (Group B Strep)"),
+ fungal:splitTargets("Candida albicans|Candida parapsilosis|Candida tropicalis|Candida glabrata|Candida krusei"),
+ resistance:splitTargets("ACT/MIR/FOX/ACC groups|CTX-M groups|dfrA1/dfrA5|sul1/sul2|ermA/ermB/ermC|mefA|IMP/NDM/VIM groups|mecA|OXA groups|qnrA/qnrB|SHV/KPC groups|tetB/tetM|vanA/vanB")
+};
+const combineHTRX=(a,b)=>Object.fromEntries([...new Set([...Object.keys(a),...Object.keys(b)])].map(k=>[k,[...new Set([...(a[k]||[]),...(b[k]||[])])]]));
+const htrxRecords=[
+ {code:"RTI",name:"Respiratory tract infection",tube:"White top",specimen:"Nasopharynx/nares, oropharynx/throat/oral, cough sputum",groups:htrxResp,aliases:"respiratory viral respiratory bacterial cough"},
+ {code:"RTIPROAO",name:"RTI - persistent add-on",tube:"White top",specimen:"RTI specimen sources",groups:combineHTRX(htrxResp,{bacterial:splitTargets("Haemophilus influenzae|Moraxella catarrhalis|Streptococcus pneumoniae")}),aliases:"persistent respiratory"},
+ {code:"RTITHRAO",name:"RTI - atypical pharyngitis",tube:"White top",specimen:"Oropharynx/throat/oral only",groups:combineHTRX(htrxResp,htrxPersistent),aliases:"atypical throat EBV"},
+ {code:"PHAR",name:"Pharyngitis",tube:"White top",specimen:"Oropharynx/throat/oral",groups:htrxPhar,aliases:"sore throat strep A"},
+ {code:"PHARRECAO",name:"Pharyngitis - persistent add-on",tube:"White top",specimen:"Oropharynx/throat/oral",groups:combineHTRX(htrxPhar,htrxPersistent),aliases:"persistent strep pharyngitis EBV"},
+ {code:"FCRSV",name:"Flu, COVID, RSV",tube:"White top",specimen:"Nasopharynx/nares",groups:{viral:splitTargets("SARS-CoV-2 (COVID-19)|Influenza A|Influenza B|Respiratory syncytial virus (RSV)")},aliases:"flu covid coronavirus RSV"},
+ {code:"UTI",name:"Urinary tract infection",tube:"White top",specimen:"Voided or catheter urine",groups:htrxUTI,aliases:"urine urinary infection bladder UTI"},
+ {code:"CGGY",name:"Chlamydia / Gonorrhea (throat/oral)",tube:"Green top",specimen:"Oral/throat swab (green collection device)",groups:{bacterial:splitTargets("Chlamydia trachomatis|Neisseria gonorrhoeae")},aliases:"throat GC CT GC gonococcus chlamydia gonorrhea"}
+];
+let htrxQuery="";
+const normHTRX=s=>String(s||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const htrxText=p=>[p.code,p.name,p.tube,p.specimen,p.aliases,...Object.values(p.groups).flat()].join(" ");
 function htrxMenu(){
- const menus=[
- ["RTI","Respiratory tract infection","White top","Nasopharynx/nares, oropharynx/throat/oral, cough sputum"],
- ["RTIPROAO","RTI - persistent add-on","White top","RTI sources; additional bacterial targets"],
- ["RTITHRAO","RTI - atypical pharyngitis","White top","Oropharynx/throat/oral only"],
- ["PHAR","Pharyngitis","White top","Oropharynx/throat/oral"],
- ["PHARRECAO","Pharyngitis - persistent add-on","White top","Oropharynx/throat/oral"],
- ["FCRSV","Flu, COVID, RSV","White top","Nasopharynx/nares"],
- ["UTI","Urinary tract infection","White top","Urine, voided or catheter, per guide"],
- ["CGGY","Chlamydia / Gonorrhea (throat/oral)","Green top","Oral/throat swab, green collection device"]
- ];
+ const needle=normHTRX(htrxQuery.trim());
+ const rows=htrxRecords.filter(p=>!needle||normHTRX(htrxText(p)).includes(needle));
+ const labels={bacterial:"Bacterial",viral:"Viral",fungal:"Fungal / yeast",resistance:"Resistance markers"};
  return '<section class="calc2-htrx-menu" id="calc2-htrx-menu" aria-label="HealthTrackRx molecular test menu">'+
-  '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">HEALTHTRACKRX / MENU</span><h4>Test menu</h4><p>Selected white-top panels and the approved green-top oral/throat CG test.</p></div></div>'+
-  '<label class="calc2-htrx-menu-search-label" for="calc2-htrx-search">Search by panel name, code or specimen</label>'+
-  '<input id="calc2-htrx-search" data-calc2-htrx-search type="search" placeholder="Search RTI, throat, CGGY, FCRSV..." autocomplete="off">'+
-  '<div class="calc2-htrx-menu-items">'+menus.map(p=>
-   '<article class="calc2-htrx-menu-row" data-calc2-htrx-entry="'+E(p.join(" ").toLowerCase())+'"><strong>'+E(p[0])+'</strong>'+
-    '<div><b>'+E(p[1])+'</b><small>'+E(p[3])+'</small></div><span class="calc2-htrx-menu-tube '+(p[2]==="Green top"?"green":"white")+'">'+E(p[2])+'</span></article>'
-   ).join("")+'</div>'+
-  '<p class="calc2-htrx-menu-foot">Selected clinic menu. Confirm current HealthTrackRx test activation, panel details and approved specimen instructions before collection.</p>'+
+  '<div class="calc2-vendor-section-heading"><div><span class="calc-guide-eyebrow">HEALTHTRACKRX / MENU</span><h4>Test menu &amp; pathogens</h4><p>Search the organisms included in selected white-top panels and green-top oral/throat CG.</p></div><span class="calc2-htrx-menu-count">'+rows.length+' of '+htrxRecords.length+'</span></div>'+
+  '<label class="calc2-htrx-menu-search-label" for="calc2-htrx-search">Search panel, code, pathogen or resistance marker</label>'+
+  '<input id="calc2-htrx-search" data-calc2-htrx-search type="search" placeholder="Try RSV, Strep pyogenes, E. coli, Candida, mecA..." autocomplete="off" value="'+E(htrxQuery)+'">'+
+  '<div class="calc2-htrx-menu-items">'+(rows.length?rows.map(p=>
+   '<details class="calc2-htrx-menu-row" '+(needle?'open':'')+'><summary><span class="calc2-htrx-menu-code">'+E(p.code)+'</span>'+
+   '<span class="calc2-htrx-menu-desc"><b>'+E(p.name)+'</b><small>'+E(p.specimen)+'</small></span>'+
+   '<span class="calc2-htrx-menu-tube '+(p.tube==="Green top"?"green":"white")+'">'+E(p.tube)+'</span><span class="calc2-htrx-menu-chevron" aria-hidden="true"></span></summary>'+
+   '<div class="calc2-htrx-pathogens">'+Object.entries(p.groups).map(([kind,targets])=>
+     '<div class="calc2-htrx-pathogen-group"><strong>'+E(labels[kind]||kind)+' <small>'+targets.length+'</small></strong>'+
+      '<div>'+targets.map(t=>'<span class="calc2-htrx-pathogen'+(needle&&normHTRX(t).includes(needle)?' is-match':'')+'">'+E(t)+'</span>').join("")+'</div></div>'
+   ).join("")+'</div></details>'
+  ).join(""):'<div class="calc2-htrx-no-results">No matching panels or pathogens. Try another name or code.</div>')+'</div>'+
+  '<p class="calc2-htrx-menu-foot">Panel targets from the June 2026 HealthTrackRx syndromic menu. Add-on panels include base targets. Confirm activated panels, specimen source and current vendor instructions before collection.</p>'+
  '</section>';
 }
 function htrxReference(){
@@ -263,10 +296,18 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener("input",event=>{
  if(!event.target?.matches?.("[data-calc2-htrx-search]"))return;
- const needle=event.target.value.toLowerCase().trim();
- document.querySelectorAll("[data-calc2-htrx-entry]").forEach(row=>{
-  row.hidden=Boolean(needle)&&!row.dataset.calc2HtrxEntry.includes(needle);
- });
+ htrxQuery=event.target.value;
+ const needle=normHTRX(htrxQuery.trim());
+ const root=document.getElementById("calc2-htrx-menu");
+ if(!root)return;
+ const input=event.target, start=input.selectionStart, end=input.selectionEnd;
+ const html=htrxMenu();
+ root.outerHTML=html;
+ const next=document.getElementById("calc2-htrx-search");
+ if(next){
+  next.focus({preventScroll:true});
+  try{next.setSelectionRange(start,end)}catch(e){}
+ }
 });
 document.addEventListener('keydown',event=>{
  const tab=event.target.closest('.calc2-tab');
