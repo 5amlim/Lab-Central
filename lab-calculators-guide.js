@@ -164,6 +164,10 @@ function panel(calculators,logo){
  const calc=(calculators||[]).find(v=>v.accent===id);
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const htrxContent=id==="htrx"?htrxReference():"";
+ const pickup=(id==="pathmd"&&m.id==="socal")?
+  '<section class="calc2-pickup-note" aria-label="PathMD pickup details"><span class="calc-guide-eyebrow">SOCAL LOCAL COURIER</span><strong>'+(c[0]==="sm"?"Santa Monica · Monday through Friday":"Local courier pickup · Daily")+'</strong>'+
+  (c[0]==="sm"?'<p>11:00–11:30 PM · Place sealed, labeled specimens in the <strong>lockbox</strong> for pickup.</p>':'<p>Local courier pickup is arranged daily. Confirm the exact time and handoff location with the clinic.</p>')+'</section>':'';
+
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-open-menu="'+id+'">Open '+E(names[id])+' test menu <span aria-hidden="true">↓</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
@@ -183,7 +187,7 @@ function panel(calculators,logo){
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
    '<div class="calc2-panel-actions">'+action+extra+sendout+'</div>'+
   '</div>'+
-  (pathmdContent||htrxContent||quickSteps)+
+  (pathmdContent||htrxContent||quickSteps)+pickup+
   '<p class="calc2-panel-footnote">'+(molecular?
     'Before collection or dispatch, verify this clinic is activated and confirm approved panels, collection devices and transport arrangements.':
     'Always verify the current test directory, exact specimen requirements and local SOP before collection.')+'</p>'+
