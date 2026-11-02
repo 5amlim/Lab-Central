@@ -143,3 +143,88 @@
 }
 
 #pmd-test-search{scroll-margin-top:90px}
+
+
+/* PathMD live ordering and aftercare, November 2026 */
+.pmd-current-flow{
+ display:flex;align-items:center;flex-wrap:wrap;gap:9px 13px;
+ background:#f5f3fa;border:1px solid #e2ddef;border-radius:10px;
+ padding:12px 14px;margin:0 0 13px;
+}
+.pmd-current-label{
+ color:#766b9d;background:#fff;border:1px solid #e7e1f1;
+ border-radius:6px;padding:5px 7px;font-size:9px;font-weight:850;letter-spacing:.085em;
+}
+.pmd-current-flow>strong{flex:1;color:#4f5879;font-size:12px;min-width:150px}
+.pmd-current-flow>span:last-child{font-size:10px;color:#827c9c;font-weight:750;white-space:nowrap}
+.pmd-ordering-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:stretch}
+.pmd-ordering-card{
+ min-width:0;background:#fff;border:1px solid #e0e6ed;
+ border-radius:12px;padding:18px;
+}
+.pmd-order-card-top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.pmd-order-step{
+ flex:none;display:grid;place-items:center;width:35px;height:35px;border-radius:9px;
+ background:#efedf8;color:#6c619c;font-weight:850;font-size:12px;
+}
+.pmd-order-card-top h5{margin:3px 0 0;font-size:14px;color:#344f67;line-height:1.4}
+.pmd-ordering-card>p{margin:0;color:#6e8495;font-size:11.5px;line-height:1.7}
+.pmd-order-example{
+ display:flex;flex-direction:column;gap:6px;margin:15px 0 12px;
+ background:#f5f8fc;border:1px solid #dfe8f0;border-left:3px solid #83a6bc;
+ border-radius:8px;padding:13px;
+}
+.pmd-order-example>span{font-size:9px;color:#6c88a1;font-weight:850;letter-spacing:.08em}
+.pmd-order-example>strong{font-size:12px;color:#31556c;font-weight:850;line-height:1.5}
+.pmd-ordering-card>p.pmd-order-hint{font-size:10.5px;color:#8294a3}
+.pmd-order-checklist{list-style:none;margin:0;padding:0}
+.pmd-order-checklist li{
+ position:relative;border-top:1px solid #e8edf1;
+ padding:10px 5px 10px 27px;min-height:20px;color:#4a687d;
+}
+.pmd-order-checklist li:first-child{border-top:0;padding-top:2px}
+.pmd-order-checklist li:before{
+ content:"";position:absolute;left:2px;top:12px;width:13px;height:13px;
+ border:1.5px solid #94adae;border-radius:4px;background:#f8fbfb;
+}
+.pmd-order-checklist li:first-child:before{top:4px}
+.pmd-order-checklist strong{display:block;color:#3c5d73;font-size:11.5px;line-height:1.45}
+.pmd-order-checklist small{display:block;margin-top:3px;font-size:10.5px;color:#8596a4;line-height:1.4}
+.pmd-order-footer{
+ font-size:11px;color:#728b9b;line-height:1.65;background:#f9fbfc;
+ border:1px solid #e2ebef;border-radius:9px;padding:12px 14px;margin:14px 0 0;
+}
+.pmd-order-footer strong{color:#436b7d}
+.pmd-aftercare-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.pmd-aftercare-card{
+ display:flex;align-items:flex-start;gap:12px;
+ border:1px solid #e2e7ed;border-radius:12px;background:#fbfcfe;padding:17px;
+}
+.pmd-aftercare-icon{
+ display:grid;place-items:center;width:30px;height:30px;flex:none;
+ background:#e7f3f1;color:#257d78;font-size:11px;font-weight:900;border-radius:8px;
+}
+.pmd-aftercare-card h5{font-size:13px;color:#365970;line-height:1.4;margin:4px 0 7px}
+.pmd-aftercare-card p{font-size:11.5px;color:#718a9c;line-height:1.7;margin:0}
+.pmd-aftercare-note{
+ background:#eef7f5;border:1px solid #d9ebe5;border-radius:9px;
+ padding:12px 15px;color:#527f73;font-size:11px;line-height:1.65;margin-top:14px;
+}
+.pmd-aftercare-note strong{color:#2d7164}
+.pmd-aftercare-reference{border:1px solid #e1e8ec;border-radius:10px;margin-top:15px;overflow:hidden}
+.pmd-aftercare-reference summary{
+ cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+ list-style:none;padding:13px 15px;background:#f8fafc;color:#476981;font-size:11.5px;font-weight:780;
+}
+.pmd-aftercare-reference summary::-webkit-details-marker{display:none}
+.pmd-aftercare-reference summary:hover{background:#f1f7f9}
+.pmd-aftercare-reference[open] summary span{transform:rotate(180deg)}
+.pmd-aftercare-reference>div{padding:11px 15px 14px;border-top:1px solid #e6edf0}
+.pmd-aftercare-reference>div p{font-size:11px;color:#71899c;line-height:1.65;margin:6px 0}
+@media(max-width:760px){
+ .pmd-ordering-grid,.pmd-aftercare-flow{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+ .pmd-ordering-card,.pmd-aftercare-card{padding:14px}
+ .pmd-current-flow{align-items:flex-start}
+}
