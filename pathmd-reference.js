@@ -75,16 +75,23 @@ function filtered(){
  const needle=safeSearch(query.trim());
  return panels.filter(p=>(category==="All"||p.category===category)&&(!needle||searchText(p).includes(needle)));
 }
+function highlighted(text){
+ const value=String(text),needle=query.trim();
+ if(!needle)return e(value);
+ const index=value.toLowerCase().indexOf(needle.toLowerCase());
+ if(index<0)return e(value);
+ return e(value.slice(0,index))+'<mark class="pmd-match">'+e(value.slice(index,index+needle.length))+'</mark>'+e(value.slice(index+needle.length));
+}
 function groupHtml(groups){
  return Object.entries(groups).map(([kind,values])=>
   '<section class="pmd-analyte-group pmd-analyte-'+e(kind)+'"><h5>'+e(groupNames[kind])+' <small>'+values.length+'</small></h5><div class="pmd-targets">'+
-   values.map(value=>'<span class="pmd-target">'+e(value)+'</span>').join("")+'</div></section>').join('');
+   values.map(value=>'<span class="pmd-target">'+highlighted(value)+'</span>').join("")+'</div></section>').join('');
 }
 function menuCards(){
  const arr=filtered();
  return '<div class="pmd-results-count" id="pmd-result-count"><strong>'+arr.length+'</strong> of '+panels.length+' menus'+(query?' matching “'+e(query)+'”':'')+'</div>'+
  (arr.length?'<div class="pmd-menu-grid">'+arr.map(p=>
-   '<details class="pmd-menu-card" '+(query.trim().length>1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+e(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
+   '<details class="pmd-menu-card" '+(query.trim().length>1?'open':'')+'><summary><span class="pmd-panel-heading"><span class="pmd-panel-category">'+e(p.category)+'</span><strong>'+highlighted(p.name)+'</strong><small>Menu guide · page '+p.page+'</small></span><span class="pmd-expand-arrow" aria-hidden="true"></span></summary>'+
    '<div class="pmd-menu-body">'+groupHtml(p.groups)+'</div></details>').join("")+'</div>':
  '<div class="pmd-no-results"><strong>No matching test menus</strong><p>Try a pathogen name, panel name or category, or clear the search.</p><button type="button" data-pmd-clear>Clear search &amp; filters</button></div>');
 }
@@ -147,7 +154,7 @@ function results(){
 function pricing(){
  return '<div class="pmd-section-lead"><h4>2026 patient cash-pay schedule</h4><p>Reference rates transcribed from the uploaded PathMD schedule. These names are billing categories and are not necessarily identical to the molecular menu titles.</p></div>'+
  '<div class="pmd-rate-list">'+rates.map(([name,price])=>'<div class="pmd-rate-row"><span>'+e(name)+'</span><strong>'+e(price)+'</strong></div>').join("")+'</div>'+
- '<div class="pmd-critical pmd-rate-warning"><strong>Eligibility and payment</strong><p>The 2026 document restricts cash rates to uninsured, self-pay patients. Patients with active insurance are ineligible under the vendor’s stated policy. Confirm current pricing and payment procedures directly with PathMD; do not store or enter payment card information in Lab Central.</p></div>';
+ '<div class="pmd-critical pmd-rate-warning"><strong>Eligibility and payment</strong><p>The 2026 document restricts cash rates to uninsured, self-pay patients. Patients with active insurance are ineligible under the vendor’s stated policy. Payment is required at the time of service. Confirm current pricing and approved payment procedures with PathMD; do not store or enter card information in Lab Central. Vendor billing phone listed on the supplied schedule: (323) 648-3211.</p></div>';
 }
 function renderContent(){return tab==="menu"?menu():tab==="ordering"?ordering():tab==="shipping"?shipping():tab==="results"?results():pricing();}
 function render(){
