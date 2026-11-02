@@ -1727,7 +1727,7 @@ function renderCalculators(){
  let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select your market and clinic to find receiving lab calculators, collection guides and molecular sendout references.');
  h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
- h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
+ if(calcLab==='htrx'||calcLab==='pathmd')h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.panel(calculators,calculatorLogo())||'';
 
  if(window.LAB_CALCULATORS_GUIDE?.isCalculator() && calcLab!=='cedars'){
