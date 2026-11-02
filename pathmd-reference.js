@@ -67,6 +67,9 @@ const categoryOptions=["All","Respiratory","Gastrointestinal","Urinary","Sexual 
 const tabOptions=[["menu","Test menu"],["ordering","Ordering"],["shipping","Collection & shipping"],["results","Results"],["rates","Cash-pay rates"]];
 const groupNames={bacterial:"Bacterial",viral:"Viral",fungal:"Fungal / yeast",parasitic:"Parasite / protozoal",resistance:"Resistance markers"};
 let tab="menu",category="All",query="";
+let selectedMarket="socal",selectedClinic="bh";
+function setLocation(market,clinic){selectedMarket=market;selectedClinic=clinic;}
+
 function safeSearch(s){return String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"");}
 function searchText(p){
  return safeSearch([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" "));
@@ -126,19 +129,29 @@ function ordering(){
  '<div class="pmd-mini-notice">Use the location and provider authorized for this clinic. Do not place patient information into this reference site.</div></section></div>';
 }
 function shipping(){
- const steps=[
-  ["Collect the approved specimen","Follow the test-specific PathMD collection medium and specimen source instructions."],
-  ["Label the collection tube","Write the patient's first and last name AND date of birth directly on the tube."],
-  ["Prepare specimen bag","Place the closed specimen tube in a specimen bag with the printed requisition and demographic sheet."],
-  ["Use temperature-control bag","Place the specimen bag inside the silver temperature-control bag."],
-  ["Add frozen packs","Add exactly two frozen ice packs, as specified in the supplied shipping quick guide."],
-  ["Pack FedEx shipment","Close the silver bag, place it inside the FedEx shipping bag and apply the FedEx label."],
-  ["Seal and hand off","Seal the FedEx bag and leave it for the scheduled clinic FedEx pickup. Log the handoff."]
+ const local=selectedMarket==="socal";
+ const base=[
+  ["Collect the approved specimen","Follow the exact PathMD test menu's approved collection device and specimen source."],
+  ["Label the tube","Write the patient's first and last name AND date of birth directly on the tube."],
+  ["Prepare specimen bag","Secure the tube and include the approved requisition and demographic documentation."],
+  ["Verify transport conditions","Confirm the temperature-control and packaging instructions for the clinic's approved PathMD service."]
  ];
- return '<div class="pmd-critical"><strong>Critical labeling requirement</strong><p>The PathMD quick guide states that specimens missing the patient’s first and last name or date of birth on the tube are automatically rejected.</p></div>'+
- '<div class="pmd-section-lead"><h4>Package and ship</h4><p>Seven checkpoints from specimen collection to FedEx pickup.</p></div>'+
+ const steps=local?base.concat([
+  ["Use the local courier","SoCal PathMD specimens use the clinic's local courier pickup, not an assumed FedEx handoff."],
+  ["Confirm clinic pickup",selectedClinic==="sm"?"Santa Monica: Monday-Friday, 11:00-11:30 PM. Place sealed specimens in the lockbox.":"The local courier is scheduled daily. Verify the exact pickup time and handoff location at this clinic."],
+  ["Document transfer","Log the receiving lab, specimen bag and pickup confirmation under the Lab Sendout Log."]
+ ]):base.concat([
+  ["Verify service activation","Confirm whether PathMD and the courier service are activated at this clinic."],
+  ["Confirm transport procedure","Follow the local authorized shipping or pickup procedure; no pickup window is configured here."],
+  ["Document handoff","Record the confirmed carrier, tracking or pickup confirmation in the Sendout Log."]
+ ]);
+ const optional='<details class="pmd-vendor-rates"><summary><span><strong>Vendor FedEx quick-guide reference</strong><small>Use only when FedEx shipping is the approved routing at your clinic</small></span><span class="pmd-vendor-chevron" aria-hidden="true"></span></summary>'+
+  '<div class="pmd-vendor-price-note">The supplied PathMD Quick Guide describes a silver temperature-control bag with two frozen ice packs, placed inside a labeled FedEx bag. These instructions are not a substitute for the SoCal local courier SOP.</div></details>';
+ return '<div class="pmd-critical"><strong>Critical specimen labeling</strong><p>The vendor quick guide states that specimens missing the patient first and last name or date of birth directly on the tube are automatically rejected.</p></div>'+
+ '<div class="pmd-section-lead"><h4>'+(local?"Collection & local courier":"Collection & transport")+'</h4><p>Verify collection requirements and use the approved route for your clinic.</p></div>'+
  '<section class="pmd-subcard">'+sequence(steps)+'</section>'+
- '<div class="pmd-inline-note"><strong>Before sending:</strong> Confirm the current receiving-lab packing instructions, cold-chain requirements and pickup schedule for your clinic. Keep extra ice packs frozen and ready.</div>';
+ '<div class="pmd-inline-note"><strong>Before sending:</strong> Confirm the current PathMD kit, specimen handling and clinic-specific transport procedure. Record the handoff.</div>'+
+ optional;
 }
 function results(){
  return '<div class="pmd-section-lead"><h4>Find and review results</h4><p>Based on the PathMD portal and results quick guide.</p></div>'+
@@ -212,5 +225,5 @@ function openMenu(){
  const target=document.getElementById("pmd-test-search")||document.getElementById("pathmd-reference");
  target?.scrollIntoView?.({behavior:"smooth",block:"start"});
 }
-window.LAB_PATHMD_REFERENCE={render,openMenu,panels,prices:rates};
+window.LAB_PATHMD_REFERENCE={render,openMenu,setLocation,panels,prices:rates};
 })();
