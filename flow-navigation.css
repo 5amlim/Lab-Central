@@ -301,7 +301,7 @@
 .ad-guide-card-head p{font-size:11px;color:#678498;line-height:1.6;margin:5px 0 0}
 .ad-mock{font-family:Arial,sans-serif;margin:0 11px 12px;background:white;border:1px solid #d9d7e2;border-radius:7px;overflow:hidden;font-size:10px;color:#414351;box-shadow:0 2px 6px #273c4f0b}
 .ad-mock-top{padding:8px 10px;background:#756095;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.ad-mock-top strong{font-size:12px;letter-spacing:-.025em}
+.ad-mock-top strong{font-size:12px;letter-spacing:-.025em;color:#fff!important}
 .ad-mock-top small{font-size:8px;color:#e9e2f3;white-space:nowrap}
 .ad-mock-chart{display:flex;justify-content:space-between;background:#e9e4f0;color:#584279;font-weight:700;padding:10px}
 .ad-mock-chart b{background:#50327b;color:white;border-radius:3px;padding:5px 8px}
