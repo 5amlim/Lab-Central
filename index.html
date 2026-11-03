@@ -1830,11 +1830,40 @@ function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false){
   ['Apply the document label','Select the highlighted document label.','label'],
   ['Save and verify','Click Save to commit the document label, then confirm it appears correctly in the patient chart.','save']
  ];
+ if(requisition)steps.splice(steps.length-1,0,['Add the Internal Note','Enter (1 of 1) even for one requisition. Use the correct number out of the total when there are multiple.','req-note']);
  return '<details class="ad-guide'+(buttonStyle?' sollis-upload-guide':'')+'" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(updated&&requisition?'How to upload the updated requisition':faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
- steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaMock(x[2],label,file)+'</article>';}).join('')+
- '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Use this for the outside lab order.':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
+ steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+(x[2]==='req-note'?athenaInternalNoteMock('field'):athenaMock(x[2],label,file))+'</article>';}).join('')+
+ '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Every LAB REQUISITION also needs an Internal Note, starting with (1 of 1).':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
 }
+
+function athenaInternalNoteMock(type){
+ const top='<div class="ad-mock-top"><strong>athenaOne</strong><small>TRAINING EXAMPLE · NO PATIENT DATA</small></div>';
+ const heading='<div class="req-note-mock-heading">Lab Requisition in REVIEW <span>×</span></div>';
+ if(type==='open')return '<div class="ad-mock req-note-mock">'+top+
+  '<div class="req-note-mock-chart"><span>Patient documents</span><div class="ad-target req-note-mock-doc"><strong>lab requisition</strong><small>Clinical Document · LAB REQUISITION</small><em>OPEN</em></div></div></div>';
+ if(type==='field')return '<div class="ad-mock req-note-mock">'+top+heading+
+  '<div class="req-note-mock-editor"><div class="req-note-mock-row"><span>Document Label</span><b>Lab Requisition</b></div>'+
+  '<div class="req-note-mock-row"><span>Department</span><b>CA_Sollis Beverly Hills</b></div>'+
+  '<div class="req-note-mock-field-label">Internal Note</div><div class="ad-target req-note-mock-input"><strong>(1 of 1)</strong><em>ENTER NOTE</em></div></div></div>';
+ if(type==='save')return '<div class="ad-mock req-note-mock">'+top+heading+
+  '<div class="req-note-mock-editor"><div class="req-note-mock-row"><span>Document Label</span><b>Lab Requisition</b></div>'+
+  '<div class="req-note-mock-row"><span>Internal Note</span><b>(1 of 1)</b></div></div>'+
+  '<div class="req-note-mock-footer"><span class="ad-target req-note-mock-save">Save <em>SELECT</em></span><span>Cancel</span></div></div>';
+ return '';
+}
+function athenaInternalNoteGuide(){
+ const steps=[
+  ['Open the saved requisition','Select the LAB REQUISITION document in the correct patient chart.','open'],
+  ['Enter the Internal Note','In the Internal Note field, enter (1 of 1) for a single requisition, or its correct number out of the total.','field'],
+  ['Save and confirm','Select Save and verify the numbering on the correct requisition.','save']
+ ];
+ return '<details class="ad-guide req-note-guide"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>How to add the Internal Note</strong><small>View 3 illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
+ '<div class="ad-guide-body"><p class="ad-guide-intro">Illustrations follow the Athena document screen. Green outlines mark where to click. No patient information is shown.</p><div class="ad-guide-grid">'+
+ steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaInternalNoteMock(x[2])+'</article>';}).join('')+
+ '</div><p class="ad-guide-confirm"><strong>Required even for one:</strong> enter (1 of 1). If additional documents arrive, update the total on all current requisitions.</p></div></details>';
+}
+
 function requisitionVersionNotice(){
  return `<details class="req-version-details">
   <summary><span class="req-version-icon" aria-hidden="true">!</span><span class="req-version-title">Multiple or updated requisitions?</span><span class="lab-shared-chevron" aria-hidden="true"></span></summary>
