@@ -2693,3 +2693,135 @@
  .workflow-main .walkin-upload-action:nth-child(3),
  .workflow-main .walkin-upload-action:nth-child(4){border-left:0}
 }
+
+
+/* Scheduled external requisition intake: clear, full-width vertical sequence. */
+.workflow-main .req-intake-actions{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ gap:28px;
+ padding:0;
+}
+.workflow-main .req-intake-actions>.req-intake-action,
+.workflow-main .req-intake-actions>.req-intake-note,
+.workflow-main .req-intake-actions>.req-intake-route{
+ grid-column:1/-1;
+ position:relative;
+ width:100%;
+ min-width:0;
+ min-height:0;
+ display:flex;
+ align-items:flex-start;
+ gap:13px;
+ padding:15px 17px;
+ border:1px solid #d9e7e4;
+ border-radius:12px;
+ background:#fff;
+ box-shadow:0 1px 2px rgba(30,80,80,.035);
+}
+.workflow-main .req-intake-actions>.req-intake-route{
+ background:#f6fbf9;
+ border-color:#cfdfd9;
+}
+.workflow-main .req-intake-actions>.req-intake-action>div{
+ flex:1 1 auto;
+ min-width:0;
+}
+.workflow-main .req-intake-actions>.req-intake-action:not(:last-child)::after{
+ content:"↓";
+ position:absolute;
+ z-index:2;
+ left:50%;
+ right:auto;
+ top:auto;
+ bottom:-28px;
+ transform:translateX(-50%);
+ width:28px;
+ height:28px;
+ display:grid;
+ place-items:center;
+ border:1px solid #b2dcd2;
+ border-radius:50%;
+ background:#eaf7f3;
+ color:#237f71;
+ font-size:18px;
+ font-weight:850;
+ line-height:1;
+ box-shadow:0 1px 4px rgba(24,113,96,.08);
+ pointer-events:none;
+}
+.workflow-main .req-intake-actions>.req-intake-action strong{
+ margin:0 0 4px;
+}
+.workflow-main .req-intake-actions>.req-intake-action p{
+ max-width:100%;
+ margin:0!important;
+}
+.workflow-main .req-intake-upload-guide,
+.workflow-main .req-intake-note-guide{
+ width:100%;
+ margin-top:11px;
+}
+.workflow-main .req-intake-upload-guide>.ad-guide,
+.workflow-main .req-intake-note-guide>.ad-guide{
+ width:100%;
+ max-width:100%;
+ margin:0;
+ border:0;
+ border-radius:0;
+ background:transparent;
+ box-shadow:none;
+ overflow:visible;
+}
+.workflow-main .req-intake-upload-guide>.ad-guide>summary,
+.workflow-main .req-intake-note-guide>.ad-guide>summary{
+ display:flex;
+ align-items:center;
+ width:100%;
+ max-width:430px;
+ min-height:53px;
+ padding:9px 13px;
+ border:1px solid #cbdfe8;
+ border-radius:10px;
+ background:#fff;
+ box-shadow:0 1px 4px rgba(38,87,115,.045);
+}
+.workflow-main .req-intake-upload-guide>.ad-guide>summary:hover,
+.workflow-main .req-intake-note-guide>.ad-guide>summary:hover{
+ background:#f2f9fc;
+ border-color:#93c1d0;
+}
+.workflow-main .req-intake-upload-guide>.ad-guide>.ad-guide-body,
+.workflow-main .req-intake-note-guide>.ad-guide>.ad-guide-body{
+ margin-top:10px;
+ border:1px solid #d9e5ed;
+ border-radius:10px;
+ overflow:hidden;
+}
+.workflow-main .req-intake-upload-guide .ad-guide-label strong,
+.workflow-main .req-intake-note-guide .ad-guide-label strong{
+ display:block;
+ color:#285e7e;
+ font-size:12.5px;
+ margin:0;
+}
+.workflow-main .req-intake-actions .req-intake-route-badge{
+ flex:0 0 auto;
+}
+@media(max-width:760px){
+ .workflow-main .req-intake-actions{
+  grid-template-columns:minmax(0,1fr);
+  gap:27px;
+ }
+ .workflow-main .req-intake-actions>.req-intake-action{
+  padding:12px;
+  gap:10px;
+ }
+ .workflow-main .req-intake-upload-guide>.ad-guide>summary,
+ .workflow-main .req-intake-note-guide>.ad-guide>summary{
+  max-width:100%;
+ }
+ .workflow-main .req-intake-actions>.req-intake-action:not(:last-child)::after{
+  bottom:-27px;
+ }
+}
