@@ -2446,3 +2446,138 @@
  .poc-reference-item{gap:10px}
 }
 @media print{.poc-reference-panel,.poc-reference-item{break-inside:avoid}.poc-reference-reminder{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+
+/* Multiple/updated external requisitions: clear Athena numbering workflow. */
+.workflow-main .req-version-details[open]{
+ background:#fffaf1;
+ border-color:#e5cfa5;
+}
+.workflow-main .req-version-body{
+ padding:0 14px 14px;
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+}
+.workflow-main .req-version-intro{
+ margin:0!important;
+ padding:13px 15px!important;
+ background:#fff;
+ border:1px solid #e9e1d2;
+ border-radius:9px;
+ color:#5c6170!important;
+ font-size:12.5px!important;
+ line-height:1.65!important;
+}
+.workflow-main .req-version-intro strong{color:#744c15}
+.workflow-main .req-version-steps{
+ margin:0;
+ padding:0;
+ list-style:none;
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ gap:8px;
+}
+.workflow-main .req-version-steps>li{
+ display:flex;
+ align-items:flex-start;
+ gap:12px;
+ border:1px solid #e8e4dd;
+ background:#fff;
+ border-radius:10px;
+ padding:12px 13px;
+ min-width:0;
+}
+.workflow-main .req-version-step-num{
+ display:grid;
+ place-items:center;
+ flex:none;
+ width:28px;
+ height:28px;
+ border-radius:8px;
+ background:#f8e8c9;
+ color:#8c5d1c;
+ font-size:12px;
+ font-weight:850;
+}
+.workflow-main .req-version-steps>li>div{min-width:0}
+.workflow-main .req-version-steps>li strong{
+ display:block;
+ color:#2c4d5c;
+ font-size:12.75px;
+ line-height:1.4;
+ margin:3px 0 5px;
+}
+.workflow-main .req-version-steps>li p{
+ margin:0!important;
+ font-size:12px!important;
+ line-height:1.6!important;
+ color:#59707a!important;
+}
+.workflow-main .req-version-steps code,
+.workflow-main .req-version-note-set span{
+ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+ font-size:11.5px;
+ font-weight:750;
+ color:#77511a;
+ background:#fff4df;
+ border:1px solid #eddfc0;
+ border-radius:5px;
+ padding:2px 5px;
+ white-space:nowrap;
+}
+.workflow-main .req-version-example{
+ background:#fff;
+ border:1px solid #d9e8e3;
+ border-radius:10px;
+ padding:13px 14px;
+}
+.workflow-main .req-version-example-heading{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ flex-wrap:wrap;
+}
+.workflow-main .req-version-example-heading strong{
+ color:#1f6c66;
+ font-size:12.75px;
+}
+.workflow-main .req-version-example-heading>span{
+ color:#73858b;
+ font-size:10px;
+ font-weight:800;
+ letter-spacing:.09em;
+}
+.workflow-main .req-version-note-set{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ margin:11px 0;
+}
+.workflow-main .req-version-note-set span{
+ font-size:12px;
+ padding:6px 10px;
+ background:#eff8f5;
+ border-color:#d5eae2;
+ color:#176e63;
+}
+.workflow-main .req-version-example p,
+.workflow-main .req-version-reminder{
+ margin:0!important;
+ color:#596e75!important;
+ font-size:11.75px!important;
+ line-height:1.65!important;
+}
+.workflow-main .req-version-reminder{
+ padding:11px 13px!important;
+ border-left:3px solid #d49a49;
+ border-radius:0 7px 7px 0;
+ background:#fff6e8;
+}
+.workflow-main .req-version-reminder strong{color:#8b5b1b}
+@media(max-width:600px){
+ .workflow-main .req-version-body{padding:0 10px 11px;gap:9px}
+ .workflow-main .req-version-steps>li{padding:11px 10px;gap:9px}
+ .workflow-main .req-version-intro{padding:11px!important}
+}
