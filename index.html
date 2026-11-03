@@ -1836,9 +1836,21 @@ function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false){
  '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Use this for the outside lab order.':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
 }
 function requisitionVersionNotice(){
- return '<details class="req-version-details"><summary><span class="req-version-icon" aria-hidden="true">!</span><span class="req-version-title">Multiple or updated requisitions?</span><span class="lab-shared-chevron" aria-hidden="true"></span></summary><p class="req-version-copy">Confirm which requisition is current and applicable. Remove superseded or non-applicable versions from the active workflow only in accordance with the approved medical-record retention/correction policy. Do not leave conflicting versions presented as active orders.</p></details>';
+ return `<details class="req-version-details">
+  <summary><span class="req-version-icon" aria-hidden="true">!</span><span class="req-version-title">Multiple or updated requisitions?</span><span class="lab-shared-chevron" aria-hidden="true"></span></summary>
+  <div class="req-version-body">
+   <p class="req-version-intro">Use this process whenever <strong>several requisitions arrive together</strong> or a <strong>second, third or later requisition</strong> comes in after the first has been uploaded. Number each <em>active, unique</em> requisition so the lab team knows exactly how many to send.</p>
+   <ol class="req-version-steps">
+    <li><span class="req-version-step-num">1</span><div><strong>Confirm how many current requisitions there are</strong><p>Review everything received, including documents already in Athena. Count only the current requisitions that need to be sent to the receiving lab. Do not count exact duplicates or older versions that have been replaced.</p></div></li>
+    <li><span class="req-version-step-num">2</span><div><strong>Open the existing LAB REQUISITION document</strong><p>In the patient's Athena chart, select the lab requisition document that was already created. Change its <b>Internal Note</b> to <code>(1 of N)</code>, where <b>N</b> is the total number of current requisitions. Select <b>Save</b>. If more documents arrive later, revisit previously saved requisitions and update the total in every Internal Note.</p></div></li>
+    <li><span class="req-version-step-num">3</span><div><strong>Upload and number each additional requisition</strong><p>Upload each new requisition as its <b>own document</b> in the correct chart. Classify it as <b>Clinical Document</b>, label it <b>LAB REQUISITION</b>, and enter <code>(2 of N)</code>, <code>(3 of N)</code>, and so on in <b>Internal Note</b>. Save each one. If received by fax, open the automatically uploaded document, verify the chart and classification, then update its note instead of uploading a duplicate.</p></div></li>
+    <li><span class="req-version-step-num">4</span><div><strong>Remove old duplicates and verify the final set</strong><p>Delete duplicate or superseded requisitions from the active Athena workflow using the approved document correction/deletion process. Do not delete records that must be retained. Confirm each current requisition appears once, its numbering is sequential, and the total matches the number of documents to send. Notify the lab team when the set changes.</p></div></li>
+   </ol>
+   <div class="req-version-example" role="note"><div class="req-version-example-heading"><strong>Example: 3 requisitions to send</strong><span>INTERNAL NOTE</span></div><div class="req-version-note-set"><span>(1 of 3)</span><span>(2 of 3)</span><span>(3 of 3)</span></div><p>If the third requisition arrives later, change the earlier notes from <b>(1 of 2)</b> and <b>(2 of 2)</b> to <b>(1 of 3)</b> and <b>(2 of 3)</b>, then upload the new document as <b>(3 of 3)</b>.</p></div>
+   <p class="req-version-reminder"><strong>Replacement vs. additional order:</strong> If a newly received requisition replaces an older one rather than adds a new order, remove the superseded copy from the active workflow. Do not increase the count for a replacement.</p>
+  </div>
+ </details>`;
 }
-
 function sollisPatientChoices(){
  const inClinic=state.sollisPatientPath!=='schedule';
  return '<div class="sollis-route-choices" role="group" aria-label="Is the patient currently in clinic?">'+
@@ -2035,6 +2047,7 @@ function walkinFlow(){
   ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab Personnel'],
   ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab Personnel']
  ],1);
+ h+=requisitionVersionNotice();
  h+=collectionProcessingHandoff(true,3);
  h+='<p class="source-footnote">Walk-in requests proceed directly to collection after review and document upload. Follow the current receiving laboratory directory and approved collection, shipping and documentation procedures.</p>';
  return h;
