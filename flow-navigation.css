@@ -2659,3 +2659,37 @@
  .workflow-main .req-version-update-warning{padding:11px;gap:8px}
  .workflow-main .req-version-warning-icon{width:25px;height:25px}
 }
+
+
+/* Layout: keep the new mandatory note step readable in both intake paths. */
+.workflow-main .req-intake-actions>.req-intake-note{grid-column:1/-1}
+.workflow-main .walkin-upload-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.workflow-main .walkin-upload-action:nth-child(3){
+ border-left:0;
+ border-top:1px solid #d7e5e9;
+}
+.workflow-main .walkin-upload-action:nth-child(4){border-top:1px solid #d7e5e9}
+/* Keep embedded illustration typography independent of the parent step cards. */
+.workflow-main .req-version-inline-guide .ad-guide-label strong,
+.workflow-main .req-intake-note-guide .ad-guide-label strong{
+ color:#285e7e;font-size:12.5px;font-weight:800;margin:0;
+}
+.workflow-main .req-version-inline-guide .ad-guide-card-head strong,
+.workflow-main .req-intake-note-guide .ad-guide-card-head strong{
+ color:#305465;font-size:12px;font-weight:750;margin:0;
+}
+.workflow-main .req-version-inline-guide .ad-guide-intro,
+.workflow-main .req-intake-note-guide .ad-guide-intro{
+ font-size:11px!important;line-height:1.6!important;color:#59768a!important;
+}
+.workflow-main .req-version-inline-guide .req-note-mock strong,
+.workflow-main .req-intake-note-guide .req-note-mock strong{
+ font-size:11px;font-weight:750;display:inline;margin:0;
+}
+.workflow-main .req-version-inline-guide .req-note-mock-input strong,
+.workflow-main .req-intake-note-guide .req-note-mock-input strong{font-size:12px;color:#1c6650}
+@media(max-width:760px){
+ .workflow-main .walkin-upload-grid{grid-template-columns:minmax(0,1fr)}
+ .workflow-main .walkin-upload-action:nth-child(3),
+ .workflow-main .walkin-upload-action:nth-child(4){border-left:0}
+}
