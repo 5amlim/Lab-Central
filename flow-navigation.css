@@ -2581,3 +2581,81 @@
  .workflow-main .req-version-steps>li{padding:11px 10px;gap:9px}
  .workflow-main .req-version-intro{padding:11px!important}
 }
+
+
+/* Required requisition Internal Note step and illustrated Athena walkthrough. */
+.workflow-main .req-intake-note-content{width:100%;min-width:0}
+.workflow-main .req-intake-note-guide{margin-top:10px}
+.workflow-main .req-intake-note-guide .ad-guide,
+.workflow-main .req-version-inline-guide .ad-guide,
+.workflow-main .walkin-internal-note-guide .ad-guide{margin:7px 0 0;max-width:100%}
+.workflow-main .req-version-inline-guide{margin-top:12px;min-width:0}
+.workflow-main .req-version-inline-guide .ad-guide>summary{min-height:52px}
+.workflow-main .req-version-inline-guide .ad-guide-label strong{margin:0;color:#285e7e}
+.workflow-main .req-version-update-warning{
+ display:flex;align-items:flex-start;gap:12px;
+ background:#fff0da;border:2px solid #e4ab53;border-left-width:5px;
+ padding:14px 15px;border-radius:10px;
+ color:#744814;box-shadow:0 2px 0 #b47e2315;
+}
+.workflow-main .req-version-warning-icon{
+ flex:none;width:30px;height:30px;display:grid;place-items:center;
+ background:#d89026;border-radius:50%;color:#fff;
+ font-size:17px;font-weight:900;
+}
+.workflow-main .req-version-update-warning strong{
+ display:block;color:#805012;font-size:12px;letter-spacing:.025em;
+ line-height:1.5;margin:0 0 5px;
+}
+.workflow-main .req-version-update-warning p{
+ margin:0!important;color:#795b35!important;
+ font-size:12px!important;line-height:1.65!important;
+}
+.workflow-main .req-version-update-warning b{color:#67451c}
+.workflow-main .req-version-intro code{
+ display:inline-block;background:#fff4df;border:1px solid #eddfc0;
+ border-radius:5px;color:#77511a;font-weight:800;padding:1px 5px;
+}
+.workflow-main .req-note-guide .ad-guide-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.workflow-main .req-note-guide .ad-guide-card{min-width:0}
+.workflow-main .req-note-mock{font-size:10px;margin:0 10px 12px}
+.workflow-main .req-note-mock-heading{
+ padding:10px 11px;background:#f0eaf7;color:#4d3679;
+ display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:800;
+}
+.workflow-main .req-note-mock-chart{padding:12px;background:#f7f5fa}
+.workflow-main .req-note-mock-chart>span{display:block;color:#68547d;margin-bottom:9px;font-weight:800}
+.workflow-main .req-note-mock-doc{
+ padding:10px;display:flex;flex-wrap:wrap;align-items:center;
+ gap:4px 9px;min-height:54px;
+}
+.workflow-main .req-note-mock-doc>strong{flex:1 1 100%;font-size:11px}
+.workflow-main .req-note-mock-doc>small{flex:1 1 auto;font-size:9px}
+.workflow-main .req-note-mock-editor{padding:14px 12px;background:#faf9fc}
+.workflow-main .req-note-mock-row{
+ display:flex;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;gap:5px;border-bottom:1px solid #eeeaf2;
+ padding:8px 0;
+}
+.workflow-main .req-note-mock-row>span{color:#67636e}
+.workflow-main .req-note-mock-row>b{color:#463e55;font-size:10px}
+.workflow-main .req-note-mock-field-label{padding:13px 0 6px;color:#635b6a;font-weight:750}
+.workflow-main .req-note-mock-input{
+ min-height:38px;padding:8px 10px;
+ background:#fff!important;
+}
+.workflow-main .req-note-mock-input strong{font-size:12px;color:#1c6650}
+.workflow-main .req-note-mock-footer{
+ display:flex;align-items:center;gap:12px;padding:10px 12px;
+ background:#f0edf2;
+}
+.workflow-main .req-note-mock-save{padding:6px 10px}
+.workflow-main .walkin-internal-note-guide{margin:12px 0}
+@media(max-width:1050px){
+ .workflow-main .req-note-guide .ad-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .workflow-main .req-note-guide .ad-guide-grid{grid-template-columns:minmax(0,1fr)}
+ .workflow-main .req-version-update-warning{padding:11px;gap:8px}
+ .workflow-main .req-version-warning-icon{width:25px;height:25px}
+}
