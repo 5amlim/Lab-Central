@@ -2825,3 +2825,17 @@
   bottom:-27px;
  }
 }
+
+/* Intake cards: keep vertical layout but remove arrows between steps. */
+.workflow-main .req-intake-actions{
+ gap:12px;
+}
+.workflow-main .req-intake-actions>.req-intake-action::after{
+ content:none!important;
+ display:none!important;
+}
+@media(max-width:760px){
+ .workflow-main .req-intake-actions{
+  gap:12px;
+ }
+}
