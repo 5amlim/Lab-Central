@@ -1978,15 +1978,14 @@ function externalFlow(){
  <div class="req-intake-actions">
  ${fax?`
  <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Verify the auto-uploaded fax</strong><p>Faxed requisitions are automatically uploaded to Athena and initially auto-classified. Confirm the fax is in the correct patient chart and review its document classification.</p></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Reclassify and save</strong><p>Change the automatically assigned classification to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Reclassify and save</strong><p>Change the automatically assigned classification to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
  `:`
  <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Manually upload the requisition</strong><p>Open the existing Navigator task, then manually upload the emailed or texted requisition to the correct Athena patient chart. It is not automatically uploaded.</p></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
  `}
  <div class="req-intake-action req-intake-note"><span class="req-intake-action-num">3</span><div class="req-intake-note-content"><strong>Add the Internal Note (required even for one)</strong><p>Open the saved <b>LAB REQUISITION</b>, enter <b>(1 of 1)</b> in <b>Internal Note</b>, and save. If there are multiple, use <b>(1 of N)</b>, <b>(2 of N)</b>, etc., with the same total.</p><div class="req-intake-note-guide">${athenaInternalNoteGuide()}</div></div></div>
  <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">4</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Route Navigator task for review</strong><span class="req-intake-route-badge">REQUIRED HANDOFF</span></div><p>${fax?'Create and route a Navigator task to the lab team or RN according to the market workflow, unless one already exists. Do not create a duplicate task.':'Assign the existing Navigator task to the lab team or RN according to the market workflow. Do not create a duplicate task.'}</p></div></div>
  </div>
- <div class="req-inline-guide">${athenaUploadGuide("requisition",fax)}</div>
  </div>
  ${requisitionVersionNotice()}
  </section>`;
