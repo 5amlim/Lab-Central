@@ -1965,9 +1965,10 @@ function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
  <header class="requisition-intake-header">
   <span class="req-intake-number">01</span>
-  <div><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><p>Start here when a member calls to ask about completing outside laboratory testing at Sollis.</p></div>
+  <div><div class="fd-intake-title-row"><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><span class="fd-intake-conditional-tag">WHEN APPLICABLE</span></div><p>Use this step when a member calls before their outside lab requisition has been received.</p></div>
   ${workflowOwnerTag('Front Desk Coordinator')}
  </header>
+ <div class="fd-intake-skip-notice" role="note"><span class="fd-intake-skip-label">ALREADY RECEIVED THE REQUISITION?</span><p><strong>Skip Step 01.</strong> If orders arrived directly by email, text, or fax, start at <b>Step 02: Receive, classify and route the requisition.</b></p></div>
  <div class="fd-intake-question"><strong>Does the member already have lab orders from their doctor?</strong><span>SELECT THE APPLICABLE PATH</span></div>
  <div class="fd-intake-options">
   <article class="fd-intake-option fd-intake-has">
