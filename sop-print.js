@@ -26,41 +26,78 @@ function handoff(start){
  ['Separate transport bags','Lab personnel',bullet('Use <b>separate bags by receiving lab and temperature</b>: room temperature, refrigerated and frozen.','Keep STAT and routine or special-handling requests separated when required; include appropriate paperwork in the bag sleeve.')],
  ['Check billing paperwork','Lab personnel',bullet('Confirm insurance information is included with the requisition.','<b>If insurance information is missing,</b> attach the patient facesheet.')],
  ['Complete the Sendout Log','Lab personnel',bullet('Photograph labeled specimens, requisition and each transport bag as required.','Scan the QR code for the correct regional Microsoft Form and complete the Sendout Log, including pickup confirmation or UPS/FedEx tracking when applicable.')],
- ['Place bags for pickup','Lab personnel',bullet('Use the appropriate cold or frozen sleeve as needed, following the Lab Calculator printout and receiving-lab requirements.','For lockbox pickup, place sealed bags in the designated lockbox.','For pickup inside the lab, place sealed bags in the appropriate receiving-lab collection bin.','For special courier pickups and UPS/FedEx kits, follow the site-specific approved handoff procedure.')]
+ ['Place bags for pickup','Lab personnel',bullet('Use the appropriate cold or frozen sleeve as needed, following the Lab Calculator printout and receiving-lab requirements.','For lockbox pickup, place sealed bags in the designated lockbox.','For pickup inside the lab, place sealed bags in the correct receiving-lab collection bin. Place refrigerated bags in the refrigerator and frozen bags in the freezer as needed.','For special courier pickups and UPS/FedEx kits, follow the site-specific approved handoff procedure.')]
  ];
  return section('Specimen collection, processing and handoff','Required after the order and collection plan are ready.')+steps.map((v,i)=>step(v[0],v[2],v[1],i+(start||1))).join('');
 }
 function scheduled(){
- let h=header('External requisition · Scheduled','From receipt of an outside requisition through documentation, scheduling, specimen collection and sendout.','Scheduled external laboratory requests','Front Desk Coordinator · RN / Lab personnel · Provider');
- h+=section('1. Receive and route the requisition','Use the route that matches how it arrived.');
+ let h=header('External requisition · Scheduled','From receipt of an outside requisition through Athena documentation, scheduling, specimen collection and sendout.','Scheduled external laboratory requests','Front Desk Coordinator · RN / Lab personnel · Provider');
+ h+=section('1. Receive, classify and route the requisition','Complete all four actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
- ['Faxed to Sollis',bullet('Find the automatically uploaded fax in the correct Athena patient chart.','Verify and <b>reclassify it as Clinical Document</b> labeled <b>LAB REQUISITION</b>.','Create and route a Navigator task to the lab team/RN unless one already exists. Do not duplicate.')],
- ['Email or text',bullet('Use the existing Navigator task and <b>manually upload</b> the requisition to the correct Athena chart.','Classify it as <b>Clinical Document · LAB REQUISITION</b> and verify.','Assign the existing task to the lab team/RN. Do not create a duplicate.')]
+  ['Faxed to Sollis',bullet(
+   '<b>1. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
+   '<b>2. Reclassify and save.</b> Change the document to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.',
+   '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
+   '<b>4. Route the Navigator task.</b> Create and route to lab personnel or RN according to the market workflow unless a task already exists. Do not duplicate.')],
+  ['Email or text',bullet(
+   '<b>1. Upload manually.</b> Open the existing Navigator task and upload the requisition into the correct Athena chart.',
+   '<b>2. Classify and save.</b> Set <b>Clinical Document · LAB REQUISITION</b>, then save and verify.',
+   '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
+   '<b>4. Route the Navigator task.</b> Assign the existing task to lab personnel or RN according to the market workflow. Do not duplicate.')]
  ]);
- h+=step('Review the outside requisition',bullet('Verify patient identity, intended lab, ordered tests, exact <b>test codes</b>, <b>account number</b> and preparation requirements.','Check that the chart and requisition match before proceeding.'),'RN / Lab personnel',2);
- h+=fork('Are the account number and test codes complete?',[
- ['Yes',bullet('Continue to prepare the Lab Calculator and collection plan.')],
- ['No, information is missing',bullet('RN or lab personnel contacts the ordering provider’s office for the missing information.','<b>If obtained:</b> upload the corrected requisition as Clinical Document · LAB REQUISITION and confirm the new version before continuing.','<b>If unavailable:</b> the <b>Sollis provider on duty</b> must place the required orders in Athena. Verify the receiving lab and orders before collection, then continue with the Lab Calculator.')]
+ h+=note('Required even for one document','Every current LAB REQUISITION needs an Athena Internal Note. One file: <b>(1 of 1)</b>. Three files: <b>(1 of 3)</b>, <b>(2 of 3)</b>, <b>(3 of 3)</b>.',true);
+ h+=section('Additional or updated requisitions','Reconcile the current set whenever more documents arrive.');
+ h+=bullet(
+  '<b>Count current, unique requisitions.</b> Include all active requisitions already saved in Athena. Do not count exact duplicates or versions replaced by newer orders.',
+  '<b>Reopen and update every prior Internal Note.</b> For example, when a second requisition arrives, change (1 of 1) to <b>(1 of 2)</b>, then save the second as <b>(2 of 2)</b>.',
+  '<b>Upload each additional requisition separately.</b> Classify as Clinical Document · LAB REQUISITION and enter its sequential (X of N) Internal Note. For automatically uploaded faxes, update the existing document rather than uploading a duplicate.',
+  '<b>Handle replacements correctly.</b> A corrected requisition that replaces an older one does not increase the total. Remove exact duplicates or superseded copies from the active workflow using the approved document correction/deletion process, without deleting records that must be retained.',
+  '<b>Verify the final set and notify the lab team.</b> Confirm each current requisition appears once, the numbering is sequential, and the denominator matches the total documents to send.'
+ );
+ h+=note('IMPORTANT: Update all existing notes','Whenever an additional requisition arrives later, revisit <b>every previously saved LAB REQUISITION</b> and update the total in each Internal Note before handoff.',true);
+ h+=step('Review the outside requisition',bullet(
+  'Verify patient name and date of birth against the chart, receiving lab, ordered tests, exact <b>test codes</b>, <b>account number</b> and preparation requirements.',
+  'Check that each active requisition is the correct, current version before proceeding.'),'RN / Lab personnel',2);
+ h+=fork('Are the account number and test codes available?',[
+  ['Yes',bullet('Continue to prepare the Lab Calculator and collection plan.')],
+  ['No, information is missing',bullet(
+   '<b>Call the ordering provider’s office</b> for the missing account number and/or test codes.',
+   '<b>If obtained:</b> get the corrected requisition and upload it as Clinical Document · LAB REQUISITION. Reconcile any replaced document and verify the Internal Note count before continuing.',
+   '<b>If unavailable:</b> ask the <b>Sollis provider on duty</b> to place the required orders in Athena before collection. Confirm the receiving lab and orders, then continue to the Lab Calculator.')]
  ]);
- h+=section('2. Prepare and schedule','Resolve all missing information first.');
- h+=step('Prepare and upload the Lab Calculator',bullet('Choose the correct receiving lab and confirm test codes, tubes, volumes, processing and transport temperature.','Generate and upload the final calculator PDF in Athena as <b>Clinical Document · LAB FLOWSHEET</b>.'),'RN / Lab personnel',3);
- h+=step('Schedule the patient',bullet('Front Desk Coordinator schedules after receiving the completed request.','Communicate any fasting, dietary, timed-draw or other patient instructions supplied by the clinical team.'),'Front Desk Coordinator',4);
- h+=step('Print both documents on appointment day',bullet('Print the current <b>LAB REQUISITION</b> and <b>LAB FLOWSHEET</b> from the chart.','For calculator colors, choose <b>View Original Image</b> in Athena before printing.'),'RN / Lab personnel',5);
+ h+=section('2. Prepare and schedule','Complete order review and required documentation first.');
+ h+=step('Prepare and upload the Lab Calculator',bullet(
+  'Choose the correct receiving lab and confirm test codes, tubes, volumes, processing, transport temperature and priority.',
+  'Generate the final calculator printout and upload the PDF in Athena as <b>Clinical Document · LAB FLOWSHEET</b>.'),'RN / Lab personnel',3);
+ h+=step('Schedule the patient',bullet(
+  'Front Desk Coordinator schedules after receiving the completed request.',
+  'Communicate fasting, dietary, timed-draw and other preparation instructions provided by the clinical team.'),'Front Desk Coordinator',4);
+ h+=step('Print both documents on appointment day',bullet(
+  'Before collection, print <b>every current LAB REQUISITION</b> and the <b>LAB FLOWSHEET</b> from the chart.',
+  'For the calculator color-coded tube and bag instructions, choose <b>View Original Image</b> in Athena before printing.'),'RN / Lab personnel',5);
  h+=handoff(6);
- h+=note('Do not collect before required orders are in place','If codes or account information cannot be obtained, escalate to the Sollis provider on duty. Complete the required Athena ordering and document uploads before collection.',true);
+ h+=note('Do not collect before required orders are in place','If codes or account details cannot be obtained, escalate to the Sollis provider on duty. Complete the required Athena orders and document uploads before collection.',true);
  return h+finish();
 }
 function walkin(){
- let h=header('External requisition · Walk-in','Full same-visit process for a patient presenting with an outside lab requisition.','Walk-in external lab request','RN / Lab personnel · Provider');
- h+=note('Scheduling','Encourage patients to schedule external lab visits in advance. For a patient already in clinic, review and complete the order documentation before collecting.');
- h+=step('Review the outside requisition',bullet('Match the requisition to the Athena patient chart and verify identity, exact test codes, receiving lab and account number.','Review tubes, timing, specimen processing, special precautions and patient preparation.'),'RN / Lab personnel',1);
- h+=fork('Are all required codes, account and ordering details available?',[
-  ['Yes',bullet('Continue to calculator preparation and chart document uploads.')],
-  ['No or unclear',bullet('Contact the ordering provider’s office for missing information.','If test codes or account number still cannot be obtained, the <b>Sollis provider on duty places the orders in Athena</b> before collection. Confirm the intended receiving lab.')]
+ let h=header('External requisition · Walk-in','Same-visit procedure for a patient presenting with an outside laboratory requisition.','Walk-in external lab request','RN / Lab personnel · Provider');
+ h+=note('Scheduling','Encourage patients to schedule external lab visits in advance. For a patient already in clinic, review and complete the orders and chart documentation before collection.');
+ h+=step('Review the outside requisition',bullet(
+  'Match patient name and date of birth to the Athena chart; verify exact test codes, receiving lab, account number and preparation requirements.',
+  'Review specimen collection, timing, processing and special precautions.'),'RN / Lab personnel',1);
+ h+=fork('Are all required test codes, account and ordering details available?',[
+  ['Yes',bullet('Continue to prepare the calculator and upload the required chart documents.')],
+  ['No or unclear',bullet('Call the ordering provider’s office for missing details.','If unavailable, the <b>Sollis provider on duty places the required orders in Athena</b> before collection. Confirm the intended receiving lab.')]
  ]);
- h+=step('Prepare and upload both documents',bullet('Use the correct receiving-lab calculator to prepare the collection plan, then save its printout as PDF.','Upload outside requisition as <b>Clinical Document · LAB REQUISITION</b>.','Upload Lab Calculator as <b>Clinical Document · LAB FLOWSHEET</b>.','Verify both documents in the correct patient chart before collection.'),'RN / Lab personnel',2);
+ h+=step('Prepare the Lab Calculator and upload both documents',bullet(
+  'Select the correct receiving-lab calculator, review tubes, volumes, processing and transport, and save the finalized printout as a PDF.',
+  'Upload the requisition as <b>Clinical Document · LAB REQUISITION</b>.',
+  '<b>Required Internal Note:</b> open the saved requisition and enter <b>(1 of 1)</b> even if it is the only file. Number multiple requisitions (1 of N), (2 of N), etc.',
+  'Upload the calculator PDF as <b>Clinical Document · LAB FLOWSHEET</b>.',
+  'Confirm both documents are saved in the correct chart before collection. Print the current requisition(s) and Lab Calculator as needed for handoff.'),'RN / Lab personnel',2);
+ h+=note('Additional, updated or replacement requisitions','Count current unique requisitions, update the denominator in every existing Internal Note when new ones arrive, and number each additional document separately. Do not increase the count for a replacement. Remove duplicates and superseded copies from the active workflow only through the approved document correction/deletion process. Verify the current set before handoff.',true);
  h+=handoff(3);
- h+=note('Patient already in clinic','After review and chart uploads, proceed directly with collection and subsequent processing, packaging and electronic Sendout Log.');
+ h+=note('Patient already in clinic','After order review and documentation, proceed with collection, processing, packaging, billing paperwork and Sendout Log.');
  return h+finish();
 }
 function sollis(){
