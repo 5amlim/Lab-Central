@@ -40,7 +40,7 @@ function scheduled(){
   ['They have orders',bullet(
    'Ask the member to email the orders to their <b>approved regional intake email</b> for clinical review.',
    '<b>Do not offer or confirm an appointment time</b> before review.',
-   '<b>Suggested wording:</b> Please email your lab orders to the regional email provided by our team. Our clinical team will review them and contact you about scheduling once the review is complete.')],
+   '<b>Suggested wording:</b> Please email your lab orders to <b>[REGIONAL EMAIL]</b> provided by our team. Our clinical team needs to review them before we can confirm an appointment. We’ll contact you about scheduling once the review is complete.')],
   ['They do not have orders',bullet(
    'Explain that a Sollis provider can assess the member and order labs when clinically appropriate.',
    'If Sollis places the orders, follow the <b>Ordered at Sollis</b> sendout workflow instead of the outside-requisition pathway.')]
