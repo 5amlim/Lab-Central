@@ -191,7 +191,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261104" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261104a" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="socal-daily-checklist.css?v=20261104" media="all">
@@ -272,7 +272,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="supply-vendor-reference.css?v=20261104" media="all">
 <script src="envi-ordering-guide.js?v=20261104"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261104" media="all">
-<script src="sop-print.js?v=20261104"></script>
+<script src="sop-print.js?v=20261104a"></script>
 <style id="lab-central-athena-icon-theme">
 /* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
 .nav-section .nav-link[data-go="order-sets"] .nav-icon.athena-nav-icon {
@@ -1961,14 +1961,51 @@ function orderWorkflowTabs(tab){
   options.map(([id,label])=>'<button type="button" role="tab" aria-selected="'+(tab===id)+'" class="tab '+(tab===id?'active':'')+'" data-workflowtab="'+id+'">'+label+'</button>').join('')+
   '</div>';
 }
+function frontDeskRequisitionIntake(){
+ const markets=[
+  {code:'SOCAL',name:'Southern California',label:'SoCal'},
+  {code:'NORCAL',name:'Northern California',label:'NorCal'},
+  {code:'FL',name:'Florida',label:'Florida'},
+  {code:'NY',name:'New York',label:'New York'}
+ ];
+ return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
+ <header class="requisition-intake-header">
+  <span class="req-intake-number">01</span>
+  <div><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><p>Start here when a member calls or walks in asking to complete outside laboratory testing at Sollis.</p></div>
+  ${workflowOwnerTag('Front Desk Coordinator')}
+ </header>
+ <div class="fd-intake-question"><strong>Does the member already have lab orders from their doctor?</strong><span>SELECT THE APPLICABLE PATH</span></div>
+ <div class="fd-intake-options">
+  <article class="fd-intake-option fd-intake-has">
+   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">01</span><strong>They have orders</strong><span class="fd-intake-option-status">CLINICAL REVIEW FIRST</span></div>
+   <p>Ask the member to email the requisition to their <b>region's approved intake email</b> so the clinical team can review it.</p>
+   <div class="fd-intake-script"><span>WHAT TO SAY</span><p>“Please email your lab orders to the regional email address provided by our team. Our clinical team needs to review them before we can confirm an appointment. We’ll contact you about scheduling once the review is complete.”</p></div>
+   <div class="fd-intake-rule"><strong>Do not offer or confirm an appointment time until clinical review is complete.</strong></div>
+  </article>
+  <article class="fd-intake-option fd-intake-no">
+   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">02</span><strong>They do not have orders</strong><span class="fd-intake-option-status">SOLLIS PROVIDER</span></div>
+   <p>Explain that a Sollis provider can assess the member and order laboratory testing when clinically appropriate.</p>
+   <p class="fd-intake-next">If Sollis places the orders, follow the <b>Ordered at Sollis</b> workflow rather than the external requisition intake process.</p>
+  </article>
+ </div>
+ <div class="fd-market-panel" aria-label="Regional outside requisition intake routing">
+  <div class="fd-market-panel-heading"><div><strong>Regional intake and routing</strong><p>For members who already have outside lab orders</p></div><span>4 MARKETS</span></div>
+  <div class="fd-market-grid">
+   ${markets.map(m=>`<article class="fd-market-item"><div class="fd-market-top"><span class="fd-market-code">${m.code}</span><strong>${m.name}</strong></div><p><b>Send orders:</b> ${m.label} regional intake email provided by Front Desk</p><p><b>Review:</b> Route the Athena Navigator task to the RN or lab personnel according to ${m.label} workflow</p><p><b>Schedule:</b> Only after the clinical team confirms the request is ready</p></article>`).join('')}
+  </div>
+  <p class="fd-market-footnote">Use the current, approved regional mailbox and local Navigator assignment. Email addresses and market-specific assignees are not listed in this portal reference.</p>
+ </div>
+ </section>`;
+}
 function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const complete=state.reqBranch==='complete';const unresolved=state.reqResolution==='unresolved';
- let h=`<div class="workflow-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start with how the requisition was received. Upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
+ let h=`<div class="workflow-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start by confirming whether the member has outside lab orders. After review, upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
  h+=orderWorkflowTabs('external');
  h+='<div class="external-workflow-timeline">';
+ h+=frontDeskRequisitionIntake();
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
- <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">Receive, classify and route the requisition</h3><p>Select how it arrived, then complete all four actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
+ <header class="requisition-intake-header"><span class="req-intake-number">02</span><div><h3 id="req-intake-title">Receive, classify and route the requisition</h3><p>Select how it arrived, then complete all four actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
  <div class="workflow-choice-caption">CHOOSE ONE</div><div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
  <button type="button" class="requisition-source-option ${!fax?'selected':''}" data-reqsource="message" aria-pressed="${!fax}"><span class="requisition-source-icon">${svg('mail')}</span><span class="requisition-source-copy"><strong>Email or text</strong><small>Manually upload and classify in Athena</small></span><span class="requisition-source-indicator" aria-hidden="true">${!fax?'✓':''}</span></button>
  <button type="button" class="requisition-source-option ${fax?'selected':''}" data-reqsource="fax" aria-pressed="${fax}"><span class="requisition-source-icon">${svg('file-text')}</span><span class="requisition-source-copy"><strong>Faxed to Sollis</strong><small>Automatically uploaded; reclassification required</small></span><span class="requisition-source-indicator" aria-hidden="true">${fax?'✓':''}</span></button>
@@ -1989,7 +2026,7 @@ function externalFlow(){
  </div>
  ${requisitionVersionNotice()}
  </section>`;
- h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">02</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Lab personnel or RN reviews the requisition</strong></div>${workflowOwnerTag('Lab Personnel / RN')}</div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Confirm the patient's name and date of birth match the requisition and patient chart, then choose a path to continue.</p></div><div class="branch-choice-group"><div class="workflow-choice-caption">CHOOSE ONE</div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${complete?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${complete}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div></div>`;
+ h+=`<div class="branch-panel"><div class="branch-title"><span class="branch-number">03</span><div><strong><span class="branch-title-symbol" aria-hidden="true">${svg('scan')}</span>Lab personnel or RN reviews the requisition</strong></div>${workflowOwnerTag('Lab Personnel / RN')}</div><div class="branch-review-question"><strong>Are the <span class="branch-focus-term">account number</span> and <span class="branch-focus-term">test codes</span> available?</strong><p><span class="branch-question-hint" aria-hidden="true">↳</span> Confirm the patient's name and date of birth match the requisition and patient chart, then choose a path to continue.</p></div><div class="branch-choice-group"><div class="workflow-choice-caption">CHOOSE ONE</div><div class="branch-options" role="group" aria-label="External requisition status"><button class="branch-choice ${complete?'selected':''}" type="button" data-reqbranch="complete" aria-pressed="${complete}">Yes, requisition is complete</button><button class="branch-choice ${missing?'selected':''}" type="button" data-reqbranch="missing" aria-pressed="${missing}">No, details are missing</button></div></div>`;
  if(missing){
  h+=`<div class="branch-result"><div class="branch-action branch-action-emphasis" role="note"><span class="branch-action-icon" aria-hidden="true">!</span><div class="branch-action-content"><div class="branch-action-heading"><strong>Contact the ordering provider’s office</strong><span class="branch-action-badge">ACTION REQUIRED</span></div><p><strong>Lab personnel or the RN must call</strong> the ordering provider’s office to obtain the missing account number and/or test codes.</p></div></div><div class="branch-choice-group"><div class="workflow-choice-caption">CHOOSE ONE</div><div class="branch-options branch-followup" role="group" aria-label="Ordering office follow-up"><button type="button" class="branch-choice ${state.reqResolution==='provided'?'selected':''}" data-reqresolution="provided" aria-pressed="${state.reqResolution==='provided'}">Information obtained</button><button type="button" class="branch-choice ${unresolved?'selected':''}" data-reqresolution="unresolved" aria-pressed="${unresolved}">Office unable to provide</button></div></div>`;
  if(unresolved){
@@ -2002,7 +2039,7 @@ function externalFlow(){
  ['Prepare and upload the Lab Calculator','Use the appropriate Lab Calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
  ['Schedule the patient','The Front Desk Coordinator schedules the patient after receiving the completed request and communicates any fasting, dietary or other preparation instructions provided by lab personnel or the RN.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
- ],3)}</div>`;
+ ],4)}</div>`;
  h+='</div>';
  h+=collectionProcessingHandoff();
  return h;
