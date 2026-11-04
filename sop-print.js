@@ -45,12 +45,6 @@ function scheduled(){
    'Explain that a Sollis provider can assess the member and order labs when clinically appropriate.',
    'If Sollis places the orders, follow the <b>Ordered at Sollis</b> sendout workflow instead of the outside-requisition pathway.')]
  ]);
- h+=note('Market routing for members with outside lab orders',bullet(
-  '<b>Southern California / SoCal:</b> Send to the approved SoCal regional intake email; route the Athena Navigator task to the RN or lab personnel per SoCal workflow; schedule only after clinical review.',
-  '<b>Northern California / NorCal:</b> Send to the approved NorCal regional intake email; route the Athena Navigator task to the RN or lab personnel per NorCal workflow; schedule only after clinical review.',
-  '<b>Florida:</b> Send to the approved Florida regional intake email; route the Athena Navigator task to the RN or lab personnel per Florida workflow; schedule only after clinical review.',
-  '<b>New York:</b> Send to the approved New York regional intake email; route the Athena Navigator task to the RN or lab personnel per New York workflow; schedule only after clinical review.',
-  'Use the current approved regional mailbox and Navigator assignee. Exact market email addresses are not listed in this reference.'));
  h+=section('2. Receive, classify and route the requisition','Complete all four actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
   ['Faxed to Sollis',bullet(
