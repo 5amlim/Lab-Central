@@ -1,0 +1,23 @@
+name: Check site files
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check HTML asset references
+        run: node scripts/check-site.mjs
+      - name: Check JavaScript syntax
+        shell: bash
+        run: |
+          for file in *.js; do
+            node --check "$file"
+          done
