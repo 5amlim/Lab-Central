@@ -17,17 +17,17 @@ The application is a static website. It does not require a database or applicati
 
 Use a local HTTP server to preview the same static files published through GitHub Pages:
 
-\`\`\`bash
+```bash
 python3 -m http.server 8000
-\`\`\`
+```
 
 Open http://localhost:8000 in a browser. There is no build or install step.
 
 Run the repository checks before publishing changes:
 
-\`\`\`bash
+```bash
 node scripts/check-site.mjs
-\`\`\`
+```
 
 The checker verifies that local files referenced by the site's HTML pages exist. JavaScript syntax is also checked in GitHub Actions.
 
@@ -35,13 +35,13 @@ The checker verifies that local files referenced by the site's HTML pages exist.
 
 | Location | Purpose |
 | --- | --- |
-| \`index.html\` | Main application shell, reference data, and client-side navigation |
-| \`*.js\` | Feature modules, interactive guides, and illustrations |
-| \`*.css\` | Feature styling and printable layouts |
-| \`assets/\` | Reference images, instructional documents, and templates |
-| \`archive/\` | Retired reference material, not part of the active website |
-| \`docs/\` | Architecture, maintenance instructions, and review considerations |
-| \`.github/workflows/\` | Repository checks and asset workflows |
+| `index.html` | Main application shell, reference data, and client-side navigation |
+| `*.js` | Feature modules, interactive guides, and illustrations |
+| `*.css` | Feature styling and printable layouts |
+| `assets/` | Reference images, instructional documents, and templates |
+| `archive/` | Retired reference material, not part of the active website |
+| `docs/` | Architecture, maintenance instructions, and review considerations |
+| `.github/workflows/` | Repository checks and asset workflows |
 
 Most feature modules are still loaded directly from the repository root. Script order matters because the modules share browser globals. See [Architecture](docs/architecture.md) before reorganizing files.
 
@@ -49,7 +49,7 @@ Most feature modules are still loaded directly from the repository root. Script 
 
 The site is designed to publish from the repository root using GitHub Pages. Confirm the active deployment settings under **Settings > Pages** before changing the branch or directory.
 
-The \`?v=\` value on local stylesheet and script URLs in \`index.html\` is a cache version. Update it consistently when publishing a coordinated release.
+The `?v=` value on local stylesheet and script URLs in `index.html` is a cache version. Update it consistently when publishing a coordinated release.
 
 See [Maintenance](docs/maintenance.md) for the change and verification process.
 
