@@ -32,7 +32,26 @@ function handoff(start){
 }
 function scheduled(){
  let h=header('External requisition · Scheduled','From receipt of an outside requisition through Athena documentation, scheduling, specimen collection and sendout.','Scheduled external laboratory requests','Front Desk Coordinator · RN / Lab personnel · Provider');
- h+=section('1. Receive, classify and route the requisition','Complete all four actions for the appropriate arrival method.');
+ h+=section('1. Front desk intake','Ask whether the member already has outside lab orders before receiving and routing documents.');
+ h+=step('Obtain the requisition',bullet(
+  'When a member calls or walks in to ask about outside laboratory testing, ask if they already have lab orders from their doctor.'
+ ),'Front Desk Coordinator',1);
+ h+=fork('Does the member already have orders?',[
+  ['They have orders',bullet(
+   'Ask the member to email the orders to their <b>approved regional intake email</b> for clinical review.',
+   '<b>Do not offer or confirm an appointment time</b> before review.',
+   '<b>Suggested wording:</b> Please email your lab orders to the regional email provided by our team. Our clinical team will review them and contact you about scheduling once the review is complete.')],
+  ['They do not have orders',bullet(
+   'Explain that a Sollis provider can assess the member and order labs when clinically appropriate.',
+   'If Sollis places the orders, follow the <b>Ordered at Sollis</b> sendout workflow instead of the outside-requisition pathway.')]
+ ]);
+ h+=note('Market routing for members with outside lab orders',bullet(
+  '<b>Southern California / SoCal:</b> Send to the approved SoCal regional intake email; route the Athena Navigator task to the RN or lab personnel per SoCal workflow; schedule only after clinical review.',
+  '<b>Northern California / NorCal:</b> Send to the approved NorCal regional intake email; route the Athena Navigator task to the RN or lab personnel per NorCal workflow; schedule only after clinical review.',
+  '<b>Florida:</b> Send to the approved Florida regional intake email; route the Athena Navigator task to the RN or lab personnel per Florida workflow; schedule only after clinical review.',
+  '<b>New York:</b> Send to the approved New York regional intake email; route the Athena Navigator task to the RN or lab personnel per New York workflow; schedule only after clinical review.',
+  'Use the current approved regional mailbox and Navigator assignee. Exact market email addresses are not listed in this reference.'));
+ h+=section('2. Receive, classify and route the requisition','Complete all four actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
   ['Faxed to Sollis',bullet(
    '<b>1. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
@@ -57,7 +76,7 @@ function scheduled(){
  h+=note('IMPORTANT: Update all existing notes','Whenever an additional requisition arrives later, revisit <b>every previously saved LAB REQUISITION</b> and update the total in each Internal Note before handoff.',true);
  h+=step('Review the outside requisition',bullet(
   'Verify patient name and date of birth against the chart, receiving lab, ordered tests, exact <b>test codes</b>, <b>account number</b> and preparation requirements.',
-  'Check that each active requisition is the correct, current version before proceeding.'),'RN / Lab personnel',2);
+  'Check that each active requisition is the correct, current version before proceeding.'),'RN / Lab personnel',3);
  h+=fork('Are the account number and test codes available?',[
   ['Yes',bullet('Continue to prepare the Lab Calculator and collection plan.')],
   ['No, information is missing',bullet(
@@ -68,14 +87,14 @@ function scheduled(){
  h+=section('2. Prepare and schedule','Complete order review and required documentation first.');
  h+=step('Prepare and upload the Lab Calculator',bullet(
   'Choose the correct receiving lab and confirm test codes, tubes, volumes, processing, transport temperature and priority.',
-  'Generate the final calculator printout and upload the PDF in Athena as <b>Clinical Document · LAB FLOWSHEET</b>.'),'RN / Lab personnel',3);
+  'Generate the final calculator printout and upload the PDF in Athena as <b>Clinical Document · LAB FLOWSHEET</b>.'),'RN / Lab personnel',4);
  h+=step('Schedule the patient',bullet(
   'Front Desk Coordinator schedules after receiving the completed request.',
-  'Communicate fasting, dietary, timed-draw and other preparation instructions provided by the clinical team.'),'Front Desk Coordinator',4);
+  'Communicate fasting, dietary, timed-draw and other preparation instructions provided by the clinical team.'),'Front Desk Coordinator',5);
  h+=step('Print both documents on appointment day',bullet(
   'Before collection, print <b>every current LAB REQUISITION</b> and the <b>LAB FLOWSHEET</b> from the chart.',
-  'For the calculator color-coded tube and bag instructions, choose <b>View Original Image</b> in Athena before printing.'),'RN / Lab personnel',5);
- h+=handoff(6);
+  'For the calculator color-coded tube and bag instructions, choose <b>View Original Image</b> in Athena before printing.'),'RN / Lab personnel',6);
+ h+=handoff(7);
  h+=note('Do not collect before required orders are in place','If codes or account details cannot be obtained, escalate to the Sollis provider on duty. Complete the required Athena orders and document uploads before collection.',true);
  return h+finish();
 }
