@@ -657,3 +657,49 @@
  .lab-search-source{box-shadow:none;break-inside:auto}
  .lab-search-source-header{break-after:avoid}
 }
+
+
+/* PATHFAST assay accent cards */
+.assay-catalog .ac-grid--pathfast > .ac-card:nth-child(1) {
+  --pf-accent:#658fb7;
+  --pf-pale:#edf4fb;
+  --pf-deep:#426c94;
+  --pf-outline:#cddfec;
+}
+.assay-catalog .ac-grid--pathfast > .ac-card:nth-child(2) {
+  --pf-accent:#62aaa0;
+  --pf-pale:#edf8f5;
+  --pf-deep:#347e76;
+  --pf-outline:#c9e5dd;
+}
+.assay-catalog .ac-grid--pathfast > .ac-card:nth-child(3) {
+  --pf-accent:#c9a05d;
+  --pf-pale:#fff8eb;
+  --pf-deep:#966d32;
+  --pf-outline:#ebddc4;
+}
+.assay-catalog .ac-grid--pathfast > .ac-card {
+  border-color:var(--pf-outline);
+  border-top:4px solid var(--pf-accent);
+}
+.assay-catalog .ac-grid--pathfast .ac-card-head {
+  background:linear-gradient(110deg,var(--pf-pale),#fff 86%);
+}
+.assay-catalog .ac-grid--pathfast .ac-card-index {
+  background:var(--pf-pale);
+  color:var(--pf-deep);
+}
+.assay-catalog .ac-grid--pathfast .ac-card-summary strong {
+  color:var(--pf-deep);
+}
+.assay-catalog .ac-grid--pathfast .ac-group h4 {
+  color:var(--pf-deep);
+}
+.assay-catalog .ac-grid--pathfast .ac-group li::before {
+  background:var(--pf-accent);
+}
+.assay-catalog .ac-grid--pathfast .ac-analyte-short {
+  background:var(--pf-pale);
+  border-color:var(--pf-outline);
+  color:var(--pf-deep);
+}
