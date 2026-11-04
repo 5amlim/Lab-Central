@@ -1962,12 +1962,6 @@ function orderWorkflowTabs(tab){
   '</div>';
 }
 function frontDeskRequisitionIntake(){
- const markets=[
-  {code:'SOCAL',name:'Southern California',label:'SoCal'},
-  {code:'NORCAL',name:'Northern California',label:'NorCal'},
-  {code:'FL',name:'Florida',label:'Florida'},
-  {code:'NY',name:'New York',label:'New York'}
- ];
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
  <header class="requisition-intake-header">
   <span class="req-intake-number">01</span>
@@ -1987,13 +1981,6 @@ function frontDeskRequisitionIntake(){
    <p>Explain that a Sollis provider can assess the member and order laboratory testing when clinically appropriate.</p>
    <p class="fd-intake-next">If Sollis places the orders, follow the <b>Ordered at Sollis</b> workflow rather than the external requisition intake process.</p>
   </article>
- </div>
- <div class="fd-market-panel" aria-label="Regional outside requisition intake routing">
-  <div class="fd-market-panel-heading"><div><strong>Regional intake and routing</strong><p>For members who already have outside lab orders</p></div><span>4 MARKETS</span></div>
-  <div class="fd-market-grid">
-   ${markets.map(m=>`<article class="fd-market-item"><div class="fd-market-top"><span class="fd-market-code">${m.code}</span><strong>${m.name}</strong></div><p><b>Send orders:</b> ${m.label} regional intake email provided by Front Desk</p><p><b>Review:</b> Route the Athena Navigator task to the RN or lab personnel according to ${m.label} workflow</p><p><b>Schedule:</b> Only after the clinical team confirms the request is ready</p></article>`).join('')}
-  </div>
-  <p class="fd-market-footnote">Use the current, approved regional mailbox and local Navigator assignment. Email addresses and market-specific assignees are not listed in this portal reference.</p>
  </div>
  </section>`;
 }
