@@ -144,7 +144,7 @@ function pmdCollection(p){
  const pharyngitisNote=p.id==="resp-limited"?
   '<aside class="pmd-pharyngitis-note" aria-label="Pharyngitis and tonsillar swab collection">'+
   '<strong>PHARYNGITIS / TONSILLAR SWAB</strong>'+
-  '<p>A tonsillar (oropharyngeal) swab collects from the tonsillar pillars and posterior pharynx. <b>Use for this panel only after PathMD confirms that a throat swab is accepted</b> and verifies the approved swab and transport kit.</p></aside>':'';
+  '<p>A tonsillar (oropharyngeal) swab can be used for this panel. Swab the tonsillar pillars and posterior pharynx, avoiding contact with the tongue, teeth and cheeks. Place the collected swab in the PathMD white-top tube.</p></aside>':'';
  const paths=mode==="urine-or-swab"?
   '<div class="pmd-collection-path"><h5>Urine specimen</h5><p>When urine is the approved specimen source for the ordered panel:</p>'+pmdStepCards("urine")+'</div>'+
   '<div class="pmd-collection-path"><h5>Swab specimen</h5><p>When a site-specific swab is the approved specimen source:</p>'+pmdStepCards("swab")+'</div>':
