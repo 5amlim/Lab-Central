@@ -34,7 +34,7 @@ function scheduled(){
  let h=header('External requisition · Scheduled','From receipt of an outside requisition through Athena documentation, scheduling, specimen collection and sendout.','Scheduled external laboratory requests','Front Desk Coordinator · RN / Lab personnel · Provider');
  h+=section('1. Front desk intake','Ask whether the member already has outside lab orders before receiving and routing documents.');
  h+=step('Obtain the requisition',bullet(
-  'When a member calls or walks in to ask about outside laboratory testing, ask if they already have lab orders from their doctor.'
+  'When a member calls to ask about outside laboratory testing, ask if they already have lab orders from their doctor.'
  ),'Front Desk Coordinator',1);
  h+=fork('Does the member already have orders?',[
   ['They have orders',bullet(
