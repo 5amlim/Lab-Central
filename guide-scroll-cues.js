@@ -142,6 +142,59 @@ window.addEventListener("scroll",updatePage,{passive:true});
 window.addEventListener("resize",scan,{passive:true});
 window.addEventListener("hashchange",scan);
 const root=document.getElementById("mainContent");
+
+/* Keep clicked controls stationary when an in-place view redraws.
+   Deliberate route changes, step navigation and scroll-to links stay untouched. */
+if(root&&typeof MutationObserver!=="undefined"){
+ const controls="button,[role='button'],[role='tab'],summary";
+ const intentional="a[href],[data-go],[data-gotab],[data-goorderset],[data-workflowtab],"+
+  "[data-guide-step],[data-guide-mode],[data-ev-step],[data-calc2-search-lab],"+
+  "[data-calc2-open-menu],[data-pf-panel-trigger],"+
+  ".lc-scroll-cue-left,.lc-scroll-cue-right,.lc-page-scroll-cue";
+ const label=node=>String(node.getAttribute("aria-label")||node.textContent||"")
+  .replace(/\s+/g," ").trim().slice(0,160);
+ document.addEventListener("click",function(event){
+  const control=event.target.closest(controls);
+  if(!control||!root.contains(control)||control.closest(intentional))return;
+  const originalRoute=location.pathname+location.search+location.hash;
+  const originalTop=control.getBoundingClientRect().top;
+  const tag=control.tagName;
+  const id=control.id;
+  const key=Array.from(control.attributes).find(a=>a.name.startsWith("data-")&&a.value);
+  const text=label(control);
+  if(!id&&!key&&!text)return;
+  const matches=()=>Array.from(root.querySelectorAll(controls)).filter(node=>
+   node.tagName===tag&&(id?node.id===id:key?node.getAttribute(key.name)===key.value:label(node)===text));
+  const position=Math.max(0,matches().indexOf(control));
+  let closed=false,queued=false;
+  const observer=new MutationObserver(schedule);
+  function close(){if(closed)return;closed=true;observer.disconnect();}
+  function schedule(){
+   if(closed||queued)return;
+   queued=true;
+   requestAnimationFrame(function(){
+    queued=false;
+    if(closed)return;
+    if(location.pathname+location.search+location.hash!==originalRoute){close();return;}
+    const candidates=matches();
+    const labeled=candidates.filter(node=>label(node)===text);
+    const replacement=control.isConnected?control:
+     (labeled.length===1?labeled[0]:(candidates[position]||(candidates.length===1?candidates[0]:null)));
+    if(!replacement||!replacement.isConnected)return;
+    const displacement=replacement.getBoundingClientRect().top-originalTop;
+    if(control.isConnected&&Math.abs(displacement)<=2)return;
+    if(Number.isFinite(displacement)&&Math.abs(displacement)>2)
+     window.scrollBy({top:displacement,behavior:"instant"});
+    if(event.detail===0&&!control.isConnected)
+     replacement.focus?.({preventScroll:true});
+    close();
+   });
+  }
+  observer.observe(root,{childList:true,subtree:true});
+  setTimeout(close,350);
+ },true);
+}
+
 if(root&&typeof MutationObserver!=="undefined"){
  const observer=new MutationObserver(scan);
  observer.observe(root,{subtree:true,childList:true});
