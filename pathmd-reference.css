@@ -239,6 +239,10 @@
 .pmd-collection-tags span{border:1px solid #d5d0e6;border-radius:6px;background:#f3f0fa;padding:6px 9px;color:#665b92;font-size:9px;font-weight:850;letter-spacing:.05em}
 .pmd-collection-tags span+span{background:#edf7f5;border-color:#d0e7df;color:#357c70}
 .pmd-collection-intro{font-size:11px;line-height:1.6;color:#657d8d;margin:0;padding:0 17px 14px}
+.pmd-pharyngitis-note{margin:0 14px 14px;padding:12px 14px;border:1px solid #ddd5ee;border-left:3px solid #8773b4;border-radius:9px;background:#f9f7fd;color:#595475}
+.pmd-pharyngitis-note>strong{display:block;margin-bottom:4px;font-size:10px;letter-spacing:.06em;color:#695891}
+.pmd-pharyngitis-note p{margin:0;font-size:11px;line-height:1.6}
+.pmd-pharyngitis-note b{color:#544674;font-weight:750}
 .pmd-collection-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0 14px 14px}
 .pmd-collection-step{display:flex;flex-direction:column;min-width:0;border:1px solid #e3e9ef;border-radius:10px;overflow:hidden;background:#fff}
 .pmd-step-picture{padding:9px 10px;background:#f5f9fc;border-bottom:1px solid #edf0f5}
