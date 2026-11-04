@@ -28,7 +28,7 @@ const panels=[
  {id:"peds-resp",category:"Respiratory",name:"Pediatrics Respiratory Panel",page:1,terms:"pediatric children paediatric",groups:{
   bacterial:items("Bordetella pertussis|Chlamydophila pneumoniae|Legionella pneumophila|Mycoplasma pneumoniae"),
   viral:items("Adenovirus|Coronavirus 229E|Coronavirus HKU1|Coronavirus NL63|Coronavirus OC43|Epstein-Barr virus (EBV, mononucleosis)|Enterovirus|Human metapneumovirus A|Human metapneumovirus B|Influenza A|Influenza B|Parainfluenza 1|Parainfluenza 2|Parainfluenza 3|Parainfluenza 4|Rhinovirus|RSV|SARS-CoV-2 (COVID-19)")}},
- {id:"resp-limited",category:"Respiratory",name:"Limited Respiratory Panel",page:1,terms:"limited respiratory",groups:{
+ {id:"resp-limited",category:"Respiratory",name:"Limited Respiratory Panel",page:1,terms:"limited respiratory pharyngitis sore throat tonsillar tonsil swab oropharyngeal throat",groups:{
   bacterial:items("Bordetella pertussis|Chlamydophila pneumoniae|Mycoplasma pneumoniae|Streptococcus pneumoniae|Streptococcus pyogenes (Group A)"),viral:respCore}},
  {id:"gi",category:"Gastrointestinal",name:"Gastrointestinal Pathogen Panel",page:1,terms:"GI stool diarrhea gastro stool test",groups:{
   bacterial:giBacteria,viral:giViruses,parasitic:items("Cryptosporidium spp.|Entamoeba histolytica|Giardia lamblia")}},
@@ -141,6 +141,10 @@ function pmdStepCards(mode){
 function pmdCollection(p){
  const mode=pmdCollectionMode(p);
  const note=mode==="urine"?"URINE · THICK SWAB × 10":mode==="stool"?"STOOL · THICK SWAB":mode==="urine-or-swab"?"URINE OR SITE SWAB":"APPROVED SITE SWAB";
+ const pharyngitisNote=p.id==="resp-limited"?
+  '<aside class="pmd-pharyngitis-note" aria-label="Pharyngitis and tonsillar swab collection">'+
+  '<strong>PHARYNGITIS / TONSILLAR SWAB</strong>'+
+  '<p>A tonsillar (oropharyngeal) swab collects from the tonsillar pillars and posterior pharynx. <b>Use for this panel only after PathMD confirms that a throat swab is accepted</b> and verifies the approved swab and transport kit.</p></aside>':'';
  const paths=mode==="urine-or-swab"?
   '<div class="pmd-collection-path"><h5>Urine specimen</h5><p>When urine is the approved specimen source for the ordered panel:</p>'+pmdStepCards("urine")+'</div>'+
   '<div class="pmd-collection-path"><h5>Swab specimen</h5><p>When a site-specific swab is the approved specimen source:</p>'+pmdStepCards("swab")+'</div>':
@@ -149,6 +153,7 @@ function pmdCollection(p){
   '<div class="pmd-collection-heading"><div><span class="pmd-mini-label">SPECIMEN COLLECTION</span><h4>How to collect</h4></div>'+
   '<div class="pmd-collection-tags"><span>1 WHITE-TOP TUBE</span><span>'+note+'</span></div></div>'+
   '<p class="pmd-collection-intro">Use one PathMD white-top transport tube for this panel. Confirm the ordered specimen source is approved before collection.</p>'+
+  pharyngitisNote+
   paths+
   '<div class="pmd-label-instruction"><div class="pmd-label-art">'+pmdPicture("label")+'</div><div><span class="pmd-collection-step-no">REQUIRED ON EVERY TUBE</span><p>'+pmdLabels+'</p></div></div>'+
   '<div class="pmd-collection-foot">Close the tube securely. Match the tube with the completed paper requisition and follow the clinic-approved PathMD pickup procedure.</div>'+
