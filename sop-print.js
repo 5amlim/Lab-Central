@@ -32,7 +32,8 @@ function handoff(start){
 }
 function scheduled(){
  let h=header('External requisition · Scheduled','From receipt of an outside requisition through Athena documentation, scheduling, specimen collection and sendout.','Scheduled external laboratory requests','Front Desk Coordinator · RN / Lab personnel · Provider');
- h+=section('1. Front desk intake','Ask whether the member already has outside lab orders before receiving and routing documents.');
+ h+=section('1. Front desk intake (when applicable)','Only for members who call before sending an outside requisition.');
+ h+=note('Already received the requisition? Skip Step 01','If the outside lab requisition arrives directly by email, text, or fax, begin with Step 02: Receive, classify and route the requisition. Front desk phone intake is not required.');
  h+=step('Obtain the requisition',bullet(
   'When a member calls to ask about outside laboratory testing, ask if they already have lab orders from their doctor.'
  ),'Front Desk Coordinator',1);
