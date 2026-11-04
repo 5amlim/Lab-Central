@@ -2879,7 +2879,14 @@
 .fd-intake-option>p{font-size:12px;line-height:1.6;color:#3b5366;margin:0}
 .fd-intake-script{border:1px solid #d8e9e3;background:#fff;border-radius:9px;padding:10px 12px}
 .fd-intake-script>span{font-weight:850;letter-spacing:.07em;font-size:9px;color:#508074}
-.fd-intake-script p{font-size:11.5px;line-height:1.6;color:#456375;margin:5px 0 0}
+.fd-intake-script p{font-size:11.5px;line-height:1.75;color:#456375;margin:5px 0 0}
+.fd-intake-script .fd-intake-email-badge{
+ display:inline-flex;align-items:center;vertical-align:baseline;
+ padding:2px 8px;margin:0 2px;border-radius:6px;
+ border:1px solid #afcbd8;background:#e8f3f7;color:#245a77;
+ font-size:10px;font-weight:820;letter-spacing:.025em;line-height:1.55;
+ white-space:nowrap;
+}
 .fd-intake-rule{border-left:3px solid #b8893d;border-radius:5px;background:#fff8e9;padding:9px 11px;font-size:11.5px;line-height:1.5;color:#725321}
 .fd-intake-next{margin-top:5px!important;border-top:1px solid #eadfcf;padding-top:12px}
 @media(max-width:760px){
