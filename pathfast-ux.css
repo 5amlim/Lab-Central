@@ -244,3 +244,24 @@
  .pf-training-video-card{flex-direction:column;align-items:stretch;padding:13px 14px}
  .pf-training-video-action{width:100%;white-space:normal;text-align:center}
 }
+
+/* Full-width, contextually placed training cards within the PATHFAST workflows. */
+.procedure-flow.pfux-patient > .pf-training-video-card,
+.pf-calibration-guide > .pf-training-video-card {
+ width:100%;
+ max-width:none;
+ box-sizing:border-box;
+ align-self:stretch;
+ margin:14px 0 18px;
+}
+.pf-training-video-card .pf-training-video-icon {
+ display:block;
+ width:19px;height:19px;
+ flex:0 0 19px;
+ stroke:currentColor;
+}
+.pf-training-video-action > span:last-child{font-size:14px;line-height:1}
+@media (max-width:720px){
+ .pf-training-video-card{gap:12px}
+ .pf-training-video-action{min-height:44px}
+}
