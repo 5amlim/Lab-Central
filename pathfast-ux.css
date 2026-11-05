@@ -206,3 +206,41 @@
    The card numbers are navigation order, not an instruction to delay RN collection. */
 @media(min-width:1260px){.pfux-primary-nav{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media(min-width:1051px) and (max-width:1259px){.pfux-primary-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Direct Sollis SharePoint training references in PATHFAST patient / CAL-QC tabs. */
+.pf-training-video-card{
+ display:flex;align-items:center;justify-content:space-between;gap:16px;
+ margin:0 0 17px;padding:15px 18px;
+ background:linear-gradient(105deg,#f1f8fb,#fff);
+ border:1px solid #d2e4ee;border-left:4px solid #428dad;
+ border-radius:12px;
+}
+.pf-training-video-card.pf-training-video-cal{
+ border-color:#d0e8e3;border-left-color:#27998e;
+ background:linear-gradient(105deg,#f0faf7,#fff);
+}
+.pf-training-video-copy{min-width:0}
+.pf-training-video-eyebrow{
+ display:block;margin-bottom:6px;
+ color:#4c8095;font-size:10px;font-weight:850;letter-spacing:.075em;
+}
+.pf-training-video-cal .pf-training-video-eyebrow{color:#368477}
+.pf-training-video-copy strong{display:block;color:#274962;font-size:15px;line-height:1.35}
+.pf-training-video-copy p{color:#637e90;margin:5px 0 0;font-size:11.5px;line-height:1.55}
+.pf-training-video-action{
+ flex:none;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+ border:1px solid #bbd6e7;border-radius:9px;padding:11px 14px;
+ color:#25648a;background:#fff;font-size:11.5px;font-weight:850;
+ text-decoration:none;white-space:nowrap;
+}
+.pf-training-video-cal .pf-training-video-action{border-color:#bcddd6;color:#19796c}
+.pf-training-video-action:hover,.pf-training-video-action:focus-visible{
+ background:#eaf6fb;border-color:#8fbccc;text-decoration:none;
+}
+.pf-training-video-cal .pf-training-video-action:hover,.pf-training-video-cal .pf-training-video-action:focus-visible{
+ background:#e7f6f1;border-color:#8ec8b9;
+}
+@media(max-width:720px){
+ .pf-training-video-card{flex-direction:column;align-items:stretch;padding:13px 14px}
+ .pf-training-video-action{width:100%;white-space:normal;text-align:center}
+}
