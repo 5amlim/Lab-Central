@@ -508,27 +508,56 @@ function render(sec,groups){
   actions(patient)+
   '<p class="ptg-foot">Code badges identify sample prefixes or guide assay shorthand, not API catalog numbers. Always match the actual kit, event worksheet and enrollment. Test PT as patient specimens, without grading-driven repeats or referral. File under the correct event tab and retain records for at least two years. Photos and binder filing do not submit results to API; verify transmission in Event History. <a target="_blank" rel="noopener noreferrer" href="'+cms+'">CMS requirements ↗</a></p></section>';
 }
-function refresh(host,id,field){
- const seq=stepsSaved.get(id);
- if(!seq)return;
+function refresh(host,id,field,preserveNavigation=false){
+ const seq=stepsSaved.get(id);if(!seq)return;
  const page=host.closest(".ptg-page");
  const heading=page?.querySelector("[data-ptg-picker]");
  if(field&&heading)heading.innerHTML=materialPicker(id,stateFor(id,seq.length));
+ if(preserveNavigation&&!field){
+  const live=host.querySelector("#ptg-current-step .ptg-stage");
+  const temp=document.createElement("template");
+  temp.innerHTML=workflow(id,seq);
+  const fresh=temp.content.querySelector("#ptg-current-step .ptg-stage");
+  const liveNav=live?.querySelector(".ptg-transport");
+  const freshNav=fresh?.querySelector(".ptg-transport");
+  if(live&&fresh&&liveNav&&freshNav){
+   live.classList.toggle("ptg-stage-final",fresh.classList.contains("ptg-stage-final"));
+   for(const selector of [".ptg-number",".ptg-stage-heading",".ptg-stage-body"]){
+    const part=live.querySelector(selector),replacement=fresh.querySelector(selector);
+    if(part&&replacement)part.innerHTML=replacement.innerHTML;
+   }
+   const freshButtons=freshNav.querySelectorAll("button");
+   liveNav.querySelectorAll("button").forEach((button,i)=>{
+    const replacement=freshButtons[i];if(!replacement)return;
+    button.textContent=replacement.textContent;button.disabled=replacement.disabled;
+    button.className=replacement.className;
+    for(const attr of ["data-ptg-step","data-ptg-mode","aria-label"]){
+     if(replacement.hasAttribute(attr))button.setAttribute(attr,replacement.getAttribute(attr));
+     else button.removeAttribute(attr);
+    }
+   });
+   const st=stateFor(id,seq.length);
+   host.querySelectorAll(".ptg-step-tab").forEach(tab=>{
+    const current=Number(tab.getAttribute("data-ptg-step"))===st.step;
+    tab.classList.toggle("is-active",current);
+    if(current)tab.setAttribute("aria-current","step");else tab.removeAttribute("aria-current");
+   });
+   const bar=host.querySelector(".ptg-progress");
+   if(bar){
+    bar.setAttribute("aria-valuenow",String(st.step+1));
+    const fill=bar.querySelector("span");
+    if(fill)fill.style.width=((st.step+1)/seq.length*100)+"%";
+   }
+   return;
+  }
+ }
  host.innerHTML=workflow(id,seq);
  if(field){
   const trigger=heading?.querySelector('[data-ptg-dropdown-trigger="'+field+'"]');
   if(trigger&&typeof trigger.focus==="function")trigger.focus({preventScroll:true});
- }else{
-  const stage=host.querySelector("#ptg-current-step");
-  if(stage&&typeof stage.focus==="function"){
-   stage.focus({preventScroll:true});
-   const b=stage.getBoundingClientRect();
-   if((b.top<90||b.top>window.innerHeight-140)&&typeof stage.scrollIntoView==="function")
-    stage.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
-  }
  }
+ // Step navigation does not move the browser's viewport.
 }
-
 /* Portal-level chooser: appends to body, beyond clipped pages, with code badges
    visible beside every option. Accessible through keyboard, pointer and touch. */
 let activePickerPortal=null;
@@ -633,6 +662,7 @@ document.addEventListener("click",event=>{
  const id=host.getAttribute("data-ptg-workflow"),seq=stepsSaved.get(id);
  if(!seq)return;
  const st=stateFor(id,seq.length);
+ const wasGuided=st.mode==="guided";
  if(btn.hasAttribute("data-ptg-mode")){
   const m=btn.getAttribute("data-ptg-mode");
   if(m!=="guided"&&m!=="all")return;
@@ -642,7 +672,7 @@ document.addEventListener("click",event=>{
   if(!Number.isInteger(num)||num<0||num>=seq.length)return;
   st.step=num;st.mode="guided";
  }
- remembered.set(id,st);refresh(host,id);
+ remembered.set(id,st);refresh(host,id,undefined,wasGuided&&st.mode==="guided"&&btn.hasAttribute("data-ptg-step"));
 });
 document.addEventListener("keydown",event=>{
  if(!activePickerPortal)return;
