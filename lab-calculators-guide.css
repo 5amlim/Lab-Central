@@ -676,16 +676,11 @@
  display:flex;align-items:center;justify-content:space-between;
  gap:12px;text-align:left;
 }
-.lab-panel-sendout-footer-kind{
+.lab-panel-sendout-result .lab-panel-all-targets .lab-panel-sendout-footer-market{
  display:inline-flex;align-items:center;flex:0 0 auto;
- border:1px solid #d3e9e4;border-radius:6px;
- background:#e9f5f1;color:#277e76;
- padding:4px 7px;
- font-size:9px;font-weight:850;letter-spacing:.055em;
- line-height:1.35;white-space:nowrap;
-}
-.lab-panel-sendout-pathmd .lab-panel-sendout-footer-kind{
- border-color:#e2d9ef;background:#f2eff9;color:#75629f;
+ margin:0;padding:4px 7px;
+ font-size:9px;font-weight:850;line-height:1.35;
+ white-space:nowrap;
 }
 .lab-panel-target-summary-action{
  display:inline-flex;align-items:center;justify-content:flex-end;
@@ -695,6 +690,6 @@
 .lab-panel-target-summary-action .lab-shared-chevron{flex:none}
 @media(max-width:480px){
  .lab-panel-sendout-result .lab-panel-all-targets>summary{gap:7px}
- .lab-panel-sendout-footer-kind{padding:4px 6px;font-size:8px}
+ .lab-panel-sendout-footer-market{padding:4px 6px;font-size:8px}
  .lab-panel-target-summary-action{gap:5px;font-size:10px}
 }
