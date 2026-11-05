@@ -208,7 +208,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="reference-refresh.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261104" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261104-fullstep" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261104-cal-parent" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261104" media="all">
@@ -2621,7 +2621,7 @@ function sectionRender(sec,tab){
  else if(tab==='visuals'&&hasVisualGuide)h+=window.LAB_EQUIPMENT_ART.visualGuide(sec);
  else if(tab==='troubleshooting'&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))h+=window.LAB_TROUBLESHOOTING.render(sec.id);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
- else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="Expanded Calibration and QC dropdown"><div class="pfux-cal-nested-label">Inside Calibration + QC · Choose assay panel below</div>'+window.LAB_PATHFAST_UI.render()+'</div>';
+ else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="PATHFAST Calibration and QC guide">'+window.LAB_PATHFAST_UI.render()+'</div>';
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
  else if(sec.id==='piccolo'&&tab==='result-interpretation')h+=window.LAB_PICCOLO_RESULTS.render();
