@@ -310,3 +310,47 @@
   padding:14px 12px 18px;
  }
 }
+
+/* PATHFAST patient testing: one enclosing card with heading, training, collection, and guided steps. */
+.procedure-flow.pfux-patient{
+ width:100%;
+ min-width:0;
+ max-width:none;
+ box-sizing:border-box;
+ border:1px solid #cfe5e4;
+ border-left:4px solid #26968c;
+ border-radius:17px;
+ background:#f8fbfc;
+ box-shadow:0 5px 18px rgba(33,77,96,.045);
+}
+.procedure-flow.pfux-patient > .pcr-heading.pf-patient-heading{
+ width:100%;
+ max-width:none;
+ box-sizing:border-box;
+ margin:0;
+ padding:22px 24px;
+ border:0;
+ border-bottom:1px solid #d6e8e8;
+ border-radius:14px 16px 0 0;
+ background:linear-gradient(110deg,#edf8f6,#f8fbfc);
+}
+.procedure-flow.pfux-patient > .pfux-patient-body{
+ width:100%;
+ min-width:0;
+ box-sizing:border-box;
+ padding:18px 22px 24px;
+}
+.procedure-flow.pfux-patient .pfux-patient-body > .pf-training-video-card{
+ width:100%;
+ max-width:none;
+ box-sizing:border-box;
+ margin:0 0 18px;
+}
+@media(max-width:720px){
+ .procedure-flow.pfux-patient > .pcr-heading.pf-patient-heading{
+  padding:17px 16px;
+ }
+ .procedure-flow.pfux-patient > .pfux-patient-body{
+  padding:14px 12px 18px;
+ }
+}
