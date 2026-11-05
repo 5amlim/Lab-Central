@@ -600,6 +600,15 @@
  padding:4px 6px;border-radius:5px;vertical-align:middle;
 }
 .lab-panel-sendout-pathmd .lab-panel-sendout-kind{background:#f2eff9}
+.lab-panel-special-title{display:flex;align-items:center;flex-wrap:wrap;gap:6px 9px;min-width:0}
+.lab-panel-sendout-result .lab-panel-special-title h3{margin:0}
+.lab-panel-pharyngitis-tag{
+ display:inline-flex;align-items:center;flex:none;
+ border:1px solid #d7cbea;border-radius:6px;
+ background:#f4effa;color:#7755a0;
+ padding:3px 7px;font-size:9px;font-weight:850;letter-spacing:.045em;
+ line-height:1.45;white-space:nowrap;
+}
 .lab-panel-sendout-result .lab-panel-target-match{
  background:#e8f5f2;color:#276f71;border-color:#d5eae5;
 }
