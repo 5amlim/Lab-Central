@@ -200,7 +200,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261104" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261104" media="all">
-<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-phar" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261104" media="all">
@@ -993,6 +993,7 @@ function searchPanelCard({section,panel,targets,hits}){
  */
 function searchSendoutPanelCard(item,query){
  const name=safeHtml(item.name),lab=safeHtml(item.labName);
+ const pharyngitisException=item.lab==='pathmd'&&item.id==='resp-limited';
  const hits=[...new Set(item.hits||[])];
  const chips=hits.slice(0,6).map(target=>'<span class="lab-panel-target-match">'+safeHtml(target)+'</span>').join('');
  const more=hits.length>6?'<span class="lab-panel-target-more">+'+(hits.length-6)+' more</span>':'';
@@ -1002,7 +1003,7 @@ function searchSendoutPanelCard(item,query){
   targets.map(target=>'<span>'+safeHtml(target)+'</span>').join('')+'</p></div>').join('');
  return '<article class="lab-panel-search-result lab-panel-sendout-result lab-panel-sendout-'+safeHtml(item.lab)+'">'+
   '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-kind">MOLECULAR SENDOUT</span></small>'+
-  '<h3>'+name+'</h3>'+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
+  (pharyngitisException?'<div class="lab-panel-special-title"><h3>'+name+'</h3><span class="lab-panel-pharyngitis-tag" title="Exception: May be used for pharyngitis under the local approved workflow.">PHARYNGITIS OPTION</span></div>':'<h3>'+name+'</h3>')+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
   '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'"'+(item.lab==="pathmd"&&item.id?' data-calc2-search-panel="'+safeHtml(item.id)+'"':'')+'>'+(item.lab==="pathmd"?'Open test details':'Open test menu')+' <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
 
