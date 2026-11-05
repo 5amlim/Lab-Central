@@ -2722,24 +2722,74 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-pf-close-video]')){closeCalibrationVideo();return;}
  if(e.target.closest('[data-pf-set-video-link]')){closeCalibrationVideo();openEditor('calibration');return;}
  const homeTab=e.target.closest('[data-ops-tab]');if(homeTab){navigate('outside',homeTab.dataset.opsTab);return}
+
+/* Change only the shared guided stage; keep its focused Previous/Next buttons mounted. */
+function updateGuidedProcedureInPlace(button){
+ const flow=button.closest('.procedure-flow'),stage=flow?.querySelector('#guideStageDetails');
+ const card=stage?.querySelector('.guide-card');
+ if(!flow||!card||state.guideMode!=='guided'||!state.section)return false;
+ const groups=buildGroups(state.section);
+ const group=state.section.id==='clinitek'&&state.tab==='combined-qc'
+  ?groups.find(g=>g.id===state.clinitekQc)||groups.find(g=>g.id==='ua-qc')
+  :groups.find(g=>g.id===state.tab);
+ if(!group)return false;
+ const template=document.createElement('template');
+ template.innerHTML=renderGuidedProcedure(group,state.section);
+ const freshFlow=template.content.querySelector('.procedure-flow');
+ const freshCard=freshFlow?.querySelector('#guideStageDetails .guide-card');
+ const header=card.querySelector('.guide-card-head'),freshHeader=freshCard?.querySelector('.guide-card-head');
+ const nav=header?.querySelector('.guide-header-transport'),freshNav=freshHeader?.querySelector('.guide-header-transport');
+ if(!freshFlow||!freshCard||!header||!freshHeader||!nav||!freshNav)return false;
+ for(const selector of ['.guide-card-index','.guide-card-title']){
+  const oldPart=header.querySelector(selector),newPart=freshHeader.querySelector(selector);
+  if(oldPart&&newPart)oldPart.innerHTML=newPart.innerHTML;
+ }
+ // Keep the original header/controls while changing the rest of the card.
+ while(card.lastElementChild&&card.lastElementChild!==header)card.lastElementChild.remove();
+ Array.from(freshCard.children).slice(1).forEach(child=>card.appendChild(child));
+ const targetButtons=freshNav.querySelectorAll('button');
+ nav.querySelectorAll('button').forEach((control,i)=>{
+  const fresh=targetButtons[i];if(!fresh)return;
+  control.textContent=fresh.textContent;control.className=fresh.className;control.disabled=fresh.disabled;
+  for(const attr of ['data-guide-step','data-guide-mode','aria-label']){
+   if(fresh.hasAttribute(attr))control.setAttribute(attr,fresh.getAttribute(attr));
+   else control.removeAttribute(attr);
+  }
+ });
+ const progress=flow.querySelector('.guide-progress'),freshProgress=freshFlow.querySelector('.guide-progress');
+ if(progress&&freshProgress){
+  progress.setAttribute('aria-valuenow',freshProgress.getAttribute('aria-valuenow'));
+  const fill=progress.querySelector('span'),newFill=freshProgress.querySelector('span');
+  if(fill&&newFill)fill.style.width=newFill.style.width;
+ }
+ if(flow.classList.contains('pfux-patient')){
+  const toolbar=flow.querySelector('#procedureTop'),newToolbar=freshFlow.querySelector('#procedureTop');
+  for(const selector of [':scope > strong',':scope > span']){
+   const oldValue=toolbar?.querySelector(selector),newValue=newToolbar?.querySelector(selector);
+   if(oldValue&&newValue)oldValue.textContent=newValue.textContent;
+  }
+ }
+ flow.querySelectorAll('.guide-step-pill[data-guide-step],.pfux-stage-button[data-guide-step]').forEach(pill=>{
+  const n=Number(pill.getAttribute('data-guide-step'));
+  if(n===state.guideStep)pill.setAttribute('aria-current','step');else pill.removeAttribute('aria-current');
+  if(pill.classList.contains('pfux-stage-button')){
+   pill.classList.toggle('is-current',n===state.guideStep);
+   pill.classList.toggle('is-previous',n<state.guideStep);
+  }
+ });
+ const rail=flow.querySelector('.pfux-stage-nav .pfux-stage-track');
+ const active=rail?.querySelector('.pfux-stage-button.is-current');
+ if(rail&&active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
+ return true;
+}
+
  const stepButton=e.target.closest('[data-guide-step]');
  if(stepButton&&state.section){
   const next=Number(stepButton.dataset.guideStep);
   if(Number.isSafeInteger(next)&&next>=0){
-   // Header Previous/Next buttons remain stationary; stage shortcuts still jump.
-   const keepHeader=state.section.id==='pathfast'&&Boolean(stepButton.closest('.guide-header-transport'));
-   const oldHeader=keepHeader?stepButton.closest('.guide-card-head'):null;
-   const oldTop=oldHeader?oldHeader.getBoundingClientRect().top:null;
    state.guideStep=next;
    state.guideMode='guided';
-   render();
-   if(oldTop!==null){
-    const newHeader=el('guideStageDetails')?.querySelector('.guide-card-head');
-    if(newHeader)window.scrollBy(0,newHeader.getBoundingClientRect().top-oldTop);
-   }else{
-    const top=el('procedureTop');
-    if(top)top.scrollIntoView({behavior:'smooth',block:'start'});
-   }
+   if(!updateGuidedProcedureInPlace(stepButton))render();
   }
   return;
  }
