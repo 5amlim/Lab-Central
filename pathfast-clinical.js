@@ -37,14 +37,14 @@ function rnGuide(){
  '<div class="guide-mode-switch" role="group" aria-label="RN workflow display mode"><button type="button" data-pcr-rn-mode="guided" aria-pressed="'+(!rnAllSteps)+'">Guided view</button><button type="button" data-pcr-rn-mode="all" aria-pressed="'+rnAllSteps+'">All steps</button></div></div>'+
  '<div class="guide-stepper" role="group" aria-label="Go directly to an RN collection step">'+buttons+'</div>';
  if(!rnAllSteps)h+='<div class="guide-progress" role="progressbar" aria-label="RN steps viewed" aria-valuemin="0" aria-valuemax="'+count+'" aria-valuenow="'+number+'"><span style="width:'+(number/count*100)+'%"></span></div>';
- h+='<div class="pcr-rn-step-content">'+articles+'</div>';
  if(!rnAllSteps){
-  h+='<div class="guide-bottom"><span class="guide-step-count">'+number+' / '+count+' main steps</span><div class="guide-transport">'+
+  h+='<div class="guide-bottom pcr-rn-guided-nav"><span class="guide-step-count">'+number+' / '+count+' main steps</span><div class="guide-transport">'+
   '<button type="button" class="guide-button" data-pcr-rn-step="'+(rnStep-1)+'" '+(rnStep===0?'disabled ':'')+'aria-label="Previous RN collection step">← Previous</button>'+
   (rnStep<count-1?'<button type="button" class="guide-button primary" data-pcr-rn-step="'+(rnStep+1)+'" aria-label="Next RN collection step">Next step →</button>':
   '<button type="button" class="guide-button primary" data-pcr-rn-mode="all">View all steps ↗</button>')+
   '</div></div>';
  }
+ h+='<div class="pcr-rn-step-content">'+articles+'</div>';
  return h+'</section>';
 }
 if(typeof document!=="undefined"&&typeof document.addEventListener==="function"){
@@ -62,7 +62,36 @@ if(typeof document!=="undefined"&&typeof document.addEventListener==="function")
    rnAllSteps=mode==="all";
   }
   const old=document.querySelector(".pcr-rn-guide");
-  if(old){old.outerHTML=rnGuide();const fresh=document.querySelector(".pcr-rn-guide");if(fresh&&typeof fresh.scrollIntoView==="function")fresh.scrollIntoView({behavior:"smooth",block:"start"});}
+  if(!old)return;
+  if(button.hasAttribute("data-pcr-rn-step")&&!rnAllSteps){
+   old.querySelectorAll(".pcr-rn-step").forEach((step,i)=>{step.hidden=i!==rnStep;});
+   old.querySelectorAll(".guide-step-pill[data-pcr-rn-step]").forEach(pill=>{
+    if(Number(pill.getAttribute("data-pcr-rn-step"))===rnStep)pill.setAttribute("aria-current","step");
+    else pill.removeAttribute("aria-current");
+   });
+   const meter=old.querySelector(".guide-progress");
+   if(meter){
+    meter.setAttribute("aria-valuenow",String(rnStep+1));
+    const fill=meter.querySelector("span");
+    if(fill)fill.style.width=((rnStep+1)/rnSteps.length*100)+"%";
+   }
+   const count=old.querySelector(".pcr-rn-guided-nav .guide-step-count");
+   if(count)count.textContent=(rnStep+1)+" / "+rnSteps.length+" main steps";
+   const transport=old.querySelector(".pcr-rn-guided-nav .guide-transport");
+   const prev=transport?.querySelector(".guide-button:not(.primary)");
+   const next=transport?.querySelector(".guide-button.primary");
+   if(prev){prev.disabled=rnStep===0;prev.setAttribute("data-pcr-rn-step",String(rnStep-1));}
+   if(next){
+    const last=rnStep===rnSteps.length-1;
+    next.textContent=last?"View all steps ↗":"Next step →";
+    next.removeAttribute("data-pcr-rn-step");
+    next.removeAttribute("data-pcr-rn-mode");
+    next.setAttribute(last?"data-pcr-rn-mode":"data-pcr-rn-step",last?"all":String(rnStep+1));
+    next.setAttribute("aria-label",last?"View all RN collection steps":"Next RN collection step");
+   }
+   return;
+  }
+  old.outerHTML=rnGuide();
  });
 }
 function collection(){
