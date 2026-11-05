@@ -670,3 +670,31 @@
  padding:4px 8px;
  white-space:nowrap;
 }
+
+/* Search result footer: molecular category on left, expandable target list on right. */
+.lab-panel-sendout-result .lab-panel-all-targets>summary{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;text-align:left;
+}
+.lab-panel-sendout-footer-kind{
+ display:inline-flex;align-items:center;flex:0 0 auto;
+ border:1px solid #d3e9e4;border-radius:6px;
+ background:#e9f5f1;color:#277e76;
+ padding:4px 7px;
+ font-size:9px;font-weight:850;letter-spacing:.055em;
+ line-height:1.35;white-space:nowrap;
+}
+.lab-panel-sendout-pathmd .lab-panel-sendout-footer-kind{
+ border-color:#e2d9ef;background:#f2eff9;color:#75629f;
+}
+.lab-panel-target-summary-action{
+ display:inline-flex;align-items:center;justify-content:flex-end;
+ gap:9px;min-width:0;margin-left:auto;text-align:right;
+ font-size:11px;font-weight:760;color:#2b6685;line-height:1.45;
+}
+.lab-panel-target-summary-action .lab-shared-chevron{flex:none}
+@media(max-width:480px){
+ .lab-panel-sendout-result .lab-panel-all-targets>summary{gap:7px}
+ .lab-panel-sendout-footer-kind{padding:4px 6px;font-size:8px}
+ .lab-panel-target-summary-action{gap:5px;font-size:10px}
+}
