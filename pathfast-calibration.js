@@ -410,6 +410,7 @@ function render(){
  '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
  '<h2>28-day calibration + QC</h2><p>Review the screen sequence, dispense calibrators and controls into their assigned cartridges, and load the six-lane rack.</p></div>'+
  '<span class="pf-interval">↻ 28 DAYS</span></div>'+
+ (window.LAB_PATHFAST_TRAINING_VIDEO?.('cal-qc')||'')+
  panelPicker();
  if(!group){
   h+='<div class="pf-panel-empty" aria-live="polite"><span class="pf-panel-empty-icon">▤</span><strong>Select the assay to start</strong><p>Start with the reagent box, calibrators, matching Bio-Rad quality controls and the six-lane rack. Instrument login comes after physical preparation.</p></div>';
