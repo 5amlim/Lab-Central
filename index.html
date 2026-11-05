@@ -200,7 +200,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261104" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261104" media="all">
-<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-region" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-groupmarket" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261104" media="all">
@@ -1017,7 +1017,7 @@ function labSearchResultGroup(kind,title,description,cards,count){
  return '<section class="lab-search-source lab-search-source-'+kind+'" aria-label="'+safeHtml(title)+' matches">'+
   '<div class="lab-search-source-header"><div class="lab-search-source-heading">'+
    '<span class="lab-search-source-mark" aria-hidden="true">'+type+'</span>'+
-   '<div><h3>'+safeHtml(title)+'</h3><p>'+safeHtml(description)+'</p></div></div>'+
+   '<div><div class="lab-search-source-title"><h3>'+safeHtml(title)+'</h3>'+(kind==='htrx'||kind==='pathmd'?'<span class="lab-panel-sendout-market lab-search-source-market" title="Southern California and Northern California only">SOCAL + NORCAL ONLY</span>':'')+'</div><p>'+safeHtml(description)+'</p></div></div>'+
    '<span class="lab-search-source-count">'+count+' panel'+(count===1?'':'s')+'</span></div>'+
   '<div class="lab-search-source-items">'+cards+'</div></section>';
 }
