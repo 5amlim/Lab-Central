@@ -379,12 +379,24 @@ function panelPicker(){
  '<span class="pf-panel-option-check" aria-hidden="true">'+(selectedPanel===g.id?'✓':'›')+'</span></button>').join('')+'</div>':'')+
  '</div></div>';
 }
-function repaintPanel(){
+function repaintPanel(keepNavPosition=false,focusSelector=''){
  const old=document.querySelector('.pf-calibration-guide');
+ const oldNav=keepNavPosition?old?.querySelector('.pfux-cal-header-nav'):null;
+ const oldNavTop=oldNav?oldNav.getBoundingClientRect().top:null;
  if(old)old.outerHTML=render();
  const rail=document.querySelector('.pfux-cal-stage-nav .pfux-stage-track');
  const active=rail?.querySelector('.pfux-stage-button.is-current');
  if(rail&&active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
+ // Preserve the control's viewport position when step content changes height.
+ if(oldNavTop!==null){
+  const newNav=document.querySelector('.pf-calibration-guide .pfux-cal-header-nav');
+  if(newNav){
+   const shift=newNav.getBoundingClientRect().top-oldNavTop;
+   if(Math.abs(shift)>1)window.scrollBy(0,shift);
+   const focused=focusSelector?newNav.querySelector(focusSelector):null;
+   if(focused)focused.focus({preventScroll:true});
+  }
+ }
 }
 function render(){
  const group=selectedGroup();
@@ -504,8 +516,9 @@ if(typeof document!=='undefined' && typeof document.addEventListener==='function
    if(jump){const n=Number(jump.getAttribute('data-pf-jump'));if(n>=1&&n<=14)currentStep=n;showAllSteps=false;stepMenuOpen=false;}
    if(browse)stepMenuOpen=!stepMenuOpen;
    if(toggleAll){showAllSteps=!showAllSteps;stepMenuOpen=false;}
-   repaintPanel();
-   if(next||prev||jump){const head=document.querySelector('.pfux-cal-toolbar');if(head&&head.scrollIntoView)head.scrollIntoView({block:'start',behavior:'instant'});}
+   repaintPanel(!!(next||prev),next?'[data-pf-next], [data-pf-toggle-all]':prev?'[data-pf-prev]':'');
+   // Step rail jumps may navigate to the toolbar. Previous/Next never do.
+   if(jump){const head=document.querySelector('.pfux-cal-toolbar');if(head&&head.scrollIntoView)head.scrollIntoView({block:'start',behavior:'instant'});}
    return;
   }
   const trigger=e.target.closest('[data-pf-panel-trigger]');

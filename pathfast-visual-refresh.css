@@ -60,12 +60,18 @@
 .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pf-workflow-label strong{font-size:15px;line-height:1.4}
 .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pf-workflow-label small{font-size:12px}
 .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{
- position:static!important;display:flex!important;flex:none;align-items:center;
+ position:static!important;display:flex!important;flex:none;align-items:center;align-self:flex-start;
  justify-content:flex-end;gap:9px;margin:0 0 0 auto!important;padding:0!important;
  width:auto!important;min-width:0;background:transparent!important;border:0!important;
 }
-.pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{min-height:45px;font-size:13px;font-weight:850}
-.pf-calibration-guide .pf-workflow-static .pfux-cal-progress{font-size:12px;font-weight:850;white-space:nowrap}
+.pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{
+ flex:0 0 148px;min-width:148px;box-sizing:border-box;
+ min-height:45px;font-size:13px;font-weight:850;text-align:center;
+}
+.pf-calibration-guide .pf-workflow-static .pfux-cal-progress{
+ flex:0 0 47px;min-width:47px;text-align:center;
+ font-size:12px;font-weight:850;white-space:nowrap;
+}
 .pf-calibration-guide .pf-workflow-static > .pf-workflow-detail{display:block;padding:16px 19px 22px}
 .pf-calibration-guide .pf-material-card{position:relative}
 .pf-calibration-guide .pf-material-card:has(.pf-material-lane-tag) .pf-material-figure{padding-top:29px}
@@ -89,7 +95,8 @@
  .procedure-flow .guide-card.pf-static-step > .guide-card-head{flex-wrap:wrap;padding:15px}
  .procedure-flow .guide-card.pf-static-step > .guide-card-head .guide-card-header-actions{flex-basis:100%;justify-content:flex-start;margin-left:0}
  .pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{margin:0!important;width:100%!important;flex-wrap:wrap}
- .pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{flex:1 1 auto}
+ .pf-calibration-guide .pf-workflow-static .pfux-cal-header-nav button{flex:1 1 0;min-width:0}
+ .pf-calibration-guide .pf-workflow-static .pfux-cal-progress{flex:0 0 43px;min-width:43px}
  .pf-calibration-guide .pf-cal2-mix-diagram header .pf-cal-one-vial{margin-left:0!important;text-align:left!important}
 }
 @media print{.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{display:none!important}}
