@@ -200,7 +200,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261104" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261104" media="all">
-<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-groupmarket" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-footerkind" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="biofire-visual.css?v=20261104" media="all">
@@ -1002,12 +1002,12 @@ function searchSendoutPanelCard(item,query){
   '<div class="lab-panel-target-group"><strong>'+safeHtml(label[key]||key)+'</strong><p>'+
   targets.map(target=>'<span>'+safeHtml(target)+'</span>').join('')+'</p></div>').join('');
  return '<article class="lab-panel-search-result lab-panel-sendout-result lab-panel-sendout-'+safeHtml(item.lab)+'">'+
-  '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-kind">MOLECULAR SENDOUT</span><span class="lab-panel-sendout-market" title="Available for Southern California and Northern California only">SOCAL + NORCAL ONLY</span></small>'+
+  '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-market" title="Available for Southern California and Northern California only">SOCAL + NORCAL ONLY</span></small>'+
   (pharyngitisException?'<div class="lab-panel-special-title"><h3>'+name+'</h3><span class="lab-panel-pharyngitis-tag" title="Exception: May be used for pharyngitis under the local approved workflow.">PHARYNGITIS OPTION</span></div>':'<h3>'+name+'</h3>')+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
   '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'"'+(item.lab==="pathmd"&&item.id?' data-calc2-search-panel="'+safeHtml(item.id)+'"':'')+'>'+(item.lab==="pathmd"?'Open test details':'Open test menu')+' <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
 
-  '<details class="lab-panel-all-targets"><summary>See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></summary>'+
+  '<details class="lab-panel-all-targets"><summary><span class="lab-panel-sendout-footer-kind">MOLECULAR SENDOUT</span><span class="lab-panel-target-summary-action">See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></span></summary>'+
   '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
 }
 /* Group matching test panels by receiving lab instead of interleaving unlike results. */
