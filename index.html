@@ -208,7 +208,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="reference-refresh.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261104" media="all">
-  <link rel="stylesheet" href="pathfast-ux.css?v=20261104" media="all">
+  <link rel="stylesheet" href="pathfast-ux.css?v=20261104-sharepoint" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261104" media="all">
@@ -1679,8 +1679,22 @@ function renderGuidedProcedure(group,sec){
  return h+'</section>';
 }
 
+/* Training videos provided by Sollis: links require authorized SharePoint access. */
+const pathfastTrainingVideos={
+ patient:{title:'How to run a patient test',description:'Watch the PATHFAST patient-testing demonstration before following the step-by-step procedure.',url:'https://ppcny.sharepoint.com/:v:/r/sites/LAClinicalDocuments2/_layouts/15/stream.aspx?id=%2Fsites%2FLAClinicalDocuments2%2FLab%20Resources%2FInstruments%2FPATHFAST%2FEducation%2FPathfast%20%2D%20Running%20a%20test%201%2Emp4&share=cQpjB%5F3d5sOrQ4rlJF2IJShGEgUCIyUQlkqyrAdYuGcU%5FQl5wA'},
+ 'cal-qc':{title:'How to perform calibration + QC',description:'Watch the PATHFAST calibration and quality-control demonstration alongside the 28-day workflow.',url:'https://ppcny.sharepoint.com/:v:/r/sites/LAClinicalDocuments2/_layouts/15/stream.aspx?id=%2Fsites%2FLAClinicalDocuments2%2FLab%20Resources%2FInstruments%2FPATHFAST%2FEducation%2FPathFast%20%2D%20Cal%20and%20QC%201%2Emp4&share=cQpLNLMxwppTSIi0YPJIfBAMEgUCMYKtgNJJvAt13zs6MD03bg'}
+};
+function pathfastTrainingVideoLink(tab){
+ const video=pathfastTrainingVideos[tab];
+ if(!video)return '';
+ return '<aside class="pf-training-video-card'+(tab==='cal-qc'?' pf-training-video-cal':'')+'" aria-label="PATHFAST SharePoint training video">'+
+ '<div class="pf-training-video-copy"><span class="pf-training-video-eyebrow">VIDEO TUTORIAL · SOLLIS SHAREPOINT</span><strong>'+safeHtml(video.title)+'</strong><p>'+safeHtml(video.description)+'</p></div>'+
+ '<a class="pf-training-video-action" href="'+safeHtml(video.url)+'" target="_blank" rel="noopener noreferrer">Watch training video <span aria-hidden="true">↗</span></a></aside>';
+}
 const sources={
- pathfast:[{name:'PATHFAST customer resources',desc:'Polymedco customer resource portal',url:'https://info.polymedco.com/customer-portal'}],
+ pathfast:[{name:'PATHFAST customer resources',desc:'Polymedco customer resource portal',url:'https://info.polymedco.com/customer-portal'},
+{name:'PATHFAST patient testing video',desc:'Sollis SharePoint · How to run a test',url:pathfastTrainingVideos.patient.url},
+{name:'PATHFAST calibration and QC video',desc:'Sollis SharePoint · How to perform calibration and QC',url:pathfastTrainingVideos['cal-qc'].url}],
  sendout:[{name:'Quest Test Directory',desc:'Verify test codes, tubes and handling before collection',url:'https://testdirectory.questdiagnostics.com/test/home'},
  {name:'LabcorpLink',desc:'Reference and portal access',url:'https://www.labcorplink.com/ui/'},
  {name:'Quest Quanum order guide',desc:'Quest ordering reference',url:'https://physician.quanum.questdiagnostics.com/content/quickviews/QuickView_Placing_Orders.pdf'}],
@@ -2581,6 +2595,7 @@ function sectionRender(sec,tab){
   h+=`<nav class="api-guide-tabs ${sec.id==='calver'?'calver-reference-tabs':''}" role="tablist" aria-label="${sec.id==='calver'?'Calibration verification reference sections':'Proficiency testing reference sections'}">${tabs.map(t=>`<button type="button" role="tab" aria-selected="${tab===t.id}" class="api-guide-tab ${tab===t.id?'is-selected':''}" data-gotab="${safeHtml(t.id)}" title="${safeHtml(t.title)}"><span class="api-guide-tab-icon">${svg(tabDetails[t.id]?.icon||'book')}</span><span class="api-guide-tab-copy"><strong>${safeHtml(t.title)}</strong><small>${safeHtml(tabDetails[t.id]?.subtitle||'Reference information')}</small></span></button>`).join('')}</nav>`;
  }else h+=`<div class="tab-strip${sec.id==='calver'?' calver-reference-tabs':sec.id==='supplies'?' supply-vendor-tabs':sec.id==='sendout'?' sendout-reference-tabs':(['Analyzers','Point of care'].includes(sec.category)?' instrument-matched-tabs':'')}" role="tablist" aria-label="${safeHtml(sec.title)} sections">${tabs.filter(x=>sec.id!=='clinitek'||!['ua-qc','hcg-qc'].includes(x.id)).map(x=>`<button type="button" role="tab" aria-selected="${tab===x.id}" class="tab ${tab===x.id?'active':''}" data-gotab="${safeHtml(x.id)}" title="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}" aria-label="${safeHtml(x.fullTitle||x.title)}${sec.id==='supplies'&&x.id==='cedars'?' · SoCal only':''}">${safeHtml(instrumentCategories.includes(sec.category)?instrumentTabTitle(x.fullTitle||x.title):guideTabTitle(x.title))}</button>`).join('')}</div>`;
  h+='<div class="tab-content" id="activeTabContent">';
+ if(sec.id==='pathfast'&&(tab==='patient'||tab==='cal-qc'))h+=pathfastTrainingVideoLink(tab);
  if(tab==='pt-testing'&&window.LAB_PT_TESTING?.supports(sec))h+=window.LAB_PT_TESTING.render(sec,groups);
  else if(tab==='overview'&&sec.id==='api')h+=window.LAB_QUALITY_GUIDE.apiOverview();
  else if(tab==='overview'&&sec.id==='calver')h+=window.LAB_QUALITY_GUIDE.calverOverview();
