@@ -379,24 +379,67 @@ function panelPicker(){
  '<span class="pf-panel-option-check" aria-hidden="true">'+(selectedPanel===g.id?'✓':'›')+'</span></button>').join('')+'</div>':'')+
  '</div></div>';
 }
-function repaintPanel(keepNavPosition=false,focusSelector=''){
+function repaintPanel(keepNavigation=false){
  const old=document.querySelector('.pf-calibration-guide');
- const oldNav=keepNavPosition?old?.querySelector('.pfux-cal-header-nav'):null;
- const oldNavTop=oldNav?oldNav.getBoundingClientRect().top:null;
+ // Previous/Next must not destroy the focused button or the section above it.
+ // Only update the current step content and progress; keep the live navigation DOM.
+ if(keepNavigation&&old&&!showAllSteps){
+  const liveStep=old.querySelector('.pf-workflow-step.pf-workflow-static');
+  const liveNav=liveStep?.querySelector('.pfux-cal-header-nav');
+  if(liveStep&&liveNav){
+   const holder=document.createElement('div');
+   holder.innerHTML=render();
+   const fresh=holder.querySelector('.pf-calibration-guide');
+   const freshStep=fresh?.querySelector('.pf-workflow-step.pf-workflow-static');
+   if(freshStep){
+    const liveNo=liveStep.querySelector('.pf-workflow-no');
+    const freshNo=freshStep.querySelector('.pf-workflow-no');
+    const liveLabel=liveStep.querySelector('.pf-workflow-label');
+    const freshLabel=freshStep.querySelector('.pf-workflow-label');
+    const liveDetail=liveStep.querySelector('.pf-workflow-detail');
+    const freshDetail=freshStep.querySelector('.pf-workflow-detail');
+    if(liveNo&&freshNo)liveNo.textContent=freshNo.textContent;
+    if(liveLabel&&freshLabel)liveLabel.innerHTML=freshLabel.innerHTML;
+    if(liveDetail&&freshDetail)liveDetail.innerHTML=freshDetail.innerHTML;
+    const counter=liveNav.querySelector('.pfux-cal-progress');
+    if(counter)counter.textContent=currentStep+' / 14';
+    const prev=liveNav.querySelector('[data-pf-prev]');
+    if(prev)prev.disabled=currentStep===1;
+    const next=liveNav.querySelector('[data-pf-next], [data-pf-toggle-all]');
+    if(next){
+     next.textContent=currentStep===14?'View all steps ↗':'Next step →';
+     next.removeAttribute('data-pf-next');
+     next.removeAttribute('data-pf-toggle-all');
+     next.setAttribute(currentStep===14?'data-pf-toggle-all':'data-pf-next','');
+    }
+    const toolbarCount=old.querySelector('.pfux-cal-toolbar strong');
+    if(toolbarCount)toolbarCount.textContent='Step '+currentStep+' of 14';
+    const rail=old.querySelector('.pfux-cal-stage-nav .pfux-stage-track');
+    if(rail){
+     rail.querySelectorAll('[data-pf-jump]').forEach(function(button){
+      const n=Number(button.getAttribute('data-pf-jump'));
+      button.classList.toggle('is-current',n===currentStep);
+      button.classList.toggle('is-previous',n<currentStep);
+      if(n===currentStep)button.setAttribute('aria-current','step');
+      else button.removeAttribute('aria-current');
+     });
+     const active=rail.querySelector('.pfux-stage-button.is-current');
+     if(active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
+    }
+    const meter=old.querySelector('.pfux-cal-meter');
+    if(meter){
+     meter.setAttribute('aria-valuenow',String(currentStep));
+     const fill=meter.querySelector('span');
+     if(fill)fill.style.width=(currentStep/14*100)+'%';
+    }
+    return;
+   }
+  }
+ }
  if(old)old.outerHTML=render();
  const rail=document.querySelector('.pfux-cal-stage-nav .pfux-stage-track');
  const active=rail?.querySelector('.pfux-stage-button.is-current');
  if(rail&&active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
- // Preserve the control's viewport position when step content changes height.
- if(oldNavTop!==null){
-  const newNav=document.querySelector('.pf-calibration-guide .pfux-cal-header-nav');
-  if(newNav){
-   const shift=newNav.getBoundingClientRect().top-oldNavTop;
-   if(Math.abs(shift)>1)window.scrollBy(0,shift);
-   const focused=focusSelector?newNav.querySelector(focusSelector):null;
-   if(focused)focused.focus({preventScroll:true});
-  }
- }
 }
 function render(){
  const group=selectedGroup();
@@ -516,7 +559,7 @@ if(typeof document!=='undefined' && typeof document.addEventListener==='function
    if(jump){const n=Number(jump.getAttribute('data-pf-jump'));if(n>=1&&n<=14)currentStep=n;showAllSteps=false;stepMenuOpen=false;}
    if(browse)stepMenuOpen=!stepMenuOpen;
    if(toggleAll){showAllSteps=!showAllSteps;stepMenuOpen=false;}
-   repaintPanel(!!(next||prev),next?'[data-pf-next], [data-pf-toggle-all]':prev?'[data-pf-prev]':'');
+   repaintPanel(!!(next||prev));
    // Step rail jumps may navigate to the toolbar. Previous/Next never do.
    if(jump){const head=document.querySelector('.pfux-cal-toolbar');if(head&&head.scrollIntoView)head.scrollIntoView({block:'start',behavior:'instant'});}
    return;

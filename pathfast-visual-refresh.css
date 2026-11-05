@@ -100,3 +100,9 @@
  .pf-calibration-guide .pf-cal2-mix-diagram header .pf-cal-one-vial{margin-left:0!important;text-align:left!important}
 }
 @media print{.pf-calibration-guide .pf-workflow-static > .pf-workflow-head .pfux-cal-header-nav{display:none!important}}
+
+/* Guided calibration steps change content in place. Exclude the changing
+   illustration from scroll anchoring so clicking Next cannot shift the page. */
+.pf-calibration-guide .pf-workflow-static .pf-workflow-detail{
+ overflow-anchor:none;
+}
