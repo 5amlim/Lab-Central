@@ -661,3 +661,12 @@
 @media(max-width:580px){
  .calc2-panel-cedars .calc2-cedars-payer-note{margin:0 12px 12px;padding:10px 12px}
 }
+
+/* Surface the market restriction at the vendor-group level, not only on panels. */
+.lab-search-source-title{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;min-width:0}
+.lab-search-source-title .lab-search-source-market{
+ margin:0;
+ font-size:9px;
+ padding:4px 8px;
+ white-space:nowrap;
+}
