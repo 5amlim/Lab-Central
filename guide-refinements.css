@@ -1235,3 +1235,21 @@
  .lc-page-scroll-cue{left:0}
  body:has(.sidebar.open) .lc-page-scroll-cue{display:none!important}
 }
+
+/* Prevent vertical movement of guided step controls on all active instruments.
+   The dynamically changing illustration remains below the anchored header. */
+.procedure-flow .guide-stage .guide-card > :not(.guide-card-head){overflow-anchor:none}
+.procedure-flow .guide-card-has-nav > .guide-card-head{align-items:flex-start}
+.procedure-flow .guide-card-has-nav > .guide-card-head .guide-card-header-actions{align-self:flex-start}
+.procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{
+ flex:0 0 148px;min-width:148px;box-sizing:border-box;text-align:center;
+}
+.pcr-rn-guide .pcr-rn-guided-nav{
+ display:flex;align-items:center;justify-content:space-between;
+ margin:12px 0 14px;gap:12px;
+}
+.pcr-rn-guide .pcr-rn-step-content{overflow-anchor:none}
+@media(max-width:700px){
+ .procedure-flow .guide-card-has-nav .guide-header-transport .guide-button{flex:1 1 0;min-width:0}
+ .pcr-rn-guide .pcr-rn-guided-nav{flex-wrap:wrap}
+}

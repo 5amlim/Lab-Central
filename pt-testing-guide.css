@@ -487,3 +487,12 @@
  .ptg-mini-reagent-art .ptg-reagent-count{padding:4px;gap:4px}
  .ptg-torch-gi-visual{gap:5px}
 }
+
+/* PT step changes never move the original header controls. */
+.ptg-focused-stage .ptg-stage-body{overflow-anchor:none}
+.ptg-focused-stage .ptg-stage-head{align-items:flex-start}
+.ptg-focused-stage .ptg-transport{align-self:flex-start}
+.ptg-focused-stage .ptg-transport button{flex:0 0 145px;min-width:145px;box-sizing:border-box;text-align:center}
+@media(max-width:650px){
+ .ptg-focused-stage .ptg-transport button{flex:1 1 0;min-width:0}
+}
