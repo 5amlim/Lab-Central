@@ -406,10 +406,11 @@ function render(){
     (guided?calHeaderNavigation():'')+'</header>'+
     '<div class="pf-workflow-detail">'+(inner||"")+'</div></article>';
  }
- let h='<section class="pf-calibration-guide">'+
- '<div class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
+ let h='<section class="pf-calibration-guide" aria-label="PATHFAST 28-day calibration and QC guide">'+
+ '<header class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
  '<h2>28-day calibration + QC</h2><p>Review the screen sequence, dispense calibrators and controls into their assigned cartridges, and load the six-lane rack.</p></div>'+
- '<span class="pf-interval">↻ 28 DAYS</span></div>'+
+ '<span class="pf-interval">↻ 28 DAYS</span></header>'+
+ '<div class="pf-calibration-body">'+
  (window.LAB_PATHFAST_TRAINING_VIDEO?.('cal-qc')||'')+
  panelPicker();
  if(!group){
@@ -488,7 +489,7 @@ function render(){
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
  }
- return h+'</section>';
+ return h+'</div></section>';
 }
 if(typeof document!=='undefined' && typeof document.addEventListener==='function'){
  document.addEventListener('click',function(e){
