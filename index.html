@@ -274,7 +274,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="supply-vendor-reference.css?v=20261104" media="all">
 <script src="envi-ordering-guide.js?v=20261104"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261104" media="all">
-<script src="sop-print.js?v=20261107-reset-filter"></script>
+<script src="sop-print.js?v=20261107-optional-v2"></script>
 <script src="ny-scheduled-workflow.js?v=20261106-market-layout"></script>
 <style id="lab-central-athena-icon-theme">
 /* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
@@ -298,8 +298,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   background:#f3ecff;color:#7c4dcc;
 }
 </style>
-<link rel="stylesheet" href="market-context.css?v=20261107-reset-filter" media="all">
-<script src="market-context.js?v=20261107-reset-filter"></script>
+<link rel="stylesheet" href="market-context.css?v=20261107-optional-v2" media="all">
+<script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -453,12 +453,12 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261104"></script>
 <script src="quality-reference.js?v=20261104"></script>
 <script src="pt-testing-guide.js?v=20261105-guided-nav"></script>
-<script src="api-submission.js?v=20261107-reset-filter"></script>
-<script src="lab-calculators-guide.js?v=20261107-reset-filter"></script>
-<script src="pathmd-reference.js?v=20261107-portal-regional"></script>
+<script src="api-submission.js?v=20261107-optional-v2"></script>
+<script src="lab-calculators-guide.js?v=20261107-optional-v2"></script>
+<script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261104"></script>
-<script src="socal-daily-checklist.js?v=20261107-reset-filter"></script>
-<script src="training-competency.js?v=20261107-reset-filter"></script>
+<script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
+<script src="training-competency.js?v=20261107-optional-v2"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
@@ -484,8 +484,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
-<script src="sendout-market-guide.js?v=20261107-reset-filter"></script>
-<script src="assay-catalog.js?v=20261107-reset-filter"></script>
+<script src="sendout-market-guide.js?v=20261107-optional-v2"></script>
+<script src="assay-catalog.js?v=20261107-optional-v2"></script>
 <script src="instrument-troubleshooting.js?v=20261104"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
@@ -1794,7 +1794,7 @@ function renderCalculators(){
   ?'<li>Check <strong>STAT routing info</strong> and verify the local clinic’s available STAT menu.</li>'
   :'<li>Confirm urgent or STAT acceptance and courier cutoff with Cedars. Do not assume a routine test is available as STAT.</li>';
  el('currentCrumb').textContent='Lab calculators/guides';
- let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Find receiving lab calculators, collection guides and molecular sendout references for the market shown in the sidebar.');
+ let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides',window.LAB_MARKET?.get()?'Browse receiving lab calculators, collection guides and molecular sendout references for the selected market.':'Select a market and clinic to find receiving lab calculators, collection guides and molecular sendout references.');
  h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
  if(calcLab==='htrx'||calcLab==='pathmd')h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
