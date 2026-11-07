@@ -1643,6 +1643,7 @@ function renderGuidedProcedure(group,sec){
  }
  else h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.')+'</p></div></div>';
  if(title.detail&&!isInstrumentProcedure)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
+  if(sec.id==='triage'&&isQcWorkflow&&/monthly|liquid/i.test(group.title))h+='<div class="pfm-quicklink"><div><strong>Triage MeterPro Monthly QC Log</strong><span>BNP, D-dimer and Troponin · Levels 1 and 2 · Every month or new lot/shipment</span></div><a class="pfm-log-button" href="assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-revised" target="_blank" rel="noopener noreferrer">Open QC log (PDF) ↗</a></div>';
  
  if(window.LAB_EQUIPMENT_ART?.specimenGuide&&['Analyzers','Point of care'].includes(sec.category)&&!/QC|calibration|maintenance|cleaning/i.test(group.title))h+=window.LAB_EQUIPMENT_ART.specimenGuide(sec);
  const patientVisual=sec.id==='pathfast'&&group.id==='patient'?window.LAB_PATHFAST_SCREEN.patientStep:null;
