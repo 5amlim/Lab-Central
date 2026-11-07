@@ -109,7 +109,7 @@ const trainingDocuments=[
  {name:'QuickVue Strep A',file:'Quidel_QuickVue_Strep_A_Training.pdf',group:'Rapid POC training',tone:'blue',note:'Strep A rapid test training checklist',available:true},
  {name:'General Laboratory Procedure Package',file:'Sollis_Health_Procedure_Package.pdf',group:'General lab training',tone:'amber',note:'Bloodborne pathogens and core procedure acknowledgments',available:true}
 ];
-let selectedTrainingMarket='socal';
+let selectedTrainingMarket=window.LAB_MARKET?.get()||'socal';
 let selectedTrainingView='schedule';
 const trainingClinicByMarket=Object.fromEntries(trainingMarkets.map(m=>[m.id,m.clinics[0][0]]));
 let plannerStart='';
@@ -157,7 +157,6 @@ function render(){
  const market=trainingMarket(),clinic=trainingClinic(market);
  return '<div class="lc-competency tc-portal">'+
  '<div class="tc-page-heading"><span class="tc-page-overline">TRAINING &amp; COMPETENCY / '+esc(market.short).toUpperCase()+'</span><h1>'+esc(clinic[1])+'</h1><p>'+esc(market.name)+' · Follow the approved training, competency and documentation policies for the tests installed at this clinic.</p></div>'+
- '<div class="tc-market-picker"><span class="tc-picker-label">MARKET</span><div class="tc-market-buttons">'+trainingMarkets.map(m=>'<button type="button" data-tc-market="'+esc(m.id)+'" class="tc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+esc(m.short)+'</button>').join('')+'</div></div>'+
  '<div class="tc-location-bar"><span class="tc-location-label" id="tc-clinic-label">Clinic location</span>'+
  '<div class="tc-location-picker"><button type="button" class="tc-location-trigger" data-tc-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="tc-location-options" aria-labelledby="tc-clinic-label tc-location-value">'+
  '<span id="tc-location-value">'+esc(clinic[1])+'</span><span class="tc-location-chevron" aria-hidden="true"></span></button>'+
@@ -261,6 +260,10 @@ document.addEventListener('keydown',e=>{
  else if(e.key==='Home')next=options[0];
  else if(e.key==='End')next=options[options.length-1];
  if(next){e.preventDefault();next.focus();}
+});
+document.addEventListener('labcentral:marketchange',event=>{
+ const next=event.detail?.market;
+ if(trainingMarkets.some(m=>m.id===next))selectedTrainingMarket=next;
 });
 window.LAB_TRAINING_COMPETENCY={render,addMonths:dueDate};
 })();
