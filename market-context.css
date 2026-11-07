@@ -22,3 +22,10 @@
 @media(max-width:860px){.lc-global-market{margin-bottom:12px}}
 @media(prefers-reduced-motion:reduce){.lc-global-market,.lc-global-market-trigger,.lc-global-market-caret{transition:none}}
 @media print{.lc-global-market{display:none!important}}
+
+/* Secondary reset control remains subtle until a global market is selected. */
+.lc-market-reset{margin-left:auto;flex:none;padding:4px 7px;border:1px solid #d9e6ed;border-radius:7px;background:#fff;color:#496f88;font-size:10px;font-weight:750;letter-spacing:0;text-transform:none;line-height:1.25}
+.lc-market-reset:hover{background:#eaf4f8;border-color:#b4d5e4;color:#235f7a}
+.lc-market-reset:focus-visible{outline:2px solid #4c9eac;outline-offset:2px}
+.lc-market-reset[hidden]{display:none}
+.lc-global-market-option[data-lc-market-option="all"]{border-bottom:1px solid #edf1f5;border-radius:6px 6px 0 0;padding-bottom:10px;margin-bottom:2px}
