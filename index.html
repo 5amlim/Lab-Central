@@ -475,7 +475,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
 <script src="sendout-market-guide.js?v=20261107-global-market"></script>
-<script src="assay-catalog.js?v=20261104"></script>
+<script src="assay-catalog.js?v=20261107-global-market"></script>
 <script src="instrument-troubleshooting.js?v=20261104"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
@@ -824,7 +824,7 @@ function searchPanelMatches(query,sections=all){
  const matches=[];
  for(const section of sections){
   for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
-   if(/New York/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
+   if(/(?:\bNY\b|New York)/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
    const content=[section.title,panel.title,panel.short,
