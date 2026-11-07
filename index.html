@@ -2037,10 +2037,20 @@ function orderWorkflowTabs(tab){
   options.map(([id,label])=>'<button type="button" role="tab" aria-selected="'+(tab===id)+'" class="tab '+(tab===id?'active':'')+'" data-workflowtab="'+id+'">'+label+'</button>').join('')+
   '</div>';
 }
-function orderWorkflowControls(tab){
+function orderRegionSelector(){
+ const market=orderMarkets.find(m=>m.id===state.ordersRegion)||orderMarkets[0];
+ return '<div class="order-region-switch"><div class="order-region-copy"><small>SELECTED CLINIC MARKET</small><strong>'+safeHtml(market.name)+'</strong><p>'+safeHtml(market.note)+'</p></div>'+
+  '<div class="order-region-select"><span class="lc-orders-market-label">Market</span><div class="lc-orders-market-picker">'+
+  '<button type="button" class="lc-orders-market-trigger" data-orders-market-toggle data-orders-market-value="'+market.id+'" aria-haspopup="listbox" aria-expanded="false" aria-controls="lc-orders-market-options"><span>'+safeHtml(market.name)+'</span><span class="lc-orders-market-chevron" aria-hidden="true"></span></button>'+
+  '<div class="lc-orders-market-options" id="lc-orders-market-options" role="listbox" aria-label="Choose workflow market" hidden>'+
+  orderMarkets.map(m=>'<button type="button" role="option" data-orders-market-option="'+m.id+'" aria-selected="'+(market.id===m.id)+'" class="lc-orders-market-option'+(market.id===m.id?' is-selected':'')+'">'+safeHtml(m.name)+(market.id===m.id?' <span aria-hidden="true">✓</span>':'')+'</button>').join('')+
+  '</div></div></div></div>';
+}
+function orderWorkflowControls(tab,selectMarket=false){
+ const pageMarket=selectMarket&&!window.LAB_MARKET?.get();
  return '<section class="orders-setup-panel" aria-label="Workflow selection">'+
-  '<div class="orders-setup-head"><div><span>WORKFLOW SELECTION</span><strong>Choose the request type</strong></div><p>Workflow requirements follow the market selected in the sidebar.</p></div>'+
-  orderWorkflowTabs(tab)+'</section>';
+  '<div class="orders-setup-head"><div><span>WORKFLOW SELECTION</span><strong>Choose the request type'+(pageMarket?' and market':'')+'</strong></div><p>'+(pageMarket?'Select a clinic market for the correct scheduled requisition process.':'Workflow requirements follow the market selected in the sidebar, when applicable.')+'</p></div>'+
+  orderWorkflowTabs(tab)+(pageMarket?orderRegionSelector():'')+'</section>';
 }
 function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
@@ -2205,7 +2215,7 @@ function inhouseFlow(){
 }
 function renderOrders(tab='external'){
  tab=['external','walk-in','in-house'].includes(tab)?tab:'external';el('currentCrumb').textContent='Sendout lab workflows';
- let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to Quest, Labcorp, Cedars and other reference labs. Choose a request type. The workflow follows the market selected in the sidebar.');
+ let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to Quest, Labcorp, Cedars and other reference labs. Choose a request type. The selected market determines the workflow.');
  h+=`<div class="workflow-main">${tab==='external'?externalFlow():tab==='walk-in'?walkinFlow():inhouseFlow()}</div>`;
  h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
@@ -2917,10 +2927,55 @@ function updateGuidedProcedureInPlace(button){
  const expand=e.target.closest('[data-expand]');if(expand){const toggles=el('mainContent').querySelectorAll('[data-toggle]');const collapse=expand.textContent==='Collapse all';for(const b of toggles){b.setAttribute('aria-expanded',String(!collapse));const target=el(b.dataset.toggle);if(target)target.hidden=collapse}expand.textContent=collapse?'Expand all':'Collapse all';return}
  const edit=e.target.closest('[data-edit-video]');if(edit){openEditor(edit.dataset.editVideo);return}
 });
+document.addEventListener('click',e=>{
+ const trigger=e.target.closest('[data-orders-market-toggle]');
+ const choice=e.target.closest('[data-orders-market-option]');
+ if(trigger){
+  const list=document.getElementById('lc-orders-market-options');
+  if(!list)return;
+  const open=trigger.getAttribute('aria-expanded')!=='true';
+  trigger.setAttribute('aria-expanded',String(open));list.hidden=!open;
+  return;
+ }
+ if(choice){
+  const next=choice.dataset.ordersMarketOption;
+  if(orderMarkets.some(m=>m.id===next)&&next!==state.ordersRegion){
+   state.ordersRegion=next;
+   render();
+   document.querySelector('[data-orders-market-toggle]')?.focus({preventScroll:true});
+  }else{
+   document.querySelector('[data-orders-market-toggle]')?.setAttribute('aria-expanded','false');
+   const list=document.getElementById('lc-orders-market-options');if(list)list.hidden=true;
+  }
+  return;
+ }
+ if(!e.target.closest('.lc-orders-market-picker')){
+  const trigger=document.querySelector('[data-orders-market-toggle]');
+  if(trigger)trigger.setAttribute('aria-expanded','false');
+  const list=document.getElementById('lc-orders-market-options');if(list)list.hidden=true;
+ }
+});
+document.addEventListener('keydown',e=>{
+ const trigger=document.querySelector('[data-orders-market-toggle]');
+ const list=document.getElementById('lc-orders-market-options');
+ if(!trigger||!list)return;
+ if(e.key==='Escape'&&!list.hidden){
+  e.preventDefault();list.hidden=true;trigger.setAttribute('aria-expanded','false');trigger.focus({preventScroll:true});return;
+ }
+ if(document.activeElement===trigger&&['ArrowDown','ArrowUp'].includes(e.key)){
+  e.preventDefault();list.hidden=false;trigger.setAttribute('aria-expanded','true');
+  (e.key==='ArrowDown'?list.querySelector('[aria-selected="true"]'):list.querySelector('[data-orders-market-option]:last-child'))?.focus({preventScroll:true});
+ }
+ const opts=[...list.querySelectorAll('[data-orders-market-option]')];
+ const index=opts.indexOf(document.activeElement);
+ if(index<0||!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;
+ e.preventDefault();
+ const next=e.key==='Home'?0:e.key==='End'?opts.length-1:(index+(e.key==='ArrowDown'?1:-1)+opts.length)%opts.length;
+ opts[next]?.focus({preventScroll:true});
+});
 document.addEventListener('labcentral:marketchange',e=>{
  const next=e.detail?.market;
- if(!orderMarkets.some(m=>m.id===next))return;
- state.ordersRegion=next;
+ if(orderMarkets.some(m=>m.id===next))state.ordersRegion=next;
  render();
 });
 el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';render();});
