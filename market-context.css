@@ -1,0 +1,11 @@
+/* Global market picker: matches Lab Central's blue-gray sidebar palette. */
+.lc-global-market{margin:0 15px 15px;padding:12px 12px 11px;background:linear-gradient(155deg,#f4f8fc,#f8fbfd);border:1px solid #e0eaf2;border-radius:13px}
+.lc-global-market-label{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:#638099;font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.lc-global-market-label svg{width:14px;height:14px;stroke:#5a839f}
+.lc-global-market-field{position:relative}
+.lc-global-market select{width:100%;min-height:40px;appearance:none;-webkit-appearance:none;border:1px solid #cfdfea;border-radius:9px;background:#fff;color:#24465e;font:700 12px Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:9px 34px 9px 12px;cursor:pointer;box-shadow:0 2px 5px rgba(33,67,96,.025)}
+.lc-global-market select:hover{border-color:#9dbdd3;background:#fdfefe}
+.lc-global-market select:focus-visible{outline:3px solid #b8dcdf;outline-offset:2px}
+.lc-global-market-caret{position:absolute;right:12px;top:50%;width:7px;height:7px;border-right:1.6px solid #668399;border-bottom:1.6px solid #668399;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.lc-global-market-hint{display:block;margin-top:7px;color:#8193a4;font-size:10px;line-height:1.35}
+@media print{.lc-global-market{display:none!important}}
