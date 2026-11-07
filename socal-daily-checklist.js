@@ -55,7 +55,7 @@ const monthlyQcTasks=[
  {id:'fire-extinguisher',group:'Safety & Facilities',title:'Fire extinguisher monthly inspection',frequency:'Every month',desc:'Verify the monthly visual inspection was completed for each clinic extinguisher. Confirm it is mounted and accessible, pressure gauge is in range when present, pin/seal intact, and no damage, corrosion, leaks or blocked nozzle.',note:'If Facilities already completed the check, verify its dated tag, checklist or electronic record. Otherwise arrange an inspection with Facilities or assigned staff, document date/initials and escalate defects immediately. Annual servicing is separate.',role:'Facilities / designated clinic staff'}
 ];
 const monthlyBinder=[
- {"id":"pathfast-qc","title":"PATHFAST Calibration and QC Printouts","desc":"Use a separate page for each analyte and attach two CAL 1, two CAL 2, QC 1 and QC 2 printouts every 28 days, with identifiers and corrective actions.","role":"Trained lab personnel / RN","template":"pathfast-qc","badges":["Printouts Needed"]},
+ {"id":"pathfast-qc","title":"PATHFAST Calibration and QC Printouts (Every 28 Days)","desc":"Use a separate page for each analyte and attach two CAL 1, two CAL 2, QC 1 and QC 2 printouts every 28 days, with identifiers and corrective actions.","role":"Trained lab personnel / RN","template":"pathfast-qc","badges":["Printouts Needed"]},
  {"id":"pathfast-maint","title":"PATHFAST Operational and Maintenance Schedule (Attachment K)","desc":"Use the original SOP-0523 Rev 02, Attachment K for the three weekly and three monthly maintenance checks, plus printer-paper replacement and self-check when applicable. Record date/initials and instrument details on the same log.","role":"Trained lab personnel / RN","template":"pathfast-maint"},
  {"id":"piccolo-qc","title":"Piccolo Xpress Quality Control Sheet","desc":"Record required low- and high-level panel controls and file the matching analyzer QC printouts.","role":"Trained lab personnel / RN","template":"piccolo-qc","badges":["Printouts Needed"]},
  {"id":"triage-liquid","title":"Triage MeterPro Liquid QC Control Log","desc":"Record scheduled liquid controls for active assay lots and file corresponding QC printouts, separate from daily electronic QC.","role":"Trained lab personnel / RN","template":"triage-liquid","badges":["Printouts Needed"]},
@@ -171,7 +171,7 @@ const dailyTemplateCatalog=[
  {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'}
 ];
 const monthlyTemplateCatalog=[
- {id:'pathfast-qc',title:'PATHFAST Calibration & QC Printout Log',detail:'Two-page PDF · one analyte per page · two CAL 1, two CAL 2, QC 1 and QC 2 printouts',group:'Instrument QC'},
+ {id:'pathfast-qc',title:'PATHFAST Calibration & QC Printout Log (Every 28 Days)',detail:'Two-page PDF · one analyte per page · two CAL 1, two CAL 2, QC 1 and QC 2 printouts',group:'Instrument QC'},
  {id:'pathfast-maint',title:'PATHFAST Operational & Maintenance Schedule (Attachment K)',detail:'Original SOP-0523 Rev 02 PDF · weekly and monthly maintenance',group:'Maintenance'},
  {id:'piccolo-qc',title:'Piccolo Xpress QC Control Sheet',detail:'Low- and high-level controls with printout attachments',group:'Instrument QC'},
  {id:'triage-liquid',title:'Triage MeterPro Liquid QC Log',detail:'Scheduled liquid QC for active assays',group:'Instrument QC'},
