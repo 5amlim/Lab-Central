@@ -214,8 +214,8 @@ function oneCard(c,idx,withDisc,id){
 function render(section){
  const id=typeof section==='string'?section:section?.id;
  const source=tests[id];if(!source)return '';
- const market=window.LAB_MARKET?.get()||'socal';
- const list=source.filter(item=>!item.marketNote||!/(?:\bNY\b|New York)/i.test(item.marketNote)||market==='ny');
+ const market=window.LAB_MARKET?.get()||null;
+ const list=source.filter(item=>!market||!item.marketNote||!/(?:\bNY\b|New York)/i.test(item.marketNote)||market==='ny');
  const isDisc=id==='piccolo';
  const heading=isDisc?'Available Piccolo reagent discs':id==='torch'?'Gastrointestinal panel targets':id==='hiv'?'Abbott Determine HIV-1/2 Ag/Ab Combo':'Available tests and detected analytes';
  const subtitle=isDisc?'Six approved chemistry discs. Accent colors follow the corresponding reagent pouch labeling. Measured and calculated results are separated.':'Select an assay below to review its full analyte or pathogen menu. Categories and complexity labels are assay-specific.';
