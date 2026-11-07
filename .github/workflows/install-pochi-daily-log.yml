@@ -28,9 +28,8 @@ jobs:
               if found!=n:raise SystemExit(f'Expected {n} matches for {a[:90]!r}; found {found}')
               return s.replace(a,b)
           p='lab-templates.html';s=load(p)
-          a="""  {id:'sysmex-control',group:'daily',title:'pocH-100i Control Log',originalPdf:'assets/lab-templates/pocH-100i-Control-Log.pdf'},
-           {id:'sysmex-blank',group:'daily',title:'pocH-100i Start-up Blank Check Log',originalPdf:'assets/lab-templates/pocH-100i-Start-up-Blank-Check-Log.pdf'},"""
-          b="""  {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'"""+url+"""'},"""
+          a=" {id:'sysmex-control',group:'daily',title:'pocH-100i Control Log',originalPdf:'assets/lab-templates/pocH-100i-Control-Log.pdf'},\n {id:'sysmex-blank',group:'daily',title:'pocH-100i Start-up Blank Check Log',originalPdf:'assets/lab-templates/pocH-100i-Start-up-Blank-Check-Log.pdf'},"
+          b=" {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'"+url+"'},"
           s=swap(s,a,b)
           s=swap(s,"const requested=params.get('template')||'';","const requested=params.get('template')==='sysmex-blank'?'sysmex-control':(params.get('template')||'');")
           save(p,s)
@@ -38,10 +37,10 @@ jobs:
           s=swap(s,"'use strict';","'use strict';\nconst POCHI_DAILY_PDF='"+url+"';")
           s=swap(s,'complete the dedicated control and start-up blank-check logs','complete the combined Pochi Daily Blank Check and Control Log')
           s=swap(s,'Complete the pocH-100i Control Log and Start-up Blank Check Log','Complete the Pochi Daily Blank Check and Control Log')
-          combined='  {"id":"sysmex-control","title":"Pochi Daily Blank Check and Control Log","desc":"If installed, document the blank check and EIGHTCHECK Low, Normal and High QC on the combined form. File all four matching analyzer printouts.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},\n'
-          s,n=re.subn(r'(?m)^  \{"id":"sysmex-control"[^\n]+\n  \{"id":"sysmex-blank"[^\n]+\n',lambda m:combined,s)
+          combined=' {"id":"sysmex-control","title":"Pochi Daily Blank Check and Control Log","desc":"If installed, document the blank check and EIGHTCHECK Low, Normal and High QC on the combined form. File all four matching analyzer printouts.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},\n'
+          s,n=re.subn(r'(?m)^ \{"id":"sysmex-control"[^\n]+\n \{"id":"sysmex-blank"[^\n]+\n',lambda m:combined,s)
           if n!=2:raise SystemExit(f'Expected two market binder pairs, found {n}')
-          s,n=re.subn(r"(?m)^  \{id:'sysmex-control',[^\n]+\n  \{id:'sysmex-blank',[^\n]+\n", "  {id:'sysmex-control',title:'Pochi Daily Blank Check and Control Log',detail:'Blank check and three QC levels with four printouts',group:'Instrument QC'},\n",s)
+          s,n=re.subn(r"(?m)^ \{id:'sysmex-control',[^\n]+\n \{id:'sysmex-blank',[^\n]+\n", " {id:'sysmex-control',title:'Pochi Daily Blank Check and Control Log',detail:'Blank check and three QC levels with four printouts',group:'Instrument QC'},\n",s)
           if n!=1:raise SystemExit(f'Expected one template reference pair, found {n}')
           s=swap(s,"const url=item.template==='sysmex-maint'?","const url=item.template==='sysmex-control'?POCHI_DAILY_PDF:item.template==='sysmex-maint'?")
           s=swap(s,"const href=t.id==='sysmex-maint'?","const href=t.id==='sysmex-control'?POCHI_DAILY_PDF:t.id==='sysmex-maint'?")
