@@ -184,7 +184,7 @@ const dailyTemplateCatalog=[
  {id:'eyewash',title:'Eyewash Station Maintenance Log',detail:'Daily bump test and weekly flush',group:'Maintenance'}
 ];
 const monthlyTemplateCatalog=[
- {id:'pathfast-qc',title:'PATHFAST Calibration & QC Printout Log (Every 28 Days)',detail:'Two-page PDF · one analyte per page · two CAL 1, two CAL 2, QC 1 and QC 2 printouts',group:'Instrument QC'},
+ {id:'pathfast-qc',title:'PATHFAST Calibration & QC Printout Log (Every 28 Days)',detail:'Combined CAL and QC printout per analyte',group:'Instrument QC'},
  {id:'pathfast-maint',title:'PATHFAST Operational & Maintenance Schedule (Attachment K)',detail:'Original SOP-0523 Rev 02 PDF · weekly and monthly maintenance',group:'Maintenance'},
   {id:'piccolo-qc',title:'Piccolo Monthly QC Log',detail:'Original PDF · monthly or new lot/shipment · two printout areas',group:'Instrument QC'},
  {id:'triage-liquid',title:'Triage MeterPro Monthly QC Log',detail:'Two-page PDF · BNP, D-dimer, Troponin · monthly or new lot/shipment',group:'Instrument QC'},
