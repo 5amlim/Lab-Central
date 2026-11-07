@@ -19,16 +19,10 @@ function allows(vendor){return vendor!=="cedars"||activeMarket==="socal";}
 function market(){return activeMarket;}
 function count(){return availableLabs().length;}
 function selector(){
- const {market:m,clinic:c}=current();
- return '<section id="calc2-site-selector" class="calc2-site-selector" aria-label="Lab calculators and guides market and clinic">'+
-  '<div class="dqc-location-bar"><span class="dqc-location-label" id="calc2-clinic-label">Clinic location</span>'+
-  '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-calc2-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="calc2-location-options" aria-labelledby="calc2-clinic-label calc2-clinic-value">'+
-   '<span id="calc2-clinic-value">'+E(c[1])+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
-   '<div class="dqc-location-options" id="calc2-location-options" role="listbox" aria-labelledby="calc2-clinic-label" hidden>'+
-    m.clinics.map(cl=>'<button type="button" role="option" data-calc2-clinic="'+E(cl[0])+'" class="dqc-location-option'+(cl[0]===c[0]?' is-selected':'')+'" aria-selected="'+(cl[0]===c[0])+'" tabindex="-1">'+E(cl[1])+(cl[0]===c[0]?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
-   '</div></div><span class="dqc-location-hint">Select a clinic to view its reference tools</span></div>'+
+ const {market:m}=current();
+ return '<section id="calc2-site-selector" class="calc2-site-selector" aria-label="Regional lab reference tools">'+
   '<div class="dqc-market-heading"><div><span class="dqc-market-overline">LAB REFERENCE TOOLS / '+E(m.short).toUpperCase()+'</span>'+
-   '<h2>'+E(c[1])+'</h2><p>'+E(m.name)+' · Confirm individual lab account activation, panels, collection kits and courier details for this clinic before sending specimens.</p></div></div>'+
+   '<h2>'+E(m.name)+'</h2><p>Regional calculators and receiving laboratory guides. Verify lab activation, collection requirements and courier arrangements for the actual clinic before sending specimens.</p></div></div>'+
  '</section>';
 }
 function moleculeIcon(){
@@ -52,7 +46,7 @@ function molecular(){
    '<div class="calculator-top"><span class="calculator-tag">'+E(v.tag)+'</span><span class="calc2-type-badge">MOLECULAR</span></div>'+
    '<div class="calculator-brand-title"><span class="calc2-molecule-icon">'+moleculeIcon()+'</span><h2>'+E(v.name)+'</h2></div>'+
    '<p>'+E(v.desc)+'</p>'+
-   '<div class="calc2-clinic-note"><strong>'+E(c[1])+'</strong><span>Verify approved panels, specimen media and courier arrangements.</span></div>'+
+   '<div class="calc2-clinic-note"><strong>'+E(m.name)+'</strong><span>Verify approved panels, specimen media and pickup requirements with your clinic.</span></div>'+
    '<details class="calc2-guide-details"><summary>Collection &amp; sendout checkpoints <span class="calc2-detail-chevron" aria-hidden="true"></span></summary><ol>'+v.tips.map(t=>'<li>'+E(t)+'</li>').join('')+'</ol></details>'+
    '<button type="button" class="calculator-go calc2-molecular-go" data-calc2-sendout="'+E(v.id)+'">Open '+E(v.name)+' sendout guide <span aria-hidden="true">↗</span></button>'+
   '</article>').join('')+'</div>'+
@@ -262,13 +256,12 @@ function panel(calculators,logo){
  const id=selectedLab(),item=labData[id],{market:m,clinic:c}=current();
  const molecular=id==="htrx"||id==="pathmd";
  const calc=(calculators||[]).find(v=>v.accent===id);
- if(id==="pathmd")window.LAB_PATHMD_REFERENCE?.setLocation?.(m.id,c[0]);
+ if(id==="pathmd")window.LAB_PATHMD_REFERENCE?.setLocation?.(m.id,"");
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const htrxContent=id==="htrx"?htrxReference():"";
  const pickup=(id==="pathmd"&&m.id==="socal")?
-  '<section class="calc2-pickup-note" aria-label="PathMD pickup details"><span class="calc-guide-eyebrow">SOCAL LOCAL COURIER</span><strong>'+(c[0]==="sm"?"Santa Monica · Monday through Friday":"Local courier pickup · Daily")+'</strong>'+
-  (c[0]==="sm"?'<p>11:00–11:30 PM · Place sealed, labeled specimens in the <strong>lockbox</strong> for pickup.</p>':'<p>Local courier pickup is arranged daily. Confirm the exact time and handoff location with the clinic.</p>')+'</section>':'';
-
+  '<section class="calc2-pickup-note" aria-label="PathMD courier details"><span class="calc-guide-eyebrow">SOCAL LOCAL COURIER</span><strong>Clinic-specific pickup</strong><p>Confirm the current local pickup schedule and handoff location with your clinic. Do not assume another site’s cutoff.</p></section>':'';
+ 
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-open-menu="'+id+'">Open '+E(names[id])+' test menu <span aria-hidden="true">↓</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
@@ -284,7 +277,7 @@ function panel(calculators,logo){
    '<div><strong>'+E(step[0])+'</strong><p>'+E(step[1])+'</p></div></div>').join("")+
   '</div></section>';
  return '<section id="calc2-lab-panel" role="tabpanel" aria-labelledby="calc2-tab-'+id+'" tabindex="0" class="calc2-panel calc2-panel-'+id+'">'+
-  '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span class="calc2-selected-site">'+E(m.short)+' <i aria-hidden="true">·</i> '+E(c[1])+'</span></div>'+
+  '<div class="calc2-panel-top"><span>'+E(item.kind)+'</span><span class="calc2-selected-site">'+E(m.name)+'</span></div>'+
   '<div class="calc2-panel-intro">'+
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
    '<div class="calc2-panel-actions">'+action+extra+'</div>'+
@@ -371,7 +364,7 @@ document.addEventListener('click',event=>{
  const sendout=event.target.closest('[data-calc2-sendout]');
  if(sendout){
   const {market:m,clinic:c}=current();
-  window.LAB_SENDOUT_MARKETS?.select?.(m.id,c[0],sendout.dataset.calc2Sendout);
+  window.LAB_SENDOUT_MARKETS?.select?.(m.id,null,sendout.dataset.calc2Sendout);
   location.hash='#sendout';
   return;
  }
