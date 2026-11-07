@@ -172,7 +172,7 @@ function sollis(){
  h+=handoff(5);
  return h+finish();
 }
-function orders(tab){return tab==='walk-in'?walkin():tab==='in-house'?sollis():(window.LAB_MARKET?.get()==='ny'?nyScheduled():scheduled());}
+function orders(tab){return tab==='walk-in'?walkin():tab==='in-house'?sollis():((window.LAB_MARKET?.get()||document.querySelector('[data-orders-market-value]')?.dataset.ordersMarketValue)==='ny'?nyScheduled():scheduled());}
 function nodeText(el){return el?.textContent?.replace(/\s+/g,' ').trim()||'';}
 function htmlText(el){
  if(!el)return '';
