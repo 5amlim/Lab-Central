@@ -1,0 +1,79 @@
+name: Install approved Pochi daily blank-check and QC log
+on:
+  push:
+    paths:
+      - 'assets/lab-templates/Pochi-Daily-Blank-Check-and-Control-Log.pdf'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original PDF and update Pochi links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,re
+          pdf=Path('assets/lab-templates/Pochi-Daily-Blank-Check-and-Control-Log.pdf')
+          expected='5e1ffac2863d9688b07724492a011caaacd86f1ea65c4fd7804849ce3eaa6288'
+          if not pdf.is_file() or hashlib.sha256(pdf.read_bytes()).hexdigest()!=expected:
+              raise SystemExit('The uploaded PDF does not match the approved two-page original.')
+          url='assets/lab-templates/Pochi-Daily-Blank-Check-and-Control-Log.pdf?v=20261107'
+          def load(path):return Path(path).read_text(encoding='utf-8')
+          def save(path,data):Path(path).write_text(data,encoding='utf-8')
+          def swap(s,a,b,n=1):
+              found=s.count(a)
+              if found!=n:raise SystemExit(f'Expected {n} matches for {a[:90]!r}; found {found}')
+              return s.replace(a,b)
+          p='lab-templates.html';s=load(p)
+          a="""  {id:'sysmex-control',group:'daily',title:'pocH-100i Control Log',originalPdf:'assets/lab-templates/pocH-100i-Control-Log.pdf'},
+           {id:'sysmex-blank',group:'daily',title:'pocH-100i Start-up Blank Check Log',originalPdf:'assets/lab-templates/pocH-100i-Start-up-Blank-Check-Log.pdf'},"""
+          b="""  {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'"""+url+"""'},"""
+          s=swap(s,a,b)
+          s=swap(s,"const requested=params.get('template')||'';","const requested=params.get('template')==='sysmex-blank'?'sysmex-control':(params.get('template')||'');")
+          save(p,s)
+          p='socal-daily-checklist.js';s=load(p)
+          s=swap(s,"'use strict';","'use strict';\nconst POCHI_DAILY_PDF='"+url+"';")
+          s=swap(s,'complete the dedicated control and start-up blank-check logs','complete the combined Pochi Daily Blank Check and Control Log')
+          s=swap(s,'Complete the pocH-100i Control Log and Start-up Blank Check Log','Complete the Pochi Daily Blank Check and Control Log')
+          combined='  {"id":"sysmex-control","title":"Pochi Daily Blank Check and Control Log","desc":"If installed, document the blank check and EIGHTCHECK Low, Normal and High QC on the combined form. File all four matching analyzer printouts.","role":"Trained lab personnel / RN","template":"sysmex-control","badges":["Printouts Needed"]},\n'
+          s,n=re.subn(r'(?m)^  \{"id":"sysmex-control"[^\n]+\n  \{"id":"sysmex-blank"[^\n]+\n',lambda m:combined,s)
+          if n!=2:raise SystemExit(f'Expected two market binder pairs, found {n}')
+          s,n=re.subn(r"(?m)^  \{id:'sysmex-control',[^\n]+\n  \{id:'sysmex-blank',[^\n]+\n", "  {id:'sysmex-control',title:'Pochi Daily Blank Check and Control Log',detail:'Blank check and three QC levels with four printouts',group:'Instrument QC'},\n",s)
+          if n!=1:raise SystemExit(f'Expected one template reference pair, found {n}')
+          s=swap(s,"const url=item.template==='sysmex-maint'?","const url=item.template==='sysmex-control'?POCHI_DAILY_PDF:item.template==='sysmex-maint'?")
+          s=swap(s,"const href=t.id==='sysmex-maint'?","const href=t.id==='sysmex-control'?POCHI_DAILY_PDF:t.id==='sysmex-maint'?")
+          save(p,s)
+          p='qc-guide.js';s=load(p)
+          s=swap(s,'const configs={',"const POCHI_DAILY_PDF='"+url+"';\nfunction pochiLogLink(){return '<a class=\"qc-pochi-log-link\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"'+POCHI_DAILY_PDF+'\">Open Pochi Daily Blank Check and Control Log (PDF) ↗</a>';}\nconst configs={")
+          s=swap(s,"pocH-100i Control Log and Start-up Blank Check Log · Daily QC binder","Pochi Daily Blank Check and Control Log · Daily QC binder")
+          s=swap(s,"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the completed pocH-100i Control Log. Complete the Start-up Blank Check Log and file its blank-check printout with it.","Complete the Pochi Daily Blank Check and Control Log. File the accepted QC1 (Low), QC2 (Normal), QC3 (High), and startup blank-check printouts with this combined form.")
+          s=swap(s,'<small>pocH Daily Control Log</small>','<small>Combined daily log · QC</small>')
+          s=swap(s,'<small>Maintenance Log · Blank Check</small>','<small>Combined daily log · Blank Check</small>')
+          s=swap(s,"Keep all three QC reports together in the pocH Daily Control Log. File the blank check in its separate section.","Keep all three QC reports and the blank-check report with the Pochi Daily Blank Check and Control Log.")
+          s=swap(s,"Escalate missing or unacceptable results.</li></ol>'+","Escalate missing or unacceptable results.</li></ol>'+pochiLogLink()+")
+          s=swap(s,"Tap Print and file the report in the blank-check section of the Maintenance Log binder.","Tap Print and file the report with today's combined Pochi daily log.")
+          s=swap(s,"Press Print and file with the date/name in the blank-check section of the Maintenance Log binder.","Press Print and file the result with the completed Pochi Daily Blank Check and Control Log.")
+          s=swap(s,'],\"Sysmex pocH-100i\",{scroll:true})+\'</div>\';\n  if(/new qc lot','],"Sysmex pocH-100i",{scroll:true})+pochiLogLink()+\'</div>\';\n  if(/new qc lot')
+          s=swap(s,'],\"Sysmex pocH-100i\",{scroll:true})+sysmexPrintFallback()+\'</div>\';','],"Sysmex pocH-100i",{scroll:true})+pochiLogLink()+sysmexPrintFallback()+\'</div>\';')
+          save(p,s)
+          p='qc-guide.css';s=load(p)
+          s+='\n.qc-pochi-log-link{display:inline-flex;align-items:center;gap:8px;max-width:100%;margin:12px 0;padding:10px 14px;border:1px solid #c9dde2;border-radius:10px;background:#f4fafb;color:#286578;font-weight:700;font-size:13px;text-decoration:none}.qc-pochi-log-link:hover{background:#e9f5f8}\n'
+          save(p,s)
+          p='index.html';s=load(p)
+          s=swap(s,"Print and put it on the pocHi blank check log with name and date filled out (in Maintenance Log binder)","Print and file the blank-check result with the completed Pochi Daily Blank Check and Control Log.")
+          save(p,s)
+          print('Approved PDF confirmed, 6 site files updated.')
+          PY
+      - name: Commit site changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html qc-guide.js qc-guide.css socal-daily-checklist.js lab-templates.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'Use approved combined Pochi daily blank check and control log'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
