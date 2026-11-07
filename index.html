@@ -192,7 +192,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   
   
   <link rel="stylesheet" href="flow-navigation.css?v=20261104c" media="all">
-<link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261106" media="all">
+<link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261106-market-layout" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="socal-daily-checklist.css?v=20261104" media="all">
@@ -275,7 +275,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <script src="envi-ordering-guide.js?v=20261104"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261104" media="all">
 <script src="sop-print.js?v=20261104a"></script>
-<script src="ny-scheduled-workflow.js?v=20261106"></script>
+<script src="ny-scheduled-workflow.js?v=20261106-market-layout"></script>
 <style id="lab-central-athena-icon-theme">
 /* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
 .nav-section .nav-link[data-go="order-sets"] .nav-icon.athena-nav-icon {
@@ -548,7 +548,7 @@ if(favs.includes('tubes')){
  favs=[...new Set(favs.map(id=>id==='tubes'?'sendout':id))];
  try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}
 }
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:'standard',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -1975,15 +1975,29 @@ function workflowSteps(steps,start=1){
  const stepIcon=title=>/calculat|upload/i.test(title)?'file-text':/schedule|appointment/i.test(title)?'clipboard-check':/print/i.test(title)?'file-text':'clipboard-check';
  return `<div class="workflow-steps">${steps.map((step,i)=>`<article class="workflow-step${step[2]==='sollis-patient'?' sollis-patient-branch':''}"><span class="workflow-step-number">${String(i+start).padStart(2,'0')}</span><div class="workflow-step-content"><div class="workflow-step-heading"><h3><span class="workflow-title-icon" aria-hidden="true">${svg(stepIcon(step[0]))}</span><span>${safeHtml(step[0])}</span></h3>${workflowOwnerTag(step[4])}</div>${(step[1]||step[3])?`<p>${step[3]?`<strong>${safeHtml(step[3])}</strong> `:""}${safeHtml(step[1])}</p>`:""}${workflowStepExtras(step[2])}</div></article>`).join('')}</div>`;
 }
+const orderMarkets=[
+ {id:'socal',name:'Southern California',note:'Use the shared scheduled requisition workflow and follow clinic-specific collection and sendout procedures.'},
+ {id:'norcal',name:'Northern California',note:'Use the shared scheduled requisition workflow and confirm the local lab and courier requirements.'},
+ {id:'fl',name:'Florida',note:'Use the shared scheduled requisition workflow and confirm the local lab and courier requirements.'},
+ {id:'ny',name:'New York',note:'Follow the New York-specific outside-provider approval, scheduling and sendout process.'}
+];
 function orderWorkflowTabs(tab){
  const options=[['external','External Requisition (Scheduled)'],['walk-in','External Requisition (Walk in)'],['in-house','Ordered at Sollis']];
- return '<div class="workflow-choice-caption">CHOOSE ONE WORKFLOW</div><div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Sendout order workflow">'+
+ return '<div class="tab-strip order-workflow-tabs" role="tablist" aria-label="Sendout order workflow">'+
   options.map(([id,label])=>'<button type="button" role="tab" aria-selected="'+(tab===id)+'" class="tab '+(tab===id?'active':'')+'" data-workflowtab="'+id+'">'+label+'</button>').join('')+
   '</div>';
 }
 function orderRegionSelector(){
- const newYork=state.ordersRegion==='ny';
- return '<div class="order-region-switch"><div class="order-region-copy"><small>MARKET-SPECIFIC WORKFLOW</small><strong>Select the clinic region</strong><p>'+(newYork?'New York uses the outside-provider policy and approval process.':'Other regions follow the current scheduled external requisition workflow.')+'</p></div><label class="order-region-select"><span class="sr-only">Clinic region</span><select data-orders-region aria-label="Select clinic region"><option value="standard"'+(!newYork?' selected':'')+'>All other regions</option><option value="ny"'+(newYork?' selected':'')+'>New York</option></select></label></div>';
+ const market=orderMarkets.find(m=>m.id===state.ordersRegion)||orderMarkets[0];
+ return '<div class="order-region-switch"><div class="order-region-copy"><small>SELECTED CLINIC MARKET</small><strong>'+safeHtml(market.name)+'</strong><p>'+safeHtml(market.note)+'</p></div>'+
+ '<div class="order-region-select"><label for="orders-market-select">Market</label><select id="orders-market-select" data-orders-region aria-label="Select clinic market">'+
+ orderMarkets.map(m=>'<option value="'+m.id+'"'+(market.id===m.id?' selected':'')+'>'+safeHtml(m.name)+'</option>').join('')+
+ '</select></div></div>';
+}
+function orderWorkflowControls(tab,selectMarket=false){
+ return '<section class="orders-setup-panel" aria-label="Workflow and market selection">'+
+ '<div class="orders-setup-head"><div><span>WORKFLOW SELECTION</span><strong>Choose the request type'+(selectMarket?' and market':'')+'</strong></div><p>'+(selectMarket?'Choose the clinic market to see the appropriate scheduled requisition process.':'Choose the request type to view its collection and sendout steps.')+'</p></div>'+
+ orderWorkflowTabs(tab)+(selectMarket?orderRegionSelector():'')+'</section>';
 }
 function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
@@ -2010,12 +2024,11 @@ function frontDeskRequisitionIntake(){
  </section>`;
 }
 function externalFlow(){
- if(state.ordersRegion==='ny')return window.LAB_NY_SCHEDULED.render(orderWorkflowTabs('external'),orderRegionSelector());
+ const selection=orderWorkflowControls('external',true);
+ if(state.ordersRegion==='ny')return selection+window.LAB_NY_SCHEDULED.render();
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const complete=state.reqBranch==='complete';const unresolved=state.reqResolution==='unresolved';
- let h=`<div class="workflow-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start by confirming whether the member has outside lab orders. After review, upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
- h+=orderWorkflowTabs('external');
- h+=orderRegionSelector();
+ let h=selection+`<div class="workflow-head orders-selected-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start by confirming whether the member has outside lab orders. After review, upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
  h+='<div class="external-workflow-timeline">';
  h+=frontDeskRequisitionIntake();
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
@@ -2123,8 +2136,7 @@ function walkinDocumentPanel(){
  '</div>';
 }
 function walkinFlow(){
- let h='<div class="workflow-head walkin-workflow-head"><div><span class="eyebrow">EXTERNAL REQUISITION · WALK IN</span><h2>External requisition (walk in)</h2><p><strong>Patients should be encouraged to schedule external lab visits in advance.</strong> For walk-ins already in clinic, the RN reviews the outside requisition, prepares the collection plan and uploads both documents before drawing specimens. Lab personnel then process and log the sendout.</p><div class="workflow-doc-labels" aria-label="Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">RN · Lab personnel</span></div>';
- h+=orderWorkflowTabs('walk-in');
+ let h=orderWorkflowControls('walk-in')+'<div class="workflow-head walkin-workflow-head orders-selected-head"><div><span class="eyebrow">EXTERNAL REQUISITION · WALK IN</span><h2>External requisition (walk in)</h2><p><strong>Patients should be encouraged to schedule external lab visits in advance.</strong> For walk-ins already in clinic, the RN reviews the outside requisition, prepares the collection plan and uploads both documents before drawing specimens. Lab personnel then process and log the sendout.</p><div class="workflow-doc-labels" aria-label="Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">RN · Lab personnel</span></div>';
  h+=workflowSteps([
   ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab Personnel'],
   ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab Personnel']
@@ -2135,8 +2147,7 @@ function walkinFlow(){
  return h;
 }
 function inhouseFlow(){
- let h=`<div class="workflow-head"><div><span class="eyebrow">SOLLIS-PLACED SENDOUT ORDERS</span><h2>Sendout orders placed by Sollis</h2><p>For tests ordered in Athena by the Sollis clinical team and sent to an outside laboratory.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
- h+=orderWorkflowTabs('in-house');
+ let h=orderWorkflowControls('in-house')+`<div class="workflow-head orders-selected-head"><div><span class="eyebrow">SOLLIS-PLACED SENDOUT ORDERS</span><h2>Sendout orders placed by Sollis</h2><p>For tests ordered in Athena by the Sollis clinical team and sent to an outside laboratory.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
  h+=workflowSteps([
  ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','athena-sendout-order','','Provider'],
  ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
@@ -2151,7 +2162,7 @@ function inhouseFlow(){
 }
 function renderOrders(tab='external'){
  tab=['external','walk-in','in-house'].includes(tab)?tab:'external';el('currentCrumb').textContent='Sendout lab workflows';
- let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to outside laboratories such as Quest, Labcorp or Cedars. Choose the scheduled external, walk-in external or Sollis-ordered workflow. Scheduled external requests include a missing-information escalation path.');
+ let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to Quest, Labcorp, Cedars and other reference labs. Select the request type and clinic market below to follow the appropriate workflow.');
  h+=`<div class="workflow-main">${tab==='external'?externalFlow():tab==='walk-in'?walkinFlow():inhouseFlow()}</div>`;
  h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
@@ -2852,7 +2863,7 @@ function updateGuidedProcedureInPlace(button){
 document.addEventListener('change',e=>{
  const region=e.target.closest('[data-orders-region]');
  if(!region)return;
- const next=region.value==='ny'?'ny':'standard';
+ const next=orderMarkets.some(m=>m.id===region.value)?region.value:'socal';
  if(next===state.ordersRegion)return;
  state.ordersRegion=next;
  render();
