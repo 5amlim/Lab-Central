@@ -213,12 +213,14 @@ function oneCard(c,idx,withDisc,id){
 }
 function render(section){
  const id=typeof section==='string'?section:section?.id;
- const list=tests[id];if(!list)return '';
+ const source=tests[id];if(!source)return '';
+ const market=window.LAB_MARKET?.get()||'socal';
+ const list=source.filter(item=>!item.marketNote||!/(?:\bNY\b|New York)/i.test(item.marketNote)||market==='ny');
  const isDisc=id==='piccolo';
  const heading=isDisc?'Available Piccolo reagent discs':id==='torch'?'Gastrointestinal panel targets':id==='hiv'?'Abbott Determine HIV-1/2 Ag/Ab Combo':'Available tests and detected analytes';
  const subtitle=isDisc?'Six approved chemistry discs. Accent colors follow the corresponding reagent pouch labeling. Measured and calculated results are separated.':'Select an assay below to review its full analyte or pathogen menu. Categories and complexity labels are assay-specific.';
  let notes='';
- if(id==='spotfire')notes='Select the specimen-appropriate respiratory or sore throat menu per the installed U.S. pouch IFU. Full sore throat is listed for NY clinics.';
+ if(id==='spotfire')notes=market==='ny'?'Select the specimen-appropriate respiratory or sore throat menu per the installed U.S. pouch IFU. Full sore throat is listed for NY clinics.':'Select the specimen-appropriate respiratory or sore throat menu per the installed U.S. pouch IFU.';
  if(id==='poc'||id==='drug-screen')notes='Rapid antigen and drug-screen assays are kit-dependent. Check the specific product, specimen type, CLIA category, and current lot insert before testing.';
  if(isDisc)notes='CLIA complexity applies to the reagent disc and the approved specimen type, not to an analyte universally. Calculated results are estimates from measured values and required patient information; follow the current manufacturer IFU, instrument settings, and site SOP.';
  return '<section class="assay-catalog" aria-label="'+esc(heading)+'"><header class="ac-title"><div><span class="ac-eyebrow">TEST MENU / ANALYTE REFERENCE</span><h2>'+esc(heading)+'</h2><p>'+esc(subtitle)+'</p></div><span class="ac-count">'+list.length+' '+(list.length===1?'panel':'panels / tests')+'</span></header>'+
