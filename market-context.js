@@ -8,20 +8,24 @@
   {id:'ny',name:'New York',short:'New York'},
   {id:'fl',name:'Florida',short:'Florida'}
  ];
- const valid=id=>markets.some(m=>m.id===id);
+ const valid=id=>id===null||markets.some(m=>m.id===id);
  let initial=null;
  try {initial=new URLSearchParams(window.location.search).get('market')} catch(_){}
- let selected=valid(initial)?initial:'socal';
+ let selected=markets.some(m=>m.id===initial)?initial:null;
  const get=()=>selected;
- const current=()=>markets.find(m=>m.id===selected);
- const label=()=>current().name;
+ const current=()=>markets.find(m=>m.id===selected)||null;
+ const label=()=>current()?.name||'All markets';
  const dom=(id)=>document.getElementById(id);
  function sync(){
   const labelNode=dom('labCentralMarketLabel');
   if(labelNode)labelNode.textContent=label();
+  const reset=dom('labCentralMarketReset');
+  if(reset)reset.hidden=!selected;
+  const hint=dom('lcMarketHint');
+  if(hint)hint.textContent=selected?'Regional filter active across the portal':'Individual page filters are available';
   const list=dom('labCentralMarketOptions');
   if(list)list.querySelectorAll('[data-lc-market-option]').forEach(option=>{
-   const chosen=option.dataset.lcMarketOption===selected;
+   const chosen=(option.dataset.lcMarketOption==='all'?null:option.dataset.lcMarketOption)===selected;
    option.setAttribute('aria-selected',String(chosen));
    option.classList.toggle('is-selected',chosen);
   });
@@ -42,7 +46,8 @@
   selected=id;
   try {
    const url=new URL(window.location.href);
-   url.searchParams.set('market',id);
+   if(id)url.searchParams.set('market',id);
+   else url.searchParams.delete('market');
    window.history.replaceState(window.history.state,'',url.pathname+url.search+url.hash);
   }catch(_){}
   sync();
@@ -55,10 +60,11 @@
   const list=dom('labCentralMarketOptions');
   if(!trigger||!list)return;
   sync();
+  dom('labCentralMarketReset')?.addEventListener('click',()=>set(null));
   trigger.addEventListener('click',()=>expand(trigger.getAttribute('aria-expanded')!=='true'));
   list.addEventListener('click',event=>{
    const item=event.target.closest('[data-lc-market-option]');
-   if(item)set(item.dataset.lcMarketOption);
+   if(item)set(item.dataset.lcMarketOption==='all'?null:item.dataset.lcMarketOption);
   });
   document.addEventListener('click',event=>{
    if(!event.target.closest('.lc-global-market'))expand(false);
