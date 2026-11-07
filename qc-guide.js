@@ -6,7 +6,7 @@
 "use strict";
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const POCHI_LOG_URL="assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107";
-const PICCOLO_LOG_URL="assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-exact";
+const PICCOLO_LOG_URL="assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-2page-upload";
 const TRIAGE_MONTHLY_LOG_URL="assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-revised";
 function piccoloLogLink(){return '<div class="pfm-quicklink"><div><strong>Piccolo Monthly QC Log</strong><span>Complete monthly or for a new lot/shipment. Attach both analyzer QC printouts.</span></div><a class="pfm-log-button" href="'+PICCOLO_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open log (PDF) ↗</a></div>';}
 function triageLogLink(){return '<div class="pfm-quicklink"><div><strong>Triage MeterPro Monthly QC Log</strong><span>Complete every month or with a new lot/shipment for BNP, D-dimer and Troponin liquid QC (Levels 1 and 2).</span></div><a class="pfm-log-button" href="'+TRIAGE_MONTHLY_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open QC log (PDF) ↗</a></div>';}
