@@ -298,8 +298,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   background:#f3ecff;color:#7c4dcc;
 }
 </style>
-<link rel="stylesheet" href="market-context.css?v=20261107-portal-dropdown" media="all">
-<script src="market-context.js?v=20261107-portal-dropdown"></script>
+<link rel="stylesheet" href="market-context.css?v=20261107-optional-market" media="all">
+<script src="market-context.js?v=20261107-optional-market"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -315,19 +315,21 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
         <div class="lc-global-market-label" id="lcMarketTitle">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
           VIEWING MARKET
+          <button type="button" id="labCentralMarketReset" class="lc-market-reset" title="Clear the portal market filter and restore each page's selectors" hidden>Reset</button>
         </div>
         <button type="button" id="labCentralMarket" class="lc-global-market-trigger" aria-labelledby="lcMarketTitle labCentralMarketLabel" aria-haspopup="listbox" aria-controls="labCentralMarketOptions" aria-expanded="false">
           <span class="lc-global-market-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
-          <span id="labCentralMarketLabel" class="lc-global-market-title">Southern California</span>
+          <span id="labCentralMarketLabel" class="lc-global-market-title">All markets</span>
           <span class="lc-global-market-caret" aria-hidden="true"></span>
         </button>
         <div id="labCentralMarketOptions" class="lc-global-market-options" role="listbox" aria-label="Choose a market" hidden>
-          <button type="button" role="option" class="lc-global-market-option is-selected" data-lc-market-option="socal" aria-selected="true">Southern California<span class="lc-market-check" aria-hidden="true">✓</span></button>
+          <button type="button" role="option" class="lc-global-market-option is-selected" data-lc-market-option="all" aria-selected="true">All markets · Use page filters<span class="lc-market-check" aria-hidden="true">✓</span></button>
+          <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="socal" aria-selected="false">Southern California<span class="lc-market-check" aria-hidden="true">✓</span></button>
           <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="norcal" aria-selected="false">Northern California<span class="lc-market-check" aria-hidden="true">✓</span></button>
           <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="ny" aria-selected="false">New York<span class="lc-market-check" aria-hidden="true">✓</span></button>
           <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="fl" aria-selected="false">Florida<span class="lc-market-check" aria-hidden="true">✓</span></button>
         </div>
-        <small class="lc-global-market-hint">One selection for the entire portal</small>
+        <small class="lc-global-market-hint" id="lcMarketHint">Individual page filters are available</small>
       </div>
       <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tests, analytes, or order sets…" aria-label="Search instruments, analytes, pathogens, abbreviations, order sets, or workflows" autocomplete="off"></div>
       <nav id="sidebarNav" class="sidebar-nav"></nav>
