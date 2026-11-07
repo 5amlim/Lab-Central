@@ -299,7 +299,7 @@ function sysmexStep(sec,group,title){
  if(/turn on the sysmex|start.*analyzer|startup blank check/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"status",heading:"Power on the analyzer",screen:"INITIALIZING",status:"System starting",detail:"Please wait",tip:"Turn on the physical power switch after the completed shutdown. The analyzer initializes automatically."},
   {kind:"status",heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",status:"Blank check in progress",detail:"Wait for the ready indication",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
- ],"Sysmex pocH-100i")+'</div>';
+ ],"Sysmex pocH-100i")+'</div>'+pochiLogLink();
  if(/go to menu|blank check.*today/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"mainMenu",heading:"Open the Main screen",screen:"MAIN",tip:"On the ready Main screen, select the highlighted Menu button."},
   {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"In Menu, select Str. Data."},
