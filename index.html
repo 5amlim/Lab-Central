@@ -195,7 +195,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261107-timeline" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261104" media="all">
-<link rel="stylesheet" href="socal-daily-checklist.css?v=20261104" media="all">
+<link rel="stylesheet" href="socal-daily-checklist.css?v=20261107-single-links" media="all">
 <link rel="stylesheet" href="training-competency.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261104" media="all">
   <link rel="stylesheet" href="quality-reference.css?v=20261104" media="all">
@@ -210,7 +210,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261104-patient-parent" media="all">
-  <link rel="stylesheet" href="pathfast-maintenance.css?v=20261107-footer" media="all">
+  <link rel="stylesheet" href="pathfast-maintenance.css?v=20261107-qc-footer" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261104" media="all">
@@ -435,7 +435,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-calculators-guide.js?v=20261104"></script>
 <script src="pathmd-reference.js?v=20261104"></script>
 <script src="operations-guides.js?v=20261104"></script>
-<script src="socal-daily-checklist.js?v=20261106-pathfast-qc-log"></script>
+<script src="socal-daily-checklist.js?v=20261107-single-links"></script>
 <script src="training-competency.js?v=20261104"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
@@ -447,7 +447,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="step-illustrations.js?v=20261107-black-case"></script>
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
-<script src="qc-guide.js?v=20261107-footer"></script>
+<script src="qc-guide.js?v=20261107-unused-links-cleanup"></script>
 <script src="biofire-visual.js?v=20261104"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
 <script src="lab-guide-polish.js?v=20261104"></script>
@@ -1556,16 +1556,16 @@ function qcStepTemplateFooter(sec,groupId){
  if(!sec)return '';
  const id=sec.id,g=String(groupId||'').toLowerCase();
  let name='',note='',url='';
- if(id==='sysmex'&&g.includes('qc')){
+ if(id==='sysmex'&&(/qc|blank-check/.test(g))){
   name='Pochi Daily Blank Check and Control Log';note='Document the blank check and three QC levels on the approved combined log.';url='assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107';
  }else if(id==='piccolo'&&g==='monthly-qc'){
-  name='Piccolo Monthly QC Log';note='Complete monthly or with a new lot/shipment. Attach both QC printouts.';url='assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-2page-upload';
+  name='Piccolo Monthly QC Log';note='Complete monthly or with a new lot/shipment. Attach both QC printouts.';url='assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-fa5441bb';
  }else if(id==='triage'&&g==='daily-qc'){
   name='Triage MeterPro Daily QC Log';note='Record the daily QC Device check and retain its printout.';url='assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf';
  }else if(id==='triage'&&/liquid-qc|new-box-qc/.test(g)){
   name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-revised';
  }else if(id==='clinitek'&&g.includes('qc')){
-  name='UA + hCG Control Log';note='Use the approved combined UA and hCG control log.';url='assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107';
+  name='UA + hCG Control Log';note='Use the approved combined UA and hCG control log.';url='assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638';
  }else if(id==='sofia'&&g.includes('calibration')){
   name='Sofia 2 Calibration Check Log';note='Document the completed calibration check.';url='lab-templates.html?view=monthly&template=sofia-cal';
  }else if(id==='sofia'&&g.includes('qc')){
@@ -1616,7 +1616,7 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const nav=headerNav?'<div class="guide-card-header-actions">'+headerNav+'</div>':'';
  // Main step cards do not collapse; navigation is handled by explicit step buttons.
  if(isPathfast)return '<article class="guide-card pf-static-step'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header><div class="pf-step-collapse-body">'+stepBody+'</div></article>';
- return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+'</article>'+qcFooter;
+ return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+(sec?.id==='sysmex'?qcFooter:'')+'</article>'+(sec?.id==='sysmex'?'':qcFooter);
 }
 function renderFebridxReferences(){
  const ifu='https://phasescientificamericas.com/wp-content/uploads/2026/08/PM-548.0_INDICAID_IFU.pdf';
