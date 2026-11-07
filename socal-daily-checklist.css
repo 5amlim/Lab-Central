@@ -448,3 +448,34 @@
 .dqc-monthly-card .dqc-task-actions>.dqc-binder-template-link{grid-column:1;grid-row:2;justify-self:start;margin:0}
 .dqc-monthly-card .dqc-task-actions>.dqc-task-badges{grid-column:2;grid-row:1 / span 2;align-self:end;justify-self:end;margin:0}
 @media(max-width:480px){.dqc-monthly-card .dqc-task-actions{grid-template-columns:1fr}.dqc-monthly-card .dqc-task-actions>.dqc-task-badges{grid-column:1;grid-row:3;justify-self:start;margin-top:5px}}
+
+/* Shared stacked guide/template actions for daily and monthly QC cards. */
+/* The grid must be at least as specific as the generic task action layout.
+   Only rows with both links need stacking; log-only and guide-only cards stay untouched. */
+.dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link){
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+ grid-template-rows:auto auto;
+ align-items:end;
+ justify-content:initial;
+ column-gap:14px;
+ row-gap:6px;
+ flex-wrap:initial;
+}
+.dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link) > .dqc-qc-guide-link{
+ grid-column:1;grid-row:1;justify-self:start;align-self:end;margin:0;
+}
+.dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link) > .dqc-binder-template-link{
+ grid-column:1;grid-row:2;justify-self:start;align-self:start;margin:0;
+}
+.dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link) > .dqc-task-badges{
+ grid-column:2;grid-row:1 / span 2;align-self:end;justify-self:end;margin:0;
+}
+@media(max-width:510px){
+ .dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link){
+  grid-template-columns:minmax(0,1fr);
+ }
+ .dqc-page .dqc-item.has-task-badges > .dqc-task-actions:has(> .dqc-qc-guide-link):has(> .dqc-binder-template-link) > .dqc-task-badges{
+  grid-column:1;grid-row:3;justify-self:end;margin-top:3px;
+ }
+}
