@@ -545,6 +545,8 @@ function render(){
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
  }
+ // Keep the documentation footer available before an assay is chosen.
+ if(!group)h+=calQcTemplateFooter();
  return h+'</div></section>';
 }
 if(typeof document!=='undefined' && typeof document.addEventListener==='function'){
