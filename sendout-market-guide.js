@@ -34,16 +34,24 @@ function dropdown(field,label,value,choices){
   return '<button type="button" role="option" aria-selected="'+chosen+'" class="lc-option '+(chosen?"chosen":"")+'" data-lc-choice="'+field+'" data-lc-value="'+E(id)+'">'+E(text)+(chosen?'<span aria-hidden="true">✓</span>':'')+'</button>';
  }).join("")+'</div>':"")+'</div>';
 }
-function selection(){return '';}
+function selection(mode="guide"){
+ const logOnly=mode==="log";
+ return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(logOnly?'Choose market':'Choose market and clinic')+'</strong><p>'+(logOnly?'Choose a market for routine send-outs, STAT or special pickups, and shipped test kits. Select the clinic within the Microsoft Form.':'The receiving lab, packaging rules, courier and documentation depend on your site.')+'</p></div>'+
+ '<div class="lc-picker-fields">'+(window.LAB_MARKET?.get()?'':dropdown("market","Market",markets[market].name,Object.entries(markets).map(([k,v])=>[k,v.name])))+
+ (logOnly?'':dropdown("site","Clinic location",selectedSite(),markets[market].sites))+'</div></div>';
+}
 function labInfo(l){
  const m=labs[l],regional=market==="socal";
  let extra="";
- if(regional&&l==="htrx")extra='<div class="lc-site-note"><strong>SoCal HTRX pickup schedule</strong><p><b>Beverly Hills:</b> '+E(htrxTimes.bh)+'</p><p><b>Santa Monica:</b> '+E(htrxTimes.sm)+'</p><p><b>Manhattan Beach:</b> '+E(htrxTimes.mb)+'</p><p>Confirm satellite/annex activation and any holiday changes before shipping.</p></div>';
+ if(regional&&l==="htrx")extra='<div class="lc-site-note"><strong>HTRX pickup for '+E(selectedSite())+'</strong><p>'+E(htrxTimes[site]||"Annex routing is not active until launch and courier confirmation. Do not ship until the site is approved.")+'</p></div>';
  if(regional&&l==="cedars")extra='<div class="lc-site-note"><strong>Cedars timing</strong><p>Follow the site courier schedule and aim for weekday pickup before noon; confirm weekend Apollo cutoff (before 4 PM) through the site procedure.</p></div>';
- if(regional&&l==="pathmd")extra='<div class="lc-site-note"><strong>PathMD local courier</strong><p>Confirm the actual clinic pickup time and handoff location. Site schedules vary and can require an as-needed request.</p></div>';
+ if(regional&&l==="pathmd"){
+  const timing=site==="sm"?"Santa Monica: Monday through Friday, 11:00-11:30 PM. Leave specimens in the lockbox.":"Local courier pickup is arranged daily. Confirm site-specific handoff time and location.";
+  extra="<div class=\"lc-site-note\"><strong>PathMD local courier</strong><p>"+E(timing)+"</p></div>";
+ }
  if(regional&&l==="labcorp")extra='<div class="lc-site-note"><strong>Labcorp timing</strong><p>Verify pickup before 5 PM or the current site-specific scheduled time.</p></div>';
- if(regional&&l==="quest")extra='<div class="lc-site-note"><strong>Quest handoff</strong><p>Check the receiving lab bin or lockbox and verify the clinic’s evening courier schedule. Manhattan Beach and other sites may have different pickup arrangements.</p></div>';
- if(!regional&&l!=="pathmd")extra='<div class="lc-site-note"><strong>Site verification required</strong><p>Courier windows and activated receiving labs can vary by clinic. Verify the current local SOP and vendor directory; do not assume another market’s pickup times apply.</p></div>';
+ if(regional&&l==="quest")extra='<div class="lc-site-note"><strong>Quest handoff</strong><p>'+(site==="bh"?"Use Beverly Hills evening pickup and check the lockbox.":site==="sm"?"Confirm the Santa Monica evening pickup and lockbox.":site==="mb"?"Manhattan Beach may require calling for pickup; verify the lockbox and cold bags.":"Annex pickups are not established. Confirm account readiness and courier before use.")+'</p></div>';
+ if(!regional&&l!=="pathmd")extra='<div class="lc-site-note"><strong>Site verification required</strong><p>This market’s courier windows and activated receiving labs are not confirmed here. Use the current local SOP and vendor directory; do not assume SoCal pickup times apply.</p></div>';
  return '<details class="lc-lab-detail" '+(l===(focusedLab||markets[market].labs[0])?'open':'')+'><summary><span class="lc-lab-sign">'+E(m.eyebrow)+'</span><span class="lc-lab-heading"><strong>'+E(m.title)+'</strong><small>'+E(m.desc)+'</small></span><span class="lc-lab-chevron">'+chevron+'</span></summary><div class="lc-lab-content">'+
  '<ol>'+m.steps.map(v=>'<li>'+E(v)+'</li>').join("")+'</ol>'+extra+
  (m.href?'<a class="lc-lab-resource" target="_blank" rel="noopener noreferrer" href="'+m.href+'">Open receiving lab directory ↗</a>':'')+
@@ -52,7 +60,7 @@ function labInfo(l){
 function guide(){
  const f=form(),l=markets[market].labs;
  return '<div class="lc-sendout" id="lcSendoutGuide">'+selection()+
- '<div class="lc-guide-intro"><span class="lc-guide-eyebrow">REGIONAL SENDOUT GUIDE</span><h2>'+E(markets[market].name)+' sendouts</h2>'+
+ '<div class="lc-guide-intro"><span class="lc-guide-eyebrow">SELECTED SITE · '+E(markets[market].name)+'</span><h2>'+E(selectedSite())+' sendouts</h2>'+
  '<p>Begin with the Lab Calculator, verify the receiving laboratory and test-specific instructions, then use the relevant lab section below. These sections are independent, not one combined sendout procedure.</p></div>'+
  '<div class="lc-sendout-actions"><button type="button" data-go="calculators">Open Lab Calculators ↗</button><button type="button" data-go="sendout-log">Open Lab Sendout Log ↗</button></div>'+
  '<div class="lc-lab-accordions"><div class="lc-guide-eyebrow">RECEIVING LABS · SELECT ONE</div>'+l.map(labInfo).join("")+'</div>'+
@@ -84,7 +92,8 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open){open="";refresh();}});
 function select(nextMarket,nextClinic,nextLab){
- if(!markets[nextMarket])return false;
+ const locked=window.LAB_MARKET?.get();
+ if((locked&&locked!==nextMarket)||!markets[nextMarket])return false;
  const ids={"bh-satellite":"annex","palo-alto":"pa","palm-beach":"palm","coral-gables":"coral"};
  market=nextMarket;
  const preferred=ids[nextClinic]||nextClinic;
