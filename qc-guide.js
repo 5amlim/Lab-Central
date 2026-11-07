@@ -6,6 +6,8 @@
 "use strict";
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const POCHI_LOG_URL="assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107";
+const PICCOLO_LOG_URL="assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261106-exact";
+function piccoloLogLink(){return '<div class="pfm-quicklink"><div><strong>Piccolo Monthly QC Log</strong><span>Complete monthly or for a new lot/shipment. Attach both analyzer QC printouts.</span></div><a class="pfm-log-button" href="'+PICCOLO_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open log (PDF) ↗</a></div>';}
 function pochiLogLink(){return '<div class="pfm-quicklink"><div><strong>Pochi Daily Blank Check and Control Log</strong><span>One PDF for the blank check and all three QC levels.</span></div><a class="pfm-log-button" href="'+POCHI_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open log (PDF) ↗</a></div>';}
 const configs={
  sysmex:{brand:"SYSMEX pocH-100i",binder:"Pochi Daily Blank Check and Control Log · Daily QC binder",steps:[
@@ -13,7 +15,7 @@ const configs={
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
   {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print, then choose Current on the confirmation prompt (not Chart). Repeat separately for any missing QC1, QC2 or QC3 records."}
  ],note:"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the Pochi Daily Blank Check and Control Log. File the accepted blank-check printout with the same form. Retain new-lot comparison records in the approved validation log."},
- piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
+ piccolo:{brand:"Piccolo Xpress",binder:"Piccolo Monthly QC Log · Monthly QC binder",steps:[
   {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
   {kind:"piccoloResultsList",heading:"Choose the QC result",screen:"All Results Sorted by Date",tip:"Select the correct C (Control) result by date and ID, not a P (Patient) result."},
   {kind:"piccoloViewResult",heading:"Open result and Print",screen:"View Result",tip:"Check the correct control level and date, then tap Print on the result preview."},
@@ -401,7 +403,7 @@ function printStep(id){
  '<div class="qc-final-section-label">02 · Verify and file the QC result</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
- '<p>'+esc(cfg.note)+'</p></div></div>'+(id==='sysmex'?pochiLogLink():'')+'</div>';
+ '<p>'+esc(cfg.note)+'</p></div></div>'+(id==='sysmex'?pochiLogLink():id==='piccolo'?piccoloLogLink():'')+'</div>';
 }
 window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep,screenGallery:screenGallery};
 })();
