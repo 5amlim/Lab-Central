@@ -2633,7 +2633,7 @@ function sectionRender(sec,tab){
  else if(tab==='troubleshooting'&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))h+=window.LAB_TROUBLESHOOTING.render(sec.id);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='weekly-monthly-maint')h+=window.LAB_PATHFAST_MAINT.render();
- else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="PATHFAST Calibration and QC guide">'+window.LAB_PATHFAST_UI.render()+'</div>'+window.LAB_PATHFAST_MAINT.logLink();
+ else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="PATHFAST Calibration and QC guide">'+window.LAB_PATHFAST_UI.render()+'</div>'+'<div class="pfm-quicklink"><div><strong>CAL + QC printout log (Every 28 Days)</strong><span>Use the original two-page CAL + QC template. Enter the analyte and attach both CAL 1, both CAL 2, QC 1 and QC 2 printouts.</span></div><a class="pfm-log-button" href="assets/lab-templates/PATHFAST-Calibration-and-QC-Printout-Log.pdf?v=original-source-20261107" target="_blank" rel="noopener noreferrer"><span class="pfm-log-icon" aria-hidden="true">&#128196;</span><span>Open CAL + QC log (PDF)</span><span aria-hidden="true">&#8599;</span></a></div>';
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
  else if(sec.id==='piccolo'&&tab==='result-interpretation')h+=window.LAB_PICCOLO_RESULTS.render();
