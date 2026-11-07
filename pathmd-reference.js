@@ -215,7 +215,7 @@ function shipping(){
  ];
  const steps=local?base.concat([
   ["Use the local courier","SoCal PathMD specimens use the clinic's local courier pickup, not an assumed FedEx handoff."],
-  ["Confirm clinic pickup",selectedClinic==="sm"?"Santa Monica: Monday-Friday, 11:00-11:30 PM. Place sealed specimens in the lockbox.":"The local courier is scheduled daily. Verify the exact pickup time and handoff location at this clinic."],
+  ["Confirm clinic pickup",selectedClinic==="sm"?"Santa Monica: Confirm the current clinic pickup schedule and lockbox handoff.":"Confirm the clinic-specific courier schedule or as-needed pickup request, and use the approved local handoff location."],
   ["Document transfer","Log the receiving lab, specimen bag and pickup confirmation under the Lab Sendout Log."]
  ]):base.concat([
   ["Verify service activation","Confirm whether PathMD and the courier service are activated at this clinic."],
