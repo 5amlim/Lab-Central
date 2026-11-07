@@ -1,0 +1,76 @@
+/* New York scheduled external requisition. Reuses Lab Central workflow components. */
+.order-region-switch{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0 23px;padding:15px 17px;background:#f9fcfe;border:1px solid #dce8f0;border-radius:14px}
+.order-region-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.order-region-copy small{font-size:9px;letter-spacing:.12em;font-weight:850;color:#74899c}
+.order-region-copy strong{font-size:13px;color:#24455f}
+.order-region-copy p{margin:0;color:#7b8ea0;font-size:11px;line-height:1.5}
+.order-region-select{position:relative;flex:none;min-width:195px}
+.order-region-select select{width:100%;appearance:none;min-height:43px;border:1px solid #b7cdda;border-radius:10px;background:white;padding:9px 36px 9px 12px;font:inherit;font-size:12px;font-weight:750;color:#234960;cursor:pointer}
+.order-region-select select:focus-visible{outline:3px solid #86c3d2;outline-offset:2px}
+.order-region-select:after{content:"⌄";pointer-events:none;position:absolute;right:14px;top:8px;color:#3b718c;font-size:20px}
+.ny-workflow-head .eyebrow{color:#367c91}
+.ny-only-chip{background:#e3f2f6;border:1px solid #c9e4eb;border-radius:999px;padding:5px 9px;color:#246779;font-size:9px;letter-spacing:.07em;font-weight:850}
+.ny-flow-overview{margin:5px 0 22px;padding:20px;background:linear-gradient(115deg,#f2f9fb,#fcfefe);border:1px solid #d9e8ef;border-radius:17px}
+.ny-overview-heading{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:10px;font-weight:800;letter-spacing:.09em;color:#658093;margin-bottom:14px}
+.ny-overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ny-overview-grid>div{background:white;border:1px solid #e1ebf0;border-radius:12px;padding:15px}
+.ny-overview-grid small,.ny-schedule-tile small{display:block;color:#7891a2;font-size:9px;font-weight:850;letter-spacing:.1em}
+.ny-overview-grid strong{display:block;font-size:13px;color:#21455d;margin:6px 0}
+.ny-overview-grid p{margin:0;color:#6d8295;font-size:11px;line-height:1.55}
+.ny-flow-stage{margin-bottom:18px}
+.ny-flow-stage .requisition-intake-header{align-items:flex-start}
+.ny-flow-stage .requisition-intake-header>div{flex:1;min-width:0}
+.ny-flow-stage .requisition-intake-header p{margin-top:5px}
+.ny-check-list{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.ny-check-list li{position:relative;padding:11px 13px 11px 35px;border:1px solid #e3ebf0;background:#fcfdfe;border-radius:10px;font-size:12px;line-height:1.65;color:#4c6174}
+.ny-check-list li:before{content:"✓";position:absolute;top:11px;left:13px;color:#278d81;font-weight:850}
+.ny-check-list b{color:#264b64}
+.ny-callout{margin-top:15px;padding:13px 15px;border-radius:11px;border:1px solid #d7e7e8;background:#f3faf9}
+.ny-callout strong{color:#246c70;font-size:11px}
+.ny-callout p{font-size:11.5px;line-height:1.65;color:#507079;margin:5px 0 0}
+.ny-callout--warning{border-color:#efdfbd;background:#fffbf2}
+.ny-callout--warning strong{color:#946319}
+.ny-callout--warning p{color:#795d35}
+.ny-review-summary{margin-bottom:13px;border:1px solid #dbeaf0;border-radius:12px;padding:14px 15px;background:#f5fafc}
+.ny-review-summary>div{display:flex;align-items:flex-start;flex-wrap:wrap;gap:7px}
+.ny-summary-icon{background:#e1f2ef;color:#217b70;border-radius:8px;width:23px;height:23px;display:grid;place-items:center;font-weight:850}
+.ny-review-summary strong{color:#244d61;font-size:12px;align-self:center}
+.ny-review-summary p{flex-basis:100%;margin:0 0 0 30px;font-size:11.5px;line-height:1.65;color:#668292}
+.ny-checklist-card{border:1px solid #e2eaf0;border-radius:12px;overflow:hidden;background:white}
+.ny-checklist-heading{padding:12px 15px;background:#f6f9fb;border-bottom:1px solid #e2eaf0;display:flex;justify-content:space-between;gap:10px}
+.ny-checklist-heading strong{color:#294c64;font-size:12px}
+.ny-checklist-heading span{font-size:9px;font-weight:850;color:#9a6b27;letter-spacing:.08em}
+.ny-checklist-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.ny-checklist-item{padding:13px;display:flex;gap:8px;border-right:1px solid #eef2f5;border-bottom:1px solid #eef2f5}
+.ny-checklist-item:last-child{border-bottom:0}
+.ny-checkmark{color:#2b8a80;font-size:13px;font-weight:850}
+.ny-checklist-item strong{display:block;font-size:11.5px;color:#385a6c}
+.ny-checklist-item p{font-size:11px;color:#758c9a;line-height:1.55;margin:4px 0 0}
+.ny-decision-grid,.ny-schedule-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
+.ny-decision{padding:15px;border-radius:12px;border:1px solid #d9e7e5;background:#f7fcfa}
+.ny-decision--no{border-color:#f0e1d6;background:#fffbf8}
+.ny-decision span{display:block;color:#3b8d7d;font-size:9px;font-weight:850;letter-spacing:.1em;margin-bottom:6px}
+.ny-decision--no span{color:#b17549}
+.ny-decision strong{display:block;color:#2e565e;font-size:12px;line-height:1.4}
+.ny-decision p{font-size:11px;line-height:1.55;color:#748b90;margin:5px 0 0}
+.ny-team-note{font-size:10px;line-height:1.5;color:#8b99a5;margin:13px 1px 0}
+.ny-schedule-grid{margin:0 0 13px}
+.ny-schedule-tile{border:1px solid #dce8f0;border-radius:12px;background:#f7fafc;padding:15px}
+.ny-schedule-tile strong{display:block;font-size:15px;color:#275370;margin:7px 0 4px}
+.ny-schedule-tile span{font-size:11px;color:#748a9a}
+.ny-message-template{border:1px solid #dde7ef;border-radius:11px;background:white;margin-top:15px;overflow:hidden}
+.ny-message-template summary{display:flex;align-items:center;gap:12px;list-style:none;padding:14px;cursor:pointer}
+.ny-message-template summary::-webkit-details-marker{display:none}
+.ny-message-symbol{width:33px;height:33px;background:#eaf3f9;color:#407c9b;border-radius:9px;display:grid;place-items:center;font-size:17px}
+.ny-message-template summary strong{display:block;color:#38566e;font-size:12px}
+.ny-message-template summary small{display:block;margin-top:4px;color:#8ca0af;font-size:10px}
+.ny-message-arrow{margin-left:auto;font-size:19px;color:#8aa0b1;transition:transform .15s}
+.ny-message-template[open] .ny-message-arrow{transform:rotate(180deg)}
+.ny-message-body{border-top:1px solid #e4ebf0;background:#fbfdfe;padding:16px;color:#546c7e;font-size:11.5px;line-height:1.7}
+.ny-message-body p{margin:0 0 12px}
+.ny-confirm-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:13px 0}
+.ny-confirm-details span{display:block;background:white;border:1px solid #e1eaf0;border-radius:8px;padding:10px;font-size:10px}
+.ny-confirm-details b{display:block;color:#68879b;font-size:9px;margin-bottom:4px}
+.ny-flow-stage code{background:#f1f5fa;color:#42648a;border-radius:4px;padding:2px 5px;font-size:11px}
+@media(max-width:700px){.order-region-switch{align-items:stretch;flex-direction:column}.order-region-select{width:100%}.ny-overview-grid{grid-template-columns:1fr}.ny-checklist-grid,.ny-decision-grid,.ny-schedule-grid{grid-template-columns:1fr}.ny-flow-stage .requisition-intake-header{flex-wrap:wrap}.ny-flow-stage .workflow-owner-tag{margin-left:0}.ny-confirm-details{grid-template-columns:1fr}.ny-flow-overview{padding:14px}}
+@media print{.order-region-switch{display:none!important}.ny-message-template .ny-message-body{display:block!important}.ny-flow-stage{break-inside:avoid}.ny-overview-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
