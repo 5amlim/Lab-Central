@@ -63,9 +63,8 @@ td:focus,.blank:focus{background:#fffae6;outline:1px solid #c6a24d}
 const forms=[
  {id:'temperature',group:'daily',title:'Daily Temperature Log',note:'Based on the uploaded BH/SM/MB temperature log examples. Use site-specific ranges and installed-unit columns.',fields:['Month','Year','Location'],headers:['Date','Initials','Lab temperature','Refrigerator 1','Refrigerator 2','Refrigerator 3','Freezer','Humidity'],rows:31,numbered:true},
  {id:'cleaning',group:'daily',title:'Daily Cleaning and Disinfection Log',note:'Record completed cleaning and disinfection per the site SOP.',fields:['Month','Year','Clinic'],headers:['Day','Disinfection completed','Operator initials','Comments / exceptions'],rows:31,numbered:true},
- {id:'sysmex-control',group:'daily',title:'pocH-100i Control Log',originalPdf:'assets/lab-templates/pocH-100i-Control-Log.pdf'},
- {id:'sysmex-blank',group:'daily',title:'pocH-100i Start-up Blank Check Log',originalPdf:'assets/lab-templates/pocH-100i-Start-up-Blank-Check-Log.pdf'},
- {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
+ {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107'},
+  {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
  {id:'triage-daily',group:'daily',title:'Triage MeterPro Daily QC Log',originalPdf:'assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf'},
  {id:'clinitek-ua',group:'daily',title:'Siemens Urinalysis QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and lot information.',fields:['Month / Year','Level 1 / Level 2 lots and expirations','Test strip lot and expiration'],headers:['Date / initials','Level 1 (low)','Level 2 (high)','Result','Comments / corrective action'],rows:22,numbered:false},
  {id:'clinitek-hcg',group:'daily',title:'Siemens hCG Pregnancy QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and cassette lot.',fields:['Month / Year','Negative / Positive control lots and expirations','Cassette lot and expiration'],headers:['Date / initials','Level 1 (negative)','Level 2 (positive)','Result','Comments / corrective action'],rows:22,numbered:false},
@@ -84,7 +83,7 @@ const forms=[
  {id:'fire-extinguisher',group:'monthly',title:'Fire Extinguisher Monthly Inspection Log',note:'OPTIONAL: Use only if no approved Facilities, tag or electronic inspection record exists. Verify each extinguisher individually. Record access/mounting, gauge if present (N/A otherwise), pin/seal, visible condition, date, initials and corrective actions. Escalate defects promptly. This monthly visual check is not the annual service.',fields:['Clinic / facility','Month / Year','Facilities contact / reviewer'],headers:['Extinguisher ID / location','Inspection date','Accessible / mounted','Pressure gauge (or N/A)','Pin / tamper seal','Condition / nozzle','Inspector initials','Defect / corrective action / follow-up'],rows:16,numbered:false}
 ];
 const params=new URLSearchParams(location.search);
-const requested=params.get('template')||'';
+const requested=params.get('template')==='sysmex-blank'?'sysmex-control':(params.get('template')||'');
 const market=params.get('market')||'';
 const clinic=params.get('clinic')||'';
 const currentGroup=params.get('view')==='monthly'?'monthly':'daily';

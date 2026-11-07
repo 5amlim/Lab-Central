@@ -5,12 +5,14 @@
 (function(){
 "use strict";
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+const POCHI_LOG_URL="assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107";
+function pochiLogLink(){return '<div class="pfm-quicklink"><div><strong>Pochi Daily Blank Check and Control Log</strong><span>One PDF for the blank check and all three QC levels.</span></div><a class="pfm-log-button" href="'+POCHI_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open log (PDF) ↗</a></div>';}
 const configs={
- sysmex:{brand:"SYSMEX pocH-100i",binder:"pocH-100i Control Log and Start-up Blank Check Log · Daily QC binder",steps:[
+ sysmex:{brand:"SYSMEX pocH-100i",binder:"Pochi Daily Blank Check and Control Log · Daily QC binder",steps:[
   {kind:"mainMenu",heading:"Open QC from Menu",tip:"From the Main screen select Menu, then QC."},
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
   {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print, then choose Current on the confirmation prompt (not Chart). Repeat separately for any missing QC1, QC2 or QC3 records."}
- ],note:"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the completed pocH-100i Control Log. Complete the Start-up Blank Check Log and file its blank-check printout with it. Retain new-lot comparison records in the approved validation log."},
+ ],note:"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the Pochi Daily Blank Check and Control Log. File the accepted blank-check printout with the same form. Retain new-lot comparison records in the approved validation log."},
  piccolo:{brand:"Piccolo Xpress",binder:"Monthly QC Log binder",steps:[
   {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
   {kind:"piccoloResultsList",heading:"Choose the QC result",screen:"All Results Sorted by Date",tip:"Select the correct C (Control) result by date and ID, not a P (Patient) result."},
@@ -240,15 +242,15 @@ function sysmexBinderChecklist(){
  return '<div class="lc-poc-print-binder" aria-label="pocH-100i four required reports">'+
   '<div class="lc-poc-binder-heading"><span>FINAL CHECK · 4 REPORTS</span><strong>Verify and file the daily records</strong><p>Three accepted QC levels plus today’s startup blank check.</p></div>'+
   '<div class="lc-poc-report-groups">'+
-   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>3 QC printouts</strong><small>pocH Daily Control Log</small></div>'+
+   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>3 QC printouts</strong><small>Pochi Daily Blank Check and Control Log</small></div>'+
     '<div class="lc-poc-print-checklist">'+
      ['QC1 · Low','QC2 · Normal','QC3 · High'].map(label=>'<div class="lc-poc-check-item"><span aria-hidden="true">□</span>'+esc(label)+'</div>').join('')+
     '</div></section>'+
-   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>1 blank-check printout</strong><small>Maintenance Log · Blank Check</small></div>'+
+   '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>1 blank-check printout</strong><small>Pochi Daily Blank Check and Control Log</small></div>'+
     '<div class="lc-poc-print-checklist"><div class="lc-poc-check-item lc-poc-blank-check"><span aria-hidden="true">□</span>Today’s startup blank check</div></div></section>'+
   '</div>'+
   '<ol class="lc-poc-binder-filing-steps"><li><b>Review:</b> Match date, control level, lot, operator and accepted results. Check that the blank check is acceptable.</li>'+
-   '<li><b>File:</b> Keep all three QC reports together in the pocH Daily Control Log. File the blank check in its separate section.</li>'+
+   '<li><b>File:</b> Keep all three QC reports and the blank-check printout with the Pochi Daily Blank Check and Control Log.</li>'+
    '<li><b>Document:</b> Complete the Insight daily log and Daily Maintenance Log with date and initials. Escalate missing or unacceptable results.</li></ol>'+
   '</div>';
 }
@@ -258,7 +260,7 @@ function sysmexPrintFallback(){
   {kind:"mainMenu",heading:"Open Menu",tip:"From the main screen, open Menu."},
   {heading:"Open stored data",screen:"MENU",items:["Str. Data","QC","Maint."],focus:"Str. Data",tip:"Select Str. Data to retrieve today's startup blank check."},
   {heading:"Select today's blank check",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored results","Back"],focus:"__BLANK CHECK__",tip:"Select the BLANK CHECK record with today's date. Verify the background check is acceptable."},
-  {heading:"Print blank-check result",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Tap Print and file the report in the blank-check section of the Maintenance Log binder."}
+  {heading:"Print blank-check result",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Tap Print and file the report with the Pochi Daily Blank Check and Control Log."}
  ];
  return '<section class="lc-poc-print-decision" data-poc-print-decision aria-label="pocH control result printing">'+
   '<div class="lc-poc-print-prompt"><div><span class="lc-poc-print-eyebrow">AFTER QC · ACTION REQUIRED</span><h4>Do you have all four reports?</h4><p>Check QC1 Low, QC2 Normal, QC3 High and today’s blank check. If any report is missing, follow the reprint route.</p></div>'+
@@ -302,8 +304,8 @@ function sysmexStep(sec,group,title){
   {kind:"mainMenu",heading:"Open the Main screen",screen:"MAIN",tip:"On the ready Main screen, select the highlighted Menu button."},
   {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"In Menu, select Str. Data."},
   {heading:"Choose today's blank",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored result","Back"],focus:"__BLANK CHECK__",tip:"Select the blank-check record bearing today’s date."},
-  {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name in the blank-check section of the Maintenance Log binder."}
- ],"Sysmex pocH-100i",{scroll:true})+'</div>';
+  {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name with the Pochi Daily Blank Check and Control Log."}
+ ],"Sysmex pocH-100i",{scroll:true})+'</div>'+pochiLogLink();
  if(/new qc lot|register a new qc lot|parallel qc|lot-to-lot comparison|lot is expired/.test(t))return '<div class="qc-instrument-walkthrough lc-poc-lot-setup">'+
  '<div class="lc-poc-lot-intro"><strong>Enter the new QC lot and control ranges</strong><span>Menu → QC → select file → Setup. This illustrates the analyzer workflow, not a working barcode input.</span></div>'+
  screenGallery([
@@ -318,7 +320,7 @@ function sysmexStep(sec,group,title){
   {kind:"qcFiles",heading:"Select QC1, QC2 or QC3",tip:"Choose the correct active QC file: QC1 Low, QC2 Normal or QC3 High. Verify lot and expiration."},
   {heading:"Run the selected QC level",screen:"QC FILE",items:["Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
   {heading:"Accept and print result",screen:"QC RESULT",items:["Quit","Print (if needed)","Back"],focus:"Quit",tip:"Review the result, then select Quit. An automatic printout is generated only when the printer setting is enabled. Otherwise follow the reprint route below."}
- ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>';
+ ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>'+pochiLogLink();
  return "";
 }
 function qcClickStep(sec,groupId,title){
@@ -399,7 +401,7 @@ function printStep(id){
  '<div class="qc-final-section-label">02 · Verify and file the QC result</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
- '<p>'+esc(cfg.note)+'</p></div></div></div>';
+ '<p>'+esc(cfg.note)+'</p></div></div>'+(id==='sysmex'?pochiLogLink():'')+'</div>';
 }
 window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep,screenGallery:screenGallery};
 })();
