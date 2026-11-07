@@ -15,6 +15,8 @@ jobs:
           node-version: '22'
       - name: Check HTML asset references
         run: node scripts/check-site.mjs
+      - name: Check local PDFs and linked source files
+        run: node scripts/check-local-reference-links.mjs
       - name: Check JavaScript syntax
         shell: bash
         run: |

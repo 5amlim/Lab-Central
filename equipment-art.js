@@ -788,7 +788,7 @@ function febridxCollectionGuide(){
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Clean the fingertip, twist and remove the protective lancet tab, then puncture using the device’s integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>02</span><strong>Fill the collection tube completely</strong></div><div class="febridx-collection-figure">'+collectArt+'</div><p>Massage from the base of the finger to form a new, large hanging drop. Touch the integrated tube to <strong>the drop only</strong>, never the skin, and fill it completely.</p></article>'+
   '</div>'+
-  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://lumosdiagnostics.com/tools" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
+  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://arcview-lumosdiagnostics.s3.ap-southeast-2.amazonaws.com/lumosdiagnostics.com/assets/documents/2026/04/PM-127.5-IFU-FebriDx-US.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
  '</section>';
 }
 

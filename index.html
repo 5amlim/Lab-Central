@@ -1316,7 +1316,7 @@ function buildGroups(section){
   return groups;
  }
  if(section.id==='febridx'){
-  // Approved U.S. INDICAID FebriDx 2026 IFU PM-548.0. Keep patient testing distinct from source notes.
+  // U.S. FebriDx 2026 manufacturer IFU (Lumos Diagnostics, PM-127.5). Keep patient testing distinct from source notes.
   const pair=(title,detail)=>[{type:'list',level:1,text:title},{type:'list',level:2,text:detail}];
   const patient=[
    ...pair('Confirm patient eligibility, order and single-use test','Confirm the provider order and identifiers. Per current U.S. IFU: age 12–64, acute respiratory symptoms for fewer than 7 days and within 3 days of fever onset. Use fresh fingerstick blood only; never venous blood, serum or plasma. Verify sealed pouch, expiry and 4–25°C storage.'),
@@ -1619,13 +1619,13 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+(['sysmex','triage'].includes(sec?.id)?qcFooter:'')+'</article>'+(['sysmex','triage'].includes(sec?.id)?'':qcFooter);
 }
 function renderFebridxReferences(){
- const ifu='https://phasescientificamericas.com/wp-content/uploads/2026/08/PM-548.0_INDICAID_IFU.pdf';
- const qri='https://phasescientificamericas.com/wp-content/uploads/2026/10/PM-549.0-INDICAID-QRI.pdf';
+ const ifu='https://arcview-lumosdiagnostics.s3.ap-southeast-2.amazonaws.com/lumosdiagnostics.com/assets/documents/2026/04/PM-127.5-IFU-FebriDx-US.pdf';
+ const qri='https://arcview-lumosdiagnostics.s3.ap-southeast-2.amazonaws.com/lumosdiagnostics.com/assets/documents/2026/04/PM-063.5-QRI-CLIA-FebriDx-US-03-27-2026.pdf';
  return '<section class="fbr-static-reference" aria-label="FebriDx reference documents">'+
   '<header class="fbr-ref-intro"><span>FEBRIDX · REFERENCE MATERIAL</span><h2>References &amp; SOP</h2><p>Read the current approved instructions before testing. These are reference documents, not sequential procedure steps.</p></header>'+
   '<div class="fbr-ref-grid">'+
-   '<article class="fbr-ref-card"><span class="fbr-ref-label">MANUFACTURER</span><h3>U.S. Instructions for Use</h3><p>INDICAID FebriDx · PM-548.0 (2026). Intended use, full procedure, invalid-result criteria and quality controls.</p><a href="'+ifu+'" target="_blank" rel="noopener noreferrer">View complete IFU ↗</a></article>'+
-   '<article class="fbr-ref-card"><span class="fbr-ref-label">QUICK REFERENCE</span><h3>Illustrated test guide</h3><p>INDICAID FebriDx · PM-549.0 (2026). Visual guide for fingerstick collection, transfer, buffer and interpretation.</p><a href="'+qri+'" target="_blank" rel="noopener noreferrer">View quick reference ↗</a></article>'+
+   '<article class="fbr-ref-card"><span class="fbr-ref-label">MANUFACTURER</span><h3>U.S. Instructions for Use</h3><p>FebriDx · Lumos Diagnostics · PM-127.5 (2026). Intended use, full procedure, invalid-result criteria and quality controls.</p><a href="'+ifu+'" target="_blank" rel="noopener noreferrer">View complete IFU ↗</a></article>'+
+   '<article class="fbr-ref-card"><span class="fbr-ref-label">QUICK REFERENCE</span><h3>Illustrated test guide</h3><p>FebriDx · Lumos Diagnostics · PM-063.5 (2026). Visual guide for fingerstick collection, transfer, buffer and interpretation.</p><a href="'+qri+'" target="_blank" rel="noopener noreferrer">View quick reference ↗</a></article>'+
    '<article class="fbr-ref-card"><span class="fbr-ref-label">SITE DOCUMENT</span><h3>Local training &amp; SOP</h3><p>Refer to FebriDx Guide.docx and the current approved local QC documentation. Confirm that the site document matches the stocked product and current IFU.</p></article>'+
   '</div><p class="fbr-ref-foot">Use the most recent IFU for the exact kit supplied at your site. The reference guide does not replace approved competency or QC requirements.</p></section>';
 }
@@ -2418,7 +2418,7 @@ function febridxResultInterpretation(){
  '<p><strong>Blue control line only.</strong> Non-bacterial test classification; this does not rule out respiratory infection.</p></article>'+
  '</div>'+
  '<div class="fbr-invalid"><b>INVALID</b><div><strong>No blue control line:</strong> do not report the result, even if red or black lines appear. Discard and repeat with a new test.</div></div>'+
- '<p class="fbr-caution">Faint, incomplete or uneven result lines count as present. Verify the blood-clearance indicator and the specific test instructions. FebriDx is an aid to clinical assessment, not a standalone diagnosis or treatment decision. <a href="https://phasescientificamericas.com/wp-content/uploads/2026/08/PM-548.0_INDICAID_IFU.pdf" target="_blank" rel="noopener noreferrer">2026 manufacturer IFU</a>.</p>'+
+ '<p class="fbr-caution">Faint, incomplete or uneven result lines count as present. Verify the blood-clearance indicator and the specific test instructions. FebriDx is an aid to clinical assessment, not a standalone diagnosis or treatment decision. <a href="https://arcview-lumosdiagnostics.s3.ap-southeast-2.amazonaws.com/lumosdiagnostics.com/assets/documents/2026/04/PM-127.5-IFU-FebriDx-US.pdf" target="_blank" rel="noopener noreferrer">2026 manufacturer IFU</a>.</p>'+
  '</section>';
 }
 
