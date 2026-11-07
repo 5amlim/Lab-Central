@@ -66,3 +66,25 @@
 .sidebar-bottom .reference-note small{font-size:9px;color:#95a4b2}
 .sidebar-bottom .reference-note .indicator-dot{margin-top:4px}
 @media(max-width:860px){.sidebar-bottom .lc-global-market{margin:0}}
+
+/* Shared market and clinic section spacing across reference pages. */
+@media screen {
+  /* Daily and monthly checklists: provide breathing room after the hero card,
+     whether the next section is a market picker, a clinic picker, or the heading. */
+  .dqc-page > .dqc-hero { margin-bottom:22px; }
+  .dqc-page > .dqc-hero + .dqc-market-picker,
+  .dqc-page > .dqc-hero + .dqc-location-bar,
+  .dqc-page > .dqc-hero + .dqc-market-heading,
+  .dqc-page > .dqc-market-picker + .dqc-location-bar { margin-top:0; }
+
+  /* Training and competency: match the same 22px heading-to-selector rhythm. */
+  .tc-portal > .tc-page-heading { padding-bottom:22px; }
+  .tc-portal > .tc-page-heading + .tc-location-bar,
+  .tc-portal > .tc-market-picker + .tc-location-bar { margin-top:0; }
+
+  /* Calculators, proficiency testing, and calibration verification:
+     equal top clearance for either global or per-page market mode. */
+  .calc2-site-selector,
+  .api2-site-selector,
+  .calver2-site-selector { margin-top:22px; }
+}
