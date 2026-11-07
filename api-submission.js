@@ -31,16 +31,10 @@ function selectedPtSite(){
  return {market,clinic:market.clinics.find(c=>c.id===clinicByPtMarket[market.id])||market.clinics[0]};
 }
 function marketSelector(){
- const {market,clinic}=selectedPtSite();
- return '<section class="api2-site-selector" aria-label="API market and clinic reference">'+
- '<div class="dqc-location-bar"><span class="dqc-location-label" id="api2-clinic-label">Clinic location</span>'+
-  '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-api2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="api2-location-options" aria-labelledby="api2-clinic-label api2-clinic-value">'+
-  '<span id="api2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
-  '<div class="dqc-location-options" id="api2-location-options" role="listbox" aria-labelledby="api2-clinic-label" hidden>'+
-  market.clinics.map(c=>'<button type="button" role="option" data-api2-clinic="'+x(c.id)+'" class="dqc-location-option'+(c.id===clinic.id?' is-selected':'')+'" aria-selected="'+(c.id===clinic.id)+'" tabindex="-1">'+x(c.name)+(c.id===clinic.id?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
-  '</div></div><span class="dqc-location-hint">Choose a clinic to view its PT reference</span></div>'+
+ const {market}=selectedPtSite();
+ return '<section class="api2-site-selector" aria-label="Regional proficiency testing reference">'+
   '<div class="dqc-market-heading"><div><span class="dqc-market-overline">PROFICIENCY TESTING / '+x(market.short).toUpperCase()+'</span>'+
-  '<h2>'+x(clinic.name)+'</h2><p>'+x(market.name)+' · Verify the current enrollment, API account and approved PT procedures for this clinic.</p></div></div>'+
+  '<h2>'+x(market.name)+'</h2><p>Verify the current API enrollment, assigned program and approved PT procedures for each participating site.</p></div></div>'+
   '</section>';
 }
 function rerenderPtSite(returnFocus=false){
@@ -112,17 +106,11 @@ function selectedCalverSite(){
  return {market,clinic:market.clinics.find(c=>c.id===clinicByCalverMarket[market.id])||market.clinics[0]};
 }
 function calverMarketSelector(){
- const {market,clinic}=selectedCalverSite();
- return '<section class="calver2-site-selector" aria-label="Calibration verification market and clinic reference">'+
- '<div class="dqc-location-bar"><span class="dqc-location-label" id="calver2-clinic-label">Clinic location</span>'+
-  '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-calver2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="calver2-location-options" aria-labelledby="calver2-clinic-label calver2-clinic-value">'+
-  '<span id="calver2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
-  '<div class="dqc-location-options" id="calver2-location-options" role="listbox" aria-labelledby="calver2-clinic-label" hidden>'+
-  market.clinics.map(c=>'<button type="button" role="option" data-calver2-clinic="'+x(c.id)+'" class="dqc-location-option'+(c.id===clinic.id?' is-selected':'')+'" aria-selected="'+(c.id===clinic.id)+'" tabindex="-1">'+x(c.name)+(c.id===clinic.id?'<span class="dqc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
-  '</div></div><span class="dqc-location-hint">Choose a clinic to view its calibration verification reference</span></div>'+
-  '<div class="dqc-market-heading"><div><span class="dqc-market-overline">CALIBRATION VERIFICATION / '+x(market.short).toUpperCase()+'</span>'+
-  '<h2>'+x(clinic.name)+'</h2><p>'+x(market.name)+' · Confirm this clinic’s analyzer-specific verification plan, acceptance limits, and documentation requirements before testing.</p></div></div>'+
-  '</section>';
+ const {market}=selectedCalverSite();
+ return '<section class="calver2-site-selector" aria-label="Regional calibration verification reference">'+
+ '<div class="dqc-market-heading"><div><span class="dqc-market-overline">CALIBRATION VERIFICATION / '+x(market.short).toUpperCase()+'</span>'+
+ '<h2>'+x(market.name)+'</h2><p>Follow the verification plan, acceptance limits and documentation requirements approved for each test system and site.</p></div></div>'+
+ '</section>';
 }
 function rerenderCalverSite(returnFocus=false){
  const root=document.querySelector('.calver2-site-selector');
