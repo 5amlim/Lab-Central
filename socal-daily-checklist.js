@@ -22,7 +22,7 @@ const sharedTasks=[
  {id:'fridge',group:'Environment & logs',title:'Refrigerator temperature',desc:'Record and assess current/min/max temperatures as applicable. Escalate excursions and document corrective actions.',role:'Lab personnel / RN'},
  {id:'freezer',group:'Environment & logs',title:'Freezer temperature',desc:'Review freezer readings and alarms. Escalate excursions before using affected reagents or controls.',role:'Lab personnel / RN'},
  {id:'room',group:'Environment & logs',title:'Room temperature and humidity',desc:'Record ambient conditions and check against the required ranges for active instruments and reagents.',role:'Lab personnel / RN'},
- {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens Clinitek daily UA and hCG QC',desc:'Perform daily external QC for UA strips and hCG controls per market SOP. Confirm acceptable results and print/file required QC records in the daily binder. Repeat QC for new bottles or lots when required.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'}},
+ {id:'clinitek',group:'Instrument QC & readiness',title:'Siemens Clinitek daily UA and hCG QC',desc:'Perform daily external QC for UA strips and hCG controls per market SOP. Confirm acceptable results and print/file required QC records in the daily binder. Repeat QC for new bottles or lots when required.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'clinitek',tab:'combined-qc'},logUrl:'assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107',logLabel:'Open UA + hCG Control Log (PDF)'},
  {id:'sysmex',group:'Instrument QC & readiness',title:'Sysmex pocH daily QC and blank check',desc:'If installed, run or verify three EIGHTCHECK QC levels and the blank/background check. Complete the pocH-100i Control Log and Start-up Blank Check Log, and file all three QC printouts plus the blank-check printout in the daily binder.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'sysmex',tab:'daily-qc'}},
  {id:'triage',group:'Instrument QC & readiness',title:'Triage electronic QC Device',desc:'If installed, run the electronic QC Device daily when testing is performed. Check liquid-QC due dates and new-lot or new-shipment requirements. Print/file the daily QC record.',role:'Trained lab personnel / RN',badges:['QC','Printouts Needed'],qcGuide:{instrument:'triage',tab:'daily-qc'}},
  {id:'rapid',group:'Instrument QC & readiness',title:'Rapid POC station and test-kit QC',desc:'Check supplies, stock, expiry and new shipment/lot QC requirements for active POC kits. Document failed controls or unavailable kits.',role:'Lab personnel / RN'},
@@ -61,8 +61,7 @@ const monthlyBinder=[
  {"id":"triage-liquid","title":"Triage MeterPro Liquid QC Control Log","desc":"Record scheduled liquid controls for active assay lots and file corresponding QC printouts, separate from daily electronic QC.","role":"Trained lab personnel / RN","template":"triage-liquid","badges":["Printouts Needed"]},
  {"id":"sofia-cal","title":"Sofia 2 Calibration Check Log","desc":"Record the 30-day optical calibration check result, date and operator. Sofia 2 does not require a printout.","role":"Trained lab personnel / RN","template":"sofia-cal"},
  {"id":"sofia-qc","title":"Sofia 2 Quality Control Log","desc":"Document positive and negative external QC for new shipments, new lots or other approved triggers. No printout is required.","role":"Trained lab personnel / RN","template":"sofia-qc"},
- {"id":"clinitek-ua","title":"Siemens Urinalysis Control Log","desc":"SoCal: record monthly UA strip QC and required new-bottle/new-lot controls. File any applicable QC printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-ua","badges":["Printouts Needed"]},
- {"id":"clinitek-hcg","title":"Siemens hCG Pregnancy Control Log","desc":"SoCal: record monthly hCG controls and required new-lot or other event-based QC. File any applicable printouts with this log.","role":"Trained lab personnel / RN","template":"clinitek-hcg","badges":["Printouts Needed"]},
+ {"id":"clinitek-combined","title":"CLINITEK UA + hCG Control Log","desc":"SoCal: document monthly and event-triggered UA low/high controls and hCG negative/positive controls on the same form. Attach the corresponding QC printouts.","role":"Trained lab personnel / RN","template":"clinitek-combined","badges":["Printouts Needed"]},
  {"id":"waived-qc","title":"Waived Test Quality Control Log","desc":"As needed, record rapid-test kit controls for new shipments, new lots and other SOP-triggered QC events.","role":"Trained lab personnel / RN","template":"waived-qc","badges":["As needed"]},
  {"id":"febridx-qc","title":"FebriDx Quality Control Log","desc":"As needed, document external controls for new kit boxes, lots or other required QC events, including failed controls.","role":"Trained lab personnel / RN","template":"febridx-qc","badges":["As needed"]},
  {"id":"remedial","title":"Comprehensive Remedial Action Log","desc":"As needed, document failed QC, specimen or instrument issues, corrective actions and resolution. Complete this log when an incident occurs.","role":"Lab personnel / RN","template":"remedial","badges":["As needed"]},
@@ -82,7 +81,7 @@ const sharedBinder=[
 ];
 // Non-SoCal markets document Clinitek QC daily, so it does not appear as a separate monthly task.
 const otherMarketsMonthlyQcTasks=monthlyQcTasks.filter(t=>t.id!=='clinitek-monthly');
-const otherMarketsMonthlyBinder=monthlyBinder.filter(t=>t.id!=='clinitek-ua'&&t.id!=='clinitek-hcg');
+const otherMarketsMonthlyBinder=monthlyBinder.filter(t=>t.id!=='clinitek-combined');
 const markets=[
  {id:'socal',name:'Southern California',short:'SoCal',tasks:socalTasks,monthly:monthlyQcTasks,binder:socalBinder,clinics:[
   {id:'bh',name:'Beverly Hills'},
@@ -152,7 +151,7 @@ function monthlyCard(t){
 function binderCard(item,market,view){
  const badge=Array.isArray(item.badges)&&item.badges.length?'<div class="dqc-binder-task-badges">'+item.badges.map(function(label){return '<span class="dqc-task-badge '+(label==='Printouts Needed'?'is-print':'is-as-needed')+'">'+safe(label)+'</span>';}).join('')+'</div>':'';
  const clinic=market.clinics.find(c=>c.id===siteByMarket[market.id])||market.clinics[0];
- const url=item.template==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':item.template==='pathfast-maint'?'assets/lab-templates/PATHFAST-Operational-and-Maintenance-Schedule.pdf':item.template==='pathfast-qc'?'assets/lab-templates/PATHFAST-Calibration-and-QC-Printout-Log.pdf?v=original-source-20261107':item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
+ const url=item.template==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':item.template==='pathfast-maint'?'assets/lab-templates/PATHFAST-Operational-and-Maintenance-Schedule.pdf':item.template==='pathfast-qc'?'assets/lab-templates/PATHFAST-Calibration-and-QC-Printout-Log.pdf?v=original-source-20261107':item.template==='clinitek-combined'?'assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107':item.template?'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(item.template)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name):'';
  const link=url?'<a class="dqc-binder-template-link" href="'+safe(url)+'" target="_blank" rel="noopener noreferrer">'+(item.template==='sysmex-maint'||item.template==='pathfast-maint'?'Open original maintenance log (PDF)':item.template==='pathfast-qc'?'Open printout log (PDF)':item.template==='fire-extinguisher'?'Optional inspection log template':'Open log template')+' <span aria-hidden="true">↗</span></a>':'';
  return '<article class="dqc-binder-item"><div class="dqc-binder-main">'+
   '<div class="dqc-binder-heading"><h3>'+safe(item.title)+'</h3><span class="dqc-role">'+safe(item.role)+'</span></div>'+
@@ -182,14 +181,17 @@ const monthlyTemplateCatalog=[
  {id:'remedial',title:'Comprehensive Remedial Action Log',detail:'QC failures, incidents and corrective action documentation',group:'As needed'},
  {id:'fire-extinguisher',title:'Fire Extinguisher Monthly Inspection Log',detail:'Optional log only if Facilities has no approved inspection record',group:'Safety & Facilities'}
 ];
-const clinitekTemplateCatalog=[
+const clinitekDailyTemplateCatalog=[
  {id:'clinitek-ua',title:'Siemens Urinalysis QC Log',detail:'Low and high UA controls',group:'Clinitek'},
  {id:'clinitek-hcg',title:'Siemens hCG Pregnancy QC Log',detail:'Negative and positive pregnancy controls',group:'Clinitek'}
 ];
+const clinitekMonthlyTemplateCatalog=[
+ {id:'clinitek-combined',title:'CLINITEK UA + hCG Control Log',detail:'UA low/high and hCG negative/positive controls on one PDF',group:'Clinitek'}
+];
 function templatesForMarket(market,page){
  const base=(page==='monthly'?monthlyTemplateCatalog:dailyTemplateCatalog);
- return page==='monthly'?(market.id==='socal'?[...base,...clinitekTemplateCatalog]:base)
- :market.id==='socal'?base:[...base,...clinitekTemplateCatalog];
+ return page==='monthly'?(market.id==='socal'?[...base,...clinitekMonthlyTemplateCatalog]:base)
+ :market.id==='socal'?base:[...base,...clinitekDailyTemplateCatalog];
 }
 function renderTemplatePanel(market,page){
  const records=templatesForMarket(market,page);
@@ -199,7 +201,7 @@ function renderTemplatePanel(market,page){
  const panelId=page==='monthly'?'dqc-panel-monthly-templates':'dqc-panel-templates';
  const tabId=page==='monthly'?'dqc-tab-monthly-templates':'dqc-tab-templates';
  const cards=records.map(function(t){
-  const href=t.id==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':t.id==='pathfast-qc'?'assets/lab-templates/PATHFAST-Calibration-and-QC-Printout-Log.pdf?v=original-source-20261107':t.id==='pathfast-maint'?'assets/lab-templates/PATHFAST-Operational-and-Maintenance-Schedule.pdf':'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
+  const href=t.id==='sysmex-maint'?'assets/lab-templates/pocH-100i-Maintenance-Log.pdf':t.id==='pathfast-qc'?'assets/lab-templates/PATHFAST-Calibration-and-QC-Printout-Log.pdf?v=original-source-20261107':t.id==='pathfast-maint'?'assets/lab-templates/PATHFAST-Operational-and-Maintenance-Schedule.pdf':t.id==='clinitek-combined'?'assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107':'lab-templates.html?view='+encodeURIComponent(view)+'&template='+encodeURIComponent(t.id)+'&market='+encodeURIComponent(market.short)+'&clinic='+encodeURIComponent(clinic.name);
   return '<article class="dqc-template-card"><h3>'+safe(t.title)+'</h3><p>'+safe(t.detail)+'</p><div class="dqc-template-footer"><a class="dqc-template-action" href="'+safe(href)+'" target="_blank" rel="noopener noreferrer">'+(t.id==='sysmex-maint'||t.id==='pathfast-maint'?'Open original PDF':t.id==='pathfast-qc'?'Open PDF template':t.id==='fire-extinguisher'?'Open optional template':'Open printable template')+' <span aria-hidden="true">↗</span></a><span class="dqc-template-category">'+safe(t.group)+'</span></div></article>';
  }).join('');
  return '<section id="'+panelId+'" class="dqc-workstream dqc-templates-workstream" role="tabpanel" aria-labelledby="'+tabId+'"'+(active?'':' hidden')+'><header class="dqc-workstream-header"><div><span class="dqc-workstream-index">'+dqcSectionIcon('templates')+'</span><div><h2>Lab Templates</h2><p>Blank log sheets for '+(page==='monthly'?'recurring QC, maintenance and as-needed documentation':'daily checks, controls and lab documentation')+'</p></div></div><span class="dqc-check-count">'+records.length+' templates</span></header><p class="dqc-template-intro">Open a print-ready log and fill in the header if needed, then print or save it as a PDF. These are adapted from the supplied lab logs. Verify the current controlled form and site SOP before clinical use.</p><div class="dqc-template-grid">'+cards+'</div></section>';

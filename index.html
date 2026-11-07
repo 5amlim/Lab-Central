@@ -2652,7 +2652,7 @@ function sectionRender(sec,tab){
  else if(['sysmex','pathfast','clinitek'].includes(sec.id)&&tab==='result-interpretation')h+=window.LAB_RESULT_INTERPRETATION.render(sec.id);
  else if(sec.id==='clinitek'&&tab==='combined-qc'){
   const selected=groups.find(x=>x.id===state.clinitekQc)||groups.find(x=>x.id==='ua-qc');
-  h+=window.LAB_ASSAY_CATALOG.qcMenu(selected.id)+renderGuidedProcedure(selected,sec);
+  h+=window.LAB_ASSAY_CATALOG.qcMenu(selected.id)+'<div class="pfm-quicklink"><div><strong>UA + hCG Control Log</strong><span>Record both UA and hCG controls on the same form.</span></div><a class="pfm-log-button" href="assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107" target="_blank" rel="noopener noreferrer"><span class="pfm-log-icon" aria-hidden="true">&#128196;</span><span>Open QC log (PDF)</span><span aria-hidden="true">&#8599;</span></a></div>'+renderGuidedProcedure(selected,sec);
  }
  else if(tab==='videos')h+=videoLibrary();
  else if(tab==='gallery')h+=tubeGallery();
