@@ -29,3 +29,18 @@
 .lc-market-reset:focus-visible{outline:2px solid #4c9eac;outline-offset:2px}
 .lc-market-reset[hidden]{display:none}
 .lc-global-market-option[data-lc-market-option="all"]{border-bottom:1px solid #edf1f5;border-radius:6px 6px 0 0;padding-bottom:10px;margin-bottom:2px}
+
+/* In-page requisition market picker, shown only in All markets mode. */
+.lc-orders-market-picker{position:relative;min-width:225px}
+.lc-orders-market-label{display:block;margin:0 0 7px;color:#5d7e96;font-size:10px;font-weight:780;letter-spacing:.06em}
+.lc-orders-market-trigger{width:100%;min-height:41px;border:1px solid #d5e3ed;border-radius:10px;background:#fff;color:#284b68;padding:9px 12px;display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:12px;font-weight:730;text-align:left}
+.lc-orders-market-trigger:hover,.lc-orders-market-trigger[aria-expanded="true"]{border-color:#92b9d0;background:#fbfdff}
+.lc-orders-market-trigger:focus-visible,.lc-orders-market-option:focus-visible{outline:2px solid #50a2aa;outline-offset:2px}
+.lc-orders-market-chevron{flex:none;width:8px;height:8px;transform:translateY(-2px) rotate(45deg);border-right:1.6px solid #698aa0;border-bottom:1.6px solid #698aa0}
+.lc-orders-market-trigger[aria-expanded="true"] .lc-orders-market-chevron{transform:translateY(2px) rotate(225deg)}
+.lc-orders-market-options[hidden]{display:none}
+.lc-orders-market-options{z-index:5;position:absolute;top:calc(100% + 6px);left:0;right:0;border:1px solid #d9e6ee;box-shadow:0 10px 28px rgba(28,61,89,.12);border-radius:10px;padding:5px;background:#fff;display:grid;gap:3px}
+.lc-orders-market-option{width:100%;min-height:36px;border:0;background:transparent;color:#577089;text-align:left;border-radius:7px;font-size:11.5px;font-weight:650;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.lc-orders-market-option:hover{background:#f0f6fa;color:#28637f}
+.lc-orders-market-option.is-selected{background:#eaf4f8;color:#1c6676;font-weight:800}
+@media(max-width:650px){.lc-orders-market-picker{width:100%;min-width:0}.lc-orders-market-options{max-height:210px;overflow:auto}}
