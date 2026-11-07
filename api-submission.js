@@ -24,7 +24,7 @@ const ptMarkets=[
  {id:'ny',short:'New York',name:'New York',clinics:[{id:'ues',name:'Upper East Side'},{id:'tribeca',name:'Tribeca'},{id:'hamptons',name:'Hamptons'},{id:'fifth',name:'5th Avenue'},{id:'gramercy',name:'Gramercy'},{id:'hudson-yards',name:'Hudson Yards'}]},
  {id:'fl',short:'Florida',name:'Florida',clinics:[{id:'boca',name:'Boca Raton'},{id:'palm-beach',name:'Palm Beach'},{id:'coral-gables',name:'Coral Gables'}]}
 ];
-let selectedPtMarket='socal';
+let selectedPtMarket=window.LAB_MARKET?.get()||'socal';
 const clinicByPtMarket=Object.fromEntries(ptMarkets.map(m=>[m.id,m.clinics[0].id]));
 function selectedPtSite(){
  const market=ptMarkets.find(m=>m.id===selectedPtMarket)||ptMarkets[0];
@@ -33,9 +33,7 @@ function selectedPtSite(){
 function marketSelector(){
  const {market,clinic}=selectedPtSite();
  return '<section class="api2-site-selector" aria-label="API market and clinic reference">'+
-  '<nav class="dqc-market-picker" aria-label="Select API PT market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+
-  ptMarkets.map(m=>'<button type="button" data-api2-market="'+x(m.id)+'" class="dqc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+x(m.short)+'</button>').join('')+'</div></nav>'+
-  '<div class="dqc-location-bar"><span class="dqc-location-label" id="api2-clinic-label">Clinic location</span>'+
+ '<div class="dqc-location-bar"><span class="dqc-location-label" id="api2-clinic-label">Clinic location</span>'+
   '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-api2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="api2-location-options" aria-labelledby="api2-clinic-label api2-clinic-value">'+
   '<span id="api2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
   '<div class="dqc-location-options" id="api2-location-options" role="listbox" aria-labelledby="api2-clinic-label" hidden>'+
@@ -107,7 +105,7 @@ document.addEventListener('keydown',event=>{
 
 /* Calibration verification uses the same site list and accessible selector patterns as API.
    Each compliance page tracks its selected clinic independently. */
-let selectedCalverMarket='socal';
+let selectedCalverMarket=window.LAB_MARKET?.get()||'socal';
 const clinicByCalverMarket=Object.fromEntries(ptMarkets.map(m=>[m.id,m.clinics[0].id]));
 function selectedCalverSite(){
  const market=ptMarkets.find(m=>m.id===selectedCalverMarket)||ptMarkets[0];
@@ -116,9 +114,7 @@ function selectedCalverSite(){
 function calverMarketSelector(){
  const {market,clinic}=selectedCalverSite();
  return '<section class="calver2-site-selector" aria-label="Calibration verification market and clinic reference">'+
-  '<nav class="dqc-market-picker" aria-label="Select calibration verification market"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+
-  ptMarkets.map(m=>'<button type="button" data-calver2-market="'+x(m.id)+'" class="dqc-market-choice'+(m.id===market.id?' is-selected':'')+'" aria-pressed="'+(m.id===market.id)+'">'+x(m.short)+'</button>').join('')+'</div></nav>'+
-  '<div class="dqc-location-bar"><span class="dqc-location-label" id="calver2-clinic-label">Clinic location</span>'+
+ '<div class="dqc-location-bar"><span class="dqc-location-label" id="calver2-clinic-label">Clinic location</span>'+
   '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-calver2-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="calver2-location-options" aria-labelledby="calver2-clinic-label calver2-clinic-value">'+
   '<span id="calver2-clinic-value">'+x(clinic.name)+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
   '<div class="dqc-location-options" id="calver2-location-options" role="listbox" aria-labelledby="calver2-clinic-label" hidden>'+
@@ -287,6 +283,12 @@ document.addEventListener("click",function(event){
  if(!["prepare","entry","attest","confirm"].includes(phase))return;
  const target=page.querySelector("#api-submit-"+phase);
  if(target)target.scrollIntoView({block:"start",behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
+});
+document.addEventListener('labcentral:marketchange',event=>{
+ const next=event.detail?.market;
+ if(!ptMarkets.some(m=>m.id===next))return;
+ selectedPtMarket=next;
+ selectedCalverMarket=next;
 });
 window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,marketSelector,calverMarketSelector};
 })();
