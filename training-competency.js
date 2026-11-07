@@ -135,7 +135,7 @@ function trainingTemplateCards(items){
 function renderTrainingTemplates(market,clinic){
  const groups=['Analyzer training','Rapid POC training','General lab training'];
  return '<section class="tc-route-panel tc-templates-panel" role="tabpanel" id="tc-panel-templates" aria-labelledby="tc-tab-templates">'+
- '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.length+' documents</span></div>'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(market.name)+'. Open only the forms for equipment and tests installed at your site.</p></div><span class="tc-page-count">'+trainingDocuments.length+' documents</span></div>'+
  '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.'+(market.id==='socal'?' <strong>SoCal:</strong> Follow the local monthly and event-triggered Clinitek external QC schedule.':' <strong>'+esc(market.short)+':</strong> Follow the local daily Clinitek external QC schedule.')+'</div>'+
  groups.map((g,i)=>{
   const items=trainingDocuments.filter(t=>t.group===g);
@@ -156,13 +156,7 @@ function renderCompetencyRecords(){
 function render(){
  const market=trainingMarket(),clinic=trainingClinic(market);
  return '<div class="lc-competency tc-portal">'+
- '<div class="tc-page-heading"><span class="tc-page-overline">TRAINING &amp; COMPETENCY / '+esc(market.short).toUpperCase()+'</span><h1>'+esc(clinic[1])+'</h1><p>'+esc(market.name)+' · Follow the approved training, competency and documentation policies for the tests installed at this clinic.</p></div>'+
- '<div class="tc-location-bar"><span class="tc-location-label" id="tc-clinic-label">Clinic location</span>'+
- '<div class="tc-location-picker"><button type="button" class="tc-location-trigger" data-tc-location-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="tc-location-options" aria-labelledby="tc-clinic-label tc-location-value">'+
- '<span id="tc-location-value">'+esc(clinic[1])+'</span><span class="tc-location-chevron" aria-hidden="true"></span></button>'+
- '<div class="tc-location-options" id="tc-location-options" role="listbox" aria-labelledby="tc-clinic-label" hidden>'+
- market.clinics.map(c=>'<button type="button" role="option" data-tc-clinic-option="'+esc(c[0])+'" class="tc-location-option'+(c[0]===clinic[0]?' is-selected':'')+'" aria-selected="'+(c[0]===clinic[0])+'" tabindex="-1">'+esc(c[1])+(c[0]===clinic[0]?'<span class="tc-location-check" aria-hidden="true">✓</span>':'')+'</button>').join('')+
- '</div></div><span class="tc-location-hint">Choose a clinic to view its training reference</span></div>'+
+ '<div class="tc-page-heading"><span class="tc-page-overline">TRAINING &amp; COMPETENCY / '+esc(market.short).toUpperCase()+'</span><h1>'+esc(market.name)+'</h1><p>Market-wide training and competency reference. Confirm the approved requirements for the instruments installed at your clinic.</p></div>'+
  '<nav class="tc-view-switch" role="tablist" aria-label="Training and competency sections">'+trainingTabs.map(t=>'<button type="button" id="tc-tab-'+t.id+'" role="tab" aria-selected="'+(selectedTrainingView===t.id)+'" aria-controls="tc-panel-'+t.id+'" tabindex="'+(selectedTrainingView===t.id?'0':'-1')+'" class="tc-view-button'+(selectedTrainingView===t.id?' is-selected':'')+'" data-tc-view="'+t.id+'" data-tone="'+t.tone+'"><span class="tc-view-icon">'+ico(t.icon)+'</span><span class="tc-view-copy"><strong>'+esc(t.title)+'</strong><small>'+esc(t.subtitle)+'</small></span></button>').join('')+'</nav>'+
  '<div id="tc-panel-schedule" role="tabpanel" aria-labelledby="tc-tab-schedule" class="tc-route-panel tc-schedule-panel"'+(selectedTrainingView==='schedule'?'':' hidden')+'>'+renderSchedule()+'</div>'+
  '<div'+(selectedTrainingView==='templates'?'':' hidden')+'>'+renderTrainingTemplates(market,clinic)+'</div>'+
