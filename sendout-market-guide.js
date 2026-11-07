@@ -20,7 +20,7 @@ const htrxTimes={
  sm:"Monday to Friday: UPS 3–4 PM. Saturday: UPS 3–4 PM. Sunday: no pickup; send Monday.",
  mb:"Monday to Friday: UPS 4–5 PM. Saturday: UPS 4–5 PM. Sunday: no pickup; send Monday."
 };
-let market="socal",site="bh",open="",focusedLab=null;
+let market=window.LAB_MARKET?.get()||"socal",site="bh",open="",focusedLab=null;
 const validSite=()=>markets[market].sites.some(x=>x[0]===site);
 const selectedSite=()=>markets[market].sites.find(x=>x[0]===site)?.[1]||"Select location";
 const form=()=>window.LAB_SENDOUT_FORMS?.[market];
@@ -36,9 +36,8 @@ function dropdown(field,label,value,choices){
 }
 function selection(mode="guide"){
  const logOnly=mode==="log";
- return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(logOnly?'Choose market':'Choose market and clinic')+'</strong><p>'+(logOnly?'Choose a market for routine send-outs, STAT or special pickups, and shipped test kits. Select the clinic within the Microsoft Form.':'The receiving lab, packaging rules, courier and documentation depend on your site.')+'</p></div>'+
- '<div class="lc-picker-fields">'+dropdown("market","Market",markets[market].name,Object.entries(markets).map(([k,v])=>[k,v.name]))+
- (logOnly?'':dropdown("site","Clinic location",selectedSite(),markets[market].sites))+'</div></div>';
+ return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(logOnly?'Regional sendout log':'Clinic sendout reference')+'</strong><p>'+(logOnly?'This log follows the market selected in the sidebar. Choose the clinic within the Microsoft Form.':'Select a clinic below. Receiving labs, packaging, courier details and documentation depend on the site.')+'</p></div>'+
+ (logOnly?'':'<div class="lc-picker-fields">'+dropdown("site","Clinic location",selectedSite(),markets[market].sites)+'</div>')+'</div>';
 }
 function labInfo(l){
  const m=labs[l],regional=market==="socal";
@@ -101,5 +100,13 @@ function select(nextMarket,nextClinic,nextLab){
  focusedLab=markets[market].labs.includes(nextLab)?nextLab:null;
  return true;
 }
+document.addEventListener('labcentral:marketchange',event=>{
+ const next=event.detail?.market;
+ if(!markets[next]||next===market)return;
+ market=next;
+ site=markets[market].sites[0][0];
+ open='';
+ focusedLab=null;
+});
 window.LAB_SENDOUT_MARKETS={render,select};
 })();
