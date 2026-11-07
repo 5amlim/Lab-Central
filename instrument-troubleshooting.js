@@ -37,7 +37,7 @@ pathfast:{
  ]},
 piccolo:{
  name:'Piccolo Xpress',subtitle:'Chemistry discs · suppressed values, sample quality and analyzer messages',
- sources:[S('Abaxis Piccolo Xpress manufacturer FAQ','https://www.abaxis.com/faqs/'),S('Piccolo Xpress operator manual (hosted copy)','https://piccolo-xpress.sirv.com/resources/manuals-and-drivers/Piccolo-Xpress-Operators-Manual-Multilingual.pdf')],
+ sources:[S('Abaxis Piccolo Xpress manufacturer FAQ','https://www.abaxis.com/faqs/'),S('Piccolo Xpress operator manual (manufacturer library)','https://www.abaxis.com/resources/category/manuals-and-drivers/')],
  items:[
  entry('Specimen & results','~~~ instead of a chemistry value','Analyzer suppressed the chemistry; it is not a numeric result.',[
   'Print or review the instrument error report and identify the affected analyte.',

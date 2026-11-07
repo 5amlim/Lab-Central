@@ -788,7 +788,7 @@ function febridxCollectionGuide(){
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Clean the fingertip, twist and remove the protective lancet tab, then puncture using the device’s integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>02</span><strong>Fill the collection tube completely</strong></div><div class="febridx-collection-figure">'+collectArt+'</div><p>Massage from the base of the finger to form a new, large hanging drop. Touch the integrated tube to <strong>the drop only</strong>, never the skin, and fill it completely.</p></article>'+
   '</div>'+
-  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
+  '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://lumosdiagnostics.com/tools" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
  '</section>';
 }
 
@@ -812,15 +812,15 @@ const collectionTestWindows={
 };
 const collectionStabilitySources={
  sysmex:[["Procedure reference","https://www.scribd.com/document/981273870/Lab-3A-Sysmex-PocH-100i-Operations-Manual-1-1"]],
- piccolo:[["Operator manual","https://www.abaxis.com/sites/default/files/resource-files/Piccolo_Xpress_Operators_Manual.pdf"]],
+ piccolo:[["Operator manual (manufacturer library)","https://www.abaxis.com/resources/category/manuals-and-drivers/"],["2024 operator manual PDF","https://www.abaxis.com/sites/default/files/resource-files/Piccolo_Xpress_Operators_Manual.pdf"]],
  pathfast:[["Manufacturer assay IFUs","https://www.phchd.com/eu/ivd/pathfast/ifu/english"]],
- triage:[["Triage D-dimer reference","https://www.appn.net.au/Data/Sites/1/appn/02implementation/technicalresources/d-dimer/aleretriagemeterprod-d-dimermethodandsamplecollection.pdf"]],
+ triage:[["Triage D-dimer product insert (PDF)","https://imgcdn.mckesson.com/CumulusWeb/Click_and_learn/Quidel_Triage_D-Dimer_Test_Product_Insert.pdf"]],
  clinitek:[["Siemens hCG instructions","https://www.siemens-healthineers.com/en-us/point-of-care-testing/featured-topics-in-poct/urinalysis-featured-topics/clinitest-hcg-proper-testing"]],
  torch:[["GI panel IFU","https://dgs.virginia.gov/content/dam/site-assets/dcls/MRG%20Documents/RFIT-PRT-0143%20FilmArray%20GI%20Panel%20IVD%20Instruction%20Booklet%20EN.pdf"]],
  spotfire:[["FDA specimen study","https://www.accessdata.fda.gov/cdrh_docs/clia_waivers/CW240014.pdf"]],
  febridx:[["FebriDx instructions","https://www.lumosdiagnostics.com/products/febridx/usa/how-to-use"]],
  coagsense:[["Professional manual","https://coag-sense.com/wp-content/uploads/2021/02/PN-200220-PT2-Professional-User-Manual-Rev-AD.pdf"]],
- sofia:[["Flu + SARS IFU","https://www.fda.gov/media/142704/download"],["Strep A+ reference","https://maxanim.com/content/quidel/sofia-strepa-faq.PDF"],["RSV reference","https://maxanim.com/content/quidel/sofia-rsv-fia-faq.PDF"]],
+ sofia:[["Flu + SARS IFU","https://www.fda.gov/media/142704/download"],["Strep A+ package insert","https://maxanim.com/content/quidel/sofia-strepa-insert.PDF"],["RSV reference","https://maxanim.com/content/quidel/sofia-rsv-fia-faq.PDF"]],
  hemocue:[["FDA device instructions","https://www.accessdata.fda.gov/CDRH510K/K032203.pdf"]]
 };
 /* Label boundaries for the shared stability card.
