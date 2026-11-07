@@ -8,7 +8,7 @@ const markets=[
  {id:"ny",short:"New York",name:"New York",clinics:[["ues","Upper East Side"],["tribeca","Tribeca"],["hamptons","Hamptons"],["fifth","5th Avenue"],["gramercy","Gramercy"],["hudson-yards","Hudson Yards"]]},
  {id:"fl",short:"Florida",name:"Florida",clinics:[["boca","Boca Raton"],["palm-beach","Palm Beach"],["coral-gables","Coral Gables"]]}
 ];
-let activeMarket="socal";
+let activeMarket=window.LAB_MARKET?.get()||"socal";
 const selectedClinics=Object.fromEntries(markets.map(m=>[m.id,m.clinics[0][0]]));
 function current(){
  const market=markets.find(m=>m.id===activeMarket)||markets[0];
@@ -21,9 +21,6 @@ function count(){return availableLabs().length;}
 function selector(){
  const {market:m,clinic:c}=current();
  return '<section id="calc2-site-selector" class="calc2-site-selector" aria-label="Lab calculators and guides market and clinic">'+
-  '<nav class="dqc-market-picker" aria-label="Select market for lab calculators and guides"><span class="dqc-picker-label">MARKET</span><div class="dqc-market-buttons">'+
-   markets.map(item=>'<button type="button" class="dqc-market-choice'+(item.id===m.id?' is-selected':'')+'" data-calc2-market="'+E(item.id)+'" aria-pressed="'+(item.id===m.id)+'">'+E(item.short)+'</button>').join('')+
-  '</div></nav>'+
   '<div class="dqc-location-bar"><span class="dqc-location-label" id="calc2-clinic-label">Clinic location</span>'+
   '<div class="dqc-location-picker"><button type="button" class="dqc-location-trigger" data-calc2-toggle aria-haspopup="listbox" aria-expanded="false" aria-controls="calc2-location-options" aria-labelledby="calc2-clinic-label calc2-clinic-value">'+
    '<span id="calc2-clinic-value">'+E(c[1])+'</span><span class="dqc-location-chevron" aria-hidden="true"></span></button>'+
@@ -178,7 +175,7 @@ function htrxMenu(){
 let molecularQuery="";
 function molecularMatches(query=molecularQuery){
  const q=normHTRX(String(query||"").trim());
- if(q.length<2)return [];
+ if(q.length<2||!availableLabs().some(id=>id==="htrx"||id==="pathmd"))return [];
  const htrx=htrxRecords.filter(p=>normHTRX(htrxText(p)).includes(q)).map(p=>({
   lab:"htrx",labName:"HealthTrackRx",name:p.name,code:p.code,
   targets:Object.values(p.groups).flat(),groups:p.groups,specimen:p.specimen,
@@ -199,7 +196,7 @@ function molecularMatches(query=molecularQuery){
 let pendingSendoutSearchScroll=null;
 function selectSendoutSearchResult(lab,term,panelId=""){
  if(lab!=="htrx"&&lab!=="pathmd")return false;
- if(!availableLabs().includes(lab))activeMarket="socal";
+ if(!availableLabs().includes(lab))return false;
  rememberedLab[activeMarket]=lab;
  const query=String(term||"");
  let selectedId="";
@@ -432,6 +429,10 @@ document.addEventListener('keydown',event=>{
   event.key==='ArrowUp'?options[(idx-1+options.length)%options.length]:
   event.key==='Home'?options[0]:event.key==='End'?options[options.length-1]:null;
  if(next){event.preventDefault();next.focus();}
+});
+document.addEventListener('labcentral:marketchange',event=>{
+ const next=event.detail?.market;
+ if(markets.some(m=>m.id===next))activeMarket=next;
 });
 window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,allows,market,count};
 })();
