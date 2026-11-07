@@ -451,12 +451,12 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261104"></script>
 <script src="quality-reference.js?v=20261104"></script>
 <script src="pt-testing-guide.js?v=20261105-guided-nav"></script>
-<script src="api-submission.js?v=20261107-global-market"></script>
-<script src="lab-calculators-guide.js?v=20261107-global-market"></script>
-<script src="pathmd-reference.js?v=20261104"></script>
+<script src="api-submission.js?v=20261107-portal-regional"></script>
+<script src="lab-calculators-guide.js?v=20261107-portal-regional"></script>
+<script src="pathmd-reference.js?v=20261107-portal-regional"></script>
 <script src="operations-guides.js?v=20261104"></script>
-<script src="socal-daily-checklist.js?v=20261107-global-market"></script>
-<script src="training-competency.js?v=20261107-global-market"></script>
+<script src="socal-daily-checklist.js?v=20261107-portal-regional"></script>
+<script src="training-competency.js?v=20261107-portal-regional"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
@@ -482,7 +482,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
-<script src="sendout-market-guide.js?v=20261107-global-market"></script>
+<script src="sendout-market-guide.js?v=20261107-portal-regional"></script>
 <script src="assay-catalog.js?v=20261107-global-market"></script>
 <script src="instrument-troubleshooting.js?v=20261104"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
@@ -1072,7 +1072,7 @@ const extraHomeGuides=[
  {id:'specimen-dropoff',title:'Specimen drop-off',subtitle:'Walk-in scheduling, orders and specimen handoff',category:'Home collection',icon:'clipboard-check',blocks:[]},
  {id:'lab-container-gallery',title:'Lab Container Gallery',subtitle:'Collection tubes, swabs, kits and reference photos',category:'Send-outs',icon:'test-tube-2',blocks:[]},
  {id:'sendout-log',title:'Lab Sendout Log',subtitle:'Specimen tracking and regional submission forms',category:'Send-outs',icon:'file-text',blocks:[]},
- {id:'socal-daily',title:'Lab Daily Checklist',subtitle:'Daily tasks and binder documentation by clinic',category:'Operations',icon:'clipboard-check',blocks:[]},
+ {id:'socal-daily',title:'Lab Daily Checklist',subtitle:'Daily tasks and binder documentation by market',category:'Operations',icon:'clipboard-check',blocks:[]},
  {id:'lab-monthly-checklist',title:'Lab Monthly Checklist',subtitle:'Recurring instrument QC and monthly binder records',category:'Operations',icon:'calendar',blocks:[]},
  {id:'envi-ordering',title:'Envi Ordering',subtitle:'Supply ordering, vendors and tracking',category:'Operations',icon:'package',blocks:[]}
 ];
@@ -1789,7 +1789,7 @@ function renderCalculators(){
  const calcLabStat=calcLab==='quest'
   ?'<li>Choose the appropriate STAT receiving lab, then <strong>Show STAT tests</strong>.</li>'
   :calcLab==='labcorp'
-  ?'<li>Check <strong>STAT routing info</strong> and the selected clinic\'s available STAT menu.</li>'
+  ?'<li>Check <strong>STAT routing info</strong> and verify the local clinic’s available STAT menu.</li>'
   :'<li>Confirm urgent or STAT acceptance and courier cutoff with Cedars. Do not assume a routine test is available as STAT.</li>';
  el('currentCrumb').textContent='Lab calculators/guides';
  let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Find receiving lab calculators, collection guides and molecular sendout references for the market shown in the sidebar.');
@@ -2542,7 +2542,7 @@ function sendoutLogisticsOverview(){
  return '<section class="sendout-logistics-overview" aria-label="Lab sendout logistics overview">'+
   '<div class="sendout-logistics-heading"><span>REFERENCE LIBRARY</span><h2>Find a collection or transport reference</h2><p>Use the tabs above or select the reference you need.</p></div>'+
   '<div class="sendout-logistics-reference-grid">'+
-   card('clinics','map-pin','Receiving labs by clinic','Market-specific couriers, pickup windows and packaging')+
+   card('clinics','map-pin','Receiving labs by market','Market-specific couriers, pickup windows and packaging')+
    card('collection','clipboard-check','Collection &amp; transport','Quest collection requirements and temperature guidance')+
    card('lockbox','package','Quest lockbox pickups','Frozen and refrigerated pouches, labels and handoff')+
   '</div>'+
@@ -2580,7 +2580,7 @@ function sectionRender(sec,tab){
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
  const tabs=sec.id==='sendout'?[
   {id:'overview',title:'Overview'},
-  {id:'clinics',title:'By clinic'},
+  {id:'clinics',title:'By market'},
   {id:'collection',title:'Collection notes'},
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
