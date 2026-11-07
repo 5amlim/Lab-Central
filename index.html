@@ -298,6 +298,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   background:#f3ecff;color:#7c4dcc;
 }
 </style>
+<link rel="stylesheet" href="market-context.css?v=20261107" media="all">
+<script src="market-context.js?v=20261107"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -308,6 +310,16 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
           <span><strong>LAB <span>CENTRAL</span></strong><small>REFERENCE &amp; TRAINING</small></span>
         </a>
         <button class="icon-button sidebar-close" id="closeSidebar" type="button" aria-label="Close navigation">✕</button>
+      </div>
+      <div class="lc-global-market" aria-label="Market filter">
+        <label class="lc-global-market-label" for="labCentralMarket"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>YOUR MARKET</label>
+        <div class="lc-global-market-field"><select id="labCentralMarket" aria-label="Choose Lab Central market">
+          <option value="socal">Southern California</option>
+          <option value="norcal">Northern California</option>
+          <option value="ny">New York</option>
+          <option value="fl">Florida</option>
+        </select><span class="lc-global-market-caret" aria-hidden="true"></span></div>
+        <small class="lc-global-market-hint">Applies across Lab Central</small>
       </div>
       <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tests, analytes, or order sets…" aria-label="Search instruments, analytes, pathogens, abbreviations, order sets, or workflows" autocomplete="off"></div>
       <nav id="sidebarNav" class="sidebar-nav"></nav>
@@ -548,7 +560,7 @@ if(favs.includes('tubes')){
  favs=[...new Set(favs.map(id=>id==='tubes'?'sendout':id))];
  try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}
 }
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
+const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:window.LAB_MARKET?.get()||'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -2014,17 +2026,10 @@ function orderWorkflowTabs(tab){
   options.map(([id,label])=>'<button type="button" role="tab" aria-selected="'+(tab===id)+'" class="tab '+(tab===id?'active':'')+'" data-workflowtab="'+id+'">'+label+'</button>').join('')+
   '</div>';
 }
-function orderRegionSelector(){
- const market=orderMarkets.find(m=>m.id===state.ordersRegion)||orderMarkets[0];
- return '<div class="order-region-switch"><div class="order-region-copy"><small>SELECTED CLINIC MARKET</small><strong>'+safeHtml(market.name)+'</strong><p>'+safeHtml(market.note)+'</p></div>'+
- '<div class="order-region-select"><label for="orders-market-select">Market</label><select id="orders-market-select" data-orders-region aria-label="Select clinic market">'+
- orderMarkets.map(m=>'<option value="'+m.id+'"'+(market.id===m.id?' selected':'')+'>'+safeHtml(m.name)+'</option>').join('')+
- '</select></div></div>';
-}
-function orderWorkflowControls(tab,selectMarket=false){
- return '<section class="orders-setup-panel" aria-label="Workflow and market selection">'+
- '<div class="orders-setup-head"><div><span>WORKFLOW SELECTION</span><strong>Choose the request type'+(selectMarket?' and market':'')+'</strong></div><p>'+(selectMarket?'Choose the clinic market to see the appropriate scheduled requisition process.':'Choose the request type to view its collection and sendout steps.')+'</p></div>'+
- orderWorkflowTabs(tab)+(selectMarket?orderRegionSelector():'')+'</section>';
+function orderWorkflowControls(tab){
+ return '<section class="orders-setup-panel" aria-label="Workflow selection">'+
+  '<div class="orders-setup-head"><div><span>WORKFLOW SELECTION</span><strong>Choose the request type</strong></div><p>Workflow requirements follow the market selected in the sidebar.</p></div>'+
+  orderWorkflowTabs(tab)+'</section>';
 }
 function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
@@ -2189,7 +2194,7 @@ function inhouseFlow(){
 }
 function renderOrders(tab='external'){
  tab=['external','walk-in','in-house'].includes(tab)?tab:'external';el('currentCrumb').textContent='Sendout lab workflows';
- let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to Quest, Labcorp, Cedars and other reference labs. Select the request type and clinic market below to follow the appropriate workflow.');
+ let h=toolHeader('SENDOUT LAB REQUESTS & HANDOFF','Sendout lab order workflows','For tests sent to Quest, Labcorp, Cedars and other reference labs. Choose a request type. The workflow follows the market selected in the sidebar.');
  h+=`<div class="workflow-main">${tab==='external'?externalFlow():tab==='walk-in'?walkinFlow():inhouseFlow()}</div>`;
  h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
@@ -2887,14 +2892,11 @@ function updateGuidedProcedureInPlace(button){
  const expand=e.target.closest('[data-expand]');if(expand){const toggles=el('mainContent').querySelectorAll('[data-toggle]');const collapse=expand.textContent==='Collapse all';for(const b of toggles){b.setAttribute('aria-expanded',String(!collapse));const target=el(b.dataset.toggle);if(target)target.hidden=collapse}expand.textContent=collapse?'Expand all':'Collapse all';return}
  const edit=e.target.closest('[data-edit-video]');if(edit){openEditor(edit.dataset.editVideo);return}
 });
-document.addEventListener('change',e=>{
- const region=e.target.closest('[data-orders-region]');
- if(!region)return;
- const next=orderMarkets.some(m=>m.id===region.value)?region.value:'socal';
- if(next===state.ordersRegion)return;
+document.addEventListener('labcentral:marketchange',e=>{
+ const next=e.detail?.market;
+ if(!orderMarkets.some(m=>m.id===next))return;
  state.ordersRegion=next;
  render();
- document.querySelector('[data-orders-region]')?.focus({preventScroll:true});
 });
 el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';render();});
 el('search').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';state.search='';render();e.target.blur()}});
