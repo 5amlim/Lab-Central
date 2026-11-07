@@ -361,7 +361,7 @@ function renderStep(title,group){
      "QC result schematic. Never treat a synthetic PASS label as a real result.","qcresult");
   if(/eject and return the reusable/.test(t))
    return show(title,qcElectronicSvg(),
-     "Return to Main Menu, press Exit to eject, and store the dry QC Device in its opaque case.","main");
+     "Return to Main Menu, press Exit to eject, and store the dry QC Device in its black case.","main");
  }
  if(qc){
   if(/select run test and enter user id|select run test, enter user id/.test(t))
@@ -407,7 +407,7 @@ function renderStep(title,group){
   if(/remove the reusable|inspect the qc device|select qc device|insert the reusable|press enter to run/.test(t))
    return show(title,qcElectronicSvg(),"Keep the reusable QC Device clean and dry. Never pipette liquid onto it.");
   if(/verify qc device pass|print and document/.test(t))return show(title,qcElectronicSvg(),"Confirm a PASS, record it and follow lockout procedure if QC fails.","result");
-  if(/eject and return/.test(t))return show(title,qcElectronicSvg(),"Return the reusable electronic QC Device to its light-protective opaque case after use.");
+  if(/eject and return/.test(t))return show(title,qcElectronicSvg(),"Return the reusable electronic QC Device to its black case after use.");
   return show(title,qcElectronicSvg(),"Daily electronic QC does not require any blood, liquid controls or disposable patient cassette.");
  }
  // Separate details for actual pipette aspiration, chamber inspection, and dispensing.

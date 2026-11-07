@@ -206,7 +206,7 @@ function triageScene(title,group){
  const isQC=/qc|control/.test(t)||/qc/.test(grp);
  if(/chip|install|new box/.test(t))return scene('Install the matching CODE CHIP',triageMeter('chip'),'From the main menu select INSTALL NEW CODE CHIP, insert the matching lot chip into the left lower port when prompted, confirm and remove it for storage.');
  if(/freezer|grab the qc sample|qc sample/.test(t)&&!/select|enter|click/.test(t))return scene('Thaw and prepare liquid QC',triageQcControls(),'Illustrative freezer and control bottles. Use the Triage Total 5 controls specified in the local SOP.');
- if(daily&&(/qc device|insert the qc device|cassette/.test(t)))return scene('Reusable electronic QC Device',triageQCDevice(),'Daily device check: no sample port and no pipette. Keep this device in its opaque case.');
+ if(daily&&(/qc device|insert the qc device|cassette/.test(t)))return scene('Reusable electronic QC Device',triageQCDevice(),'Daily device check: no sample port and no pipette. Keep this device in its black case.');
  if(/print|record|initial|log/.test(t))return scene('Document the QC result',printout(),'Verify pass/fail, date, user initials and correct log.');
  if(/machine is ready|review|result/.test(t))return scene('Verify the meter status',triageMeter('pass'),'Continue only after acceptable QC and no active lockout.');
  if(/insert the cassette|insert.*port/.test(t))return scene(daily?'Insert reusable QC Device':'Insert prepared test cassette',daily?triageQCDevice():triageCassette(true),daily?'Do not add liquid to daily QC Device.':'Prepare the cassette using the kit-specific transfer pipette.');
