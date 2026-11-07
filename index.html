@@ -1563,15 +1563,15 @@ function qcStepTemplateFooter(sec,groupId){
  }else if(id==='triage'&&g==='daily-qc'){
   name='Triage MeterPro Daily QC Log';note='Record the daily QC Device check and retain its printout.';url='assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf?v=20261107-daily-qc';
  }else if(id==='triage'&&/liquid-qc|new-box-qc/.test(g)){
-  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-5e9af24f';
+  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Monthly-QC-Log.pdf?v=20261107-revised';
  }else if(id==='clinitek'&&g.includes('qc')){
   name='UA + hCG Control Log';note='Use the approved combined UA and hCG control log.';url='assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638';
  }else if(id==='sofia'&&g.includes('calibration')){
-  name='Sofia 2 Calibration Check Log';note='Document the completed calibration check.';url='lab-templates.html?view=monthly&template=sofia-cal';
+  name='Sofia 2 Calibration Check Log';note='Document the completed calibration check.';url='assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107';
  }else if(id==='sofia'&&g.includes('qc')){
-  name='Sofia 2 QC Log';note='Document external positive and negative controls.';url='lab-templates.html?view=monthly&template=sofia-qc';
+  name='Sofia 2 QC Log';note='Document external positive and negative controls.';url='assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107';
  }else if(id==='coagsense'&&g.includes('qc')){
-  name='Waived Test Quality Control Log';note='Document high and low controls.';url='lab-templates.html?view=monthly&template=waived-qc';
+  name='Waived Test Quality Control Log';note='Document high and low controls.';url='assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107';
  }
  if(!url)return '';
  const pdf=/\.pdf(?:\?|$)/i.test(url);

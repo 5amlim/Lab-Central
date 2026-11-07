@@ -441,3 +441,10 @@
  .dqc-page .dqc-view-switch{display:flex;gap:9px}
  .dqc-page .dqc-view-button{flex-basis:235px;min-height:70px}
 }
+
+/* The QC template sits directly below the guide link on monthly cards. */
+.dqc-monthly-card .dqc-task-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-items:end;gap:3px 12px}
+.dqc-monthly-card .dqc-task-actions>.dqc-qc-guide-link{grid-column:1;grid-row:1;justify-self:start;margin:0}
+.dqc-monthly-card .dqc-task-actions>.dqc-binder-template-link{grid-column:1;grid-row:2;justify-self:start;margin:0}
+.dqc-monthly-card .dqc-task-actions>.dqc-task-badges{grid-column:2;grid-row:1 / span 2;align-self:end;justify-self:end;margin:0}
+@media(max-width:480px){.dqc-monthly-card .dqc-task-actions{grid-template-columns:1fr}.dqc-monthly-card .dqc-task-actions>.dqc-task-badges{grid-column:1;grid-row:3;justify-self:start;margin-top:5px}}

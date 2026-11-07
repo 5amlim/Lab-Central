@@ -32,6 +32,10 @@ td{height:22px;outline-offset:-3px}
 tr{break-inside:avoid}
 td:focus,.blank:focus{background:#fffae6;outline:1px solid #c6a24d}
 .sheet-footer{font-size:10px;color:#78909b;margin:16px 0 0;line-height:1.6}
+.sheet:has(.pdf-preview){padding:18px 18px 16px}
+.preview-title{font-size:17px!important;margin:0 0 12px!important;color:#25282a}
+.pdf-preview{height:76vh;min-height:500px;border:1px solid #d2d4d5;border-radius:8px;overflow:hidden;background:#fff}
+.pdf-preview object{display:block;width:100%;height:100%;border:0}
 .inline-note{font-size:11px;color:#587989;margin:0 0 14px}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.library{position:static;max-height:none}.library-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}.meta{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding:14px 16px}}
 @media(max-width:550px){.shell{padding:0 10px}.sheet{padding:15px}.sheet h1{font-size:21px}.meta,.library-list{grid-template-columns:1fr}.top{flex-wrap:wrap}.actions{width:100%}.btn{flex:1;text-align:center}}
@@ -56,8 +60,8 @@ td:focus,.blank:focus{background:#fffae6;outline:1px solid #c6a24d}
 </style>
 </head>
 <body>
-<header class="top"><div class="brand">Lab Central / Lab Templates<small>Print-ready blank log sheets adapted from the supplied lab forms</small></div><div class="actions"><a class="btn" href="index.html">Return to Lab Central</a><button type="button" id="print" class="btn primary">Print / Save PDF</button></div></header>
-<div class="shell"><aside class="library"><h2>Template Library</h2><p>Select a log, fill optional header fields, then print or save as PDF. Use the approved revision when your site's form differs.</p><div id="library-list" class="library-list"></div></aside><main class="sheet" id="sheet" aria-label="Printable lab template"></main></div>
+<header class="top"><div class="brand">Sollis Health / Lab Forms<small>Print-ready PDF logs and approved instrument records</small></div><div class="actions"><a class="btn" href="index.html">Return to Lab Central</a><button type="button" id="print" class="btn primary">Print / Save PDF</button></div></header>
+<div class="shell"><aside class="library"><h2>Template Library</h2><p>Select a form to preview and open its PDF. Approved instrument forms remain unchanged.</p><div id="library-list" class="library-list"></div></aside><main class="sheet" id="sheet" aria-label="Printable lab template"></main></div>
 <script>
 'use strict';
 const forms=[
@@ -82,6 +86,21 @@ const forms=[
  {id:'sofia-qc',group:'monthly',title:'Sofia 2 QC Log',note:'For external QC associated with new shipments/lots or other IFU triggers. No analyzer printout is needed.',fields:['Facility','Sofia 2 serial number','Kit test / lot / expiration'],headers:['Date','Positive QC','Negative QC','Control lots / expirations','Technician','Comments / action'],rows:15,numbered:false},
  {id:'fire-extinguisher',group:'monthly',title:'Fire Extinguisher Monthly Inspection Log',note:'OPTIONAL: Use only if no approved Facilities, tag or electronic inspection record exists. Verify each extinguisher individually. Record access/mounting, gauge if present (N/A otherwise), pin/seal, visible condition, date, initials and corrective actions. Escalate defects promptly. This monthly visual check is not the annual service.',fields:['Clinic / facility','Month / Year','Facilities contact / reviewer'],headers:['Extinguisher ID / location','Inspection date','Accessible / mounted','Pressure gauge (or N/A)','Pin / tamper seal','Condition / nozzle','Inspector initials','Defect / corrective action / follow-up'],rows:16,numbered:false}
 ];
+const GENERATED_PRINTABLE_PDFS = {
+  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107",
+  "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107",
+  "clinitek-ua": "assets/lab-templates/generated/Siemens-Urinalysis-QC-Log.pdf?v=20261107",
+  "clinitek-hcg": "assets/lab-templates/generated/Siemens-hCG-Pregnancy-QC-Log.pdf?v=20261107",
+  "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107",
+  "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107",
+  "waived-qc": "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107",
+  "febridx-qc": "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf?v=20261107",
+  "remedial": "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf?v=20261107",
+  "sofia-cal": "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107",
+  "sofia-qc": "assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107",
+  "fire-extinguisher": "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf?v=20261107"
+};
+forms.forEach(function(form){if(GENERATED_PRINTABLE_PDFS[form.id])form.printPdf=GENERATED_PRINTABLE_PDFS[form.id]});
 const params=new URLSearchParams(location.search);
 const requested=params.get('template')==='sysmex-blank'?'sysmex-control':(params.get('template')||'');
 const market=params.get('market')||'';
@@ -104,8 +123,13 @@ function show(){
    return '<button type="button" data-template="'+esc(form.id)+'" class="'+(form.id===selected.id?'current':'')+'">'+esc(form.title)+'</button>';
   }).join('');
  }).join('');
+ if(selected.printPdf){
+  const url=esc(selected.printPdf);
+  document.getElementById('sheet').innerHTML='<h1 class="preview-title">'+esc(selected.title)+'</h1><div class="pdf-preview"><object type="application/pdf" data="'+url+'#toolbar=1" aria-label="'+esc(selected.title)+' PDF preview"><p>PDF preview unavailable. <a href="'+url+'" target="_blank" rel="noopener">Open PDF</a></p></object></div>';
+  document.title=selected.title+' | Sollis Health';return;
+ }
  const fields=selected.fields.map(function(f,i){
-  const prefill=f==='Location'||f==='Clinic'?clinic:(f==='Lab name'||f==='Facility'?clinic:'');
+  const prefill='';
   return '<label class="field">'+esc(f)+'<span class="blank" contenteditable="true" spellcheck="false" role="textbox" aria-label="'+esc(f)+'">'+esc(prefill)+'</span></label>';
  }).join('');
  const rows=Array.from({length:selected.rows},function(_,i){
@@ -114,17 +138,15 @@ function show(){
   }).join('')+'</tr>';
  }).join('');
  document.getElementById('sheet').innerHTML=
-  '<div class="overline">Lab Central / '+esc(market||'All markets')+' / '+esc(selected.group==='monthly'?'Recurring records':selected.group==='daily'?'Daily records':'QC records')+'</div>'+
   '<h1>'+esc(selected.title)+'</h1>'+
-  '<p class="description">Blank, print-ready template based on the log sheets supplied for Lab Central.</p>'+
   '<div class="meta">'+fields+'</div>'+
-  '<p class="instruction">'+esc(selected.note)+'</p>'+
+  ''+
   '<table aria-label="'+esc(selected.title)+'"><thead><tr>'+selected.headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+rows+'</tbody></table>'+
-  '<p class="sheet-footer">Use only with the current approved site SOP and document-control process. This is a printable adaptation, not a replacement for a controlled original form.</p>';
+  '';
  document.title=selected.title+' | Lab Central';
 }
 document.addEventListener('click',function(e){const b=e.target.closest('[data-template]');if(b)choose(b.dataset.template)});
-document.getElementById('print').addEventListener('click',function(){window.print()});
+document.getElementById('print').addEventListener('click',function(){if(selected.printPdf){window.open(selected.printPdf,'_blank','noopener');}else{window.print();}});
 if(selected.originalPdf)location.replace(selected.originalPdf);else show();
 </script>
 </body>
