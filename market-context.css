@@ -47,3 +47,22 @@
 
 /* The older workflow CSS draws an additional caret on this container. Keep only the portal dropdown chevron. */
 .order-region-select::after{content:none;display:none}
+
+/* Compact persistent market controls in the sidebar footer.
+   The menu opens upward over the scrollable navigation, never underneath it. */
+.sidebar-bottom{position:relative;z-index:4;flex:none;background:#f9fbfd;padding:11px 14px 12px;border-top:1px solid #e3ebf1;box-shadow:0 -4px 14px rgba(33,66,92,.035)}
+.sidebar-bottom .lc-global-market{position:relative;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.sidebar-bottom .lc-global-market.is-open{border:0;box-shadow:none}
+.sidebar-bottom .lc-global-market-label{margin:0 0 6px;gap:6px;font-size:9px;letter-spacing:.1em;color:#71889c}
+.sidebar-bottom .lc-global-market-label svg{width:13px;height:13px}
+.sidebar-bottom .lc-market-reset{font-size:9px;padding:3px 7px;border-color:#e1e9ee;background:#fff}
+.sidebar-bottom .lc-global-market-control{position:relative}
+.sidebar-bottom .lc-global-market-trigger{min-height:37px;border-radius:9px;padding:7px 10px;gap:8px;box-shadow:none;font-size:11.5px;background:#fff}
+.sidebar-bottom .lc-global-market-icon svg{width:15px;height:15px}
+.sidebar-bottom .lc-global-market-hint{display:none}
+.sidebar-bottom .lc-global-market-options{position:absolute;bottom:calc(100% + 7px);top:auto;left:0;right:0;z-index:55;margin:0;padding:5px;max-height:min(275px,50vh);overflow-y:auto;border-radius:11px;box-shadow:0 10px 28px rgba(28,61,88,.17)}
+.sidebar-bottom .lc-global-market-option{min-height:35px}
+.sidebar-bottom .reference-note{margin-top:10px;padding-top:9px;border-top:1px solid #e4ebf1;gap:8px;font-size:10px;line-height:1.4;color:#61768a}
+.sidebar-bottom .reference-note small{font-size:9px;color:#95a4b2}
+.sidebar-bottom .reference-note .indicator-dot{margin-top:4px}
+@media(max-width:860px){.sidebar-bottom .lc-global-market{margin:0}}
