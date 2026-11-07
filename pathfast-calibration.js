@@ -441,6 +441,7 @@ function repaintPanel(keepNavigation=false){
  const active=rail?.querySelector('.pfux-stage-button.is-current');
  if(rail&&active)rail.scrollLeft=Math.max(0,active.offsetLeft-rail.offsetLeft-24);
 }
+function calQcTemplateFooter(){return '<div class="pfm-quicklink qc-step-template-footer"><div><strong>PATHFAST CAL + QC Log</strong><span>Complete the 28-day calibration and QC record and attach the required analyzer printouts.</span></div><a class="pfm-log-button" href="assets/lab-templates/PATHFAST%20CAL%20%2B%20QC%20Log.pdf?v=approved-20261107" target="_blank" rel="noopener noreferrer">Open CAL + QC log (PDF) ↗</a></div>';}
 function render(){
  const group=selectedGroup();
  const x=group?esc(group.label):"";
@@ -459,7 +460,7 @@ function render(){
     '<header class="pf-workflow-head"><span class="pf-workflow-no">'+String(n).padStart(2,"0")+'</span>'+
     '<span class="pf-workflow-label"><strong>'+title+'</strong><small>'+desc+'</small></span>'+
     (guided?calHeaderNavigation():'')+'</header>'+
-    '<div class="pf-workflow-detail">'+(inner||"")+'</div></article>';
+    '<div class="pf-workflow-detail">'+(inner||"")+'</div></article>'+calQcTemplateFooter();
  }
  let h='<section class="pf-calibration-guide" aria-label="PATHFAST 28-day calibration and QC guide">'+
  '<header class="pf-calibration-heading"><div><span class="pf-eyebrow">PATHFAST · CALIBRATION AND QC</span>'+
@@ -538,7 +539,7 @@ function render(){
       '<p class="pf-workflow-note">Review CAL 1, CAL 2 and both Bio-Rad controls against lot-specific criteria; confirm results are acceptable before patient testing. Failed controls require resolution.</p>');
   h+=step(14,'Print, file and return CAL/QC materials to storage','Document both control levels and return each material to the correct temperature',
       (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Print and retain the accepted calibration and QC results in the approved binder.</p>')+
-      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>'+'<div class="pfm-quicklink"><div><strong>PATHFAST CAL + QC Log</strong><span>Use one vertical section per analyte. Attach the complete calibration and QC printout, including the calibration report, QC 1 and QC 2.</span></div><a class="pfm-log-button" href="assets/lab-templates/PATHFAST%20CAL%20%2B%20QC%20Log.pdf?v=approved-20261107" target="_blank" rel="noopener noreferrer"><span class="pfm-log-icon" aria-hidden="true">&#128196;</span><span>Open printout log (PDF)</span><span aria-hidden="true">&#8599;</span></a></div>'+returnMaterials(group));
+      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>'+returnMaterials(group));
 
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+

@@ -101,3 +101,9 @@
 .ny-overview-subtitle{font-size:12px;line-height:1.55;color:#668196;margin:0 0 17px;max-width:850px}
 @media(max-width:740px){.orders-setup-head{align-items:flex-start;flex-direction:column;gap:5px}.orders-setup-head p{text-align:left}.orders-setup-panel{padding:15px}.orders-setup-panel .order-workflow-tabs{grid-template-columns:1fr}.orders-setup-panel .order-workflow-tabs>.tab{min-height:43px}.orders-setup-panel .order-region-select{width:100%;min-width:0}.orders-selected-head{padding:16px}.ny-flow-overview{padding:16px}}
 @media print{.orders-setup-panel{display:none!important}}
+
+/* NY line starts at Step 01 and ends at Step 05. */
+.ny-scheduled-timeline::before{content:none!important;display:none!important}
+.ny-scheduled-timeline>.ny-flow-stage:not(:last-of-type)::before{content:"";position:absolute;top:36px;bottom:-54px;left:-37px;width:2px;background:#cbd6df;border-radius:2px;pointer-events:none;z-index:0}
+.ny-scheduled-timeline>.ny-flow-stage .req-intake-number{z-index:1}
+@media(max-width:650px){.ny-scheduled-timeline>.ny-flow-stage:not(:last-of-type)::before{top:32px;bottom:-50px;left:-31px}}

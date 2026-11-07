@@ -6,7 +6,7 @@
 "use strict";
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const POCHI_LOG_URL="assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107";
-const PICCOLO_LOG_URL="assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261106-exact";
+const PICCOLO_LOG_URL="assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-exact";
 const TRIAGE_MONTHLY_LOG_URL="assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-revised";
 function piccoloLogLink(){return '<div class="pfm-quicklink"><div><strong>Piccolo Monthly QC Log</strong><span>Complete monthly or for a new lot/shipment. Attach both analyzer QC printouts.</span></div><a class="pfm-log-button" href="'+PICCOLO_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open log (PDF) ↗</a></div>';}
 function triageLogLink(){return '<div class="pfm-quicklink"><div><strong>Triage MeterPro Monthly QC Log</strong><span>Complete every month or with a new lot/shipment for BNP, D-dimer and Troponin liquid QC (Levels 1 and 2).</span></div><a class="pfm-log-button" href="'+TRIAGE_MONTHLY_LOG_URL+'" target="_blank" rel="noopener noreferrer">Open QC log (PDF) ↗</a></div>';}
@@ -303,13 +303,13 @@ function sysmexStep(sec,group,title){
  if(/turn on the sysmex|start.*analyzer|startup blank check/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"status",heading:"Power on the analyzer",screen:"INITIALIZING",status:"System starting",detail:"Please wait",tip:"Turn on the physical power switch after the completed shutdown. The analyzer initializes automatically."},
   {kind:"status",heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",status:"Blank check in progress",detail:"Wait for the ready indication",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
- ],"Sysmex pocH-100i")+'</div>'+pochiLogLink();
+ ],"Sysmex pocH-100i")+'</div>'; 
  if(/go to menu|blank check.*today/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"mainMenu",heading:"Open the Main screen",screen:"MAIN",tip:"On the ready Main screen, select the highlighted Menu button."},
   {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"In Menu, select Str. Data."},
   {heading:"Choose today's blank",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored result","Back"],focus:"__BLANK CHECK__",tip:"Select the blank-check record bearing today’s date."},
   {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name with the Pochi Daily Blank Check and Control Log."}
- ],"Sysmex pocH-100i",{scroll:true})+'</div>'+pochiLogLink();
+ ],"Sysmex pocH-100i",{scroll:true})+'</div>'; 
  if(/new qc lot|register a new qc lot|parallel qc|lot-to-lot comparison|lot is expired/.test(t))return '<div class="qc-instrument-walkthrough lc-poc-lot-setup">'+
  '<div class="lc-poc-lot-intro"><strong>Enter the new QC lot and control ranges</strong><span>Menu → QC → select file → Setup. This illustrates the analyzer workflow, not a working barcode input.</span></div>'+
  screenGallery([
@@ -324,7 +324,7 @@ function sysmexStep(sec,group,title){
   {kind:"qcFiles",heading:"Select QC1, QC2 or QC3",tip:"Choose the correct active QC file: QC1 Low, QC2 Normal or QC3 High. Verify lot and expiration."},
   {heading:"Run the selected QC level",screen:"QC FILE",items:["Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
   {heading:"Accept and print result",screen:"QC RESULT",items:["Quit","Print (if needed)","Back"],focus:"Quit",tip:"Review the result, then select Quit. An automatic printout is generated only when the printer setting is enabled. Otherwise follow the reprint route below."}
- ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>'+pochiLogLink();
+ ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>'; 
  return "";
 }
 function qcClickStep(sec,groupId,title){
@@ -405,7 +405,7 @@ function printStep(id){
  '<div class="qc-final-section-label">02 · Verify and file the QC result</div>'+
  '<div class="qc-binder-layout"><div class="qc-binder-pictogram">'+binderSvg()+'</div><div class="qc-binder-text"><span>FILE IN</span><strong>'+esc(cfg.binder)+'</strong>'+
  '<ol><li>Verify the report shows the instrument, date, test/panel, control level or type, lot, and result.</li><li>Confirm result acceptance and add operator identification or any missing required log details.</li><li>Place the printout in the designated QC binder section, grouped by date and QC category.</li></ol>'+
- '<p>'+esc(cfg.note)+'</p></div></div>'+(id==='sysmex'?pochiLogLink():id==='piccolo'?piccoloLogLink():id==='triage'?triageLogLink():'')+'</div>';
+ '<p>'+esc(cfg.note)+'</p></div></div>'+'</div>';
 }
 window.LAB_QC_GUIDE={isQcGroup:isQcGroup,sysmexStep:sysmexStep,qcClickStep:qcClickStep,controlNotes:controlNotes,printStep:printStep,piccoloPatientLoadStep:piccoloPatientLoadStep,screenGallery:screenGallery};
 })();

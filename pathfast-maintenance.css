@@ -33,3 +33,8 @@
 .pfm-quicklink .pfm-log-button span{color:#fff}
 .dqc-monthly-original-log{display:inline-flex;margin:0 17px 16px}
 @media(max-width:760px){.pfm-grid{grid-template-columns:1fr}.pfm-header,.pfm-misc,.pfm-document,.pfm-quicklink{flex-direction:column;align-items:stretch}.pfm-role{align-self:flex-start}.pfm-document .pfm-log-button,.pfm-quicklink .pfm-log-button{width:100%;white-space:normal}.pfm-header{padding:20px}.pfm-document{padding:20px}}
+
+/* Keep documentation links below the QC step card. */
+.qc-step-template-footer{width:100%;box-sizing:border-box;margin:20px 0 22px}
+.guide-stage>.qc-step-template-footer{align-self:stretch}
+@media(max-width:650px){.qc-step-template-footer{align-items:stretch;flex-direction:column;gap:12px}.qc-step-template-footer .pfm-log-button{width:100%;white-space:normal;text-align:center}}
