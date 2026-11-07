@@ -435,7 +435,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-calculators-guide.js?v=20261104"></script>
 <script src="pathmd-reference.js?v=20261104"></script>
 <script src="operations-guides.js?v=20261104"></script>
-<script src="socal-daily-checklist.js?v=20261107-single-links"></script>
+<script src="socal-daily-checklist.js?v=20261107-triage-qc-forms"></script>
 <script src="training-competency.js?v=20261104"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
@@ -1561,9 +1561,9 @@ function qcStepTemplateFooter(sec,groupId){
  }else if(id==='piccolo'&&g==='monthly-qc'){
   name='Piccolo Monthly QC Log';note='Complete monthly or with a new lot/shipment. Attach both QC printouts.';url='assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-fa5441bb';
  }else if(id==='triage'&&g==='daily-qc'){
-  name='Triage MeterPro Daily QC Log';note='Record the daily QC Device check and retain its printout.';url='assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf';
+  name='Triage MeterPro Daily QC Log';note='Record the daily QC Device check and retain its printout.';url='assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf?v=20261107-daily-qc';
  }else if(id==='triage'&&/liquid-qc|new-box-qc/.test(g)){
-  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-revised';
+  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Control-Log.pdf?v=20261107-5e9af24f';
  }else if(id==='clinitek'&&g.includes('qc')){
   name='UA + hCG Control Log';note='Use the approved combined UA and hCG control log.';url='assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638';
  }else if(id==='sofia'&&g.includes('calibration')){
@@ -1616,7 +1616,7 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const nav=headerNav?'<div class="guide-card-header-actions">'+headerNav+'</div>':'';
  // Main step cards do not collapse; navigation is handled by explicit step buttons.
  if(isPathfast)return '<article class="guide-card pf-static-step'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header><div class="pf-step-collapse-body">'+stepBody+'</div></article>';
- return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+(sec?.id==='sysmex'?qcFooter:'')+'</article>'+(sec?.id==='sysmex'?'':qcFooter);
+ return '<article class="guide-card'+navClass+'"><header class="guide-card-head"><span class="guide-card-index">'+String(index+1).padStart(2,'0')+'</span><div class="guide-card-title"><span class="guide-card-kicker">'+label+' '+(index+1)+' of '+total+'</span><h3>'+title+'</h3></div>'+nav+'</header>'+stepBody+(['sysmex','triage'].includes(sec?.id)?qcFooter:'')+'</article>'+(['sysmex','triage'].includes(sec?.id)?'':qcFooter);
 }
 function renderFebridxReferences(){
  const ifu='https://phasescientificamericas.com/wp-content/uploads/2026/08/PM-548.0_INDICAID_IFU.pdf';
