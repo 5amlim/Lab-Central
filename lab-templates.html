@@ -67,7 +67,7 @@ td:focus,.blank:focus{background:#fffae6;outline:1px solid #c6a24d}
 const forms=[
  {id:'temperature',group:'daily',title:'Daily Temperature Log',note:'Based on the uploaded BH/SM/MB temperature log examples. Use site-specific ranges and installed-unit columns.',fields:['Month','Year','Location'],headers:['Date','Initials','Lab temperature','Refrigerator 1','Refrigerator 2','Refrigerator 3','Freezer','Humidity'],rows:31,numbered:true},
  {id:'cleaning',group:'daily',title:'Daily Cleaning and Disinfection Log',note:'Record completed cleaning and disinfection per the site SOP.',fields:['Month','Year','Clinic'],headers:['Day','Disinfection completed','Operator initials','Comments / exceptions'],rows:31,numbered:true},
- {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107'},
+ {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107-headerfix'},
   {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
  {id:'triage-daily',group:'daily',title:'Triage MeterPro Daily QC Log',originalPdf:'assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf?v=20261107-daily-qc'},
  {id:'clinitek-ua',group:'daily',title:'Siemens Urinalysis QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and lot information.',fields:['Month / Year','Level 1 / Level 2 lots and expirations','Test strip lot and expiration'],headers:['Date / initials','Level 1 (low)','Level 2 (high)','Result','Comments / corrective action'],rows:22,numbered:false},
@@ -87,18 +87,18 @@ const forms=[
  {id:'fire-extinguisher',group:'monthly',title:'Fire Extinguisher Monthly Inspection Log',note:'OPTIONAL: Use only if no approved Facilities, tag or electronic inspection record exists. Verify each extinguisher individually. Record access/mounting, gauge if present (N/A otherwise), pin/seal, visible condition, date, initials and corrective actions. Escalate defects promptly. This monthly visual check is not the annual service.',fields:['Clinic / facility','Month / Year','Facilities contact / reviewer'],headers:['Extinguisher ID / location','Inspection date','Accessible / mounted','Pressure gauge (or N/A)','Pin / tamper seal','Condition / nozzle','Inspector initials','Defect / corrective action / follow-up'],rows:16,numbered:false}
 ];
 const GENERATED_PRINTABLE_PDFS = {
-  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107",
-  "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107",
-  "clinitek-ua": "assets/lab-templates/generated/Siemens-Urinalysis-QC-Log.pdf?v=20261107",
-  "clinitek-hcg": "assets/lab-templates/generated/Siemens-hCG-Pregnancy-QC-Log.pdf?v=20261107",
-  "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107",
-  "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107",
-  "waived-qc": "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107",
-  "febridx-qc": "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf?v=20261107",
-  "remedial": "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf?v=20261107",
-  "sofia-cal": "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107",
-  "sofia-qc": "assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107",
-  "fire-extinguisher": "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf?v=20261107"
+  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107-headerfix",
+  "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107-headerfix",
+  "clinitek-ua": "assets/lab-templates/generated/Siemens-Urinalysis-QC-Log.pdf?v=20261107-headerfix",
+  "clinitek-hcg": "assets/lab-templates/generated/Siemens-hCG-Pregnancy-QC-Log.pdf?v=20261107-headerfix",
+  "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107-headerfix",
+  "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107-headerfix",
+  "waived-qc": "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107-headerfix",
+  "febridx-qc": "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf?v=20261107-headerfix",
+  "remedial": "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf?v=20261107-headerfix",
+  "sofia-cal": "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107-headerfix",
+  "sofia-qc": "assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107-headerfix",
+  "fire-extinguisher": "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf?v=20261107-headerfix"
 };
 forms.forEach(function(form){if(GENERATED_PRINTABLE_PDFS[form.id])form.printPdf=GENERATED_PRINTABLE_PDFS[form.id]});
 const params=new URLSearchParams(location.search);

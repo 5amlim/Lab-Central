@@ -1557,21 +1557,21 @@ function qcStepTemplateFooter(sec,groupId){
  const id=sec.id,g=String(groupId||'').toLowerCase();
  let name='',note='',url='';
  if(id==='sysmex'&&(/qc|blank-check/.test(g))){
-  name='Pochi Daily Blank Check and Control Log';note='Document the blank check and three QC levels on the approved combined log.';url='assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107';
+  name='Pochi Daily Blank Check and Control Log';note='Document the blank check and three QC levels on the approved combined log.';url='assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107-headerfix';
  }else if(id==='piccolo'&&g==='monthly-qc'){
   name='Piccolo Monthly QC Log';note='Complete monthly or with a new lot/shipment. Attach both QC printouts.';url='assets/lab-templates/Piccolo_Monthly_QC_Log.pdf?v=20261107-fa5441bb';
  }else if(id==='triage'&&g==='daily-qc'){
   name='Triage MeterPro Daily QC Log';note='Record the daily QC Device check and retain its printout.';url='assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf?v=20261107-daily-qc';
  }else if(id==='triage'&&/liquid-qc|new-box-qc/.test(g)){
-  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Monthly-QC-Log.pdf?v=20261107-revised';
+  name='Triage MeterPro Monthly QC Log';note='Record liquid QC every month or with a new lot/shipment.';url='assets/lab-templates/Triage-MeterPro-Monthly-QC-Log.pdf?v=20261107-original-upload';
  }else if(id==='clinitek'&&g.includes('qc')){
   name='UA + hCG Control Log';note='Use the approved combined UA and hCG control log.';url='assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638';
  }else if(id==='sofia'&&g.includes('calibration')){
-  name='Sofia 2 Calibration Check Log';note='Document the completed calibration check.';url='assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107';
+  name='Sofia 2 Calibration Check Log';note='Document the completed calibration check.';url='assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107-headerfix';
  }else if(id==='sofia'&&g.includes('qc')){
-  name='Sofia 2 QC Log';note='Document external positive and negative controls.';url='assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107';
+  name='Sofia 2 QC Log';note='Document external positive and negative controls.';url='assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107-headerfix';
  }else if(id==='coagsense'&&g.includes('qc')){
-  name='Waived Test Quality Control Log';note='Document high and low controls.';url='assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107';
+  name='Waived Test Quality Control Log';note='Document high and low controls.';url='assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107-headerfix';
  }
  if(!url)return '';
  const pdf=/\.pdf(?:\?|$)/i.test(url);
