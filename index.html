@@ -298,8 +298,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   background:#f3ecff;color:#7c4dcc;
 }
 </style>
-<link rel="stylesheet" href="market-context.css?v=20261107" media="all">
-<script src="market-context.js?v=20261107"></script>
+<link rel="stylesheet" href="market-context.css?v=20261107-portal-dropdown" media="all">
+<script src="market-context.js?v=20261107-portal-dropdown"></script>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -311,15 +311,23 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
         </a>
         <button class="icon-button sidebar-close" id="closeSidebar" type="button" aria-label="Close navigation">✕</button>
       </div>
-      <div class="lc-global-market" aria-label="Market filter">
-        <label class="lc-global-market-label" for="labCentralMarket"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>YOUR MARKET</label>
-        <div class="lc-global-market-field"><select id="labCentralMarket" aria-label="Choose Lab Central market">
-          <option value="socal">Southern California</option>
-          <option value="norcal">Northern California</option>
-          <option value="ny">New York</option>
-          <option value="fl">Florida</option>
-        </select><span class="lc-global-market-caret" aria-hidden="true"></span></div>
-        <small class="lc-global-market-hint">Applies across Lab Central</small>
+      <div class="lc-global-market" aria-label="Lab Central market">
+        <div class="lc-global-market-label" id="lcMarketTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+          VIEWING MARKET
+        </div>
+        <button type="button" id="labCentralMarket" class="lc-global-market-trigger" aria-labelledby="lcMarketTitle labCentralMarketLabel" aria-haspopup="listbox" aria-controls="labCentralMarketOptions" aria-expanded="false">
+          <span class="lc-global-market-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+          <span id="labCentralMarketLabel" class="lc-global-market-title">Southern California</span>
+          <span class="lc-global-market-caret" aria-hidden="true"></span>
+        </button>
+        <div id="labCentralMarketOptions" class="lc-global-market-options" role="listbox" aria-label="Choose a market" hidden>
+          <button type="button" role="option" class="lc-global-market-option is-selected" data-lc-market-option="socal" aria-selected="true">Southern California<span class="lc-market-check" aria-hidden="true">✓</span></button>
+          <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="norcal" aria-selected="false">Northern California<span class="lc-market-check" aria-hidden="true">✓</span></button>
+          <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="ny" aria-selected="false">New York<span class="lc-market-check" aria-hidden="true">✓</span></button>
+          <button type="button" role="option" class="lc-global-market-option" data-lc-market-option="fl" aria-selected="false">Florida<span class="lc-market-check" aria-hidden="true">✓</span></button>
+        </div>
+        <small class="lc-global-market-hint">One selection for the entire portal</small>
       </div>
       <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tests, analytes, or order sets…" aria-label="Search instruments, analytes, pathogens, abbreviations, order sets, or workflows" autocomplete="off"></div>
       <nav id="sidebarNav" class="sidebar-nav"></nav>
@@ -1784,7 +1792,7 @@ function renderCalculators(){
   ?'<li>Check <strong>STAT routing info</strong> and the selected clinic\'s available STAT menu.</li>'
   :'<li>Confirm urgent or STAT acceptance and courier cutoff with Cedars. Do not assume a routine test is available as STAT.</li>';
  el('currentCrumb').textContent='Lab calculators/guides';
- let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select a clinic to find receiving lab calculators, collection guides and molecular sendout references for your chosen market.');
+ let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Find receiving lab calculators, collection guides and molecular sendout references for the market shown in the sidebar.');
  h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
  if(calcLab==='htrx'||calcLab==='pathmd')h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
@@ -2671,7 +2679,7 @@ function sectionRender(sec,tab){
  else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
  else if(sec.id==='sendout'&&tab==='overview')h+=sendoutLogisticsOverview();
- else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a clinic location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
+ else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by market</h2><p>Review regional receiving labs, pickup guidance and transport rules. Confirm the exact clinic schedule with your team.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
  else if(sec.id==='sendout'&&tab==='collection')h+=tubeReferencePanel('general');
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(sec.id==='calver'&&['preparation','testing','filing'].includes(tab))h+=window.LAB_QUALITY_GUIDE.calverReference(groups.find(g=>g.id===tab));
