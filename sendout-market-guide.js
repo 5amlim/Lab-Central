@@ -35,8 +35,9 @@ function dropdown(field,label,value,choices){
  }).join("")+'</div>':"")+'</div>';
 }
 function selection(mode="guide"){
- const logOnly=mode==="log";
- return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(logOnly?'Choose market':'Choose market and clinic')+'</strong><p>'+(logOnly?'Choose a market for routine send-outs, STAT or special pickups, and shipped test kits. Select the clinic within the Microsoft Form.':'The receiving lab, packaging rules, courier and documentation depend on your site.')+'</p></div>'+
+ const logOnly=mode==="log",locked=Boolean(window.LAB_MARKET?.get());
+ if(logOnly&&locked)return '';
+ return '<div class="lc-market-choice"><div class="lc-picker-lead"><strong>'+(locked?'Choose clinic':logOnly?'Choose market':'Choose market and clinic')+'</strong><p>'+(logOnly?'Choose a market for routine send-outs, STAT or special pickups, and shipped test kits. Select the clinic within the Microsoft Form.':locked?'The market follows the sidebar. Select your clinic below for site-specific courier and packaging details.':'The receiving lab, packaging rules, courier and documentation depend on your site.')+'</p></div>'+
  '<div class="lc-picker-fields">'+(window.LAB_MARKET?.get()?'':dropdown("market","Market",markets[market].name,Object.entries(markets).map(([k,v])=>[k,v.name])))+
  (logOnly?'':dropdown("site","Clinic location",selectedSite(),markets[market].sites))+'</div></div>';
 }
