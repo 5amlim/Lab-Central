@@ -55,7 +55,7 @@ jobs:
           s=swap(s,"Escalate missing or unacceptable results.</li></ol>'+","Escalate missing or unacceptable results.</li></ol>'+pochiLogLink()+")
           s=swap(s,"Tap Print and file the report in the blank-check section of the Maintenance Log binder.","Tap Print and file the report with today's combined Pochi daily log.")
           s=swap(s,"Press Print and file with the date/name in the blank-check section of the Maintenance Log binder.","Press Print and file the result with the completed Pochi Daily Blank Check and Control Log.")
-          s=swap(s,'],\"Sysmex pocH-100i\",{scroll:true})+\'</div>\';\n  if(/new qc lot','],"Sysmex pocH-100i",{scroll:true})+pochiLogLink()+\'</div>\';\n  if(/new qc lot')
+          s=swap(s,'],\"Sysmex pocH-100i\",{scroll:true})+\'</div>\';\n if(/new qc lot','],"Sysmex pocH-100i",{scroll:true})+pochiLogLink()+\'</div>\';\n if(/new qc lot')
           s=swap(s,'],\"Sysmex pocH-100i\",{scroll:true})+sysmexPrintFallback()+\'</div>\';','],"Sysmex pocH-100i",{scroll:true})+pochiLogLink()+sysmexPrintFallback()+\'</div>\';')
           save(p,s)
           p='qc-guide.css';s=load(p)
