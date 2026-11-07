@@ -93,6 +93,51 @@ function scheduled(){
  h+=note('Do not collect before required orders are in place','If codes or account details cannot be obtained, escalate to the Sollis provider on duty. Complete the required Athena orders and document uploads before collection.',true);
  return h+finish();
 }
+function nyScheduled(){
+ let h=header('External requisition · Scheduled · New York','NY-only process for outside-physician lab draw requests, from intake and approval through collection and results routing.','New York scheduled non-Sollis provider requests','Front Desk Coordinator · NY Lab/Rad Tech · RN · Provider');
+ h+=note('Three important New York distinctions','<b>Outside orders are not entered as Athena laboratory orders.</b> An <b>Athena encounter is still required</b>, including for urine or stool drop-offs. <b>Results go directly to the outside ordering provider</b>, not Sollis Aftercare.',true);
+ h+=section('Front Desk · Intake');
+ h+=step('Receive the request and outside Rx',bullet(
+  'Ask the member to email the outside physician\'s lab prescription before scheduling.',
+  'Use the incoming Navigator task; reassign to <b>NY Lab/Rad Techs</b> for approval.',
+  'Upload the Rx in the correct Athena chart under <b>Clinical Documents</b> with the label <b>Outside Lab Rx: [Date]</b>.',
+  '<b>Do not schedule</b> until lab review is complete.'
+ ),'Front Desk Coordinator',1);
+ h+=section('NY Lab/Rad Tech · Approval');
+ h+=step('Confirm collection eligibility and required information',bullet(
+  'Review whether Sollis can collect and handle the ordered tests and verify specimen and transport requirements.',
+  'Confirm ordering physician <b>name, address, fax and NPI</b>.',
+  'Confirm readable <b>test orders and diagnosis codes</b>.',
+  'Confirm <b>insurance card or facesheet</b> and <b>ordering physician lab account number</b>.',
+  'Contact the ordering physician\'s office for missing information. For unavailable Quest provider accounts, use the approved <b>NY Sollis Quest fallback account</b> from the internal directory, not an unverified number.',
+  '<b>All required information must be obtained before approval.</b>'
+ ),'NY Lab/Rad Tech',2);
+ h+=fork('Is the lab draw approved?',[
+  ['Approved',bullet('Reassign the Navigator task to Front Desk for scheduling.')],
+  ['Not approved',bullet('Reassign the task to the Lab Supervisor with the reason for denial.')]
+ ]);
+ h+=section('Front Desk · Schedule');
+ h+=step('Schedule and inform the member',bullet(
+  'Schedule <b>Monday to Friday, 9:00 AM to 5:00 PM</b>; prefer a non-flagship clinic.',
+  'Verify required ordering-physician fax and lab account details before the appointment.',
+  'Tell the member that results go <b>directly to the ordering provider</b>; Sollis will not receive, send or interpret them.',
+  'Confirm appointment <b>date, time and clinic location</b>.'
+ ),'Front Desk Coordinator',3);
+ h+=section('Appointment · Athena documentation and specimen sendout');
+ h+=step('Document the encounter and collect',bullet(
+  'Open an Athena encounter for <b>every lab sendout</b>, including samples dropped off without an in-person visit.',
+  'The provider or RN adds <b>.outsidelabdraw</b> to the HPI; the in-clinic provider documents and closes the encounter.',
+  'Send tests using <b>only the outside ordering physician\'s Rx</b>. Do not create a Sollis laboratory requisition or enter those orders in Athena.',
+  'Collect and handle specimens per the current reference-lab requirements and include the insurance card or patient facesheet.'
+ ),'RN / Lab personnel · Provider',4);
+ h+=step('Verify requisition details before bagging',bullet(
+  'Confirm ordering physician name, address, fax, NPI and lab account number.',
+  'Confirm tests, diagnosis codes and insurance information are attached.',
+  'Submit to Quest or LabCorp using approved NY site handling and courier procedures.'
+ ),'Lab personnel / RN',5);
+ h+=note('Results and follow-up','Reconfirm with the member: <b>Sollis will not receive or discuss outside results.</b> The ordering physician receives results and handles questions and follow-up.',true);
+ return h+finish();
+}
 function walkin(){
  let h=header('External requisition · Walk-in','Same-visit procedure for a patient presenting with an outside laboratory requisition.','Walk-in external lab request','RN / Lab personnel · Provider');
  h+=note('Scheduling','Encourage patients to schedule external lab visits in advance. For a patient already in clinic, review and complete the orders and chart documentation before collection.');
@@ -127,7 +172,7 @@ function sollis(){
  h+=handoff(5);
  return h+finish();
 }
-function orders(tab){return tab==='walk-in'?walkin():tab==='in-house'?sollis():scheduled();}
+function orders(tab){return tab==='walk-in'?walkin():tab==='in-house'?sollis():(document.querySelector('[data-orders-region]')?.value==='ny'?nyScheduled():scheduled());}
 function nodeText(el){return el?.textContent?.replace(/\s+/g,' ').trim()||'';}
 function htmlText(el){
  if(!el)return '';
