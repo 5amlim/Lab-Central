@@ -274,7 +274,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="supply-vendor-reference.css?v=20261104" media="all">
 <script src="envi-ordering-guide.js?v=20261104"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261104" media="all">
-<script src="sop-print.js?v=20261104a"></script>
+<script src="sop-print.js?v=20261107-global-market"></script>
 <script src="ny-scheduled-workflow.js?v=20261106-market-layout"></script>
 <style id="lab-central-athena-icon-theme">
 /* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
@@ -443,12 +443,12 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sendout-visual.js?v=20261104"></script>
 <script src="quality-reference.js?v=20261104"></script>
 <script src="pt-testing-guide.js?v=20261105-guided-nav"></script>
-<script src="api-submission.js?v=20261104"></script>
-<script src="lab-calculators-guide.js?v=20261104"></script>
+<script src="api-submission.js?v=20261107-global-market"></script>
+<script src="lab-calculators-guide.js?v=20261107-global-market"></script>
 <script src="pathmd-reference.js?v=20261104"></script>
 <script src="operations-guides.js?v=20261104"></script>
-<script src="socal-daily-checklist.js?v=20261107-triage-qc-forms"></script>
-<script src="training-competency.js?v=20261104"></script>
+<script src="socal-daily-checklist.js?v=20261107-global-market"></script>
+<script src="training-competency.js?v=20261107-global-market"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
@@ -474,7 +474,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
-<script src="sendout-market-guide.js?v=20261104"></script>
+<script src="sendout-market-guide.js?v=20261107-global-market"></script>
 <script src="assay-catalog.js?v=20261104"></script>
 <script src="instrument-troubleshooting.js?v=20261104"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
@@ -824,6 +824,7 @@ function searchPanelMatches(query,sections=all){
  const matches=[];
  for(const section of sections){
   for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
+   if(/New York/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
    const content=[section.title,panel.title,panel.short,
@@ -964,7 +965,7 @@ const labPanelAthenaNames={
 };
 function searchPanelAthenaOrders(section,panel){
  const names=labPanelAthenaNames[section.id]?.[panel.title]||[];
- const verified=window.LAB_ORDER_SETS?.[section.id]||[];
+ const verified=orderSetsFor(section);
  return names.map(name=>verified.find(order=>order.name===name)).filter(Boolean);
 }
 
@@ -1023,7 +1024,7 @@ function searchSendoutPanelCard(item,query){
   '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'"'+(item.lab==="pathmd"&&item.id?' data-calc2-search-panel="'+safeHtml(item.id)+'"':'')+'>'+(item.lab==="pathmd"?'Open test details':'Open test menu')+' <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
 
-  '<details class="lab-panel-all-targets"><summary><span class="lab-panel-sendout-market lab-panel-sendout-footer-market" title="Available for Southern California and Northern California only">SOCAL + NORCAL ONLY</span><span class="lab-panel-target-summary-action">See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></span></summary>'+
+  '<details class="lab-panel-all-targets"><summary><span class="lab-panel-target-summary-action">See all '+item.targets.length+' pathogens / markers in this panel <span class="lab-shared-chevron" aria-hidden="true"></span></span></summary>'+
   '<div class="lab-panel-target-groups">'+groups+'</div></details></article>';
 }
 /* Group matching test panels by receiving lab instead of interleaving unlike results. */
@@ -1033,7 +1034,7 @@ function labSearchResultGroup(kind,title,description,cards,count){
  return '<section class="lab-search-source lab-search-source-'+kind+'" aria-label="'+safeHtml(title)+' matches">'+
   '<div class="lab-search-source-header"><div class="lab-search-source-heading">'+
    '<span class="lab-search-source-mark" aria-hidden="true">'+type+'</span>'+
-   '<div><div class="lab-search-source-title"><h3>'+safeHtml(title)+'</h3>'+(kind==='htrx'||kind==='pathmd'?'<span class="lab-panel-sendout-market lab-search-source-market" title="Southern California and Northern California only">SOCAL + NORCAL ONLY</span>':'')+'</div><p>'+safeHtml(description)+'</p></div></div>'+
+   '<div><div class="lab-search-source-title"><h3>'+safeHtml(title)+'</h3>'+''+'</div><p>'+safeHtml(description)+'</p></div></div>'+
    '<span class="lab-search-source-count">'+count+' panel'+(count===1?'':'s')+'</span></div>'+
   '<div class="lab-search-source-items">'+cards+'</div></section>';
 }
@@ -1783,7 +1784,7 @@ function renderCalculators(){
   ?'<li>Check <strong>STAT routing info</strong> and the selected clinic\'s available STAT menu.</li>'
   :'<li>Confirm urgent or STAT acceptance and courier cutoff with Cedars. Do not assume a routine test is available as STAT.</li>';
  el('currentCrumb').textContent='Lab calculators/guides';
- let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select your market and clinic to find receiving lab calculators, collection guides and molecular sendout references.');
+ let h=toolHeader('COLLECTION & SEND-OUT TOOLS','Lab calculators/guides','Select a clinic to find receiving lab calculators, collection guides and molecular sendout references for your chosen market.');
  h+=window.LAB_CALCULATORS_GUIDE?.selector()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.tabs()||'';
  if(calcLab==='htrx'||calcLab==='pathmd')h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
@@ -2199,7 +2200,21 @@ function renderOrders(tab='external'){
  h+=`<p class="source-footnote">Navigator tasks, clinical orders, documents and appointments must be completed in Athena.</p>`;
  el('mainContent').innerHTML=h;
 }
-function orderSetsFor(sec){const sets=window.LAB_ORDER_SETS?.[sec.id];return Array.isArray(sets)?sets.filter(x=>x&&x.name):[];}
+function orderSetsFor(sec){
+ const sets=window.LAB_ORDER_SETS?.[sec.id];
+ const market=window.LAB_MARKET?.get()||'socal';
+ return Array.isArray(sets)?sets.filter(x=>{
+  if(!x?.name)return false;
+  const note=String(x.note||'')+' '+x.name;
+  return !/\b(?:NY ONLY|New York only)\b/i.test(note)||market==='ny';
+ }):[];
+}
+function marketAllowsVendor(id){
+ const market=window.LAB_MARKET?.get()||'socal';
+ if(id==='cedars')return market==='socal';
+ if(market==='ny'&&['healthtrackrx','pathmd'].includes(id))return false;
+ return true;
+}
 function athenaOrderName(x){
  const emphasis=typeof x.emphasis==='string'&&x.name.startsWith(x.emphasis)?x.emphasis:'';
  return emphasis?'<strong>'+safeHtml(emphasis)+'</strong>'+safeHtml(x.name.slice(emphasis.length)):safeHtml(x.name);
@@ -2552,7 +2567,7 @@ function renderPocStaticReference(group){
 }
 function sectionRender(sec,tab){
  treeId=0;
- const groups=buildGroups(sec);
+ const groups=buildGroups(sec).filter(g=>sec.id!=='supplies'||marketAllowsVendor(g.id));
  const hasVideo=sec.id==='pathfast';const hasGallery=false;const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
  const tabs=sec.id==='sendout'?[
@@ -2656,7 +2671,7 @@ function sectionRender(sec,tab){
  else if(tab==='interpretation'&&sec.id==='drug-screen')h+=drugScreenInterpretation();
  else if(tab==='result-interpretation'&&sec.id==='febridx')h+=febridxResultInterpretation();
  else if(sec.id==='sendout'&&tab==='overview')h+=sendoutLogisticsOverview();
- else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a market and location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
+ else if(sec.id==='sendout'&&tab==='clinics')h+='<div class="sendout-logistics-clinic-intro"><h2>Receiving labs by clinic</h2><p>Choose a clinic location for pickup schedules, transport rules and receiving-lab instructions.</p></div>'+window.LAB_SENDOUT_MARKETS.render('guide');
  else if(sec.id==='sendout'&&tab==='collection')h+=tubeReferencePanel('general');
  else if(sec.id==='sendout'&&tab==='lockbox')h+=tubeReferencePanel('for-lockbox-pickups');
  else if(sec.id==='calver'&&['preparation','testing','filing'].includes(tab))h+=window.LAB_QUALITY_GUIDE.calverReference(groups.find(g=>g.id===tab));
