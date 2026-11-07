@@ -1,11 +1,24 @@
-/* Global market picker: matches Lab Central's blue-gray sidebar palette. */
-.lc-global-market{margin:0 15px 15px;padding:12px 12px 11px;background:linear-gradient(155deg,#f4f8fc,#f8fbfd);border:1px solid #e0eaf2;border-radius:13px}
-.lc-global-market-label{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:#638099;font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
-.lc-global-market-label svg{width:14px;height:14px;stroke:#5a839f}
-.lc-global-market-field{position:relative}
-.lc-global-market select{width:100%;min-height:40px;appearance:none;-webkit-appearance:none;border:1px solid #cfdfea;border-radius:9px;background:#fff;color:#24465e;font:700 12px Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:9px 34px 9px 12px;cursor:pointer;box-shadow:0 2px 5px rgba(33,67,96,.025)}
-.lc-global-market select:hover{border-color:#9dbdd3;background:#fdfefe}
-.lc-global-market select:focus-visible{outline:3px solid #b8dcdf;outline-offset:2px}
-.lc-global-market-caret{position:absolute;right:12px;top:50%;width:7px;height:7px;border-right:1.6px solid #668399;border-bottom:1.6px solid #668399;transform:translateY(-70%) rotate(45deg);pointer-events:none}
-.lc-global-market-hint{display:block;margin-top:7px;color:#8193a4;font-size:10px;line-height:1.35}
+/* In-portal market dropdown, not a native browser select. */
+.lc-global-market{margin:0 15px 15px;padding:12px 12px 11px;background:linear-gradient(154deg,#f3f8fc,#fafcfe);border:1px solid #dfeaf2;border-radius:13px;flex:none;transition:border-color .15s,box-shadow .15s}
+.lc-global-market.is-open{border-color:#bdd4e4;box-shadow:0 5px 16px rgba(35,77,111,.07)}
+.lc-global-market-label{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:#647f96;font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.lc-global-market-label svg{width:14px;height:14px;stroke:#638da6}
+.lc-global-market-trigger{width:100%;min-height:41px;display:flex;align-items:center;gap:9px;border:1px solid #d1e1eb;border-radius:10px;background:white;color:#254760;padding:8px 12px;text-align:left;box-shadow:0 2px 5px rgba(33,67,96,.025);font-size:12px;font-weight:750;transition:border-color .15s,background .15s}
+.lc-global-market-trigger:hover,.lc-global-market.is-open .lc-global-market-trigger{border-color:#95bbd2;background:#fcfeff}
+.lc-global-market-trigger:focus-visible,.lc-global-market-option:focus-visible{outline:2px solid #4c9eac;outline-offset:2px}
+.lc-global-market-icon{display:grid;place-items:center;flex:none;color:#57819d}
+.lc-global-market-icon svg{height:16px;width:16px;stroke:currentColor}
+.lc-global-market-title{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc-global-market-caret{height:8px;width:8px;margin-right:2px;border-right:1.6px solid #67869b;border-bottom:1.6px solid #67869b;transform:translateY(-2px) rotate(45deg);transition:transform .15s;flex:none}
+.lc-global-market.is-open .lc-global-market-caret{transform:translateY(2px) rotate(225deg)}
+.lc-global-market-options[hidden]{display:none}
+.lc-global-market-options{display:grid;gap:3px;margin-top:7px;padding:4px;border:1px solid #e1eaf2;border-radius:10px;background:#fff;box-shadow:0 5px 15px rgba(30,63,91,.05)}
+.lc-global-market-option{display:flex;align-items:center;gap:10px;min-height:35px;width:100%;border:0;border-radius:7px;background:transparent;color:#526c82;text-align:left;padding:8px 9px;font:650 11.5px Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.lc-global-market-option:hover{background:#f0f6fa;color:#2b597a}
+.lc-global-market-option.is-selected{background:#eaf3fa;color:#215b82;font-weight:800}
+.lc-global-market-option .lc-market-check{margin-left:auto;color:#26897f;opacity:0;font-size:13px}
+.lc-global-market-option.is-selected .lc-market-check{opacity:1}
+.lc-global-market-hint{display:block;margin-top:8px;color:#8194a4;font-size:10px;line-height:1.4}
+@media(max-width:860px){.lc-global-market{margin-bottom:12px}}
+@media(prefers-reduced-motion:reduce){.lc-global-market,.lc-global-market-trigger,.lc-global-market-caret{transition:none}}
 @media print{.lc-global-market{display:none!important}}
