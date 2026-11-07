@@ -70,9 +70,7 @@ const forms=[
  {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107-headerfix'},
   {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
  {id:'triage-daily',group:'daily',title:'Triage MeterPro Daily QC Log',originalPdf:'assets/lab-templates/Triage-MeterPro-Daily-QC-Log.pdf?v=20261107-daily-qc'},
- {id:'clinitek-ua',group:'daily',title:'Siemens Urinalysis QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and lot information.',fields:['Month / Year','Level 1 / Level 2 lots and expirations','Test strip lot and expiration'],headers:['Date / initials','Level 1 (low)','Level 2 (high)','Result','Comments / corrective action'],rows:22,numbered:false},
- {id:'clinitek-hcg',group:'daily',title:'Siemens hCG Pregnancy QC Log',note:'Daily in NorCal, New York and Florida; monthly and event-triggered in SoCal. Record both control levels and cassette lot.',fields:['Month / Year','Negative / Positive control lots and expirations','Cassette lot and expiration'],headers:['Date / initials','Level 1 (negative)','Level 2 (positive)','Result','Comments / corrective action'],rows:22,numbered:false},
- {id:'clinitek-combined',group:'monthly',title:'CLINITEK UA + hCG Control Log',originalPdf:'assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638'},
+ {id:'clinitek-combined',group:'both',title:'CLINITEK UA + hCG Control Log',originalPdf:'assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf?v=20261107-b75f5638'},
   {id:'clinitek-maint',group:'daily',title:'Siemens Urinalysis Maintenance Log',note:'Based on the uploaded Siemens maintenance record. Follow site-approved frequencies.',fields:['Month','Year','Instrument serial number'],headers:['Day','Initials','Clean platform','Wipe exterior (as needed)','Clean feed table (as needed)','Check calibration bar (as needed)'],rows:31,numbered:true},
  {id:'eyewash',group:'daily',title:'Eyewash Station Maintenance Log',note:'Uploaded log calls for a daily flow bump test and a weekly three-minute flush.',fields:['Month','Year','Location / station'],headers:['Day','Bump test','Three-minute flush','Initials','Corrective action'],rows:31,numbered:true},
  {id:'waived-qc',group:'monthly',title:'Waived Test Quality Control Log',note:'Event-triggered QC for active waived kits, including new lots/shipments and other approved triggers.',fields:['Date range','Year','Clinic'],headers:['Test name','Lot number','Open date','Expiration','Positive QC','Negative QC','Internal QC','Initials / action'],rows:15,numbered:false},
@@ -87,26 +85,25 @@ const forms=[
  {id:'fire-extinguisher',group:'monthly',title:'Fire Extinguisher Monthly Inspection Log',note:'OPTIONAL: Use only if no approved Facilities, tag or electronic inspection record exists. Verify each extinguisher individually. Record access/mounting, gauge if present (N/A otherwise), pin/seal, visible condition, date, initials and corrective actions. Escalate defects promptly. This monthly visual check is not the annual service.',fields:['Clinic / facility','Month / Year','Facilities contact / reviewer'],headers:['Extinguisher ID / location','Inspection date','Accessible / mounted','Pressure gauge (or N/A)','Pin / tamper seal','Condition / nozzle','Inspector initials','Defect / corrective action / follow-up'],rows:16,numbered:false}
 ];
 const GENERATED_PRINTABLE_PDFS = {
-  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107-headerfix",
-  "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107-headerfix",
-  "clinitek-ua": "assets/lab-templates/generated/Siemens-Urinalysis-QC-Log.pdf?v=20261107-headerfix",
-  "clinitek-hcg": "assets/lab-templates/generated/Siemens-hCG-Pregnancy-QC-Log.pdf?v=20261107-headerfix",
-  "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107-headerfix",
-  "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107-headerfix",
-  "waived-qc": "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107-headerfix",
-  "febridx-qc": "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf?v=20261107-headerfix",
-  "remedial": "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf?v=20261107-headerfix",
-  "sofia-cal": "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107-headerfix",
-  "sofia-qc": "assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107-headerfix",
-  "fire-extinguisher": "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf?v=20261107-headerfix"
+  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107-guidance-v2",
+  "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107-guidance-v2",
+  "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107-guidance-v2",
+  "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107-guidance-v2",
+  "waived-qc": "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf?v=20261107-guidance-v2",
+  "febridx-qc": "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf?v=20261107-guidance-v2",
+  "remedial": "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf?v=20261107-guidance-v2",
+  "sofia-cal": "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf?v=20261107-guidance-v2",
+  "sofia-qc": "assets/lab-templates/generated/Sofia-2-QC-Log.pdf?v=20261107-guidance-v2",
+  "fire-extinguisher": "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf?v=20261107-guidance-v2"
 };
 forms.forEach(function(form){if(GENERATED_PRINTABLE_PDFS[form.id])form.printPdf=GENERATED_PRINTABLE_PDFS[form.id]});
 const params=new URLSearchParams(location.search);
 const requested=params.get('template')==='sysmex-blank'?'sysmex-control':(params.get('template')||'');
+const activeTemplate=(requested==='clinitek-ua'||requested==='clinitek-hcg')?'clinitek-combined':requested;
 const market=params.get('market')||'';
 const clinic=params.get('clinic')||'';
 const currentGroup=params.get('view')==='monthly'?'monthly':'daily';
-let selected=forms.find(x=>x.id===requested)||forms.find(x=>x.group===currentGroup);
+let selected=forms.find(x=>x.id===activeTemplate)||forms.find(x=>x.group===currentGroup);
 function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&#39;'}[c]})}
 function byGroup(group){return forms.filter(x=>x.group===group||x.group==='both')}
 function choose(id){
