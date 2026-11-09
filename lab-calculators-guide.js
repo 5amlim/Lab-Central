@@ -268,14 +268,17 @@ function panel(calculators,logo){
  if(id==="pathmd")window.LAB_PATHMD_REFERENCE?.setLocation?.(m.id,c[0]);
  const pathmdContent=id==="pathmd"?window.LAB_PATHMD_REFERENCE?.render()||"":"";
  const htrxContent=id==="htrx"?htrxReference():"";
+ const cedarsContent=id==="cedars"&&m.id==="socal"?window.LAB_CEDARS_DIRECTORY?.render()||"":"";
  const pickup=(id==="pathmd"&&m.id==="socal")?
   '<section class="calc2-pickup-note" aria-label="PathMD pickup details"><span class="calc-guide-eyebrow">SOCAL LOCAL COURIER</span><strong>'+(c[0]==="sm"?"Santa Monica · Monday through Friday":"Local courier pickup · Daily")+'</strong>'+
   (c[0]==="sm"?'<p>11:00–11:30 PM · Place sealed, labeled specimens in the <strong>lockbox</strong> for pickup.</p>':'<p>Local courier pickup is arranged daily. Confirm the exact time and handoff location with the clinic.</p>')+'</section>':'';
 
  const action=molecular?
   '<button type="button" class="calc2-primary-action" data-calc2-open-menu="'+id+'">Open '+E(names[id])+' test menu <span aria-hidden="true">↓</span></button>':
+  id==="cedars"?'<button type="button" class="calc2-primary-action" data-calc2-open-menu="cedars">Search Cedars tests <span aria-hidden="true">↓</span></button>':
   calc?'<a class="calc2-primary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Open '+E(item.title)+' <span aria-hidden="true">↗</span></a>':'';
- const extra=calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Container guide <span aria-hidden="true">↗</span></a>':'';
+ const extra=(id==="cedars"&&calc?'<a class="calc2-secondary-action" target="_blank" rel="noopener noreferrer" href="'+E(calc.url)+'">Full Cedars lab guide <span aria-hidden="true">↗</span></a>':'')+
+  (calc?.extra?'<a class="calc2-secondary-action" href="'+E(calc.extra)+'" target="_blank" rel="noopener noreferrer">Container guide <span aria-hidden="true">↗</span></a>':'');
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
   '<span class="calc2-panel-icon">'+logo+'</span>';
  const cedarsPayerNote=id==="cedars"?
@@ -292,7 +295,7 @@ function panel(calculators,logo){
    '<div class="calc2-panel-hero">'+visual+'<div><span class="calc2-panel-tag">'+E(item.tag)+'</span><h3>'+E(item.title)+'</h3><p>'+E(item.desc)+'</p></div></div>'+
    '<div class="calc2-panel-actions">'+action+extra+'</div>'+
   '</div>'+
-  pickup+cedarsPayerNote+(pathmdContent||htrxContent||quickSteps)+
+  pickup+cedarsPayerNote+(pathmdContent||htrxContent||quickSteps)+cedarsContent+
   '<p class="calc2-panel-footnote">'+(molecular?
     'Before collection or dispatch, verify this clinic is activated and confirm approved panels, collection devices and transport arrangements.':
     'Always verify the current test directory, exact specimen requirements and local SOP before collection.')+'</p>'+
@@ -355,6 +358,7 @@ document.addEventListener('click',event=>{
  if(menuButton){
   if(menuButton.dataset.calc2OpenMenu==="pathmd")window.LAB_PATHMD_REFERENCE?.openMenu?.();
   else if(menuButton.dataset.calc2OpenMenu==="htrx")document.getElementById("calc2-htrx-menu")?.scrollIntoView({behavior:"smooth",block:"start"});
+   else if(menuButton.dataset.calc2OpenMenu==="cedars")window.LAB_CEDARS_DIRECTORY?.open?.();
   return;
  }
  const pick=event.target.closest('[data-calc2-pick-molecular]');
