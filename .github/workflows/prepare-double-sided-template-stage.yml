@@ -1,0 +1,74 @@
+name: Prepare double-sided lab log templates
+on:
+  push:
+    branches: [lab-central-double-sided-template-stage]
+    paths:
+      - .github/workflows/prepare-double-sided-template-stage.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install exact PDF processing version
+        run: python -m pip install --disable-pip-version-check 'pymupdf==1.26.7'
+      - name: Duplicate source pages without changing appearance
+        run: |
+          python - <<'PY'
+          import pathlib, hashlib, fitz
+          expected = {
+              "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf": "2c2fb18ba4504f2861e0fcf9f53d1f6b10cd6f7d",
+              "assets/lab-templates/generated/Daily-Temperature-Log.pdf": "b7d27be80c48fe9890b13ae02c3ed0f1e37d6616",
+              "assets/lab-templates/PATHFAST-Operational-and-Maintenance-Schedule.pdf": "676b60c210d29453ab928a0cbfabd3744d258be7",
+              "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf": "2f07139146214da4213ee3ea97529005febadda7",
+              "assets/lab-templates/pocH-100i-Maintenance-Log.pdf": "662c0ff5ae4302a7797cc28063741b46cf480f2b",
+              "assets/lab-templates/generated/FebriDx-Quality-Control-Log.pdf": "98951db16977b75b052c83f361657d8ab2c4833e",
+              "assets/lab-templates/generated/Sofia-2-Calibration-Check-Log.pdf": "c4457577b244f2d6f08fd136d5096f80ad2ff9d5",
+              "assets/lab-templates/generated/Sofia-2-QC-Log.pdf": "e8f820ba3a0f2ed42d85a7a295ecafeaea617830",
+              "assets/lab-templates/generated/Waived-Test-Quality-Control-Log.pdf": "a59ae847c4fb47041430d8a8f0a860dea0d121b6",
+              "assets/lab-templates/generated/Comprehensive-Remedial-Action-Log.pdf": "6289bd0639664cbecf11f2a535482269be16c4d2",
+              "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf": "91e47d08a6ba230fac10593d87212fa26c1f9b80",
+              "assets/lab-templates/generated/Fire-Extinguisher-Monthly-Inspection-Log.pdf": "8bca7e6edbcf2ad40a353748e1c9f70d94fd7062",
+          }
+          for file_name, expected_sha in expected.items():
+              path = pathlib.Path(file_name)
+              raw = path.read_bytes()
+              original = fitz.open(stream=raw, filetype='pdf')
+              assert len(original) == 1, (file_name, len(original))
+              doubled = fitz.open()
+              doubled.insert_pdf(original, from_page=0, to_page=0)
+              doubled.insert_pdf(original, from_page=0, to_page=0)
+              data = doubled.tobytes(garbage=0, deflate=False)
+              git_sha = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\\0' + data).hexdigest()
+              assert git_sha == expected_sha, (file_name, git_sha, expected_sha)
+              updated = fitz.open(stream=data, filetype='pdf')
+              assert len(updated) == 2
+              orig_pix = original[0].get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False)
+              for page in updated:
+                  pix = page.get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False)
+                  assert page.rect == original[0].rect
+                  assert (pix.width,pix.height,pix.samples)==(orig_pix.width,orig_pix.height,orig_pix.samples)
+              path.write_bytes(data)
+              print('Verified exact double-sided PDF',file_name,git_sha)
+              updated.close(); doubled.close(); original.close()
+          PY
+      - name: Commit PDFs only to staging branch
+        shell: bash
+        run: |
+          rm .github/workflows/prepare-double-sided-template-stage.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- assets/lab-templates/ .github/workflows/prepare-double-sided-template-stage.yml
+          git diff --cached --name-status
+          git diff --cached --quiet && exit 1
+          git commit -m "Prepare exact two-page copies of 12 single-page log templates"
+          git push origin HEAD:lab-central-double-sided-template-stage
