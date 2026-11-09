@@ -1,0 +1,77 @@
+/* Cedars menu: compact searchable directory, Southern California only. */
+.calc2-panel-cedars .cedars-menu{--cedars-ink:#8b3b4d;--cedars-light:#fbf2f4;--cedars-line:#ead7dc;margin:16px 0 4px;border:1px solid #e4e9ee;background:#fff;border-radius:13px;overflow:hidden;scroll-margin-top:88px}
+.cedars-menu-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:20px 20px 12px}
+.cedars-menu-head h4{font-size:17px;letter-spacing:-.03em;color:#304e62;margin:5px 0 4px}
+.cedars-menu-head p{font-size:11.5px;line-height:1.6;color:#72889a;margin:0;max-width:680px}
+.cedars-menu-head .calc-guide-eyebrow{color:var(--cedars-ink)}
+.cedars-menu-count{white-space:nowrap;border:1px solid var(--cedars-line);background:var(--cedars-light);color:var(--cedars-ink);padding:6px 10px;border-radius:30px;font-size:10px;font-weight:850}
+.cedars-menu-search{position:relative;margin:4px 20px 13px;display:flex;align-items:center}
+.cedars-menu-search svg{position:absolute;left:13px;color:#8da0ad;pointer-events:none}
+.cedars-menu-search input{width:100%;min-width:0;min-height:43px;padding:10px 14px 10px 40px;border:1px solid #dae4eb;border-radius:9px;background:#f9fbfc;font-size:12px;color:#304a5d;outline:0}
+.cedars-menu-search input:focus{background:#fff;border-color:#bb8d98;box-shadow:0 0 0 3px #faeef1}
+.cedars-menu-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 20px 16px;border-bottom:1px solid #e7edf0}
+.cedars-menu-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1px solid #dae5eb;color:#536c7e;background:#fff;font-size:11px;font-weight:750;line-height:1.2}
+.cedars-menu-chip span{font-size:9px;color:#8299a6;font-weight:850}
+.cedars-menu-chip:hover{background:#f5f8fa}
+.cedars-menu-chip.is-selected{color:var(--cedars-ink);background:var(--cedars-light);border-color:var(--cedars-line)}
+.cedars-menu-chip.is-selected span{color:#a65968}
+.cedars-menu-chip:focus-visible,.cedars-test-pagination button:focus-visible{outline:2px solid #ae6576;outline-offset:2px}
+.cedars-test-results{padding:12px 20px 5px}
+.cedars-test-results-heading{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:0 0 11px;color:#687f90;font-size:10.5px}
+.cedars-test-results-heading strong{font-size:11.5px;color:#36566a}
+.cedars-test-group-heading{margin:14px 0 7px;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#9d495b;font-weight:850}
+.cedars-test-group-heading:first-of-type{margin-top:3px}
+.cedars-test-row{border:1px solid #e2e9ed;border-radius:10px;background:#fff;overflow:hidden;margin:0 0 8px}
+.cedars-test-row[open]{border-color:#e2cbd1;box-shadow:0 3px 12px rgba(107,47,62,.035)}
+.cedars-test-row>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:58px;padding:12px 13px;list-style:none;cursor:pointer}
+.cedars-test-row>summary::-webkit-details-marker{display:none}
+.cedars-test-row>summary:hover{background:#fcf8f9}
+.cedars-test-row-main{display:flex;flex-direction:column;gap:5px;min-width:0}
+.cedars-test-row-main strong{font-size:12px;line-height:1.35;color:#315169;font-weight:790}
+.cedars-test-row-main small{font-size:10.5px;color:#7d909e;line-height:1.4}
+.cedars-test-row-meta{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:0 0 auto}
+.cedars-test-code{font-size:9.5px;font-weight:850;color:#8a4755;border-radius:5px;background:#f8edef;padding:5px 7px;white-space:nowrap}
+.cedars-test-tag{font-size:9px;font-weight:800;border-radius:5px;padding:5px 6px;white-space:nowrap}
+.cedars-test-tag.local{color:#647b88;background:#f1f5f7}
+.cedars-test-tag.stat{color:#96642a;background:#fff4df}
+.cedars-test-chevron{display:block;height:8px;width:8px;border-right:2px solid #8c9fa9;border-bottom:2px solid #8c9fa9;transform:rotate(45deg);margin:0 5px 4px 4px;transition:transform .15s}
+.cedars-test-row[open] .cedars-test-chevron{transform:rotate(225deg);margin-top:5px;margin-bottom:0}
+.cedars-test-detail{border-top:1px solid #eaeef1;padding:14px 15px 16px;background:#fdfefe}
+.cedars-test-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 19px;margin:0}
+.cedars-test-field{min-width:0}
+.cedars-test-field dt{font-size:9px;font-weight:850;color:#8494a1;text-transform:uppercase;letter-spacing:.06em;margin:0 0 4px}
+.cedars-test-field dd{margin:0;color:#34546b;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.cedars-test-notes{margin:13px 0 0;border-top:1px solid #e7edf0;padding-top:11px;color:#556f80;font-size:11px;line-height:1.65}
+.cedars-test-stat{margin:10px 0 0;padding:8px 11px;border-radius:8px;background:#fff7ea;border:1px solid #f1e2c9;color:#805f36;font-size:10.5px;line-height:1.5}
+.cedars-test-stat p{margin:3px 0}
+.cedars-test-source{font-size:10px;line-height:1.5;color:#82919d;margin:10px 0 0}
+.cedars-test-source-link{display:inline-flex;align-items:center;gap:7px;color:#8d4052!important;font-size:10.5px;font-weight:800;margin-top:12px}
+.cedars-test-source-link:hover{text-decoration:underline}
+.cedars-test-empty{border:1px dashed #dce5e9;border-radius:9px;background:#f9fbfc;text-align:center;padding:25px 16px;color:#698194;font-size:11px;line-height:1.6}
+.cedars-test-pagination{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0 10px}
+.cedars-test-pagination span{font-size:10px;color:#768b9b;font-weight:750}
+.cedars-test-pagination button{border:1px solid #dbe5ea;background:#fff;color:#4c6b7d;border-radius:8px;padding:9px 14px;font-size:10.5px;font-weight:800}
+.cedars-test-pagination button:not(:disabled):hover{border-color:#c49da8;background:#fbf3f5;color:#893d4d}
+.cedars-test-pagination button:disabled{opacity:.4;cursor:default}
+.cedars-test-disclaimer{font-size:10.5px;line-height:1.6;color:#798d9c;background:#fafbfd;border-top:1px solid #e7edf0;margin:7px 0 0;padding:12px 20px 14px}
+@media(max-width:680px){
+ .cedars-menu-head{padding:16px 14px 10px}
+ .cedars-menu-search{margin:4px 14px 12px}
+ .cedars-menu-chips{padding:0 14px 12px;gap:6px}
+ .cedars-menu-chip{padding:7px 8px}
+ .cedars-test-results{padding:11px 13px 5px}
+ .cedars-test-row>summary{align-items:flex-start;gap:8px}
+ .cedars-test-row-meta{flex-wrap:wrap;max-width:125px}
+ .cedars-test-fields{grid-template-columns:1fr}
+ .cedars-test-disclaimer{padding:12px 14px}
+}
+@media(max-width:420px){
+ .cedars-menu-head{align-items:flex-start;flex-direction:column;gap:8px}
+ .cedars-test-tag.local{display:none}
+ .cedars-test-row-meta{max-width:93px}
+}
+@media print{
+ .cedars-menu-search,.cedars-menu-chips,.cedars-test-pagination,.cedars-test-source-link{display:none!important}
+ .cedars-test-row{break-inside:avoid}
+ .cedars-test-row .cedars-test-detail{display:block!important}
+}
