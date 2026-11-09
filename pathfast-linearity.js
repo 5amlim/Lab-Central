@@ -1,0 +1,68 @@
+/* PATHFAST semiannual calibration verification reference; instructional content pending site SOP approval. */
+(function () {
+  'use strict';
+
+  function render() {
+    return [
+      '<section class="pfl-page" aria-label="PATHFAST six-month linearity and calibration verification">',
+        '<header class="pfl-hero">',
+          '<div class="pfl-hero-copy">',
+            '<span class="pfl-eyebrow">PATHFAST / QUALITY ASSURANCE</span>',
+            '<h2>6-Month Linearity <span>&amp; Calibration Verification</span></h2>',
+            '<p>Verify quantitative assay performance across the laboratory’s reportable range. This is a separate activity from the routine 28-day calibration and quality control workflow.</p>',
+            '<div class="pfl-hero-tags"><span>Every 6 months</span><span>Lab personnel</span><span>Director-approved procedure</span></div>',
+          '</div>',
+          '<div class="pfl-hero-mark" aria-hidden="true"><svg viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="65" cy="65" r="55" stroke="#c4dfdf" stroke-width="1.5"/><circle cx="65" cy="65" r="39" stroke="#bfdada" stroke-dasharray="3 5"/><path d="M28 85h76M28 85V32" stroke="#7b9faa" stroke-width="2" stroke-linecap="round"/><path d="M37 75 52 67 67 58 82 49 98 37" stroke="#238d89" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><g fill="#238d89"><circle cx="37" cy="75" r="5"/><circle cx="52" cy="67" r="5"/><circle cx="67" cy="58" r="5"/><circle cx="82" cy="49" r="5"/><circle cx="98" cy="37" r="5"/></g></svg></div>',
+        '</header>',
+        '<div class="pfl-metrics" aria-label="Verification at a glance">',
+          '<div><strong>6 months</strong><span>Minimum interval</span></div>',
+          '<div><strong>3 assays</strong><span>hs-Troponin I · NT-proBNP · D-dimer</span></div>',
+          '<div><strong>Low · Mid · High</strong><span>Minimum concentrations across the reportable range</span></div>',
+        '</div>',
+        '<section class="pfl-section" aria-labelledby="pfl-materials-title">',
+          '<div class="pfl-section-heading"><div><span class="pfl-kicker">01 / MATERIALS</span><h3 id="pfl-materials-title">Select the verification material</h3><p>Two PATHFAST-specific, five-level product options. Confirm suitability for the installed assay and approved measuring range before use.</p></div></div>',
+          '<div class="pfl-material-grid">',
+            '<article class="pfl-material">',
+              '<div class="pfl-material-head"><span class="pfl-kit-icon">01</span><span class="pfl-code">K982M-5</span></div>',
+              '<h4>Cardiac markers</h4>',
+              '<div class="pfl-chips"><span>hs-Troponin I</span><span>NT-proBNP</span></div>',
+              '<p>AUDIT MicroControls PATHFAST cardiac linearity material. Five freeze-dried serum levels, 1 mL per vial.</p>',
+              '<div class="pfl-kit-footer"><span>5 levels · A–E</span><a href="https://www.auditmicro.com/linearity-cardiac-markers-pathfast.html" target="_blank" rel="noopener noreferrer">Manufacturer details <span aria-hidden="true">↗</span></a></div>',
+            '</article>',
+            '<article class="pfl-material">',
+              '<div class="pfl-material-head"><span class="pfl-kit-icon">02</span><span class="pfl-code">K883M-5</span></div>',
+              '<h4>D-dimer</h4>',
+              '<div class="pfl-chips"><span>D-dimer</span></div>',
+              '<p>AUDIT MicroControls PATHFAST D-dimer linearity material. Five freeze-dried plasma levels, 1 mL per vial.</p>',
+              '<div class="pfl-kit-footer"><span>5 levels · A–E</span><a href="https://www.auditmicro.com/linearity-fd-d-dimer-pathfast-immunoanalyzer.html" target="_blank" rel="noopener noreferrer">Manufacturer details <span aria-hidden="true">↗</span></a></div>',
+            '</article>',
+          '</div>',
+          '<div class="pfl-review-note"><span class="pfl-review-icon" aria-hidden="true">i</span><p><strong>Before ordering or running:</strong> Check the current lot package insert, sample-matrix compatibility, PATHFAST hs-Troponin assay version and units, expected concentrations, low-end coverage, and approved acceptance limits. A five-level kit is not automatically proof that the entire laboratory reportable range has been verified.</p></div>',
+        '</section>',
+        '<section class="pfl-section" aria-labelledby="pfl-process-title">',
+          '<div class="pfl-section-heading"><div><span class="pfl-kicker">02 / WORKFLOW</span><h3 id="pfl-process-title">Verification procedure</h3><p>Use the current manufacturer instructions and the site’s signed calibration verification SOP for detailed analyzer operation, repetitions and acceptance criteria.</p></div></div>',
+          '<ol class="pfl-steps">',
+            '<li><span class="pfl-step-n">01</span><div><h4>Confirm readiness</h4><p>Verify instrument identification, satisfactory current calibration and QC, material lot and expiration, and the approved assay-specific reportable ranges. Prepare each level exactly as directed by its current package insert.</p></div></li>',
+            '<li><span class="pfl-step-n">02</span><div><h4>Run the verification levels</h4><p>Test the approved levels for hs-Troponin I, NT-proBNP and D-dimer using the laboratory’s validated PATHFAST workflow. Follow the established instructions for sample handling, replicates, entry and labeling. Do not route verification samples into patient results.</p></div></li>',
+            '<li><span class="pfl-step-n">03</span><div><h4>Assess each assay</h4><p>Compare observed values with the lot-specific expected values using the laboratory’s approved criteria. Confirm low-, mid- and high-range coverage, and retain the calculation or linearity graph and analyzer printouts.</p></div></li>',
+            '<li><span class="pfl-step-n">04</span><div><h4>Review and file</h4><p>Document findings and obtain the required reviewer sign-off. If a level fails or range coverage is incomplete, notify the lab supervisor or laboratory director, investigate and follow the corrective action SOP before relying on the verification.</p></div></li>',
+          '</ol>',
+        '</section>',
+        '<div class="pfl-bottom-grid">',
+          '<section class="pfl-panel" aria-labelledby="pfl-document-title">',
+            '<div class="pfl-panel-heading"><span class="pfl-kicker">03 / DOCUMENTATION</span><h3 id="pfl-document-title">What to keep on file</h3></div>',
+            '<ul class="pfl-checks"><li>Site, instrument serial number and verification date</li><li>Assay and reagent lots; material brand, catalog and lot</li><li>Level A–E expected and observed results, units, and accepted range</li><li>Linearity graph or worksheet and analyzer printouts</li><li>Pass/fail conclusion, corrective action and reviewer sign-off</li></ul>',
+          '</section>',
+          '<section class="pfl-panel pfl-panel-triggers" aria-labelledby="pfl-trigger-title">',
+            '<div class="pfl-panel-heading"><span class="pfl-kicker">04 / FREQUENCY</span><h3 id="pfl-trigger-title">When to repeat verification</h3></div>',
+            '<p class="pfl-trigger-main">At least every six months and whenever required by the approved SOP.</p>',
+            '<ul><li>Complete reagent change without sufficient evidence that the reporting range and QC are unaffected</li><li>Major preventive maintenance or replacement of critical parts affecting performance</li><li>Unresolved QC shift, trend or unacceptable results</li><li>Any more frequent schedule established by the laboratory</li></ul>',
+          '</section>',
+        '</div>',
+        '<footer class="pfl-resources"><div><span class="pfl-kicker">SOURCE &amp; POLICY</span><h3>Calibration verification requirements</h3><p>42 CFR §493.1255. This reference does not replace the analyzer IFU, material package insert or the laboratory director’s approved procedure.</p></div><a href="https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-G/part-493/subpart-K/section-493.1255" target="_blank" rel="noopener noreferrer">Review CLIA requirements <span aria-hidden="true">↗</span></a></footer>',
+      '</section>'
+    ].join('');
+  }
+
+  window.LAB_PATHFAST_LINEARITY = {render: render};
+})();
