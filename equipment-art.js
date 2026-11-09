@@ -429,12 +429,10 @@ function body(shape,a){
  '<rect x="267" y="198" width="28" height="15" rx="3" fill="#e9f7f7" stroke="#80b5c1"/>'+
  '<rect x="299" y="198" width="27" height="15" rx="3" fill="#e9f7f7" stroke="#80b5c1"/>'+
  '<path d="M267 223h51 M267 231h42" stroke="#8bb8c8" stroke-width="3"/>'+
- '<text x="297" y="252" text-anchor="middle" fill="#365d70" font-weight="850" font-size="8">TOUCHSCREEN</text>'+
  '<rect x="258" y="254" width="78" height="24" rx="4" fill="#f8faf9" stroke="#c0cdd1" stroke-width="2"/>'+
  '<rect x="268" y="258" width="54" height="12" rx="2" fill="#8b9da7"/>'+
  '<rect x="274" y="264" width="41" height="4" fill="#eef6f6"/>'+
  '<path d="M262 276v-12 M333 276v-12" stroke="#d0dcdf" stroke-width="2"/>'+
- '<text x="287" y="143" font-family="Arial" font-size="12" font-weight="900" fill="#50626a">COMPACT</text>'+
  '<circle cx="331" cy="145" r="4" fill="#318b76"/>'+
  '<path d="M375 76 Q379 54 405 53 L466 54 Q498 59 502 94 L502 239 Q498 261 475 265 L391 266 Q364 260 364 234 L363 108 Q363 85 375 76Z" fill="#4bacc3" stroke="#67b7cc" stroke-width="4"/>'+
  '<path d="M378 87 Q386 64 407 65 L466 66 Q485 70 490 95 L491 228 Q489 247 472 252 H389 Q377 250 375 227 L374 109Z" fill="url(#pf-cover-p)" stroke="#2e91ad" stroke-width="3"/>'+
