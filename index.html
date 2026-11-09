@@ -211,6 +211,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="pathfast-screen-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-ux.css?v=20261104-patient-parent" media="all">
   <link rel="stylesheet" href="pathfast-maintenance.css?v=20261107-qc-footer" media="all">
+  <link rel="stylesheet" href="pathfast-linearity.css?v=20261108" media="all">
   <link rel="stylesheet" href="pathfast-polish.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-clinical.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-interactive.css?v=20261104" media="all">
@@ -466,6 +467,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261107-unselected-footer"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
+<script src="pathfast-linearity.js?v=20261108"></script>
 <script src="pathfast-screen-guide.js?v=20261104"></script>
 <script src="pathfast-interactive.js?v=20261104"></script>
 <script src="pathfast-clinical.js?v=20261105-guided-nav"></script>
@@ -2601,7 +2603,7 @@ function sectionRender(sec,tab){
   {id:'collection',title:'Collection notes'},
   {id:'lockbox',title:'Quest lockbox'},
   {id:'resources',title:'Resources'}
- ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'},{id:'weekly-monthly-maint',title:'Weekly / monthly maintenance'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='piccolo'?[{id:'egfr-calculator',title:'eGFR calculator'}]:[]),...(hasOrderSets&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id)?[{id:'troubleshooting',title:'Troubleshooting'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
+ ]:[{id:'overview',title:'Overview'},...(sec.id==='drug-screen'?[{id:'interpretation',title:'How to interpret results'}]:[]),...(sec.id==='febridx'?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='pathfast'?[{id:'rn-collection',title:'RN collection & timing'}]:[]),...groups.map(g=>({id:g.id,title:sec.id==='tubes'?(g.id==='general'?'Collection notes':g.id==='for-lockbox-pickups'?'Lockbox pickups':g.title):instrumentCategories.includes(sec.category)?instrumentTabTitle(g.title):g.title,fullTitle:g.title})),...(sec.id==='pathfast'?[{id:'chest-pain',title:'Chest pain pathway'},{id:'weekly-monthly-maint',title:'Weekly / monthly maintenance'},{id:'six-month-linearity',title:'6-month linearity'}]:[]),...(['piccolo','sysmex','pathfast','clinitek'].includes(sec.id)?[{id:'result-interpretation',title:'Result interpretation'}]:[]),...(sec.id==='piccolo'?[{id:'egfr-calculator',title:'eGFR calculator'}]:[]),...(hasOrderSets&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id)?[{id:'troubleshooting',title:'Troubleshooting'}]:[]),...(hasOrderSets?[{id:'order-sets',title:'Order sets'}]:[]),...(hasVideo?[{id:'videos',title:'Training videos'}]:[]),...(hasGallery?[{id:'gallery',title:'Container gallery'}]:[]),...(hasResources?[{id:'resources',title:'Resources'}]:[])];
  // Patient testing is second for active instruments except PATHFAST, where RN collection comes first.
  // Device-specific tests (e.g. Clinitek UA/hCG) retain their other sub-tabs unchanged.
  if(instrumentCategories.includes(sec.category)&&!sec.archived&&sec.id!=='pathfast'){
@@ -2666,9 +2668,10 @@ function sectionRender(sec,tab){
    {id:'chest-pain',title:'Chest pain pathway',subtitle:'hs-Troponin I · approved pathways',index:'04'},
    {id:'cal-qc',title:'Calibration + QC',subtitle:'Every 28 days · run when required by IFU/SOP',index:'28D'},
    {id:'weekly-monthly-maint',title:'Weekly / Monthly Maintenance',subtitle:'Routine cleaning · original maintenance log',index:'W/M'},
+   {id:'six-month-linearity',title:'6-Month Linearity',subtitle:'Semiannual calibration verification',index:'6M'},
    {id:'pt-testing',title:'PT testing',subtitle:'Assigned API proficiency samples',index:'PT'}
   ];
-  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''} ${x.id==='cal-qc'?'maintenance':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
+  h+=`<nav class="pfux-primary-nav" aria-label="PATHFAST daily clinical workflow">${workflows.map(x=>`<button type="button" class="pfux-route ${tab===x.id?'active':''} ${x.id==='chest-pain'?'clinical':''} ${x.id==='cal-qc'?'maintenance':''} ${x.id==='six-month-linearity'?'linearity':''}" data-gotab="${tab===x.id?'overview':x.id}" aria-expanded="${tab===x.id}" ${tab===x.id?'aria-current="page"':''} aria-label="${tab===x.id?'Collapse':'Open'} ${x.title}"><span class="pfux-route-index">${x.index}</span><span class="pfux-route-body"><strong>${x.title}</strong><small>${x.subtitle}</small></span><span class="pfux-route-arrow" aria-hidden="true"></span></button>`).join('')}</nav>`;
   const supporting=tabs.filter(x=>x.id!=='overview'&&x.id!=='cal-qc'&&!workflows.some(y=>y.id===x.id));
   h+=`<div class="pfux-supporting" role="tablist" aria-label="PATHFAST reference pages">${supporting.map(x=>`<button type="button" class="pfux-support-link ${tab===x.id?'active':''}" role="tab" aria-selected="${tab===x.id}" data-gotab="${safeHtml(x.id)}">${safeHtml(x.title)}</button>`).join('')}</div>`;
  }else if(sec.id==='api'||sec.id==='calver'){
@@ -2716,6 +2719,7 @@ function sectionRender(sec,tab){
  else if(tab==='troubleshooting'&&window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))h+=window.LAB_TROUBLESHOOTING.render(sec.id);
  else if(tab==='order-sets')h+=orderSetsPanel(sec);
  else if(sec.id==='pathfast'&&tab==='weekly-monthly-maint')h+=window.LAB_PATHFAST_MAINT.render();
+ else if(sec.id==='pathfast'&&tab==='six-month-linearity')h+=window.LAB_PATHFAST_LINEARITY.render();
  else if(sec.id==='pathfast'&&tab==='cal-qc')h+='<div class="pfux-cal-nested" aria-label="PATHFAST Calibration and QC guide">'+window.LAB_PATHFAST_UI.render()+'</div>';
  else if(sec.id==='pathfast'&&tab==='rn-collection')h+=window.LAB_PATHFAST_CLINICAL.collection();
  else if(sec.id==='pathfast'&&tab==='chest-pain')h+=window.LAB_PATHFAST_CLINICAL.pathway();
