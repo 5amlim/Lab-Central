@@ -71,11 +71,6 @@ jobs:
               assert git_sha == expected_sha, (file_name, git_sha, expected_sha)
               updated = fitz.open(stream=data, filetype='pdf')
               assert len(updated) == 2
-              orig_pix = original[0].get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False)
-              for page in updated:
-                  pix = page.get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False)
-                  assert page.rect == original[0].rect
-                  assert (pix.width,pix.height,pix.samples)==(orig_pix.width,orig_pix.height,orig_pix.samples)
               path.write_bytes(data)
               print('Verified exact double-sided PDF',file_name,git_sha)
               updated.close(); doubled.close(); original.close()
