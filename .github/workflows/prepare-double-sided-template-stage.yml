@@ -48,7 +48,7 @@ jobs:
               doubled.insert_pdf(original, from_page=0, to_page=0)
               doubled.insert_pdf(original, from_page=0, to_page=0)
               data = doubled.tobytes(garbage=0, deflate=False)
-              git_sha = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\\0' + data).hexdigest()
+              git_sha = hashlib.sha1(b'blob ' + str(len(data)).encode() + bytes([0]) + data).hexdigest()
               assert git_sha == expected_sha, (file_name, git_sha, expected_sha)
               updated = fitz.open(stream=data, filetype='pdf')
               assert len(updated) == 2
