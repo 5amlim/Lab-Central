@@ -63,3 +63,10 @@
 @media(max-width:850px){.pfl-hero-mark{display:none}.pfl-bottom-grid{grid-template-columns:1fr}.pfl-metrics{grid-template-columns:1fr 1fr}.pfl-metrics>div:last-child{grid-column:1/-1;border-top:1px solid #e8eef1;border-left:0}}
 @media(max-width:640px){.pfl-hero{padding:21px 18px}.pfl-hero h2{font-size:23px}.pfl-material-grid,.pfl-metrics{grid-template-columns:1fr}.pfl-metrics>div+div,.pfl-metrics>div:last-child{grid-column:auto;border-left:0;border-top:1px solid #e8eef1}.pfl-metrics>div{padding:13px 17px}.pfl-material{padding:18px}.pfl-section-heading h3{font-size:19px}.pfl-steps{padding:0 15px}.pfl-steps li{gap:12px}.pfl-step-n{flex-basis:32px;height:32px}.pfl-panel{padding:17px}.pfl-resources{flex-direction:column;align-items:stretch;padding:18px}.pfl-resources a{width:100%}.pfl-kit-footer{flex-wrap:wrap}}
 @media print{.pfl-page{max-width:none}.pfl-material,.pfl-panel,.pfl-steps li,.pfl-resources{break-inside:avoid}.pfl-resources a{text-decoration:underline}}
+
+/* Place eight PATHFAST destinations in balanced rows on wide screens. */
+.pfux-primary-nav .pfux-route.linearity{border-top:3px solid #4794aa!important}
+.pfux-primary-nav .pfux-route.linearity .pfux-route-index{background:#e2f0f5;color:#266b84;font-size:12px}
+.pfux-primary-nav .pfux-route.linearity.active{border-color:#289e98;background:#eaf7f3;box-shadow:inset 0 0 0 1px #289e98}
+.pfux-primary-nav .pfux-route.linearity.active .pfux-route-index{background:#207d93;color:#fff}
+@media(min-width:1260px){.pfux-primary-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
