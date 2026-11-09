@@ -502,7 +502,7 @@ function render(sec,groups){
  const patient=patientGroup(sec,groups);
  const st=stateFor(sec.id,full.length);
  return '<section class="ptg-page"><header class="ptg-head"><div class="ptg-title"><span>API · PROFICIENCY TESTING</span>'+
-  '<h2>PT testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.</p></div>'+
+  '<h2>Proficiency testing</h2><p>Follow the routine patient method with the assigned PT sample and its exact event ID.</p></div>'+
   '<div class="ptg-heading-picker'+((materials[sec.id]||[{id:"EVENT"}]).length===1?' ptg-heading-static':'')+'" data-ptg-picker="'+e(sec.id)+'">'+materialPicker(sec.id,st)+'</div></header>'+
   '<div class="ptg-workflow" data-ptg-workflow="'+e(sec.id)+'">'+workflow(sec.id,full)+'</div>'+
   actions(patient)+
