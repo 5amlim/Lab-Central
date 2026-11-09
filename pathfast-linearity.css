@@ -70,3 +70,11 @@
 .pfux-primary-nav .pfux-route.linearity.active{border-color:#289e98;background:#eaf7f3;box-shadow:inset 0 0 0 1px #289e98}
 .pfux-primary-nav .pfux-route.linearity.active .pfux-route-index{background:#207d93;color:#fff}
 @media(min-width:1260px){.pfux-primary-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+
+/* Manufacturer product photos, sized to the PATHFAST kit cards. */
+.pfl-product-photo{margin:0 0 17px;border:1px solid #e3ecef;background:#f5f7f8;border-radius:12px;overflow:hidden;min-width:0}
+.pfl-product-photo img{display:block;width:100%;height:auto;aspect-ratio:2 / 1;object-fit:cover;object-position:center top;background:#f2f2f2}
+.pfl-product-photo figcaption{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;padding:9px 12px;background:#fbfcfd;border-top:1px solid #e7edf0;color:#6a8290;font-size:10px;line-height:1.5}
+.pfl-product-photo figcaption span:first-child{font-weight:800;color:#4e7082}
+.pfl-product-photo figcaption span:last-child{font-weight:650}
+@media(max-width:640px){.pfl-product-photo{margin-bottom:15px}.pfl-product-photo figcaption{padding:8px 10px}}
