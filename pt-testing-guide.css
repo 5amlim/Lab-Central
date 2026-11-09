@@ -496,3 +496,82 @@
 @media(max-width:650px){
  .ptg-focused-stage .ptg-transport button{flex:1 1 0;min-width:0}
 }
+
+/* API descriptions are secondary text, scoped only to proficiency testing buttons. */
+.tab-strip.instrument-matched-tabs .tab.lc-pt-tab{
+  flex-direction:column;
+  gap:4px;
+  min-width:200px;
+  flex-basis:200px;
+  padding:13px 14px;
+}
+.tab-strip.instrument-matched-tabs .tab.lc-pt-tab .lc-pt-tab-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  width:100%;
+}
+.tab-strip.instrument-matched-tabs .tab.lc-pt-tab strong{
+  display:block;
+  font-size:15px;
+  line-height:1.25;
+  font-weight:850;
+  color:inherit;
+}
+.tab-strip.instrument-matched-tabs .tab.lc-pt-tab small{
+  display:block;
+  color:#8093a0;
+  font-size:10.5px;
+  font-weight:550;
+  line-height:1.45;
+  letter-spacing:0;
+  white-space:normal;
+}
+.tab-strip.instrument-matched-tabs .tab.lc-pt-tab.active small{
+  color:#5e867f;
+}
+.ptg-patient-shortcut button.lc-pt-shortcut{
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-height:56px;
+  text-align:left;
+}
+.ptg-patient-shortcut button.lc-pt-shortcut .lc-pt-shortcut-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:3px;
+  min-width:0;
+  color:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+  letter-spacing:normal;
+}
+.ptg-patient-shortcut button.lc-pt-shortcut .lc-pt-shortcut-copy strong{
+  margin:0;
+  color:#187f73;
+  font-size:12px;
+  line-height:1.35;
+}
+.ptg-patient-shortcut button.lc-pt-shortcut .lc-pt-shortcut-copy small{
+  color:#758f96;
+  font-size:10px;
+  font-weight:550;
+  line-height:1.4;
+}
+.ptg-patient-shortcut button.lc-pt-shortcut .lc-pt-shortcut-arrow{
+  font-size:17px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:0;
+}
+@media(max-width:700px){
+  .tab-strip.instrument-matched-tabs .tab.lc-pt-tab{
+    min-width:185px;
+    flex-basis:185px;
+  }
+}
