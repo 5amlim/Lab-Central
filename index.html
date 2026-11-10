@@ -301,6 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261109-unified-search" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -313,7 +314,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
         </a>
         <button class="icon-button sidebar-close" id="closeSidebar" type="button" aria-label="Close navigation">✕</button>
       </div>
-      <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search tests, analytes, or order sets…" aria-label="Search instruments, analytes, pathogens, abbreviations, order sets, or workflows" autocomplete="off"></div>
+      <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search anything: templates, tools, tests…" aria-label="Search documents, templates, tools, pathways, instruments, tests and workflows" autocomplete="off"></div>
       <nav id="sidebarNav" class="sidebar-nav"></nav>
       <div class="sidebar-bottom">
       <div class="lc-global-market" aria-label="Lab Central market">
@@ -504,6 +505,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="collection-photo-preview.js?v=20261104"></script>
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
+<script src="lab-search.js?v=20261109-unified-search"></script>
 <script>
 (()=>{
 'use strict';
@@ -1116,6 +1118,17 @@ function card(s){
 function noticeText(){return `<div class="notice"><span class="notice-icon">!</span><div><strong>Reference guide, not a substitute for an approved procedure.</strong> Confirm the current approved SOP, manufacturer IFU, specimen requirements and site-specific procedures before testing or sending specimens.</div></div>`}
 function renderHome(mode='home'){
  const search=state.search.trim();
+ if(search&&window.LAB_SITE_SEARCH){
+  el('currentCrumb').textContent='Search';
+  el('mainContent').innerHTML=window.LAB_SITE_SEARCH.render({
+   query:search,filter:state.filter,sections:all,extras:extraHomeGuides,
+   groupsFor:buildGroups,market:window.LAB_MARKET?.get()||null,
+   panelResults:searchPanelMatches(search,all),
+   sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[],
+   searchPanelCard,searchSendoutPanelCard,labSearchResultGroup
+  });
+  return;
+ }
  const isFav=mode==='favorites';
  const directory=homeBrowseSections();
  const matches=(isFav?all.filter(s=>favs.includes(s.id)):directory);
