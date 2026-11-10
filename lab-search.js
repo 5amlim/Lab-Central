@@ -222,6 +222,27 @@ function itemCard(x){
  }
  return '<a class="gs-result" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer">'+label+'</a>';
 }
+function sendoutTestCard(x){
+ const lab=(x.lab==='quest'?'Quest':x.lab==='labcorp'?'Labcorp':'Cedars');
+ const name=x.testName||x.title.replace(/^[^·]+·\s*/,'');
+ const code=x.code||'';
+ const specimen=x.specimen||'';
+ const isCedars=x.lab==='cedars';
+ const linkLabel=isCedars?'Open Cedars test':'Open '+lab+' calculator';
+ const description=isCedars?'Review the full test-specific collection guide.':'Use test code '+code+' in the calculator to verify collection, processing and availability.';
+ return '<article class="lab-panel-search-result gs-orderable-test">'+
+ '<div class="lab-panel-search-top"><div><small>'+E(lab)+' <span class="lab-panel-sendout-kind">SENDOUT TEST</span></small>'+
+ '<h3>'+E(name)+'</h3>'+
+ (code?'<span class="lab-panel-abbrev">'+E(code)+'</span>':'')+
+ '</div><a class="lab-panel-open" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer">'+E(linkLabel)+' <span aria-hidden="true">→</span></a></div>'+
+ (specimen||x.container?'<div class="lab-panel-target-hits"><strong>Specimen / collection</strong>'+
+ (specimen?'<span class="lab-panel-target-match">'+E(specimen)+'</span>':'')+
+ (x.container?'<span class="lab-panel-target-match">'+E(x.container)+'</span>':'')+
+ '</div>':'')+
+ '<div class="gs-sendout-test-note">'+E(description)+
+ (x.transport?'<span class="gs-transport-label">'+E(x.transport)+' transport</span>':'')+
+ '</div></article>';
+}
 function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
  ensureExternalCatalog(q);
@@ -270,7 +291,12 @@ function render(arg){
   const tests=group.category==='Sendout testing'?group.rows.filter(x=>x.kind==='sendout-test'):[];
   const related=group.rows.filter(x=>x.kind!=='sendout-test');
   if(tests.length){
-   html+='<p class="gs-assay-caption">Matching sendout tests</p><div class="gs-results">'+tests.map(itemCard).join('')+'</div>';
+   const visibleLimit=Math.max(12,Number(arg.visibleLimit)||24);
+   const shown=tests.slice(0,visibleLimit);
+   html+='<p class="gs-assay-caption">Matching sendout tests · '+shown.length+' of '+tests.length+'</p>'+
+    '<div class="gs-sendout-test-grid">'+shown.map(sendoutTestCard).join('')+'</div>';
+   if(tests.length>visibleLimit)
+    html+='<button type="button" class="gs-show-more" data-search-more="sendout">Show more tests <span>'+Math.min(24,tests.length-visibleLimit)+' more</span></button>';
   }
   if(related.length){
    if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length)))
@@ -282,5 +308,5 @@ function render(arg){
  if(!visible.length)html+='<div class="empty-state gs-empty">No matches in '+E(filter==='All'?'Lab Central':filter)+'. Try a broader term such as “QC”, “troponin”, “eGFR”, “sendout”, or “template”.</div>';
  return html;
 }
-window.LAB_SITE_SEARCH={render,find,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length};
+window.LAB_SITE_SEARCH={render,find,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
 })();
