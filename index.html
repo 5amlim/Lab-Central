@@ -301,7 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261109-unified-search" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261110-sendout-cards" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -505,7 +505,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="collection-photo-preview.js?v=20261104"></script>
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
-<script src="lab-search.js?v=20261110-all-analytes-first"></script>
+<script src="lab-search.js?v=20261110-external-tests"></script>
 <script>
 (()=>{
 'use strict';
@@ -581,7 +581,7 @@ if(favs.includes('tubes')){
  favs=[...new Set(favs.map(id=>id==='tubes'?'sendout':id))];
  try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}
 }
-const state={search:'',filter:'All',tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:window.LAB_MARKET?.get()||'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
+const state={search:'',filter:'All',searchVisibleLimit:24,tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:window.LAB_MARKET?.get()||'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -1130,7 +1130,7 @@ function renderHome(mode='home'){
  if(search&&window.LAB_SITE_SEARCH){
   el('currentCrumb').textContent='Search';
   el('mainContent').innerHTML=window.LAB_SITE_SEARCH.render({
-   query:search,filter:state.filter,sections:all,extras:extraHomeGuides,
+   query:search,filter:state.filter,visibleLimit:state.searchVisibleLimit,sections:all,extras:extraHomeGuides,
    groupsFor:buildGroups,market:window.LAB_MARKET?.get()||null,
    panelResults:searchPanelMatches(search,all),
    sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[],
@@ -2955,6 +2955,11 @@ function updateGuidedProcedureInPlace(button){
   state.clinitekQc=cq.dataset.clinitekQc;render();return;
  }
  const tb=e.target.closest('[data-gotab]');if(tb&&state.section){navigate(state.section.id,tb.dataset.gotab);return}
+ const more=e.target.closest('[data-search-more]');if(more&&state.search){
+  state.searchVisibleLimit=(state.searchVisibleLimit||24)+24;
+  render();
+  return;
+ }
  const fit=e.target.closest('[data-filter]');if(fit){state.filter=fit.dataset.filter;render();return}
  const fav=e.target.closest('[data-favorite]');if(fav){const id=fav.dataset.favorite;favs=favs.includes(id)?favs.filter(x=>x!==id):[...favs,id];try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}render();return}
  const toggle=e.target.closest('[data-toggle]');if(toggle){const controlled=el(toggle.dataset.toggle);if(controlled){const expanded=toggle.getAttribute('aria-expanded')!=='false';toggle.setAttribute('aria-expanded',String(!expanded));controlled.hidden=expanded}return}
@@ -3012,7 +3017,7 @@ document.addEventListener('labcentral:marketchange',e=>{
  if(orderMarkets.some(m=>m.id===next))state.ordersRegion=next;
  render();
 });
-el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';render();});
+el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';state.searchVisibleLimit=24;render();});
 el('search').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';state.search='';render();e.target.blur()}});
 document.addEventListener('keydown',e=>{if((e.key==='/'||((e.ctrlKey||e.metaKey)&&e.key==='k'))&&!/input|textarea/i.test(e.target.tagName)){e.preventDefault();el('search').focus();el('search').select()}if(e.key==='Escape'){el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')}});
 el('homeCrumb').addEventListener('click',()=>navigate('home'));
@@ -3245,6 +3250,7 @@ el('calibrationVideoPlayer').addEventListener('close',()=>{el('calibrationVideoS
 el('closeVideoDialog').addEventListener('click',closeEditor);
 el('saveVideo').addEventListener('click',()=>saveEditor());
 el('clearVideo').addEventListener('click',()=>saveEditor(true));
+window.addEventListener('labcentral:searchindexready',()=>{if(state.search.trim())render();});
 window.addEventListener('hashchange',render);
 if(!location.hash)history.replaceState(null,'','#home');
 render();
