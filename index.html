@@ -301,7 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261110-vendor-groups" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261110-smart-verified" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -463,7 +463,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="api-submission.js?v=20261107-optional-v2"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
-  <script src="lab-calculators-guide.js?v=20261109-cedars-v1"></script>
+  <script src="lab-calculators-guide.js?v=20261110-smart-verified"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261104"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
@@ -505,8 +505,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="collection-photo-preview.js?v=20261104"></script>
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
-<script src="lab-smart-search.js?v=20261109-smart"></script>
-<script src="lab-search.js?v=20261110-vendor-groups"></script>
+<script src="lab-smart-search.js?v=20261110-smart-verified"></script>
+<script src="lab-search.js?v=20261110-smart-verified"></script>
 <script>
 (()=>{
 'use strict';
@@ -1004,7 +1004,7 @@ function searchPanelAthenaOrders(section,panel){
  return names.map(name=>verified.find(order=>order.name===name)).filter(Boolean);
 }
 
-function searchPanelCard({section,panel,targets,hits}){
+function searchPanelCard({section,panel,targets,hits,approximate=false}){
  const names=[...new Set(hits.map(t=>t.name))];
  const chips=names.slice(0,6).map(n=>'<span class="lab-panel-target-match">'+(window.LAB_ASSAY_CATALOG?.formatPanelTarget?.(section.id,panel,n)||safeHtml(n))+'</span>').join('');
  const more=names.length>6?'<span class="lab-panel-target-more">+'+(names.length-6)+' more</span>':'';
@@ -1031,7 +1031,7 @@ function searchPanelCard({section,panel,targets,hits}){
   '<div class="lab-panel-target-group"><strong>'+safeHtml(group)+'</strong><p>'+
   arr.map(n=>'<span>'+(window.LAB_ASSAY_CATALOG?.formatPanelTarget?.(section.id,panel,n)||safeHtml(n))+'</span>').join('')+'</p></div>').join('');
  return '<article class="lab-panel-search-result"><div class="lab-panel-search-top"><div>'+
-  '<small>'+safeHtml(section.title)+'</small><h3>'+safeHtml(panel.title)+'</h3>'+
+  '<small>'+safeHtml(section.title)+'</small><h3>'+safeHtml(panel.title)+'</h3>'+(approximate?'<span class="gs-approx-match">Possible spelling match</span>':'')+
   (panel.short?'<span class="lab-panel-abbrev">'+safeHtml(panel.short)+'</span>':'')+
   spotfireContext+
   '</div><button type="button" class="lab-panel-open" data-go="'+safeHtml(section.id)+'">Open guide <span aria-hidden="true">→</span></button></div>'+
@@ -1055,7 +1055,7 @@ function searchSendoutPanelCard(item,query){
   targets.map(target=>'<span>'+safeHtml(target)+'</span>').join('')+'</p></div>').join('');
  return '<article class="lab-panel-search-result lab-panel-sendout-result lab-panel-sendout-'+safeHtml(item.lab)+'">'+
   '<div class="lab-panel-search-top"><div><small>'+lab+' <span class="lab-panel-sendout-kind">MOLECULAR SENDOUT</span></small>'+
-  (pharyngitisException?'<div class="lab-panel-special-title"><h3>'+name+'</h3><span class="lab-panel-pharyngitis-tag" title="Exception: May be used for pharyngitis under the local approved workflow.">PHARYNGITIS OPTION</span></div>':'<h3>'+name+'</h3>')+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
+  (pharyngitisException?'<div class="lab-panel-special-title"><h3>'+name+'</h3><span class="lab-panel-pharyngitis-tag" title="Exception: May be used for pharyngitis under the local approved workflow.">PHARYNGITIS OPTION</span></div>':'<h3>'+name+'</h3>')+(item.approximate?'<span class="gs-approx-match">Possible spelling match</span>':'')+(item.code?'<span class="lab-panel-abbrev">'+safeHtml(item.code)+'</span>':'')+
   '</div><button type="button" class="lab-panel-open" data-calc2-search-lab="'+safeHtml(item.lab)+'" data-calc2-search-query="'+safeHtml(query)+'"'+(item.lab==="pathmd"&&item.id?' data-calc2-search-panel="'+safeHtml(item.id)+'"':'')+'>'+(item.lab==="pathmd"?'Open test details':'Open test menu')+' <span aria-hidden="true">→</span></button></div>'+
   (hits.length?'<div class="lab-panel-target-hits"><strong>Matching pathogens / markers</strong>'+chips+more+'</div>':'')+
 
