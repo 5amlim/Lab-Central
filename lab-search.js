@@ -319,7 +319,7 @@ function render(arg){
   const tests=group.category==='Sendout testing'?group.rows.filter(x=>x.kind==='sendout-test'):[];
   const related=group.rows.filter(x=>x.kind!=='sendout-test');
   if(group.category==='Sendout testing'&&(tests.length||sendouts.length)){
-   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p>'+renderSendoutSources(tests,sendouts,q,arg)+'</div>';
+   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources gs-sendout-sources">'+renderSendoutSources(tests,sendouts,q,arg)+'</div></div>';
   }
   if(related.length){
    if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length)))
