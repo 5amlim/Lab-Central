@@ -218,26 +218,63 @@ function itemCard(x){
  }
  return '<a class="gs-result" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer">'+label+'</a>';
 }
+// A single orderable sendout test uses the same panel card structure as
+// in-house assay/pathogen results. The source heading lives above the cards.
 function sendoutTestCard(x){
- const lab=(x.lab==='quest'?'Quest':x.lab==='labcorp'?'Labcorp':'Cedars');
+ const lab=x.lab==='quest'?'Quest':x.lab==='labcorp'?'Labcorp':'Cedars-Sinai';
  const name=x.testName||x.title.replace(/^[^·]+·\s*/,'');
  const code=x.code||'';
  const specimen=x.specimen||'';
  const isCedars=x.lab==='cedars';
  const linkLabel=isCedars?'Open Cedars test':'Open '+lab+' calculator';
- const description=isCedars?'Review the full test-specific collection guide.':'Use test code '+code+' in the calculator to verify collection, processing and availability.';
- return '<article class="lab-panel-search-result gs-orderable-test">'+
- '<div class="lab-panel-search-top"><div><small>'+E(lab)+' <span class="lab-panel-sendout-kind">SENDOUT TEST</span></small>'+
- '<h3>'+E(name)+'</h3>'+
- (code?'<span class="lab-panel-abbrev">'+E(code)+'</span>':'')+
- '</div><a class="lab-panel-open" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer">'+E(linkLabel)+' <span aria-hidden="true">→</span></a></div>'+
- (specimen||x.container?'<div class="lab-panel-target-hits"><strong>Specimen / collection</strong>'+
- (specimen?'<span class="lab-panel-target-match">'+E(specimen)+'</span>':'')+
- (x.container?'<span class="lab-panel-target-match">'+E(x.container)+'</span>':'')+
- '</div>':'')+
- '<div class="gs-sendout-test-note">'+E(description)+
- (x.transport?'<span class="gs-transport-label">'+E(x.transport)+' transport</span>':'')+
- '</div></article>';
+ const note=isCedars
+  ?'Verify the current collection and shipping instructions before sending.'
+  :'Find code '+code+' in the calculator to confirm specimen requirements.';
+ return '<article class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test">'+
+  '<div class="lab-panel-search-top"><div class="gs-test-title">'+
+   '<small>'+E(lab)+' <span class="lab-panel-sendout-kind">SENDOUT TEST</span></small>'+
+   '<h3>'+E(name)+'</h3>'+
+   (code?'<div class="gs-test-code"><span>Test code</span><strong>'+E(code)+'</strong></div>':'')+
+   '</div><a class="lab-panel-open" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer"'+
+    (code?' title="Look up test code '+E(code)+' in '+E(lab)+'"':'')+'>'+E(linkLabel)+' <span aria-hidden="true">→</span></a></div>'+
+  (specimen||x.container||x.transport?
+   '<div class="lab-panel-target-hits gs-test-specimens"><strong>Specimen / collection</strong>'+
+    (specimen?'<span class="lab-panel-target-match">'+E(specimen)+'</span>':'')+
+    (x.container?'<span class="lab-panel-target-match">'+E(x.container)+'</span>':'')+
+    (x.transport?'<span class="lab-panel-target-match">'+E(x.transport)+'</span>':'')+
+   '</div>':'')+
+  '<p class="gs-test-verification">'+E(note)+'</p></article>';
+}
+const SENDOUT_SOURCES=[
+ {id:'quest',name:'Quest',description:'Quest Diagnostics · Test codes and specimen references'},
+ {id:'labcorp',name:'Labcorp',description:'Labcorp · Test codes and specimen references'},
+ {id:'cedars',name:'Cedars-Sinai',description:'Cedars · Curated local sendout test menu'},
+ {id:'htrx',name:'HealthTrackRx',description:'Molecular sendout panels and pathogen targets'},
+ {id:'pathmd',name:'PathMD',description:'Molecular sendout panels and pathogen targets'}
+];
+function renderSendoutSources(tests,sendouts,q,arg){
+ const out=[];
+ for(const source of SENDOUT_SOURCES){
+  const labTests=tests.filter(test=>test.lab===source.id);
+  const molecular=sendouts.filter(panel=>panel.lab===source.id);
+  if(!labTests.length&&!molecular.length)continue;
+  const cards=[];
+  // Keep the matched molecular panels and their original interactive
+  // order information, then append the source's individual orderable tests.
+  if(molecular.length)cards.push(...molecular.map(panel=>arg.searchSendoutPanelCard(panel,q)));
+  const shownLimit=Math.max(6,Number(arg.visibleByLab?.[source.id])||6);
+  const shown=labTests.slice(0,shownLimit);
+  cards.push(...shown.map(sendoutTestCard));
+  if(labTests.length>shown.length){
+   const remaining=labTests.length-shown.length;
+   cards.push('<button type="button" class="gs-show-more" data-search-more="'+E(source.id)+'">'+
+    'Show more '+E(source.name)+' tests <span>'+Math.min(6,remaining)+' more of '+remaining+'</span></button>');
+  }
+  out.push(arg.labSearchResultGroup(
+   source.id,source.name,source.description,cards.join(''),labTests.length+molecular.length
+  ));
+ }
+ return out.join('');
 }
 function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
@@ -279,20 +316,10 @@ function render(arg){
   if(group.category==='In-house testing'&&panels.length){
    html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching in-house testing options</p><div class="lab-search-sources">'+arg.labSearchResultGroup('inhouse','In-house panels','Assay and pathogen matches',panels.map(arg.searchPanelCard).join(''),panels.length)+'</div></div>';
   }
-  if(group.category==='Sendout testing'&&sendouts.length){
-   const kinds=[['htrx','HealthTrackRx'],['pathmd','PathMD']];
-   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources">'+
-    kinds.map(kind=>{const subset=sendouts.filter(x=>x.lab===kind[0]);return arg.labSearchResultGroup(kind[0],kind[1],'Molecular sendout panel matches',subset.map(x=>arg.searchSendoutPanelCard(x,q)).join(''),subset.length)}).join('')+'</div></div>';
-  }
   const tests=group.category==='Sendout testing'?group.rows.filter(x=>x.kind==='sendout-test'):[];
   const related=group.rows.filter(x=>x.kind!=='sendout-test');
-  if(tests.length){
-   const visibleLimit=Math.max(12,Number(arg.visibleLimit)||24);
-   const shown=tests.slice(0,visibleLimit);
-   html+='<p class="gs-assay-caption">Matching sendout tests · '+shown.length+' of '+tests.length+'</p>'+
-    '<div class="gs-sendout-test-grid">'+shown.map(sendoutTestCard).join('')+'</div>';
-   if(tests.length>visibleLimit)
-    html+='<button type="button" class="gs-show-more" data-search-more="sendout">Show more tests <span>'+Math.min(24,tests.length-visibleLimit)+' more</span></button>';
+  if(group.category==='Sendout testing'&&(tests.length||sendouts.length)){
+   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p>'+renderSendoutSources(tests,sendouts,q,arg)+'</div>';
   }
   if(related.length){
    if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length)))
