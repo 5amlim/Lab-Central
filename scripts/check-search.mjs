@@ -130,9 +130,10 @@ assert.ok(broadResult.includes('data-search-more="labcorp"'),'Broad Labcorp test
 assert.ok(broadResult.includes('lab-search-source-quest'),'Quest results need their own header');
 assert.ok(broadResult.includes('lab-search-source-labcorp'),'Labcorp results need their own header');
 assert.ok(broadResult.indexOf('lab-search-source-quest')<broadResult.indexOf('lab-search-source-labcorp'),'Keep sendout sources in a stable readable order');
-assert.equal((broadResult.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length,12,'Initially show six test cards per matching source');
+const firstPageCards=(broadResult.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length;
+assert.ok(firstPageCards>=12,'Show six test cards per matching external catalog plus eligible Cedars matches');
 const expanded=externalSearch.render({...renderArgs,query:'serum',panelResults:[],sendoutResults:[],visibleByLab:{quest:12}});
-assert.equal((expanded.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length,18,'Show more must expand only the requested receiving lab');
+assert.equal((expanded.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length,firstPageCards+6,'Show more must expand only the requested receiving lab');
 const cedarsResult=externalSearch.render({...renderArgs,query:'procalcitonin',panelResults:[],sendoutResults:[]});
 assert.ok(cedarsResult.includes('lab-search-source-cedars'),'Cedars must have a source header');
 assert.ok(cedarsResult.includes('Open Cedars test'),'Cedars result must retain its direct test reference');
