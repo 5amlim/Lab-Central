@@ -1,0 +1,27 @@
+/* Unified search: uses Lab Central's restrained teal/navy reference styling. */
+.gs-search-summary{display:flex;align-items:baseline;flex-wrap:wrap;gap:9px 15px;margin:22px 0 14px;color:#657b8d;font-size:13px}
+.gs-search-summary strong{font-size:15px;color:#24485e}
+.gs-filters{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0 17px;margin-bottom:7px;border-bottom:1px solid #e2e9ee}
+.gs-filter{display:inline-flex;align-items:center;gap:8px;border:1px solid #d7e2e7;border-radius:10px;background:#fff;color:#4b6477;padding:9px 12px;font:inherit;font-size:12px;font-weight:720;cursor:pointer;transition:background .15s,border-color .15s}
+.gs-filter span{font-size:11px;font-weight:750;color:#6a8391;background:#eef3f6;padding:2px 6px;border-radius:6px}
+.gs-filter:hover{border-color:#8dbcb8;background:#f5faf9}
+.gs-filter.is-selected{border-color:#258b81;color:#176e69;background:#eaf7f4}
+.gs-filter.is-selected span{color:#166f68;background:#d7eee8}
+.gs-group{margin:23px 0 35px}
+.gs-group-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #e0e9ec;margin:0 0 13px;padding-bottom:11px}
+.gs-group-heading h2{font-size:17px;line-height:1.4;color:#24445b;margin:0;font-weight:770}
+.gs-group-heading>span{font-size:12px;font-weight:650;color:#748a97;white-space:nowrap}
+.gs-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.gs-result{appearance:none;text-align:left;display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:130px;border:1px solid #d8e4e9;border-radius:12px;background:#fff;color:#2b4c63;padding:15px 16px 13px;box-shadow:0 1px 5px rgba(29,66,84,.045);font:inherit;text-decoration:none;cursor:pointer;transition:border-color .16s,box-shadow .16s,transform .16s}
+.gs-result:hover{background:#fcfefd;border-color:#7ab7ae;box-shadow:0 5px 17px rgba(30,85,92,.09);transform:translateY(-1px)}
+.gs-result:focus-visible,.gs-filter:focus-visible{outline:3px solid #73beb6;outline-offset:2px}
+.gs-result-type{text-transform:uppercase;letter-spacing:.065em;font-size:10px;font-weight:800;color:#308780;margin-bottom:7px}
+.gs-result strong{font-size:14px;line-height:1.4;font-weight:780;overflow-wrap:anywhere;color:#24465b}
+.gs-result small{font-size:12px;line-height:1.48;color:#698091;font-weight:500;margin:5px 0 10px}
+.gs-result-open{font-size:11px;font-weight:770;color:#187e79;margin-top:auto}
+.gs-assay-results{margin-top:21px}
+.gs-assay-caption{font-size:12px;font-weight:750;color:#63798a;margin-bottom:9px}
+.gs-assay-results .lab-search-sources{margin:0}
+.gs-empty{margin-top:22px}
+@media(max-width:740px){.gs-results{grid-template-columns:1fr}.gs-result{min-height:108px}.gs-group{margin:19px 0 29px}.gs-filters{gap:7px}.gs-filter{padding:8px 10px}}
+@media print{.gs-filters{display:none}.gs-results{grid-template-columns:1fr 1fr}.gs-result{break-inside:avoid;box-shadow:none}}
