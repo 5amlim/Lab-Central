@@ -323,7 +323,7 @@ function render(arg){
  let html='<div class="eyebrow">LAB CENTRAL / UNIVERSAL SEARCH</div><h1 class="page-h1">Search Lab Central</h1>'+
  '<p class="lede">Results for “'+E(q)+'” across documents, tools, workflows, in-house testing and sendout references.</p>'+
  '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by test name, code, category, shorthand or keyword. Word order and small spelling mistakes are supported.</span></div>'+
- (records.some(x=>x.approximate)?'<p class="gs-index-status">Some results are approximate spelling matches. Confirm the exact test name and code before using a collection guide.</p>':'')+
+ ([].concat(records,panels,sendouts).some(x=>x.approximate)?'<p class="gs-index-status">Some results are approximate spelling matches. Confirm the exact test name and code before using a collection guide.</p>':'')+
  (pendingCatalog&&!externalCatalog?'<p class="gs-index-status" role="status">Loading Quest and Labcorp test indexes…</p>':'')+
  (catalogFailed?'<p class="gs-index-status">Some external test indexes could not be loaded. Open the calculators for full searches.</p>':'')+
  '<div class="gs-filters" role="group" aria-label="Filter search results by category">'+
