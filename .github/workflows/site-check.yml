@@ -17,6 +17,8 @@ jobs:
         run: node scripts/check-site.mjs
       - name: Check local PDFs and linked source files
         run: node scripts/check-local-reference-links.mjs
+      - name: Check global search coverage
+        run: node scripts/check-search.mjs
       - name: Check JavaScript syntax
         shell: bash
         run: |
