@@ -230,7 +230,7 @@ function find(q,ctx){
   .sort((a,b)=>b.score-a.score||a.i-b.i);
  // Fuzzy fallback only when exact/prefix results are scarce. Never approximate
  // codes, 1-4-letter analyte acronyms or numeric-containing clinical tokens.
- if(!smart||exact.length>=5||!smartQuery.some(t=>t.length>=5&&!/\d/.test(t)))return exact.map(x=>x.item);
+ if(!smart||exact.length||!smartQuery.some(t=>t.length>=5&&!/\d/.test(t)))return exact.map(x=>x.item);
  const already=new Set(exact.map(x=>x.item));
  const near=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,true),i}))
   .filter(x=>x.score>=0&&!already.has(x.item))
