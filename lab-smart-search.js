@@ -113,7 +113,7 @@ function score(index,terms,{fuzzy=false}={}){
   scoreValue+=closest===1?4:1;
   usedFuzzy=true;
  }
- return usedFuzzy?scoreValue-100:scoreValue;
+ return usedFuzzy?Math.max(1,scoreValue-100):scoreValue;
 }
 function matches(text,query,{fuzzy=false}={}){
  return score(create(text),queryWords(query),{fuzzy})>= (fuzzy?-100:0);
