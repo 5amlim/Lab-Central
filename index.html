@@ -853,9 +853,18 @@ function searchPanelMatches(query,sections=all){
     ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name,section.id))].join(' ');
    if(!labWordMatch(content,terms))continue;
    const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name,section.id),[term])));
-   matches.push({section,panel,targets,hits});
+   // Display focused tests before broad panels that happen to contain the analyte.
+   // Keep every matching test and panel available for staff to compare.
+   const q=normalizeLabQuery(query);
+   const exactPanel=[panel.title,panel.short].some(label=>label&&normalizeLabQuery(label)===q);
+   const nameMatch=labWordMatch([panel.title,panel.short,labPanelSearchAliases[section.id]?.[panel.title]||''].join(' '),terms);
+   const exactAnalyte=targets.some(target=>normalizeLabQuery(target.name)===q);
+   const score=(exactPanel?350:nameMatch?160:0)+(exactAnalyte?120:0)+
+    (hits.length?60:0)+Math.max(0,30-targets.length)-(section.archived?500:0);
+   matches.push({section,panel,targets,hits,score});
   }
  }
+ matches.sort((a,b)=>b.score-a.score);
  return matches;
 }
 
