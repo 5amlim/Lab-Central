@@ -239,7 +239,7 @@ function find(q,ctx){
 }
 function itemCard(x){
  const route=x.href.charAt(0)==='#';
- const label='<span class="gs-result-type">'+E(x.category)+(x.archived?' · Archived':'')+'</span><strong>'+E(x.title)+'</strong>'+(x.approximate?'<span class="gs-approx-match">Possible spelling match</span>':'');<small>'+E(x.description||'Open reference')+'</small><span class="gs-result-open">'+(route?'Open section':'Open document')+' <span aria-hidden="true">→</span></span>';
+ const label='<span class="gs-result-type">'+E(x.category)+(x.archived?' · Archived':'')+'</span><strong>'+E(x.title)+'</strong>'+(x.approximate?'<span class="gs-approx-match">Possible spelling match</span>':'')+'<small>'+E(x.description||'Open reference')+'</small><span class="gs-result-open">'+(route?'Open section':'Open document')+' <span aria-hidden="true">→</span></span>';
  if(route){
   const bits=x.href.slice(1).split('/');
   return '<button type="button" class="gs-result" data-go="'+E(bits[0])+'"'+(bits.length>1?' data-target-tab="'+E(bits.slice(1).join('/'))+'"':'')+'>'+label+'</button>';
