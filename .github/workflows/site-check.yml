@@ -19,6 +19,8 @@ jobs:
         run: node scripts/check-local-reference-links.mjs
       - name: Check global search coverage
         run: node scripts/check-search.mjs
+      - name: Check troubleshooting support contacts
+        run: node scripts/check-troubleshooting-support.mjs
       - name: Check JavaScript syntax
         shell: bash
         run: |
