@@ -10,8 +10,8 @@ function norm(s){
  .replace(/\b(?:zero\s*[/\-]\s*)?two[\s-]*hour\b/g,'2h')
  .replace(/\b0\s*[/\-]\s*1\s*(?:hour|hr|h)\b/g,'1h')
  .replace(/\b0\s*[/\-]\s*2\s*(?:hour|hr|h)\b/g,'2h')
- .replace(/\b1\s*(?:hour|hr|h)\b/g,'1h')
- .replace(/\b2\s*(?:hour|hr|h)\b/g,'2h')
+ .replace(/\b1[\s-]*(?:hours?|hrs?|h)\b/g,'1h')
+ .replace(/\b2[\s-]*(?:hours?|hrs?|h)\b/g,'2h')
  .replace(/\b60\s*(?:minutes?|mins?)\b/g,'1h')
  .replace(/\b120\s*(?:minutes?|mins?)\b/g,'2h')
  .replace(/\bhs[\s-]*tni\b/g,'hstni')
@@ -21,8 +21,7 @@ function norm(s){
 const items=[
  // Workflow destinations which do not appear as individual instrument guides.
  ['Tools','eGFR calculator','2021 CKD-EPI creatinine-based estimated GFR, race-free; G1 through G5','egfr gfr renal kidney function ckd epi creatinine estimate glomerular filtration calculator','\x23piccolo/egfr-calculator'],
- ['Tools','Troponin pathway','PATHFAST high-sensitivity troponin I serial assessment and chest pain pathway','troponin hstni hs tni hs ctni chest pain acs heart score 0/1h 0/2h 1h 2h 1 hour 2 hour one hour two hour 60 minute 120 minute serial testing delta pathway repeat','\x23pathfast/chest-pain'],
- ['Tools','PATHFAST 1h / 2h serial pathway','Open the troponin pathway and timing decision reference','0/1h 0/2h 1h 2h one hour two hour 60 min 120 min serial troponin repeat delta missed window timing','\x23pathfast/chest-pain'],
+ ['Tools','Troponin pathway (0/1h and 0/2h)','PATHFAST high-sensitivity troponin I: routine 1-hour and provider-authorized 2-hour fallback chest pain pathways','troponin trop hstni hs tni hs ctni chest pain acs heart score 0/1h 0/2h 1h 2h 1 hour 2 hour one hour two hour 60 minute 120 minute serial testing delta pathway repeat','\x23pathfast/chest-pain'],
  ['Tools','Lab calculators and collection guides','Quest, Labcorp, Cedars, HealthTrackRx and PathMD collection references','calculator tube volume order of draw specimen collection sendout search test code','\x23calculators'],
  ['Tools','Quest specimen calculator','Quest test codes, tube volumes and specimen processing','quest calculator tubes lab calculator quest diagnostics','https://5amlim.github.io/Lab-Calculator/'],
  ['Tools','Labcorp specimen calculator','Labcorp test codes, tube volumes and specimen processing','labcorp calculator specimen tubes','https://5amlim.github.io/Lab-Calculator/labcorp.html'],
@@ -106,10 +105,16 @@ function baseIndex(ctx){
  templates.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Printable laboratory template · QC, maintenance or tracking record',keywords:'pdf document form template log '+x[2],href:'lab-templates.html?template='+encodeURIComponent(x[0])}));
  checklists.forEach(x=>add(out,{category:'Documents',title:x[1],description:'PDF training and competency record',keywords:'pdf training competency document '+x[2],href:'assets/training-checklists/'+x[0]}));
  referenceDocs.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Reference PDF',keywords:'pdf document reference '+x[2],href:'assets/reference-pdfs/'+x[0],markets:/^pathmd|^healthtrackrx/.test(x[0])?['socal','norcal']:null}));
+ (window.CEDARS_TESTS||[]).filter(t=>t&&t.id&&!t.hold).forEach(t=>add(out,{
+  category:'Sendout testing',title:'Cedars · '+t.name,
+  description:'Cedars test reference'+(t.code?' · '+t.code:'')+(t.specimen?' · '+t.specimen:''),
+  keywords:[t.name,t.code,t.category,t.aliases,t.specimen,t.collect,t.submit,t.containerType,t.notes,t.temp].filter(Boolean).join(' '),
+  href:'https://5amlim.github.io/Lab-Calculator/cedars.html?test='+encodeURIComponent(t.id),markets:['socal']
+ }));
  (ctx.sections||[]).concat(ctx.extras||[]).forEach(sec=>{
   const category=categoryFor(sec);
   const archived=Boolean(sec.archived||sec.category==='Archived');
-  add(out,{category,title:sec.title,description:(sec.subtitle||'Open reference guide')+(archived?' · Archived reference':''),keywords:[sec.category,sec.sourceTitle,sec.sample,sec.qc,sec.title,sec.subtitle,archived?'historical archive':''].filter(Boolean).join(' '),href:'#'+sec.id,archived});
+  add(out,{category,title:sec.title,description:(sec.subtitle||'Open reference guide')+(archived?' · Archived reference':''),keywords:[sec.category,sec.sourceTitle,sec.sample,sec.qc,sec.title,sec.subtitle,(sec.blocks||[]).map(b=>b.text||'').join(' '),archived?'historical archive':''].filter(Boolean).join(' '),href:'#'+sec.id,archived});
   if(!(ctx.sections||[]).includes(sec))return;
   let groups=[];
   try{groups=ctx.groupsFor(sec)||[]}catch(_){}
@@ -119,7 +124,7 @@ function baseIndex(ctx){
    add(out,{category,title:sec.title+' · '+(g.title||g.id),description:'Open '+(g.title||g.id)+' section',keywords:sec.title+' '+sec.subtitle+' '+g.id+' '+text,href:'#'+sec.id+'/'+g.id,archived});
   });
   if(category==='In-house testing'&&!archived){
-   add(out,{category,title:sec.title+' · Proficiency testing',description:'American Proficiency Institute (API) sample procedures',keywords:sec.title+' pt api proficiency test quality',href:'#'+sec.id+'/pt-testing'});
+   if(window.LAB_PT_TESTING?.supports?.(sec))add(out,{category,title:sec.title+' · Proficiency testing',description:'American Proficiency Institute (API) sample procedures',keywords:sec.title+' pt api proficiency test quality',href:'#'+sec.id+'/pt-testing'});
    add(out,{category,title:sec.title+' · Athena orders',description:'In-house test names and order sets',keywords:sec.title+' athena orders laboratory test code',href:'#'+sec.id+'/order-sets'});
   }
  });
@@ -148,7 +153,7 @@ function relevance(item,q,terms){
  return score;
 }
 function find(q,ctx){
- const term=norm(q),words=term.split(' ').filter(Boolean);
+ const term=norm(q),words=term.split(' ').filter(x=>x&&!['and','or','the','for','of','to','with','in','at','a','an'].includes(x));
  if(!words.length)return [];
  const market=ctx.market||null;
  return baseIndex(ctx).filter(x=>!x.markets||!market||x.markets.includes(market))
