@@ -63,7 +63,7 @@ for(const term of ['procalcitonin','PCT']){
  const testHtml=search.render({...renderArgs,query:term,panelResults:[],sendoutResults:[]});
  assert.ok(testHtml.indexOf('aria-label="Sendout testing search results"')>=0,term+' sendout test is missing');
  assert.ok(testHtml.indexOf('Matching sendout tests')>=0,term+' is not presented as a test option');
- assert.ok(testHtml.indexOf('Matching sendout tests')<testHtml.indexOf('Cedars · Procalcitonin'),term+' testing option was not prioritized');
+ assert.ok(testHtml.indexOf('Matching sendout tests')<testHtml.indexOf('<h3>Procalcitonin, serum or plasma (PCT)</h3>'),term+' testing option was not prioritized');
  assert.ok(testHtml.indexOf('aria-label="Sendout testing search results"')<testHtml.indexOf('aria-label="Documents search results"')||!testHtml.includes('aria-label="Documents search results"'),term+' did not put testing first');
 }
 assert.ok(index.includes('matches.sort((a,b)=>b.score-a.score)'), 'In-house test panels are not ranked by test/analyte specificity');
