@@ -41,6 +41,23 @@ expectResult('training checklist','assets/training-checklists/');
 expectResult('Quest lockbox','#sendout/lockbox');
 assert.ok(!search.find('procalcitonin',{...ctx,market:'ny'}).some(x=>x.title.startsWith('Cedars')),'Cedars test leaked into NY market results');
 
+// Test-name searches should lead with actual assays rather than generic guides.
+const samplePanels=[{id:'flu-test'}];
+const renderArgs={
+ ...ctx,query:'flu',filter:'All',
+ sections:[...ctx.sections,{id:'sofia',title:'Sofia 2',subtitle:'Flu and COVID testing',category:'Point of care',blocks:[]}],
+ panelResults:samplePanels,sendoutResults:[],
+ labSearchResultGroup:(kind,title,description,cards)=>'<div class="mock-panel-group">'+cards+'</div>',
+ searchPanelCard:()=>'<div class="mock-flu-panel">Flu testing option</div>',
+ searchSendoutPanelCard:()=>''
+};
+const fluHtml=search.render(renderArgs);
+assert.ok(fluHtml.indexOf('aria-label="In-house testing search results"')>=0,'Missing in-house testing group');
+assert.ok(fluHtml.indexOf('mock-flu-panel')<fluHtml.indexOf('class="gs-results"'),'Testing panels must precede related instrument guides');
+assert.ok(fluHtml.indexOf('gs-group-heading')<fluHtml.indexOf('mock-flu-panel'),'Testing group heading missing');
+const resourceHtml=search.render({...renderArgs,query:'qc log'});
+assert.ok(resourceHtml.indexOf('aria-label="Documents search results"')<resourceHtml.indexOf('aria-label="In-house testing search results"'),'Document-focused searches must keep documents first');
+
 const formsPart=templatePage.split('const forms=[')[1]?.split('\n];')[0]||'';
 const formIds=Array.from(formsPart.matchAll(/\{id:'([^']+)'/g),x=>x[1]);
 assert.ok(formIds.length>=18,'Unable to audit template list');
