@@ -843,7 +843,8 @@ function labWordMatch(text,terms){
 function searchPanelMatches(query,sections=all){
  const terms=normalizeLabQuery(query).split(/\s+/).filter(Boolean);
  if(!terms.length)return [];
- const matches=[];
+ const smart=window.LAB_SMART_SEARCH;
+ const strict=[],near=[];
  for(const section of sections){
   for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
    if(window.LAB_MARKET?.get()&&/(?:\bNY\b|New York)/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
@@ -852,21 +853,24 @@ function searchPanelMatches(query,sections=all){
    const content=[section.title,panel.title,panel.short,
     labPanelSearchAliases[section.id]?.[panel.title]||'',
     ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name,section.id))].join(' ');
-   if(!labWordMatch(content,terms))continue;
-   const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name,section.id),[term])));
-   // Display focused tests before broad panels that happen to contain the analyte.
-   // Keep every matching test and panel available for staff to compare.
+   const direct=labWordMatch(content,terms)||Boolean(smart?.matches(content,query));
+   const approximate=!direct&&Boolean(smart?.matches(content,query,{fuzzy:true}));
+   if(!direct&&!approximate)continue;
+   const hits=targets.filter(t=>terms.some(term=>labWordMatch(labTargetText(t.name,section.id),[term])||
+    Boolean(smart?.matches(labTargetText(t.name,section.id),term,{fuzzy:approximate}))));
    const q=normalizeLabQuery(query);
    const exactPanel=[panel.title,panel.short].some(label=>label&&normalizeLabQuery(label)===q);
-   const nameMatch=labWordMatch([panel.title,panel.short,labPanelSearchAliases[section.id]?.[panel.title]||''].join(' '),terms);
+   const nameMatch=labWordMatch([panel.title,panel.short,labPanelSearchAliases[section.id]?.[panel.title]||''].join(' '),terms)||
+    Boolean(smart?.matches([panel.title,panel.short].join(' '),query));
    const exactAnalyte=targets.some(target=>normalizeLabQuery(target.name)===q);
    const score=(exactPanel?350:nameMatch?160:0)+(exactAnalyte?120:0)+
-    (hits.length?60:0)+Math.max(0,30-targets.length)-(section.archived?500:0);
-   matches.push({section,panel,targets,hits,score});
+    (hits.length?60:0)+Math.max(0,30-targets.length)-(section.archived?500:0)-(approximate?100:0);
+   (approximate?near:strict).push({section,panel,targets,hits,score,approximate});
   }
  }
- matches.sort((a,b)=>b.score-a.score);
- return matches;
+ strict.sort((a,b)=>b.score-a.score);
+ near.sort((a,b)=>b.score-a.score);
+ return strict.length>=5?strict:strict.concat(near.slice(0,12));
 }
 
 /* Match panel-level target results to exact, supplied Athena order names.
