@@ -4,12 +4,12 @@
 'use strict';
 const STOP=new Set(['the','and','or','a','an','of','to','for','with','me','please','find','show']);
 const PHRASES=[
- ['cbc',['complete blood count','full blood count','blood cell count']],
+ ['cbc',['complete blood count','full blood count']],
  ['cmp',['comprehensive metabolic panel','comprehensive chemistry panel']],
  ['bmp',['basic metabolic panel','basic chemistry panel']],
  ['tsh',['thyroid stimulating hormone','thyrotropin']],
  ['hcg',['human chorionic gonadotropin','pregnancy hormone','beta hcg']],
- ['qc',['quality control','quality controls','quality check']],
+ ['qc',['quality control','quality controls','quality check','q c']],
  ['egfr',['estimated glomerular filtration rate','estimated gfr']],
  ['sendout',['send out','send outs','sendouts','reference laboratory testing']],
  ['inhouse',['in house','in house testing','in house tests']],
@@ -100,7 +100,7 @@ function score(index,terms,{fuzzy=false}={}){
    scoreValue+=12;continue;
   }
   if(!fuzzy||term.length<5||isCode(term))return -1;
-  const max=term.length>=9?2:1;
+  const max=term.length>=8?2:1;
   let closest=max+1;
   for(const w of vocab){
    if(w.length<5||isCode(w)||Math.abs(w.length-term.length)>max)continue;
