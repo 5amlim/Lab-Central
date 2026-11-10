@@ -181,6 +181,10 @@ function render(arg){
   return {category,rows,count:rows.length+extraCount};
  });
  const total=groups.reduce((n,x)=>n+x.count,0);
+ // Prioritize real testing options when a clinical assay or pathogen matches.
+ // Searches specifically about documents, workflows or tools keep those resources first.
+ const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(norm(q));
+ const testingFirst=Boolean((panels.length||sendouts.length)&&!resourceIntent);
  let html='<div class="eyebrow">LAB CENTRAL / UNIVERSAL SEARCH</div><h1 class="page-h1">Search Lab Central</h1>'+
  '<p class="lede">Results for “'+E(q)+'” across documents, tools, workflows, in-house testing and sendout references.</p>'+
  '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by name, test, abbreviation or keyword. Choose a category to narrow results.</span></div>'+
@@ -188,16 +192,26 @@ function render(arg){
  '<button type="button" data-filter="All" class="gs-filter'+(filter==='All'?' is-selected':'')+'" aria-pressed="'+(filter==='All')+'">All <span>'+total+'</span></button>'+
  groups.map(x=>'<button type="button" data-filter="'+E(x.category)+'" class="gs-filter'+(filter===x.category?' is-selected':'')+'" aria-pressed="'+(filter===x.category)+'">'+E(x.category)+' <span>'+x.count+'</span></button>').join('')+'</div>';
  const visible=groups.filter(x=>x.count&&(filter==='All'||filter===x.category));
+ if(testingFirst){
+  const priority={'In-house testing':0,'Sendout testing':1};
+  visible.sort((a,b)=>(priority[a.category]??2)-(priority[b.category]??2));
+ }
  visible.forEach(group=>{
   html+='<section class="gs-group" aria-label="'+E(group.category)+' search results"><div class="gs-group-heading"><h2>'+E(group.category)+'</h2><span>'+group.count+' '+(group.count===1?'result':'results')+'</span></div>';
-  if(group.rows.length)html+='<div class="gs-results">'+group.rows.map(itemCard).join('')+'</div>';
+  // Matching assay cards are the primary action for test-name searches.
+  // Related analyzer and workflow guide cards come afterward.
   if(group.category==='In-house testing'&&panels.length){
-   html+='<div class="gs-assay-results"><p class="gs-assay-caption">Matching in-house assay panels</p><div class="lab-search-sources">'+arg.labSearchResultGroup('inhouse','In-house panels','Assay and pathogen matches',panels.map(arg.searchPanelCard).join(''),panels.length)+'</div></div>';
+   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching in-house testing options</p><div class="lab-search-sources">'+arg.labSearchResultGroup('inhouse','In-house panels','Assay and pathogen matches',panels.map(arg.searchPanelCard).join(''),panels.length)+'</div></div>';
   }
   if(group.category==='Sendout testing'&&sendouts.length){
    const kinds=[['htrx','HealthTrackRx'],['pathmd','PathMD']];
-   html+='<div class="gs-assay-results"><p class="gs-assay-caption">Matching molecular sendout panels</p><div class="lab-search-sources">'+
+   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources">'+
     kinds.map(kind=>{const subset=sendouts.filter(x=>x.lab===kind[0]);return arg.labSearchResultGroup(kind[0],kind[1],'Molecular sendout panel matches',subset.map(x=>arg.searchSendoutPanelCard(x,q)).join(''),subset.length)}).join('')+'</div></div>';
+  }
+  if(group.rows.length){
+   if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&sendouts.length))
+    html+='<p class="gs-assay-caption">Related guides and references</p>';
+   html+='<div class="gs-results">'+group.rows.map(itemCard).join('')+'</div>';
   }
   html+='</section>';
  });
