@@ -109,7 +109,7 @@ function baseIndex(ctx){
   category:'Sendout testing',title:'Cedars · '+t.name,
   description:'Cedars test reference'+(t.code?' · '+t.code:'')+(t.specimen?' · '+t.specimen:''),
   keywords:[t.name,t.code,t.category,t.aliases,t.specimen,t.collect,t.submit,t.containerType,t.notes,t.temp].filter(Boolean).join(' '),
-  href:'https://5amlim.github.io/Lab-Calculator/cedars.html?test='+encodeURIComponent(t.id),markets:['socal']
+  href:'https://5amlim.github.io/Lab-Calculator/cedars.html?test='+encodeURIComponent(t.id),markets:['socal'],kind:'sendout-test'
  }));
  (ctx.sections||[]).concat(ctx.extras||[]).forEach(sec=>{
   const category=categoryFor(sec);
@@ -175,6 +175,7 @@ function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
  const records=find(q,arg);
  const panels=arg.panelResults||[],sendouts=arg.sendoutResults||[];
+ const directSendoutTests=records.filter(x=>x.kind==='sendout-test');
  const groups=CATEGORIES.map(category=>{
   const rows=records.filter(x=>x.category===category);
   const extraCount=category==='In-house testing'?panels.length:category==='Sendout testing'?sendouts.length:0;
@@ -184,7 +185,7 @@ function render(arg){
  // Prioritize real testing options when a clinical assay or pathogen matches.
  // Searches specifically about documents, workflows or tools keep those resources first.
  const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(norm(q));
- const testingFirst=Boolean((panels.length||sendouts.length)&&!resourceIntent);
+ const testingFirst=Boolean((panels.length||sendouts.length||directSendoutTests.length)&&!resourceIntent);
  let html='<div class="eyebrow">LAB CENTRAL / UNIVERSAL SEARCH</div><h1 class="page-h1">Search Lab Central</h1>'+
  '<p class="lede">Results for “'+E(q)+'” across documents, tools, workflows, in-house testing and sendout references.</p>'+
  '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by name, test, abbreviation or keyword. Choose a category to narrow results.</span></div>'+
@@ -193,7 +194,11 @@ function render(arg){
  groups.map(x=>'<button type="button" data-filter="'+E(x.category)+'" class="gs-filter'+(filter===x.category?' is-selected':'')+'" aria-pressed="'+(filter===x.category)+'">'+E(x.category)+' <span>'+x.count+'</span></button>').join('')+'</div>';
  const visible=groups.filter(x=>x.count&&(filter==='All'||filter===x.category));
  if(testingFirst){
-  const priority={'In-house testing':0,'Sendout testing':1};
+  // A Cedars analyte with no in-house panel should be the first result, not
+  // an empty In-house heading or an unrelated guide/document match.
+  const priority=panels.length
+   ?{'In-house testing':0,'Sendout testing':1}
+   :{'Sendout testing':0,'In-house testing':1};
   visible.sort((a,b)=>(priority[a.category]??2)-(priority[b.category]??2));
  }
  visible.forEach(group=>{
@@ -208,10 +213,15 @@ function render(arg){
    html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources">'+
     kinds.map(kind=>{const subset=sendouts.filter(x=>x.lab===kind[0]);return arg.labSearchResultGroup(kind[0],kind[1],'Molecular sendout panel matches',subset.map(x=>arg.searchSendoutPanelCard(x,q)).join(''),subset.length)}).join('')+'</div></div>';
   }
-  if(group.rows.length){
-   if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&sendouts.length))
+  const tests=group.category==='Sendout testing'?group.rows.filter(x=>x.kind==='sendout-test'):[];
+  const related=group.rows.filter(x=>x.kind!=='sendout-test');
+  if(tests.length){
+   html+='<p class="gs-assay-caption">Matching sendout tests</p><div class="gs-results">'+tests.map(itemCard).join('')+'</div>';
+  }
+  if(related.length){
+   if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length)))
     html+='<p class="gs-assay-caption">Related guides and references</p>';
-   html+='<div class="gs-results">'+group.rows.map(itemCard).join('')+'</div>';
+   html+='<div class="gs-results">'+related.map(itemCard).join('')+'</div>';
   }
   html+='</section>';
  });
