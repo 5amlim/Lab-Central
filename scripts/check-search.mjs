@@ -66,7 +66,7 @@ for(const term of ['procalcitonin','PCT']){
  assert.ok(testHtml.indexOf('Matching sendout testing options')<testHtml.indexOf('<h3>Procalcitonin, serum or plasma (PCT)</h3>'),term+' testing option was not prioritized');
  assert.ok(testHtml.indexOf('aria-label="Sendout testing search results"')<testHtml.indexOf('aria-label="Documents search results"')||!testHtml.includes('aria-label="Documents search results"'),term+' did not put testing first');
 }
-assert.ok(index.includes('matches.sort((a,b)=>b.score-a.score)'), 'In-house test panels are not ranked by test/analyte specificity');
+assert.ok(index.includes('strict.sort((a,b)=>b.score-a.score)')&&index.includes('near.sort((a,b)=>b.score-a.score)'), 'In-house exact and approximate panels are not ranked by specificity');
 
 const formsPart=templatePage.split('const forms=[')[1]?.split('\n];')[0]||'';
 const formIds=Array.from(formsPart.matchAll(/\{id:'([^']+)'/g),x=>x[1]);
@@ -92,8 +92,11 @@ assert.ok(readFileSync(resolve(root,'assets/search/labcorp-tests.json')).length<
 const catalogWindow={
  CEDARS_TESTS:browser.CEDARS_TESTS,
  LAB_PT_TESTING:{supports:()=>true},
+ LAB_TROUBLESHOOTING:{ids:['pathfast','piccolo']},
  dispatchEvent:()=>{}
 };
+const smartSource=readFileSync(resolve(root,'lab-smart-search.js'),'utf8');
+runInNewContext(smartSource,{window:catalogWindow});
 const loadedPaths=[];
 runInNewContext(source,{
  window:catalogWindow,
@@ -104,6 +107,28 @@ runInNewContext(source,{
   return {ok:true,json:async()=>data};
  }
 });
+const smart=catalogWindow.LAB_SMART_SEARCH;
+assert.ok(smart,'Shared smart search was not initialized');
+for(const [field,query] of [
+ ['Comprehensive Metabolic Panel','cmp'],
+ ['Comprehensive Metabolic Panel','metabolic panel comprehensive'],
+ ['Complete Blood Count with Differential','cbc'],
+ ['Influenza A virus','flu'],
+ ['Urinalysis reagent strip','urine analysis'],
+ ['Proficiency testing guide','proficiency testing'],
+ ['Daily Quality Control Log','qc log'],
+ ['Pathfast technical support and troubleshooting','troubleshoot support'],
+ ['Daily QC log','q c']
+])assert.ok(smart.matches(field,query),'Shorthand or word-order search failed: '+query);
+for(const [field,query] of [
+ ['Procalcitonin serum','procalcitonn'],
+ ['Chemistry analyzer','chemstry'],
+ ['Training template checklist','traning templtes'],
+ ['Cardiac troponin pathway','tropnin pathway']
+])assert.ok(smart.matches(field,query,{fuzzy:true}),'Typo-tolerant search failed: '+query);
+assert.ok(!smart.matches('Quest 593 Lactate Dehydrogenase','594',{fuzzy:true}),'Test codes must remain exact');
+assert.ok(!smart.matches('Labcorp 001453 Hemoglobin A1c','001454',{fuzzy:true}),'Leading-zero codes must remain exact');
+assert.ok(!smart.matches('Red Blood Cell Count','cbc'),'CBC must not be equivalent to an individual RBC count');
 const externalSearch=catalogWindow.LAB_SITE_SEARCH;
 assert.equal(loadedPaths.length,0,'External indexes must not load before the user searches');
 await externalSearch.ensureExternalCatalog('procalcitonin');
@@ -119,6 +144,25 @@ for(const [needle,lab,code] of [
  assert.ok(options.some(x=>x.kind==='sendout-test'&&x.lab===lab&&x.code===code),
   needle+' did not find expected '+lab+' code '+code);
 }
+const syntheticCtx={...ctx,sections:[...ctx.sections,{id:'piccolo',title:'Piccolo Xpress',subtitle:'Chemistry analyzer',category:'Analyzers',blocks:[]}]};
+for(const [query,category,fragment] of [
+ ['procalcitonn','Sendout testing','Procalcitonin'],
+ ['pottassium','Sendout testing','Potassium'],
+ ['metabolic panel comprehensive','Sendout testing','Metabolic Panel'],
+ ['labcorp cmp','Sendout testing','Metabolic Panel'],
+ ['training templates','Documents','Training Checklist'],
+ ['templates training','Documents','Training Checklist'],
+ ['traning templtes','Documents','Training Checklist'],
+ ['tropnin pathway','Tools','Troponin pathway'],
+ ['quality control log','Documents','QC Log'],
+ ['piccolo chemstry','In-house testing','Piccolo']
+]){
+ const hits=externalSearch.find(query,syntheticCtx);
+ assert.ok(hits.some(x=>x.category===category&&x.title.toLowerCase().includes(fragment.toLowerCase())),
+  query+' did not find '+category+' / '+fragment);
+}
+assert.ok(!externalSearch.find('quest 594',ctx).some(x=>x.code==='593'),'Wrong Quest numeric code matched');
+assert.ok(!externalSearch.find('labcorp 001454',ctx).some(x=>x.code==='001453'),'Wrong Labcorp numeric code matched');
 const labcorpResult=externalSearch.render({...renderArgs,query:'322000',panelResults:[],sendoutResults:[]});
 assert.ok(labcorpResult.includes('class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"'),'External test is not using detailed in-house-style card');
 assert.ok(labcorpResult.includes('Open Labcorp calculator'),'Missing Labcorp calculator link');
