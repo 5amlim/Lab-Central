@@ -91,13 +91,57 @@ const referenceDocs=[
  ['pathmd-test-menu-index.pdf','PathMD Test Menu Index','pathmd pathogens limited respiratory molecular tests']
 ];
 let cached=null;
+let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
+const EXTERNAL_SEARCH_FILES=[
+ 'assets/search/quest-tests.json',
+ 'assets/search/labcorp-tests-1.json',
+ 'assets/search/labcorp-tests-2.json',
+ 'assets/search/labcorp-tests-3.json',
+ 'assets/search/labcorp-tests-4.json',
+ 'assets/search/labcorp-tests-5.json',
+ 'assets/search/labcorp-tests-6.json'
+];
+// Only download the compact external test names and codes after a search starts.
+// The full Quest/Labcorp specimen calculators remain separate applications.
+function ensureExternalCatalog(query){
+ if(externalCatalog||catalogFailed||norm(query).length<2||typeof fetch!=='function')return;
+ if(pendingCatalog)return;
+ pendingCatalog=Promise.allSettled(EXTERNAL_SEARCH_FILES.map(path=>
+  fetch(path).then(response=>{if(!response.ok)throw Error('Catalog unavailable');return response.json();})
+ )).then(results=>{
+  const rows=new Map();
+  results.forEach((result,i)=>{
+   if(result.status!=='fulfilled')return;
+   const lab=i===0?'quest':'labcorp';
+   for(const entry of result.value.tests||[]){
+    const [code,name,specimen]=entry;
+    if(!/^\d{2,8}$/.test(String(code||''))||!String(name||'').trim())continue;
+    const key=lab+':'+code;
+    if(!rows.has(key))rows.set(key,{lab,code:String(code),name:String(name),specimen:String(specimen||'')});
+   }
+  });
+  externalCatalog=[...rows.values()];
+  catalogFailed=results.some(result=>result.status!=='fulfilled');
+  cached=null;
+  window.dispatchEvent(new Event('labcentral:searchindexready'));
+ }).catch(()=>{
+  catalogFailed=true;
+  window.dispatchEvent(new Event('labcentral:searchindexready'));
+ });
+}
+
 function categoryFor(sec){
  if(sec.category==='Analyzers'||sec.category==='Point of care'||sec.category==='Archived')return 'In-house testing';
  if(sec.category==='Send-outs')return 'Sendout testing';
  if(sec.category==='Quality & compliance')return 'Quality & compliance';
  return 'Workflows';
 }
-function add(list,entry){if(!entry.title||!entry.href)return;list.push(entry);}
+function add(list,entry){
+ if(!entry.title||!entry.href)return;
+ entry._search={title:norm(entry.title),description:norm(entry.description),keywords:norm(entry.keywords),category:norm(entry.category)};
+ entry._search.words=new Set(Object.values(entry._search).filter(x=>typeof x==='string').join(' ').split(' '));
+ list.push(entry);
+}
 function baseIndex(ctx){
  if(cached)return cached;
  const out=[];
@@ -109,7 +153,14 @@ function baseIndex(ctx){
   category:'Sendout testing',title:'Cedars · '+t.name,
   description:'Cedars test reference'+(t.code?' · '+t.code:'')+(t.specimen?' · '+t.specimen:''),
   keywords:[t.name,t.code,t.category,t.aliases,t.specimen,t.collect,t.submit,t.containerType,t.notes,t.temp].filter(Boolean).join(' '),
-  href:'https://5amlim.github.io/Lab-Calculator/cedars.html?test='+encodeURIComponent(t.id),markets:['socal'],kind:'sendout-test'
+  href:'https://5amlim.github.io/Lab-Calculator/cedars.html?test='+encodeURIComponent(t.id),markets:['socal'],kind:'sendout-test',lab:'cedars',testName:t.name,code:t.code||'',specimen:t.specimen||'',container:t.collect||'',transport:t.temp||''
+ }));
+ (externalCatalog||[]).forEach(t=>add(out,{
+  category:'Sendout testing',title:(t.lab==='quest'?'Quest':'Labcorp')+' · '+t.name,
+  description:(t.code?'Test code '+t.code:'')+(t.specimen?' · '+t.specimen:''),
+  keywords:[t.name,t.code,t.specimen].join(' '),kind:'sendout-test',lab:t.lab,
+  testName:t.name,code:t.code,specimen:t.specimen,
+  href:t.lab==='quest'?'https://5amlim.github.io/Lab-Calculator/':'https://5amlim.github.io/Lab-Calculator/labcorp.html'
  }));
  (ctx.sections||[]).concat(ctx.extras||[]).forEach(sec=>{
   const category=categoryFor(sec);
@@ -132,9 +183,8 @@ function baseIndex(ctx){
  return out;
 }
 function relevance(item,q,terms){
- const title=norm(item.title),desc=norm(item.description),keys=norm(item.keywords),cat=norm(item.category);
- const titleWords=new Set(title.split(' ')),fullWords=new Set((title+' '+desc+' '+keys+' '+cat).split(' '));
- const keyWords=new Set(keys.split(' '));
+ const title=item._search.title,keys=item._search.keywords,fullWords=item._search.words;
+ const titleWords=new Set(title.split(' ')),keyWords=new Set(keys.split(' '));
  for(const t of terms){
   const wordMatch=Array.from(fullWords).some(w=>t.length<=2?w===t:w===t||w.startsWith(t));
   if(!wordMatch)return -1;
@@ -156,7 +206,8 @@ function find(q,ctx){
  const term=norm(q),words=term.split(' ').filter(x=>x&&!['and','or','the','for','of','to','with','in','at','a','an'].includes(x));
  if(!words.length)return [];
  const market=ctx.market||null;
- return baseIndex(ctx).filter(x=>!x.markets||!market||x.markets.includes(market))
+ return baseIndex(ctx).filter(x=>(!x.markets||!market||x.markets.includes(market))&&
+  !(x.kind==='sendout-test'&&term===x.lab))
  .map((item,i)=>({item,score:relevance(item,term,words),i}))
  .filter(x=>x.score>=0)
  .sort((a,b)=>b.score-a.score||a.i-b.i)
@@ -173,6 +224,7 @@ function itemCard(x){
 }
 function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
+ ensureExternalCatalog(q);
  const records=find(q,arg);
  const panels=arg.panelResults||[],sendouts=arg.sendoutResults||[];
  const directSendoutTests=records.filter(x=>x.kind==='sendout-test');
@@ -188,7 +240,9 @@ function render(arg){
  const testingFirst=Boolean((panels.length||sendouts.length||directSendoutTests.length)&&!resourceIntent);
  let html='<div class="eyebrow">LAB CENTRAL / UNIVERSAL SEARCH</div><h1 class="page-h1">Search Lab Central</h1>'+
  '<p class="lede">Results for “'+E(q)+'” across documents, tools, workflows, in-house testing and sendout references.</p>'+
- '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by name, test, abbreviation or keyword. Choose a category to narrow results.</span></div>'+
+ '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by name, test code, analyte or keyword. Choose a category to narrow results.</span></div>'+
+ (pendingCatalog&&!externalCatalog?'<p class="gs-index-status" role="status">Loading Quest and Labcorp test indexes…</p>':'')+
+ (catalogFailed?'<p class="gs-index-status">Some external test indexes could not be loaded. Open the calculators for full searches.</p>':'')+
  '<div class="gs-filters" role="group" aria-label="Filter search results by category">'+
  '<button type="button" data-filter="All" class="gs-filter'+(filter==='All'?' is-selected':'')+'" aria-pressed="'+(filter==='All')+'">All <span>'+total+'</span></button>'+
  groups.map(x=>'<button type="button" data-filter="'+E(x.category)+'" class="gs-filter'+(filter===x.category?' is-selected':'')+'" aria-pressed="'+(filter===x.category)+'">'+E(x.category)+' <span>'+x.count+'</span></button>').join('')+'</div>';
