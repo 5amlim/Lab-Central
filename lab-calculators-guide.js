@@ -177,25 +177,42 @@ function htrxMenu(){
 /* Cross-vendor molecular pathogen search, available regardless of selected lab tab. */
 let molecularQuery="";
 function molecularMatches(query=molecularQuery){
- const q=normHTRX(String(query||"").trim());
+ const raw=String(query||"").trim(),q=normHTRX(raw);
  if(q.length<2||(window.LAB_MARKET?.get()&&!availableLabs().some(id=>id==="htrx"||id==="pathmd")))return [];
- const htrx=htrxRecords.filter(p=>normHTRX(htrxText(p)).includes(q)).map(p=>({
-  lab:"htrx",labName:"HealthTrackRx",name:p.name,code:p.code,
-  targets:Object.values(p.groups).flat(),groups:p.groups,specimen:p.specimen,
-  text:[p.name,p.code,p.specimen,p.aliases].join(" ")
- }));
- const pathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>
-  normHTRX([p.name,p.category,p.terms,...Object.values(p.groups).flat()].join(" ")).includes(q)
- ).map(p=>({
-  lab:"pathmd",labName:"PathMD",id:p.id,name:p.name,code:"",targets:Object.values(p.groups).flat(),
-  groups:p.groups,specimen:"PathMD white-top tube; swab collection depends on specimen source",
-  text:[p.name,p.category,p.terms].join(" ")
- }));
- return [...htrx,...pathmd].map(p=>{
-  const hits=p.targets.filter(t=>normHTRX(t).includes(q));
-  return {...p,matched:hits[0]||"",hits};
+ const smart=window.LAB_SMART_SEARCH;
+ const matches=(text,fuzzy=false)=>normHTRX(text).includes(q)||Boolean(smart?.matches(text,raw,{fuzzy}));
+ const htrxTextFor=p=>htrxText(p);
+ const pathmdTextFor=p=>[p.name,p.category,p.terms,...Object.values(p.groups||{}).flat()].join(" ");
+ const exactHtrx=htrxRecords.filter(p=>matches(htrxTextFor(p)));
+ const exactPathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>matches(pathmdTextFor(p)));
+ // Consider near spellings only when no panel matches exactly. Do not expand
+ // short pathogen abbreviations or laboratory order codes by edit distance.
+ const fuzzyEligible=!exactHtrx.length&&!exactPathmd.length&&raw.length>=5;
+ const htrx=fuzzyEligible
+  ?htrxRecords.filter(p=>matches(htrxTextFor(p),true))
+  :exactHtrx;
+ const pathmd=fuzzyEligible
+  ?(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>matches(pathmdTextFor(p),true))
+  :exactPathmd;
+ const list=[
+  ...htrx.map(p=>({
+   lab:"htrx",labName:"HealthTrackRx",name:p.name,code:p.code,
+   targets:Object.values(p.groups).flat(),groups:p.groups,specimen:p.specimen,
+   text:[p.name,p.code,p.specimen,p.aliases].join(" ")
+  })),
+  ...pathmd.map(p=>({
+   lab:"pathmd",labName:"PathMD",id:p.id,name:p.name,code:"",
+   targets:Object.values(p.groups).flat(),groups:p.groups,
+   specimen:"PathMD white-top tube; swab collection depends on specimen source",
+   text:[p.name,p.category,p.terms].join(" ")
+  }))
+ ];
+ return list.map(p=>{
+  const hits=p.targets.filter(t=>matches(t,fuzzyEligible));
+  return {...p,matched:hits[0]||"",hits,approximate:fuzzyEligible};
  });
 }
+
 let pendingSendoutSearchScroll=null;
 function selectSendoutSearchResult(lab,term,panelId=""){
  if(lab!=="htrx"&&lab!=="pathmd")return false;
