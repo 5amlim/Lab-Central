@@ -151,7 +151,7 @@ function baseIndex(ctx){
  const out=[];
  items.forEach(x=>add(out,{category:x[0],title:x[1],description:x[2],keywords:x[3],href:x[4],markets:x[5]?[x[5]]:null}));
  templates.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Printable laboratory template · QC, maintenance or tracking record',keywords:'pdf document form template log '+x[2],href:'lab-templates.html?template='+encodeURIComponent(x[0])}));
- checklists.forEach(x=>add(out,{category:'Documents',title:x[1],description:'PDF training and competency record',keywords:'pdf training competency document '+x[2],href:'assets/training-checklists/'+x[0]}));
+ checklists.forEach(x=>add(out,{category:'Documents',title:x[1],description:'PDF training and competency record',keywords:'pdf training competency document template form checklist '+x[2],href:'assets/training-checklists/'+x[0]}));
  referenceDocs.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Reference PDF',keywords:'pdf document reference '+x[2],href:'assets/reference-pdfs/'+x[0],markets:/^pathmd|^healthtrackrx/.test(x[0])?['socal','norcal']:null}));
  (window.CEDARS_TESTS||[]).filter(t=>t&&t.id&&!t.hold).forEach(t=>add(out,{
   category:'Sendout testing',title:'Cedars · '+t.name,
@@ -179,6 +179,8 @@ function baseIndex(ctx){
    add(out,{category,title:sec.title+' · '+(g.title||g.id),description:'Open '+(g.title||g.id)+' section',keywords:sec.title+' '+sec.subtitle+' '+g.id+' '+text,href:'#'+sec.id+'/'+g.id,archived});
   });
   if(category==='In-house testing'&&!archived){
+   if(window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))
+    add(out,{category:'Workflows',title:sec.title+' · Troubleshooting',description:'Instrument errors, fault messages, technical support and corrective actions',keywords:sec.title+' troubleshoot troubleshooting common issues errors fault support manufacturer technical service help',href:'#'+sec.id+'/troubleshooting'});
    if(window.LAB_PT_TESTING?.supports?.(sec))add(out,{category,title:sec.title+' · Proficiency testing',description:'American Proficiency Institute (API) sample procedures',keywords:sec.title+' pt api proficiency test quality',href:'#'+sec.id+'/pt-testing'});
    add(out,{category,title:sec.title+' · Athena orders',description:'In-house test names and order sets',keywords:sec.title+' athena orders laboratory test code',href:'#'+sec.id+'/order-sets'});
   }
@@ -190,8 +192,7 @@ function relevance(item,q,terms,smartQuery,allowFuzzy=false){
  const smart=window.LAB_SMART_SEARCH;
  if(smart&&item._smart){
   const match=smart.score(item._smart,smartQuery,{fuzzy:allowFuzzy});
-  if(match<0&&(!allowFuzzy||match===-1))return -1;
-  if(match===-1)return -1;
+  if(match<0)return -1;
   const titleScore=smart.score(item._smartTitle,smartQuery,{fuzzy:false});
   const exactCode=item.kind==='sendout-test'&&item.code&&smartQuery.length===1&&smartQuery[0]===String(item.code);
   return match+(exactCode?500:0)+(titleScore>=0?80+titleScore:0)+
@@ -234,11 +235,11 @@ function find(q,ctx){
  const near=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,true),i}))
   .filter(x=>x.score>=0&&!already.has(x.item))
   .sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,25);
- return exact.concat(near).map(x=>x.item);
+ return exact.map(x=>x.item).concat(near.map(x=>({...x.item,approximate:true})));
 }
 function itemCard(x){
  const route=x.href.charAt(0)==='#';
- const label='<span class="gs-result-type">'+E(x.category)+(x.archived?' · Archived':'')+'</span><strong>'+E(x.title)+'</strong><small>'+E(x.description||'Open reference')+'</small><span class="gs-result-open">'+(route?'Open section':'Open document')+' <span aria-hidden="true">→</span></span>';
+ const label='<span class="gs-result-type">'+E(x.category)+(x.archived?' · Archived':'')+'</span><strong>'+E(x.title)+'</strong>'+(x.approximate?'<span class="gs-approx-match">Possible spelling match</span>':'');<small>'+E(x.description||'Open reference')+'</small><span class="gs-result-open">'+(route?'Open section':'Open document')+' <span aria-hidden="true">→</span></span>';
  if(route){
   const bits=x.href.slice(1).split('/');
   return '<button type="button" class="gs-result" data-go="'+E(bits[0])+'"'+(bits.length>1?' data-target-tab="'+E(bits.slice(1).join('/'))+'"':'')+'>'+label+'</button>';
@@ -260,7 +261,7 @@ function sendoutTestCard(x){
  return '<article class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test">'+
   '<div class="lab-panel-search-top"><div class="gs-test-title">'+
    '<small>'+E(lab)+' <span class="lab-panel-sendout-kind">SENDOUT TEST</span></small>'+
-   '<h3>'+E(name)+'</h3>'+
+   '<h3>'+E(name)+'</h3>'+(x.approximate?'<span class="gs-approx-match">Possible spelling match · check name and code</span>':'')+
    (code?'<div class="gs-test-code"><span>Test code</span><strong>'+E(code)+'</strong></div>':'')+
    '</div><a class="lab-panel-open" href="'+E(x.href)+'" target="_blank" rel="noopener noreferrer"'+
     (code?' title="Look up test code '+E(code)+' in '+E(lab)+'"':'')+'>'+E(linkLabel)+' <span aria-hidden="true">→</span></a></div>'+
@@ -321,7 +322,8 @@ function render(arg){
  const testingFirst=Boolean((panels.length||sendouts.length||directSendoutTests.length)&&!resourceIntent);
  let html='<div class="eyebrow">LAB CENTRAL / UNIVERSAL SEARCH</div><h1 class="page-h1">Search Lab Central</h1>'+
  '<p class="lede">Results for “'+E(q)+'” across documents, tools, workflows, in-house testing and sendout references.</p>'+
- '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by name, test code, analyte or keyword. Choose a category to narrow results.</span></div>'+
+ '<div class="gs-search-summary"><strong>'+total+' '+(total===1?'result':'results')+'</strong><span>Search by test name, code, category, shorthand or keyword. Word order and small spelling mistakes are supported.</span></div>'+
+ (records.some(x=>x.approximate)?'<p class="gs-index-status">Some results are approximate spelling matches. Confirm the exact test name and code before using a collection guide.</p>':'')+
  (pendingCatalog&&!externalCatalog?'<p class="gs-index-status" role="status">Loading Quest and Labcorp test indexes…</p>':'')+
  (catalogFailed?'<p class="gs-index-status">Some external test indexes could not be loaded. Open the calculators for full searches.</p>':'')+
  '<div class="gs-filters" role="group" aria-label="Filter search results by category">'+
