@@ -30,7 +30,7 @@ function expectResult(q,fragment,market='socal'){
  const results=search.find(q,{...ctx,market});
  assert.ok(results.some(x=>x.href.includes(fragment)),q+' did not locate '+fragment);
 }
-for(const q of ['troponin pathway','1h','0/1h','1-hour','one-hour','60 minute','2h','0/2h','2-hour troponin','two hour','120 minute','1h and 2h pathway'])
+for(const q of ['troponin pathway','1h','0/1h','0/1-hour','1-hour','one-hour','60 minute','2h','0/2h','0/2-hour','2-hour troponin','two hour','120 minute','1h and 2h pathway'])
  expectResult(q,'#pathfast/chest-pain');
 for(const q of ['eGFR','estimated gfr','CKD-EPI'])expectResult(q,'#piccolo/egfr-calculator');
 expectResult('procalcitonin','cedars.html?test=procalcitonin');
