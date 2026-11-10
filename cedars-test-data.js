@@ -714,7 +714,7 @@ window.CEDARS_TESTS = [
   },
   {
     "id": "procalcitonin",
-    "code": "",
+    "code": "LAB2289",
     "name": "Procalcitonin, serum or plasma (PCT)",
     "category": "Blood",
     "specimen": "Serum or plasma (lithium heparin or K2EDTA)",
