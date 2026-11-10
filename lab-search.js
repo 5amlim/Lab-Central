@@ -136,6 +136,14 @@ function add(list,entry){
  if(!entry.title||!entry.href)return;
  entry._search={title:norm(entry.title),description:norm(entry.description),keywords:norm(entry.keywords),category:norm(entry.category)};
  entry._search.words=new Set(Object.values(entry._search).filter(x=>typeof x==='string').join(' ').split(' '));
+ const smart=window.LAB_SMART_SEARCH;
+ if(smart){
+  const aliases=entry.kind==='sendout-test'&&/comprehensive/i.test(entry.testName||'')&&/metabolic panel/i.test(entry.testName||'')?' cmp ':
+   entry.kind==='sendout-test'&&/basic/i.test(entry.testName||'')&&/metabolic panel/i.test(entry.testName||'')?' bmp ':'';
+  entry._smart=smart.create([entry.title,entry.description,entry.keywords,entry.category,aliases].join(' '));
+  entry._smart.wordList=Array.from(entry._smart.words);
+  entry._smartTitle=smart.create(entry.title+' '+aliases);
+ }
  list.push(entry);
 }
 function baseIndex(ctx){
@@ -178,7 +186,17 @@ function baseIndex(ctx){
  cached=out;
  return out;
 }
-function relevance(item,q,terms){
+function relevance(item,q,terms,smartQuery,allowFuzzy=false){
+ const smart=window.LAB_SMART_SEARCH;
+ if(smart&&item._smart){
+  const match=smart.score(item._smart,smartQuery,{fuzzy:allowFuzzy});
+  if(match<0&&(!allowFuzzy||match===-1))return -1;
+  if(match===-1)return -1;
+  const titleScore=smart.score(item._smartTitle,smartQuery,{fuzzy:false});
+  const exactCode=item.kind==='sendout-test'&&item.code&&smartQuery.length===1&&smartQuery[0]===String(item.code);
+  return match+(exactCode?500:0)+(titleScore>=0?80+titleScore:0)+
+   (item._smartTitle.value===smart.norm(q)?170:0)-(item.archived?25:0);
+ }
  const title=item._search.title,keys=item._search.keywords,fullWords=item._search.words;
  const titleWords=new Set(title.split(' ')),keyWords=new Set(keys.split(' '));
  for(const t of terms){
@@ -201,13 +219,22 @@ function relevance(item,q,terms){
 function find(q,ctx){
  const term=norm(q),words=term.split(' ').filter(x=>x&&!['and','or','the','for','of','to','with','in','at','a','an'].includes(x));
  if(!words.length)return [];
+ const smart=window.LAB_SMART_SEARCH,smartQuery=smart?smart.queryWords(q):words;
+ if(!smartQuery.length)return [];
  const market=ctx.market||null;
- return baseIndex(ctx).filter(x=>(!x.markets||!market||x.markets.includes(market))&&
-  !(x.kind==='sendout-test'&&term===x.lab))
- .map((item,i)=>({item,score:relevance(item,term,words),i}))
- .filter(x=>x.score>=0)
- .sort((a,b)=>b.score-a.score||a.i-b.i)
- .map(x=>x.item);
+ const scoped=baseIndex(ctx).filter(x=>(!x.markets||!market||x.markets.includes(market))&&
+  !(x.kind==='sendout-test'&&term===x.lab));
+ const exact=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,false),i}))
+  .filter(x=>x.score>=0)
+  .sort((a,b)=>b.score-a.score||a.i-b.i);
+ // Fuzzy fallback only when exact/prefix results are scarce. Never approximate
+ // codes, 1-4-letter analyte acronyms or numeric-containing clinical tokens.
+ if(!smart||exact.length>=5||!smartQuery.some(t=>t.length>=5&&!/\d/.test(t)))return exact.map(x=>x.item);
+ const already=new Set(exact.map(x=>x.item));
+ const near=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,true),i}))
+  .filter(x=>x.score>=0&&!already.has(x.item))
+  .sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,25);
+ return exact.concat(near).map(x=>x.item);
 }
 function itemCard(x){
  const route=x.href.charAt(0)==='#';
