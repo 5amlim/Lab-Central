@@ -113,7 +113,7 @@ for(const [needle,lab,code] of [
  ['001453','labcorp','001453'],
  ['005009','labcorp','005009'],
  ['acetaminophen','quest','201'],
- ['procalcitonin','cedars','']
+ ['procalcitonin','cedars','PCT']
 ]){
  const options=externalSearch.find(needle,ctx);
  assert.ok(options.some(x=>x.kind==='sendout-test'&&x.lab===lab&&x.code===code),
