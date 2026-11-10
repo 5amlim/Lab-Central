@@ -850,7 +850,7 @@ function searchPanelMatches(query,sections=all){
    if(window.LAB_MARKET?.get()&&/(?:\bNY\b|New York)/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
-   const content=[section.title,panel.title,panel.short,
+   const content=[section.title,section.subtitle,section.category,panel.title,panel.short,
     labPanelSearchAliases[section.id]?.[panel.title]||'',
     ...Object.keys(panel.groups||{}),...targets.map(t=>labTargetText(t.name,section.id))].join(' ');
    const direct=labWordMatch(content,terms)||Boolean(smart?.matches(content,query));
