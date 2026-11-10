@@ -26,19 +26,74 @@
 @media(max-width:740px){.gs-results{grid-template-columns:1fr}.gs-result{min-height:108px}.gs-group{margin:19px 0 29px}.gs-filters{gap:7px}.gs-filter{padding:8px 10px}}
 @media print{.gs-filters{display:none}.gs-results{grid-template-columns:1fr 1fr}.gs-result{break-inside:avoid;box-shadow:none}}
 
-/* Searchable sendout tests share the same result structure as in-house assay panels. */
-.gs-sendout-test-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 14px}
-.gs-orderable-test{min-width:0;border-top:3px solid #238e7d}
-.gs-orderable-test .lab-panel-search-top{flex-wrap:wrap}
-.gs-orderable-test .lab-panel-search-top>div{min-width:0;flex:1}
-.gs-orderable-test .lab-panel-search-top h3{overflow-wrap:anywhere}
-.gs-orderable-test .lab-panel-open{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;white-space:nowrap}
-.gs-orderable-test .lab-panel-target-hits{flex-wrap:wrap}
-.gs-sendout-test-note{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:13px 16px;border-top:1px solid #e5ecef;color:#698192;font-size:12px;line-height:1.5}
-.gs-transport-label{margin-left:auto;font-size:11px;color:#377c75;font-weight:700}
-.gs-show-more{display:flex;align-items:center;justify-content:center;gap:10px;margin:17px auto 5px;padding:11px 17px;background:#fff;color:#247d77;border:1px solid #b7d6d2;border-radius:9px;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
+/* Lab-grouped sendout results reuse the in-house assay panel structure. */
+.gs-sendout-sources{display:grid;grid-template-columns:minmax(0,1fr);gap:19px;margin-top:10px}
+.gs-sendout-sources .lab-search-source{
+ min-width:0;margin:0;border:1px solid #dce7ec;border-radius:14px;
+ background:#fff;overflow:hidden;box-shadow:0 2px 8px rgba(34,71,87,.04)
+}
+.gs-sendout-sources .lab-search-source-header{
+ display:flex;justify-content:space-between;align-items:center;gap:14px;
+ padding:16px 19px;background:#edf5f8;border-bottom:1px solid #dbe8ed
+}
+.gs-sendout-sources .lab-search-source-heading{min-width:0}
+.gs-sendout-sources .lab-search-source-title h3{font-size:17px;line-height:1.3}
+.gs-sendout-sources .lab-search-source-count{white-space:nowrap}
+.gs-sendout-sources .lab-search-source-items{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:12px;
+ background:#fbfcfd;padding:14px
+}
+.gs-sendout-sources .lab-search-source-mark{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-width:36px;min-height:36px;letter-spacing:-.02em
+}
+.gs-sendout-sources .lab-search-source-quest .lab-search-source-mark{background:#237f83}
+.gs-sendout-sources .lab-search-source-labcorp .lab-search-source-mark{background:#3c728a}
+.gs-sendout-sources .lab-search-source-cedars .lab-search-source-mark{background:#396f7e}
+.gs-orderable-test{
+ width:100%;min-width:0;margin:0;border:1px solid #dce6ea;border-radius:11px;
+ background:#fff;box-shadow:0 1px 3px rgba(31,66,83,.025);overflow:hidden
+}
+.gs-orderable-test .lab-panel-search-top{
+ display:flex;align-items:flex-start;justify-content:space-between;
+ gap:15px;padding:16px 17px 13px
+}
+.gs-orderable-test .gs-test-title{flex:1;min-width:0}
+.gs-orderable-test .lab-panel-search-top h3{
+ margin:6px 0 9px;font-size:16px;line-height:1.38;overflow-wrap:anywhere
+}
+.gs-test-code{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:#718797}
+.gs-test-code strong{
+ display:inline-block;background:#edf4f7;color:#3d6880;
+ border-radius:6px;padding:3px 8px;letter-spacing:.025em;font-weight:780
+}
+.gs-orderable-test .lab-panel-open{
+ display:inline-flex;align-items:center;justify-content:center;
+ gap:6px;flex-shrink:0;max-width:100%;white-space:normal;
+ text-decoration:none;text-align:center;font-size:12px
+}
+.gs-orderable-test .gs-test-specimens{
+ display:flex;align-items:center;flex-wrap:wrap;gap:7px 9px;
+ padding:1px 17px 14px;margin:0
+}
+.gs-orderable-test .gs-test-specimens strong{margin-right:3px;white-space:normal}
+.gs-orderable-test .gs-test-specimens .lab-panel-target-match{max-width:100%;white-space:normal}
+.gs-test-verification{
+ margin:0;padding:10px 17px 12px;border-top:1px solid #edf1f3;
+ color:#7a8e9c;font-size:11px;line-height:1.5;background:#fff
+}
+.gs-sendout-sources .gs-show-more{
+ margin:2px auto 3px;justify-self:center;border-radius:9px
+}
+.gs-show-more{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:11px 17px;background:#fff;color:#247d77;border:1px solid #b7d6d2;border-radius:9px;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
 .gs-show-more:hover{background:#f0f9f7;border-color:#66aaa0}
 .gs-show-more:focus-visible{outline:3px solid #73beb6;outline-offset:2px}
 .gs-show-more span{font-size:11px;color:#718b98;font-weight:650}
 .gs-index-status{border-left:3px solid #7eb9b0;padding:7px 12px;font-size:12px;color:#66818e;background:#f6faf9;margin:10px 0 0}
-@media(max-width:820px){.gs-sendout-test-grid{grid-template-columns:1fr}.gs-orderable-test .lab-panel-search-top{gap:12px}}
+@media(max-width:820px){
+ .gs-sendout-sources .lab-search-source-header{padding:13px 14px}
+ .gs-sendout-sources .lab-search-source-items{padding:10px}
+ .gs-orderable-test .lab-panel-search-top{flex-wrap:wrap;padding:14px}
+ .gs-orderable-test .gs-test-specimens{padding:0 14px 12px}
+ .gs-test-verification{padding:10px 14px}
+}
