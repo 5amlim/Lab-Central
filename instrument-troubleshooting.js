@@ -356,6 +356,93 @@ poc:{
  ],'Escalate missing analytes, mismatched tests or unresolvable QC failures.','hold')
  ]}
 };
+
+/* U.S. manufacturer and product-support contacts, verified against the official
+ * support pages, manuals, or package inserts on 2026-11-09. Use product-specific
+ * routing; a general customer service address is not labelled "technical". */
+const support={
+ pathfast:{
+  company:'PATHFAST · Polymedco',type:'US product / distributor contact',
+  phone:'800-431-2123',dial:'+18004312123',email:'info@polymedco.com',
+  note:'Published customer service contact. Ask for PATHFAST technical assistance.',
+  url:'https://www.pathfast.com/contact-us'
+ },
+ piccolo:{
+  company:'Zoetis · Piccolo Xpress',type:'Technical support',
+  phone:'800-822-2947',dial:'+18008222947',detail:'Option 2',
+  email:'AB-PiccoloTechSupport@zoetis.com',
+  url:'https://www.abaxis.com/support/'
+ },
+ sysmex:{
+  company:'Sysmex · pocH-100i',type:'Product technical assistance',
+  phone:'888-879-7639',dial:'+18888797639',
+  detail:'Mon–Fri, 7 AM–7 PM Central',
+  note:'pocH-100i-specific support hours; other Sysmex systems may have different hours.',
+  url:'https://www.sysmex.com/en-us/customer-support/contact-directory'
+ },
+ clinitek:{
+  company:'Siemens Healthineers',type:'Laboratory / POC technical support',
+  phone:'877-229-3711',dial:'+18772293711',detail:'CLINITEK: prompts 13, 2',
+  url:'https://www.siemens-healthineers.com/en-us/poct-urinalysis/clinitek-status-plus-analyzer-purchase-options'
+ },
+ triage:{
+  company:'QuidelOrtho · Triage',type:'Technical support',
+  phone:'800-874-1517',dial:'+18008741517',email:'technicalsupport@quidelortho.com',
+  url:'https://www.quidelortho.com/global/en/contact-us'
+ },
+ spotfire:{
+  company:'bioMérieux · BIOFIRE SPOTFIRE',type:'U.S. customer technical support',
+  phone:'844-815-0363',dial:'+18448150363',
+  email:'biofiresupport@biomerieux.com',
+  note:'SPOTFIRE-specific U.S. line from the operator manual.',
+  url:'https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/BFR0001-1641-BIOFIRE-SPOTFIRE-System-Operator-Manual-IVD-EN.pdf'
+ },
+ torch:{
+  company:'bioMérieux · BIOFIRE TORCH',type:'Customer technical support',
+  phone:'800-735-6544',dial:'+18007356544',email:'biofiresupport@biomerieux.com',
+  detail:'24/7 support',
+  url:'https://www.biomerieux.com/us/en/our-offer/clinical-products/biofire-torch-system.html'
+ },
+ sofia:{
+  company:'QuidelOrtho · Sofia',type:'Technical support',
+  phone:'800-874-1517',dial:'+18008741517',email:'technicalsupport@quidelortho.com',
+  url:'https://www.quidelortho.com/global/en/contact-us'
+ },
+ febridx:{
+  company:'Lumos Diagnostics · FebriDx',type:'Technical support',
+  phone:'855-586-6739',dial:'+18555866739',email:'technical.support@lumosdiagnostics.com',
+  url:'https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf'
+ },
+ hemocue:{
+  company:'HemoCue America',type:'Technical support',
+  phone:'800-426-7256',dial:'+18004267256',email:'technicalsupport@hemocue.com',
+  detail:'Mon–Fri, 6 AM–4 PM Pacific',
+  url:'https://hemocue.com/us/customer-inquiry/'
+ },
+ coagsense:{
+  company:'CoaguSense',type:'24/7 technical support',
+  phone:'866-903-0890',dial:'+18669030890',email:'support@coagusense.com',
+  url:'https://coag-sense.com/contact/'
+ },
+ poc:{
+  company:'QuidelOrtho · QuickVue',type:'Rapid-test technical support',
+  phone:'800-874-1517',dial:'+18008741517',email:'technicalsupport@quidelortho.com',
+  url:'https://www.quidelortho.com/global/en/contact-us',
+  other:{
+   company:'McKesson Consult kits',type:'Product support',
+   phone:'800-777-4908',dial:'+18007774908',
+   note:'For McKesson-branded kits, including Consult mono.',
+   url:'https://imgcdn.mckesson.com/CumulusWeb/Click_and_learn/SDS_MGM32_TEST_KIT_MONO_WAIVED_25KT.pdf'
+  }
+ },
+ 'drug-screen':{
+  company:'McKesson Brands',type:'Product support',
+  phone:'800-777-4908',dial:'+18007774908',
+  note:'For Consult-branded products; have the kit label and lot available.',
+  url:'https://imgcdn.mckesson.com/CumulusWeb/Click_and_learn/McKB_Consult_Premium_Liquid_Urine_Controls_Brochure_%202017-10_FINAL.pdf'
+ }
+};
+
 /* Start with the checks most likely to prevent an unnecessary repeat. */
 const firstChecks={
  pathfast:['Confirm lithium-heparin mixing, sample well, bubble-free pipetting and correct lane/SID.','Review reagent pill, 28-day calibration and both QC levels.','For failed or questionable tests, save the analyzer remark and notify the ordering provider.'],
@@ -396,6 +483,24 @@ function card(item,num){
   '<summary><span class="lt-no">'+String(num).padStart(2,'0')+'</span><span class="lt-main"><strong>'+esc(item.title)+'</strong><small>'+esc(item.signal)+'</small></span><span class="lt-status '+(urgent?'lt-status-hold':item.level==='service'?'lt-status-service':'lt-status-check')+'">'+(urgent?'HOLD RESULT':item.level==='service'?'SUPPORT':'CHECK')+'</span><span class="lt-chevron" aria-hidden="true"></span></summary>'+
   '<div class="lt-issue-content"><div class="lt-subhead">Corrective action</div><ol>'+item.actions.map(a=>'<li>'+esc(a)+'</li>').join('')+'</ol><p class="lt-escalate"><b>If unresolved / stop:</b> '+esc(item.escalate)+'</p><p class="lt-record"><strong>Record:</strong> exact error or printout flag, sample/lot ID in the approved system, QC status, action performed, repeat result and who was notified. Do not enter patient information in this reference page.</p></div></details>';
 }
+function supportCard(id){
+ const info=support[id];if(!info)return '';
+ const details=(contact,secondary=false)=>{
+  const phone=contact.phone?'<a class="lt-support-link" href="tel:'+esc(contact.dial)+'"><span>Call</span>'+esc(contact.phone)+'</a>':'';
+  const email=contact.email?'<a class="lt-support-link" href="mailto:'+esc(contact.email)+'"><span>Email</span>'+esc(contact.email)+'</a>':'';
+  return '<div class="lt-support-contact'+(secondary?' lt-support-secondary':'')+'">'+
+   '<strong>'+esc(contact.company)+'</strong><small>'+esc(contact.type)+'</small>'+
+   '<div class="lt-support-actions">'+phone+email+'</div>'+
+   (contact.detail?'<p class="lt-support-detail">'+esc(contact.detail)+'</p>':'')+
+   (contact.note?'<p class="lt-support-detail">'+esc(contact.note)+'</p>':'')+
+   (contact.url?'<a class="lt-support-source" href="'+esc(contact.url)+'" target="_blank" rel="noopener noreferrer">Official contact source ↗</a>':'')+
+   '</div>';
+ };
+ return '<aside class="lt-support" aria-label="'+esc(guides[id].name)+' manufacturer support">'+
+  '<div class="lt-support-heading">TECHNICAL / PRODUCT SUPPORT</div>'+
+  details(info)+(info.other?details(info.other,true):'')+'</aside>';
+}
+
 function render(id){
  const guide=guides[id];if(!guide)return '';
  const items=guide.items;
@@ -405,7 +510,7 @@ function render(id){
   return '<section class="lt-group" aria-label="'+esc(topic)+'"><div class="lt-group-heading"><h3>'+esc(topic)+'</h3><span>'+hits.length+' '+(hits.length===1?'situation':'situations')+'</span></div><div class="lt-issues">'+hits.map(x=>card(x,++num)).join('')+'</div></section>';
  }).join('');
  return '<section class="lt-guide" aria-label="'+esc(guide.name)+' troubleshooting reference">'+
-  '<header class="lt-hero"><div><span class="lt-eyebrow">LAB CENTRAL / TROUBLESHOOTING</span><h2>Troubleshooting</h2><p>'+esc(guide.subtitle)+'</p></div><span class="lt-counter">'+items.length+' common issues</span></header>'+
+  '<header class="lt-hero"><div class="lt-hero-description"><span class="lt-eyebrow">LAB CENTRAL / TROUBLESHOOTING</span><h2>Troubleshooting</h2><p>'+esc(guide.subtitle)+'</p></div><div class="lt-hero-sidebar"><span class="lt-counter">'+items.length+' common issues</span>'+supportCard(id)+'</div></header>'+
   '<div class="lt-response"><div><span>01</span><b>HOLD</b><small>Do not report a failed, blocked or invalid result.</small></div><div><span>02</span><b>CHECK</b><small>Confirm patient, specimen, lot, QC and exact instrument message.</small></div><div><span>03</span><b>RESOLVE</b><small>Follow the current assay IFU, document the action and verify a valid repeat.</small></div></div>'+
   '<div class="lt-quick"><strong>First checks for '+esc(guide.name)+'</strong><ul>'+(firstChecks[id]||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>'+
   '<div class="lt-tools"><label>Find an error or symptom<input type="search" class="lt-search" data-lt-search placeholder="e.g. QC, clot, invalid, E67" aria-label="Search troubleshooting situations"></label><div class="lt-tools-actions"><button type="button" data-lt-action="expand">Expand all</button><button type="button" data-lt-action="collapse">Collapse all</button></div></div>'+
@@ -432,5 +537,5 @@ document.addEventListener('input',function(e){
  root.querySelectorAll('.lt-group').forEach(g=>{g.hidden=![...g.querySelectorAll('.lt-issue')].some(x=>!x.hidden)});
  const empty=root.querySelector('.lt-empty');if(empty)empty.hidden=[...root.querySelectorAll('.lt-issue')].some(x=>!x.hidden);
 });
-window.LAB_TROUBLESHOOTING={render,ids:Object.keys(guides),guides};
+window.LAB_TROUBLESHOOTING={render,ids:Object.keys(guides),guides,support};
 })();
