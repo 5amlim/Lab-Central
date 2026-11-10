@@ -301,7 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261110-sendout-cards" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261110-vendor-groups" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -505,7 +505,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="collection-photo-preview.js?v=20261104"></script>
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
-<script src="lab-search.js?v=20261110-external-tests"></script>
+<script src="lab-search.js?v=20261110-vendor-groups"></script>
 <script>
 (()=>{
 'use strict';
@@ -581,7 +581,7 @@ if(favs.includes('tubes')){
  favs=[...new Set(favs.map(id=>id==='tubes'?'sendout':id))];
  try{localStorage.setItem('labGuideFavorites',JSON.stringify(favs))}catch(_){}
 }
-const state={search:'',filter:'All',searchVisibleLimit:24,tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:window.LAB_MARKET?.get()||'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
+const state={search:'',filter:'All',searchVisibleLimit:24,searchVisibleByLab:{},tab:'overview',section:null,editingSlot:null,reqSource:'message',ordersRegion:window.LAB_MARKET?.get()||'socal',reqBranch:null,reqResolution:null,sollisPatientPath:'clinic',guideRoute:'',guideStep:0,guideMode:'guided',guideDetailsExpanded:true,clinitekQc:'ua-qc'};
 const iconMap={
  'test-tube':'<path d="m14 2 6 6M5 21l8-8M3 21h6l13-13-6-6L3 15v6Z"/>',
  'flask-conical':'<path d="M9 3h6M10 3v7l-6.5 9a2 2 0 0 0 1.6 3h13.8a2 2 0 0 0 1.6-3L14 10V3M7 16h10"/>',
@@ -1060,12 +1060,13 @@ function searchSendoutPanelCard(item,query){
 /* Group matching test panels by receiving lab instead of interleaving unlike results. */
 function labSearchResultGroup(kind,title,description,cards,count){
  if(!count)return '';
- const type=kind==='inhouse'?'IH':kind==='htrx'?'HT':'PM';
+ const type={inhouse:'IH',htrx:'HT',pathmd:'PM',quest:'Q',labcorp:'LC',cedars:'CS'}[kind]||'LAB';
+ const noun=['quest','labcorp','cedars'].includes(kind)?'test':'panel';
  return '<section class="lab-search-source lab-search-source-'+kind+'" aria-label="'+safeHtml(title)+' matches">'+
   '<div class="lab-search-source-header"><div class="lab-search-source-heading">'+
    '<span class="lab-search-source-mark" aria-hidden="true">'+type+'</span>'+
    '<div><div class="lab-search-source-title"><h3>'+safeHtml(title)+'</h3>'+''+'</div><p>'+safeHtml(description)+'</p></div></div>'+
-   '<span class="lab-search-source-count">'+count+' panel'+(count===1?'':'s')+'</span></div>'+
+   '<span class="lab-search-source-count">'+count+' '+noun+(count===1?'':'s')+'</span></div>'+
   '<div class="lab-search-source-items">'+cards+'</div></section>';
 }
 // Reuse the instrument guide illustrations in compact cards without altering card dimensions.
@@ -1130,7 +1131,7 @@ function renderHome(mode='home'){
  if(search&&window.LAB_SITE_SEARCH){
   el('currentCrumb').textContent='Search';
   el('mainContent').innerHTML=window.LAB_SITE_SEARCH.render({
-   query:search,filter:state.filter,visibleLimit:state.searchVisibleLimit,sections:all,extras:extraHomeGuides,
+   query:search,filter:state.filter,visibleByLab:state.searchVisibleByLab,sections:all,extras:extraHomeGuides,
    groupsFor:buildGroups,market:window.LAB_MARKET?.get()||null,
    panelResults:searchPanelMatches(search,all),
    sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[],
@@ -2956,7 +2957,9 @@ function updateGuidedProcedureInPlace(button){
  }
  const tb=e.target.closest('[data-gotab]');if(tb&&state.section){navigate(state.section.id,tb.dataset.gotab);return}
  const more=e.target.closest('[data-search-more]');if(more&&state.search){
-  state.searchVisibleLimit=(state.searchVisibleLimit||24)+24;
+  const lab=more.dataset.searchMore;
+  if(['quest','labcorp','cedars'].includes(lab))
+   state.searchVisibleByLab[lab]=(state.searchVisibleByLab[lab]||6)+6;
   render();
   return;
  }
@@ -3017,7 +3020,7 @@ document.addEventListener('labcentral:marketchange',e=>{
  if(orderMarkets.some(m=>m.id===next))state.ordersRegion=next;
  render();
 });
-el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';state.searchVisibleLimit=24;render();});
+el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';state.searchVisibleByLab={};render();});
 el('search').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';state.search='';render();e.target.blur()}});
 document.addEventListener('keydown',e=>{if((e.key==='/'||((e.ctrlKey||e.metaKey)&&e.key==='k'))&&!/input|textarea/i.test(e.target.tagName)){e.preventDefault();el('search').focus();el('search').select()}if(e.key==='Escape'){el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')}});
 el('homeCrumb').addEventListener('click',()=>navigate('home'));
