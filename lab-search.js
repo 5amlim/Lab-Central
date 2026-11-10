@@ -94,18 +94,13 @@ let cached=null;
 let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
 const EXTERNAL_SEARCH_FILES=[
  'assets/search/quest-tests.json',
- 'assets/search/labcorp-tests-1.json',
- 'assets/search/labcorp-tests-2.json',
- 'assets/search/labcorp-tests-3.json',
- 'assets/search/labcorp-tests-4.json',
- 'assets/search/labcorp-tests-5.json',
- 'assets/search/labcorp-tests-6.json'
+ 'assets/search/labcorp-tests.json'
 ];
 // Only download the compact external test names and codes after a search starts.
 // The full Quest/Labcorp specimen calculators remain separate applications.
 function ensureExternalCatalog(query){
  if(externalCatalog||catalogFailed||norm(query).length<2||typeof fetch!=='function')return;
- if(pendingCatalog)return;
+ if(pendingCatalog)return pendingCatalog;
  pendingCatalog=Promise.allSettled(EXTERNAL_SEARCH_FILES.map(path=>
   fetch(path).then(response=>{if(!response.ok)throw Error('Catalog unavailable');return response.json();})
  )).then(results=>{
@@ -128,6 +123,7 @@ function ensureExternalCatalog(query){
   catalogFailed=true;
   window.dispatchEvent(new Event('labcentral:searchindexready'));
  });
+ return pendingCatalog;
 }
 
 function categoryFor(sec){
