@@ -82,4 +82,51 @@ assert.ok(index.includes('lab-search.css?v='),'Main page does not load search st
 assert.ok(index.includes('LAB_SITE_SEARCH.render'),'Main search is not connected');
 assert.ok(index.includes("sec.id==='pathfast'&&tab==='chest-pain'"),'Troponin deep link route missing');
 assert.ok(index.includes("sec.id==='piccolo'&&tab==='egfr-calculator'"),'eGFR deep link route missing');
+// The full Quest/Labcorp catalogs load only on demand, from compact local data.
+const questIndex=JSON.parse(readFileSync(resolve(root,'assets/search/quest-tests.json'),'utf8'));
+const labcorpIndex=JSON.parse(readFileSync(resolve(root,'assets/search/labcorp-tests.json'),'utf8'));
+assert.ok(questIndex.tests.length>=2600,'Quest test code search coverage unexpectedly reduced');
+assert.ok(labcorpIndex.tests.length>=1300,'Labcorp test code search coverage unexpectedly reduced');
+assert.ok(readFileSync(resolve(root,'assets/search/quest-tests.json')).length<200000,'Quest index is too large');
+assert.ok(readFileSync(resolve(root,'assets/search/labcorp-tests.json')).length<120000,'Labcorp index is too large');
+const catalogWindow={
+ CEDARS_TESTS:browser.CEDARS_TESTS,
+ LAB_PT_TESTING:{supports:()=>true},
+ dispatchEvent:()=>{}
+};
+const loadedPaths=[];
+runInNewContext(source,{
+ window:catalogWindow,
+ Event:class Event{constructor(type){this.type=type}},
+ fetch:async path=>{
+  loadedPaths.push(path);
+  const data=JSON.parse(readFileSync(resolve(root,path),'utf8'));
+  return {ok:true,json:async()=>data};
+ }
+});
+const externalSearch=catalogWindow.LAB_SITE_SEARCH;
+assert.equal(loadedPaths.length,0,'External indexes must not load before the user searches');
+await externalSearch.ensureExternalCatalog('procalcitonin');
+assert.equal(loadedPaths.length,2,'External catalogs should require only two lazy requests');
+for(const [needle,lab,code] of [
+ ['322000','labcorp','322000'],
+ ['001453','labcorp','001453'],
+ ['005009','labcorp','005009'],
+ ['acetaminophen','quest','201'],
+ ['procalcitonin','cedars','']
+]){
+ const options=externalSearch.find(needle,ctx);
+ assert.ok(options.some(x=>x.kind==='sendout-test'&&x.lab===lab&&x.code===code),
+  needle+' did not find expected '+lab+' code '+code);
+}
+const labcorpResult=externalSearch.render({...renderArgs,query:'322000',panelResults:[],sendoutResults:[]});
+assert.ok(labcorpResult.includes('class="lab-panel-search-result gs-orderable-test"'),'External test is not using detailed in-house-style card');
+assert.ok(labcorpResult.includes('Open Labcorp calculator'),'Missing Labcorp calculator link');
+const questResult=externalSearch.render({...renderArgs,query:'201',panelResults:[],sendoutResults:[]});
+assert.ok(questResult.includes('Open Quest calculator'),'Missing Quest calculator link');
+const broadResult=externalSearch.render({...renderArgs,query:'serum',panelResults:[],sendoutResults:[],visibleLimit:24});
+assert.ok(broadResult.includes('data-search-more="sendout"'),'Broad test search must offer show-more results');
+assert.ok(index.includes('data-search-more'),'Show-more clicks must be handled by Lab Central');
+assert.ok(index.includes('labcentral:searchindexready'),'External index loading should refresh open search results');
+console.log('Verified '+questIndex.tests.length+' Quest and '+labcorpIndex.tests.length+' Labcorp indexed names/codes, lazy loading and assay-style results.');
 console.log('Unified search keywords, templates, categories, destinations and market scoping verified.');
