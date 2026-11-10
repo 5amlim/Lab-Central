@@ -116,7 +116,7 @@ function score(index,terms,{fuzzy=false}={}){
  return usedFuzzy?Math.max(1,scoreValue-100):scoreValue;
 }
 function matches(text,query,{fuzzy=false}={}){
- return score(create(text),queryWords(query),{fuzzy})>= (fuzzy?-100:0);
+ return score(create(text),queryWords(query),{fuzzy})>=0;
 }
 window.LAB_SMART_SEARCH={norm,create,queryWords,score,matches,editDistance};
 })();
