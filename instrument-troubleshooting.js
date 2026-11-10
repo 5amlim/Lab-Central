@@ -411,7 +411,7 @@ const support={
  febridx:{
   company:'Lumos Diagnostics · FebriDx',type:'Technical support',
   phone:'855-586-6739',dial:'+18555866739',email:'technical.support@lumosdiagnostics.com',
-  url:'https://www.febridx.com/documents/2025/08/_PM-127.3_FebriDx%20Instructions%20for%20Use_US_07-15-2025.pdf'
+  url:'https://lumosdiagnostics.com/contact/'
  },
  hemocue:{
   company:'HemoCue America',type:'Technical support',
