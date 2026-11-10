@@ -57,6 +57,16 @@ assert.ok(fluHtml.indexOf('mock-flu-panel')<fluHtml.indexOf('class="gs-results"'
 assert.ok(fluHtml.indexOf('gs-group-heading')<fluHtml.indexOf('mock-flu-panel'),'Testing group heading missing');
 const resourceHtml=search.render({...renderArgs,query:'qc log'});
 assert.ok(resourceHtml.indexOf('aria-label="Documents search results"')<resourceHtml.indexOf('aria-label="In-house testing search results"'),'Document-focused searches must keep documents first');
+// Direct test-name and analyte hits are primary results even when no in-house
+// or molecular panel matches. Cedars has its own verified local test index.
+for(const term of ['procalcitonin','PCT']){
+ const testHtml=search.render({...renderArgs,query:term,panelResults:[],sendoutResults:[]});
+ assert.ok(testHtml.indexOf('aria-label="Sendout testing search results"')>=0,term+' sendout test is missing');
+ assert.ok(testHtml.indexOf('Matching sendout tests')>=0,term+' is not presented as a test option');
+ assert.ok(testHtml.indexOf('Matching sendout tests')<testHtml.indexOf('Cedars · Procalcitonin'),term+' testing option was not prioritized');
+ assert.ok(testHtml.indexOf('aria-label="Sendout testing search results"')<testHtml.indexOf('aria-label="Documents search results"')||!testHtml.includes('aria-label="Documents search results"'),term+' did not put testing first');
+}
+assert.ok(index.includes('matches.sort((a,b)=>b.score-a.score)'), 'In-house test panels are not ranked by test/analyte specificity');
 
 const formsPart=templatePage.split('const forms=[')[1]?.split('\n];')[0]||'';
 const formIds=Array.from(formsPart.matchAll(/\{id:'([^']+)'/g),x=>x[1]);
