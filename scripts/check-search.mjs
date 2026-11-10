@@ -47,7 +47,7 @@ const renderArgs={
  ...ctx,query:'flu',filter:'All',
  sections:[...ctx.sections,{id:'sofia',title:'Sofia 2',subtitle:'Flu and COVID testing',category:'Point of care',blocks:[]}],
  panelResults:samplePanels,sendoutResults:[],
- labSearchResultGroup:(kind,title,description,cards)=>'<div class="mock-panel-group">'+cards+'</div>',
+ labSearchResultGroup:(kind,title,description,cards,count)=>'<section class="lab-search-source lab-search-source-'+kind+'" aria-label="'+title+' matches"><header>'+title+' · '+count+'</header><div class="mock-panel-group">'+cards+'</div></section>',
  searchPanelCard:()=>'<div class="mock-flu-panel">Flu testing option</div>',
  searchSendoutPanelCard:()=>''
 };
@@ -120,12 +120,29 @@ for(const [needle,lab,code] of [
   needle+' did not find expected '+lab+' code '+code);
 }
 const labcorpResult=externalSearch.render({...renderArgs,query:'322000',panelResults:[],sendoutResults:[]});
-assert.ok(labcorpResult.includes('class="lab-panel-search-result gs-orderable-test"'),'External test is not using detailed in-house-style card');
+assert.ok(labcorpResult.includes('class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"'),'External test is not using detailed in-house-style card');
 assert.ok(labcorpResult.includes('Open Labcorp calculator'),'Missing Labcorp calculator link');
 const questResult=externalSearch.render({...renderArgs,query:'201',panelResults:[],sendoutResults:[]});
 assert.ok(questResult.includes('Open Quest calculator'),'Missing Quest calculator link');
-const broadResult=externalSearch.render({...renderArgs,query:'serum',panelResults:[],sendoutResults:[],visibleLimit:24});
-assert.ok(broadResult.includes('data-search-more="sendout"'),'Broad test search must offer show-more results');
+const broadResult=externalSearch.render({...renderArgs,query:'serum',panelResults:[],sendoutResults:[],visibleByLab:{}});
+assert.ok(broadResult.includes('data-search-more="quest"'),'Broad Quest test search must offer vendor-specific show-more results');
+assert.ok(broadResult.includes('data-search-more="labcorp"'),'Broad Labcorp test search must offer vendor-specific show-more results');
+assert.ok(broadResult.includes('lab-search-source-quest'),'Quest results need their own header');
+assert.ok(broadResult.includes('lab-search-source-labcorp'),'Labcorp results need their own header');
+assert.ok(broadResult.indexOf('lab-search-source-quest')<broadResult.indexOf('lab-search-source-labcorp'),'Keep sendout sources in a stable readable order');
+assert.equal((broadResult.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length,12,'Initially show six test cards per matching source');
+const expanded=externalSearch.render({...renderArgs,query:'serum',panelResults:[],sendoutResults:[],visibleByLab:{quest:12}});
+assert.equal((expanded.match(/class="lab-panel-search-result lab-panel-sendout-result gs-orderable-test"/g)||[]).length,18,'Show more must expand only the requested receiving lab');
+const cedarsResult=externalSearch.render({...renderArgs,query:'procalcitonin',panelResults:[],sendoutResults:[]});
+assert.ok(cedarsResult.includes('lab-search-source-cedars'),'Cedars must have a source header');
+assert.ok(cedarsResult.includes('Open Cedars test'),'Cedars result must retain its direct test reference');
+const molecularGroup=externalSearch.render({...renderArgs,query:'flu',panelResults:[],sendoutResults:[
+ {lab:'htrx',name:'Flu COVID RSV',labName:'HealthTrackRx',hits:[],targets:[],groups:{}},
+ {lab:'pathmd',name:'Flu panel',labName:'PathMD',hits:[],targets:[],groups:{}}
+ ],searchSendoutPanelCard:x=>'<article class="mock-molecular">'+x.name+'</article>'});
+assert.ok(molecularGroup.includes('lab-search-source-htrx'),'HealthTrackRx must have its own header');
+assert.ok(molecularGroup.includes('lab-search-source-pathmd'),'PathMD must have its own header');
+assert.ok(index.includes('visibleByLab:state.searchVisibleByLab'),'Search must pass independent per-lab pagination state');
 assert.ok(index.includes('data-search-more'),'Show-more clicks must be handled by Lab Central');
 assert.ok(index.includes('labcentral:searchindexready'),'External index loading should refresh open search results');
 console.log('Verified '+questIndex.tests.length+' Quest and '+labcorpIndex.tests.length+' Labcorp indexed names/codes, lazy loading and assay-style results.');
