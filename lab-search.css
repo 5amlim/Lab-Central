@@ -181,3 +181,56 @@
 @media print{
  .sidebar .sidebar-search .search-suggestions{display:none!important}
 }
+
+
+/* Quiet, meaning-based color cues for the typeahead. No saturated card fills. */
+.search-suggestion{
+ position:relative;border-left:3px solid transparent;
+ --suggestion-accent:#6c8394;
+ --suggestion-soft:#f0f4f7;
+ --suggestion-text:#456477;
+ padding-left:11px
+}
+.search-suggestion[data-kind="equipment"]{
+ --suggestion-accent:#416f96;--suggestion-soft:#edf4fa;--suggestion-text:#285d81
+}
+.search-suggestion[data-kind="inhouse"]{
+ --suggestion-accent:#328a7d;--suggestion-soft:#eaf6f2;--suggestion-text:#227368
+}
+.search-suggestion[data-kind="sendout"]{
+ --suggestion-accent:#3c85a5;--suggestion-soft:#edf6fa;--suggestion-text:#31708e
+}
+.search-suggestion[data-kind="tool"]{
+ --suggestion-accent:#398b90;--suggestion-soft:#eaf6f5;--suggestion-text:#226e74
+}
+.search-suggestion[data-kind="document"]{
+ --suggestion-accent:#ab8750;--suggestion-soft:#faf5ec;--suggestion-text:#856632
+}
+.search-suggestion[data-kind="quality"]{
+ --suggestion-accent:#8073ac;--suggestion-soft:#f2f0fa;--suggestion-text:#655695
+}
+.search-suggestion[data-kind="workflow"]{
+ --suggestion-accent:#708b9b;--suggestion-soft:#f0f5f7;--suggestion-text:#506d7e
+}
+.search-suggestion:hover,.search-suggestion[aria-selected="true"]{
+ background:var(--suggestion-soft);border-left-color:var(--suggestion-accent);
+ color:#284a5f
+}
+.search-suggestion-meta{
+ display:flex;flex-wrap:wrap;align-items:center;gap:4px 7px;min-width:0
+}
+.search-suggestion-kind{
+ display:inline-flex;align-items:center;white-space:nowrap;
+ background:var(--suggestion-soft);color:var(--suggestion-text);
+ border:1px solid color-mix(in srgb,var(--suggestion-accent) 18%,transparent);
+ border-radius:5px;padding:2px 6px;font-size:9px;line-height:1.45;
+ letter-spacing:.015em;font-weight:780
+}
+.search-suggestion-meta small{
+ font-size:10px;line-height:1.45;color:#7b8e9d;min-width:0
+}
+.search-suggestion-arrow{color:var(--suggestion-accent)}
+@media (prefers-contrast:more){
+ .search-suggestion{border-left-color:var(--suggestion-accent)}
+ .search-suggestion-kind{border-color:var(--suggestion-accent)}
+}
