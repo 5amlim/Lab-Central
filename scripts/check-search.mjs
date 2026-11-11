@@ -133,6 +133,30 @@ const externalSearch=catalogWindow.LAB_SITE_SEARCH;
 assert.equal(loadedPaths.length,0,'External indexes must not load before the user searches');
 await externalSearch.ensureExternalCatalog('procalcitonin');
 assert.equal(loadedPaths.length,2,'External catalogs should require only two lazy requests');
+
+const troponinOptions=externalSearch.render({...renderArgs,query:'troponin',panelResults:samplePanels});
+const inHouseOptionAt=troponinOptions.indexOf('mock-flu-panel');
+const sendoutOptionAt=troponinOptions.indexOf('Matching sendout testing options');
+const toolResultAt=troponinOptions.indexOf('aria-label="Tools search results"');
+assert.ok(inHouseOptionAt>=0&&sendoutOptionAt>inHouseOptionAt&&toolResultAt>sendoutOptionAt,
+ 'Troponin search should show both testing options before the troponin pathway tool');
+const fluOptions=externalSearch.render({...renderArgs,query:'flu',panelResults:samplePanels,
+ sendoutResults:[{lab:'htrx',name:'Flu molecular panel',labName:'HealthTrackRx',hits:[],targets:[],groups:{}}],
+ searchSendoutPanelCard:()=>'<article class="mock-molecular">Flu molecular option</article>'});
+const fluInHouseAt=fluOptions.indexOf('mock-flu-panel');
+const fluSendoutAt=fluOptions.indexOf('mock-molecular');
+const fluDocumentAt=fluOptions.indexOf('aria-label="Documents search results"');
+assert.ok(fluInHouseAt>=0&&fluSendoutAt>fluInHouseAt&&fluDocumentAt>fluSendoutAt,
+ 'Pathogen search should show in-house and sendout tests before reference documents');
+const explicitPathway=externalSearch.render({...renderArgs,query:'troponin pathway',panelResults:samplePanels});
+assert.ok(explicitPathway.indexOf('aria-label="Tools search results"')<
+ explicitPathway.indexOf('aria-label="In-house testing search results"'),
+ 'Explicit pathway searches should continue prioritizing the requested tool');
+const sendoutFilter=externalSearch.render({...renderArgs,query:'troponin',filter:'Sendout testing',panelResults:samplePanels});
+assert.ok(sendoutFilter.includes('aria-label="Sendout testing search results"')&&
+ !sendoutFilter.includes('aria-label="In-house testing search results"'),
+ 'Category filter must continue showing only requested test sources');
+
 for(const [needle,lab,code] of [
  ['322000','labcorp','322000'],
  ['001453','labcorp','001453'],
