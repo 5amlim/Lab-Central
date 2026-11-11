@@ -89,6 +89,39 @@ for(const term of ['piccolo qc log','quest troponin','troponin','flu']){
 const apiFiltered=search.render({...renderArgs,query:'api',filter:'Tools',panelResults:[],sendoutResults:[]});
 assert.ok(!apiFiltered.includes('aria-label="Top search result"'),
  'Direct destination card must respect category filtering');
+// Sidebar typeahead must respect named destinations, testing intent and search scope.
+const quickSuggest=(term,overrides={})=>search.suggestions(term,{...renderArgs,...overrides});
+for(const [term,title] of [
+ ['piccolo','Piccolo Xpress'],
+ ['quest','Quest specimen calculator'],
+ ['labcorp','Labcorp specimen calculator'],
+ ['api','Proficiency testing (API)'],
+ ['pathfast','PATHFAST']
+]){
+ const suggestions=quickSuggest(term,{panelResults:[],sendoutResults:[]});
+ assert.equal(suggestions[0]?.title,title,term+' quick suggestion must lead with its direct destination');
+ assert.ok(suggestions.length<=6,term+' suggestion panel exceeded its compact limit');
+}
+const analyteSuggestions=quickSuggest('troponin',{
+ panelResults:[{section:ctx.sections[0],panel:{title:'High-sensitivity cardiac troponin I'}}],
+ sendoutResults:[]
+});
+assert.equal(analyteSuggestions[0]?.title,'High-sensitivity cardiac troponin I',
+ 'Analyte typeahead should put in-house test panels ahead of guides');
+assert.equal(analyteSuggestions[0]?.action,'search','Panel typeahead must return to test search results');
+const documentSuggestions=quickSuggest('qc log',{panelResults:[],sendoutResults:[]});
+assert.equal(documentSuggestions[0]?.category,'Documents',
+ 'Explicit QC log autocomplete must prioritize documents');
+assert.ok(index.includes('id="searchSuggestions"')&&index.includes('id="clearSearch"')&&
+ index.includes('role="combobox"')&&index.includes('aria-controls="searchSuggestionOptions"'),
+ 'Accessible search autocomplete or custom clear button is missing');
+assert.ok(index.includes("highlightSearchSuggestion(")&&index.includes("refreshSearchSuggestions()"),
+ 'Search keyboard navigation and live suggestions must be wired');
+const searchCss=readFileSync(resolve(root,'lab-search.css'),'utf8');
+assert.ok(searchCss.includes('.sidebar .sidebar-search input::-webkit-search-cancel-button')&&
+ searchCss.includes('.sidebar .sidebar-search .sidebar-search-clear')&&
+ searchCss.includes('.sidebar .sidebar-search .search-suggestions'),
+ 'Sidebar search input sizing, custom clear icon, or dropdown styles are missing');
 const resourceHtml=search.render({...renderArgs,query:'qc log'});
 assert.ok(resourceHtml.indexOf('aria-label="Documents search results"')<resourceHtml.indexOf('aria-label="In-house testing search results"'),'Document-focused searches must keep documents first');
 // Direct test-name and analyte hits are primary results even when no in-house
