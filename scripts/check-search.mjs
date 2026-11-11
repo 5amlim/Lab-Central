@@ -55,6 +55,41 @@ const fluHtml=search.render(renderArgs);
 assert.ok(fluHtml.indexOf('aria-label="In-house testing search results"')>=0,'Missing in-house testing group');
 assert.ok(fluHtml.indexOf('mock-flu-panel')<fluHtml.indexOf('class="gs-results"'),'Testing panels must precede related instrument guides');
 assert.ok(fluHtml.indexOf('gs-group-heading')<fluHtml.indexOf('mock-flu-panel'),'Testing group heading missing');
+// Named destinations lead directly to their equipment, lab calculator or quality card.
+// Avoid duplicate cards while retaining the normal category and test-name searches.
+for(const [term,title,link] of [
+ ['piccolo','Piccolo Xpress','data-go="piccolo"'],
+ ['pathfast','PATHFAST','data-go="pathfast"'],
+ ['quest','Quest specimen calculator','https://5amlim.github.io/Lab-Calculator/'],
+ ['labcorp','Labcorp specimen calculator','labcorp.html'],
+ ['cedars','Cedars specimen calculator','cedars.html'],
+ ['api','Proficiency testing (API)','data-go="api"'],
+ ['envi','Envi supply ordering','data-go="envi-ordering"'],
+ ['eGFR','eGFR calculator','data-target-tab="egfr-calculator"']
+]){
+ const markup=search.render({...renderArgs,query:term,panelResults:[],sendoutResults:[]});
+ const start=markup.indexOf('aria-label="Top search result"');
+ assert.ok(start>=0,term+' should have a top destination card');
+ const top=markup.slice(start,markup.indexOf('</section>',start));
+ assert.ok(top.includes(title)&&top.includes(link),term+' top destination was incorrect');
+ assert.equal(markup.split('>'+title+'</strong>').length,2,term+' repeated its featured card');
+}
+const pochiMarkup=search.render({...renderArgs,query:'pochi',
+ sections:[...renderArgs.sections,{id:'sysmex',title:'Sysmex pocH-100i',category:'Analyzers',subtitle:'CBC',blocks:[]}],
+ panelResults:[],sendoutResults:[]});
+assert.ok(pochiMarkup.includes('aria-label="Top search result"')&&
+ pochiMarkup.includes('data-go="sysmex"'),'Pochi nickname must open the Sysmex instrument');
+const piccoloWithPanels=search.render({...renderArgs,query:'piccolo'});
+assert.ok(piccoloWithPanels.indexOf('aria-label="Top search result"')<
+ piccoloWithPanels.indexOf('mock-flu-panel'),'Named analyzer guide must lead before related assays');
+for(const term of ['piccolo qc log','quest troponin','troponin','flu']){
+ const markup=search.render({...renderArgs,query:term});
+ assert.ok(!markup.includes('aria-label="Top search result"'),
+  term+' should keep its task or assay results rather than a generic direct shortcut');
+}
+const apiFiltered=search.render({...renderArgs,query:'api',filter:'Tools',panelResults:[],sendoutResults:[]});
+assert.ok(!apiFiltered.includes('aria-label="Top search result"'),
+ 'Direct destination card must respect category filtering');
 const resourceHtml=search.render({...renderArgs,query:'qc log'});
 assert.ok(resourceHtml.indexOf('aria-label="Documents search results"')<resourceHtml.indexOf('aria-label="In-house testing search results"'),'Document-focused searches must keep documents first');
 // Direct test-name and analyte hits are primary results even when no in-house
