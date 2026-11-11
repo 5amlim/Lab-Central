@@ -109,6 +109,21 @@ const analyteSuggestions=quickSuggest('troponin',{
 assert.equal(analyteSuggestions[0]?.title,'High-sensitivity cardiac troponin I',
  'Analyte typeahead should put in-house test panels ahead of guides');
 assert.equal(analyteSuggestions[0]?.action,'search','Panel typeahead must return to test search results');
+const nearEquipmentSuggestions=quickSuggest('pathfas',{panelResults:[]});
+assert.equal(nearEquipmentSuggestions[0]?.title,'PATHFAST',
+ 'Near-complete analyzer names should rank the equipment guide first');
+const nearPiccoloSuggestions=quickSuggest('piccol',{panelResults:[]});
+assert.equal(nearPiccoloSuggestions[0]?.title,'Piccolo Xpress',
+ 'Nearly complete Piccolo searches should prioritize the analyzer');
+assert.notEqual(quickSuggest('pathfas troponin',{panelResults:[]})[0]?.title,'PATHFAST',
+ 'Specific multiword assay searches should not be replaced by a generic analyzer guide');
+const labelMarkup=index.slice(index.indexOf('const html=searchSuggestions.map('));
+assert.ok(labelMarkup.includes("data-kind=")&&labelMarkup.includes("search-suggestion-kind")&&
+ labelMarkup.includes("Equipment")&&labelMarkup.includes("Document"),
+ 'Search dropdown must render category labels for informative colors');
+const categorizedCss=readFileSync(resolve(root,'lab-search.css'),'utf8');
+for(const kind of ['equipment','inhouse','sendout','tool','document','quality','workflow'])
+ assert.ok(categorizedCss.includes('[data-kind="'+kind+'"]'),'Missing search category styling: '+kind);
 const documentSuggestions=quickSuggest('qc log',{panelResults:[],sendoutResults:[]});
 assert.equal(documentSuggestions[0]?.category,'Documents',
  'Explicit QC log autocomplete must prioritize documents');
