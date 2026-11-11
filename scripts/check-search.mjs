@@ -21,7 +21,8 @@ const ctx={
  market:'socal',
  sections:[
   {id:'pathfast',title:'PATHFAST',category:'Analyzers',subtitle:'Cardiac marker analyzer',blocks:[{type:'list',level:0,text:'Daily QC'},{type:'list',level:1,text:'Check controls before testing'}]},
-  {id:'piccolo',title:'Piccolo Xpress',category:'Analyzers',subtitle:'Chemistry analyzer',blocks:[]}
+  {id:'piccolo',title:'Piccolo Xpress',category:'Analyzers',subtitle:'Chemistry analyzer',blocks:[]},
+  {id:'sysmex',title:'Sysmex pocH-100i',category:'Analyzers',subtitle:'CBC analyzer',blocks:[]}
  ],
  extras:[],
  groupsFor:s=>s.id==='pathfast'?[{id:'daily-qc',title:'Daily QC',blocks:s.blocks}]:[]
@@ -74,9 +75,7 @@ for(const [term,title,link] of [
  assert.ok(top.includes(title)&&top.includes(link),term+' top destination was incorrect');
  assert.equal(markup.split('>'+title+'</strong>').length,2,term+' repeated its featured card');
 }
-const pochiMarkup=search.render({...renderArgs,query:'pochi',
- sections:[...renderArgs.sections,{id:'sysmex',title:'Sysmex pocH-100i',category:'Analyzers',subtitle:'CBC',blocks:[]}],
- panelResults:[],sendoutResults:[]});
+const pochiMarkup=search.render({...renderArgs,query:'pochi',panelResults:[],sendoutResults:[]});
 assert.ok(pochiMarkup.includes('aria-label="Top search result"')&&
  pochiMarkup.includes('data-go="sysmex"'),'Pochi nickname must open the Sysmex instrument');
 const piccoloWithPanels=search.render({...renderArgs,query:'piccolo'});
