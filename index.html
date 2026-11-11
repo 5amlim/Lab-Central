@@ -3090,7 +3090,7 @@ function selectSearchSuggestion(index){
  if(entry.action==='search'){
   el('search').value=entry.query||entry.title;
   state.search=el('search').value;state.filter='All';state.searchVisibleByLab={};
-  syncSearchClear();render();el('search').focus({preventScroll:true});return;
+  syncSearchClear();render();el('search').focus({preventScroll:true});closeSearchSuggestions();return;
  }
  if(entry.href?.startsWith('#')){
   const [section,...rest]=entry.href.slice(1).split('/');
