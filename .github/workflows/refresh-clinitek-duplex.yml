@@ -1,0 +1,95 @@
+name: Refresh CLINITEK UA and hCG duplex control log
+on:
+  push:
+    paths:
+      - .github/workflows/refresh-clinitek-duplex.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-clinitek-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --disable-pip-version-check pymupdf
+      - name: Replace CLINITEK with two matching, reversed, hole-punch-safe pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import fitz
+
+          path = Path("assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf")
+          source = fitz.open(path)
+          assert source.is_pdf and len(source) in (1, 2), "Expected a one/two-page CLINITEK template"
+          front = source[0]
+          assert front.rect.width > front.rect.height, "Template must be landscape"
+          assert "CLINITEK UA + hCG Control Log" in front.get_text(), "Wrong PDF target"
+          assert front.rotation == 0, "Unexpected front rotation"
+          source_text = front.get_text()
+          source_mediabox = front.mediabox
+          old_title = front.search_for("CLINITEK UA + hCG Control Log")
+          assert old_title, "Cannot verify the title position"
+          old_title_y = old_title[0].y0
+
+          # Preserve the exact original page graphics and type; two copies of
+          # the same controlled log, with the back side upside down for duplex.
+          result = fitz.open()
+          result.insert_pdf(source, from_page=0, to_page=0, links=True, annots=True)
+          result.insert_pdf(source, from_page=0, to_page=0, links=True, annots=True)
+          result[0].set_rotation(0)
+          result[1].set_rotation(180)
+
+          # Match the binder revision: title top at ~38.09 pt rather than ~22.09.
+          # Translate PDF content without scaling, reflowing or recreating fonts.
+          shift_pt = max(0.0, 38.09 - old_title_y)
+          assert shift_pt <= 22, f"Unexpected title offset, refusing to edit: {old_title_y}"
+          if shift_pt > 0.02:
+              for page in result:
+                  old_stream = b"\n".join(result.xref_stream(ref) for ref in page.get_contents())
+                  wrapped = (f"q\n1 0 0 1 0 {-shift_pt:.4f} cm\n".encode("ascii")
+                             + old_stream + b"\nQ\n")
+                  xref = result.get_new_xref()
+                  result.update_object(xref, "<<>>")
+                  result.update_stream(xref, wrapped, compress=True)
+                  page.set_contents(xref)
+
+          for i,page in enumerate(result):
+              assert page.get_text() == source_text, f"Text altered on page {i+1}"
+              assert page.mediabox == source_mediabox, f"Page size changed on page {i+1}"
+              assert page.rotation == i*180, f"Wrong page orientation {i+1}"
+              title = page.search_for("CLINITEK UA + hCG Control Log")
+              assert title and 37.5 <= title[0].y0 <= 42, f"Title not hole-punch safe on {i+1}"
+              # Verify every text item remains on the page.
+              for word in page.get_text("words"):
+                  assert word[0] > 0 and word[1] > 0 and word[2] < page.mediabox.width and word[3] < page.mediabox.height, f"Text clipped on {i+1}"
+
+          temporary = path.with_name("CLINITEK-UA-hCG-Control-Log.updated.pdf")
+          result.save(temporary,garbage=4,deflate=True)
+          result.close()
+          source.close()
+          with fitz.open(temporary) as verified:
+              assert len(verified) == 2
+              assert [p.rotation for p in verified] == [0,180]
+              assert all("CLINITEK UA + hCG Control Log" in p.get_text() for p in verified)
+          os.replace(temporary,path)
+          print("UPDATED ONLY",path)
+          print("PAGES",2,"ROTATIONS", [0,180], "TRANSLATION_POINTS",round(shift_pt,3))
+          PY
+      - name: Publish only the CLINITEK control log PDF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- assets/lab-templates/CLINITEK-UA-hCG-Control-Log.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m "Give CLINITEK UA-hCG duplex log binder punch clearance"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "CLINITEK duplex PDF already matches requested format."
+          fi
