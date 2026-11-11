@@ -428,5 +428,52 @@ function render(arg){
  if(!visible.length)html+='<div class="empty-state gs-empty">No matches in '+E(filter==='All'?'Lab Central':filter)+'. Try a broader term such as “QC”, “troponin”, “eGFR”, “sendout”, or “template”.</div>';
  return html;
 }
-window.LAB_SITE_SEARCH={render,find,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
+// Lightweight typeahead entries reuse the same ranked index and direct shortcuts.
+// A test/panel suggestion narrows the search; a resource opens its real destination.
+function suggestions(query,ctx){
+ const q=norm(query);
+ if(!q)return [];
+ const records=find(query,ctx);
+ const featured=directDestination(query,records,ctx);
+ const panels=ctx.panelResults||[],sendouts=ctx.sendoutResults||[];
+ const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(q);
+ const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
+ const results=[],seen=new Set();
+ const add=(item)=>{
+  if(!item||!item.title||results.length>=7)return;
+  const key=[item.action||'open',item.href||item.query||'',item.title].join('|');
+  if(seen.has(key))return;
+  seen.add(key);results.push(item);
+ };
+ const resource=(item)=>({
+  title:item.title,category:item.category,
+  detail:item.kind==='sendout-test'?((item.lab||'Lab').toUpperCase()+(item.code?' · '+item.code:'')):
+   item.category==='In-house testing'?'Equipment guide':
+   item.category==='Tools'?'Tool or calculator':
+   item.category==='Quality & compliance'?'Quality reference':'Open reference',
+  action:item.kind==='sendout-test'?'search':'open',
+  query:item.kind==='sendout-test'?(item.code||item.testName):undefined,
+  href:item.href,approximate:Boolean(item.approximate)
+ });
+ if(featured)add(resource(featured));
+ if(testFirst){
+  for(const match of panels){
+   if(!match?.section||!match?.panel)continue;
+   add({title:match.panel.title,category:'In-house testing',detail:match.section.title+' · Test panel',
+    action:'search',query:match.panel.title,approximate:Boolean(match.approximate)});
+  }
+  for(const match of sendouts){
+   if(!match?.name)continue;
+   add({title:match.name,category:'Sendout testing',detail:(match.labName||'Sendout')+' · Molecular panel',
+    action:'search',query:match.name,approximate:Boolean(match.approximate)});
+  }
+  for(const item of records.filter(item=>item.kind==='sendout-test'))add(resource(item));
+ }
+ for(const item of records){
+  if(item===featured||testFirst&&item.kind==='sendout-test')continue;
+  add(resource(item));
+ }
+ return results.slice(0,6);
+}
+window.LAB_SITE_SEARCH={render,find,suggestions,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
 })();
