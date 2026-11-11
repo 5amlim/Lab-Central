@@ -433,7 +433,7 @@ function render(arg){
  return html;
 }
 // Lightweight typeahead entries reuse the same ranked index and direct shortcuts.
-// A test/panel suggestion narrows the search; a resource opens its real destination.
+// Every suggestion opens its own guide, form, calculator or test-menu destination.
 function suggestions(query,ctx){
  const q=norm(query);
  if(!q)return [];
@@ -455,21 +455,23 @@ function suggestions(query,ctx){
    item.category==='In-house testing'?'Equipment guide':
    item.category==='Tools'?'Tool or calculator':
    item.category==='Quality & compliance'?'Quality reference':'Open reference',
-  action:item.kind==='sendout-test'?'search':'open',
-  query:item.kind==='sendout-test'?(item.code||item.testName):undefined,
+  action:'open',
   href:item.href,approximate:Boolean(item.approximate)
  });
  if(featured)add(resource(featured));
  if(testFirst){
   for(const match of panels){
    if(!match?.section||!match?.panel)continue;
+   const tab=match.section.id==='clinitek'
+    ?(/pregnancy|chorionic|hcg/i.test(match.panel.title)?'hcg-cassette':'ua-strip'):'';
    add({title:match.panel.title,category:'In-house testing',detail:match.section.title+' · Test panel',
-    action:'search',query:match.panel.title,approximate:Boolean(match.approximate)});
+    action:'open',href:'#'+match.section.id+(tab?'/'+tab:''),approximate:Boolean(match.approximate)});
   }
   for(const match of sendouts){
    if(!match?.name)continue;
    add({title:match.name,category:'Sendout testing',detail:(match.labName||'Sendout')+' · Molecular panel',
-    action:'search',query:match.name,approximate:Boolean(match.approximate)});
+    action:'sendout-panel',lab:match.lab,panelId:match.id||'',query:match.name,
+    approximate:Boolean(match.approximate)});
   }
   for(const item of records.filter(item=>item.kind==='sendout-test'))add(resource(item));
  }
