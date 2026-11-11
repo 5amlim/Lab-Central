@@ -169,7 +169,7 @@ function baseIndex(ctx){
  (ctx.sections||[]).concat(ctx.extras||[]).forEach(sec=>{
   const category=categoryFor(sec);
   const archived=Boolean(sec.archived||sec.category==='Archived');
-  add(out,{category,title:sec.title,description:(sec.subtitle||'Open reference guide')+(archived?' · Archived reference':''),keywords:[sec.category,sec.sourceTitle,sec.sample,sec.qc,sec.title,sec.subtitle,(sec.blocks||[]).map(b=>b.text||'').join(' '),archived?'historical archive':''].filter(Boolean).join(' '),href:'#'+sec.id,archived});
+  add(out,{category,title:sec.title,description:(sec.subtitle||'Open reference guide')+(archived?' · Archived reference':''),keywords:[sec.category,sec.sourceTitle,sec.sample,sec.qc,sec.title,sec.subtitle,...(EQUIPMENT_ALIASES[sec.id]||[]),(sec.blocks||[]).map(b=>b.text||'').join(' '),archived?'historical archive':''].filter(Boolean).join(' '),href:'#'+sec.id,archived});
   if(!(ctx.sections||[]).includes(sec))return;
   let groups=[];
   try{groups=ctx.groupsFor(sec)||[]}catch(_){}
@@ -236,6 +236,49 @@ function find(q,ctx){
   .filter(x=>x.score>=0&&!already.has(x.item))
   .sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,25);
  return exact.map(x=>x.item).concat(near.map(x=>({...x.item,approximate:true})));
+}
+// Prioritize an unambiguous named destination without overriding assay/pathogen searches.
+const DIRECT_DESTINATIONS=[
+ {href:'https://5amlim.github.io/Lab-Calculator/',aliases:['quest','quest diagnostics','quest lab','quest labs','quest calculator','quest lab calculator','quest specimen calculator']},
+ {href:'https://5amlim.github.io/Lab-Calculator/labcorp.html',aliases:['labcorp','lab corp','labcorp lab','labcorp calculator','labcorp lab calculator','labcorp specimen calculator']},
+ {href:'https://5amlim.github.io/Lab-Calculator/cedars.html',aliases:['cedars','cedars sinai','cedars lab','cedars calculator','cedars lab calculator','cedars specimen calculator']},
+ {href:'#api',aliases:['api','api proficiency testing','proficiency testing','proficiency testing api','american proficiency institute']},
+ {href:'#envi-ordering',aliases:['envi','envi ordering']},
+ {href:'#piccolo/egfr-calculator',aliases:['egfr','egfr calculator']},
+ {href:'#calculators',aliases:['lab calculators','lab calculator','lab calculators and collection guides']}
+];
+const EQUIPMENT_ALIASES={
+ pathfast:['pathfast'],piccolo:['piccolo','piccolo xpress'],
+ sysmex:['sysmex','pochi','poc h 100i','sysmex pochi'],
+ triage:['triage','triage meterpro','quidel triage'],
+ clinitek:['clinitek','clinitek status','clinitek status plus'],
+ spotfire:['spotfire','biofire spotfire'],torch:['torch','biofire torch'],
+ sofia:['sofia','sofia 2'],febridx:['febridx'],
+ hemocue:['hemocue'],coagsense:['coag sense','coagsense']
+};
+function directDestination(q,records,ctx){
+ const query=norm(q);
+ if(!query)return null;
+ const shortcut=DIRECT_DESTINATIONS.find(rule=>rule.aliases.some(alias=>norm(alias)===query));
+ if(shortcut){
+  const hit=records.find(item=>item.href===shortcut.href&&!item.approximate);
+  if(hit)return hit;
+ }
+ const sections=(ctx.sections||[]).concat(ctx.extras||[]);
+ for(const sec of sections){
+  if(categoryFor(sec)!=='In-house testing'||sec.archived||sec.category==='Archived')continue;
+  const aliases=[sec.id,sec.title,...(EQUIPMENT_ALIASES[sec.id]||[])];
+  const named=aliases.some(alias=>{
+   const name=norm(alias);
+   return name&&(query===name||
+    ['analyzer','instrument','equipment','machine','device'].some(type=>query===name+' '+type));
+  });
+  if(!named)continue;
+  const hit=records.find(item=>item.href==='#'+sec.id&&!item.approximate);
+  if(hit)return hit;
+ }
+ // Exact full titles of indexed resources deserve the same direct navigation treatment.
+ return records.find(item=>item.kind!=='sendout-test'&&!item.approximate&&norm(item.title)===query)||null;
 }
 function itemCard(x){
  const route=x.href.charAt(0)==='#';
@@ -330,13 +373,23 @@ function render(arg){
  '<button type="button" data-filter="All" class="gs-filter'+(filter==='All'?' is-selected':'')+'" aria-pressed="'+(filter==='All')+'">All <span>'+total+'</span></button>'+
  groups.map(x=>'<button type="button" data-filter="'+E(x.category)+'" class="gs-filter'+(filter===x.category?' is-selected':'')+'" aria-pressed="'+(filter===x.category)+'">'+E(x.category)+' <span>'+x.count+'</span></button>').join('')+'</div>';
  const visible=groups.filter(x=>x.count&&(filter==='All'||filter===x.category));
- let display=visible;
+ const featured=directDestination(q,records,arg);
+ const showFeatured=featured&&(filter==='All'||filter===featured.category);
+ if(showFeatured){
+  html+='<section class="gs-group gs-top-result" aria-label="Top search result"><div class="gs-group-heading"><h2>Top match</h2></div>'+
+   '<div class="gs-results">'+itemCard(featured)+'</div></section>';
+ }
+ // Show the direct result once, without changing aggregate category counts.
+ let display=visible.map(group=>{
+  const rows=showFeatured?group.rows.filter(item=>item!==featured):group.rows;
+  return {...group,rows,count:group.count-(group.rows.length-rows.length)};
+ }).filter(group=>group.count);
  if(testingFirst){
   // Display real testing options across both sources before any guides or resources.
   // A related in-house guide must not precede a sendout test card.
   const primary=[];
   for(const category of ['In-house testing','Sendout testing']){
-   const group=visible.find(x=>x.category===category);
+   const group=display.find(x=>x.category===category);
    if(!group)continue;
    if(category==='In-house testing'&&panels.length)
     primary.push({category,rows:[],count:panels.length,primaryOnly:true});
@@ -346,7 +399,7 @@ function render(arg){
      primary.push({category,rows:tests,count:tests.length+sendouts.length,primaryOnly:true});
    }
   }
-  const related=visible.map(group=>{
+  const related=display.map(group=>{
    const rows=group.rows.filter(x=>x.kind!=='sendout-test');
    return {...group,rows,count:rows.length,relatedOnly:true};
   }).filter(group=>group.count);
