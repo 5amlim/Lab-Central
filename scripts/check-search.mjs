@@ -108,7 +108,38 @@ const analyteSuggestions=quickSuggest('troponin',{
 });
 assert.equal(analyteSuggestions[0]?.title,'High-sensitivity cardiac troponin I',
  'Analyte typeahead should put in-house test panels ahead of guides');
-assert.equal(analyteSuggestions[0]?.action,'search','Panel typeahead must return to test search results');
+assert.equal(analyteSuggestions[0]?.action,'open','Clicking a panel suggestion must open its guide');
+assert.equal(analyteSuggestions[0]?.href,'#pathfast','PATHFAST assay should open its equipment guide');
+const clinitekSection={id:'clinitek',title:'Siemens Clinitek',category:'Analyzers',blocks:[]};
+for(const [title,route] of [
+ ['Urine pregnancy (human chorionic gonadotropin)','#clinitek/hcg-cassette'],
+ ['Urinalysis reagent strip','#clinitek/ua-strip']
+]){
+ const matches=quickSuggest('clinitek',{
+  sections:[...ctx.sections,clinitekSection],
+  panelResults:[{section:clinitekSection,panel:{title}}],
+  sendoutResults:[]
+ });
+ assert.ok(matches.some(x=>x.title===title&&x.action==='open'&&x.href===route),
+  title+' should open its exact Clinitek testing procedure');
+}
+const molecularSuggestions=quickSuggest('molecular panel',{
+ panelResults:[],
+ sendoutResults:[{name:'Molecular respiratory panel',lab:'htrx',id:'resp',labName:'HealthTrackRx'}]
+});
+assert.ok(molecularSuggestions.some(x=>x.action==='sendout-panel'&&x.lab==='htrx'&&x.query==='Molecular respiratory panel'),
+ 'Molecular typeahead must open the sendout panel menu');
+const documentLink=quickSuggest('clinitek control log',{
+ panelResults:[],sendoutResults:[]
+}).find(x=>x.title==='CLINITEK UA + hCG Control Log');
+assert.ok(documentLink?.action==='open'&&documentLink?.href.includes('template=clinitek-combined'),
+ 'Document suggestion must link directly to its approved form');
+const inputHandler=index.slice(index.indexOf("el('search').addEventListener('keydown'"),index.indexOf("el('searchSuggestionOptions').addEventListener('click'"));
+assert.ok(inputHandler.includes("if(e.key==='Enter')")&&
+ inputHandler.includes('scrollIntoView')&&!inputHandler.includes('selected.click()'),
+ 'Enter must display complete search results, even when a suggestion is highlighted');
+assert.ok(index.includes('const tag=linked?')&&index.includes("!entry.href.startsWith('#')"),
+ 'Direct document links must render as clickable anchors instead of inert buttons');
 const nearEquipmentSuggestions=quickSuggest('pathfas',{panelResults:[]});
 assert.equal(nearEquipmentSuggestions[0]?.title,'PATHFAST',
  'Near-complete analyzer names should rank the equipment guide first');
