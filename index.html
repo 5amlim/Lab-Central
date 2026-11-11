@@ -319,7 +319,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
         <input id="search" type="search" placeholder="Search Lab Central…" aria-label="Search documents, templates, tools, pathways, instruments, tests and workflows" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="searchSuggestionOptions">
         <button class="sidebar-search-clear" id="clearSearch" type="button" aria-label="Clear search" title="Clear search" hidden><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         <div class="search-suggestions" id="searchSuggestions" hidden>
-          <div class="search-suggestions-heading"><strong>Suggestions</strong><span>↑ ↓ to select</span></div>
+          <div class="search-suggestions-heading"><strong>Suggestions</strong><span>Click to open · Enter for results</span></div>
           <div class="search-suggestion-options" id="searchSuggestionOptions" role="listbox" aria-label="Search suggestions"></div>
           <button type="button" class="search-view-all" id="searchViewAll">View all matching results <span aria-hidden="true">→</span></button>
         </div>
@@ -3068,9 +3068,10 @@ function refreshSearchSuggestions(){
  };
  searchSuggestions=window.LAB_SITE_SEARCH?.suggestions?.(query,context)||[];
  const html=searchSuggestions.map((entry,i)=>{
-  const external=entry.action==='open'&&/^https?:\/\//i.test(entry.href||'');
-  const tag=external?'a':'button';
-  const attrs=external?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
+  const linked=entry.action==='open'&&Boolean(entry.href)&&!entry.href.startsWith('#');
+  const external=linked&&/^https?:\/\//i.test(entry.href);
+  const tag=linked?'a':'button';
+  const attrs=linked?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
   const description=entry.detail||entry.category||'Reference';
   const kind=entry.category==='In-house testing'
    ?(entry.detail==='Equipment guide'?'equipment':'inhouse'):
@@ -3097,10 +3098,9 @@ function selectSearchSuggestion(index){
  const entry=searchSuggestions[index];
  if(!entry)return;
  closeSearchSuggestions();
- if(entry.action==='search'){
-  el('search').value=entry.query||entry.title;
-  state.search=el('search').value;state.filter='All';state.searchVisibleByLab={};
-  syncSearchClear();render();el('search').focus({preventScroll:true});closeSearchSuggestions();return;
+ if(entry.action==='sendout-panel'){
+  if(window.LAB_CALCULATORS_GUIDE?.selectSendoutSearchResult?.(entry.lab,entry.query,entry.panelId||''))navigate('calculators');
+  return;
  }
  if(entry.href?.startsWith('#')){
   const [section,...rest]=entry.href.slice(1).split('/');
@@ -3128,10 +3128,15 @@ el('search').addEventListener('keydown',e=>{
    searchSuggestionIndex<0?(e.key==='ArrowDown'?0:total-1):
     searchSuggestionIndex+(e.key==='ArrowDown'?1:-1));}
  }
- if(e.key==='Enter'&&visible){
+ if(e.key==='Enter'){
   e.preventDefault();
-  const selected=el('searchSuggestionOptions').querySelector('[data-search-suggestion="'+searchSuggestionIndex+'"]');
-  if(selected)selected.click();else{closeSearchSuggestions();e.target.blur();}
+  const query=e.target.value.trim();
+  if(query){
+   state.search=query;state.filter='All';state.searchVisibleByLab={};
+   render();
+   el('mainContent')?.scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  closeSearchSuggestions();e.target.blur();
  }
  if(e.key==='Tab'&&visible)closeSearchSuggestions();
 });
@@ -3141,7 +3146,7 @@ el('searchSuggestionOptions').addEventListener('click',e=>{
  const index=Number(target.dataset.searchSuggestion);
  const item=searchSuggestions[index];
  if(!item)return;
- if(item.action==='open'&&/^https?:\/\//i.test(item.href||'')){closeSearchSuggestions();return;}
+ if(item.action==='open'&&item.href&&!item.href.startsWith('#')){closeSearchSuggestions();return;}
  e.preventDefault();selectSearchSuggestion(index);
 });
 el('searchViewAll').addEventListener('click',()=>{
