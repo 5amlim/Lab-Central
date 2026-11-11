@@ -330,28 +330,43 @@ function render(arg){
  '<button type="button" data-filter="All" class="gs-filter'+(filter==='All'?' is-selected':'')+'" aria-pressed="'+(filter==='All')+'">All <span>'+total+'</span></button>'+
  groups.map(x=>'<button type="button" data-filter="'+E(x.category)+'" class="gs-filter'+(filter===x.category?' is-selected':'')+'" aria-pressed="'+(filter===x.category)+'">'+E(x.category)+' <span>'+x.count+'</span></button>').join('')+'</div>';
  const visible=groups.filter(x=>x.count&&(filter==='All'||filter===x.category));
+ let display=visible;
  if(testingFirst){
-  // A Cedars analyte with no in-house panel should be the first result, not
-  // an empty In-house heading or an unrelated guide/document match.
-  const priority=panels.length
-   ?{'In-house testing':0,'Sendout testing':1}
-   :{'Sendout testing':0,'In-house testing':1};
-  visible.sort((a,b)=>(priority[a.category]??2)-(priority[b.category]??2));
+  // Display real testing options across both sources before any guides or resources.
+  // A related in-house guide must not precede a sendout test card.
+  const primary=[];
+  for(const category of ['In-house testing','Sendout testing']){
+   const group=visible.find(x=>x.category===category);
+   if(!group)continue;
+   if(category==='In-house testing'&&panels.length)
+    primary.push({category,rows:[],count:panels.length,primaryOnly:true});
+   if(category==='Sendout testing'){
+    const tests=group.rows.filter(x=>x.kind==='sendout-test');
+    if(tests.length||sendouts.length)
+     primary.push({category,rows:tests,count:tests.length+sendouts.length,primaryOnly:true});
+   }
+  }
+  const related=visible.map(group=>{
+   const rows=group.rows.filter(x=>x.kind!=='sendout-test');
+   return {...group,rows,count:rows.length,relatedOnly:true};
+  }).filter(group=>group.count);
+  display=primary.concat(related);
  }
- visible.forEach(group=>{
-  html+='<section class="gs-group" aria-label="'+E(group.category)+' search results"><div class="gs-group-heading"><h2>'+E(group.category)+'</h2><span>'+group.count+' '+(group.count===1?'result':'results')+'</span></div>';
-  // Matching assay cards are the primary action for test-name searches.
-  // Related analyzer and workflow guide cards come afterward.
-  if(group.category==='In-house testing'&&panels.length){
+ display.forEach(group=>{
+  const heading=group.relatedOnly&&group.category==='In-house testing'?'Related in-house guides':
+   group.relatedOnly&&group.category==='Sendout testing'?'Related sendout guides':group.category;
+  html+='<section class="gs-group" aria-label="'+E(heading)+' search results"><div class="gs-group-heading"><h2>'+E(heading)+'</h2><span>'+group.count+' '+(group.count===1?'result':'results')+'</span></div>';
+  if(group.category==='In-house testing'&&panels.length&&!group.relatedOnly){
    html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching in-house testing options</p><div class="lab-search-sources">'+arg.labSearchResultGroup('inhouse','In-house panels','Assay and pathogen matches',panels.map(arg.searchPanelCard).join(''),panels.length)+'</div></div>';
   }
-  const tests=group.category==='Sendout testing'?group.rows.filter(x=>x.kind==='sendout-test'):[];
-  const related=group.rows.filter(x=>x.kind!=='sendout-test');
-  if(group.category==='Sendout testing'&&(tests.length||sendouts.length)){
-   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources gs-sendout-sources">'+renderSendoutSources(tests,sendouts,q,arg)+'</div></div>';
+  const tests=group.category==='Sendout testing'&&!group.relatedOnly?group.rows.filter(x=>x.kind==='sendout-test'):[];
+  const molecular=group.relatedOnly?[]:sendouts;
+  if(group.category==='Sendout testing'&&(tests.length||molecular.length)){
+   html+='<div class="gs-assay-results gs-assay-first"><p class="gs-assay-caption">Matching sendout testing options</p><div class="lab-search-sources gs-sendout-sources">'+renderSendoutSources(tests,molecular,q,arg)+'</div></div>';
   }
+  const related=group.primaryOnly?[]:group.rows.filter(x=>x.kind!=='sendout-test');
   if(related.length){
-   if((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length)))
+   if(!group.relatedOnly&&((group.category==='In-house testing'&&panels.length)||(group.category==='Sendout testing'&&(sendouts.length||tests.length))))
     html+='<p class="gs-assay-caption">Related guides and references</p>';
    html+='<div class="gs-results">'+related.map(itemCard).join('')+'</div>';
   }
