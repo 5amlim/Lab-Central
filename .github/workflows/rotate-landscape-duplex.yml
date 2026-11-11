@@ -1,0 +1,89 @@
+name: Rotate reverse side of landscape double-sided lab templates
+
+on:
+  push:
+    paths:
+      - .github/workflows/rotate-landscape-duplex.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  correct-pdf-rotation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF metadata editor
+        run: pip install --disable-pip-version-check pymupdf
+      - name: Rotate only page 2 of landscape two-page template PDFs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import fitz
+
+          root = Path("assets/lab-templates")
+          updated = []
+          already_correct = []
+          skipped = []
+          for path in sorted(root.rglob("*.pdf")):
+              # Binder covers and manuals are not double-sided log templates.
+              if any(word in path.name.lower() for word in ("binder-cover", "spine-cover")):
+                  skipped.append(f"{path}: cover")
+                  continue
+              try:
+                  with fitz.open(path) as doc:
+                      if not doc.is_pdf or doc.needs_pass or len(doc) != 2:
+                          skipped.append(f"{path}: not an editable two-page template")
+                          continue
+                      front, back = doc[0], doc[1]
+                      if not (front.rect.width > front.rect.height and back.rect.width > back.rect.height):
+                          skipped.append(f"{path}: not landscape on both sides")
+                          continue
+                      if abs(front.rect.width - back.rect.width) > 1 or abs(front.rect.height - back.rect.height) > 1:
+                          skipped.append(f"{path}: mismatched sheet sizes")
+                          continue
+                      goal = (front.rotation + 180) % 360
+                      if back.rotation == goal:
+                          already_correct.append(str(path))
+                          continue
+                      before_front = front.rotation
+                      before_back_text = back.get_text(sort=False)
+                      before_content_refs = back.get_contents()
+                      back.set_rotation(goal)
+                      assert front.rotation == before_front
+                      assert back.get_text(sort=False) == before_back_text, f"Text changed: {path}"
+                      assert back.get_contents() == before_content_refs, f"Content streams changed: {path}"
+                      # Incremental PDF update preserves all existing text, graphics, dimensions,
+                      # annotations and page streams; only the reverse-side rotation is changed.
+                      doc.saveIncr()
+                  with fitz.open(path) as verified:
+                      assert len(verified) == 2 and verified[1].rotation == goal
+                      assert verified[0].rotation == before_front
+                  updated.append(str(path))
+              except Exception as exc:
+                  raise RuntimeError(f"Could not safely adjust {path}: {exc}") from exc
+
+          print(f"Changed {len(updated)} landscape two-page PDFs:")
+          for name in updated: print("  UPDATED", name)
+          print(f"Already correctly oriented: {len(already_correct)}")
+          for name in already_correct: print("  UNCHANGED", name)
+          print(f"Skipped (not eligible): {len(skipped)}")
+          for reason in skipped: print("  SKIP", reason)
+          PY
+      - name: Publish the updated PDFs without modifying the templates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/lab-templates
+          if ! git diff --cached --quiet; then
+            git diff --cached --stat
+            git commit -m "Rotate reverse pages for landscape duplex binder printing"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "All landscape two-page templates already have the correct reverse-side orientation."
+          fi
