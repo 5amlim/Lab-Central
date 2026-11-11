@@ -301,7 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261110-smart-final" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261110-typeahead-v1" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -314,7 +314,16 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
         </a>
         <button class="icon-button sidebar-close" id="closeSidebar" type="button" aria-label="Close navigation">✕</button>
       </div>
-      <div class="sidebar-search"><span class="search-icon" aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search anything: templates, tools, tests…" aria-label="Search documents, templates, tools, pathways, instruments, tests and workflows" autocomplete="off"></div>
+      <div class="sidebar-search" id="sidebarSearch">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5"/></svg>
+        <input id="search" type="search" placeholder="Search Lab Central…" aria-label="Search documents, templates, tools, pathways, instruments, tests and workflows" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="searchSuggestionOptions">
+        <button class="sidebar-search-clear" id="clearSearch" type="button" aria-label="Clear search" title="Clear search" hidden><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        <div class="search-suggestions" id="searchSuggestions" hidden>
+          <div class="search-suggestions-heading"><strong>Suggestions</strong><span>↑ ↓ to select</span></div>
+          <div class="search-suggestion-options" id="searchSuggestionOptions" role="listbox" aria-label="Search suggestions"></div>
+          <button type="button" class="search-view-all" id="searchViewAll">View all matching results <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
       <nav id="sidebarNav" class="sidebar-nav"></nav>
       <div class="sidebar-bottom">
       <div class="lc-global-market" aria-label="Lab Central market">
@@ -506,7 +515,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261110-direct-destinations"></script>
+<script src="lab-search.js?v=20261110-typeahead-v1"></script>
 <script>
 (()=>{
 'use strict';
@@ -614,6 +623,7 @@ const urlFor=(id,tab='overview')=>id==='home'?'#home':'#'+id+(tab&&tab!=='overvi
 function navigate(id,tab='overview'){
  el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show');
  state.search='';el('search').value='';
+ closeSearchSuggestions();syncSearchClear();
  const url=urlFor(id,tab);
  if(location.hash!==url) location.hash=url; else render();
  window.scrollTo({top:0,behavior:'instant'});
@@ -3026,8 +3036,113 @@ document.addEventListener('labcentral:marketchange',e=>{
  if(orderMarkets.some(m=>m.id===next))state.ordersRegion=next;
  render();
 });
-el('search').addEventListener('input',e=>{state.search=e.target.value;state.filter='All';state.searchVisibleByLab={};render();});
-el('search').addEventListener('keydown',e=>{if(e.key==='Escape'){e.target.value='';state.search='';render();e.target.blur()}});
+// Search autocomplete shares the same market-aware index as full results.
+// Keyboard focus stays on the search field while Arrow keys select suggestions.
+let searchSuggestions=[];
+let searchSuggestionIndex=-1;
+function syncSearchClear(){
+ el('clearSearch').hidden=!el('search').value.length;
+}
+function closeSearchSuggestions(){
+ el('searchSuggestions').hidden=true;
+ el('search').setAttribute('aria-expanded','false');
+ el('search').removeAttribute('aria-activedescendant');
+ searchSuggestionIndex=-1;
+}
+function highlightSearchSuggestion(index){
+ const options=[...el('searchSuggestionOptions').querySelectorAll('[data-search-suggestion]')];
+ if(!options.length)return;
+ searchSuggestionIndex=(index+options.length)%options.length;
+ options.forEach((option,i)=>option.setAttribute('aria-selected',String(i===searchSuggestionIndex)));
+ el('search').setAttribute('aria-activedescendant',options[searchSuggestionIndex].id);
+ options[searchSuggestionIndex].scrollIntoView({block:'nearest'});
+}
+function refreshSearchSuggestions(){
+ const input=el('search'),query=input.value.trim(),popup=el('searchSuggestions');
+ syncSearchClear();
+ if(!query||document.activeElement!==input){closeSearchSuggestions();return;}
+ const context={
+  market:window.LAB_MARKET?.get()||null,sections:all,extras:extraHomeGuides,groupsFor:buildGroups,
+  panelResults:searchPanelMatches(query,all),
+  sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(query)||[]
+ };
+ searchSuggestions=window.LAB_SITE_SEARCH?.suggestions?.(query,context)||[];
+ const html=searchSuggestions.map((entry,i)=>{
+  const external=entry.action==='open'&&/^https?:\/\//i.test(entry.href||'');
+  const tag=external?'a':'button';
+  const attrs=external?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
+  const description=entry.detail||entry.category||'Reference';
+  return '<'+tag+attrs+' class="search-suggestion" role="option" aria-selected="false" id="search-suggestion-'+i+'" data-search-suggestion="'+i+'">'+
+   '<span class="search-suggestion-body"><strong>'+safeHtml(entry.title)+'</strong><small>'+safeHtml(entry.category)+' · '+safeHtml(description)+(entry.approximate?' · Possible spelling match':'')+'</small></span>'+
+   '<span class="search-suggestion-arrow" aria-hidden="true">'+(external?'↗':'→')+'</span></'+tag+'>';
+ }).join('');
+ el('searchSuggestionOptions').innerHTML=html||
+  '<p class="search-suggestion-empty">No quick matches. See the full results for more options.</p>';
+ searchSuggestionIndex=-1;
+ input.removeAttribute('aria-activedescendant');
+ popup.hidden=false;
+ input.setAttribute('aria-expanded','true');
+}
+function selectSearchSuggestion(index){
+ const entry=searchSuggestions[index];
+ if(!entry)return;
+ closeSearchSuggestions();
+ if(entry.action==='search'){
+  el('search').value=entry.query||entry.title;
+  state.search=el('search').value;state.filter='All';state.searchVisibleByLab={};
+  syncSearchClear();render();el('search').focus({preventScroll:true});return;
+ }
+ if(entry.href?.startsWith('#')){
+  const [section,...rest]=entry.href.slice(1).split('/');
+  navigate(section,rest.join('/')||'overview');return;
+ }
+ // External destinations are actual links, including keyboard-triggered clicks.
+}
+el('search').addEventListener('input',e=>{
+ state.search=e.target.value;state.filter='All';state.searchVisibleByLab={};
+ render();refreshSearchSuggestions();
+});
+el('search').addEventListener('focus',()=>refreshSearchSuggestions());
+el('search').addEventListener('keydown',e=>{
+ const popup=el('searchSuggestions'),visible=!popup.hidden;
+ if(e.key==='Escape'){
+  e.preventDefault();e.stopPropagation();
+  if(visible){closeSearchSuggestions();return;}
+  e.target.value='';state.search='';state.filter='All';state.searchVisibleByLab={};
+  syncSearchClear();render();e.target.blur();return;
+ }
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+  if(!visible)refreshSearchSuggestions();
+  const total=el('searchSuggestionOptions').querySelectorAll('[data-search-suggestion]').length;
+  if(total){e.preventDefault();highlightSearchSuggestion(
+   searchSuggestionIndex<0?(e.key==='ArrowDown'?0:total-1):
+    searchSuggestionIndex+(e.key==='ArrowDown'?1:-1));}
+ }
+ if(e.key==='Enter'&&visible){
+  e.preventDefault();
+  const selected=el('searchSuggestionOptions').querySelector('[data-search-suggestion="'+searchSuggestionIndex+'"]');
+  if(selected)selected.click();else{closeSearchSuggestions();e.target.blur();}
+ }
+ if(e.key==='Tab'&&visible)closeSearchSuggestions();
+});
+el('searchSuggestionOptions').addEventListener('click',e=>{
+ const target=e.target.closest('[data-search-suggestion]');
+ if(!target)return;
+ const index=Number(target.dataset.searchSuggestion);
+ const item=searchSuggestions[index];
+ if(!item)return;
+ if(item.action==='open'&&/^https?:\/\//i.test(item.href||'')){closeSearchSuggestions();return;}
+ e.preventDefault();selectSearchSuggestion(index);
+});
+el('searchViewAll').addEventListener('click',()=>{
+ closeSearchSuggestions();el('search').blur();el('mainContent')?.scrollIntoView({block:'start',behavior:'smooth'});
+});
+el('clearSearch').addEventListener('click',()=>{
+ el('search').value='';state.search='';state.filter='All';state.searchVisibleByLab={};
+ closeSearchSuggestions();syncSearchClear();render();el('search').focus({preventScroll:true});
+});
+document.addEventListener('pointerdown',e=>{if(!el('sidebarSearch').contains(e.target))closeSearchSuggestions();});
+document.addEventListener('focusin',e=>{if(!el('sidebarSearch').contains(e.target))closeSearchSuggestions();});
 document.addEventListener('keydown',e=>{if((e.key==='/'||((e.ctrlKey||e.metaKey)&&e.key==='k'))&&!/input|textarea/i.test(e.target.tagName)){e.preventDefault();el('search').focus();el('search').select()}if(e.key==='Escape'){el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')}});
 el('homeCrumb').addEventListener('click',()=>navigate('home'));
 el('openSidebar').addEventListener('click',()=>{el('sidebar').classList.add('open');el('sidebarScrim').classList.add('show')});
@@ -3259,7 +3374,7 @@ el('calibrationVideoPlayer').addEventListener('close',()=>{el('calibrationVideoS
 el('closeVideoDialog').addEventListener('click',closeEditor);
 el('saveVideo').addEventListener('click',()=>saveEditor());
 el('clearVideo').addEventListener('click',()=>saveEditor(true));
-window.addEventListener('labcentral:searchindexready',()=>{if(state.search.trim())render();});
+window.addEventListener('labcentral:searchindexready',()=>{if(state.search.trim()){render();refreshSearchSuggestions();}});
 window.addEventListener('hashchange',render);
 if(!location.hash)history.replaceState(null,'','#home');
 render();
