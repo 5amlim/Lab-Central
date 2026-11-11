@@ -301,7 +301,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261110-typeahead-v1" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261110-categorized-suggestions" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 </head>
 <body>
@@ -515,7 +515,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261110-typeahead-v1"></script>
+<script src="lab-search.js?v=20261110-categorized-suggestions"></script>
 <script>
 (()=>{
 'use strict';
@@ -3072,8 +3072,18 @@ function refreshSearchSuggestions(){
   const tag=external?'a':'button';
   const attrs=external?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
   const description=entry.detail||entry.category||'Reference';
-  return '<'+tag+attrs+' class="search-suggestion" role="option" aria-selected="false" id="search-suggestion-'+i+'" data-search-suggestion="'+i+'">'+
-   '<span class="search-suggestion-body"><strong>'+safeHtml(entry.title)+'</strong><small>'+safeHtml(entry.category)+' · '+safeHtml(description)+(entry.approximate?' · Possible spelling match':'')+'</small></span>'+
+  const kind=entry.category==='In-house testing'
+   ?(entry.detail==='Equipment guide'?'equipment':'inhouse'):
+   entry.category==='Sendout testing'?'sendout':
+   entry.category==='Tools'?'tool':
+   entry.category==='Documents'?'document':
+   entry.category==='Quality & compliance'?'quality':'workflow';
+  const kindLabel={equipment:'Equipment',inhouse:'In-house test',sendout:'Sendout test',
+   tool:'Tool',document:'Document',quality:'Quality',workflow:'Workflow'}[kind];
+  return '<'+tag+attrs+' class="search-suggestion" data-kind="'+kind+'" role="option" aria-selected="false" id="search-suggestion-'+i+'" data-search-suggestion="'+i+'">'+
+   '<span class="search-suggestion-body"><strong>'+safeHtml(entry.title)+'</strong>'+
+   '<span class="search-suggestion-meta"><span class="search-suggestion-kind">'+kindLabel+'</span>'+
+   '<small>'+safeHtml(description)+(entry.approximate?' · Possible spelling match':'')+'</small></span></span>'+
    '<span class="search-suggestion-arrow" aria-hidden="true">'+(external?'↗':'→')+'</span></'+tag+'>';
  }).join('');
  el('searchSuggestionOptions').innerHTML=html||
