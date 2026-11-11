@@ -271,10 +271,14 @@ function directDestination(q,records,ctx){
   const named=aliases.some(alias=>{
    const name=norm(alias);
    return name&&(query===name||
+    // Support near-complete equipment names such as "pathfas" or "piccol".
+    // Never turn a multi-word assay or task search into a generic guide match.
+    (query.length>=5&&!query.includes(' ')&&name.startsWith(query)&&name.length-query.length<=3)||
     ['analyzer','instrument','equipment','machine','device'].some(type=>query===name+' '+type));
   });
   if(!named)continue;
-  const hit=records.find(item=>item.href==='#'+sec.id&&!item.approximate);
+  const hit=records.find(item=>item.href==='#'+sec.id&&!item.approximate)||
+   baseIndex(ctx).find(item=>item.href==='#'+sec.id&&!item.archived);
   if(hit)return hit;
  }
  // Exact full titles of indexed resources deserve the same direct navigation treatment.
