@@ -290,6 +290,10 @@ function qcVialArt(group,v,index){
  '<text x="96" y="146" font-size="6.8" font-weight="850" text-anchor="middle" fill="#37617a">#'+esc(v[2])+'</text></svg>';
 }
 function qcGallery(group){
+ const handling=group.id==="ddimer"
+  ?'<div class="pf-qc-note" role="note"><strong>D-dimer QC: SINGLE USE</strong><p>Each D-dimer QC bottle (Low and Level 1) may be used <b>once only</b>. <b>Discard each bottle after use.</b> Never refreeze or save an opened D-dimer control for another run.</p></div>'
+  :'<div class="pf-qc-note" role="note"><strong>Cardiac QC: X + date, maximum two uses per vial</strong><p>For <b>each Cardiac Level 1, 1B and 3 vial</b> (both QC1 and QC2): at <b>first opening/use</b>, mark an <b>X</b> and the <b>date</b> on the bottle. If allowed by the current lot insert, recap and promptly refreeze remaining material. At the <b>second use</b>, add a second <b>X</b> and date, then <b>discard</b>. Never refreeze for a third use.</p></div>';
+ const troponinAlternative=group.id==="troponin"?'<div class="pf-qc-note" role="note"><strong>Troponin QC1: Level 1 OR Level 1B</strong><p>For <b>hs-Troponin I QC1 (lane 5)</b>, choose <b>Cardiac Control Level 1</b> (pictured above) <b>or Cardiac Control Level 1B</b> (yellow cap). Verify the actual vial label and the lot-specific QC range for the level chosen. <b>QC2 (lane 6) continues to use Cardiac Level 3.</b></p></div>':'';
  const photos=group.id==="ddimer"?["d-dimer-low.webp","d-dimer-level-1.webp"]:["cardiac-level-1.webp","cardiac-level-3.webp"];
  const cards=group.vials.map(function(v,i){
   const src="assets/pathfast-qc/"+photos[i];
@@ -304,9 +308,9 @@ function qcGallery(group){
      '<div class="pf-qc-photo-popover" role="tooltip"><img src="'+src+'" alt="Actual Bio-Rad '+esc(title)+' control vial photo" loading="lazy" width="210" height="210"/><span>'+esc(v[1])+' · #'+esc(v[2])+'</span></div>'+
     '</div></article>';
  }).join("");
- return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad QC materials are stored in the freezer. Thaw and handle per the current lot-specific insert.</span></div>'+
+ return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad controls are kept frozen before use. Thaw and handle per the current product-specific insert. Used D-dimer QC bottles must be discarded.</span></div>'+
   '<div class="pf-qc-vials">'+cards+'</div>'+
-  '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+'). QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Confirm manufacturer compatibility and use lot-specific QC ranges for the installed assay.</p></div>';
+  '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+')'+(group.id==="troponin"?' <b>or Cardiac Level 1B</b>':'')+'. QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Confirm manufacturer compatibility and use lot-specific QC ranges for the selected level.</p></div>'+troponinAlternative+handling;
 }
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+cartridgePack(group)+status(group)+
@@ -351,12 +355,12 @@ function returnMaterials(group){
  const cal2='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>Reconstituted CAL 2</strong><small>Freeze remaining prepared vial after use</small></header>'+
   '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgReconstitutedCal2()+'</div>'+storageSymbol("cal2")+'</div>'+
   '<p>After dispensing into both CAL 2 cartridge wells, promptly recap, label and <b>freeze the single prepared CAL 2 vial at −20°C or colder</b> when permitted by the assay IFU. Record reconstitution date, expiration and freeze/thaw history; do not exceed assay-specific stability.</p></article>';
- const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>QC1 and QC2 · separate lot-specific instructions</small></header>'+
-  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+storageSymbol("qc")+'</div>'+
-  '<p>Return Bio-Rad QC controls to the approved <b>freezer</b> only when permitted by the current lot-specific insert and open-vial stability instructions. Recap and secure each vial.</p></article>';
- return '<section class="pf-return-storage" aria-label="Storage for CAL 1, prepared CAL 2 and quality controls">'+header+
+ const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>'+(group.id==="ddimer"?'Single-use QC: discard both vials after first use':'Cardiac Levels 1, 1B and 3: two uses maximum per vial')+'</small></header>'+
+  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+(group.id==="ddimer"?'<div style="font-weight:900;color:#ab4b48;text-align:center;padding:12px">DISCARD AFTER USE</div>':storageSymbol("qc"))+'</div>'+
+  (group.id==="ddimer"?'<p><b>Discard each D-dimer QC bottle after its first use:</b> Low (QC1) and Level 1 (QC2). Do not return a used D-dimer vial to freezer storage.</p>':'<p>For each <b>Cardiac Level 1, 1B or 3</b>, mark an <b>X and date</b> at first use. If allowed by the lot insert, refreeze the remainder. On <b>second use</b>, mark another <b>X and date</b>, then <b>discard</b>. Never refreeze for a third use.</p>')+'</article>';
+  return '<section class="pf-return-storage" aria-label="Storage for CAL 1, prepared CAL 2 and quality controls">'+header+
    '<div class="pf-storage-grid pf-storage-three">'+cal1+cal2+qc+'</div>'+
-   '<p class="pf-workflow-note"><strong>Applies to all three assay workflows.</strong> Verify selected-assay CAL 2 reconstitution and freezer limits, and follow the Bio-Rad control-specific storage requirements separately.</p></section>';
+   '<p class="pf-workflow-note"><strong>All three assays:</strong> follow applicable CAL 2 storage instructions. <strong>Cardiac controls:</strong> mark X and date at each use; discard after the second. <strong>D-dimer controls:</strong> one use then discard. More restrictive lot-specific instructions take precedence.</p></section>';
 }
 
 let selectedPanel=null;
@@ -493,7 +497,7 @@ function render(){
   h+=step(1,'Gather assay cartridges, calibrators and Bio-Rad controls','Confirm the exact QC levels and vials for '+x,
       '<div class="pf-qc-prep-emphasis"><strong>Do this before logging in.</strong><span>Retrieve the matching six-cartridge assay kit, inspect cartridge packaging and expiration, and check that the two Bio-Rad control levels match the selected assay.</span></div>'+
       panelContent(group)+
-      '<p class="pf-workflow-note">Bio-Rad control material: use the current lot-specific insert for frozen storage, thawing, mixing, open-vial stability and acceptable ranges. For BNP/NT-proBNP controls, check the latest revised insert. Do not assume all control products use the same preparation.</p>');
+      '<p class="pf-workflow-note">Bio-Rad control material: use the current lot-specific insert for frozen storage, thawing, mixing, open-vial stability and acceptable ranges. For BNP/NT-proBNP controls, check the latest revised insert. Cardiac Levels 1, 1B and 3: mark X/date at first use and discard after second use. D-dimer vials: one use only, then discard.</p>');
   h+=step(2,'Prepare CAL 1, one CAL 2 vial and the two QC controls','Use one CAL 2 powder vial and one matching diluent; reserve the unopened set',
       '<div class="pf-cal-prep-row">'+
       material('CAL 1 · ready-to-use','REFRIGERATED KIT','Use CAL 1 as supplied; assign to lanes 1 and 2.',svgCal1(),'cal1','LANES 1 + 2')+
@@ -539,7 +543,7 @@ function render(){
       '<p class="pf-workflow-note">Review CAL 1, CAL 2 and both Bio-Rad controls against lot-specific criteria; confirm results are acceptable before patient testing. Failed controls require resolution.</p>');
   h+=step(14,'Print, file and return CAL/QC materials to storage','Document both control levels and return each material to the correct temperature',
       (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Print and retain the accepted calibration and QC results in the approved binder.</p>')+
-      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log.</p>'+returnMaterials(group));
+      '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log. Mark each cardiac control vial X/date for every use; discard after second use. Discard D-dimer control vials after first use.</p>'+returnMaterials(group));
 
   h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
