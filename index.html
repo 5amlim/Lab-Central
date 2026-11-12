@@ -2358,6 +2358,43 @@ function athenaEhrMock(kind){
 function athenaEhrLabelStep(number,heading,copy,kind){
  return "<article class='ae-step'><div class='ae-step-title'><span class='ae-step-num'>"+number+"</span><div><h3>"+heading+"</h3><p>"+copy+"</p></div></div>"+athenaEhrMock(kind)+"</article>";
 }
+function athenaDocumentGuideTrigger(kind){
+ const requisition=kind==="requisition";
+ const title=requisition?"How to upload the lab requisition":"How to upload the Lab Calculator";
+ return "<button type='button' class='ae-doc-trigger' data-athena-doc-expand='"+kind+"' aria-expanded='false' aria-controls='ae-document-expanded'>"+
+ "<span class='ae-doc-trigger-icon'>"+svg('file-text')+"</span>"+
+ "<span class='ae-doc-trigger-label'><strong>"+title+"</strong><small>View "+(requisition?"6":"5")+" illustrated Athena steps</small></span>"+
+ "<span class='ae-doc-trigger-chevron' aria-hidden='true'></span></button>";
+}
+function toggleAthenaDocumentGuide(kind){
+ const panel=el("ae-document-expanded");
+ if(!panel)return;
+ const closing=!kind||(panel.dataset.kind===kind&&!panel.hidden);
+ document.querySelectorAll("[data-athena-doc-expand]").forEach(button=>{
+  const selected=!closing&&button.dataset.athenaDocExpand===kind;
+  button.setAttribute("aria-expanded",String(selected));
+  button.classList.toggle("active",selected);
+ });
+ if(closing){
+  panel.hidden=true;
+  panel.dataset.kind="";
+  panel.innerHTML="";
+  return;
+ }
+ const requisition=kind==="requisition";
+ const heading=requisition?"Upload a lab requisition":"Upload a Lab Calculator PDF";
+ const tag=requisition?"Clinical Document → LAB REQUISITION":"Clinical Document → LAB FLOWSHEET";
+ panel.innerHTML="<div class='ae-doc-wide-head'><div><span class='ae-doc-wide-eyebrow'>ATHENA DOCUMENT UPLOAD</span>"+
+ "<h3>"+heading+"</h3><p>"+tag+"</p></div>"+
+ "<button type='button' class='ae-doc-wide-close' data-athena-doc-close aria-label='Close upload guide'>Close guide <span aria-hidden='true'>×</span></button></div>"+
+ "<div class='ae-doc-wide-guide'>"+athenaUploadGuide(kind)+"</div>";
+ const details=panel.querySelector("details.ad-guide");
+ if(details)details.open=true;
+ panel.dataset.kind=kind;
+ panel.hidden=false;
+ panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 function renderAthenaEhrGuides(tab){
  const active=tab==="documents"?"documents":"labels";
  el("currentCrumb").textContent="Athena EHR Guides";
@@ -2381,9 +2418,10 @@ function renderAthenaEhrGuides(tab){
  }else{
   h+="<header class='ae-intro'><div><strong>ATHENA DOCUMENT MANAGEMENT</strong><h2>Upload and classify lab documents</h2><p>Use the established Sollis workflow and the existing illustrated Athena steps. File each document in the correct patient chart, then confirm its class and label.</p></div><span class='ae-chip'>CLINICAL DOCUMENT</span></header>";
   h+="<div class='ae-doc-cards'>";
-  h+="<section class='ae-doc-card'><h3>Lab requisition</h3><p>Outside lab request received by email, text or another source. An incoming fax already in Athena should be reclassified, not uploaded again.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB REQUISITION</b></div><p><strong>Internal Note required:</strong> (1 of 1), or the correct document number out of the total. Reconcile the numbering if new requisitions arrive.</p>"+athenaUploadGuide("requisition")+"</section>";
-  h+="<section class='ae-doc-card'><h3>Lab Calculator PDF</h3><p>Save the final Quest, Labcorp or Cedars collection calculator as a PDF after verifying the tests and specimen requirements. Upload before collection per the existing Sollis workflow.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB FLOWSHEET</b></div><p><strong>Do not select:</strong> LAB REQUISITION for the calculator. Use the precise LAB FLOWSHEET document label.</p>"+athenaUploadGuide("calculator")+"</section>";
+  h+="<section class='ae-doc-card'><h3>Lab requisition</h3><p>Outside lab request received by email, text or another source. An incoming fax already in Athena should be reclassified, not uploaded again.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB REQUISITION</b></div><p><strong>Internal Note required:</strong> (1 of 1), or the correct document number out of the total. Reconcile the numbering if new requisitions arrive.</p>"+athenaDocumentGuideTrigger("requisition")+"</section>";
+  h+="<section class='ae-doc-card'><h3>Lab Calculator PDF</h3><p>Save the final Quest, Labcorp or Cedars collection calculator as a PDF after verifying the tests and specimen requirements. Upload before collection per the existing Sollis workflow.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB FLOWSHEET</b></div><p><strong>Do not select:</strong> LAB REQUISITION for the calculator. Use the precise LAB FLOWSHEET document label.</p>"+athenaDocumentGuideTrigger("calculator")+"</section>";
   h+="</div>";
+  h+="<section class='ae-doc-wide' id='ae-document-expanded' hidden aria-label='Expanded Athena document upload steps'></section>";
   h+="<section class='ae-doc-extra'><h3>Received by fax?</h3><p>Verify that the automatically uploaded requisition is in the correct chart. Open it and change its classification to <strong>Clinical Document</strong>, then select <strong>LAB REQUISITION</strong>. Do not create a duplicate upload.</p>"+athenaUploadGuide("requisition",true)+"</section>";
   h+="<section class='ae-doc-extra'><h3>Multiple or updated requisitions</h3><p>Each current requisition needs its own Internal Note. If another requisition arrives later, update the totals on the existing ones as well.</p>"+athenaInternalNoteGuide()+requisitionVersionNotice()+"</section>";
   h+="<div class='ae-links'><button type='button' class='ae-link' data-go='orders'>Open sendout workflows</button><button type='button' class='ae-link' data-go='calculators'>Open Lab Calculators</button><button type='button' class='ae-link' data-go='order-sets'>Athena Order Sets</button></div>";
@@ -3025,6 +3063,10 @@ function updateGuidedProcedureInPlace(button){
   if(window.LAB_CALCULATORS_GUIDE?.selectSendoutSearchResult?.(lab,term,panelId))navigate('calculators');
   return;
  }
+ const athenaExpand=e.target.closest('[data-athena-doc-expand]');
+ if(athenaExpand){toggleAthenaDocumentGuide(athenaExpand.dataset.athenaDocExpand);return;}
+ const athenaClose=e.target.closest('[data-athena-doc-close]');
+ if(athenaClose){toggleAthenaDocumentGuide(null);return;}
  const nav=e.target.closest('[data-go]');if(nav){navigate(nav.dataset.go,nav.dataset.targetTab||'overview');return}
  const workflowTab=e.target.closest('[data-workflowtab]');if(workflowTab){navigate('orders',workflowTab.dataset.workflowtab);return}
  const patientRoute=e.target.closest('[data-sollis-patient]');if(patientRoute){
