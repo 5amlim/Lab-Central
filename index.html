@@ -2319,12 +2319,40 @@ function orderSetsPanel(sec){
 }
 
 
+function athenaEhrTop(){
+ return "<div class='ae-ehr-topbar'><strong>athenaOne</strong><span class='ae-ehr-topnav'>Calendar&nbsp;&nbsp; Patients&nbsp;&nbsp; Claims&nbsp;&nbsp; Financials&nbsp;&nbsp; Reports&nbsp;&nbsp; Quality&nbsp;&nbsp; Apps&nbsp;&nbsp; Support</span><small>TRAINING ENVIRONMENT</small></div>"+
+ "<div class='ae-ehr-patientbar'><div class='ae-ehr-avatar'>TT</div><div class='ae-ehr-patienttext'><strong>TRAINING PATIENT</strong><span>Demo chart · ID: DEMO-001</span></div><div class='ae-ehr-patientmeta'><span>Contact <b>On file</b></span><span>Care Team <b>DEMO CLINIC</b></span><span>Code/AD <b>On file</b></span></div></div>";
+}
+function athenaEhrChart(openMenu){
+ const rail=["Find","Allergies","Problems","Meds","Vaccines","Vitals","Results","Visits","History","Care"].map((x,i)=>"<span class='ae-ehr-rail-item'><i>"+["⌕","✋","✚","◆","◈","♡","⚗","▣","▤","◎"][i]+"</i>"+x+"</span>").join("");
+ return "<div class='ae-ehr-preview ae-ehr-chart' aria-label='Training illustration of the Athena patient chart'>"+athenaEhrTop()+
+ "<div class='ae-ehr-workspace'><aside class='ae-ehr-rail'>"+rail+"</aside>"+
+ "<div class='ae-ehr-workarea'><div class='ae-ehr-chart-heading'><b>⊕ &nbsp;PERSONAL INFO</b><span class='ae-ehr-hamburger "+(!openMenu?"ae-ehr-target":"")+"' aria-label='Hamburger menu'>☰"+(!openMenu?"<em class='ae-ehr-tag'>CLICK</em>":"")+"</span></div>"+
+ "<div class='ae-ehr-chartcols'><div class='ae-ehr-data-card'><div class='ae-ehr-medgrid'><div><h5>Allergies</h5><p>• No known allergies</p><h5>Problems</h5><p>No known problems</p></div><div><h5>Medications</h5><p>• Medication list</p></div></div></div>"+
+ "<div class='ae-ehr-rightstack'><div class='ae-ehr-data-card'><h4>Care Management</h4><h5>Care Programs</h5><p>None</p><h5>Recent Event Summary</h5><p>Sample chart for training</p></div><div class='ae-ehr-data-card'><h4>Last Visit</h4><p>Medical Evaluation · Demo</p><h5>Recent activity</h5><p>Practice encounter</p></div><div class='ae-ehr-data-card'><h4>Outstanding Orders</h4><p>Sample orders</p></div></div></div></div>"+
+ (openMenu?"<div class='ae-ehr-menu-open'><div class='ae-ehr-menu-item ae-ehr-target'>Quickview <em class='ae-ehr-tag'>SELECT</em></div><div class='ae-ehr-menu-item'>Create patient case</div><div class='ae-ehr-menu-item'>Create order group</div><div class='ae-ehr-menu-item'>Print chart sections</div><div class='ae-ehr-menu-item'>Print forms</div><div class='ae-ehr-menu-item'>Add document</div><div class='ae-ehr-menu-item'>Chart export</div></div>":"")+
+ "</div><div class='ae-ehr-statusbar'>TRAINING PATIENT &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
+}
+function athenaEhrQuickview(mode){
+ const opened=mode==="registration";
+ const modal=mode==="label"||mode==="printer";
+ const labels="<div class='ae-ehr-quick-menu'><div>Quickview</div><div>Full Registration</div><div>CPI View</div><div>Check Eligibility</div><div>Print Form</div><div>Labels</div><div>Detailed Labels</div><div class='ae-ehr-target'>Single Label <em class='ae-ehr-tag'>SELECT</em></div></div>";
+ const options="<div class='ae-ehr-label-options'><div class='ae-ehr-label-row ae-ehr-target'><span><b>◉ &nbsp;Label</b><small>TRAINING PATIENT · DEMO-001 · DOB on file</small></span>"+(mode==="label"?"<em class='ae-ehr-tag'>SELECT</em>":"")+"</div><div class='ae-ehr-label-row'>◯ &nbsp;Detailed Label</div><div class='ae-ehr-label-row'>◯ &nbsp;Mailing Label</div><div class='ae-ehr-label-row'>◯ &nbsp;Simple Label</div></div>";
+ return "<div class='ae-ehr-preview ae-ehr-quickview' aria-label='Training illustration of Athena Quickview'>"+athenaEhrTop()+
+ "<div class='ae-ehr-quicknav'><b class='"+(opened?"ae-ehr-target":"")+"'>Registration ▾"+(opened?"<em class='ae-ehr-tag'>OPEN</em>":"")+"</b><span>Messaging ▾</span><span>Scheduling ▾</span><span>Billing ▾</span><span>Clinicals ▾</span><span>Communicator ▾</span><span>Other ▾</span></div>"+
+ "<div class='ae-ehr-quickcontent'><h3>Quickview</h3><div class='ae-ehr-quick-row'><span>Provider group</span><b>DEMO CLINIC · TRAINING ENVIRONMENT</b></div><div class='ae-ehr-quick-row'><span>Patient notes</span><i class='ae-ehr-field'></i></div><div class='ae-ehr-quick-row'><span>Currently admitted to</span><b>Not admitted</b></div><h4>Outstanding Balances</h4><div class='ae-ehr-quick-row'><span>Total balances</span><b>$0.00</b></div><h4>Privacy</h4><p>☑ Privacy Notice &nbsp;&nbsp; ☑ Release of Billing Information</p></div>"+
+ (opened?labels:"")+
+ (modal?"<div class='ae-ehr-dimmer'></div><div class='ae-ehr-modal'><header>Single Label <span>×</span></header>"+
+ (mode==="printer"?"<div class='ae-ehr-warning'>Printing is disabled because required software is not installed.</div>":"")+
+ options+"<div class='ae-ehr-modal-footer'>"+(mode==="printer"?"Workstation printer software must be configured.":"Choose the standard specimen label.")+"</div></div>":"")+
+ "<div class='ae-ehr-statusbar'>TRAINING PATIENT &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
+}
 function athenaEhrMock(kind){
- const top="<div class='ae-mock-head'><strong>athenaOne</strong><small>TRAINING EXAMPLE · NO PATIENT DATA</small></div>";
- if(kind==="chart")return "<div class='ae-mock'>"+top+"<div class='ae-mock-body'><div class='ae-mock-patient'><span>Patient chart</span><b>☰</b></div><div class='ae-mock-menu'><span class='ae-focus'>Quickview <b>SELECT</b></span><span>Create order group</span><span>Print chart sections</span><span>Add document</span></div></div></div>";
- if(kind==="registration")return "<div class='ae-mock'>"+top+"<div class='ae-mock-body'><div class='ae-mock-bar'>Quickview <span>Patient actions</span></div><div class='ae-mock-nav'><b class='ae-focus'>Registration ▾</b><b>Messaging ▾</b><b>Clinicals ▾</b></div><div class='ae-mock-list'><span>Quickview</span><span>Full Registration</span><span>Labels</span><span>Detailed Labels</span><span class='ae-focus'>Single Label</span></div></div></div>";
- if(kind==="label")return "<div class='ae-mock'>"+top+"<div class='ae-mock-dialog'><h4>Single Label</h4><div class='ae-mock-radio ae-focus'>◉ Label <small>SAMPLE PATIENT · DOB · ID</small></div><div class='ae-mock-radio'>◯ Detailed Label</div><div class='ae-mock-radio'>◯ Mailing Label</div><div class='ae-mock-radio'>◯ Simple Label</div></div></div>";
- if(kind==="printer")return "<div class='ae-mock'>"+top+"<div class='ae-mock-dialog'><h4>Single Label</h4><div class='ae-mock-alert'>Printing is disabled because required software is not installed.</div><div class='ae-mock-radio ae-focus'>◉ Label</div><span>Printing requires the configured label printer and workstation software.</span></div></div>";
+ if(kind==="chart")return athenaEhrChart(false);
+ if(kind==="menu")return athenaEhrChart(true);
+ if(kind==="registration")return athenaEhrQuickview("registration");
+ if(kind==="label")return athenaEhrQuickview("label");
+ if(kind==="printer")return athenaEhrQuickview("printer");
  return "";
 }
 function athenaEhrLabelStep(number,heading,copy,kind){
@@ -2341,10 +2369,11 @@ function renderAthenaEhrGuides(tab){
   h+="<header class='ae-intro'><div><strong>SPECIMEN CONTAINERS · PATIENT IDENTIFICATION</strong><h2>Print patient labels in Athena</h2><p>Follow the patient chart and Quickview route shown in the supplied screenshots. The interface illustrations below omit all patient information.</p></div><span class='ae-chip'>ATHENA QUICKVIEW</span></header>";
   h+="<div class='ae-route'><b>Patient chart</b><i>›</i><span>☰ Menu</span><i>›</i><span>Quickview</span><i>›</i><span>Registration</span><i>›</i><b>Single Label</b><i>›</i><b>Label</b></div>";
   h+="<section class='ae-step-grid' aria-label='Label printing steps'>"+
-   athenaEhrLabelStep("01","Open the chart menu","Open the correct patient chart. Click the menu (☰) at the upper right and choose Quickview.","chart")+
-   athenaEhrLabelStep("02","Open Registration","In the Quickview, expand the Registration menu on the patient actions bar. Select Single Label.","registration")+
-   athenaEhrLabelStep("03","Select Label","In the Single Label dialog, choose the first radio option, Label. Do not choose Detailed Label, Mailing Label or Simple Label for this workflow.","label")+
-   athenaEhrLabelStep("04","Print and check","Print using the approved, configured specimen-label printer. If printing is disabled, follow the software setup note below instead of relying on an unverified print.","printer")+
+   athenaEhrLabelStep("01","Click the hamburger menu","Open the correct patient's chart in Athena and click the hamburger (☰) at the top right of the chart.","chart")+
+   athenaEhrLabelStep("02","Select Quickview","From the purple menu that opens, click Quickview.","menu")+
+   athenaEhrLabelStep("03","Open Registration → Single Label","In Quickview, open the Registration dropdown, then select Single Label.","registration")+
+   athenaEhrLabelStep("04","Select Label","In the Single Label dialog, select the first option, Label. Do not choose Detailed Label, Mailing Label or Simple Label for specimen containers.","label")+
+   athenaEhrLabelStep("05","Print and check the label","Print using the approved specimen-label printer. Verify patient identifiers and legibility. If printing is disabled, request workstation software configuration.","printer")+
    "</section>";
   h+="<div class='ae-callout' role='note'><strong>Printing disabled: required software is not installed</strong><p>This exact warning appears in the screenshot. Contact IT to confirm the athenaOne printing component/Device Manager, label printer connection and workstation configuration. The Print action may not be available until setup is complete.</p></div>";
   h+="<div class='ae-checks'><span>✓ Match two patient identifiers</span><span>✓ Confirm the label is legible</span><span>✓ Add collection details required by the receiving lab/SOP</span><span>✓ Label the correct container</span></div>";
