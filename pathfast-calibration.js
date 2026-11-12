@@ -311,7 +311,7 @@ function qcGallery(group){
  const level1b=["QC1 · LANE 5","CONTROL LEVEL 1B","","LEVEL 1B"];
  const troponinQC1='<article class="pf-qc-vial pf-qc-cardiac pf-qc-choice-card">'+
   '<span class="pf-qc-slot">QC1 · LANE 5</span>'+
-  '<div class="pf-qc-choice-caption">Choose either approved control for Troponin QC1</div>'+
+  '<div class="pf-qc-choice-caption">Level 1B is the default for Troponin QC1 <small>Level 1 is also acceptable</small></div>'+
   '<div class="pf-qc-choice-options">'+
    '<div class="pf-qc-choice-option">'+
     '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,group.vials[0],0)+'</div>'+
@@ -334,7 +334,7 @@ function qcGallery(group){
   :'<section class="pf-qc-policy pf-qc-policy--reuse" aria-label="Cardiac QC vial handling"><span class="pf-qc-policy-kicker">IMPORTANT · CARDIAC QC VIAL TRACKING</span><strong>Mark X + date at each use. Discard after the second use.</strong><p>Applies to <b>Cardiac Levels 1, 1B and 3</b> for Troponin and NT-proBNP controls.</p><div class="pf-qc-policy-actions"><div><span class="pf-qc-policy-count">01</span><div><b>FIRST USE</b><span>Mark <b>X + date</b> on the bottle. Recap and refreeze remaining control.</span></div></div><div><span class="pf-qc-policy-count">02</span><div><b>SECOND USE</b><span>Add another <b>X + date</b>, then <b>discard the vial</b>. No third use.</span></div></div></div></section>';
  return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad QC controls are kept frozen before use. Thaw and gently mix according to the product-specific preparation instructions.</span></div>'+
   '<div class="pf-qc-vials">'+cards+'</div>'+
-  '<div class="pf-qc-note pf-qc-lane-note"><strong>QC lane positions</strong><p>Lane 5 = QC1'+(isTroponin?' (Cardiac Level 1 <b>OR</b> Level 1B)':' ('+esc(group.vials[0][3])+')')+'. Lane 6 = QC2 ('+esc(group.vials[1][3])+'). Check the current control lot-specific QC ranges before running.</p></div>'+
+  '<div class="pf-qc-note pf-qc-lane-note"><strong>QC lane positions</strong><p>Lane 5 = QC1'+(isTroponin?' (<b>Cardiac Level 1B</b> by default; Level 1 also acceptable)':' ('+esc(group.vials[0][3])+')')+'. Lane 6 = QC2 ('+esc(group.vials[1][3])+'). Check the current control lot-specific QC ranges before running.</p></div>'+
   handling;
 }
 function panelContent(group){
@@ -381,8 +381,8 @@ function returnMaterials(group){
   '<div class="pf-storage-visual"><div class="pf-storage-cal-images">'+svgReconstitutedCal2()+'</div>'+storageSymbol("cal2")+'</div>'+
   '<p>After dispensing into both CAL 2 cartridge wells, promptly recap, label and <b>freeze the single prepared CAL 2 vial at −20°C or colder</b> when permitted by the assay IFU. Record reconstitution date, expiration and freeze/thaw history; do not exceed assay-specific stability.</p></article>';
  const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>'+(group.id==="ddimer"?'Single-use QC: discard both vials after first use':'Cardiac Levels 1, 1B and 3: two uses maximum per vial')+'</small></header>'+
-  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+(group.id==="ddimer"?'<div style="font-weight:900;color:#ab4b48;text-align:center;padding:12px">DISCARD AFTER USE</div>':storageSymbol("qc"))+'</div>'+
-  (group.id==="ddimer"?'<p><b>Discard each D-dimer QC bottle after its first use:</b> Low (QC1) and Level 1 (QC2). Do not return a used D-dimer vial to freezer storage.</p>':'<p>For each <b>Cardiac Level 1, 1B or 3</b>, mark an <b>X and date</b> at first use. Recap and refreeze remaining material. On <b>second use</b>, mark another <b>X and date</b>, then <b>discard</b>. Never refreeze for a third use.</p>')+'</article>';
+  '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>'+(group.id==="troponin"&&i===0?'Level 1B':('#'+esc(v[2])))+'</small></div>';}).join('')+'</div>'+(group.id==="ddimer"?'<div style="font-weight:900;color:#ab4b48;text-align:center;padding:12px">DISCARD AFTER USE</div>':storageSymbol("qc"))+'</div>'+
+  (group.id==="ddimer"?'<p><b>Discard each D-dimer QC bottle after its first use:</b> Low (QC1) and Level 1 (QC2). Do not return a used D-dimer vial to freezer storage.</p>':'<p>'+(group.id==="troponin"?'<b>Troponin QC1 defaults to Level 1B</b> (Level 1 is also acceptable). ':'')+'For each <b>Cardiac Level 1, 1B or 3</b>, mark an <b>X and date</b> at first use. Recap and refreeze remaining material. On <b>second use</b>, mark another <b>X and date</b>, then <b>discard</b>. Never refreeze for a third use.</p>')+'</article>';
   return '<section class="pf-return-storage" aria-label="Storage for CAL 1, prepared CAL 2 and quality controls">'+header+
    '<div class="pf-storage-grid pf-storage-three">'+cal1+cal2+qc+'</div>'+
    '<p class="pf-workflow-note"><strong>All three assays:</strong> follow applicable CAL 2 storage instructions. <strong>Cardiac controls:</strong> mark X and date at each use; discard after the second. <strong>D-dimer controls:</strong> one use then discard. More restrictive lot-specific instructions take precedence.</p></section>';
@@ -503,9 +503,9 @@ function render(){
  }else{
   const total=14;
   const laneNames=['CAL 1','CAL 1','CAL 2','CAL 2','QC 1','QC 2'];
-  const laneDesc=['CAL 1 liquid','CAL 1 liquid','CAL 2 from the one reconstituted vial','CAL 2 from the SAME reconstituted vial',group.vials[0][1]+' · Bio-Rad #'+group.vials[0][2],group.vials[1][1]+' · Bio-Rad #'+group.vials[1][2]];
+  const laneDesc=['CAL 1 liquid','CAL 1 liquid','CAL 2 from the one reconstituted vial','CAL 2 from the SAME reconstituted vial',group.id==="troponin"?'CONTROL LEVEL 1B · DEFAULT':group.vials[0][1]+' · Bio-Rad #'+group.vials[0][2],group.vials[1][1]+' · Bio-Rad #'+group.vials[1][2]];
   const laneList='<div class="pf-qc-lane-list" role="list" aria-label="Six sample-to-lane assignments">'+laneNames.map((name,i)=>
-     '<div role="listitem" class="pf-qc-lane-item"><b class="pf-qc-lane-no">'+(i+1)+'</b><strong>'+esc(name)+'</strong><span>'+esc(laneDesc[i])+'</span></div>'
+     '<div role="listitem" class="pf-qc-lane-item"><b class="pf-qc-lane-no">'+(i+1)+'</b><strong>'+esc(name)+'</strong><span>'+esc(laneDesc[i])+(group.id==="troponin"&&i===4?'<small class="pf-qc-level-alt-note">Level 1 (#146) also acceptable</small>':'')+'</span></div>'
     ).join('')+'</div>';
   const laneMap=(filled=false,withVials=false)=>'<div class="pf-rack-header"><div><span class="pf-eyebrow">SIX-LANE RACK · TOP TO BOTTOM</span><h3>'+(withVials?'Transfer the matching vial into each sample well':'Which material goes in each cartridge?')+'</h3></div></div>'+
    '<div class="pf-qc-vertical-layout"><div class="pf-rack-box">'+rack(filled,group,withVials)+'</div>'+laneList+'</div>'+
