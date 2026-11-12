@@ -266,16 +266,16 @@ function status(group){
   }).join('')+'</div>';
 }
 function qcVialArt(group,v,index){
- const d=group.id==="ddimer", low=d&&index===0;
- const cap=low?"#0ab4b4":index===1&&!d?"#26262b":"#f7f8f9";
- const edge=low?"#06918f":index===1&&!d?"#202127":"#d4d8dc";
- const stripe=d?"#5da8d1":index===1?"#b877ab":"#d65a5f";
- const number=low?"L":index===0?"1":d?"1":"3";
+ const d=group.id==="ddimer", low=d&&index===0, level1b=!d&&String(v[3]||"").toUpperCase()==="LEVEL 1B";
+ const cap=level1b?"#ffd629":low?"#0ab4b4":index===1&&!d?"#26262b":"#f7f8f9";
+ const edge=level1b?"#d7a914":low?"#06918f":index===1&&!d?"#202127":"#d4d8dc";
+ const stripe=d?"#5da8d1":level1b?"#a875ac":index===1?"#b877ab":"#d65a5f";
+ const number=level1b?"1B":low?"L":index===0?"1":d?"1":"3";
  const family=d?"D-dimer Control":"Cardiac Markers Plus";
- return '<svg class="pf-qc-bottle-art" viewBox="0 0 180 188" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(group.qc)+' '+esc(v[1])+' vial, '+(low?"teal":index===1&&!d?"black":"white")+' cap">'+
+ return '<svg class="pf-qc-bottle-art" viewBox="0 0 180 188" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc(group.qc)+' '+esc(v[1])+' vial, '+(level1b?"yellow":low?"teal":index===1&&!d?"black":"white")+' cap">'+
  '<ellipse cx="90" cy="176" rx="49" ry="7" fill="#cad7de" opacity=".7"/>'+
  '<rect x="54" y="22" width="72" height="45" rx="19" fill="'+cap+'" stroke="'+edge+'" stroke-width="2"/>'+
- Array.from({length:15},(_,n)=>'<path d="M'+(57+n*4.6)+' 34v25" stroke="'+(low?"#50cccc":index===1&&!d?"#56565b":"#dadfe3")+'" stroke-width=".8" opacity=".8"/>').join('')+
+ Array.from({length:15},(_,n)=>'<path d="M'+(57+n*4.6)+' 34v25" stroke="'+(level1b?"#eac554":low?"#50cccc":index===1&&!d?"#56565b":"#dadfe3")+'" stroke-width=".8" opacity=".8"/>').join('')+
  '<ellipse cx="90" cy="26" rx="24" ry="8.5" fill="#a1a8b7" stroke="#858d99" stroke-width="1.2"/>'+
  '<path d="M61 64C61 72 52 80 52 90V151Q52 168 67 168H113Q128 168 128 151V90C128 80 119 72 119 64Z" fill="#79492e" stroke="#64432f" stroke-width="2"/>'+
  '<path d="M59 83C57 116 57 144 60 156" stroke="#e9c096" stroke-width="6" opacity=".45" stroke-linecap="round"/>'+
@@ -284,33 +284,57 @@ function qcVialArt(group,v,index){
  '<rect x="54" y="98" width="72" height="10" fill="'+stripe+'"/>'+
  '<text x="90" y="106" font-size="6.6" font-weight="900" text-anchor="middle" fill="#fff">Liquichek™</text>'+
  '<rect x="57" y="111" width="17" height="8" rx="2" fill="#5c997d"/><text x="65.5" y="116.7" font-size="5" font-weight="800" text-anchor="middle" fill="#fff">BIO-RAD</text>'+
- '<text x="63" y="144" font-size="29" font-weight="900" fill="'+(d?"#267eb7":"#a14a79")+'">'+number+'</text>'+
+ '<text x="63" y="144" font-size="'+(level1b?25:29)+'" font-weight="900" fill="'+(d?"#267eb7":"#a14a79")+'">'+number+'</text>'+
  '<text x="96" y="126" font-size="7" font-weight="800" text-anchor="middle" fill="#37617a">'+(d?"D-DIMER":"CARDIAC")+'</text>'+
  '<text x="96" y="137" font-size="6.6" font-weight="750" text-anchor="middle" fill="#37617a">'+(d?"CONTROL":"MARKERS")+'</text>'+
- '<text x="96" y="146" font-size="6.8" font-weight="850" text-anchor="middle" fill="#37617a">#'+esc(v[2])+'</text></svg>';
+ '<text x="96" y="146" font-size="6.8" font-weight="850" text-anchor="middle" fill="#37617a">'+(level1b?'LEVEL 1B':'#'+esc(v[2]))+'</text></svg>';
+}
+function qcPhotoButton(src,title,caption){
+ return '<div class="pf-qc-image-control">'+
+  '<button type="button" class="pf-qc-photo-trigger" aria-label="View actual vial photo: '+esc(title)+'">⌕ View vial photo</button>'+
+  '<div class="pf-qc-photo-popover" role="tooltip"><img src="'+esc(src)+'" alt="'+esc(title)+'" loading="lazy" width="210" height="210"/><span>'+esc(caption)+'</span></div>'+
+  '</div>';
 }
 function qcGallery(group){
- const handling=group.id==="ddimer"
-  ?'<div class="pf-qc-note" role="note"><strong>D-dimer QC: SINGLE USE</strong><p>Each D-dimer QC bottle (Low and Level 1) may be used <b>once only</b>. <b>Discard each bottle after use.</b> Never refreeze or save an opened D-dimer control for another run.</p></div>'
-  :'<div class="pf-qc-note" role="note"><strong>Cardiac QC: X + date, maximum two uses per vial</strong><p>For <b>each Cardiac Level 1, 1B and 3 vial</b> (both QC1 and QC2): at <b>first opening/use</b>, mark an <b>X</b> and the <b>date</b> on the bottle. If allowed by the current lot insert, recap and promptly refreeze remaining material. At the <b>second use</b>, add a second <b>X</b> and date, then <b>discard</b>. Never refreeze for a third use.</p></div>';
- const troponinAlternative=group.id==="troponin"?'<div class="pf-qc-note" role="note"><strong>Troponin QC1: Level 1 OR Level 1B</strong><p>For <b>hs-Troponin I QC1 (lane 5)</b>, choose <b>Cardiac Control Level 1</b> (pictured above) <b>or Cardiac Control Level 1B</b> (yellow cap). Verify the actual vial label and the lot-specific QC range for the level chosen. <b>QC2 (lane 6) continues to use Cardiac Level 3.</b></p></div>':'';
- const photos=group.id==="ddimer"?["d-dimer-low.webp","d-dimer-level-1.webp"]:["cardiac-level-1.webp","cardiac-level-3.webp"];
- const cards=group.vials.map(function(v,i){
-  const src="assets/pathfast-qc/"+photos[i];
+ const isDimer=group.id==="ddimer", isTroponin=group.id==="troponin";
+ const photos=isDimer?["d-dimer-low.webp","d-dimer-level-1.webp"]:["cardiac-level-1.webp","cardiac-level-3.webp"];
+ function regularVial(v,i){
   const title=group.label+" "+v[1]+" #"+v[2];
-  return '<article class="pf-qc-vial '+(group.id==="ddimer"?"pf-qc-dimer":"pf-qc-cardiac")+'">'+
+  return '<article class="pf-qc-vial '+(isDimer?"pf-qc-dimer":"pf-qc-cardiac")+'">'+
     '<span class="pf-qc-slot">'+esc(v[0])+'</span>'+
     '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,v,i)+'</div>'+
     '<strong class="pf-qc-level">'+esc(v[3])+'</strong>'+
     '<small>'+esc(group.qc)+' · Catalog #'+esc(v[2])+'</small>'+
-    '<div class="pf-qc-image-control">'+
-     '<button type="button" class="pf-qc-photo-trigger" aria-label="View actual vial photo: '+esc(title)+'">⌕ View vial photo</button>'+
-     '<div class="pf-qc-photo-popover" role="tooltip"><img src="'+src+'" alt="Actual Bio-Rad '+esc(title)+' control vial photo" loading="lazy" width="210" height="210"/><span>'+esc(v[1])+' · #'+esc(v[2])+'</span></div>'+
-    '</div></article>';
- }).join("");
- return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad controls are kept frozen before use. Thaw and handle per the current product-specific insert. Used D-dimer QC bottles must be discarded.</span></div>'+
+    qcPhotoButton("assets/pathfast-qc/"+photos[i],"Actual Bio-Rad "+title+" control vial photo",v[1]+" · #"+v[2])+
+   '</article>';
+ }
+ const level1b=["QC1 · LANE 5","CONTROL LEVEL 1B","","LEVEL 1B"];
+ const troponinQC1='<article class="pf-qc-vial pf-qc-cardiac pf-qc-choice-card">'+
+  '<span class="pf-qc-slot">QC1 · LANE 5</span>'+
+  '<div class="pf-qc-choice-caption">Choose either approved control for Troponin QC1</div>'+
+  '<div class="pf-qc-choice-options">'+
+   '<div class="pf-qc-choice-option">'+
+    '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,group.vials[0],0)+'</div>'+
+    '<strong class="pf-qc-level">LEVEL 1</strong>'+
+    '<small>Bio-Rad Cardiac Markers Plus · #146</small>'+
+    qcPhotoButton("assets/pathfast-qc/cardiac-level-1.webp","Actual Bio-Rad Cardiac Level 1 vial photo","CARDIAC LEVEL 1 · #146")+
+   '</div>'+
+   '<div class="pf-qc-choice-or" aria-label="or">OR</div>'+
+   '<div class="pf-qc-choice-option">'+
+    '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,level1b,0)+'</div>'+
+    '<strong class="pf-qc-level">LEVEL 1B</strong>'+
+    '<small>Bio-Rad Cardiac Markers Plus · yellow cap</small>'+
+    qcPhotoButton("assets/pathfast-qc/cardiac-level-1b.webp","Actual Bio-Rad Cardiac Level 1B vial photo","CARDIAC LEVEL 1B · yellow cap")+
+   '</div>'+
+  '</div></article>';
+ const cards=isTroponin?troponinQC1+regularVial(group.vials[1],1):group.vials.map(regularVial).join("");
+ const handling=isDimer
+  ?'<div class="pf-qc-policy pf-qc-policy--single" role="note"><span class="pf-qc-policy-kicker">D-DIMER CONTROL HANDLING</span><strong>One use per bottle, then discard</strong><p>Each D-dimer QC bottle, Low (QC1) and Level 1 (QC2), is <b>single-use only</b>. <b>Discard after use.</b> Never refreeze a used D-dimer control bottle.</p></div>'
+  :'<section class="pf-qc-policy pf-qc-policy--reuse" aria-label="Cardiac QC vial handling"><span class="pf-qc-policy-kicker">IMPORTANT · CARDIAC QC VIAL TRACKING</span><strong>Mark X + date at each use. Discard after the second use.</strong><p>Applies to <b>Cardiac Levels 1, 1B and 3</b> for Troponin and NT-proBNP controls.</p><div class="pf-qc-policy-actions"><div><span class="pf-qc-policy-count">01</span><div><b>FIRST USE</b><span>Mark <b>X + date</b> on the bottle. Recap and refreeze remaining control.</span></div></div><div><span class="pf-qc-policy-count">02</span><div><b>SECOND USE</b><span>Add another <b>X + date</b>, then <b>discard the vial</b>. No third use.</span></div></div></div></section>';
+ return '<div class="pf-freezer"><span>❄</span><span>Bio-Rad QC controls are kept frozen before use. Thaw and gently mix according to the product-specific preparation instructions.</span></div>'+
   '<div class="pf-qc-vials">'+cards+'</div>'+
-  '<div class="pf-qc-note"><strong>Control levels vs lane positions</strong><p>QC 1 (lane 5) uses '+esc(group.vials[0][1])+' (#'+group.vials[0][2]+')'+(group.id==="troponin"?' <b>or Cardiac Level 1B</b>':'')+'. QC 2 (lane 6) uses '+esc(group.vials[1][1])+' (#'+group.vials[1][2]+'). Confirm manufacturer compatibility and use lot-specific QC ranges for the selected level.</p></div>'+troponinAlternative+handling;
+  '<div class="pf-qc-note pf-qc-lane-note"><strong>QC lane positions</strong><p>Lane 5 = QC1'+(isTroponin?' (Cardiac Level 1 <b>OR</b> Level 1B)':' ('+esc(group.vials[0][3])+')')+'. Lane 6 = QC2 ('+esc(group.vials[1][3])+'). Check the current control lot-specific QC ranges before running.</p></div>'+
+  handling;
 }
 function panelContent(group){
  return '<div class="pf-assay-content pf-panel-content" aria-label="'+esc(group.label)+' calibration and QC materials">'+cartridgePack(group)+status(group)+
@@ -357,7 +381,7 @@ function returnMaterials(group){
   '<p>After dispensing into both CAL 2 cartridge wells, promptly recap, label and <b>freeze the single prepared CAL 2 vial at −20°C or colder</b> when permitted by the assay IFU. Record reconstitution date, expiration and freeze/thaw history; do not exceed assay-specific stability.</p></article>';
  const qc='<article class="pf-storage-card"><header><span class="pf-storage-dot qc"></span><strong>'+esc(group.qc)+'</strong><small>'+(group.id==="ddimer"?'Single-use QC: discard both vials after first use':'Cardiac Levels 1, 1B and 3: two uses maximum per vial')+'</small></header>'+
   '<div class="pf-storage-visual"><div class="pf-storage-qc-images">'+group.vials.map(function(v,i){return '<div class="pf-storage-vial"><span style="--cap:'+(i?"#a8e1c5":"#f4d082")+'"></span><b>QC'+(i+1)+'</b><small>#'+esc(v[2])+'</small></div>';}).join('')+'</div>'+(group.id==="ddimer"?'<div style="font-weight:900;color:#ab4b48;text-align:center;padding:12px">DISCARD AFTER USE</div>':storageSymbol("qc"))+'</div>'+
-  (group.id==="ddimer"?'<p><b>Discard each D-dimer QC bottle after its first use:</b> Low (QC1) and Level 1 (QC2). Do not return a used D-dimer vial to freezer storage.</p>':'<p>For each <b>Cardiac Level 1, 1B or 3</b>, mark an <b>X and date</b> at first use. If allowed by the lot insert, refreeze the remainder. On <b>second use</b>, mark another <b>X and date</b>, then <b>discard</b>. Never refreeze for a third use.</p>')+'</article>';
+  (group.id==="ddimer"?'<p><b>Discard each D-dimer QC bottle after its first use:</b> Low (QC1) and Level 1 (QC2). Do not return a used D-dimer vial to freezer storage.</p>':'<p>For each <b>Cardiac Level 1, 1B or 3</b>, mark an <b>X and date</b> at first use. Recap and refreeze remaining material. On <b>second use</b>, mark another <b>X and date</b>, then <b>discard</b>. Never refreeze for a third use.</p>')+'</article>';
   return '<section class="pf-return-storage" aria-label="Storage for CAL 1, prepared CAL 2 and quality controls">'+header+
    '<div class="pf-storage-grid pf-storage-three">'+cal1+cal2+qc+'</div>'+
    '<p class="pf-workflow-note"><strong>All three assays:</strong> follow applicable CAL 2 storage instructions. <strong>Cardiac controls:</strong> mark X and date at each use; discard after the second. <strong>D-dimer controls:</strong> one use then discard. More restrictive lot-specific instructions take precedence.</p></section>';
