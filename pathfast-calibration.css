@@ -400,3 +400,21 @@
 @media print{
  .pf-calibration-guide .pf-qc-choice-option--default{box-shadow:none;border:2.5px solid #b38c29}
 }
+
+/* Subtle Level 1 alternative note for the Troponin QC1 default (text only). */
+.pf-qc-lane-item .pf-qc-level-alt-note{
+ display:block;
+ margin-top:4px;
+ font-size:10.5px;
+ line-height:1.35;
+ font-weight:650;
+ color:#728a98;
+}
+.pf-qc-choice-caption small{
+ display:block;
+ margin-top:3px;
+ font-size:11px;
+ line-height:1.45;
+ color:#718a98;
+ font-weight:650;
+}
