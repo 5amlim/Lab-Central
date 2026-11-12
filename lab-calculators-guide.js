@@ -299,7 +299,7 @@ function panel(calculators,logo){
  const visual=molecular?'<span class="calc2-panel-icon molecular" aria-hidden="true"><svg viewBox="0 0 48 48" width="31" height="31" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 7l24 17-24 17M36 7L12 24l24 17M13 15h22M13 24h22M13 33h22"/><circle cx="12" cy="7" r="3" fill="#fff"/><circle cx="36" cy="7" r="3" fill="#fff"/><circle cx="12" cy="41" r="3" fill="#fff"/><circle cx="36" cy="41" r="3" fill="#fff"/></svg></span>':
   '<span class="calc2-panel-icon">'+logo+'</span>';
  const cedarsPayerNote=id==="cedars"?
-  '<aside class="calc2-cedars-payer-note" aria-label="Cedars insurance eligibility"><strong>Insurance eligibility</strong><span>Cedars does not accept HMO patients.</span></aside>':"";
+  '<aside class="calc2-cedars-payer-note" aria-label="Cedars insurance eligibility"><strong>Insurance eligibility</strong><span>Cedars does not accept uninsured patients or patients with HMO insurance.</span></aside>':"";
  const quickSteps='<section class="calc2-panel-steps" aria-label="Quick start for '+E(names[id])+'">'+
   '<div class="calc2-panel-steps-heading"><h4>Before specimen collection</h4><span>3 checkpoints</span></div>'+
   '<div class="calc2-step-grid">'+item.steps.map((step,i)=>
