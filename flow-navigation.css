@@ -2903,3 +2903,9 @@
  .fd-intake-option-status{margin-left:0}
  .workflow-main .fd-requisition-intake .requisition-intake-header{flex-wrap:wrap}
 }
+
+
+/* Sendout order workflows: use more of the desktop canvas, without widening other pages. */
+#mainContent.sendout-wide{max-width:1490px}
+#mainContent.sendout-wide .workflow-main{max-width:1300px;width:100%}
+@media(max-width:860px){#mainContent.sendout-wide{max-width:100%}}
