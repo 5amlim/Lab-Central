@@ -320,7 +320,8 @@ function qcGallery(group){
     qcPhotoButton("assets/pathfast-qc/cardiac-level-1.webp","Actual Bio-Rad Cardiac Level 1 vial photo","CARDIAC LEVEL 1 · #146")+
    '</div>'+
    '<div class="pf-qc-choice-or" aria-label="or">OR</div>'+
-   '<div class="pf-qc-choice-option">'+
+   '<div class="pf-qc-choice-option pf-qc-choice-option--default">'+
+    '<span class="pf-qc-default-tag">DEFAULT QC1 CONTROL</span>'+
     '<div class="pf-qc-bottle-wrap">'+qcVialArt(group,level1b,0)+'</div>'+
     '<strong class="pf-qc-level">LEVEL 1B</strong>'+
     '<small>Bio-Rad Cardiac Markers Plus · yellow cap</small>'+
