@@ -67,3 +67,95 @@
 .ae-link:hover{background:#f0f8fc}
 @media(max-width:800px){.ae-step-grid,.ae-doc-cards{grid-template-columns:1fr}.ae-intro{padding:17px}.ae-mock{min-height:140px}}
 @media print{.ae-step-grid,.ae-doc-cards{grid-template-columns:1fr 1fr}.ae-guide .ad-guide-body{display:block!important}.ae-mock{break-inside:avoid}}
+
+
+/* Realistic Athena chart walkthrough, one full-width step per row. */
+.ae-step-grid{display:grid;grid-template-columns:minmax(0,1fr);max-width:1000px;width:100%;margin-inline:auto;gap:17px}
+.ae-step{padding:20px 22px;gap:15px}
+.ae-step-title{max-width:850px}
+.ae-step-title h3{font-size:15px;margin-top:1px}
+.ae-step-title p{font-size:12px}
+.ae-ehr-preview{position:relative;margin:0 auto;width:100%;max-width:920px;overflow:hidden;border:1px solid #bfb8cb;border-radius:11px;box-shadow:0 3px 12px #30263c14;background:#e5e3e9;font-family:Arial,Helvetica,sans-serif;color:#282b36;font-size:11px}
+.ae-ehr-topbar{display:flex;align-items:center;gap:24px;min-height:31px;padding:7px 12px;background:#735595;color:white}
+.ae-ehr-topbar strong{font-size:14px;color:white;font-weight:800;white-space:nowrap}
+.ae-ehr-topnav{font-size:10px;font-weight:650;color:#f7f0ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ae-ehr-topbar small{font-size:8px;letter-spacing:.09em;color:#e4d3f2;white-space:nowrap;margin-left:auto}
+.ae-ehr-patientbar{min-height:79px;background:linear-gradient(100deg,#513181 0%,#513181 42%,#f1f1f1 42%,#f1f1f1 100%);display:flex;align-items:center;gap:12px;padding:9px 13px;border-bottom:1px solid #d7d3df}
+.ae-ehr-avatar{flex:0 0 53px;height:53px;display:grid;place-items:center;color:#fff;background:#b29f30;border:2px solid #fff;border-radius:4px;font-size:21px;font-weight:800}
+.ae-ehr-patienttext{display:flex;flex-direction:column;gap:4px;min-width:150px;flex:0 0 31%;color:#fff}
+.ae-ehr-patienttext strong{font-size:16px;line-height:1.2;color:#fff;letter-spacing:.01em}
+.ae-ehr-patienttext span{font-size:10px;color:#ebe1f7}
+.ae-ehr-patientmeta{display:flex;gap:8px;flex:1;justify-content:space-around;min-width:0}
+.ae-ehr-patientmeta span{font-size:9px;line-height:1.4;color:#67626b;white-space:nowrap}
+.ae-ehr-patientmeta b{display:block;margin-top:3px;background:#fff;border:2px solid #e5dbe9;border-radius:4px;padding:3px 6px;color:#423e4a;font-size:9px}
+.ae-ehr-workspace{position:relative;display:flex;min-height:336px}
+.ae-ehr-rail{display:flex;flex-direction:column;gap:3px;flex:0 0 65px;padding:9px 5px;background:#eeedef;border-right:1px solid #d5d2d8}
+.ae-ehr-rail-item{color:#5d5864;display:flex;align-items:center;flex-direction:column;font-size:8px;line-height:1.15;text-align:center;gap:2px}
+.ae-ehr-rail-item i{font-style:normal;font-size:15px;color:#6d5485}
+.ae-ehr-workarea{flex:1;min-width:0;padding:12px 12px 16px;background:#dcd8df}
+.ae-ehr-chart-heading{display:flex;align-items:center;justify-content:space-between;background:#eee6f3;border-radius:4px;min-height:40px;padding:4px 6px 4px 14px;margin-bottom:10px}
+.ae-ehr-chart-heading b{color:#3278a3;font-size:11px}
+.ae-ehr-hamburger{min-width:49px;display:flex;justify-content:center;align-items:center;gap:7px;padding:6px 9px;background:#624487;color:#fff;border-radius:4px;font-size:17px;font-weight:700}
+.ae-ehr-target{border:2px solid #209d79!important;background:#eaf8f2!important;color:#135f47!important;box-shadow:0 0 0 2px #cee9db70;outline-offset:2px}
+.ae-ehr-hamburger.ae-ehr-target{background:#604183!important;color:#fff!important;border-color:#2adfa5!important;box-shadow:0 0 0 3px #b0f0d7}
+.ae-ehr-tag{margin-left:auto;flex:0 0 auto;text-align:right;font:800 9px/1 Arial,sans-serif;letter-spacing:.07em;color:#12694b;background:#d9f2e7;border:1px solid #9bd7be;padding:4px 6px;border-radius:4px;font-style:normal;white-space:nowrap}
+.ae-ehr-chartcols{display:grid;grid-template-columns:1fr 1fr;gap:11px;align-items:start}
+.ae-ehr-data-card{background:#fff;border-radius:4px;padding:12px;box-shadow:0 1px 3px #9993a020;min-height:75px}
+.ae-ehr-data-card h4{color:#695487;font-weight:600;font-size:13px;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid #ece9ef}
+.ae-ehr-data-card h5{color:#373539;font-weight:800;font-size:11px;margin:5px 0 7px}
+.ae-ehr-data-card p{font-size:10px;color:#58545d;margin:0 0 13px}
+.ae-ehr-medgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:183px}
+.ae-ehr-medgrid h5{border-bottom:1px solid #ececef;padding:0 0 9px}
+.ae-ehr-rightstack{display:grid;gap:11px}
+.ae-ehr-rightstack .ae-ehr-data-card:nth-child(1){min-height:125px}
+.ae-ehr-statusbar{border-top:1px solid #c9c5ca;background:#eeeef0;padding:5px 13px;text-align:right;letter-spacing:.05em;font-size:8px;color:#706875}
+.ae-ehr-menu-open{position:absolute;z-index:5;right:12px;top:40px;width:min(305px,55%);background:#50317b;color:#fff;border-radius:3px;box-shadow:0 7px 22px #33223a55;padding:4px}
+.ae-ehr-menu-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 13px;border-bottom:1px solid #ffffff40;font-size:11px;color:#fff;min-height:36px}
+.ae-ehr-menu-item:not(.ae-ehr-target):last-child{border-bottom:0}
+.ae-ehr-quickview{background:#f4f4f4;min-height:410px}
+.ae-ehr-quickview .ae-ehr-patientbar{min-height:73px}
+.ae-ehr-quicknav{background:#e7e4cf;border-bottom:1px solid #cfcbb8;display:flex;align-items:center;gap:14px;min-height:34px;padding:5px 10px;color:#604a84;font-weight:600;font-size:10px;white-space:nowrap;overflow:hidden}
+.ae-ehr-quicknav b{display:flex;align-items:center;gap:8px;padding:5px 7px}
+.ae-ehr-quicknav b .ae-ehr-tag{margin-left:7px}
+.ae-ehr-quickcontent{min-height:290px;background:#fff;padding:15px 18px 28px}
+.ae-ehr-quickcontent h3{font-size:17px;color:#5b4880;margin:0 0 12px}
+.ae-ehr-quickcontent h4{color:#fff;background:#685386;padding:7px;font-size:12px;margin:14px 0 10px}
+.ae-ehr-quickcontent p{font-size:10px}
+.ae-ehr-quick-row{display:flex;align-items:center;gap:18px;padding:6px 0;color:#77717c;font-size:10px}
+.ae-ehr-quick-row span{flex:0 0 120px}
+.ae-ehr-quick-row b{color:#37353d;font-size:10px}
+.ae-ehr-field{width:260px;height:21px;border:1px solid #c9d1d8;background:#fdfdfd}
+.ae-ehr-quick-menu{position:absolute;top:143px;left:11px;z-index:6;width:min(230px,65%);background:#fff;box-shadow:2px 4px 12px #28202d40;border:1px solid #d9d4d9;border-radius:3px;padding:4px}
+.ae-ehr-quick-menu div{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:10px;min-height:30px;padding:7px 10px;border-bottom:1px solid #f1eef3;color:#474149}
+.ae-ehr-quick-menu div:last-child{border-bottom:0}
+.ae-ehr-dimmer{position:absolute;z-index:7;inset:0;background:#22232b70}
+.ae-ehr-modal{position:absolute;z-index:8;top:50%;left:50%;transform:translate(-50%,-50%);width:min(470px,85%);min-height:235px;padding:16px 17px;background:#fff;border:1px solid #bbb5bd;box-shadow:0 8px 25px #211e2555;color:#36323c}
+.ae-ehr-modal header{font-size:18px;color:#634a87;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between}
+.ae-ehr-modal header span{font-weight:400;color:#6f6872}
+.ae-ehr-label-options{display:grid;gap:5px}
+.ae-ehr-label-row{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:8px 9px;min-height:33px;color:#252329}
+.ae-ehr-label-row b{color:inherit}
+.ae-ehr-label-row small{display:block;color:#4d6360;font-size:9px;font-weight:400;padding:4px 0 0 23px}
+.ae-ehr-label-row span{min-width:0}
+.ae-ehr-modal-footer{border-top:1px solid #ede8ef;padding:10px 4px 0;margin-top:10px;color:#76707b;font-size:10px}
+.ae-ehr-warning{padding:9px 11px;background:#fff3af;color:#d05208;border-left:3px solid #d87130;font-size:10px;margin-bottom:10px}
+@media(max-width:620px){
+ .ae-step-grid{grid-template-columns:1fr}
+ .ae-step{padding:12px}
+ .ae-ehr-topnav,.ae-ehr-patientmeta{display:none}
+ .ae-ehr-patientbar{background:#513181}
+ .ae-ehr-patienttext{flex:1}
+ .ae-ehr-workspace{min-height:265px}
+ .ae-ehr-rail{flex-basis:42px;padding:8px 2px}
+ .ae-ehr-rail-item{font-size:6px}
+ .ae-ehr-rail-item i{font-size:12px}
+ .ae-ehr-chartcols{grid-template-columns:1fr}
+ .ae-ehr-rightstack{display:none}
+ .ae-ehr-workarea{padding:8px}
+ .ae-ehr-quicknav{gap:6px;font-size:8px}
+ .ae-ehr-quicknav span:nth-of-type(n+3){display:none}
+ .ae-ehr-quick-row span{flex-basis:85px}
+ .ae-ehr-menu-open{width:75%;right:8px}
+ .ae-ehr-quick-menu{top:135px}
+}
+@media print{.ae-step-grid{grid-template-columns:minmax(0,1fr);max-width:100%}.ae-step{break-inside:avoid}}
