@@ -1,0 +1,69 @@
+/* Athena EHR guides: label printing and document upload reference. */
+.ae-guide{display:grid;gap:18px;margin:20px 0 34px;color:#25394e}
+.ae-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:5px;background:#eef2f7;border:1px solid #e2e9f0;border-radius:14px}
+.ae-tab{appearance:none;border:1px solid transparent;background:transparent;color:#61758a;font-size:12px;font-weight:800;line-height:1.4;padding:11px 17px;border-radius:10px;transition:background .15s,color .15s,border-color .15s}
+.ae-tab:hover{background:#fff;color:#513080}
+.ae-tab.active{background:#fff;color:#603a90;border-color:#d9caed;box-shadow:0 2px 8px #35264a12}
+.ae-intro{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;background:linear-gradient(115deg,#f6f0fd,#ffffff 78%);border:1px solid #e8dff3;border-radius:15px;padding:21px 23px}
+.ae-intro strong{display:block;color:#735098;font-size:10px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:5px}
+.ae-intro h2{font-size:21px;letter-spacing:-.025em;margin:0 0 6px;color:#33274c}
+.ae-intro p{font-size:12px;max-width:660px;line-height:1.65;color:#66758a;margin:0}
+.ae-intro .ae-chip{font-size:10px;font-weight:850;padding:8px 11px;color:#624388;background:#fff;border:1px solid #ded0ee;border-radius:8px}
+.ae-route{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:13px 17px;background:#fff;border:1px solid #e0e7ee;border-radius:12px}
+.ae-route b{color:#6d467c;font-size:12px}
+.ae-route span{font-size:11px;color:#5a7186;font-weight:700}
+.ae-route i{font-style:normal;font-size:13px;color:#a48ab8}
+.ae-step-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ae-step{background:#fff;border:1px solid #dfe6ec;border-radius:15px;padding:17px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.ae-step-title{display:flex;gap:11px;align-items:flex-start}
+.ae-step-num{flex:none;border-radius:9px;display:grid;place-items:center;width:32px;height:32px;font-size:11px;font-weight:900;background:#f0e8f7;color:#7649a3}
+.ae-step h3{margin:0 0 5px;font-size:14px;color:#263c56}
+.ae-step p{margin:0;font-size:12px;line-height:1.6;color:#66798a}
+.ae-mock{border-radius:10px;border:1px solid #e3dfe9;min-height:156px;background:#faf9fc;overflow:hidden;margin-top:auto;font-size:11px}
+.ae-mock-head{background:#6a4a8d;color:white;display:flex;justify-content:space-between;gap:8px;padding:9px 13px;align-items:center}
+.ae-mock-head strong{font-size:11px;letter-spacing:.015em;color:#fff}
+.ae-mock-head small{font-size:8px;color:#e7ddef}
+.ae-mock-body{padding:11px;display:grid;gap:8px}
+.ae-mock-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 11px;background:#f1eef5;border:1px solid #e5deed;border-radius:6px;font-size:11px;font-weight:800;color:#554572}
+.ae-focus{border:2px solid #2b9b78!important;background:#edf9f4!important;color:#155c47!important;box-shadow:0 0 0 2px #e0f7ec}
+.ae-mock-menu{background:#53337f;border-radius:7px;color:white;display:grid;padding:6px;gap:2px}
+.ae-mock-menu span{padding:8px 10px;border-radius:4px}
+.ae-mock-menu .ae-focus{font-weight:850}
+.ae-mock-patient{background:#52347f;border-radius:7px;padding:9px;color:#fff;display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.ae-mock-nav{background:#f2efe3;border:1px solid #e8e4d6;display:flex;gap:8px;padding:8px;font-size:10px;flex-wrap:wrap}
+.ae-mock-nav b{padding:5px 8px;color:#4a3978}
+.ae-mock-nav .ae-focus{border-radius:5px}
+.ae-mock-list{display:grid;background:#fff;border:1px solid #e4e0e7;padding:5px;border-radius:6px}
+.ae-mock-list span{padding:8px 9px;border-bottom:1px solid #f1edf3}
+.ae-mock-list span:last-child{border-bottom:0}
+.ae-mock-dialog{background:#fff;border:1px solid #d9d1df;border-radius:6px;margin:8px;padding:11px;display:grid;gap:7px}
+.ae-mock-dialog h4{margin:0 0 3px;font-size:14px;color:#5f4987}
+.ae-mock-alert{background:#fff5b6;color:#c45a15;padding:7px 9px;font-size:10px;line-height:1.35}
+.ae-mock-radio{padding:5px 7px;border:1px solid transparent;border-radius:5px}
+.ae-mock-radio.ae-focus{font-weight:900}
+.ae-mock-radio small{display:block;padding-left:19px;color:#587069;font-size:9px}
+.ae-callout{border-left:4px solid #a16a24;background:#fff8e9;border-top:1px solid #f3e4c6;border-bottom:1px solid #f3e4c6;border-right:1px solid #f3e4c6;border-radius:10px;padding:15px 17px;font-size:12px;line-height:1.6;color:#755525}
+.ae-callout strong{display:block;color:#795119;margin-bottom:3px}
+.ae-callout p{margin:0}
+.ae-checks{display:flex;gap:10px;flex-wrap:wrap}
+.ae-checks span{background:#eff7f5;border:1px solid #d2e8e0;color:#347367;font-size:10px;font-weight:850;border-radius:7px;padding:7px 10px}
+.ae-doc-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.ae-doc-card{min-width:0;border-radius:15px;background:#fff;border:1px solid #dfe7ee;padding:20px;display:grid;align-content:start;gap:12px}
+.ae-doc-card h3{font-size:16px;margin:0;color:#243d56}
+.ae-doc-card p{font-size:12px;line-height:1.6;color:#718092;margin:0}
+.ae-class{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.ae-class span{font-size:10px;font-weight:850;color:#567083;border:1px solid #deebf1;background:#f2f8fb;padding:7px 9px;border-radius:7px}
+.ae-class i{font-size:14px;font-style:normal;color:#9fa5b8}
+.ae-class b{font-size:10px;color:#4b2b77;border:1px solid #e1d5f0;background:#f6effd;padding:7px 10px;border-radius:7px}
+.ae-guide .ad-guide{margin:0;max-width:100%}
+.ae-guide .ad-guide-grid{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.ae-guide .ad-guide-body{padding:16px}
+.ae-doc-extra{padding:17px;border-radius:12px;border:1px solid #dce6ed;background:#f7fbfc;display:grid;gap:10px}
+.ae-doc-extra h3{font-size:14px;margin:0}
+.ae-doc-extra p{font-size:12px;color:#536b7e;line-height:1.6;margin:0}
+.ae-doc-extra .ad-guide{margin:4px 0}
+.ae-links{display:flex;gap:10px;flex-wrap:wrap}
+.ae-link{border:1px solid #cddfea;border-radius:8px;color:#316b91;background:#fff;padding:9px 12px;font-size:11px;font-weight:850;text-decoration:none}
+.ae-link:hover{background:#f0f8fc}
+@media(max-width:800px){.ae-step-grid,.ae-doc-cards{grid-template-columns:1fr}.ae-intro{padding:17px}.ae-mock{min-height:140px}}
+@media print{.ae-step-grid,.ae-doc-cards{grid-template-columns:1fr 1fr}.ae-guide .ad-guide-body{display:block!important}.ae-mock{break-inside:avoid}}
