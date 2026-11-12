@@ -368,3 +368,35 @@
  .pf-qc-policy,.pf-qc-choice-card{box-shadow:none;break-inside:avoid}
  .pf-qc-choice-options{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr)}
 }
+
+
+/* Emphasize Level 1B as the default hs-Troponin I QC1 control. Level 1 remains an alternative. */
+.pf-calibration-guide .pf-qc-choice-option--default{
+ border:2.5px solid #d0a124;
+ background:linear-gradient(180deg,#fff1bd 0%,#fffbef 56%,#ffffff 100%);
+ box-shadow:0 0 0 3px rgba(232,184,47,.15),0 9px 20px rgba(125,91,20,.13);
+ transform:translateY(-1px);
+}
+.pf-calibration-guide .pf-qc-choice-option--default .pf-qc-level{
+ color:#7e5809;
+ font-size:19px;
+}
+.pf-qc-default-tag{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ max-width:100%;
+ margin-bottom:5px;
+ border-radius:999px;
+ padding:6px 11px;
+ background:#95680c;
+ color:#fff;
+ font-size:10px;
+ font-weight:900;
+ letter-spacing:.045em;
+ text-align:center;
+ line-height:1.35;
+}
+@media print{
+ .pf-calibration-guide .pf-qc-choice-option--default{box-shadow:none;border:2.5px solid #b38c29}
+}
