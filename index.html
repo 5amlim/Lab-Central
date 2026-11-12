@@ -2375,7 +2375,7 @@ function renderAthenaEhrGuides(tab){
    athenaEhrLabelStep("04","Select Label","In the Single Label dialog, select the first option, Label. Do not choose Detailed Label, Mailing Label or Simple Label for specimen containers.","label")+
    athenaEhrLabelStep("05","Print and check the label","Print using the approved specimen-label printer. Verify patient identifiers and legibility. If printing is disabled, request workstation software configuration.","printer")+
    "</section>";
-  h+="<div class='ae-callout' role='note'><strong>Printing disabled: required software is not installed</strong><p>This exact warning appears in the screenshot. Contact IT to confirm the athenaOne printing component/Device Manager, label printer connection and workstation configuration. The Print action may not be available until setup is complete.</p></div>";
+  h+="<div class='ae-callout' role='note'><strong>Printing disabled: required software is not installed</strong><p>If you see this message, contact IT to set up the DYMO label printer on your workstation.</p></div>";
   h+="<div class='ae-checks'><span>✓ Match two patient identifiers</span><span>✓ Confirm the label is legible</span><span>✓ Add collection details required by the receiving lab/SOP</span><span>✓ Label the correct container</span></div>";
   h+="<p class='source-footnote'>Patient labels identify the specimen; they do not replace a laboratory-specific requisition, specimen source, collection date/time or other required identifiers when applicable. Do not print from the wrong patient chart.</p>";
  }else{
