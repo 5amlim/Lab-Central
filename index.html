@@ -191,7 +191,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261104c" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261112-sendout-wide" media="all">
 <link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261107-timeline" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261104" media="all">
@@ -303,7 +303,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
 <link rel="stylesheet" href="lab-search.css?v=20261110-categorized-suggestions" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
-<link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-wide-document-v3" media="all">
+<link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-dymo-print" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -2343,8 +2343,7 @@ function athenaEhrQuickview(mode){
  "<div class='ae-ehr-quickcontent'><h3>Quickview</h3><div class='ae-ehr-quick-row'><span>Provider group</span><b>DEMO CLINIC · TRAINING ENVIRONMENT</b></div><div class='ae-ehr-quick-row'><span>Patient notes</span><i class='ae-ehr-field'></i></div><div class='ae-ehr-quick-row'><span>Currently admitted to</span><b>Not admitted</b></div><h4>Outstanding Balances</h4><div class='ae-ehr-quick-row'><span>Total balances</span><b>$0.00</b></div><h4>Privacy</h4><p>☑ Privacy Notice &nbsp;&nbsp; ☑ Release of Billing Information</p></div>"+
  (opened?labels:"")+
  (modal?"<div class='ae-ehr-dimmer'></div><div class='ae-ehr-modal'><header>Single Label <span>×</span></header>"+
- (mode==="printer"?"<div class='ae-ehr-warning'>Printing is disabled because required software is not installed.</div>":"")+
- options+"<div class='ae-ehr-modal-footer'>"+(mode==="printer"?"Workstation printer software must be configured.":"Choose the standard specimen label.")+"</div></div>":"")+
+ options+"<div class='ae-ehr-modal-footer ae-ehr-modal-footer-print'><span>Choose the standard specimen label.</span><span class='ae-ehr-print-btn "+(mode==="printer"?"ae-ehr-target":"")+"'>Print</span></div></div>":"")+
  "<div class='ae-ehr-statusbar'>TRAINING PATIENT &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
 }
 function athenaEhrMock(kind){
@@ -2403,14 +2402,14 @@ function renderAthenaEhrGuides(tab){
  "<button type='button' class='ae-tab "+(active==="labels"?"active":"")+"' data-go='athena-ehr' data-target-tab='labels' "+(active==="labels"?"aria-current='page'":"")+">Print specimen labels</button>"+
  "<button type='button' class='ae-tab "+(active==="documents"?"active":"")+"' data-go='athena-ehr' data-target-tab='documents' "+(active==="documents"?"aria-current='page'":"")+">Upload &amp; classify documents</button></nav>";
  if(active==="labels"){
-  h+="<header class='ae-intro'><div><strong>SPECIMEN CONTAINERS · PATIENT IDENTIFICATION</strong><h2>Print patient labels in Athena</h2><p>Follow the patient chart and Quickview route shown in the supplied screenshots. The interface illustrations below omit all patient information.</p></div><span class='ae-chip'>ATHENA QUICKVIEW</span></header>";
+  h+="<header class='ae-intro'><div><strong>SPECIMEN CONTAINERS · PATIENT IDENTIFICATION</strong><h2>Print patient labels in Athena</h2><p>Follow the patient chart and Quickview route shown in the supplied screenshots. The interface illustrations below omit all patient information.</p></div><span class='ae-chip'>Patient Dymo Label</span></header>";
   h+="<div class='ae-route'><b>Patient chart</b><i>›</i><span>☰ Menu</span><i>›</i><span>Quickview</span><i>›</i><span>Registration</span><i>›</i><b>Single Label</b><i>›</i><b>Label</b></div>";
   h+="<section class='ae-step-grid' aria-label='Label printing steps'>"+
    athenaEhrLabelStep("01","Click the hamburger menu","Open the correct patient's chart in Athena and click the hamburger (☰) at the top right of the chart.","chart")+
    athenaEhrLabelStep("02","Select Quickview","From the purple menu that opens, click Quickview.","menu")+
    athenaEhrLabelStep("03","Open Registration → Single Label","In Quickview, open the Registration dropdown, then select Single Label.","registration")+
    athenaEhrLabelStep("04","Select Label","In the Single Label dialog, select the first option, Label. Do not choose Detailed Label, Mailing Label or Simple Label for specimen containers.","label")+
-   athenaEhrLabelStep("05","Print and check the label","Print using the approved specimen-label printer. Verify patient identifiers and legibility. If printing is disabled, request workstation software configuration.","printer")+
+   athenaEhrLabelStep("05","Print and check the label","Click Print to generate the patient DYMO label, then verify patient identifiers and legibility.","printer")+
    "</section>";
   h+="<div class='ae-callout' role='note'><strong>Printing disabled: required software is not installed</strong><p>If you see this message, contact IT at <a href='mailto:helpdesk@sollishealth.com'>helpdesk@sollishealth.com</a> to set up the DYMO label printer on your workstation.</p></div>";
   h+="<div class='ae-checks'><span>✓ Match two patient identifiers</span><span>✓ Confirm the label is legible</span><span>✓ Add collection details required by the receiving lab/SOP</span><span>✓ Label the correct container</span></div>";
@@ -2923,6 +2922,7 @@ function renderContainerGallery(){
 function render(){
  const route=sectionFromHash();const sec=all.find(s=>s.id===route.id);
  state.section=sec||null;
+ el('mainContent').classList.toggle('sendout-wide',route.id==='orders');
  showNav();
  if(state.search)renderHome('search');
  else if(route.id==='outside'||route.id==='specimen-dropoff'||route.id==='sendout-log'||route.id==='socal-daily'){
