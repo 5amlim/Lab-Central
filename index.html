@@ -303,6 +303,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
 <link rel="stylesheet" href="lab-search.css?v=20261110-categorized-suggestions" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
+<link rel="stylesheet" href="athena-ehr-guides.css?v=20261112" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -647,7 +648,7 @@ function showNav(){
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${navIconSvg('home','book')}</span>Overview</button>`;
  if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
  out+='</div>';
- out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators/guides <span class="nav-end" id="calc2-nav-count">${window.LAB_CALCULATORS_GUIDE?.count()||3}</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button></div>`;
+ out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators/guides <span class="nav-end" id="calc2-nav-count">${window.LAB_CALCULATORS_GUIDE?.count()||3}</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button><button type="button" class="nav-link ${r.id==='athena-ehr'?'active':''}" data-go="athena-ehr" data-target-tab="labels"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena EHR Guides</button></div>`;
  for(const cat of categories){
   const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
@@ -1172,7 +1173,7 @@ function renderHome(mode='home'){
  if(!search&&!isFav){
  h=`<div class="eyebrow">LAB OPERATIONS / QUICK REFERENCE</div><h1 class="page-h1">Lab operations reference</h1><p class="lede">Instrument procedures, collection and send-out workflows, training, and order references.</p>`;
  h+=noticeText();
- h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators/guides</strong><small>Collection calculators &amp; molecular sendouts</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${navIconSvg('orders','clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button></div>`;
+ h+=`<div class="home-tool-grid"><button type="button" class="home-tool-card" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators/guides</strong><small>Collection calculators &amp; molecular sendouts</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="orders"><span class="home-tool-icon blue">${navIconSvg('orders','clipboard-check')}</span><span><strong>Sendout lab workflows</strong><small>External requisitions &amp; Sollis orders</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="order-sets"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Order Sets</strong><small>Athena order references</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="athena-ehr" data-target-tab="labels"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena EHR Guides</strong><small>Patient labels &amp; document upload</small></span><span class="home-tool-arrow">→</span></button></div>`;
  h+=`<div class="home-tool-grid ops-home-shortcuts"><button type="button" class="home-tool-card" data-go="outside"><span class="home-tool-icon teal">${navIconSvg('outside','droplets')}</span><span><strong>Home specimen collection</strong><small>Urine &amp; stool kits and return visits</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="specimen-dropoff"><span class="home-tool-icon blue">${navIconSvg('specimen-dropoff','clipboard-check')}</span><span><strong>Specimen drop-off</strong><small>New Athena appointment and order</small></span><span class="home-tool-arrow">→</span></button><button type="button" class="home-tool-card" data-go="sendout-log"><span class="home-tool-icon amber">${navIconSvg('sendout-log','file-text')}</span><span><strong>Lab Sendout Log</strong><small>Collection, processing, form and bin</small></span><span class="home-tool-arrow">→</span></button></div>`;
   h+=`<div class="featured"><button type="button" class="feature-primary has-featured-art" data-go="pathfast"><small>FEATURED INSTRUMENT</small><strong>PATHFAST Training Hub</strong><p>Patient testing, quality control, calibration and a dedicated video library in one place.</p><span class="feature-cta">Explore PATHFAST <span>↗</span></span>${homepageEquipmentArt(all.find(s=>s.id==="pathfast"),true)}</button><div class="feature-secondary"><button class="mini-feature" type="button" data-go="sendout"><span class="feature-small-icon">${navIconSvg('sendout','truck')}</span><span><strong>Lab Sendout Logistics</strong><small>Containers, pickups &amp; transport</small></span><span class="arrow">↗</span></button><button class="mini-feature pfux-home-clinical" type="button" data-go="pathfast" data-target-tab="chest-pain"><span class="feature-small-icon">${navIconSvg('pathfast','heart-pulse')}</span><span><strong>Chest pain pathway</strong><small>Open interactive provider guide</small></span><span class="arrow">↗</span></button></div></div>`;
  }
@@ -2317,6 +2318,51 @@ function orderSetsPanel(sec){
  return h;
 }
 
+
+function athenaEhrMock(kind){
+ const top="<div class='ae-mock-head'><strong>athenaOne</strong><small>TRAINING EXAMPLE · NO PATIENT DATA</small></div>";
+ if(kind==="chart")return "<div class='ae-mock'>"+top+"<div class='ae-mock-body'><div class='ae-mock-patient'><span>Patient chart</span><b>☰</b></div><div class='ae-mock-menu'><span class='ae-focus'>Quickview <b>SELECT</b></span><span>Create order group</span><span>Print chart sections</span><span>Add document</span></div></div></div>";
+ if(kind==="registration")return "<div class='ae-mock'>"+top+"<div class='ae-mock-body'><div class='ae-mock-bar'>Quickview <span>Patient actions</span></div><div class='ae-mock-nav'><b class='ae-focus'>Registration ▾</b><b>Messaging ▾</b><b>Clinicals ▾</b></div><div class='ae-mock-list'><span>Quickview</span><span>Full Registration</span><span>Labels</span><span>Detailed Labels</span><span class='ae-focus'>Single Label</span></div></div></div>";
+ if(kind==="label")return "<div class='ae-mock'>"+top+"<div class='ae-mock-dialog'><h4>Single Label</h4><div class='ae-mock-radio ae-focus'>◉ Label <small>SAMPLE PATIENT · DOB · ID</small></div><div class='ae-mock-radio'>◯ Detailed Label</div><div class='ae-mock-radio'>◯ Mailing Label</div><div class='ae-mock-radio'>◯ Simple Label</div></div></div>";
+ if(kind==="printer")return "<div class='ae-mock'>"+top+"<div class='ae-mock-dialog'><h4>Single Label</h4><div class='ae-mock-alert'>Printing is disabled because required software is not installed.</div><div class='ae-mock-radio ae-focus'>◉ Label</div><span>Printing requires the configured label printer and workstation software.</span></div></div>";
+ return "";
+}
+function athenaEhrLabelStep(number,heading,copy,kind){
+ return "<article class='ae-step'><div class='ae-step-title'><span class='ae-step-num'>"+number+"</span><div><h3>"+heading+"</h3><p>"+copy+"</p></div></div>"+athenaEhrMock(kind)+"</article>";
+}
+function renderAthenaEhrGuides(tab){
+ const active=tab==="documents"?"documents":"labels";
+ el("currentCrumb").textContent="Athena EHR Guides";
+ let h=toolHeader("ATHENA / STAFF HOW-TO","Athena EHR Guides","Patient specimen labels, document uploads and classification. Separate from Athena Order Sets.");
+ h+="<div class='ae-guide'><nav class='ae-tabs' aria-label='Athena guide sections'>"+
+ "<button type='button' class='ae-tab "+(active==="labels"?"active":"")+"' data-go='athena-ehr' data-target-tab='labels' "+(active==="labels"?"aria-current='page'":"")+">Print specimen labels</button>"+
+ "<button type='button' class='ae-tab "+(active==="documents"?"active":"")+"' data-go='athena-ehr' data-target-tab='documents' "+(active==="documents"?"aria-current='page'":"")+">Upload &amp; classify documents</button></nav>";
+ if(active==="labels"){
+  h+="<header class='ae-intro'><div><strong>SPECIMEN CONTAINERS · PATIENT IDENTIFICATION</strong><h2>Print patient labels in Athena</h2><p>Follow the patient chart and Quickview route shown in the supplied screenshots. The interface illustrations below omit all patient information.</p></div><span class='ae-chip'>ATHENA QUICKVIEW</span></header>";
+  h+="<div class='ae-route'><b>Patient chart</b><i>›</i><span>☰ Menu</span><i>›</i><span>Quickview</span><i>›</i><span>Registration</span><i>›</i><b>Single Label</b><i>›</i><b>Label</b></div>";
+  h+="<section class='ae-step-grid' aria-label='Label printing steps'>"+
+   athenaEhrLabelStep("01","Open the chart menu","Open the correct patient chart. Click the menu (☰) at the upper right and choose Quickview.","chart")+
+   athenaEhrLabelStep("02","Open Registration","In the Quickview, expand the Registration menu on the patient actions bar. Select Single Label.","registration")+
+   athenaEhrLabelStep("03","Select Label","In the Single Label dialog, choose the first radio option, Label. Do not choose Detailed Label, Mailing Label or Simple Label for this workflow.","label")+
+   athenaEhrLabelStep("04","Print and check","Print using the approved, configured specimen-label printer. If printing is disabled, follow the software setup note below instead of relying on an unverified print.","printer")+
+   "</section>";
+  h+="<div class='ae-callout' role='note'><strong>Printing disabled: required software is not installed</strong><p>This exact warning appears in the screenshot. Contact IT to confirm the athenaOne printing component/Device Manager, label printer connection and workstation configuration. The Print action may not be available until setup is complete.</p></div>";
+  h+="<div class='ae-checks'><span>✓ Match two patient identifiers</span><span>✓ Confirm the label is legible</span><span>✓ Add collection details required by the receiving lab/SOP</span><span>✓ Label the correct container</span></div>";
+  h+="<p class='source-footnote'>Patient labels identify the specimen; they do not replace a laboratory-specific requisition, specimen source, collection date/time or other required identifiers when applicable. Do not print from the wrong patient chart.</p>";
+ }else{
+  h+="<header class='ae-intro'><div><strong>ATHENA DOCUMENT MANAGEMENT</strong><h2>Upload and classify lab documents</h2><p>Use the established Sollis workflow and the existing illustrated Athena steps. File each document in the correct patient chart, then confirm its class and label.</p></div><span class='ae-chip'>CLINICAL DOCUMENT</span></header>";
+  h+="<div class='ae-doc-cards'>";
+  h+="<section class='ae-doc-card'><h3>Lab requisition</h3><p>Outside lab request received by email, text or another source. An incoming fax already in Athena should be reclassified, not uploaded again.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB REQUISITION</b></div><p><strong>Internal Note required:</strong> (1 of 1), or the correct document number out of the total. Reconcile the numbering if new requisitions arrive.</p>"+athenaUploadGuide("requisition")+"</section>";
+  h+="<section class='ae-doc-card'><h3>Lab Calculator PDF</h3><p>Save the final Quest, Labcorp or Cedars collection calculator as a PDF after verifying the tests and specimen requirements. Upload before collection per the existing Sollis workflow.</p><div class='ae-class'><span>Clinical Document</span><i>›</i><b>LAB FLOWSHEET</b></div><p><strong>Do not select:</strong> LAB REQUISITION for the calculator. Use the precise LAB FLOWSHEET document label.</p>"+athenaUploadGuide("calculator")+"</section>";
+  h+="</div>";
+  h+="<section class='ae-doc-extra'><h3>Received by fax?</h3><p>Verify that the automatically uploaded requisition is in the correct chart. Open it and change its classification to <strong>Clinical Document</strong>, then select <strong>LAB REQUISITION</strong>. Do not create a duplicate upload.</p>"+athenaUploadGuide("requisition",true)+"</section>";
+  h+="<section class='ae-doc-extra'><h3>Multiple or updated requisitions</h3><p>Each current requisition needs its own Internal Note. If another requisition arrives later, update the totals on the existing ones as well.</p>"+athenaInternalNoteGuide()+requisitionVersionNotice()+"</section>";
+  h+="<div class='ae-links'><button type='button' class='ae-link' data-go='orders'>Open sendout workflows</button><button type='button' class='ae-link' data-go='calculators'>Open Lab Calculators</button><button type='button' class='ae-link' data-go='order-sets'>Athena Order Sets</button></div>";
+  h+="<p class='source-footnote'>Use the existing document upload steps for Add document → file upload → Reclassify document → Clinical Document → select the specific label → Save. Verify the saved document appears in the intended patient chart.</p>";
+ }
+ el("mainContent").innerHTML=h+"</div>";
+}
+
 function renderOrderSetDirectory(tab){
  el('currentCrumb').textContent='Athena orders';
  const active=tab==='sendout'?'sendout':'in-house';
@@ -2825,6 +2871,7 @@ function render(){
   else if(route.id==='envi-ordering'){el('currentCrumb').textContent='Envi Ordering';el('mainContent').innerHTML=window.LAB_ENVI_ORDERING.render();}
  else if(route.id==='orders')renderOrders(route.tab);
  else if(route.id==='order-sets')renderOrderSetDirectory(route.tab);
+ else if(route.id==='athena-ehr')renderAthenaEhrGuides(route.tab);
  else renderHome('home');
 }
 function openEditor(id){
