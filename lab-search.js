@@ -76,8 +76,8 @@ const quickGuideRoutes=[
  ['Tools','McKesson mononucleosis result interpretation','C/T lines, positive, negative and invalid results','mono monospot heterophile result interpretation','#mono/result-interpretation'],
  ['Workflows','Sendout lab market and courier guide','Choose receiving labs and find local shipping instructions','sendout quest labcorp cedars courier pickup packaging','#sendout/clinics'],
  ['Workflows','Sendout specimen collection and packaging','Sendout tubes, requisitions, specimen conditions','sendout collection specimen packaging htrx pathmd quest','#sendout/collection'],
- ['Tools','PathMD molecular test menu','PathMD PCR panels, collection and ordering','pathmd molecular pcr test menu swab white top','#calculators'],
- ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators',['norcal','fl']]
+ ['Tools','PathMD molecular test menu','PathMD PCR panels, collection and ordering','pathmd molecular pcr test menu swab white top','#calculators/pathmd'],
+ ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators/htrx',['norcal','fl']]
 ];
 const templates=[
  ['temperature','Daily Temperature Log','fridge freezer ambient temperature humidity daily'],
@@ -284,6 +284,7 @@ const DIRECT_DESTINATIONS=[
  {href:'#athena-ehr/documents',aliases:['lab flowsheet','lab requisition','upload document','upload lab req','classify documents']},
  {href:'#pathfast/cal-qc',aliases:['pathfast cal qc','pathfast calibration qc']},
  {href:'#piccolo/egfr-calculator',aliases:['egfr','egfr calculator']},
+ {href:'#calculators/pathmd',aliases:['pathmd','pathmd lab','pathmd molecular']},
  {href:'#calculators',aliases:['lab calculators','lab calculator','lab calculators and collection guides']}
 ];
 const EQUIPMENT_ALIASES={
