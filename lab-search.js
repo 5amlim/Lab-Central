@@ -484,6 +484,7 @@ function render(arg){
 // Lightweight typeahead entries reuse the same ranked index and direct shortcuts.
 // Every suggestion opens its own guide, form, calculator or test-menu destination.
 function suggestions(query,ctx){
+ const SUGGESTION_LIMIT=6;
  const q=norm(query);
  if(!q)return [];
  const records=find(query,ctx);
@@ -493,7 +494,7 @@ function suggestions(query,ctx){
  const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
  const results=[],seen=new Set();
  const add=(item)=>{
-  if(!item||!item.title||results.length>=8)return;
+  if(!item||!item.title||results.length>=SUGGESTION_LIMIT)return;
   const key=[item.action||'open',item.href||item.query||'',item.title].join('|');
   if(seen.has(key))return;
   seen.add(key);results.push(item);
@@ -508,6 +509,28 @@ function suggestions(query,ctx){
   href:item.href,approximate:Boolean(item.approximate)
  });
  if(featured)add(resource(featured));
+ // A bare receiving-lab name means navigation, not a flood of test names.
+ // Preserve the direct destination, then offer only concise related workflows.
+ const labAlias={quest:'quest', 'quest diagnostics':'quest',labcorp:'labcorp','lab corp':'labcorp',
+   cedars:'cedars','cedars sinai':'cedars',pathmd:'pathmd'};
+ const bareLab=labAlias[q];
+ if(bareLab){
+   const priorityTitles={
+     quest:['Quest specimen calculator','Quest lockbox','Lab sendout and courier tracking','Athena sendout order directory'],
+     labcorp:['Labcorp specimen calculator','Lab sendout and courier tracking','Athena sendout order directory'],
+     cedars:['Cedars specimen calculator','Market-specific sendout requirements','Athena sendout order directory'],
+     pathmd:['PathMD molecular test menu','Sendout specimen collection and packaging','Market-specific sendout requirements']
+   };
+   for(const title of priorityTitles[bareLab]){
+     const match=records.find(item=>item.title===title&&!item.approximate);
+     if(match)add(resource(match));
+   }
+   for(const item of records){
+     if(item.kind==='sendout-test'||item.approximate)continue;
+     if(['Tools','Workflows','Documents','Quality & compliance'].includes(item.category))add(resource(item));
+   }
+   return results.slice(0,SUGGESTION_LIMIT);
+ }
  if(testFirst){
   for(const match of panels){
    if(!match?.section||!match?.panel)continue;
@@ -528,7 +551,7 @@ function suggestions(query,ctx){
   if(item===featured||testFirst&&item.kind==='sendout-test')continue;
   add(resource(item));
  }
- return results.slice(0,8);
+ return results.slice(0,SUGGESTION_LIMIT);
 }
 window.LAB_SITE_SEARCH={render,find,suggestions,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
 })();
