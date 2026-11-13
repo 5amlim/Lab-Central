@@ -1,0 +1,218 @@
+/* Shared How to navigation treatment for PATHFAST and Athena EHR guides.
+   Both areas can remain sticky without appearing detached from the content. */
+@media screen {
+  .lc-scroll-cue-frame.lc-pathfast-howto-frame:has(>.pfux-primary-nav) {
+    position: sticky;
+    top: 48px;
+    z-index: 18;
+    margin: 12px 0 24px;
+    padding: 15px 17px 0;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #cddfe5;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(30, 66, 83, .12);
+  }
+  .lc-pathfast-howto-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding: 0 2px 13px;
+    border-bottom: 1px solid #e3eef0;
+  }
+  .lc-howto-intro { min-width: 0; }
+  .lc-howto-kicker {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .11em;
+    color: #25847f;
+  }
+  .lc-howto-intro h2 {
+    margin: 0;
+    color: #254c60;
+    font-size: clamp(22px, 2.4vw, 27px);
+    line-height: 1.15;
+    letter-spacing: -.03em;
+    font-weight: 850;
+  }
+  .lc-howto-intro p {
+    margin: 5px 0 0;
+    color: #658293;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .lc-howto-guide-tag {
+    flex: 0 0 auto;
+    padding: 7px 11px;
+    background: #eaf6f4;
+    border: 1px solid #d0e7e3;
+    border-radius: 999px;
+    color: #287a76;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .lc-scroll-cue-frame.lc-pathfast-howto-frame > .pfux-primary-nav {
+    margin: 0;
+    padding: 12px 1px 13px;
+    border: 0;
+    background: transparent;
+    scroll-padding-inline: 1px;
+  }
+  .lc-pathfast-howto-frame > .pfux-primary-nav .pfux-route {
+    box-shadow: 0 2px 9px rgba(27, 64, 79, .055);
+  }
+  .lc-scroll-cue-frame.lc-pathfast-howto-frame.lc-has-horizontal-overflow {
+    padding-bottom: 0 !important;
+  }
+  .lc-pathfast-howto-frame > .lc-scroll-cue-bottom {
+    display: none !important;
+  }
+  .lc-pathfast-howto-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 9px;
+    min-height: 50px;
+    margin: 0 -17px;
+    padding: 9px 17px;
+    border-top: 1px solid #dce9ed;
+    border-radius: 0 0 15px 15px;
+    background: #f3f8fa;
+  }
+  .lc-pathfast-howto-footer[hidden] { display: none !important; }
+  .lc-pathfast-howto-hint {
+    margin-right: auto;
+    color: #698392;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .lc-pathfast-howto-frame .lc-pathfast-howto-footer > :is(.lc-scroll-cue-left, .lc-scroll-cue-right) {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: auto !important;
+    max-width: none;
+    min-width: 0;
+    min-height: 34px;
+    padding: 7px 12px;
+    border: 1px solid #aed3d7;
+    border-radius: 9px;
+    background: #fff;
+    color: #256e7d;
+    box-shadow: 0 1px 4px rgba(29, 73, 83, .08);
+    font-size: 11.5px;
+    font-weight: 850;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto;
+  }
+  .lc-pathfast-howto-frame .lc-pathfast-howto-footer > :is(.lc-scroll-cue-left, .lc-scroll-cue-right):hover {
+    border-color: #74b4bd;
+    background: #e7f5f6;
+  }
+  .lc-pathfast-howto-frame .lc-pathfast-howto-footer > :is(.lc-scroll-cue-left, .lc-scroll-cue-right)[hidden] {
+    display: none !important;
+  }
+
+  .ae-guide > .ae-howto-nav {
+    position: sticky;
+    top: 48px;
+    z-index: 18;
+    display: grid;
+    gap: 12px;
+    margin: 0 0 3px;
+    padding: 16px 18px 17px;
+    border: 1px solid #dfd6ec;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 23px rgba(62, 44, 88, .11);
+  }
+  .ae-howto-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    padding: 0 1px;
+  }
+  .ae-howto-kicker {
+    color: #7e56a4;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .11em;
+  }
+  .ae-howto-head h2 {
+    order: -1;
+    margin: 0;
+    color: #4f3972;
+    font-size: clamp(22px, 2.4vw, 27px);
+    line-height: 1.15;
+    letter-spacing: -.03em;
+    font-weight: 850;
+  }
+  .ae-howto-head p {
+    flex: 1 1 250px;
+    margin: 0;
+    color: #738095;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .ae-guide > .ae-howto-nav > .ae-tabs {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0;
+    padding: 5px;
+    border-radius: 12px;
+    background: #f1edf7;
+    border: 1px solid #e5def0;
+  }
+  .ae-guide .ae-howto-nav .ae-tab {
+    min-height: 42px;
+    cursor: pointer;
+    font-size: 12.5px;
+  }
+  .ae-guide .ae-howto-nav .ae-tab.active {
+    border-color: #d2c2e7;
+    box-shadow: 0 2px 7px rgba(88, 59, 122, .12);
+  }
+  .ae-guide .ae-howto-nav .ae-tab:focus-visible {
+    outline: 2px solid #9c71c2;
+    outline-offset: 2px;
+  }
+}
+@media screen and (max-width: 900px) {
+  .lc-scroll-cue-frame.lc-pathfast-howto-frame:has(>.pfux-primary-nav),
+  .ae-guide > .ae-howto-nav {
+    position: relative;
+    top: auto;
+    box-shadow: 0 3px 12px rgba(30, 66, 83, .07);
+  }
+}
+@media screen and (max-width: 620px) {
+  .lc-scroll-cue-frame.lc-pathfast-howto-frame:has(>.pfux-primary-nav) {
+    padding: 13px 12px 0;
+  }
+  .lc-howto-guide-tag { display: none; }
+  .lc-pathfast-howto-footer {
+    gap: 7px;
+    margin-inline: -12px;
+    padding: 9px 12px;
+  }
+  .lc-pathfast-howto-hint { flex-basis: 100%; }
+  .ae-guide > .ae-howto-nav { padding: 14px 13px; }
+  .ae-guide > .ae-howto-nav > .ae-tabs { width: 100%; }
+  .ae-guide .ae-howto-nav .ae-tab {
+    flex: 1 1 180px;
+    padding: 10px;
+    text-align: center;
+  }
+}
+@media print {
+  .lc-pathfast-howto-heading, .lc-pathfast-howto-footer,
+  .ae-guide > .ae-howto-nav { display: none !important; }
+}
