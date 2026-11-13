@@ -3,7 +3,7 @@
 "use strict";
 const E=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const markets={
- socal:{name:"Southern California",sites:[["bh","Beverly Hills Flagship"],["annex","Beverly Hills Annex"],["sm","Santa Monica"],["mb","Manhattan Beach"]],labs:["quest","labcorp","cedars","htrx","pathmd"]},
+ socal:{name:"Southern California",sites:[["bh","Beverly Hills Flagship"],["annex","Beverly Hills Annex"],["sm","Santa Monica"],["mb","Manhattan Beach"]],labs:["quest","labcorp","cedars","pathmd"]},
  norcal:{name:"Northern California",sites:[["sf","San Francisco"],["pa","Palo Alto"]],labs:["quest","labcorp","htrx","pathmd"]},
  fl:{name:"Florida",sites:[["boca","Boca Raton"],["palm","Palm Beach"],["coral","Coral Gables"]],labs:["quest","labcorp","htrx","pathmd"]},
  ny:{name:"New York",sites:[["ues","Upper East Side"],["tribeca","Tribeca"],["hamptons","Hamptons"],["fifth","5th Avenue"],["gramercy","Gramercy"]],labs:["quest","labcorp"]}
