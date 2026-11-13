@@ -1788,6 +1788,8 @@ const pathfastTrainingVideos={
  patient:{title:'How to run a patient test',description:'Watch the PATHFAST patient-testing demonstration before following the step-by-step procedure.',url:'https://ppcny.sharepoint.com/:v:/r/sites/LAClinicalDocuments2/_layouts/15/stream.aspx?id=%2Fsites%2FLAClinicalDocuments2%2FLab%20Resources%2FInstruments%2FPATHFAST%2FEducation%2FPathfast%20%2D%20Running%20a%20test%201%2Emp4&share=cQpjB%5F3d5sOrQ4rlJF2IJShGEgUCIyUQlkqyrAdYuGcU%5FQl5wA'},
  'cal-qc':{title:'How to perform calibration + QC',description:'Watch the PATHFAST calibration and quality-control demonstration alongside the 28-day workflow.',url:'https://ppcny.sharepoint.com/:v:/r/sites/LAClinicalDocuments2/_layouts/15/stream.aspx?id=%2Fsites%2FLAClinicalDocuments2%2FLab%20Resources%2FInstruments%2FPATHFAST%2FEducation%2FPathFast%20%2D%20Cal%20and%20QC%201%2Emp4&share=cQpLNLMxwppTSIi0YPJIfBAMEgUCMYKtgNJJvAt13zs6MD03bg'}
 };
+// Share the original CAL + QC SharePoint video across the bottom button and video library.
+window.LAB_GUIDE_VIDEOS.calibration = pathfastTrainingVideos['cal-qc'].url;
 function pathfastTrainingVideoLink(tab){
  const video=pathfastTrainingVideos[tab];
  if(!video)return '';
@@ -2469,8 +2471,8 @@ function closeCalibrationVideo(){
  el('calibrationVideoStage').innerHTML='';
 }
 function openCalibrationVideo(){
- const slot=DATA.videoSlots.find(x=>x.id==='calibration');
- const source=mediaSource(slot?videoURL(slot):'');
+ // Always use the shared original SharePoint video, rather than a browser-local placeholder.
+ const source=mediaSource(pathfastTrainingVideos['cal-qc'].url);
  if(source.kind==='external'){
   window.open(source.url,'_blank','noopener,noreferrer');
   return;
