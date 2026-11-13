@@ -194,7 +194,8 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="flow-navigation.css?v=20261112-sendout-wide" media="all">
 <link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261107-timeline" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
-  <link rel="stylesheet" href="operations-guides.css?v=20261104" media="all">
+  <link rel="stylesheet" href="operations-guides.css?v=20261112-patient-guides" media="all">
+  <link rel="stylesheet" href="mono-visual.css?v=20261112" media="all">
 <link rel="stylesheet" href="socal-daily-checklist.css?v=20261107-stacked-qc-links" media="all">
 <link rel="stylesheet" href="training-competency.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-qc-overview.css?v=20261104" media="all">
@@ -478,7 +479,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
   <script src="lab-calculators-guide.js?v=20261112-market-safe-deeplinks"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
-<script src="operations-guides.js?v=20261104"></script>
+<script src="operations-guides.js?v=20261112-patient-guides"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
 <script src="training-competency.js?v=20261107-optional-v2"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
@@ -503,6 +504,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="clinitek-focused.js?v=20261104""></script>
 <script src="instrument-focused.js?v=20261104"></script>
 <script src="hemocue-guide.js?v=20261104"></script>
+<script src="mono-visual.js?v=20261112"></script>
 <script src="sofia-visual-guide.js?v=20261104"></script>
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
@@ -519,7 +521,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261112-quick-nav-market-safe"></script>
+<script src="lab-search.js?v=20261112-patient-printouts"></script>
 <script>
 (()=>{
 'use strict';
@@ -1680,12 +1682,13 @@ function guideStepCard(entry,index,total,visualizer,label='Step',sec=null,groupI
  const qualityStep=sec&&window.LAB_QUALITY_GUIDE?.visual?window.LAB_QUALITY_GUIDE.visual(sec.id,root.text):'';
  const biofireStep=sec&&window.LAB_BIOFIRE_ART?.stageVisual?window.LAB_BIOFIRE_ART.stageVisual(sec.id,root.text):'';
  const instrumentFocus=sec&&window.LAB_INSTRUMENT_FOCUS?.render?window.LAB_INSTRUMENT_FOCUS.render(sec,root.text,groupId):'';
+ const monoVisual=sec?.id==='mono'&&window.LAB_MONO_ART?.render?window.LAB_MONO_ART.render(root.text,groupId):'';
  const workflowVisual=sec&&window.LAB_EQUIPMENT_ART?.workflowVisual?window.LAB_EQUIPMENT_ART.workflowVisual(sec,root.text,groupId):'';
  // The Piccolo QC walkthrough is the authoritative illustration for Run QC and QC record filing.
  // Keep the four screen cards visible instead of substituting the generic analyzer art.
  const piccoloQcWorkflowVisual=sec?.id==='piccolo'?(qcScreenVisual||qcPrintVisual):'';
  const hivVisual=sec?.id==='hiv'?HIV_GUIDE.visual(root.text,groupId):'';
- const priorityVisual=hivVisual||piccoloQcWorkflowVisual||triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
+ const priorityVisual=monoVisual||hivVisual||piccoloQcWorkflowVisual||triageVisual||clinitekFocus||sysmexFocus||piccoloVisual||primaryVisual||qcScreenVisual||qcPrintVisual||qualityStep||biofireStep||instrumentFocus||workflowVisual;
  const informational=sec&&sec.id==='hemocue'&&/^(turnaround-time|available-locations|order-set)$/.test(groupId);
  const fallbackVisual=!priorityVisual&&!informational&&sec&&window.LAB_EQUIPMENT_ART?.stepIllustration?window.LAB_EQUIPMENT_ART.stepIllustration(sec,root.text,groupId):'';
  const displayedVisual=priorityVisual||fallbackVisual;
@@ -2766,6 +2769,14 @@ function renderPocStaticReference(group){
  h+='<p class="poc-reference-reminder">Confirm the specific assay, specimen, controls and read window in the current manufacturer IFU and approved site SOP.</p></section>';
  return h;
 }
+function renderHemoAvailability(group){
+  const locations=(group?.blocks||[]).filter(b=>b.type==='list'&&b.level===1).map(b=>b.text.trim()).filter(Boolean);
+  return '<section class="hcu-location-view" aria-label="HemoCue available clinics"><h2>Clinics with HemoCue</h2>'+
+    '<p>Location reference only. No guided procedure is needed here.</p>'+
+    '<div class="hcu-location-cards">'+locations.map(function(name){
+      return '<div class="hcu-location-card"><span aria-hidden="true">⌖</span><div><strong>'+safeHtml(name)+'</strong><small>HemoCue Hb 201+ · Hemoglobin testing</small></div></div>';
+    }).join('')+'</div></section>';
+}
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec).filter(g=>sec.id!=='supplies'||marketAllowsVendor(g.id));
@@ -2909,6 +2920,7 @@ function sectionRender(sec,tab){
  else if(tab==='gallery')h+=tubeGallery();
  else if(tab==='resources')h+=resources(sec);
  else if(sec.id==='clinitek'&&tab==='references')h+=renderClinitekReferenceCards(groups.find(g=>g.id==='references'));
+ else if(sec.id==='hemocue'&&tab==='available-locations')h+=renderHemoAvailability(groups.find(g=>g.id==='available-locations'));
  else if(sec.id==='febridx'&&tab==='reference-notes')h+=renderFebridxReferences();
  else{
   const group=groups.find(g=>g.id===tab);
