@@ -570,7 +570,7 @@ function render(){
       (window.LAB_QC_GUIDE?.printStep?window.LAB_QC_GUIDE.printStep('pathfast'):'<p class="pf-workflow-note">Print and retain the accepted calibration and QC results in the approved binder.</p>')+
       '<p class="pf-workflow-note">Confirm the assay, reagent lot, control lots, levels, date and operator are recorded in the approved QC log. Mark each cardiac control vial X/date for every use; discard after second use. Discard D-dimer control vials after first use.</p>'+returnMaterials(group));
 
-  h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and approved assay SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
+  h+='<div class="pf-tip"><span class="pf-tip-icon">!</span><div>Current manufacturer IFU and SOP govern dilution volumes, incubation, stability, QC ranges and any additional QC required outside the 28-day calibration cycle.</div></div>'+
       '<div class="pf-bottom-actions"><button type="button" class="pf-video-button" data-pf-play-video aria-haspopup="dialog">▶ Play combined CAL + QC training video</button>'+
       '<button type="button" class="pf-procedure-button" data-gotab="notes">Handling notes ↗</button></div>';
  }
