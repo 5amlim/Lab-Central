@@ -508,7 +508,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
 <script src="sendout-market-guide.js?v=20261107-optional-v2"></script>
-<script src="assay-catalog.js?v=20261112-hiv-moderate"></script>
+<script src="assay-catalog.js?v=20261112-mono-guide"></script>
 <script src="instrument-troubleshooting.js?v=20261109-support-contacts-v2"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
@@ -2768,7 +2768,7 @@ function renderPocStaticReference(group){
 function sectionRender(sec,tab){
  treeId=0;
  const groups=buildGroups(sec).filter(g=>sec.id!=='supplies'||marketAllowsVendor(g.id));
- const hasVideo=sec.id==='pathfast';const hasGallery=false;const hasResources=!!sources[sec.id];const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
+ const hasVideo=sec.id==='pathfast';const hasGallery=false;const hasResources=!!sources[sec.id]&&sec.id!=='mono';const hasOrderSets=instrumentCategories.includes(sec.category)&&!sec.archived;
  const hasVisualGuide=window.LAB_EQUIPMENT_ART?.ids?.includes(sec.id)&&!!window.LAB_EQUIPMENT_ART?.visualGuide;
  const tabs=sec.id==='sendout'?[
   {id:'overview',title:'Overview'},
@@ -2881,6 +2881,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='api'&&tab==='units-reporting')h+=window.LAB_API_SUBMISSION.unitsPage();
  else if(sec.id==='api'&&tab==='pt-exceptions')h+=window.LAB_API_SUBMISSION.exceptionsPage();
  else if(sec.id==='hiv'&&tab==='manufacturer-ifu')h+=HIV_GUIDE.reference();
+ else if(sec.id==='mono'&&tab==='manufacturer-ifu')h+=resources(sec);
  else if(sec.id==='hiv'&&tab==='result-interpretation')h+=HIV_GUIDE.results();
  else if(tab==='overview')h+=sectionOverview(sec,groups);
  else if(sec.id==='tubes'&&(tab==='general'||tab==='for-lockbox-pickups'))h+=tubeReferencePanel(tab);
