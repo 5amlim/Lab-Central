@@ -200,17 +200,53 @@ let chosen=guides.find(g=>g.id===params.get("guide"))||guides[0];
 const choice=document.getElementById("chooser"),content=document.getElementById("content");
 function draw(){
  const isDrop=chosen.id==='dropoff';
- choice.innerHTML=guides.map(g=>'<button type="button" data-guide="'+g.id+'" aria-pressed="'+(g.id===chosen.id)+'">'+g.short+'</button>').join('');
- const steps=chosen.steps.map((s,i)=>'<article class="step"><span class="step-no" aria-label="Step '+(i+1)+'">'+String(i+1).padStart(2,'0')+'</span>'+
-  '<div class="step-body"><h2>'+s[0]+'</h2><p>'+s[1]+'</p></div><div class="step-picture">'+picture(s[2])+'</div></article>').join('');
+ const isCedarsChooser=chosen.id==='cedars-urine';
+ const isCedarsType=!!chosen.subguide;
+ const topChoice=isCedarsChooser||isCedarsType?'cedars-urine':chosen.id;
+ choice.innerHTML=guides.filter(g=>!g.subguide).map(g=>
+  '<button type="button" data-guide="'+g.id+'" aria-pressed="'+(g.id===topChoice)+'">'+g.short+'</button>'
+ ).join('');
+ const printButton=document.getElementById('print');
+ printButton.disabled=isCedarsChooser;
+ printButton.textContent=isCedarsChooser?'Choose a tube to print':'Print selected guide';
+ if(isCedarsChooser){
+  content.innerHTML='<article class="sheet"><header class="letterhead"><div class="brand">SOLLIS HEALTH / LABORATORY</div>'+
+   '<div class="kind">PATIENT TAKE-HOME GUIDE</div></header>'+
+   '<div class="section-kicker">CEDARS URINE COLLECTION</div>'+
+   '<h1>Which urine test was ordered?</h1>'+
+   '<p class="cedars-choice-intro">Two different collection tubes are used. Choose the one printed on your order or given to you by the clinic. If you are unsure, call the clinic before collecting.</p>'+
+   '<div class="cedars-choice-grid">'+
+    '<article class="cedars-choice"><div class="cedars-choice-visual">'+picture('cedars-gray')+'</div>'+
+    '<span class="cedars-choice-tag">OPTION 1 · URINE CULTURE</span><h2>Gray-top C&amp;S tube</h2>'+
+    '<p>Short, round-bottom tube with a gray cap. Used for the ordered urine culture (C&amp;S), not urinalysis.</p>'+
+    '<button type="button" data-cedars-choice="cedars-urine-culture">Open urine culture instructions</button></article>'+
+    '<article class="cedars-choice"><div class="cedars-choice-visual">'+picture('cedars-ua')+'</div>'+
+    '<span class="cedars-choice-tag">OPTION 2 · URINALYSIS</span><h2>Red/yellow swirl-top UA tube</h2>'+
+    '<p>Taller UA preservative tube with a distinctive red and yellow swirled cap and tapered base.</p>'+
+    '<button type="button" data-cedars-choice="cedars-urine-ua">Open urinalysis instructions</button></article>'+
+   '</div>'+
+   '<div class="warning"><strong>Important:</strong> Only use the tube(s) your clinic provided and instructed you to collect. The tube for a urine culture is not interchangeable with the UA preservative tube.</div>'+
+   '<footer class="footer"><span>Questions? Call your clinic and ask for a nurse.<br><strong>310-870-0400</strong></span>'+
+   '<span class="footer-meta">Choose the correct guide before printing.</span></footer></article>';
+  document.title='Sollis Patient Instructions | Choose Cedars urine tube';
+  return;
+ }
+ const rows=chosen.steps.map((entry,i)=>
+  '<article class="step"><span class="step-no" aria-label="Step '+(i+1)+'">'+String(i+1).padStart(2,'0')+'</span>'+
+  '<div class="step-body"><h2>'+entry[0]+'</h2><p>'+entry[1]+'</p></div>'+
+  '<div class="step-picture">'+picture(entry[2])+'</div></article>'
+ ).join('');
  const returnNote='Call your clinic before drop-off and return the labeled, sealed sample the same day when possible. Give it directly to staff. Storage requirements vary by test.';
+ const cedarsImage=isCedarsType?(chosen.id==='cedars-urine-culture'?'cedars-gray':'cedars-ua'):'';
  content.innerHTML='<article class="sheet"><header class="letterhead"><div class="brand">SOLLIS HEALTH / LABORATORY</div>'+
   '<div class="kind">PATIENT TAKE-HOME GUIDE</div></header>'+
   '<div class="section-kicker">'+(isDrop?'SPECIMEN RETURN':'AT-HOME COLLECTION')+'</div>'+
   '<h1>'+chosen.title+'</h1><p class="intro">'+chosen.intro+'</p>'+
+  (isCedarsType?'<button type="button" class="cedars-back" data-cedars-back>← Choose a different Cedars urine test</button>':'')+
   '<div class="kit"><strong>'+(isDrop?'BRING WITH YOU':'COLLECTION KIT')+'</strong><span>'+chosen.kit+'</span></div>'+
+  (isCedarsType?'<div class="cedars-kit-id">'+picture(cedarsImage)+'<div><strong>'+(chosen.id==='cedars-urine-culture'?'GRAY-TOP · URINE CULTURE (C&amp;S)':'RED/YELLOW SWIRL-TOP · URINALYSIS')+'</strong><span>Make sure the cap color matches the actual tube provided by the clinic before collecting.</span></div></div>':'')+
   '<h2 class="steps-title">'+(isDrop?'Before you come to the clinic':'How to collect your specimen')+'</h2>'+
-  '<section class="steps" aria-label="'+(isDrop?'Specimen drop-off checklist':'Collection instructions')+'">'+steps+'</section>'+
+  '<section class="steps" aria-label="'+(isDrop?'Specimen drop-off checklist':'Collection instructions')+'">'+rows+'</section>'+
   (isDrop?'':'<aside class="return"><div class="return-picture">'+picture('clinic')+'</div>'+
    '<div><h2>Returning your specimen</h2><p>'+returnNote+'</p></div></aside>')+
   '<div class="warning"><strong>Important:</strong> '+chosen.warning+'</div>'+
@@ -219,6 +255,19 @@ function draw(){
  document.title='Sollis Patient Instructions | '+chosen.short;
 }
 choice.addEventListener('click',function(e){const button=e.target.closest('[data-guide]');if(!button)return;const selected=guides.find(g=>g.id===button.dataset.guide);if(!selected)return;chosen=selected;history.replaceState(null,'','?guide='+encodeURIComponent(chosen.id));draw();});
+content.addEventListener('click',function(event){
+ const guideChoice=event.target.closest('[data-cedars-choice]');
+ const goBack=event.target.closest('[data-cedars-back]');
+ if(!guideChoice&&!goBack)return;
+ const id=guideChoice?guideChoice.dataset.cedarsChoice:'cedars-urine';
+ const next=guides.find(g=>g.id===id);
+ if(!next)return;
+ chosen=next;
+ history.replaceState(null,'','?guide='+encodeURIComponent(id));
+ draw();
+ window.scrollTo({top:0,behavior:'smooth'});
+});
+
 document.getElementById('print').addEventListener('click',()=>window.print());
 draw();
 })();
