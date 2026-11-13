@@ -1,0 +1,14 @@
+.mono-art-card{max-width:620px;margin:18px auto 12px;border:1px solid #dce6ed;border-radius:15px;padding:16px;background:linear-gradient(135deg,#fff,#f8fcfd);box-shadow:0 3px 13px #14314d09}
+.mono-art-heading{display:flex;align-items:center;gap:8px;font-size:14px;color:#273c54;margin-bottom:9px}
+.mono-art-dot{width:8px;height:8px;flex:none;border-radius:100%;background:#168d85}
+.mono-art-picture svg{width:100%;height:auto;display:block}
+.mono-art-card p{color:#577184;font-size:12px;line-height:1.6;margin:9px 4px 0}
+.hcu-location-view{margin:20px 0 0;max-width:860px}
+.hcu-location-view h2{font-size:22px;margin:0 0 6px;color:#203c52}
+.hcu-location-view>p{font-size:13px;color:#668091;margin-bottom:18px}
+.hcu-location-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hcu-location-card{border:1px solid #d8e9e9;background:#fbfefd;border-radius:14px;padding:20px;display:flex;gap:12px;align-items:center}
+.hcu-location-card>span{width:37px;height:37px;display:grid;place-items:center;background:#e6f5f2;border-radius:12px;font-size:20px}
+.hcu-location-card strong{display:block;color:#284356;font-size:16px}
+.hcu-location-card small{display:block;color:#64817f;margin-top:5px;font-size:12px}
+@media(max-width:600px){.hcu-location-cards{grid-template-columns:1fr}}
