@@ -11,6 +11,7 @@ function card(title,body,color,tag){return '<article class="ops-card '+(color||"
 function accordion(title,body,opened){return '<details class="ops-accordion" '+(opened?"open":"")+'><summary>'+title+'</summary><div class="ops-accordion-content">'+body+'</div></details>';}
 function action(route,label,color){return '<button type="button" class="ops-action '+(color||"")+'" data-go="'+route+'">'+label+' <span aria-hidden="true">→</span></button>';}
 function handout(id,label){return '<a class="ops-print-link" href="collection-handouts.html?guide='+id+'" target="_blank" rel="noopener noreferrer">'+(label||'Open illustrated patient guide')+' ↗</a>';}
+function printHandoutPanel(){return '<div class="ops-print-panel"><strong>Print an illustrated patient handout</strong><p>Each lab-specific guide covers collection, labels, return bags and clinic drop-off.</p><div class="ops-print-links">'+handout('biofire-stool','BioFire stool')+handout('pathmd-stool','PathMD stool')+handout('cedars-stool','Cedars stool')+handout('pathmd-urine','PathMD urine')+handout('cedars-urine','Cedars urine')+handout('dropoff','Specimen drop-off')+'</div></div>';}
 function tabs(active){return '<div class="ops-tabs" role="group" aria-label="Home collection topics">'+[
 ['staff','Preparing take-home kits'],['stool','Stool instructions'],['urine','Urine instructions']
 ].map(function(x){return '<button type="button" data-ops-tab="'+x[0]+'" class="'+(active===x[0]?'active':'')+'" aria-pressed="'+(active===x[0])+'">'+x[1]+'</button>';}).join("")+'<button type="button" data-go="specimen-dropoff">Specimen drop-off ↗</button></div>';}
@@ -34,7 +35,7 @@ h+=card('PathMD urine','<span class="ops-tag">Send-out</span><p>Collect urine in
 h+=card('Cedars urine','<span class="ops-tag">Send-out</span><p>Use the ordered urine cup and test-specific tubes. Some transfer devices have concealed needles; give patient instructions before use.</p>','amber','URINE');
 h+=card('Urine dip at home','<span class="ops-tag">In-house</span><p>Home collection for an in-house dipstick is not recommended. Use preservative tube and send out. An exception with a standard cup requires immediate refrigeration and same-day return.</p>','blue','URINE');
 h+='</div><h2 class="ops-section-heading">Frequently asked questions</h2>';
-h+='<div class="ops-print-panel"><strong>Print an illustrated patient handout</strong><p>Each lab-specific guide covers collection, labels, return bags and clinic drop-off.</p><div class="ops-print-links">'+handout('biofire-stool','BioFire stool')+handout('pathmd-stool','PathMD stool')+handout('cedars-stool','Cedars stool')+handout('pathmd-urine','PathMD urine')+handout('cedars-urine','Cedars urine')+handout('dropoff','Specimen drop-off')+'</div></div>';
+
 h+=accordion('May a patient return a standard specimen cup?','A plain cup has limited stability and might not be accepted. Contact the clinic for the exact test-specific transfer, temperature and timing requirements. Do not assume delayed transfer is acceptable.',true);
 h+=accordion('Can the patient return a specimen the next day?','Same-day return is preferred. Next-day stability and storage temperature depend on the exact specimen, assay and transport medium. Confirm with the current receiving lab directory.');
 h+=accordion('What if staff do not yet know which stool test is needed?','Verify the order before issuing the final kit. BioFire, PathMD and Cedars use different collection media. Do not substitute a container or process an unconfirmed order.');
@@ -63,7 +64,7 @@ var stool=type==="stool";
 var h=notice('<strong>Patient reference:</strong> Highlight the correct test and container on the handout. The handout recommends same-day specimen return. For questions, call the clinic and ask for a nurse.','green');
 h+='<h2 class="ops-section-heading">'+(stool?'Stool':'Urine')+' collection steps</h2>'+steps(stool?stoolSteps:urineSteps);
 h+='<h2 class="ops-section-heading">By test and collection device</h2>';
-h+='<div class="ops-print-panel"><strong>Printable instructions with pictures</strong><p>Give the patient the guide for the exact test and collection device.</p><div class="ops-print-links">'+(stool?handout('biofire-stool','BioFire stool')+handout('pathmd-stool','PathMD stool')+handout('cedars-stool','Cedars stool'):handout('pathmd-urine','PathMD urine')+handout('cedars-urine','Cedars urine'))+handout('dropoff','Return instructions')+'</div></div>';
+
 if(stool){
 h+=accordion('GI BioFire: orange-lid Para-Pak C&S vial',list(['The vial contains liquid; avoid spilling it.','Use the lid scoop or tongue depressor to add stool to the line.','Seal tightly.'],true),true);
 h+=accordion('PathMD: stool thick swab and white-top tube',list(['Collect stool in the hat, avoiding urine and toilet water.','Open the thick swab without touching its tip. Pick up visible stool on the tip.','Place the stool-coated swab into the white-top PathMD tube and close securely. Do not pour out the medium.'],true),true);
@@ -81,6 +82,7 @@ return h;
 function home(tab){
 var selected=['staff','stool','urine'].includes(tab)?tab:'staff';
 var h=heading('HOME COLLECTION / STAFF & PATIENT INSTRUCTIONS','Home stool &amp; urine collection','Take-home kits, specimen-specific patient instructions, and container guidance. These are at-home collections, not specimens collected by clinic staff.');
+h+=printHandoutPanel();
 h+=tabs(selected);
 h+=selected==='staff'?kit():patient(selected);
 h+='<div class="ops-link-card"><div><strong>Patient returning with a specimen?</strong><p>Use the Athena drop-off appointment and new-provider-order workflow.</p></div><button data-go="specimen-dropoff" type="button">Drop-off steps →</button></div>';
