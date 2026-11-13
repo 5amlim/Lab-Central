@@ -476,7 +476,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="api-submission.js?v=20261107-optional-v2"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
-  <script src="lab-calculators-guide.js?v=20261112-socal-htrx-hide"></script>
+  <script src="lab-calculators-guide.js?v=20261112-market-safe-deeplinks"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261104"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
@@ -2955,7 +2955,7 @@ function render(){
  else if(sec)sectionRender(sec,route.tab);
  else if(route.id==='lab-container-gallery')renderContainerGallery();
  else if(route.id==='favorites')renderHome('favorites');
- else if(route.id==='calculators')renderCalculators();
+ else if(route.id==='calculators'){window.LAB_CALCULATORS_GUIDE?.selectLab?.(route.tab);renderCalculators();}
   else if(route.id==='envi-ordering'){el('currentCrumb').textContent='Envi Ordering';el('mainContent').innerHTML=window.LAB_ENVI_ORDERING.render();}
  else if(route.id==='orders')renderOrders(route.tab);
  else if(route.id==='order-sets')renderOrderSetDirectory(route.tab);
