@@ -5,22 +5,90 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sollis Lab | Printable Stool & Urine Collection Instructions</title>
 <style>
-:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#263d54;background:#f4f7fa}
-*{box-sizing:border-box}body{margin:0}.toolbar{background:#fff;border-bottom:1px solid #e1e8f0;padding:18px max(20px,calc((100vw - 960px)/2));position:sticky;top:0;z-index:2}
-.toolbar-main{display:flex;gap:16px;justify-content:space-between;align-items:center;flex-wrap:wrap}.toolbar b{display:block;font-size:17px}.toolbar small{color:#718194}.chooser{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.chooser button,.print-button{font-family:inherit;border:1px solid #cfdae5;border-radius:9px;background:#f8fafc;padding:10px 12px;color:#35516c;font-size:12px;font-weight:700;cursor:pointer}
-.chooser button[aria-pressed=true]{background:#e5f4f1;color:#167268;border-color:#8ac8bf}.print-button{background:#147e7a;color:white;border-color:#147e7a;font-size:13px}
-main{max-width:920px;margin:30px auto;padding:0 15px 35px}.sheet{background:#fff;border:1px solid #e0e7ef;border-radius:15px;box-shadow:0 6px 24px #29354c10;padding:32px 38px}.letterhead{display:flex;justify-content:space-between;gap:15px;align-items:center;border-bottom:2px solid #147f7b;padding-bottom:18px}
-.brand{font-size:12px;letter-spacing:.16em;font-weight:850;color:#127e79}.kind{font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.12em;color:#648097;text-align:right}
-h1{font-size:27px;line-height:1.15;margin:23px 0 8px;letter-spacing:-.045em} .intro{font-size:13px;line-height:1.6;color:#5c6f83;margin:0 0 15px}.kit{background:#eaf6f4;border:1px solid #cbe6e1;border-radius:11px;padding:12px 16px;font-size:13px;margin:14px 0 20px}.kit strong{color:#177a74}
-.steps{display:grid;grid-template-columns:1fr 1fr;gap:12px}.step{display:flex;gap:13px;border:1px solid #dfebf2;border-radius:12px;padding:12px;min-height:151px;break-inside:avoid;background:#fcfdff}
-.step-picture{width:128px;min-width:128px;height:112px;align-self:center;background:#f3f8fb;border-radius:10px;display:grid;place-items:center}.step-picture svg{width:100%;height:auto;max-height:112px}.step-body{flex:1;min-width:0}.step-no{display:inline-block;color:#17847c;font-size:10px;font-weight:850;letter-spacing:.12em;margin:3px 0 6px}
-.step h2{font-size:14px;line-height:1.24;margin:0 0 6px}.step p{font-size:12px;line-height:1.48;margin:0;color:#4f6577}
-.warning{background:#fff6ea;color:#775320;border:1px solid #ebd6b6;padding:11px 14px;border-radius:10px;margin:16px 0 0;font-size:12px;line-height:1.55}
-.return{margin:18px 0 0;border:2px solid #b8dad5;border-radius:14px;display:flex;gap:15px;padding:16px;align-items:center;break-inside:avoid}.return-picture{width:110px;flex:none}.return-picture svg{width:100%}.return h2{font-size:16px;margin:0 0 5px}.return p{font-size:12px;line-height:1.55;color:#456274;margin:0}
-.footer{border-top:1px solid #e2e8ee;margin-top:18px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:14px;color:#6c7e8d;font-size:10px}.footer strong{color:#334c62}
-@media(max-width:720px){.sheet{padding:20px}.steps{grid-template-columns:1fr}.step-picture{width:115px;min-width:115px}.toolbar{position:static}.footer{flex-direction:column;align-items:flex-start}}
-@page{size:letter;margin:.45in}
-@media print{html,body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.toolbar{display:none!important}main{padding:0;margin:0;max-width:none}.sheet{border:0;box-shadow:none;border-radius:0;padding:0}.letterhead{padding-bottom:10px}h1{font-size:23px;margin:14px 0 6px}.intro{font-size:11px;margin-bottom:10px}.kit{margin:8px 0 12px;padding:8px 11px;font-size:11px}.steps{gap:9px}.step{padding:9px;min-height:126px}.step-picture{min-width:100px;width:100px;height:92px}.step-picture svg{max-height:92px}.step h2{font-size:12px;margin-bottom:5px}.step p{font-size:10px;line-height:1.35}.step-no{margin:2px 0 4px;font-size:9px}.warning{margin-top:12px;padding:8px 11px;font-size:10px}.return{margin-top:11px;padding:10px}.return-picture{width:80px}.return h2{font-size:13px}.return p{font-size:10px}.footer{margin-top:10px;padding-top:8px}}
+
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#263d54;background:#f3f7f9}
+*{box-sizing:border-box}
+body{margin:0}
+.toolbar{position:relative;z-index:2;background:#fff;border-bottom:1px solid #e2eaf0;padding:18px max(22px,calc((100vw - 900px)/2))}
+.toolbar-main{display:flex;gap:15px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.toolbar b{display:block;font-size:16px;letter-spacing:-.015em}
+.toolbar small{display:block;color:#6b8092;font-size:12px;margin-top:4px}
+.chooser{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.chooser button,.print-button{font:inherit;font-size:12px;font-weight:720;cursor:pointer;border-radius:8px;transition:background .15s,border-color .15s}
+.chooser button{background:#f9fbfd;color:#39556e;border:1px solid #d6e1e9;padding:9px 13px}
+.chooser button[aria-pressed=true]{background:#e8f5f2;border-color:#75b7ae;color:#0f7770}
+.chooser button:hover{background:#edf5f7}
+.chooser button:focus-visible,.print-button:focus-visible{outline:3px solid #81c7c0;outline-offset:2px}
+.print-button{border:1px solid #147e79;background:#147e79;color:#fff;padding:11px 17px}
+.print-button:hover{background:#096d68}
+main{width:min(100% - 32px,800px);margin:24px auto 45px}
+.sheet{background:#fff;padding:36px 46px 31px;border:1px solid #e2eaf0;border-radius:12px;box-shadow:0 12px 32px #1a38500b}
+.letterhead{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-bottom:14px;border-bottom:2px solid #167d78}
+.brand{font-size:11px;font-weight:850;letter-spacing:.15em;color:#147c79}
+.kind{font-size:10px;text-align:right;letter-spacing:.1em;font-weight:850;color:#637d8e}
+.section-kicker{font-size:10px;letter-spacing:.13em;color:#177e78;font-weight:850;margin-top:23px;text-transform:uppercase}
+h1{font-size:clamp(24px,3vw,31px);line-height:1.15;letter-spacing:-.035em;color:#253a52;margin:8px 0}
+.intro{font-size:13px;line-height:1.55;color:#5e7487;margin:0 0 17px}
+.kit{display:flex;align-items:flex-start;gap:13px;padding:12px 15px;border:1px solid #cde5e1;background:#f2faf8;border-radius:9px;font-size:12px;line-height:1.55;color:#3b6170;margin-bottom:23px}
+.kit strong{flex:0 0 116px;font-size:10px;letter-spacing:.08em;color:#187e79}
+.steps-title{font-size:13px;color:#274357;font-weight:850;margin:0 0 9px}
+.steps{display:flex;flex-direction:column;border-top:1px solid #e0eaf0}
+.step{display:grid;grid-template-columns:38px minmax(0,1fr) 86px;align-items:center;gap:17px;padding:13px 6px 13px 1px;border-bottom:1px solid #e2eaf0;break-inside:avoid;page-break-inside:avoid;min-height:101px}
+.step-no{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid #b7ddd7;color:#13807a;background:#ecf7f4;font-size:13px;font-weight:850}
+.step-body h2{font-size:15px;margin:0 0 4px;color:#263d54;line-height:1.3;letter-spacing:-.01em}
+.step-body p{font-size:12px;line-height:1.52;margin:0;color:#587183}
+.step-picture{height:79px;width:86px;display:grid;place-items:center;background:#f5f9fb;border:1px solid #edf2f6;border-radius:9px}
+.step-picture svg{width:84px;height:76px;display:block}
+.return{display:flex;align-items:center;gap:13px;margin:17px 0 0;background:#ecf7f4;border:1px solid #c8e4de;border-radius:10px;padding:13px 14px;break-inside:avoid;page-break-inside:avoid}
+.return-picture{width:58px;flex:0 0 58px}
+.return-picture svg{display:block;width:58px;height:58px}
+.return h2{font-size:14px;color:#176f69;margin:0 0 3px}
+.return p{font-size:11.5px;line-height:1.48;color:#466b70;margin:0}
+.warning{margin-top:15px;padding:11px 13px;border-radius:9px;background:#fffaef;border:1px solid #eddcba;color:#73531c;font-size:11.5px;line-height:1.5;break-inside:avoid}
+.warning strong{color:#77501a}
+.footer{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;border-top:1px solid #dfe8ee;margin-top:22px;padding-top:11px;font-size:10.5px;line-height:1.5;color:#647a89}
+.footer strong{color:#29495c}
+.footer .footer-meta{text-align:right;font-size:9px}
+@media(max-width:640px){
+ .sheet{padding:24px 20px}
+ .toolbar{padding:16px}
+ .step{grid-template-columns:32px minmax(0,1fr) 70px;gap:10px}
+ .step-picture{width:70px;height:68px}
+ .step-picture svg{width:68px;height:65px}
+ .step-body h2{font-size:13px}
+ .step-body p{font-size:11px}
+ .kit{display:block}
+ .kit strong{display:block;margin-bottom:3px}
+ .footer{align-items:flex-start;flex-direction:column}
+ .footer .footer-meta{text-align:left}
+}
+@page{size:letter;margin:.5in}
+@media print{
+ html,body{background:#fff!important;color:#1d3046!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .toolbar{display:none!important}
+ main{width:100%;max-width:none;margin:0;padding:0}
+ .sheet{border:0;border-radius:0;box-shadow:none;padding:0}
+ .letterhead{padding-bottom:9px}
+ .section-kicker{margin-top:13px;font-size:9px}
+ h1{font-size:23px;margin:6px 0 5px}
+ .intro{font-size:11px;line-height:1.4;margin:0 0 9px}
+ .kit{margin-bottom:12px;padding:8px 10px;font-size:10px}
+ .steps-title{font-size:11px;margin-bottom:4px}
+ .step{grid-template-columns:27px minmax(0,1fr) 70px;gap:9px;padding:8px 4px 8px 0;min-height:74px}
+ .step-no{width:26px;height:26px;font-size:10px}
+ .step-body h2{font-size:11.7px;line-height:1.25;margin:0 0 2px}
+ .step-body p{font-size:9.6px;line-height:1.4}
+ .step-picture{width:66px;height:62px}
+ .step-picture svg{width:66px;height:61px}
+ .return{margin:12px 0 0;padding:9px 11px;gap:10px}
+ .return-picture,.return-picture svg{width:46px;height:46px;flex-basis:46px}
+ .return h2{font-size:11px}
+ .return p{font-size:9.5px}
+ .warning{margin-top:10px;padding:8px 10px;font-size:9.5px}
+ .footer{margin-top:14px;padding-top:8px;font-size:9px}
+ .footer .footer-meta{font-size:8px}
+}
+
 </style>
 </head>
 <body>
@@ -68,50 +136,58 @@ const guides=[
 ["Check the fill and labels","Fill the exact tubes listed for your order, following their required marks. Label each tube with your name, date of birth and collection date/time.","label"],
 ["Package for return","Seal each tube in the biohazard bag and then the opaque bag. Call the clinic if transfer or collection was difficult.","bag"]
 ]},
-{id:"dropoff",short:"Specimen drop-off",title:"Returning your stool or urine specimen",kit:"Sealed and labeled collection container + biohazard bag + opaque bag",intro:"These instructions apply after you collect your stool or urine using the kit selected by the clinic.",warning:"Specimen acceptance, preservation and storage times depend on the test and container. Do not assume an overnight or room-temperature hold is acceptable. Call the clinic for instructions if you cannot return it the same day.",steps:[
-["Check the label","Confirm your full name, date of birth, and collection date/time are on each specimen container.","label"],
-["Check the cap","Make sure the collection tube or vial is tightly sealed. Keep transport liquid in place.","white-tube"],
-["Bag the specimen","Put the container in the biohazard bag, then inside an opaque outer bag. Keep paperwork outside any leak-prone specimen compartment.","bag"],
-["Return promptly","Call the clinic to coordinate a drop-off and bring the specimen the same day when possible. Do not leave it unattended.","clinic"],
-["Hand it to clinic staff","Tell staff the collection date/time and whether the container was refrigerated. Staff will arrange the Athena drop-off encounter and appropriate order.","handoff"]
+{id:"dropoff",short:"Specimen drop-off",title:"Returning your stool or urine specimen",kit:"Sealed specimen container, biohazard bag and opaque outer bag",intro:"Before bringing a specimen to the clinic, complete these four checks. Follow the collection guide for your specific test and container.",warning:"Storage and time limits depend on the test. If you cannot return your sample the same day, call the clinic first for exact instructions. Do not assume room-temperature or overnight storage is acceptable.",steps:[
+["Check the specimen label","Make sure each container has your full name, date of birth, and collection date and time. Use the label the clinic provided.","label"],
+["Seal and double-bag","Tighten each cap. Keep any preservative liquid in its container. Place the sealed specimen in its biohazard bag and then the opaque bag.","bag"],
+["Call the clinic before coming","Coordinate your drop-off and confirm any storage instructions. Bring the specimen the same day whenever possible.","call"],
+["Give it directly to staff","Hand the bag to a clinic team member. Tell them when you collected the sample and how it was stored. Do not leave it unattended.","handoff"]
 ]}
 ];
 function picture(kind){
-const txt=(x,y,s,n=10,color="#4b6275")=>'<text x="'+x+'" y="'+y+'" font-family="Arial,sans-serif" font-size="'+n+'" font-weight="700" fill="'+color+'">'+s+'</text>';
-const cup='<rect x="36" y="34" width="70" height="61" rx="7" fill="#fff" stroke="#93aabe" stroke-width="3"/><path d="M31 30h80" stroke="#90a9bc" stroke-width="7" stroke-linecap="round"/>';
-const vial=(x,color,fill)=>'<rect x="'+x+'" y="38" width="29" height="60" rx="6" fill="#fff" stroke="#8da7b6" stroke-width="2"/><rect x="'+(x-2)+'" y="27" width="33" height="16" rx="4" fill="'+color+'"/>'+(fill?'<rect x="'+(x+3)+'" y="65" width="23" height="29" rx="3" fill="'+fill+'" opacity=".7"/>':'');
-let b='';
+const steel='#91aebc',teal='#258e87',ink='#547183';
+const cup='<rect x="35" y="31" width="74" height="69" rx="8" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="M31 30h82" stroke="'+steel+'" stroke-width="7" stroke-linecap="round"/>';
+const vial=(x,col,fill)=>'<rect x="'+x+'" y="37" width="31" height="65" rx="6" fill="#fff" stroke="'+steel+'" stroke-width="2.5"/><rect x="'+(x-2)+'" y="23" width="35" height="18" rx="4" fill="'+col+'" stroke="'+steel+'" stroke-width="1"/><rect x="'+(x+4)+'" y="74" width="23" height="22" rx="2" fill="'+fill+'" opacity=".7"/>';
+const check='<path d="m100 38 11 11 19-23" stroke="'+teal+'" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>';
+let art='';
 switch(kind){
-case 'hat':b='<path d="M12 31h118l-17 64H29z" fill="#fff" stroke="#8cabbc" stroke-width="3"/><path d="M28 50h87l-10 35H37z" fill="#e6f1f5"/><path d="M41 71q6-17 18-7t17 2q13-13 27 8v11H41z" fill="#a77d5f"/>'+txt(28,117,'COLLECTION HAT');break;
-case 'orange':case 'orange-seal':b=vial(51,"#e89c37","#e8a48c")+'<path d="M60 73h12" stroke="#9c4e3c" stroke-width="2"/>'+txt(34,116,'TO FILL LINE');if(kind==='orange-seal')b+='<path d="m88 69 10 10 18-24" stroke="#0f857c" stroke-width="5" fill="none"/>';break;
-case 'stool-swab':b=cup+'<path d="m44 15 59 62" stroke="#a88d6c" stroke-width="5" stroke-linecap="round"/><ellipse cx="102" cy="78" rx="8" ry="12" fill="#a47a59" stroke="#815d43" stroke-width="2" transform="rotate(-42 102 78)"/>'+txt(30,116,'THICK SWAB');break;
-case 'white-tube':b=vial(53,"#f5f7fa","#d6e8e6")+'<path d="M67 12v66" stroke="#a28d72" stroke-width="4"/><ellipse cx="67" cy="78" rx="6" ry="9" fill="#ad8771"/>'+txt(22,116,'WHITE-TOP TUBE');break;
-case 'vials':case 'vials-fill':b=vial(17,"#f1c95d","#eee5ad")+vial(55,"#e7b1c8","#efccdb")+vial(93,"#eff4f7","#eaf2f5");if(kind==='vials-fill')b+='<path d="M18 78h102" stroke="#c17e66" stroke-width="2" stroke-dasharray="4 4"/>';break;
-case 'wipe':b='<rect x="29" y="30" width="85" height="69" rx="9" fill="#fff" stroke="#9bb8bf" stroke-width="3"/><path d="m37 75 26-27 28 26 17-18" stroke="#83beb7" stroke-width="6" fill="none"/>'+txt(38,116,'CLEANSE');break;
-case 'urine':b=cup+'<path d="M40 65h62v24H40z" fill="#e6be63" opacity=".75"/>'+txt(24,116,'STERILE CUP');break;
-case 'mix':b=cup+'<path d="m56 12 25 64" stroke="#997f64" stroke-width="5"/><ellipse cx="81" cy="75" rx="6" ry="7" fill="#f4f4eb" stroke="#9ab4ba"/><path d="M111 55q21 18 0 38" stroke="#138a80" stroke-width="3" fill="none"/>'+txt(105,45,'×10',13,"#138a80");break;
-case 'transfer':b=cup+'<rect x="62" y="27" width="20" height="65" rx="5" fill="#fff" stroke="#94abb5" stroke-width="2"/><rect x="58" y="20" width="28" height="13" rx="3" fill="#99969a"/><path d="M28 15l14 15" stroke="#d69b50" stroke-width="5"/>'+txt(20,116,'PROTECTED PORT');break;
-case 'label':b=vial(55,"#f1f4f7","#e0eef0")+'<rect x="55" y="57" width="29" height="35" fill="#fff" stroke="#afc2cc"/><path d="M60 64h20m-20 7h17m-17 7h20" stroke="#859caa" stroke-width="2"/>'+txt(31,116,'NAME + DATE');break;
-case 'bag':b='<path d="M24 28h95v72H24z" fill="#e4f5ed" stroke="#93b7b1" stroke-width="3"/><path d="M24 40h95" stroke="#75a39d" stroke-width="4"/>'+vial(57,"#f2f4f6","#d6e3e8")+txt(33,117,'BIOHAZARD BAG');break;
-case 'clinic':b='<path d="M20 61 71 21l51 40v51H20z" fill="#e0f2f1" stroke="#82b5b2" stroke-width="3"/><rect x="54" y="73" width="35" height="39" fill="#fff" stroke="#79a6a4"/><path d="M71 31v26m-13-13h26" stroke="#159486" stroke-width="6"/>'+txt(30,127,'CLINIC RETURN');break;
-case 'handoff':b='<rect x="24" y="51" width="38" height="47" rx="5" fill="#e1f4f1" stroke="#93b6b1"/><rect x="79" y="51" width="38" height="47" rx="5" fill="#e1f4f1" stroke="#93b6b1"/><path d="M62 72h17" stroke="#19847c" stroke-width="4"/><path d="m72 63 9 9-9 9" stroke="#19847c" stroke-width="3" fill="none"/>'+txt(22,118,'HAND TO STAFF');break;
+case 'hat':art='<path d="M12 35h120l-19 70H31z" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="M28 54h88l-12 37H40z" fill="#eef5f7"/><path d="M40 78c14-18 21-3 31-10s19-6 33 12v11H40z" fill="#a9896b"/>';break;
+case 'orange':case 'orange-seal':art=vial(54,'#e6a04a','#e9c3a0')+'<path d="M57 79h24" stroke="#ad886a" stroke-dasharray="3 3" stroke-width="2"/>'+(kind==='orange-seal'?check:'');break;
+case 'stool-swab':art=cup+'<path d="M45 17L97 82" stroke="#aa8b66" stroke-width="5" stroke-linecap="round"/><ellipse cx="96" cy="83" rx="8" ry="12" fill="#a58060" transform="rotate(-38 96 83)"/>';break;
+case 'white-tube':art=vial(52,'#f5f6f7','#e0eced')+'<path d="M68 12v73" stroke="#aa9274" stroke-width="4"/><ellipse cx="68" cy="83" rx="5" ry="9" fill="#ad8e74"/>';break;
+case 'vials':case 'vials-fill':art=vial(30,'#e8c967','#f2e7bf')+vial(81,'#e6b7c9','#f0d1dd')+(kind==='vials-fill'?'<path d="M32 79h80" stroke="#9d806c" stroke-dasharray="4 4" stroke-width="2"/>':'');break;
+case 'wipe':art='<rect x="28" y="29" width="88" height="75" rx="10" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="m38 81 25-26 24 22 20-17" stroke="#87bcb2" stroke-width="6" fill="none"/>';break;
+case 'urine':art=cup+'<path d="M39 65h66v30H39z" fill="#edcc7f" opacity=".75"/>';break;
+case 'mix':art=cup+'<path d="m50 14 32 69" stroke="#ad9675" stroke-width="4"/><ellipse cx="83" cy="83" rx="6" ry="8" fill="#e8ede8" stroke="'+steel+'"/><path d="M112 54q17 18 0 38" stroke="'+teal+'" stroke-width="3" fill="none"/>';break;
+case 'transfer':art=cup+'<rect x="62" y="28" width="19" height="64" rx="5" fill="#fff" stroke="'+steel+'" stroke-width="2"/><rect x="58" y="19" width="27" height="15" rx="3" fill="#a0a5aa"/>';break;
+case 'label':art=cup+vial(21,'#e5e9ee','#eef4f5')+'<rect x="58" y="51" width="43" height="30" rx="3" fill="#fff" stroke="'+steel+'"/><path d="M64 59h31M64 67h28M64 75h20" stroke="'+ink+'" stroke-width="2"/>';break;
+case 'bag':art='<path d="M23 24h97v92H23z" fill="#eef8f4" stroke="'+steel+'" stroke-width="3"/><path d="M23 39h97" stroke="'+teal+'" stroke-width="3"/>'+vial(56,'#eceff1','#dfeaec');break;
+case 'call':art='<rect x="44" y="16" width="57" height="102" rx="12" fill="#fff" stroke="'+steel+'" stroke-width="3"/><rect x="51" y="28" width="43" height="66" rx="5" fill="#edf7f5"/><path d="M61 52l8 11 12-11" stroke="'+teal+'" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="106" r="4" fill="'+steel+'"/>';break;
+case 'clinic':art='<path d="M20 58 72 20l52 38v61H20z" fill="#eaf6f3" stroke="'+steel+'" stroke-width="3"/><rect x="57" y="76" width="32" height="43" fill="#fff" stroke="'+steel+'" stroke-width="2"/><path d="M72 32v24m-12-12h24" stroke="'+teal+'" stroke-width="6"/>';break;
+case 'handoff':art='<path d="M13 87q25-11 39 0l21 4 6 13-24 7-43-5z" fill="#cce6df" stroke="'+steel+'" stroke-width="2"/>'+vial(61,'#ecf0f2','#e6eef0')+'<path d="M131 87q-22-13-35-2l-12 10-2 11 27-2 24-9" fill="#cce6df" stroke="'+steel+'" stroke-width="2"/>';break;
 }
-return '<svg viewBox="0 0 145 135" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+b+'</svg>';
+return '<svg viewBox="0 0 145 135" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+art+'</svg>';
 }
 const params=new URLSearchParams(location.search);
 let chosen=guides.find(g=>g.id===params.get("guide"))||guides[0];
 const choice=document.getElementById("chooser"),content=document.getElementById("content");
 function draw(){
+ const isDrop=chosen.id==='dropoff';
  choice.innerHTML=guides.map(g=>'<button type="button" data-guide="'+g.id+'" aria-pressed="'+(g.id===chosen.id)+'">'+g.short+'</button>').join('');
- const steps=chosen.steps.map((s,i)=>'<article class="step"><div class="step-picture">'+picture(s[2])+'</div><div class="step-body"><span class="step-no">STEP '+String(i+1).padStart(2,"0")+'</span><h2>'+s[0]+'</h2><p>'+s[1]+'</p></div></article>').join('');
- const drop=chosen.id==="dropoff"?"Call your clinic to coordinate drop-off. Clinic staff will create the Athena drop-off encounter and confirm a new provider order.":
-  "Return to your clinic the same day whenever possible. Call ahead to coordinate the drop-off. Clinic staff will create the Athena drop-off encounter and arrange the necessary provider order.";
- content.innerHTML='<article class="sheet"><header class="letterhead"><div class="brand">SOLLIS HEALTH · LAB</div><div class="kind">PATIENT INSTRUCTIONS<br>STOOL / URINE COLLECTION</div></header>'+
-  '<h1>'+chosen.title+'</h1><p class="intro">'+chosen.intro+'</p><div class="kit"><strong>YOUR KIT:</strong> '+chosen.kit+'</div>'+
-  '<section class="steps" aria-label="Collection instructions">'+steps+'</section>'+
+ const steps=chosen.steps.map((s,i)=>'<article class="step"><span class="step-no" aria-label="Step '+(i+1)+'">'+String(i+1).padStart(2,'0')+'</span>'+
+  '<div class="step-body"><h2>'+s[0]+'</h2><p>'+s[1]+'</p></div><div class="step-picture">'+picture(s[2])+'</div></article>').join('');
+ const returnNote='Call your clinic before drop-off and return the labeled, sealed sample the same day when possible. Give it directly to staff. Storage requirements vary by test.';
+ content.innerHTML='<article class="sheet"><header class="letterhead"><div class="brand">SOLLIS HEALTH / LABORATORY</div>'+
+  '<div class="kind">PATIENT TAKE-HOME GUIDE</div></header>'+
+  '<div class="section-kicker">'+(isDrop?'SPECIMEN RETURN':'AT-HOME COLLECTION')+'</div>'+
+  '<h1>'+chosen.title+'</h1><p class="intro">'+chosen.intro+'</p>'+
+  '<div class="kit"><strong>'+(isDrop?'BRING WITH YOU':'COLLECTION KIT')+'</strong><span>'+chosen.kit+'</span></div>'+
+  '<h2 class="steps-title">'+(isDrop?'Before you come to the clinic':'How to collect your specimen')+'</h2>'+
+  '<section class="steps" aria-label="'+(isDrop?'Specimen drop-off checklist':'Collection instructions')+'">'+steps+'</section>'+
+  (isDrop?'':'<aside class="return"><div class="return-picture">'+picture('clinic')+'</div>'+
+   '<div><h2>Returning your specimen</h2><p>'+returnNote+'</p></div></aside>')+
   '<div class="warning"><strong>Important:</strong> '+chosen.warning+'</div>'+
-  '<aside class="return"><div class="return-picture">'+picture("clinic")+'</div><div><h2>How to drop off your specimen</h2><p>'+drop+' Keep the specimen in its designated container, labeled with your full name, date of birth, and collection date/time. Do not leave the specimen at the clinic without handing it to staff.</p></div></aside>'+
-  '<footer class="footer"><span>Questions? Call your clinic and ask for a nurse. Main number: <strong>310-870-0400</strong>.</span><span>Verify any special storage instructions with the clinic. · 11/2026</span></footer></article>';
+  '<footer class="footer"><span>Questions? Call your clinic and ask for a nurse.<br><strong>310-870-0400</strong></span>'+
+  '<span class="footer-meta">Follow the instructions for your exact kit.<br>Do not leave specimens unattended.</span></footer></article>';
  document.title='Sollis Patient Instructions | '+chosen.short;
 }
 choice.addEventListener('click',function(e){const button=e.target.closest('[data-guide]');if(!button)return;const selected=guides.find(g=>g.id===button.dataset.guide);if(!selected)return;chosen=selected;history.replaceState(null,'','?guide='+encodeURIComponent(chosen.id));draw();});
