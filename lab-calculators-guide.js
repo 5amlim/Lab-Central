@@ -48,9 +48,9 @@ function molecular(){
  const entries=[
   {id:"htrx",name:"HealthTrackRx",tag:"HEALTHTRACKRX",title:"Molecular testing guide",tone:"htrx",desc:"Molecular sendout specimen collection, kit selection, manifest and handoff.",tips:["Check the ordered panel, specimen source and HTRX-approved kit.","Match patient identifiers, requisition and specimen collection date/time.","Confirm the site’s current UPS or courier schedule and manifest process."]},
   {id:"pathmd",name:"PathMD",tag:"PATHMD",title:"Molecular testing guide",tone:"pathmd",desc:"White-top tube collection, illustrated panel instructions and courier routing. Site activation may still be pending.",tips:["Use one PathMD white-top tube for the ordered panel and confirm the approved specimen source.","For urine, mix the thick swab in a sterile cup 10 times; for GI, collect stool on the thick swab. No transfer pipette for urine.","Label tubes with patient identifiers, date and time, specimen source, and collector initials."]}
- ];
+ ].filter(v=>availableLabs().includes(v.id));
  return '<section class="calc2-molecular-section" aria-labelledby="calc2-molecular-heading">'+
-  '<div class="calc2-section-heading"><div><span class="calc-guide-eyebrow">SPECIALTY SENDOUTS</span><h2 id="calc2-molecular-heading">Molecular testing</h2><p>HealthTrackRx and PathMD references for '+E(m.name)+'. Check clinic-specific activation before use.</p></div><span class="calc2-category-tag">2 guides</span></div>'+
+  '<div class="calc2-section-heading"><div><span class="calc-guide-eyebrow">SPECIALTY SENDOUTS</span><h2 id="calc2-molecular-heading">Molecular testing</h2><p>'+entries.map(v=>E(v.name)).join(" and ")+' references for '+E(m.name)+'. Check clinic-specific activation before use.</p></div><span class="calc2-category-tag">'+entries.length+' guide'+(entries.length===1?"":"s")+'</span></div>'+
   '<div class="calculator-grid calc2-molecular-grid">'+entries.map(v=>'<article class="calculator-card calc2-molecular-card '+v.tone+'">'+
    '<div class="calculator-top"><span class="calculator-tag">'+E(v.tag)+'</span><span class="calc2-type-badge">MOLECULAR</span></div>'+
    '<div class="calculator-brand-title"><span class="calc2-molecule-icon">'+moleculeIcon()+'</span><h2>'+E(v.name)+'</h2></div>'+
@@ -65,7 +65,7 @@ function molecular(){
 
 /* Focused laboratory tabs. One lab's instructions are visible at a time. */
 const labOrder={
- socal:["quest","cedars","labcorp","htrx","pathmd"],
+ socal:["quest","cedars","labcorp","pathmd"],
  norcal:["quest","labcorp","htrx","pathmd"],
  fl:["quest","labcorp","htrx","pathmd"],
  ny:["quest","labcorp"]
@@ -183,13 +183,13 @@ function molecularMatches(query=molecularQuery){
  const matches=(text,fuzzy=false)=>normHTRX(text).includes(q)||Boolean(smart?.matches(text,raw,{fuzzy}));
  const htrxTextFor=p=>htrxText(p);
  const pathmdTextFor=p=>[p.name,p.category,p.terms,...Object.values(p.groups||{}).flat()].join(" ");
- const exactHtrx=htrxRecords.filter(p=>matches(htrxTextFor(p)));
+ const exactHtrx=availableLabs().includes("htrx")?htrxRecords.filter(p=>matches(htrxTextFor(p))):[];
  const exactPathmd=(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>matches(pathmdTextFor(p)));
  // Consider near spellings only when no panel matches exactly. Do not expand
  // short pathogen abbreviations or laboratory order codes by edit distance.
  const fuzzyEligible=!exactHtrx.length&&!exactPathmd.length&&raw.length>=5;
  const htrx=fuzzyEligible
-  ?htrxRecords.filter(p=>matches(htrxTextFor(p),true))
+  ?(availableLabs().includes("htrx")?htrxRecords.filter(p=>matches(htrxTextFor(p),true)):[])
   :exactHtrx;
  const pathmd=fuzzyEligible
   ?(window.LAB_PATHMD_REFERENCE?.panels||[]).filter(p=>matches(pathmdTextFor(p),true))
@@ -244,7 +244,7 @@ function finderResults(){
  if(q.length<2)return '<span class="calc2-finder-hint">Try an organism such as RSV, Group A Strep, E. coli or Candida.</span>';
  const all=matches.length,shown=matches.slice(0,18);
  if(!all)return '<div class="calc2-finder-empty">No panels found for “'+E(molecularQuery)+'”. Check the spelling or search the full vendor menu.</div>';
- return '<div class="calc2-finder-count">'+all+' matching panel'+(all===1?'':'s')+' across HealthTrackRx and PathMD</div>'+
+ return '<div class="calc2-finder-count">'+all+' matching panel'+(all===1?'':'s')+' across '+availableLabs().filter(x=>x==='htrx'||x==='pathmd').map(x=>E(names[x])).join(' and ')+'</div>'+
   '<div class="calc2-finder-grid">'+shown.map(p=>
    '<button type="button" class="calc2-finder-hit" data-calc2-pick-molecular="'+p.lab+'" data-calc2-pick-target="'+E(molecularQuery)+'">'+
    '<span class="calc2-finder-lab '+p.lab+'">'+E(p.labName)+'</span>'+
@@ -256,7 +256,7 @@ function finderResults(){
 function molecularFinder(){
  if(!availableLabs().includes("htrx")&&!availableLabs().includes("pathmd"))return "";
  return '<section class="calc2-finder" id="calc2-finder" aria-label="Search molecular sendout pathogens">'+
-  '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search HealthTrackRx and PathMD panel targets together</span></div><span class="calc2-finder-labs">2 labs</span></div>'+
+  '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search '+availableLabs().filter(x=>x==="htrx"||x==="pathmd").map(x=>E(names[x])).join(" and ")+' panel targets</span></div><span class="calc2-finder-labs">'+availableLabs().filter(x=>x==="htrx"||x==="pathmd").length+' labs</span></div>'+
   '<div class="calc2-finder-input"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>'+
   '<input id="calc2-molecular-search" type="search" data-calc2-molecular-search autocomplete="off" placeholder="Search pathogen, panel or resistance marker..." value="'+E(molecularQuery)+'"></div>'+
   '<div class="calc2-finder-results" id="calc2-finder-results">'+finderResults()+'</div></section>';
