@@ -1,10 +1,9 @@
-/* Shared How to navigation treatment for PATHFAST and Athena EHR guides.
-   Both areas can remain sticky without appearing detached from the content. */
+/* Shared guide navigation presentation for PATHFAST and Athena EHR. */
 @media screen {
   .lc-scroll-cue-frame.lc-pathfast-howto-frame:has(>.pfux-primary-nav) {
-    position: sticky;
-    top: 48px;
-    z-index: 18;
+    position: relative;
+    top: auto;
+    z-index: auto;
     margin: 12px 0 24px;
     padding: 15px 17px 0;
     min-width: 0;
@@ -24,8 +23,8 @@
   .lc-howto-intro { min-width: 0; }
   .lc-howto-kicker {
     display: block;
-    margin-bottom: 3px;
-    font-size: 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
     font-weight: 850;
     letter-spacing: .11em;
     color: #25847f;
@@ -55,6 +54,9 @@
     font-weight: 800;
   }
   .lc-scroll-cue-frame.lc-pathfast-howto-frame > .pfux-primary-nav {
+    position: static;
+    top: auto;
+    z-index: auto;
     margin: 0;
     padding: 12px 1px 13px;
     border: 0;
