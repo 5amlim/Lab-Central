@@ -89,6 +89,26 @@ h1{font-size:clamp(24px,3vw,31px);line-height:1.15;letter-spacing:-.035em;color:
  .footer .footer-meta{font-size:8px}
 }
 
+
+/* Cedars patient guide chooser: deliberately separate culture vs UA tubes. */
+.cedars-choice-intro{font-size:13px;line-height:1.55;color:#5d7485;margin:0 0 17px}
+.cedars-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:17px 0 22px}
+.cedars-choice{border:1.5px solid #cfdee6;background:#fff;border-radius:13px;padding:19px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.cedars-choice-visual{height:156px;display:grid;place-items:center;background:#f5f9fa;border-radius:10px;margin:0 0 6px}
+.cedars-choice-visual svg{width:156px;height:145px;max-width:100%}
+.cedars-choice-tag{color:#187f78;letter-spacing:.10em;font-size:10px;font-weight:850}
+.cedars-choice h2{color:#233f54;font-size:18px;line-height:1.3;margin:0}
+.cedars-choice p{color:#587082;font-size:12px;line-height:1.55;margin:0 0 7px;flex:1}
+.cedars-choice button{padding:11px 13px;cursor:pointer;font:inherit;font-size:12px;font-weight:800;color:#fff;background:#167d78;border:1px solid #167d78;border-radius:8px;text-align:center}
+.cedars-choice button:focus-visible,.cedars-back:focus-visible{outline:3px solid #69b3ad;outline-offset:2px}
+.cedars-back{margin:0 0 16px;font:inherit;background:#f2f8fa;border:1px solid #d2e0e8;color:#31566f;border-radius:8px;padding:9px 12px;font-size:11px;font-weight:750;cursor:pointer}
+.cedars-kit-id{margin:0 0 15px;padding:10px 13px;border:1px solid #cde5e1;border-radius:10px;background:#f3faf8;display:flex;align-items:center;gap:14px}
+.cedars-kit-id svg{width:102px;height:91px;flex:0 0 102px}
+.cedars-kit-id strong{display:block;font-size:12px;color:#217b75;margin-bottom:4px}
+.cedars-kit-id span{font-size:11px;color:#536e7d;line-height:1.45}
+@media(max-width:640px){.cedars-choice-grid{grid-template-columns:1fr}.cedars-choice-visual{height:124px}.cedars-choice-visual svg{height:120px}}
+@media print{.cedars-choice-grid,.cedars-back{display:none!important}.cedars-kit-id{padding:7px 11px;margin:0 0 8px}.cedars-kit-id svg{width:62px;height:57px;flex-basis:62px}}
+
 </style>
 </head>
 <body>
@@ -106,39 +126,47 @@ const guides=[
 ["Add the stool","Open the orange-lid vial. Use the scoop attached to the lid or the supplied tongue depressor to add stool up to the marked fill line.","orange"],
 ["Close and mix","Close the lid tightly. Mix the sample with the liquid as instructed on the supplied vial label; keep the vial upright and do not spill.","orange-seal"],
 ["Label the vial","Write the collection date and time. Make sure your full name and date of birth are on the vial itself, not only the bag.","label"],
-["Bag the specimen","Put the sealed vial in the biohazard bag, then place that bag inside the opaque outer bag.","bag"]
+["Bag the specimen","Put the sealed vial in the biohazard bag, then place that bag inside the external bag provided.","bag"]
 ]},
 {id:"pathmd-stool",short:"PathMD stool",title:"Stool collection · PathMD GI panel",kit:"PathMD white-top transport tube + thick swab",intro:"Use the white-top PathMD transport tube and the thick swab provided with your kit. This is not a BioFire Para-Pak collection.",warning:"Keep any liquid already inside the tube. Do not pour it out. Do not use a urine pipette. Use the correct PathMD kit for the test ordered.",steps:[
 ["Collect stool in the hat","Urinate first. Collect stool in the clean collection hat without mixing it with toilet water, urine or paper.","hat"],
 ["Collect with the thick swab","Open the swab without touching the tip. Pick up a visible amount of stool on the swab tip.","stool-swab"],
 ["Place swab into white-top tube","Put the stool-coated swab into the PathMD white-top tube, following the kit's break-point directions if applicable. Close securely.","white-tube"],
 ["Label the tube","Add your full name, date of birth, specimen source, and the date and time you collected it. Do not cover any barcode.","label"],
-["Double bag","Put the sealed tube in its biohazard bag, then inside the supplied opaque bag. Do not include the collection hat.","bag"]
+["Double bag","Put the sealed tube in its biohazard bag, then in the external bag provided. Do not include the collection hat.","bag"]
 ]},
 {id:"cedars-stool",short:"Cedars stool",title:"Stool collection · Cedars",kit:"The specific Cedars stool vials supplied for your ordered test",intro:"Cedars uses different stool containers for different orders. Follow the labels and the clinic's markings on the specific vials you received.",warning:"Some vials contain different preservatives. Never mix liquids between containers, pour the preservative out or assume all tests need all three vials. Contact the clinic if you are unsure which vials to fill.",steps:[
 ["Prepare collection hat","Urinate first, then collect stool in the hat. Do not let urine, toilet water or toilet paper touch the specimen.","hat"],
 ["Check the selected vials","Use only the Cedars stool containers the clinic instructed you to fill. A kit may include more than one vial or an unpreserved cup.","vials"],
 ["Add stool to marked line","Use the scoop in each lid or the supplied tongue depressor. Follow each specific vial's fill marking; do not overfill.","vials-fill"],
 ["Seal and label each vial","Close every filled vial tightly. Put your name, date of birth, collection date and time on each container.","label"],
-["Bag all requested containers","Place closed containers together in the provided biohazard bag, then inside the opaque outer bag.","bag"]
+["Bag all requested containers","Place closed containers together in the provided biohazard bag, then in the external bag provided.","bag"]
 ]},
-{id:"pathmd-urine",short:"PathMD urine",title:"Urine collection · PathMD UTI panel",kit:"Sterile urine cup + thick swab + PathMD white-top tube",intro:"For the PathMD urinary pathogen panel, use a clean-catch urine specimen if your clinic instructed that method. Then use the thick swab and white-top transport tube.",warning:"For this PathMD white-top swab workflow, do not use the old HealthTrackRx-style urine pipette. Other PathMD tests may require a different specimen source, so follow the order-specific instructions.",steps:[
+{id:"pathmd-urine",short:"PathMD urine",title:"Urine collection · PathMD UTI panel",kit:"Sterile urine cup + thick swab + PathMD white-top tube",intro:"For the PathMD urinary pathogen panel, use a clean-catch urine specimen if your clinic instructed that method. Then use the thick swab and white-top transport tube.",warning:"For this PathMD white-top swab workflow, use the thick swab, not a transfer pipette. Other PathMD tests may require a different specimen source, so follow the order-specific instructions.",steps:[
 ["Clean before collecting","Wash hands. Clean around the urethral opening with the supplied wipes. Put used wipes in the trash, not the toilet.","wipe"],
 ["Collect urine","Start urinating into the toilet, then collect urine in the sterile cup without touching the rim or inside. Your clinic may instruct first-catch urine for other orders.","urine"],
 ["Mix using the thick swab","Put the thick swab tip into urine in the cup and stir 10 times. Do not use a transfer pipette for the white-top swab workflow.","mix"],
 ["Place in white-top tube","Put the urine-exposed swab into the PathMD white-top tube and seal it. Leave the tube's transport medium in place.","white-tube"],
-["Label and bag","Label the tube with your name, date of birth, specimen source, date and time. Seal it in the biohazard bag, then the opaque bag.","bag"]
+["Label and bag","Label the tube with your name, date of birth, specimen source, date and time. Seal it in the biohazard bag, then in the external bag provided.","bag"]
 ]},
-{id:"cedars-urine",short:"Cedars urine",title:"Urine collection · Cedars",kit:"Sterile cup and any clinic-issued Cedars test-specific transfer tubes",intro:"Collect using the method specified for your test. Clean-catch and first-catch urine are not interchangeable, so verify the clinic's instructions.",warning:"Some Cedars urine transfer cups and straws contain a concealed needle. Use these only if the clinic has instructed and trained you. Never reach into the transfer port or remove internal needle components. Different tests require different tubes and fill amounts.",steps:[
-["Clean and collect","Wash hands, clean with the supplied wipes, and collect urine into the sterile cup using the collection method your clinic specified.","wipe"],
-["Avoid touching inside","Do not touch the cup interior or inside of the cap. Close the cup securely as soon as you finish collecting.","urine"],
-["Use only assigned tubes","If staff trained you to use the integrated transfer lid or straw, keep the cup upright and insert each assigned tube stopper into the protected port until filling stops.","transfer"],
-["Check the fill and labels","Fill the exact tubes listed for your order, following their required marks. Label each tube with your name, date of birth and collection date/time.","label"],
-["Package for return","Seal each tube in the biohazard bag and then the opaque bag. Call the clinic if transfer or collection was difficult.","bag"]
+{id:"cedars-urine",short:"Cedars urine",title:"Urine collection · Cedars",kit:"Choose the collection tube that matches the ordered urine test",intro:"Cedars uses different preservative tubes for urinalysis and urine culture. Select the test below so the correct tube and instructions appear.",steps:[]},
+{id:"cedars-urine-culture",subguide:true,short:"Cedars urine culture",title:"Urine culture · Cedars (gray-top tube)",kit:"Sterile urine cup + GRAY-top C&S preservative tube (4 mL, BD REF 364951)",intro:"Use the gray-top preservative tube for urine culture only when your clinic provided and instructed you to use this kit. Do not substitute the red/yellow urinalysis tube.",warning:"Urine culture and urinalysis tubes are different. Some collection lids and transfer straws contain a concealed needle. Only transfer urine if clinic staff demonstrated the device; otherwise keep the sterile cup sealed and contact the clinic for transfer instructions. Never handle an exposed needle.",steps:[
+["Collect urine in the sterile cup","Wash hands, clean as directed, then collect the urine specimen using the method specified by the clinic. Keep the inside of the cup and cap clean.","urine"],
+["Identify the GRAY-top tube","For a urine CULTURE, use the short gray-cap C&S preservative tube supplied by the clinic, not the red/yellow swirl-top UA tube.","cedars-gray"],
+["Transfer urine if instructed","If trained, use the protected transfer port or transfer straw provided and hold the gray tube in place until filling stops. If not trained, keep the cup sealed and call the clinic.","cedars-transfer-gray"],
+["Check fill and mix","Check that urine reached the indicated fill mark. After filling the gray-top culture tube, shake it vigorously as directed for the collection system.","cedars-mix-gray"],
+["Label, seal and bag","Label the filled tube with full name, date of birth and collection date/time. Seal it in the biohazard bag, then in the external bag provided.","bag"]
 ]},
-{id:"dropoff",short:"Specimen drop-off",title:"Returning your stool or urine specimen",kit:"Sealed specimen container, biohazard bag and opaque outer bag",intro:"Before bringing a specimen to the clinic, complete these four checks. Follow the collection guide for your specific test and container.",warning:"Storage and time limits depend on the test. If you cannot return your sample the same day, call the clinic first for exact instructions. Do not assume room-temperature or overnight storage is acceptable.",steps:[
+{id:"cedars-urine-ua",subguide:true,short:"Cedars urinalysis",title:"Urinalysis (UA) · Cedars (red/yellow swirl-top tube)",kit:"Sterile urine cup + RED/YELLOW SWIRL-top UA preservative tube (8 mL, BD REF 364992)",intro:"Use the red/yellow swirled-cap urinalysis preservative tube for the ordered UA test. This longer tube has a tapered bottom and is not the gray urine-culture tube.",warning:"Do not substitute the gray-top culture tube for a UA preservative tube. Some collection lids and transfer straws contain a concealed needle. Only transfer urine if clinic staff demonstrated the device; otherwise keep the sterile cup sealed and contact the clinic for instructions.",steps:[
+["Collect urine in the sterile cup","Wash hands, clean with the provided wipes, and collect urine using the collection method the clinic specified. Avoid touching the cup interior.","urine"],
+["Identify the RED/YELLOW swirl cap","Use the tall UA preservative tube with the distinctive red/yellow swirled cap and tapered bottom. Do not use the gray urine-culture tube.","cedars-ua"],
+["Transfer urine if instructed","If trained, use the supplied protected transfer port or straw. Keep the tube in position until urine flow stops. Do not touch the concealed needle.","cedars-transfer-ua"],
+["Check fill and invert 8–10 times","Confirm urine is between the tube's MIN and MAX fill marks. Invert the UA preservative tube 8–10 times to mix after filling.","cedars-invert-ua"],
+["Label, seal and bag","Label the tube with full name, date of birth and collection date/time. Place it in the biohazard bag, then in the external bag provided.","bag"]
+]},
+{id:"dropoff",short:"Specimen drop-off",title:"Returning your stool or urine specimen",kit:"Sealed specimen container, biohazard bag and external bag provided",intro:"Before bringing a specimen to the clinic, complete these four checks. Follow the collection guide for your specific test and container.",warning:"Storage and time limits depend on the test. If you cannot return your sample the same day, call the clinic first for exact instructions. Do not assume room-temperature or overnight storage is acceptable.",steps:[
 ["Check the specimen label","Make sure each container has your full name, date of birth, and collection date and time. Use the label the clinic provided.","label"],
-["Seal and double-bag","Tighten each cap. Keep any preservative liquid in its container. Place the sealed specimen in its biohazard bag and then the opaque bag.","bag"],
+["Seal and bag the specimen","Tighten each cap. Keep any preservative liquid in its container. Place the sealed specimen in its biohazard bag and then in the external bag provided.","bag"],
 ["Call the clinic before coming","Coordinate your drop-off and confirm any storage instructions. Bring the specimen the same day whenever possible.","call"],
 ["Give it directly to staff","Hand the bag to a clinic team member. Tell them when you collected the sample and how it was stored. Do not leave it unattended.","handoff"]
 ]}
