@@ -46,7 +46,7 @@ const tests={
   {title:'Group A Streptococcus',complexity:'waived',color:'#af2447',tint:'#fae9ed',deep:'#8c1737',boxColor:'Red box',groups:{'Bacterium':A('Streptococcus pyogenes (group A Streptococcus)')}}
  ],
  hiv:[
-  {title:'Abbott Determine HIV-1/2 Ag/Ab Combo',complexity:'conditional',source:'https://www.fda.gov/media/86959/download',groups:{'Antigen (Ag line)':A('HIV-1 p24 antigen'),'Antibodies (Ab line)':A('HIV-1/2 antibodies (combined readout)')},note:'Separate Ag and Ab lines: the Ab line detects HIV-1/2 antibodies but does not distinguish HIV-1 from HIV-2. Read at 20–30 minutes. CLIA waived ONLY for fingerstick whole blood; moderate complexity for venous whole blood, serum and plasma. Follow the Abbott IFU and site SOP.'}
+  {title:'Abbott Determine HIV-1/2 Ag/Ab Combo',complexity:'moderate',source:'https://www.fda.gov/media/86959/download',groups:{'Antigen (Ag line)':A('HIV-1 p24 antigen'),'Antibodies (Ab line)':A('HIV-1/2 antibodies (combined readout)')},note:'Separate Ag and Ab lines: the Ab line detects HIV-1/2 antibodies but does not distinguish HIV-1 from HIV-2. Read at 20–30 minutes. Site guide designation: CLIA moderate. Per FDA, venous whole blood, serum and plasma are moderate complexity, while fingerstick whole blood is CLIA waived. Follow the Abbott IFU and site SOP.'}
  ],
  poc:[
   {title:'Rapid influenza test',complexity:'waived',note:'CLIA waived for the Quidel QuickVue Influenza A+B test with its approved nasal or nasopharyngeal specimens. Verify the exact stocked kit and current IFU.',source:'https://www.quidelortho.com/us/en/products/quickvue-rapid-lateral-flow-tests/quickvue-influenza-a-b-test',groups:{'Viruses':A('Influenza A virus|Influenza B virus')}},
