@@ -261,7 +261,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261104">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261104-no-outer">
   <link rel="stylesheet" href="guide-refinements.css?v=20261105-guided-nav">
-<link rel="stylesheet" href="assay-catalog.css?v=20261104" media="all">
+<link rel="stylesheet" href="assay-catalog.css?v=20261112-hiv-clia-context" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="egfr-calculator.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-troubleshooting.css?v=20261109-technical-contacts" media="all">
@@ -506,7 +506,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
 <script src="sendout-market-guide.js?v=20261107-optional-v2"></script>
-<script src="assay-catalog.js?v=20261107-optional-v2"></script>
+<script src="assay-catalog.js?v=20261112-hiv-moderate"></script>
 <script src="instrument-troubleshooting.js?v=20261109-support-contacts-v2"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
@@ -2803,7 +2803,7 @@ function sectionRender(sec,tab){
  const guideComplexities=new Set(guideAssays.map(assay=>assay.complexity||'unspecified'));
  const guideClia=guideAssays.length===0?'':guideComplexities.size===1&&guideComplexities.has('waived')?'waived':guideComplexities.size===1&&guideComplexities.has('moderate')?'moderate':'conditional';
  const guideCliaBadge=guideClia?'<span class="ac-complex ac-'+(guideClia==='conditional'?'conditional':guideClia)+' ac-header-badge"'+(guideClia==='conditional'?' title="Complexity depends on the assay, panel or specimen. Refer to the assay-specific IFU."':'')+'>'+(guideClia==='waived'?'CLIA WAIVED':guideClia==='moderate'?'CLIA MODERATE':'CLIA VARIES')+'</span>':'';
- let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${guideCliaBadge}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
+ let h=`<div class="detail-header ${sec.id==='pathfast'?'pfux-header':sec.id==='sendout'?'sendout-detail-header':''}"><div><button type="button" class="back-link" data-go="home">‹ &nbsp;Back to all references</button><div class="eyebrow" style="margin-top:20px">${safeHtml(sec.category)} / ${guideHeaderType(sec)}</div><h1 class="detail-title">${safeHtml(sec.title)}</h1><p class="detail-subtitle">${safeHtml(sec.subtitle)}</p>${guideCliaBadge}${sec.id==='hiv'?'<p class="hiv-clia-context">Moderate complexity for venous whole blood, serum and plasma. Fingerstick whole blood is CLIA waived under the FDA labeling.</p>':''}</div><div class="detail-actions"><button type="button" class="round-action ${favs.includes(sec.id)?'selected':''}" data-favorite="${safeHtml(sec.id)}" aria-label="${favs.includes(sec.id)?'Remove favorite':'Add favorite'}" title="Bookmark this guide">${favs.includes(sec.id)?'★':'☆'}</button></div></div>`;
  if(sec.id==='sendout')h+='<div class="sendout-reference-layout">';
  else if(sec.id!=='pathfast')h+=metaForGuide(sec);
  if(sec.id==='api')h+=window.LAB_API_SUBMISSION.marketSelector();
