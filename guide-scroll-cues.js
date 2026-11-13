@@ -74,7 +74,8 @@ function setup(node){
  if(!node||initialized.has(node)||!node.parentNode)return;
  initialized.add(node);
  const compliance=node.matches(".api-guide-tabs, .dqc-page .dqc-view-switch, .tc-portal .tc-view-switch, .sendout-reference-layout .sendout-reference-tabs");
- const frame=document.createElement("div");frame.className="lc-scroll-cue-frame"+(compliance?" lc-compliance-scroll-frame":"");
+ const pathfastNavigation=node.matches(".pfux-primary-nav");
+ const frame=document.createElement("div");frame.className="lc-scroll-cue-frame"+(compliance?" lc-compliance-scroll-frame":"")+(pathfastNavigation?" lc-pathfast-howto-frame":"");
  node.parentNode.insertBefore(frame,node);frame.appendChild(node);
  const bottom=document.createElement("div");bottom.className="lc-scroll-cue-bottom";
  bottom.setAttribute("aria-hidden","true");bottom.innerHTML="<span>Scroll for more ↓</span>";
@@ -97,6 +98,21 @@ function setup(node){
   node.scrollBy({left:-distance,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
  });
  frame.append(bottom,left,right);
+ let pathfastNavFooter=null;
+ if(pathfastNavigation){
+  const heading=document.createElement("div");
+  heading.className="lc-pathfast-howto-heading";
+  heading.innerHTML='<div class="lc-howto-intro"><span class="lc-howto-kicker">PATHFAST GUIDE</span><h2>How to</h2><p>Choose a workflow below. Scroll sideways or use the arrows to see every section.</p></div><span class="lc-howto-guide-tag" aria-hidden="true">Guide navigation</span>';
+  frame.insertBefore(heading,node);
+  pathfastNavFooter=document.createElement("div");
+  pathfastNavFooter.className="lc-pathfast-howto-footer";
+  pathfastNavFooter.hidden=true;
+  const tip=document.createElement("span");
+  tip.className="lc-pathfast-howto-hint";
+  tip.textContent="Browse all PATHFAST sections";
+  pathfastNavFooter.append(tip,left,right);
+  frame.appendChild(pathfastNavFooter);
+ }
  let queued=false;
  function update(){
   queued=false;if(!node.isConnected)return;
@@ -114,6 +130,7 @@ function setup(node){
   frame.classList.toggle("lc-has-more-left",moreLeft&&!onCardControls);
   right.hidden=!moreRight||onCardControls;
   left.hidden=!moreLeft||onCardControls;
+  if(pathfastNavFooter)pathfastNavFooter.hidden=!horizontal;
   if((below||horizontal)&&!node.hasAttribute("tabindex"))node.tabIndex=0;
  }
  function schedule(){
