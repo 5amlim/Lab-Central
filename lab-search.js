@@ -22,7 +22,7 @@ const items=[
  // Workflow destinations which do not appear as individual instrument guides.
  ['Tools','eGFR calculator','2021 CKD-EPI creatinine-based estimated GFR, race-free; G1 through G5','egfr gfr renal kidney function ckd epi creatinine estimate glomerular filtration calculator','\x23piccolo/egfr-calculator'],
  ['Tools','Troponin pathway (0/1h and 0/2h)','PATHFAST high-sensitivity troponin I: routine 1-hour and provider-authorized 2-hour fallback chest pain pathways','troponin trop hstni hs tni hs ctni chest pain acs heart score 0/1h 0/2h 1h 2h 1 hour 2 hour one hour two hour 60 minute 120 minute serial testing delta pathway repeat','\x23pathfast/chest-pain'],
- ['Tools','Lab calculators and collection guides','Quest, Labcorp, Cedars, HealthTrackRx and PathMD collection references','calculator tube volume order of draw specimen collection sendout search test code','\x23calculators'],
+ ['Tools','Lab calculators and collection guides','Quest, Labcorp, Cedars and specialty molecular sendout references','calculator tube volume order of draw specimen collection sendout search test code','\x23calculators'],
  ['Tools','Quest specimen calculator','Quest test codes, tube volumes and specimen processing','quest calculator tubes lab calculator quest diagnostics','https://5amlim.github.io/Lab-Calculator/'],
  ['Tools','Labcorp specimen calculator','Labcorp test codes, tube volumes and specimen processing','labcorp calculator specimen tubes','https://5amlim.github.io/Lab-Calculator/labcorp.html'],
  ['Tools','Cedars specimen calculator','Southern California Cedars collection and sendout requirements','cedars cedars sinai calculator container tubes testing','https://5amlim.github.io/Lab-Calculator/cedars.html','socal'],
@@ -48,6 +48,36 @@ const items=[
  ['Quality & compliance','PATHFAST six-month linearity','PATHFAST calibration verification and linearity checks','pathfast six month 6 month six-month linearity report','\x23pathfast/six-month-linearity'],
  ['Documents','Lab template library','Printable lab QC, maintenance, cleaning, temperature and inspection logs','template pdf forms printable log printout document records','lab-templates.html'],
  ['Documents','Lab Central reference home','Browse published clinical and operational reference pages','home overview guide reference landing','\x23home']
+];
+/* Directly searchable destinations for controls that are not data-driven guide tabs.
+   Keep each hash aligned with an actual router tab, so typeahead can open it. */
+const quickGuideRoutes=[
+ ['Tools','Athena EHR guides','Print DYMO specimen labels and file lab documents','athena ehr guide quickview printer classify upload chart','#athena-ehr'],
+ ['Workflows','Athena DYMO specimen label workflow','Quickview > Registration > Single Label > Label > Print','dymo patient labels specimen print hamburger menu single label print printer helpdesk software','#athena-ehr/labels'],
+ ['Workflows','Athena document classification','Upload or reclassify lab requisitions and Lab Calculator PDFs','athena clinical document add document reclassify document upload fax pdf','#athena-ehr/documents'],
+ ['Workflows','Athena lab requisition classification','Clinical Document > LAB REQUISITION; number multiple requisitions','lab req requisition fax internal note 1 of 1 classify athena','#athena-ehr/documents'],
+ ['Workflows','Athena Lab Calculator flowsheet','Clinical Document > LAB FLOWSHEET','lab calculator flowsheet upload pdf classify athena quest labcorp cedars','#athena-ehr/documents'],
+ ['Workflows','Athena fax requisition handling','Reclassify an existing fax, avoid duplicate upload','athena fax received reclassify lab req accession','#athena-ehr/documents'],
+ ['Tools','Athena Order Sets','Browse in-house and sendout Athena orders','athena test order sets order name provider patient','#order-sets'],
+ ['Workflows','PATHFAST RN collection and timing','Lithium heparin tube, sample mixing, timed troponin collections','pathfast rn collection green top invert 10 0/1h serial','#pathfast/rn-collection'],
+ ['Workflows','PATHFAST 28-day calibration and QC','Cal1 Cal2, Bio-Rad cardiac controls, D-dimer and log','pathfast cal qc calibrator controls biorad 1b linearity','#pathfast/cal-qc'],
+ ['Workflows','PATHFAST maintenance','Weekly and monthly analyzer maintenance','pathfast monthly maintenance cleaning logs','#pathfast/weekly-monthly-maint'],
+ ['Tools','PATHFAST result interpretation','Cardiac marker reference and diagnostic considerations','pathfast troponin bnp d dimer interpretation ng l','#pathfast/result-interpretation'],
+ ['Workflows','PATHFAST training videos','Patient testing and combined calibration QC videos','pathfast training video cal qc relias','#pathfast/videos'],
+ ['Tools','Piccolo result interpretation','Chemistry disc values, flags and report interpretation','piccolo abaxis chemistry interpretation results','#piccolo/result-interpretation'],
+ ['Tools','Sysmex result interpretation','CBC and differential result reporting','sysmex pochi cbc wbc rbc platelet reference','#sysmex/result-interpretation'],
+ ['Workflows','CLINITEK combined UA and hCG QC','Monthly controls for urinalysis and pregnancy testing','clinitek status ua hcg control urine qc monthly','#clinitek/combined-qc'],
+ ['Tools','CLINITEK result interpretation','Urinalysis and hCG reference guidance','clinitek ua hcg interpretation pregnancy','#clinitek/result-interpretation'],
+ ['Tools','FebriDx result interpretation','MxA and CRP line interpretation','febridx mxa crp test result','#febridx/result-interpretation'],
+ ['Tools','Drug screen result interpretation','McKesson 14-panel positive, negative and invalid lines','drug screen urine tox rapid interpreting','#drug-screen/interpretation'],
+ ['Tools','Abbott HIV result interpretation','HIV p24 antigen and antibody control lines','hiv determine p24 antibody positive negative invalid','#hiv/result-interpretation'],
+ ['Workflows','McKesson mononucleosis patient testing','Heterophile antibody mono cassette, 8-minute read','mckesson consult monospot mono test 5012','#mono/patient-testing'],
+ ['Workflows','McKesson mononucleosis external QC','Positive and negative controls for mono cassette','mckesson 5012 mono qc controls','#mono/external-qc'],
+ ['Tools','McKesson mononucleosis result interpretation','C/T lines, positive, negative and invalid results','mono monospot heterophile result interpretation','#mono/result-interpretation'],
+ ['Workflows','Sendout lab market and courier guide','Choose receiving labs and find local shipping instructions','sendout quest labcorp cedars courier pickup packaging','#sendout/clinics'],
+ ['Workflows','Sendout specimen collection and packaging','Sendout tubes, requisitions, specimen conditions','sendout collection specimen packaging htrx pathmd quest','#sendout/collection'],
+ ['Tools','PathMD molecular test menu','PathMD PCR panels, collection and ordering','pathmd molecular pcr test menu swab white top','#calculators'],
+ ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators',['norcal','fl']]
 ];
 const templates=[
  ['temperature','Daily Temperature Log','fridge freezer ambient temperature humidity daily'],
@@ -152,10 +182,10 @@ function add(list,entry){
 function baseIndex(ctx){
  if(cached)return cached;
  const out=[];
- items.forEach(x=>add(out,{category:x[0],title:x[1],description:x[2],keywords:x[3],href:x[4],markets:x[5]?[x[5]]:null}));
+ items.concat(quickGuideRoutes).forEach(x=>add(out,{category:x[0],title:x[1],description:x[2],keywords:x[3],href:x[4],markets:x[5]||null}));
  templates.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Printable laboratory template · QC, maintenance or tracking record',keywords:'pdf document form template log '+x[2],href:'lab-templates.html?template='+encodeURIComponent(x[0])}));
  checklists.forEach(x=>add(out,{category:'Documents',title:x[1],description:'PDF training and competency record',keywords:'pdf training competency document template form checklist '+x[2],href:'assets/training-checklists/'+x[0]}));
- referenceDocs.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Reference PDF',keywords:'pdf document reference '+x[2],href:'assets/reference-pdfs/'+x[0],markets:/^pathmd|^healthtrackrx/.test(x[0])?['socal','norcal']:null}));
+ referenceDocs.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Reference PDF',keywords:'pdf document reference '+x[2],href:'assets/reference-pdfs/'+x[0],markets:/^healthtrackrx/.test(x[0])?['norcal']:/^pathmd/.test(x[0])?['socal','norcal']:null}));
  (window.CEDARS_TESTS||[]).filter(t=>t&&t.id&&!t.hold).forEach(t=>add(out,{
   category:'Sendout testing',title:'Cedars · '+t.name,
   description:'Cedars test reference'+(t.code?' · '+t.code:'')+(t.specimen?' · '+t.specimen:''),
@@ -247,6 +277,10 @@ const DIRECT_DESTINATIONS=[
  {href:'https://5amlim.github.io/Lab-Calculator/cedars.html',aliases:['cedars','cedars sinai','cedars lab','cedars calculator','cedars lab calculator','cedars specimen calculator']},
  {href:'#api',aliases:['api','api proficiency testing','proficiency testing','proficiency testing api','american proficiency institute']},
  {href:'#envi-ordering',aliases:['envi','envi ordering']},
+ {href:'#athena-ehr',aliases:['athena ehr','athena guides','athena ehr guides']},
+ {href:'#athena-ehr/labels',aliases:['dymo','dymo label','patient dymo label','print specimen labels','specimen labels','athena labels']},
+ {href:'#athena-ehr/documents',aliases:['lab flowsheet','lab requisition','upload document','upload lab req','classify documents']},
+ {href:'#pathfast/cal-qc',aliases:['pathfast cal qc','pathfast calibration qc']},
  {href:'#piccolo/egfr-calculator',aliases:['egfr','egfr calculator']},
  {href:'#calculators',aliases:['lab calculators','lab calculator','lab calculators and collection guides']}
 ];
@@ -448,7 +482,7 @@ function suggestions(query,ctx){
  const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
  const results=[],seen=new Set();
  const add=(item)=>{
-  if(!item||!item.title||results.length>=7)return;
+  if(!item||!item.title||results.length>=8)return;
   const key=[item.action||'open',item.href||item.query||'',item.title].join('|');
   if(seen.has(key))return;
   seen.add(key);results.push(item);
@@ -483,7 +517,7 @@ function suggestions(query,ctx){
   if(item===featured||testFirst&&item.kind==='sendout-test')continue;
   add(resource(item));
  }
- return results.slice(0,6);
+ return results.slice(0,8);
 }
 window.LAB_SITE_SEARCH={render,find,suggestions,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
 })();
