@@ -241,16 +241,33 @@ const check='<path d="m100 38 11 11 19-23" stroke="'+teal+'" stroke-width="6" st
 let art='';
 switch(kind){
 case 'hat':art='<path d="M12 35h120l-19 70H31z" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="M28 54h88l-12 37H40z" fill="#eef5f7"/><path d="M40 78c14-18 21-3 31-10s19-6 33 12v11H40z" fill="#a9896b"/>';break;
-case 'orange':case 'orange-seal':art=vial(54,'#e6a04a','#e9c3a0')+'<path d="M57 79h24" stroke="#ad886a" stroke-dasharray="3 3" stroke-width="2"/>'+(kind==='orange-seal'?check:'');break;
+case 'orange':case 'orange-seal':art=renderParaPak(kind==='orange-seal');break;
 case 'stool-swab':art=cup+'<path d="M45 17L97 82" stroke="#aa8b66" stroke-width="5" stroke-linecap="round"/><ellipse cx="96" cy="83" rx="8" ry="12" fill="#a58060" transform="rotate(-38 96 83)"/>';break;
 case 'white-tube':art=vial(52,'#f5f6f7','#e0eced')+'<path d="M68 12v73" stroke="#aa9274" stroke-width="4"/><ellipse cx="68" cy="83" rx="5" ry="9" fill="#ad8e74"/>';break;
 case 'vials':case 'vials-fill':art=vial(30,'#e8c967','#f2e7bf')+vial(81,'#e6b7c9','#f0d1dd')+(kind==='vials-fill'?'<path d="M32 79h80" stroke="#9d806c" stroke-dasharray="4 4" stroke-width="2"/>':'');break;
 case 'wipe':art='<rect x="28" y="29" width="88" height="75" rx="10" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="m38 81 25-26 24 22 20-17" stroke="#87bcb2" stroke-width="6" fill="none"/>';break;
 case 'urine':art=cup+'<path d="M39 65h66v30H39z" fill="#edcc7f" opacity=".75"/>';break;
-case 'mix':art=cup+'<path d="m50 14 32 69" stroke="#ad9675" stroke-width="4"/><ellipse cx="83" cy="83" rx="6" ry="8" fill="#e8ede8" stroke="'+steel+'"/><path d="M112 54q17 18 0 38" stroke="'+teal+'" stroke-width="3" fill="none"/>';break;
-case 'transfer':art=cup+'<rect x="62" y="28" width="19" height="64" rx="5" fill="#fff" stroke="'+steel+'" stroke-width="2"/><rect x="58" y="19" width="27" height="15" rx="3" fill="#a0a5aa"/>';break;
+case 'mix':art=cup+
+  '<path d="M40 63h64v31H40z" fill="#e9c26e" opacity=".86"/>'+
+  '<path d="M40 63Q55 60 70 63T104 63" fill="none" stroke="#d7ad57" stroke-width="2"/>'+
+  '<path d="M49 12l34 74" stroke="#ad9473" stroke-width="4.5" stroke-linecap="round"/>'+
+  '<ellipse cx="83" cy="85" rx="6" ry="8" fill="#e8eedd" stroke="#9faeac" stroke-width="1.4" transform="rotate(-23 83 85)"/>'+
+  '<path d="M112 59q21 18 0 39" stroke="#168e83" stroke-width="3" fill="none"/>'+
+  '<path d="m105 91 7 9 8-9" stroke="#168e83" stroke-width="3" fill="none"/>'+
+  '<text x="112" y="46" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="#168e83">×10</text>';break;
+case 'transfer':art=renderCedarsTransfer(false);break;
+case 'cedars-gray':art=renderCedarsGray();break;
+case 'cedars-ua':art=renderCedarsUa();break;
+case 'cedars-transfer-gray':art=renderCedarsTransfer(false);break;
+case 'cedars-transfer-ua':art=renderCedarsTransfer(true);break;
+case 'cedars-mix-gray':art=renderCedarsMix(false);break;
+case 'cedars-invert-ua':art=renderCedarsMix(true);break;
 case 'label':art=cup+vial(21,'#e5e9ee','#eef4f5')+'<rect x="58" y="51" width="43" height="30" rx="3" fill="#fff" stroke="'+steel+'"/><path d="M64 59h31M64 67h28M64 75h20" stroke="'+ink+'" stroke-width="2"/>';break;
-case 'bag':art='<path d="M23 24h97v92H23z" fill="#eef8f4" stroke="'+steel+'" stroke-width="3"/><path d="M23 39h97" stroke="'+teal+'" stroke-width="3"/>'+vial(56,'#eceff1','#dfeaec');break;
+case 'bag':art=
+  '<rect x="12" y="16" width="121" height="107" rx="7" fill="#f9fafb" stroke="#a5bbc5" stroke-width="2.5"/>'+
+  '<rect x="22" y="27" width="101" height="85" rx="3" fill="#e7f5f1" stroke="#7eb5ac" stroke-width="2"/>'+
+  '<path d="M22 40h101" stroke="#168e83" stroke-width="3"/>'+
+  vial(56,'#eff1f4','#d8e5e9');break;
 case 'call':art='<rect x="44" y="16" width="57" height="102" rx="12" fill="#fff" stroke="'+steel+'" stroke-width="3"/><rect x="51" y="28" width="43" height="66" rx="5" fill="#edf7f5"/><path d="M61 52l8 11 12-11" stroke="'+teal+'" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="72" cy="106" r="4" fill="'+steel+'"/>';break;
 case 'clinic':art='<path d="M20 58 72 20l52 38v61H20z" fill="#eaf6f3" stroke="'+steel+'" stroke-width="3"/><rect x="57" y="76" width="32" height="43" fill="#fff" stroke="'+steel+'" stroke-width="2"/><path d="M72 32v24m-12-12h24" stroke="'+teal+'" stroke-width="6"/>';break;
 case 'handoff':art='<path d="M13 87q25-11 39 0l21 4 6 13-24 7-43-5z" fill="#cce6df" stroke="'+steel+'" stroke-width="2"/>'+vial(61,'#ecf0f2','#e6eef0')+'<path d="M131 87q-22-13-35-2l-12 10-2 11 27-2 24-9" fill="#cce6df" stroke="'+steel+'" stroke-width="2"/>';break;
