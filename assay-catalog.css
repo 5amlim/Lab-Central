@@ -703,3 +703,6 @@
   border-color:var(--pf-outline);
   color:var(--pf-deep);
 }
+
+/* Abbott HIV CLIA designation: note the FDA fingerstick specimen exception. */
+.hiv-clia-context{display:block;margin:6px 0 0;max-width:780px;color:#6a8493;font-size:11px;line-height:1.55;font-weight:500}
