@@ -207,9 +207,11 @@ function baseIndex(ctx){
   let groups=[];
   try{groups=ctx.groupsFor(sec)||[]}catch(_){}
   groups.forEach(g=>{
-   if(!g.id||g.id==='overview')return;
+   if(!g.id||g.id==='overview'||sec.id==='sendout')return; // Sendouts use market-specific tabs indexed separately.
    const text=(g.blocks||[]).map(b=>b.text||'').join(' ').slice(0,10000);
-   add(out,{category,title:sec.title+' · '+(g.title||g.id),description:'Open '+(g.title||g.id)+' section',keywords:sec.title+' '+sec.subtitle+' '+g.id+' '+text,href:'#'+sec.id+'/'+g.id,archived});
+   const isHtrx=/(?:htrx|healthtrackrx)/i.test(g.id+' '+g.title);
+   const markets=isHtrx&&(sec.id==='supplies'||sec.id==='calculators')?['norcal','fl']:null;
+   add(out,{category,title:sec.title+' · '+(g.title||g.id),description:'Open '+(g.title||g.id)+' section',keywords:sec.title+' '+sec.subtitle+' '+g.id+' '+text,href:'#'+sec.id+'/'+g.id,archived,markets});
   });
   if(category==='In-house testing'&&!archived){
    if(window.LAB_TROUBLESHOOTING?.ids?.includes(sec.id))
