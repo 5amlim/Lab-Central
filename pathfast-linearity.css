@@ -106,3 +106,8 @@
 @media(max-width:850px){.pfl-auditor-heading{align-items:flex-start;flex-direction:column}.pfl-auditor-list{grid-template-columns:1fr}}
 @media(max-width:640px){.pfl-explainer{padding:17px}.pfl-explainer-grid{grid-template-columns:1fr}.pfl-auditor{padding:17px}.pfl-auditor-action{width:100%}}
 @media print{.pfl-auditor-list li,.pfl-explainer-grid>div{break-inside:avoid}.pfl-auditor-action{background:#fff;color:#176c70!important}}
+
+/* Clarify AUDITOR QC output without adding a second warning card. */
+.pfl-retention-note{display:flex;align-items:flex-start;gap:8px;margin:13px 0 0;padding:12px 0 0;border-top:1px solid #e9eff1;color:#728997;font-size:11.5px;line-height:1.65}
+.pfl-retention-note strong{color:#4e7782;font-weight:750}
+.pfl-retention-icon{flex:0 0 auto;color:#6a9da6;font-size:14px;line-height:1.4}
