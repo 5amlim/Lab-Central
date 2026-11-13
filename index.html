@@ -477,7 +477,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="api-submission.js?v=20261107-optional-v2"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
-  <script src="lab-calculators-guide.js?v=20261112-market-safe-deeplinks"></script>
+  <script src="lab-calculators-guide.js?v=20261113-cedars-urine-market-safe-deeplinks"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261112-patient-guides"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
@@ -516,7 +516,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="lab-container-art.js?v=20261104"></script>
 <script src="lab-container-photos.js?v=20261104"></script>
 <script src="lab-container-photo-updates.js?v=20261104"></script>
-<script src="lab-container-reference.js?v=20261112-bd-ua-364992"></script>
+<script src="lab-container-reference.js?v=20261113-cedars-urine-bd-ua-364992"></script>
 <script src="collection-photo-preview.js?v=20261104"></script>
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
@@ -2949,7 +2949,11 @@ function sectionRender(sec,tab){
   }
  }
 }
-function renderContainerGallery(){
+function renderContainerGallery(tab='overview'){
+ if(tab==='cedars-urine'){
+  window.LAB_CONTAINER_REFERENCE?.setLab?.('C');
+  window.LAB_CONTAINER_REFERENCE?.setCategory?.('Urine');
+ }
  el('currentCrumb').textContent='Lab Container Gallery';
  el('mainContent').innerHTML='<div class="lab-container-gallery-page"><button type="button" class="back-link" data-go="sendout">‹ &nbsp;Back to Lab Sendout Logistics</button>'+tubeGallery()+'</div>';
 }
@@ -2966,7 +2970,7 @@ function render(){
  else if(route.id==='lab-monthly-checklist'){el('currentCrumb').textContent='Lab Monthly Checklist';el('mainContent').innerHTML=window.LAB_MONTHLY_CHECKLIST.render();}
  else if(route.id==='training-competency'){el('currentCrumb').textContent='Training & Competency';el('mainContent').innerHTML=window.LAB_TRAINING_COMPETENCY.render();}
  else if(sec)sectionRender(sec,route.tab);
- else if(route.id==='lab-container-gallery')renderContainerGallery();
+ else if(route.id==='lab-container-gallery')renderContainerGallery(route.tab);
  else if(route.id==='favorites')renderHome('favorites');
  else if(route.id==='calculators'){window.LAB_CALCULATORS_GUIDE?.selectLab?.(route.tab);renderCalculators();}
   else if(route.id==='envi-ordering'){el('currentCrumb').textContent='Envi Ordering';el('mainContent').innerHTML=window.LAB_ENVI_ORDERING.render();}
