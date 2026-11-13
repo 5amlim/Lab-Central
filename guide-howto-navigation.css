@@ -112,6 +112,21 @@
     visibility: visible !important;
     pointer-events: auto;
   }
+  /* Remove the old nested scroll-cue pill inside the actual button. */
+  .lc-pathfast-howto-frame .lc-pathfast-howto-footer > :is(.lc-scroll-cue-left, .lc-scroll-cue-right) > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: inherit;
+    font: inherit;
+    line-height: 1.2;
+  }
   .lc-pathfast-howto-frame .lc-pathfast-howto-footer > :is(.lc-scroll-cue-left, .lc-scroll-cue-right):hover {
     border-color: #74b4bd;
     background: #e7f5f6;
