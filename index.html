@@ -304,7 +304,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="lab-search.css?v=20261110-categorized-suggestions" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 <link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-dymo-print" media="all">
-<link rel="stylesheet" href="guide-howto-navigation.css?v=20261112-static-nav" media="all">
+<link rel="stylesheet" href="guide-howto-navigation.css?v=20261112-athena-compact" media="all">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -2301,7 +2301,8 @@ function marketAllowsVendor(id){
  const market=window.LAB_MARKET?.get()||null;
  if(!market)return true;
  if(id==='cedars')return market==='socal';
- if(market==='ny'&&['healthtrackrx','pathmd'].includes(id))return false;
+ if(id==='healthtrackrx'&&(market==='socal'||market==='ny'))return false;
+ if(market==='ny'&&id==='pathmd')return false;
  return true;
 }
 function athenaOrderName(x){
@@ -2417,7 +2418,7 @@ function renderAthenaEhrGuides(tab){
  const active=tab==="documents"?"documents":"labels";
  el("currentCrumb").textContent="Athena EHR Guides";
  let h=toolHeader("ATHENA / STAFF HOW-TO","Athena EHR Guides","Patient specimen labels, document uploads and classification. Separate from Athena Order Sets.");
- h+="<div class='ae-guide'><div class='ae-howto-nav' aria-label='Athena how-to navigation'><div class='ae-howto-head'><span class='ae-howto-kicker'>ATHENA GUIDES</span><h2>How to</h2><p>Choose a guide to view the steps below.</p></div><nav class='ae-tabs' aria-label='Athena guide sections'>"+
+ h+="<div class='ae-guide'><div class='ae-howto-nav' aria-label='Athena how-to navigation'><div class='ae-howto-head'><span class='ae-howto-kicker'>GUIDE SECTIONS</span><p>Select a workflow.</p></div><nav class='ae-tabs' aria-label='Athena guide sections'>"+
  "<button type='button' class='ae-tab "+(active==="labels"?"active":"")+"' data-go='athena-ehr' data-target-tab='labels' "+(active==="labels"?"aria-current='page'":"")+">Print specimen labels</button>"+
  "<button type='button' class='ae-tab "+(active==="documents"?"active":"")+"' data-go='athena-ehr' data-target-tab='documents' "+(active==="documents"?"aria-current='page'":"")+">Upload &amp; classify documents</button></nav></div>";
  if(active==="labels"){
