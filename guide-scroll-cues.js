@@ -102,7 +102,7 @@ function setup(node){
  if(pathfastNavigation){
   const heading=document.createElement("div");
   heading.className="lc-pathfast-howto-heading";
-  heading.innerHTML='<div class="lc-howto-intro"><span class="lc-howto-kicker">PATHFAST GUIDE</span><h2>How to</h2><p>Choose a workflow below. Scroll sideways or use the arrows to see every section.</p></div><span class="lc-howto-guide-tag" aria-hidden="true">Guide navigation</span>';
+  heading.innerHTML='<div class="lc-howto-intro"><span class="lc-howto-kicker">PATHFAST GUIDE</span><p>Choose a workflow below. Scroll sideways or use the arrows to see every section.</p></div><span class="lc-howto-guide-tag" aria-hidden="true">Guide navigation</span>';
   frame.insertBefore(heading,node);
   pathfastNavFooter=document.createElement("div");
   pathfastNavFooter.className="lc-pathfast-howto-footer";
