@@ -257,6 +257,7 @@ const EQUIPMENT_ALIASES={
  clinitek:['clinitek','clinitek status','clinitek status plus'],
  spotfire:['spotfire','biofire spotfire'],torch:['torch','biofire torch'],
  sofia:['sofia','sofia 2'],febridx:['febridx'],
+ mono:['mono','mononucleosis','monospot','mckesson mono','mckesson consult mono','rapid mono'],
  hemocue:['hemocue'],coagsense:['coag sense','coagsense']
 };
 function directDestination(q,records,ctx){
