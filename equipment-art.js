@@ -721,17 +721,19 @@ function febridxCollectionGuide(){
   '<linearGradient id="fblancet1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfc"/><stop offset="1" stop-color="#bed0d8"/></linearGradient>',
   '</defs>',
   '<ellipse cx="165" cy="238" rx="111" ry="7" fill="#e5edf0"/>',
-  // Close-up finger profile and natural pad, with an off-center puncture site.
+  // Palm-facing fingertip pad. The puncture mark must stay in the fleshy pad, away from the nail fold.
   '<path d="M102 237L105 161Q106 126 117 103Q127 86 151 82Q182 79 201 106Q207 115 204 138L201 238Z" fill="url(#fbskin1)" stroke="#b98777" stroke-width="2.8"/>',
   '<path d="M114 175Q108 130 126 109Q144 89 170 95" stroke="#fff2e6" stroke-width="7" opacity=".5" fill="none" stroke-linecap="round"/>',
-  '<path d="M170 95Q189 95 198 112L196 137" stroke="#ba8578" stroke-width="1.7" fill="none" opacity=".65"/>',
-  '<path d="M133 96Q143 88 163 89Q182 90 186 107L185 127Q183 140 167 144L139 142Q126 136 127 122Z" fill="#ffe3d7" stroke="#ca9d8d" stroke-width="1.8"/>',
-  '<path d="M135 107Q145 98 166 102" stroke="#fff5ef" stroke-width="2.3" stroke-linecap="round" fill="none"/>',
+  // Curved fingerprint ridges make the palmar surface unmistakable: no fingernail is depicted.
+  '<path d="M127 117Q136 102 155 102Q179 102 188 119" stroke="#c99083" stroke-width="1.45" opacity=".5" fill="none" stroke-linecap="round"/>',
+  '<path d="M122 132Q137 113 158 115Q177 116 185 129" stroke="#c99083" stroke-width="1.35" opacity=".44" fill="none" stroke-linecap="round"/>',
+  '<path d="M122 148Q138 131 158 132Q173 132 180 145" stroke="#c99083" stroke-width="1.25" opacity=".4" fill="none" stroke-linecap="round"/>',
+  '<path d="M127 162Q141 149 160 150Q169 152 172 157" stroke="#c99083" stroke-width="1.2" opacity=".36" fill="none" stroke-linecap="round"/>',
   '<path d="M113 200Q134 213 161 205M115 223Q155 230 189 220" stroke="#d49f91" opacity=".28" stroke-width="1.5" fill="none"/>',
-  // Small puncture on the side, not through the nail.
-  '<circle cx="203" cy="144" r="3" fill="#b83b50"/><circle cx="201.8" cy="143" r="1" fill="#fce3e0"/>',
-  // Integrated green lancet head and housing at the lateral finger pad.
-  '<g transform="rotate(-24 234 132)">',
+  // Puncture on the flesh of the fingertip pad, slightly right of center but not on the extreme edge.
+  '<circle cx="180" cy="146" r="4" fill="#b83b50" stroke="#fff4e9" stroke-width="1.5"/><circle cx="179" cy="145" r="1" fill="#fce3e0"/>',
+  // Move the integrated lancet closer to the safe off-center pad site.
+  '<g transform="translate(-24 0) rotate(-24 234 132)">',
   '<rect x="223" y="87" width="28" height="64" rx="8" fill="url(#fblancet1)" stroke="#819ca8" stroke-width="2.2"/>',
   '<rect x="227" y="88" width="20" height="22" rx="5" fill="#268b75" stroke="#317767" stroke-width="1"/>',
   '<path d="M226 114H249" stroke="#edf6f8" stroke-width="2"/>',
@@ -745,10 +747,11 @@ function febridxCollectionGuide(){
   '</g>',
   '<path d="M214 176Q241 190 257 196" stroke="#9caeb7" stroke-width="1.7" stroke-dasharray="5 5" fill="none"/>',
   '<path d="M250 190L258 197L248 199" fill="none" stroke="#9caeb7" stroke-width="1.7"/>',
-  '<text x="34" y="48" font-size="11" font-family="Arial,Helvetica,sans-serif" font-weight="800" fill="#57788a" letter-spacing=".6">SIDE OF FINGERTIP</text>',
-  '<path d="M147 53L194 78L203 141" fill="none" stroke="#5d8d9f" stroke-width="1.6"/>',
-  '<circle cx="203" cy="141" r="4.6" fill="none" stroke="#5d8d9f" stroke-width="1.5"/>'
- ].join(""),"FebriDx fingerstick: lateral fingertip puncture with integrated lancet, followed by wiping the first blood drop with clean gauze","0 0 355 255");
+  '<text x="29" y="39" font-size="11" font-family="Arial,Helvetica,sans-serif" font-weight="800" fill="#57788a" letter-spacing=".35">FLESHY FINGER PAD</text>',
+  '<text x="29" y="54" font-size="9" font-family="Arial,Helvetica,sans-serif" font-weight="750" fill="#648798" letter-spacing=".25">PALM SIDE · OFF-CENTER</text>',
+  '<path d="M162 57L174 91L181 140" fill="none" stroke="#5d8d9f" stroke-width="1.6"/>',
+  '<circle cx="180" cy="146" r="6.5" fill="none" stroke="#5d8d9f" stroke-width="1.35"/>'
+ ].join(""),"FebriDx fingerstick: off-center puncture on the fleshy palmar fingertip pad, away from the nail and finger edge, followed by wiping the first drop","0 0 355 255");
  const collectArt=illustratedSvg([
   '<defs>',
   '<linearGradient id="fbskin2" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#fff0e2"/><stop offset=".45" stop-color="#f1c5b4"/><stop offset="1" stop-color="#d6a192"/></linearGradient>',
@@ -783,7 +786,7 @@ function febridxCollectionGuide(){
  return '<section class="device-collection-guide febridx-collection-guide" aria-label="FebriDx fingerstick specimen collection reference">'+
   '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN &amp; COLLECTION</span><h3>What to collect</h3><p>Fingerstick capillary whole blood, collected with the FebriDx device’s integrated blood collection tube. No separate blood tube.</p></div></div>'+
   '<div class="device-collection-frame febridx-collection-frame"><div class="device-collection-main"><div class="febridx-collection-grid">'+
-   '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Clean the fingertip, twist and remove the protective lancet tab, then puncture using the device’s integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
+   '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>01</span><strong>Lance and wipe the first drop</strong></div><div class="febridx-collection-figure">'+fingerArt+'</div><p>Use the fleshy, palm-facing pad of the middle or ring fingertip, slightly off-center and away from the nail fold or extreme edge. Clean and dry the site, remove the protective lancet tab and puncture with the integrated lancet. Wipe away the first drop with clean gauze.</p></article>'+
    '<article class="febridx-collection-panel"><div class="febridx-collection-panel-title"><span>02</span><strong>Fill the collection tube completely</strong></div><div class="febridx-collection-figure">'+collectArt+'</div><p>Massage from the base of the finger to form a new, large hanging drop. Touch the integrated tube to <strong>the drop only</strong>, never the skin, and fill it completely.</p></article>'+
   '</div>'+
   '<p class="febridx-collection-reminder"><strong>Critical:</strong> Incomplete filling can cause erroneous results. Follow the current FebriDx IFU for the exact collection and transfer sequence. <a href="https://arcview-lumosdiagnostics.s3.ap-southeast-2.amazonaws.com/lumosdiagnostics.com/assets/documents/2026/04/PM-127.5-IFU-FebriDx-US.pdf" target="_blank" rel="noopener noreferrer">View manufacturer instructions ↗</a></p></div>'+
