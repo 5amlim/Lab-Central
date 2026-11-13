@@ -100,6 +100,12 @@ function selectedLab(){
  if(!options.includes(rememberedLab[activeMarket]))rememberedLab[activeMarket]=options[0];
  return rememberedLab[activeMarket];
 }
+// Only accept a deep-linked lab when it is offered in the active market.
+function selectLab(id){
+ if(!availableLabs().includes(id))return false;
+ rememberedLab[activeMarket]=id;
+ return true;
+}
 function isCalculator(){return ["quest","cedars","labcorp"].includes(selectedLab());}
 function tabs(){
  const active=selectedLab(),labs=availableLabs();
@@ -457,5 +463,5 @@ document.addEventListener('keydown',event=>{
 document.addEventListener('labcentral:marketchange',event=>{
  if(markets.some(m=>m.id===event.detail?.market))activeMarket=event.detail.market;
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,allows,market,count};
+window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,selectLab,allows,market,count};
 })();
