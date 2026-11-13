@@ -38,11 +38,14 @@
       '<path d="M135 90h17" stroke="'+teal+'" stroke-width="4"/>';
       note='Use two identifiers; check the exact cassette, lot and expiration.';
     }else if(kind===1){
-      name='Select the correct volume and pipette';
-      body=t(23,35,'WHOLE BLOOD',12,red)+pipette(24,48,'red')+t(34,106,'25 µL · RED LINE',13,red)+
-           t(232,35,'SERUM / PLASMA',12,ink)+pipette(229,48,'black')+t(238,106,'10 µL · BLACK LINE',13,ink)+
-           '<rect x="23" y="128" width="371" height="30" rx="8" fill="#edf5f5"/>'+t(36,149,'Complexity depends on specimen type',12,teal);
-      note='Whole blood is waived; serum/plasma are moderate complexity.';
+      name='CLIA-waived whole-blood method';
+      body=t(24,34,'WHOLE BLOOD · CLIA WAIVED',14,teal)+
+           pipette(25,55,'red')+
+           '<rect x="198" y="57" width="196" height="58" rx="11" fill="#e8f5f1" stroke="#b5dfd4"/>'+
+           t(215,79,'25 µL',18,teal,850)+t(215,100,'RED-LINE PIPETTE',11,teal)+
+           '<rect x="23" y="129" width="371" height="29" rx="8" fill="#f2f5f9"/>'+
+           t(34,149,'Black-line 10 µL pipette: external liquid QC only',11,muted);
+      note='The clinic uses whole blood with the red-line 25 µL pipette. Serum/plasma is a separate moderate-complexity method.';
     }else if(kind===2){
       name='Prepare cassette and specimen';
       body='<rect x="27" y="38" width="145" height="96" rx="12" fill="#e6ecf4" stroke="#90a5b9" stroke-width="2"/>'+
@@ -82,7 +85,7 @@
     return '<aside class="mono-art-card"><div class="mono-art-heading"><span class="mono-art-dot"></span><strong>'+name+'</strong></div>'+
       '<div class="mono-art-picture">'+svg(body,name)+'</div><p>'+note+'</p></aside>';
   }
-  const patterns=[/verify the order/i,/choose the correct specimen/i,/prepare the test device/i,/transfer the specimen/i,/add developer/i,/read at eight minutes/i];
+  const patterns=[/verify the order/i,/CLIA-waived whole-blood method/i,/prepare the test device/i,/transfer the specimen/i,/add developer/i,/read at eight minutes/i];
   window.LAB_MONO_ART={render:function(title,group){
     if(group!=='patient-testing')return '';
     const i=patterns.findIndex(p=>p.test(String(title)));
