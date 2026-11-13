@@ -2321,7 +2321,7 @@ function orderSetsPanel(sec){
 
 function athenaEhrTop(){
  return "<div class='ae-ehr-topbar'><strong>athenaOne</strong><span class='ae-ehr-topnav'>Calendar&nbsp;&nbsp; Patients&nbsp;&nbsp; Claims&nbsp;&nbsp; Financials&nbsp;&nbsp; Reports&nbsp;&nbsp; Quality&nbsp;&nbsp; Apps&nbsp;&nbsp; Support</span><small>TRAINING ENVIRONMENT</small></div>"+
- "<div class='ae-ehr-patientbar'><div class='ae-ehr-avatar'>TT</div><div class='ae-ehr-patienttext'><strong>TRAINING PATIENT</strong><span>Demo chart · ID: DEMO-001</span></div><div class='ae-ehr-patientmeta'><span>Contact <b>On file</b></span><span>Care Team <b>DEMO CLINIC</b></span><span>Code/AD <b>On file</b></span></div></div>";
+ "<div class='ae-ehr-patientbar'><div class='ae-ehr-avatar'>TT</div><div class='ae-ehr-patienttext'><strong>TEST TEST</strong><span>Demo chart · ID: DEMO-001</span></div><div class='ae-ehr-patientmeta'><span>Contact <b>On file</b></span><span>Care Team <b>DEMO CLINIC</b></span><span>Code/AD <b>On file</b></span></div></div>";
 }
 function athenaEhrChart(openMenu){
  const rail=["Find","Allergies","Problems","Meds","Vaccines","Vitals","Results","Visits","History","Care"].map((x,i)=>"<span class='ae-ehr-rail-item'><i>"+["⌕","✋","✚","◆","◈","♡","⚗","▣","▤","◎"][i]+"</i>"+x+"</span>").join("");
@@ -2331,7 +2331,7 @@ function athenaEhrChart(openMenu){
  "<div class='ae-ehr-chartcols'><div class='ae-ehr-data-card'><div class='ae-ehr-medgrid'><div><h5>Allergies</h5><p>• No known allergies</p><h5>Problems</h5><p>No known problems</p></div><div><h5>Medications</h5><p>• Medication list</p></div></div></div>"+
  "<div class='ae-ehr-rightstack'><div class='ae-ehr-data-card'><h4>Care Management</h4><h5>Care Programs</h5><p>None</p><h5>Recent Event Summary</h5><p>Sample chart for training</p></div><div class='ae-ehr-data-card'><h4>Last Visit</h4><p>Medical Evaluation · Demo</p><h5>Recent activity</h5><p>Practice encounter</p></div><div class='ae-ehr-data-card'><h4>Outstanding Orders</h4><p>Sample orders</p></div></div></div></div>"+
  (openMenu?"<div class='ae-ehr-menu-open'><div class='ae-ehr-menu-item ae-ehr-target'>Quickview <em class='ae-ehr-tag'>SELECT</em></div><div class='ae-ehr-menu-item'>Create patient case</div><div class='ae-ehr-menu-item'>Create order group</div><div class='ae-ehr-menu-item'>Print chart sections</div><div class='ae-ehr-menu-item'>Print forms</div><div class='ae-ehr-menu-item'>Add document</div><div class='ae-ehr-menu-item'>Chart export</div></div>":"")+
- "</div><div class='ae-ehr-statusbar'>TRAINING PATIENT &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
+ "</div><div class='ae-ehr-statusbar'>TEST TEST &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
 }
 function athenaEhrQuickview(mode){
  const opened=mode==="registration";
@@ -2344,7 +2344,7 @@ function athenaEhrQuickview(mode){
  (opened?labels:"")+
  (modal?"<div class='ae-ehr-dimmer'></div><div class='ae-ehr-modal'><header>Single Label <span>×</span></header>"+
  options+"<div class='ae-ehr-modal-footer ae-ehr-modal-footer-print'><span>Choose the standard specimen label.</span><span class='ae-ehr-print-btn "+(mode==="printer"?"ae-ehr-target":"")+"'>Print</span></div></div>":"")+
- "<div class='ae-ehr-statusbar'>TRAINING PATIENT &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
+ "<div class='ae-ehr-statusbar'>TEST TEST &nbsp;·&nbsp; PRACTICE CHART &nbsp;·&nbsp; NO PATIENT DATA</div></div>";
 }
 function athenaEhrMock(kind){
  if(kind==="chart")return athenaEhrChart(false);
