@@ -256,7 +256,7 @@ function finderResults(){
 function molecularFinder(){
  if(!availableLabs().includes("htrx")&&!availableLabs().includes("pathmd"))return "";
  return '<section class="calc2-finder" id="calc2-finder" aria-label="Search molecular sendout pathogens">'+
-  '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search '+availableLabs().filter(x=>x==="htrx"||x==="pathmd").map(x=>E(names[x])).join(" and ")+' panel targets</span></div><span class="calc2-finder-labs">'+availableLabs().filter(x=>x==="htrx"||x==="pathmd").length+' labs</span></div>'+
+  '<div class="calc2-finder-head"><div><strong>Find a molecular pathogen</strong><span>Search '+availableLabs().filter(x=>x==="htrx"||x==="pathmd").map(x=>E(names[x])).join(" and ")+' panel targets</span></div><span class="calc2-finder-labs">'+availableLabs().filter(x=>x==="htrx"||x==="pathmd").length+' lab'+(availableLabs().filter(x=>x==="htrx"||x==="pathmd").length===1?"":"s")+'</span></div>'+
   '<div class="calc2-finder-input"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>'+
   '<input id="calc2-molecular-search" type="search" data-calc2-molecular-search autocomplete="off" placeholder="Search pathogen, panel or resistance marker..." value="'+E(molecularQuery)+'"></div>'+
   '<div class="calc2-finder-results" id="calc2-finder-results">'+finderResults()+'</div></section>';
