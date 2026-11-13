@@ -60,7 +60,7 @@
           '<section class="pfl-panel" aria-labelledby="pfl-document-title">',
             '<div class="pfl-panel-heading"><span class="pfl-kicker">03 / DOCUMENTATION</span><h3 id="pfl-document-title">Documentation to retain</h3></div>',
             '<ul class="pfl-checks"><li>Site, instrument serial number and verification date</li><li>Assay and reagent lots; material brand, catalog and lot</li><li>Level A–E expected and observed results, units, and accepted range</li><li>Linearity graph or worksheet and analyzer printouts</li><li>Pass/fail conclusion, corrective action and reviewer sign-off</li></ul>',
-            '<p class="pfl-retention-note"><span class="pfl-retention-icon" aria-hidden="true">ⓘ</span><span><strong>AUDITOR QC provides the printable linearity report and graphs.</strong> A separate worksheet is generally unnecessary if that report contains all required study details. Keep the PATHFAST printouts with it, and document the lab’s acceptance decision, any corrective action and reviewer sign-off.</span></p>',
+            
           '</section>',
           '<section class="pfl-panel pfl-panel-triggers" aria-labelledby="pfl-trigger-title">',
             '<div class="pfl-panel-heading"><span class="pfl-kicker">04 / FREQUENCY</span><h3 id="pfl-trigger-title">When to repeat verification</h3></div>',
@@ -78,6 +78,7 @@
             '<li><span>5</span><div><strong>Generate and review the report</strong><p>Submit the data and review the linearity graph, slope, intercept, R-squared and peer comparisons if available. Repeat for each analyte. The analysis alone does not determine pass or fail.</p></div></li>',
             '<li><span>6</span><div><strong>Save the audit record</strong><p>Save or print the generated report for each analyte. File it with original analyzer printouts, kit and reagent lots, observed results, acceptance decision, corrective action if needed and reviewer sign-off in the lab\'s linearity/QC records.</p></div></li>',
           '</ol>',
+          '<p class="pfl-retention-note"><span class="pfl-retention-icon" aria-hidden="true">ⓘ</span><span><strong>After results are submitted, AUDITOR QC generates a printable linearity report and graphs.</strong> A separate worksheet is generally unnecessary if the report includes all required study details. Retain it with PATHFAST analyzer printouts, and document the lab’s acceptance decision, any corrective action and reviewer sign-off.</span></p>',
           '<p class="pfl-auditor-help"><strong>Technical support:</strong> AUDIT MicroControls at <a href="tel:18662528348">866-252-8348</a> can help with data reduction and unusual or diluted results.</p>',
         '</section>',
         '<footer class="pfl-resources"><div><span class="pfl-kicker">SOURCE &amp; POLICY</span><h3>Calibration verification requirements</h3><p>42 CFR §493.1255. Follow the current PATHFAST assay IFU, linearity material insert and lab SOP for acceptance limits and corrective actions.</p></div><a href="https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-G/part-493/subpart-K/section-493.1255" target="_blank" rel="noopener noreferrer">Review CLIA requirements <span aria-hidden="true">↗</span></a></footer>',
