@@ -78,3 +78,31 @@
 .pfl-product-photo figcaption span:first-child{font-weight:800;color:#4e7082}
 .pfl-product-photo figcaption span:last-child{font-weight:650}
 @media(max-width:640px){.pfl-product-photo{margin-bottom:15px}.pfl-product-photo figcaption{padding:8px 10px}}
+
+
+/* Calibration verification distinction and AUDITOR QC reporting instructions. */
+.pfl-explainer{border:1px solid #d6e7e6;border-radius:14px;background:linear-gradient(125deg,#f2faf8 0%,#fff 95%);padding:19px 22px;margin:-7px 0 28px}
+.pfl-explainer-heading h3{font-size:17px;color:#27576a;letter-spacing:-.025em;margin:5px 0 13px}
+.pfl-explainer-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pfl-explainer-grid>div{padding:13px 15px;border:1px solid #dfeceb;background:#fff;border-radius:10px}
+.pfl-explainer-grid strong{font-size:12px;color:#286e73}
+.pfl-explainer-grid p,.pfl-explainer-footnote{font-size:11.5px;line-height:1.7;color:#617e8c;margin:5px 0 0}
+.pfl-explainer-footnote{margin:12px 0 0;font-weight:650}
+.pfl-auditor{border:1px solid #cce0e1;border-radius:16px;background:#fff;padding:22px 23px;margin:0 0 20px}
+.pfl-auditor-heading{display:flex;align-items:center;justify-content:space-between;gap:14px 20px;margin:0 0 15px}
+.pfl-auditor-heading h3{font-size:20px;letter-spacing:-.03em;color:#27536a;margin:6px 0}
+.pfl-auditor-heading p{font-size:12px;line-height:1.65;color:#62808d;max-width:690px;margin:0}
+.pfl-auditor-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;border:1px solid #2a918d;background:#167f7d;color:#fff!important;padding:11px 15px;border-radius:9px;text-decoration:none;font-size:11px;font-weight:850;flex:none}
+.pfl-auditor-action:hover{background:#106c6b}
+.pfl-auditor-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;list-style:none;margin:0;padding:0}
+.pfl-auditor-list li{display:flex;align-items:flex-start;gap:12px;border:1px solid #e2ecee;border-radius:11px;padding:14px;background:#f9fcfc;min-width:0}
+.pfl-auditor-list li>span{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;background:#e0f1ee;color:#196f6c;border-radius:7px;font-size:11px;font-weight:900}
+.pfl-auditor-list li>div{min-width:0}
+.pfl-auditor-list strong{font-size:12px;color:#2d5369}
+.pfl-auditor-list p{font-size:11.5px;color:#607d8b;line-height:1.68;margin:5px 0 0;overflow-wrap:break-word}
+.pfl-auditor-list a,.pfl-auditor-help a{color:#167d7d;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+.pfl-auditor-help{margin:14px 0 0;border-left:3px solid #89b8b8;background:#f0f7f7;border-radius:0 8px 8px 0;color:#5e7a87;padding:11px 14px;font-size:11.5px;line-height:1.55}
+.pfl-auditor-help strong{color:#31596e}
+@media(max-width:850px){.pfl-auditor-heading{align-items:flex-start;flex-direction:column}.pfl-auditor-list{grid-template-columns:1fr}}
+@media(max-width:640px){.pfl-explainer{padding:17px}.pfl-explainer-grid{grid-template-columns:1fr}.pfl-auditor{padding:17px}.pfl-auditor-action{width:100%}}
+@media print{.pfl-auditor-list li,.pfl-explainer-grid>div{break-inside:avoid}.pfl-auditor-action{background:#fff;color:#176c70!important}}
