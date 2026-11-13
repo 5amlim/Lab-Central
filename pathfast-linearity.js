@@ -60,6 +60,7 @@
           '<section class="pfl-panel" aria-labelledby="pfl-document-title">',
             '<div class="pfl-panel-heading"><span class="pfl-kicker">03 / DOCUMENTATION</span><h3 id="pfl-document-title">Documentation to retain</h3></div>',
             '<ul class="pfl-checks"><li>Site, instrument serial number and verification date</li><li>Assay and reagent lots; material brand, catalog and lot</li><li>Level A–E expected and observed results, units, and accepted range</li><li>Linearity graph or worksheet and analyzer printouts</li><li>Pass/fail conclusion, corrective action and reviewer sign-off</li></ul>',
+            '<p class="pfl-retention-note"><span class="pfl-retention-icon" aria-hidden="true">ⓘ</span><span><strong>AUDITOR QC provides the printable linearity report and graphs.</strong> A separate worksheet is generally unnecessary if that report contains all required study details. Keep the PATHFAST printouts with it, and document the lab’s acceptance decision, any corrective action and reviewer sign-off.</span></p>',
           '</section>',
           '<section class="pfl-panel pfl-panel-triggers" aria-labelledby="pfl-trigger-title">',
             '<div class="pfl-panel-heading"><span class="pfl-kicker">04 / FREQUENCY</span><h3 id="pfl-trigger-title">When to repeat verification</h3></div>',
