@@ -530,3 +530,13 @@
 @media print{
  .sendout-reference-layout > .lc-scroll-cue-frame > .sendout-reference-tabs{display:none!important}
 }
+
+
+/* Illustrated patient printouts */
+.ops-print-panel{border:1px solid #cce5e2;background:linear-gradient(120deg,#f4fbfa,#f9fcff);border-radius:14px;padding:18px 20px;margin:18px 0 22px}
+.ops-print-panel>strong{font-size:15px;color:#225c5a;display:block}
+.ops-print-panel>p{font-size:12px;color:#5b7583;line-height:1.6;margin:5px 0 13px}
+.ops-print-links{display:flex;gap:8px;flex-wrap:wrap}
+.ops-print-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid #b9d9d4;border-radius:9px;background:#fff;color:#1d746d;text-decoration:none;padding:10px 12px;font-size:12px;line-height:1.25;font-weight:750;transition:background .15s,border-color .15s}
+.ops-print-link:hover,.ops-print-link:focus-visible{background:#e4f5f2;border-color:#70ada4;outline-offset:3px}
+@media(max-width:600px){.ops-print-panel{padding:13px}.ops-print-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ops-print-link{text-align:center;font-size:11px;padding:9px 7px}}
