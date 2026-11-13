@@ -77,7 +77,7 @@ const quickGuideRoutes=[
  ['Workflows','Sendout lab market and courier guide','Choose receiving labs and find local shipping instructions','sendout quest labcorp cedars courier pickup packaging','#sendout/clinics'],
  ['Workflows','Sendout specimen collection and packaging','Sendout tubes, requisitions, specimen conditions','sendout collection specimen packaging htrx pathmd quest','#sendout/collection'],
  ['Tools','PathMD molecular test menu','PathMD PCR panels, collection and ordering','pathmd molecular pcr test menu swab white top','#calculators/pathmd'],
- ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators/htrx',['norcal','fl']]
+ ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators/htrx',['norcal','fl'],true]
 ];
 const templates=[
  ['temperature','Daily Temperature Log','fridge freezer ambient temperature humidity daily'],
@@ -182,7 +182,7 @@ function add(list,entry){
 function baseIndex(ctx){
  if(cached)return cached;
  const out=[];
- items.concat(quickGuideRoutes).forEach(x=>add(out,{category:x[0],title:x[1],description:x[2],keywords:x[3],href:x[4],markets:x[5]||null}));
+ items.concat(quickGuideRoutes).forEach(x=>add(out,{category:x[0],title:x[1],description:x[2],keywords:x[3],href:x[4],markets:x[5]||null,requireMarket:Boolean(x[6])}));
  templates.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Printable laboratory template · QC, maintenance or tracking record',keywords:'pdf document form template log '+x[2],href:'lab-templates.html?template='+encodeURIComponent(x[0])}));
  checklists.forEach(x=>add(out,{category:'Documents',title:x[1],description:'PDF training and competency record',keywords:'pdf training competency document template form checklist '+x[2],href:'assets/training-checklists/'+x[0]}));
  referenceDocs.forEach(x=>add(out,{category:'Documents',title:x[1],description:'Reference PDF',keywords:'pdf document reference '+x[2],href:'assets/reference-pdfs/'+x[0],markets:/^healthtrackrx/.test(x[0])?['norcal']:/^pathmd/.test(x[0])?['socal','norcal']:null}));
@@ -258,7 +258,7 @@ function find(q,ctx){
  const smart=window.LAB_SMART_SEARCH,smartQuery=smart?smart.queryWords(q):words;
  if(!smartQuery.length)return [];
  const market=ctx.market||null;
- const scoped=baseIndex(ctx).filter(x=>(!x.markets||!market||x.markets.includes(market))&&
+ const scoped=baseIndex(ctx).filter(x=>(!x.requireMarket||Boolean(market))&&(!x.markets||!market||x.markets.includes(market))&&
   !(x.kind==='sendout-test'&&term===x.lab));
  const exact=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,false),i}))
   .filter(x=>x.score>=0)
