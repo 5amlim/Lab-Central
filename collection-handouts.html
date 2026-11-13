@@ -171,6 +171,68 @@ const guides=[
 ["Give it directly to staff","Hand the bag to a clinic team member. Tell them when you collected the sample and how it was stored. Do not leave it unattended.","handoff"]
 ]}
 ];
+// Illustrated specimens are schematic references based on the stocked tube design.
+// Para-Pak C&S: Meridian orange screw-top vial with 15 mL of pink-red Cary-Blair medium.
+// Cedars gray C&S: BD 364951; red/yellow swirl UA: BD 364992.
+function handoutTxt(x,y,label,size=8,color='#465f75',weight=750){
+ return '<text x="'+x+'" y="'+y+'" font-family="Arial,Helvetica,sans-serif" text-anchor="middle" font-size="'+size+'" font-weight="'+weight+'" fill="'+color+'">'+label+'</text>';
+}
+function renderParaPak(sealed){
+ let grooves='';
+ for(let x=45;x<=104;x+=5)grooves+='<path d="M'+x+' 21v16" stroke="#d86d28" stroke-width="1.6"/>';
+ return '<path d="M47 37h54v81q-27 12-54 0z" fill="#edf3f5" stroke="#88a6b5" stroke-width="2.2"/>'+
+  '<path d="M50 92h48v26q-24 6-48 0z" fill="#be7889" opacity=".62"/>'+
+  '<rect x="49" y="44" width="50" height="52" rx="2" fill="#fff8ef" stroke="#d9e0df"/>'+
+  '<rect x="49" y="44" width="50" height="11" fill="#f7b581"/>'+
+  handoutTxt(74,52,'Para-Pak C&S',7.7,'#55372b',850)+
+  handoutTxt(74,63,'Cary-Blair',7,'#715e55')+
+  '<path d="M51 75h46" stroke="#bd3939" stroke-width="2" stroke-dasharray="3 2"/>'+
+  handoutTxt(74,72,'FILL TO LINE',6.4,'#b33c40')+
+  handoutTxt(74,88,'TRANSPORT',6.4,'#866b5f')+
+  '<rect x="40" y="17" width="69" height="23" rx="6" fill="#f68a37" stroke="#d46b23" stroke-width="2"/>'+
+  grooves+'<path d="M42 20h64" stroke="#ffc08c" stroke-width="1.7"/>'+
+  (sealed?'<path d="m110 57 8 8 12-15" stroke="#168c81" stroke-width="5" fill="none" stroke-linejoin="round"/>':'');
+}
+function renderCedarsGray(){
+ return '<rect x="53" y="35" width="40" height="79" rx="16" fill="#fff" stroke="#8daab9" stroke-width="2.4"/>'+
+  '<path d="M56 90h34v12q0 9-17 9t-17-9z" fill="#e9eef2"/>'+
+  '<rect x="49" y="21" width="48" height="18" rx="5" fill="#979da3" stroke="#747c85" stroke-width="1.5"/>'+
+  '<path d="M53 24h39" stroke="#d8dee2" stroke-width="2"/>'+
+  '<rect x="54" y="50" width="38" height="43" rx="2" fill="#fffcef" stroke="#e0e4e6"/>'+
+  handoutTxt(73,62,'BD C&S',7.6,'#46668b')+
+  handoutTxt(73,72,'364951',6.8,'#4e6b82')+
+  '<path d="M58 82h30" stroke="#5684a3" stroke-width="1.6"/>'+
+  handoutTxt(73,90,'4 mL',7,'#416a8a');
+}
+function renderCedarsUa(){
+ return '<path d="M53 35h40v66l-20 24-20-24z" fill="#fdfefe" stroke="#8ba8b7" stroke-width="2.3"/>'+
+  '<path d="M56 86h34v14l-17 19-17-19z" fill="#e9d995" opacity=".65"/>'+
+  '<rect x="49" y="17" width="48" height="22" rx="5" fill="#f4d647" stroke="#ad9c56" stroke-width="1.5"/>'+
+  '<path d="M49 20Q62 11 73 21T97 20" stroke="#b82e34" fill="none" stroke-width="8"/>'+
+  '<path d="M50 30Q62 20 74 31T96 29" stroke="#ce4338" fill="none" stroke-width="6"/>'+
+  '<rect x="55" y="48" width="36" height="48" rx="2" fill="#fffdf5" stroke="#dfe4e6"/>'+
+  handoutTxt(73,60,'BD UA',8,'#47658b')+
+  handoutTxt(73,70,'364992',7,'#4c6984')+
+  '<path d="M58 76h31M58 87h31" stroke="#477da4" stroke-width="1.6"/>'+
+  handoutTxt(73,73,'MAX',6,'#477da4')+handoutTxt(73,84,'MIN',6,'#477da4');
+}
+function renderCedarsTransfer(urinalysis){
+ return '<path d="M18 62h96v48H18z" fill="#fff" stroke="#90aab8" stroke-width="2.5"/>'+
+  '<path d="M21 78h90v29H21z" fill="#eac46e" opacity=".75"/>'+
+  '<path d="M14 57h104v14H14z" fill="#80b6c5" stroke="#5899ac" stroke-width="1.5"/>'+
+  '<rect x="57" y="48" width="21" height="9" rx="3" fill="#718c9d"/>'+
+  '<rect x="64" y="24" width="27" height="52" rx="5" fill="#fff" stroke="#8ea8b7" stroke-width="2"/>'+
+  '<rect x="61" y="11" width="32" height="17" rx="4" fill="'+(urinalysis?'#eccc4e':'#999fa4')+'" stroke="#86929e" stroke-width="1.4"/>'+
+  (urinalysis?'<path d="M62 15Q73 8 82 16T92 15" fill="none" stroke="#c63d35" stroke-width="5"/>':'')+
+  '<path d="M67 65h20" stroke="#dbb864" stroke-width="3"/>';
+}
+function renderCedarsMix(urinalysis){
+ return (urinalysis?renderCedarsUa():renderCedarsGray())+
+  '<path d="M105 45Q133 70 107 94" stroke="#198d83" stroke-width="3.5" fill="none" stroke-linecap="round"/>'+
+  '<path d="m101 86 6 9 8-8" stroke="#198d83" stroke-width="3.5" fill="none"/>'+
+  handoutTxt(119,37,urinalysis?'8–10×':'SHAKE',10,'#12877c',850);
+}
+
 function picture(kind){
 const steel='#91aebc',teal='#258e87',ink='#547183';
 const cup='<rect x="35" y="31" width="74" height="69" rx="8" fill="#fff" stroke="'+steel+'" stroke-width="3"/><path d="M31 30h82" stroke="'+steel+'" stroke-width="7" stroke-linecap="round"/>';
