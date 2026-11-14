@@ -417,3 +417,62 @@
  html[data-ao-print="illustrated"] .ao-r-provider-modal{margin-top:9px}
  html[data-ao-print="illustrated"] .ao-r-outstanding{margin:7px}
 }
+
+/* Athena Orders: coordinated purple accents for the in-house directory. */
+.ao-directory-tabs{
+ border-color:#e5dcf4;
+ background:#f7f4fc;
+}
+.ao-directory-tab:hover{
+ background:#ffffff;
+ color:#6840a3;
+}
+.ao-directory-tab.active{
+ border-color:#ddd0f1;
+ background:#fff;
+ color:#7044ae;
+ box-shadow:0 2px 8px rgba(92,54,146,.075);
+}
+.ao-directory-tab .ao-tab-symbol,
+.ao-directory-tab.sendout .ao-tab-symbol{
+ background:#efe7fa;
+ color:#8054bb;
+}
+.ao-directory-tab.sendout.active{color:#7044ae}
+.ao-directory-tab:focus-visible{
+ outline-color:#ae8bdf;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .ao-directory-panel-count{
+ background:#f4edfc;
+ border-color:#e4d4f5;
+ color:#7548ae;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-grid .order-directory-item{
+ border-top-color:#8052bb;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-grid .order-directory-item:nth-child(3n+2){
+ border-top-color:#9570c8;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-grid .order-directory-item:nth-child(3n){
+ border-top-color:#6d43a7;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-item .card-icon{
+ background:#f1e9fb;
+ color:#7950b5;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-item .published-tag{
+ background:#f0e7fa;
+ color:#7444a9;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-item .card-trailing{
+ color:#7243a9;
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-item:hover{
+ border-color:#d5beec;
+ border-top-color:#8052bb;
+ box-shadow:0 10px 25px rgba(97,56,148,.13);
+}
+.ao-directory-panel[aria-label="In-house order sets"] .order-directory-item:focus-visible{
+ outline:3px solid #b696e0;
+ outline-offset:3px;
+}
