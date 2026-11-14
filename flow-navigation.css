@@ -2909,3 +2909,29 @@
 #mainContent.sendout-wide{max-width:1490px}
 #mainContent.sendout-wide .workflow-main{max-width:1300px;width:100%}
 @media(max-width:860px){#mainContent.sendout-wide{max-width:100%}}
+
+
+/* Scheduled external requisitions: high-volume lab-order triage between note and handoff. */
+.workflow-main .req-intake-actions>.req-intake-test-count{
+ grid-column:1/-1;min-height:0;background:#fffcf7;border-color:#efdcb8;
+}
+.workflow-main .req-intake-test-count>.req-intake-action-num{
+ background:#f7e8cf;color:#93641f;
+}
+.workflow-main .req-intake-test-count-content{flex:1;min-width:0}
+.workflow-main .req-intake-test-count-head{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin-bottom:6px;
+}
+.workflow-main .req-intake-test-count-head strong{color:#80602a;margin:0}
+.workflow-main .req-intake-test-count-badge{
+ display:inline-flex;align-items:center;background:#fae8ca;color:#8a5a16;
+ border-radius:999px;padding:4px 9px;font-size:10px;font-weight:850;letter-spacing:.04em;
+}
+.workflow-main .req-intake-test-count-script{
+ margin-top:12px;padding:11px 13px;border-left:3px solid #d9ae6a;
+ border-radius:7px;background:#fff5e6;
+}
+.workflow-main .req-intake-test-count-script>span{
+ display:block;color:#916320;font-size:10px;font-weight:850;letter-spacing:.06em;margin-bottom:4px;
+}
+.workflow-main .req-intake-test-count-script p{color:#735838!important}
