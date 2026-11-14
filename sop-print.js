@@ -46,19 +46,22 @@ function scheduled(){
    'Explain that a Sollis provider can assess the member and order labs when clinically appropriate.',
    'If Sollis places the orders, follow the <b>Ordered at Sollis</b> sendout workflow instead of the outside-requisition pathway.')]
  ]);
- h+=section('2. Receive, classify and route the requisition','Complete all four actions for the appropriate arrival method.');
+ h+=section('2. Receive, classify and route the requisition','Complete all five actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
   ['Faxed to Sollis',bullet(
    '<b>1. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
    '<b>2. Reclassify and save.</b> Change the document to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.',
    '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Route the Navigator task.</b> Create and route to lab personnel or RN according to the market workflow unless a task already exists. Do not duplicate.')],
+   '<b>4. Count ordered lab tests and triage if needed.</b> Count individual tests across all active requisitions, not requisition files. If there are more than 15 ordered tests, flag the request for lab personnel or RN triage and explain to the patient that larger orders carry an increased risk of errors.',
+   '<b>5. Route the Navigator task.</b> Create and route to lab personnel or RN according to the market workflow unless a task already exists. If there are more than 15 tests, flag this in the handoff. Do not duplicate.')],
   ['Email or text',bullet(
    '<b>1. Upload manually.</b> Open the existing Navigator task and upload the requisition into the correct Athena chart.',
    '<b>2. Classify and save.</b> Set <b>Clinical Document · LAB REQUISITION</b>, then save and verify.',
    '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Route the Navigator task.</b> Assign the existing task to lab personnel or RN according to the market workflow. Do not duplicate.')]
+   '<b>4. Count ordered lab tests and triage if needed.</b> Count individual tests across all active requisitions, not requisition files. If there are more than 15 ordered tests, flag the request for lab personnel or RN triage and explain to the patient that larger orders carry an increased risk of errors.',
+   '<b>5. Route the Navigator task.</b> Assign the existing task to lab personnel or RN according to the market workflow. If there are more than 15 tests, flag this in the handoff. Do not duplicate.')]
  ]);
+ h+=note('High-volume requisition triage (more than 15 tests)','<b>Count the number of ordered lab tests, not requisition documents.</b> With 16 or more tests, flag the existing Navigator handoff for lab personnel or RN triage before scheduling or specimen collection. <b>Patient-facing wording:</b> “Since your order includes more than 15 lab tests, there is an increased risk of errors during ordering, collection, or processing. Our clinical team will review the order carefully before we proceed.”',true);
  h+=note('Required even for one document','Every current LAB REQUISITION needs an Athena Internal Note. One file: <b>(1 of 1)</b>. Three files: <b>(1 of 3)</b>, <b>(2 of 3)</b>, <b>(3 of 3)</b>.',true);
  h+=section('Additional or updated requisitions','Reconcile the current set whenever more documents arrive.');
  h+=bullet(
