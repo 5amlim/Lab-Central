@@ -2935,3 +2935,7 @@
  display:block;color:#916320;font-size:10px;font-weight:850;letter-spacing:.06em;margin-bottom:4px;
 }
 .workflow-main .req-intake-test-count-script p{color:#735838!important}
+
+/* Highlight the receiving clinical team for orders with more than 15 tests. */
+.workflow-main .req-intake-test-count-tags{display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}
+.workflow-main .req-intake-triage-provider-tag{display:inline-flex;align-items:center;border:1px solid #b7dcd3;background:#e0f2ed;color:#246e61;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:850;letter-spacing:.04em;white-space:nowrap}
