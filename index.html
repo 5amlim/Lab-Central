@@ -191,7 +191,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   
   
   
-  <link rel="stylesheet" href="flow-navigation.css?v=20261113-requisition-triage" media="all">
+  <link rel="stylesheet" href="flow-navigation.css?v=20261113-triage-providers" media="all">
 <link rel="stylesheet" href="ny-scheduled-workflow.css?v=20261107-timeline" media="all">
   <link rel="stylesheet" href="procedure-guide.css?v=20261104" media="all">
   <link rel="stylesheet" href="operations-guides.css?v=20261112-patient-guides" media="all">
@@ -2174,7 +2174,7 @@ function externalFlow(){
  `}
  <div class="req-intake-action req-intake-note"><span class="req-intake-action-num">3</span><div class="req-intake-note-content"><strong>Add the Internal Note (required even for just 1 file)</strong><p>Open the saved <b>LAB REQUISITION</b>, enter <b>(1 of 1)</b> in <b>Internal Note</b>, and save. If there are multiple, use <b>(1 of N)</b>, <b>(2 of N)</b>, etc., with the same total.</p><div class="req-intake-note-guide">${athenaInternalNoteGuide()}</div></div></div>
  <div class="req-intake-action req-intake-test-count"><span class="req-intake-action-num">4</span><div class="req-intake-test-count-content">
-  <div class="req-intake-test-count-head"><strong>Front Desk: Count tests and assign to triage if over 15</strong><span class="req-intake-test-count-badge">TRIAGE IF MORE THAN 15</span></div>
+  <div class="req-intake-test-count-head"><strong>Front Desk: Count tests and assign to triage if over 15</strong><span class="req-intake-test-count-tags"><span class="req-intake-test-count-badge">TRIAGE IF MORE THAN 15</span><span class="req-intake-triage-provider-tag" aria-label="Assigned team when over 15 tests: Triage Providers">TRIAGE PROVIDERS</span></span></div>
   <p><b>Front Desk</b> counts individual ordered lab tests across all current requisitions, not the number of requisition files. <b>15 or fewer:</b> continue with the usual Navigator handoff. <b>16 or more:</b> Front Desk must <b>assign the Navigator task to the clinical triage team</b> for review. <b>The triage team, not Front Desk, must speak with the patient</b> about the increased risk of errors before scheduling or collection proceeds.</p>
   <div class="req-intake-test-count-script" role="note"><span>TRIAGE TEAM: PATIENT CONVERSATION</span><p>“Since your order includes more than 15 lab tests, there is an increased risk of errors during ordering, collection, or processing. Our clinical team will review the order carefully before we proceed.”</p></div>
  </div></div>
