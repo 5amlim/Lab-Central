@@ -90,7 +90,7 @@ const quickGuideRoutes=[
  ['Tools','HealthTrackRx molecular menu','HTRX molecular PCR panels and collection guidance','healthtrackrx htrx molecular swabs white green tube','#calculators/htrx',['norcal','fl'],true]
 ];
 const templates=[
- ['temperature','Daily Temperature Log','fridge freezer ambient temperature humidity daily'],
+ ['temperature','Daily Temperature and Humidity Log','fridge freezer ambient temperature humidity daily'],
  ['cleaning','Daily Cleaning and Disinfection Log','cleaning disinfection daily sanitation'],
  ['sysmex-control','Pochi Daily Blank Check and Control Log','sysmex pochi blank qc three levels daily control'],
  ['sysmex-maint','pocH-100i Maintenance Log','sysmex pochi maintenance daily cleaning'],

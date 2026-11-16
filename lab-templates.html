@@ -65,7 +65,7 @@ td:focus,.blank:focus{background:#fffae6;outline:1px solid #c6a24d}
 <script>
 'use strict';
 const forms=[
- {id:'temperature',group:'daily',title:'Daily Temperature Log',note:'Based on the uploaded BH/SM/MB temperature log examples. Use site-specific ranges and installed-unit columns.',fields:['Month','Year','Location'],headers:['Date','Initials','Lab temperature','Refrigerator 1','Refrigerator 2','Refrigerator 3','Freezer','Humidity'],rows:31,numbered:true},
+ {id:'temperature',group:'daily',title:'Daily Temperature and Humidity Log',note:'Use the documented clinic-specific temperature and humidity limits for the equipment and supplies in use.',fields:['Month','Year','Location'],headers:['Date','Initials','Lab temperature','Refrigerator 1','Refrigerator 2','Refrigerator 3','Freezer','Humidity'],rows:31,numbered:true},
  {id:'cleaning',group:'daily',title:'Daily Cleaning and Disinfection Log',note:'Record completed cleaning and disinfection per the site SOP.',fields:['Month','Year','Clinic'],headers:['Day','Disinfection completed','Operator initials','Comments / exceptions'],rows:31,numbered:true},
  {id:'sysmex-control',group:'daily',title:'Pochi Daily Blank Check and Control Log',originalPdf:'assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107-headerfix'},
   {id:'sysmex-maint',group:'daily',title:'pocH-100i Maintenance Log',originalPdf:'assets/lab-templates/pocH-100i-Maintenance-Log.pdf'},
@@ -85,7 +85,7 @@ const forms=[
  {id:'fire-extinguisher',group:'monthly',title:'Fire Extinguisher Monthly Inspection Log',note:'OPTIONAL: Use only if no approved Facilities, tag or electronic inspection record exists. Verify each extinguisher individually. Record access/mounting, gauge if present (N/A otherwise), pin/seal, visible condition, date, initials and corrective actions. Escalate defects promptly. This monthly visual check is not the annual service.',fields:['Clinic / facility','Month / Year','Facilities contact / reviewer'],headers:['Extinguisher ID / location','Inspection date','Accessible / mounted','Pressure gauge (or N/A)','Pin / tamper seal','Condition / nozzle','Inspector initials','Defect / corrective action / follow-up'],rows:16,numbered:false}
 ];
 const GENERATED_PRINTABLE_PDFS = {
-  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261107-guidance-v2",
+  "temperature": "assets/lab-templates/generated/Daily-Temperature-Log.pdf?v=20261116-range-punch-room-v1",
   "cleaning": "assets/lab-templates/generated/Daily-Cleaning-and-Disinfection-Log.pdf?v=20261107-approved-cleaning-686ec84f",
   "clinitek-maint": "assets/lab-templates/generated/Siemens-Urinalysis-Maintenance-Log.pdf?v=20261107-guidance-v2",
   "eyewash": "assets/lab-templates/generated/Eyewash-Station-Maintenance-Log.pdf?v=20261107-approved-eyewash-d3d1249e",

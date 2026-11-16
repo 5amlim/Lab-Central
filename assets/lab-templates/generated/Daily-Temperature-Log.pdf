@@ -104,3 +104,76 @@ trailer
 startxref
 29781
 %%EOF
+5 0 obj
+<<
+/Contents [ 12 0 R 10 0 R 13 0 R 14 0 R ] /MediaBox [ 0 0 612 792 ] /Parent 9 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] /XObject <<
+/FormXob.a1b65a36a601eb78ea6e573975d7016c 3 0 R
+>>
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+6 0 obj
+<<
+/Contents [ 12 0 R 11 0 R 13 0 R 14 0 R ] /MediaBox [ 0 0 612 792 ] /Parent 9 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ] /XObject <<
+/FormXob.a1b65a36a601eb78ea6e573975d7016c 3 0 R
+>>
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+12 0 obj
+<< /Length 23 >>
+stream
+q
+0.9575 0 0 1 26 0 cm
+endstream
+endobj
+13 0 obj
+<< /Length 2 >>
+stream
+Q
+endstream
+endobj
+14 0 obj
+<< /Length 274 >>
+stream
+q
+0.38 0.42 0.44 rg
+BT
+/F1 6.8 Tf
+1 0 0 1 145.7 625.2 Tm
+(15-30 \260C) Tj
+1 0 0 1 227.4 625.2 Tm
+(2-8 \260C) Tj
+1 0 0 1 305 625.2 Tm
+(2-8 \260C) Tj
+1 0 0 1 382.6 625.2 Tm
+(2-8 \260C) Tj
+1 0 0 1 460.2 625.2 Tm
+(-25 to -15 \260C) Tj
+1 0 0 1 523.2 625.2 Tm
+(30-60% RH) Tj
+ET
+Q
+endstream
+endobj
+xref
+5 2
+0000030235 00000 n 
+0000030517 00000 n 
+12 3
+0000030799 00000 n 
+0000030872 00000 n 
+0000030923 00000 n 
+trailer
+<< /Size 15 /Root 7 0 R /Info 8 0 R /Prev 29781 >>
+startxref
+31248
+%%EOF
