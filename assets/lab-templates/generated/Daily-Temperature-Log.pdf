@@ -177,3 +177,312 @@ trailer
 startxref
 31248
 %%EOF
+8 0 obj
+<<
+/Author (Sollis Health) /CreationDate (D:20261109200924+00'00') /Creator (anonymous) /Keywords () /ModDate (D:20261109200924+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (unspecified) /Title (Daily Temperature and Humidity Log) /Trapped /False
+>>
+endobj
+10 0 obj
+<< /Length 4028 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+96 0 0 50.4 258 719 cm
+/FormXob.a1b65a36a601eb78ea6e573975d7016c Do
+Q
+.145098 .156863 .164706 rg
+BT /F2 15.5 Tf 18.6 TL ET
+BT 1 0 0 1 170.778 699.6 Tm (Daily Temperature and Humidity Log) Tj T* ET
+BT /F2 8.3 Tf 9.96 TL ET
+.258824 .282353 .294118 rg
+BT 1 0 0 1 35 674.8 Tm (Month:) Tj T* ET
+.72549 .745098 .756863 RG
+.58 w
+n 68.6556 674 m 299 674 l S
+.258824 .282353 .294118 rg
+BT 1 0 0 1 311 674.8 Tm (Year:) Tj T* ET
+.72549 .745098 .756863 RG
+.58 w
+n 337.7583 674 m 575 674 l S
+BT /F1 7.7 Tf 9.24 TL ET
+.278431 .321569 .341176 rg
+BT 1 0 0 1 36 661 Tm (How to complete:  Record each measured reading; enter N/A for equipment not present.) Tj T* ET
+.85 w
+.596078 .627451 .643137 RG
+1 1 1 rg
+n
+38 32 m
+574 32 l
+578.4224 32 582 35.5776 582 40 c
+582 645 l
+582 649.4224 578.4224 653 574 653 c
+38 653 l
+33.5776 653 30 649.4224 30 645 c
+30 40 l
+30 35.5776 33.5776 32 38 32 c
+h
+B*
+q
+n 38.4 32.4 m 573.6 32.4 l 578.0224 32.4 581.6 35.9776 581.6 40.4 c 581.6 644.6 l 581.6 649.0224 578.0224 652.6 573.6 652.6 c 38.4 652.6 l 33.9776 652.6 30.4 649.0224 30.4 644.6 c 30.4 40.4 l 30.4 35.9776 33.9776 32.4 38.4 32.4 c h W* n
+.968627 .972549 .972549 rg
+n 30 621 552 32 re f*
+Q
+.596078 .627451 .643137 RG
+.6 w
+n 71.9611 653 m 71.9611 32 l S
+n 118.9873 653 m 118.9873 32 l S
+n 204.3577 653 m 204.3577 32 l S
+n 285.3834 653 m 285.3834 32 l S
+n 366.4091 653 m 366.4091 32 l S
+n 447.4348 653 m 447.4348 32 l S
+n 513.273 653 m 513.273 32 l S
+n 30 621 m 582 621 l S
+n 30 602 m 582 602 l S
+n 30 583 m 582 583 l S
+n 30 564 m 582 564 l S
+n 30 545 m 582 545 l S
+n 30 526 m 582 526 l S
+n 30 507 m 582 507 l S
+n 30 488 m 582 488 l S
+n 30 469 m 582 469 l S
+n 30 450 m 582 450 l S
+n 30 431 m 582 431 l S
+n 30 412 m 582 412 l S
+n 30 393 m 582 393 l S
+n 30 374 m 582 374 l S
+n 30 355 m 582 355 l S
+n 30 336 m 582 336 l S
+n 30 317 m 582 317 l S
+n 30 298 m 582 298 l S
+n 30 279 m 582 279 l S
+n 30 260 m 582 260 l S
+n 30 241 m 582 241 l S
+n 30 222 m 582 222 l S
+n 30 203 m 582 203 l S
+n 30 184 m 582 184 l S
+n 30 165 m 582 165 l S
+n 30 146 m 582 146 l S
+n 30 127 m 582 127 l S
+n 30 108 m 582 108 l S
+n 30 89 m 582 89 l S
+n 30 70 m 582 70 l S
+n 30 51 m 582 51 l S
+.596078 .627451 .643137 RG
+.85 w
+n
+38 32 m
+574 32 l
+578.4224 32 582 35.5776 582 40 c
+582 645 l
+582 649.4224 578.4224 653 574 653 c
+38 653 l
+33.5776 653 30 649.4224 30 645 c
+30 40 l
+30 35.5776 33.5776 32 38 32 c
+h
+S
+.258824 .282353 .294118 rg
+BT /F2 8 Tf 9.6 TL ET
+BT 1 0 0 1 36 634.5 Tm (Date) Tj T* ET
+BT 1 0 0 1 77.9611 634.5 Tm (Initials) Tj T* ET
+BT 1 0 0 1 124.9873 634.5 Tm (Lab temperature) Tj T* ET
+BT 1 0 0 1 210.3577 634.5 Tm (Refrigerator 1) Tj T* ET
+BT 1 0 0 1 291.3834 634.5 Tm (Refrigerator 2) Tj T* ET
+BT 1 0 0 1 372.4091 634.5 Tm (Refrigerator 3) Tj T* ET
+BT 1 0 0 1 453.4348 634.5 Tm (Freezer) Tj T* ET
+BT 1 0 0 1 519.273 634.5 Tm (Humidity) Tj T* ET
+.145098 .156863 .164706 rg
+BT /F1 8.4 Tf 10.08 TL ET
+BT 1 0 0 1 37 608.5 Tm (1) Tj T* ET
+BT 1 0 0 1 37 589.5 Tm (2) Tj T* ET
+BT 1 0 0 1 37 570.5 Tm (3) Tj T* ET
+BT 1 0 0 1 37 551.5 Tm (4) Tj T* ET
+BT 1 0 0 1 37 532.5 Tm (5) Tj T* ET
+BT 1 0 0 1 37 513.5 Tm (6) Tj T* ET
+BT 1 0 0 1 37 494.5 Tm (7) Tj T* ET
+BT 1 0 0 1 37 475.5 Tm (8) Tj T* ET
+BT 1 0 0 1 37 456.5 Tm (9) Tj T* ET
+BT 1 0 0 1 37 437.5 Tm (10) Tj T* ET
+BT 1 0 0 1 37 418.5 Tm (11) Tj T* ET
+BT 1 0 0 1 37 399.5 Tm (12) Tj T* ET
+BT 1 0 0 1 37 380.5 Tm (13) Tj T* ET
+BT 1 0 0 1 37 361.5 Tm (14) Tj T* ET
+BT 1 0 0 1 37 342.5 Tm (15) Tj T* ET
+BT 1 0 0 1 37 323.5 Tm (16) Tj T* ET
+BT 1 0 0 1 37 304.5 Tm (17) Tj T* ET
+BT 1 0 0 1 37 285.5 Tm (18) Tj T* ET
+BT 1 0 0 1 37 266.5 Tm (19) Tj T* ET
+BT 1 0 0 1 37 247.5 Tm (20) Tj T* ET
+BT 1 0 0 1 37 228.5 Tm (21) Tj T* ET
+BT 1 0 0 1 37 209.5 Tm (22) Tj T* ET
+BT 1 0 0 1 37 190.5 Tm (23) Tj T* ET
+BT 1 0 0 1 37 171.5 Tm (24) Tj T* ET
+BT 1 0 0 1 37 152.5 Tm (25) Tj T* ET
+BT 1 0 0 1 37 133.5 Tm (26) Tj T* ET
+BT 1 0 0 1 37 114.5 Tm (27) Tj T* ET
+BT 1 0 0 1 37 95.5 Tm (28) Tj T* ET
+BT 1 0 0 1 37 76.5 Tm (29) Tj T* ET
+BT 1 0 0 1 37 57.5 Tm (30) Tj T* ET
+BT 1 0 0 1 37 38.5 Tm (31) Tj T* ET
+ 
+
+endstream
+endobj
+11 0 obj
+<< /Length 4028 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+96 0 0 50.4 258 719 cm
+/FormXob.a1b65a36a601eb78ea6e573975d7016c Do
+Q
+.145098 .156863 .164706 rg
+BT /F2 15.5 Tf 18.6 TL ET
+BT 1 0 0 1 170.778 699.6 Tm (Daily Temperature and Humidity Log) Tj T* ET
+BT /F2 8.3 Tf 9.96 TL ET
+.258824 .282353 .294118 rg
+BT 1 0 0 1 35 674.8 Tm (Month:) Tj T* ET
+.72549 .745098 .756863 RG
+.58 w
+n 68.6556 674 m 299 674 l S
+.258824 .282353 .294118 rg
+BT 1 0 0 1 311 674.8 Tm (Year:) Tj T* ET
+.72549 .745098 .756863 RG
+.58 w
+n 337.7583 674 m 575 674 l S
+BT /F1 7.7 Tf 9.24 TL ET
+.278431 .321569 .341176 rg
+BT 1 0 0 1 36 661 Tm (How to complete:  Record each measured reading; enter N/A for equipment not present.) Tj T* ET
+.85 w
+.596078 .627451 .643137 RG
+1 1 1 rg
+n
+38 32 m
+574 32 l
+578.4224 32 582 35.5776 582 40 c
+582 645 l
+582 649.4224 578.4224 653 574 653 c
+38 653 l
+33.5776 653 30 649.4224 30 645 c
+30 40 l
+30 35.5776 33.5776 32 38 32 c
+h
+B*
+q
+n 38.4 32.4 m 573.6 32.4 l 578.0224 32.4 581.6 35.9776 581.6 40.4 c 581.6 644.6 l 581.6 649.0224 578.0224 652.6 573.6 652.6 c 38.4 652.6 l 33.9776 652.6 30.4 649.0224 30.4 644.6 c 30.4 40.4 l 30.4 35.9776 33.9776 32.4 38.4 32.4 c h W* n
+.968627 .972549 .972549 rg
+n 30 621 552 32 re f*
+Q
+.596078 .627451 .643137 RG
+.6 w
+n 71.9611 653 m 71.9611 32 l S
+n 118.9873 653 m 118.9873 32 l S
+n 204.3577 653 m 204.3577 32 l S
+n 285.3834 653 m 285.3834 32 l S
+n 366.4091 653 m 366.4091 32 l S
+n 447.4348 653 m 447.4348 32 l S
+n 513.273 653 m 513.273 32 l S
+n 30 621 m 582 621 l S
+n 30 602 m 582 602 l S
+n 30 583 m 582 583 l S
+n 30 564 m 582 564 l S
+n 30 545 m 582 545 l S
+n 30 526 m 582 526 l S
+n 30 507 m 582 507 l S
+n 30 488 m 582 488 l S
+n 30 469 m 582 469 l S
+n 30 450 m 582 450 l S
+n 30 431 m 582 431 l S
+n 30 412 m 582 412 l S
+n 30 393 m 582 393 l S
+n 30 374 m 582 374 l S
+n 30 355 m 582 355 l S
+n 30 336 m 582 336 l S
+n 30 317 m 582 317 l S
+n 30 298 m 582 298 l S
+n 30 279 m 582 279 l S
+n 30 260 m 582 260 l S
+n 30 241 m 582 241 l S
+n 30 222 m 582 222 l S
+n 30 203 m 582 203 l S
+n 30 184 m 582 184 l S
+n 30 165 m 582 165 l S
+n 30 146 m 582 146 l S
+n 30 127 m 582 127 l S
+n 30 108 m 582 108 l S
+n 30 89 m 582 89 l S
+n 30 70 m 582 70 l S
+n 30 51 m 582 51 l S
+.596078 .627451 .643137 RG
+.85 w
+n
+38 32 m
+574 32 l
+578.4224 32 582 35.5776 582 40 c
+582 645 l
+582 649.4224 578.4224 653 574 653 c
+38 653 l
+33.5776 653 30 649.4224 30 645 c
+30 40 l
+30 35.5776 33.5776 32 38 32 c
+h
+S
+.258824 .282353 .294118 rg
+BT /F2 8 Tf 9.6 TL ET
+BT 1 0 0 1 36 634.5 Tm (Date) Tj T* ET
+BT 1 0 0 1 77.9611 634.5 Tm (Initials) Tj T* ET
+BT 1 0 0 1 124.9873 634.5 Tm (Lab temperature) Tj T* ET
+BT 1 0 0 1 210.3577 634.5 Tm (Refrigerator 1) Tj T* ET
+BT 1 0 0 1 291.3834 634.5 Tm (Refrigerator 2) Tj T* ET
+BT 1 0 0 1 372.4091 634.5 Tm (Refrigerator 3) Tj T* ET
+BT 1 0 0 1 453.4348 634.5 Tm (Freezer) Tj T* ET
+BT 1 0 0 1 519.273 634.5 Tm (Humidity) Tj T* ET
+.145098 .156863 .164706 rg
+BT /F1 8.4 Tf 10.08 TL ET
+BT 1 0 0 1 37 608.5 Tm (1) Tj T* ET
+BT 1 0 0 1 37 589.5 Tm (2) Tj T* ET
+BT 1 0 0 1 37 570.5 Tm (3) Tj T* ET
+BT 1 0 0 1 37 551.5 Tm (4) Tj T* ET
+BT 1 0 0 1 37 532.5 Tm (5) Tj T* ET
+BT 1 0 0 1 37 513.5 Tm (6) Tj T* ET
+BT 1 0 0 1 37 494.5 Tm (7) Tj T* ET
+BT 1 0 0 1 37 475.5 Tm (8) Tj T* ET
+BT 1 0 0 1 37 456.5 Tm (9) Tj T* ET
+BT 1 0 0 1 37 437.5 Tm (10) Tj T* ET
+BT 1 0 0 1 37 418.5 Tm (11) Tj T* ET
+BT 1 0 0 1 37 399.5 Tm (12) Tj T* ET
+BT 1 0 0 1 37 380.5 Tm (13) Tj T* ET
+BT 1 0 0 1 37 361.5 Tm (14) Tj T* ET
+BT 1 0 0 1 37 342.5 Tm (15) Tj T* ET
+BT 1 0 0 1 37 323.5 Tm (16) Tj T* ET
+BT 1 0 0 1 37 304.5 Tm (17) Tj T* ET
+BT 1 0 0 1 37 285.5 Tm (18) Tj T* ET
+BT 1 0 0 1 37 266.5 Tm (19) Tj T* ET
+BT 1 0 0 1 37 247.5 Tm (20) Tj T* ET
+BT 1 0 0 1 37 228.5 Tm (21) Tj T* ET
+BT 1 0 0 1 37 209.5 Tm (22) Tj T* ET
+BT 1 0 0 1 37 190.5 Tm (23) Tj T* ET
+BT 1 0 0 1 37 171.5 Tm (24) Tj T* ET
+BT 1 0 0 1 37 152.5 Tm (25) Tj T* ET
+BT 1 0 0 1 37 133.5 Tm (26) Tj T* ET
+BT 1 0 0 1 37 114.5 Tm (27) Tj T* ET
+BT 1 0 0 1 37 95.5 Tm (28) Tj T* ET
+BT 1 0 0 1 37 76.5 Tm (29) Tj T* ET
+BT 1 0 0 1 37 57.5 Tm (30) Tj T* ET
+BT 1 0 0 1 37 38.5 Tm (31) Tj T* ET
+ 
+
+endstream
+endobj
+xref
+8 1
+0000031443 00000 n 
+10 2
+0000031734 00000 n 
+0000035815 00000 n 
+trailer
+<< /Size 15 /Root 7 0 R /Info 8 0 R /Prev 31248 >>
+startxref
+39896
+%%EOF
