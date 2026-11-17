@@ -249,7 +249,7 @@ function sysmexBinderChecklist(){
   '</div>'+
   '<ol class="lc-poc-binder-filing-steps"><li><b>Review:</b> Match date, control level, lot, operator and accepted results. Check that the blank check is acceptable.</li>'+
    '<li><b>File:</b> Keep all three QC reports and the blank-check printout with the Pochi Daily Blank Check and Control Log.</li>'+
-   '<li><b>Document:</b> Complete the Insight daily log and Daily Maintenance Log with date and initials. Escalate missing or unacceptable results.</li></ol>'+
+   '<li><b>Document:</b> Enter the measured analytes from QC1, QC2 and QC3 in Sysmex Insight (see the dedicated Insight section), complete the Daily Maintenance Log with date and initials, and escalate missing or unacceptable results.</li></ol>'+
   '</div>';
 }
 function sysmexPrintFallback(){
