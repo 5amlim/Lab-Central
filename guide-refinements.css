@@ -1282,3 +1282,18 @@
  .sx-insight-levels span{padding:6px 9px;font-size:11px}
  .sx-insight-item{padding:13px 12px;gap:10px}
 }
+
+
+/* PATHFAST training library: clearly link approved videos, separate unconfigured slots. */
+.video-stage-link{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-decoration:none;color:#386f8f;z-index:1}
+.video-stage-link:hover .video-placeholder,.video-stage-link:focus-visible .video-placeholder{transform:scale(1.05);box-shadow:0 10px 24px rgba(41,94,128,.20)}
+.video-stage-link:focus-visible{outline:3px solid #4b8fb4;outline-offset:-4px}
+.video-stage-link .video-placeholder{transition:transform .16s ease,box-shadow .16s ease}
+.video-stage-hint{font-size:11px;font-weight:750;color:#446e87}
+.video-unlinked-note{margin-top:18px;border:1px solid #dee8ed;border-radius:12px;background:#f7fafb;padding:14px 16px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+.video-unlinked-note strong{font-size:12px;font-weight:800;color:#36576a}
+.video-unlinked-note p{font-size:11px;line-height:1.5;color:#768797;margin:5px 0 0;max-width:530px}
+.video-unlinked-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.video-unlinked-actions .video-edit{white-space:normal;text-align:center}
+.video-unlinked-empty{color:#738a99;font-size:13px;padding:20px 0}
+@media(max-width:700px){.video-unlinked-note{display:block}.video-unlinked-actions{justify-content:flex-start;margin-top:12px}}
