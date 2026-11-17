@@ -261,7 +261,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="step-illustrations.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261104">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261104-no-outer">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261117-pathfast-video-links">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261117-pathfast-posters">
 <link rel="stylesheet" href="assay-catalog.css?v=20261112-hiv-clia-context" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="egfr-calculator.css?v=20261104" media="all">
@@ -2581,8 +2581,16 @@ function videoLibrary(){
   let stage='<span class="video-placeholder" aria-hidden="true">▶</span>';
   if(info.kind==='youtube')stage='<iframe src="'+safeHtml(info.url)+'" title="'+safeHtml(slot.name)+'" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
   else if(info.kind==='video')stage='<video controls playsinline preload="metadata" src="'+safeHtml(info.url)+'"></video>';
-  else if(info.kind==='external')stage='<a class="video-stage-link" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer" aria-label="Open '+safeHtml(slot.name)+' video in a new tab"><span class="video-placeholder" aria-hidden="true">▶</span><span class="video-stage-hint">Open training video</span></a>';
-  return '<article class="video-card has-video"><div class="video-stage">'+stage+'</div><div class="video-content"><strong>'+safeHtml(slot.name)+'</strong><p>'+safeHtml(slot.desc)+'</p><div class="video-buttons"><span class="video-status">'+(info.kind==='external'?'Opens in new tab':'Video linked')+'</span><div style="display:flex;gap:7px;align-items:center">'+(info.kind==='external'?'<a class="video-external" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer">Open video ↗</a>':'')+'<button class="video-edit" type="button" data-edit-video="'+safeHtml(slot.id)+'">Edit link</button></div></div></div></article>';
+  else if(info.kind==='external'){
+   const kind=slot.id==='overview'?'full':slot.id==='patient'?'patient':slot.id==='calibration'?'qc':'general';
+   const shortLabel=kind==='full'?'Comprehensive technician training':kind==='patient'?'Patient sample walkthrough':kind==='qc'?'Calibration + quality control':'Training resource';
+   stage='<a class="video-stage-link video-stage-link-external video-stage-'+kind+'" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer" aria-label="Open '+safeHtml(slot.name)+' video on SharePoint in a new tab">'+
+     '<span class="video-poster-top"><span class="video-poster-brand">PATHFAST <small>TRAINING</small></span><span class="video-poster-source">SOLLIS SHAREPOINT</span></span>'+
+     '<span class="video-stage-play" aria-hidden="true"><span>▶</span></span>'+
+     '<span class="video-poster-bottom"><strong>'+safeHtml(shortLabel)+'</strong><small>Click to watch in SharePoint <span aria-hidden="true">↗</span></small></span>'+
+   '</a>';
+  }
+  return '<article class="video-card has-video"><div class="video-stage">'+stage+'</div><div class="video-content"><strong>'+safeHtml(slot.name)+'</strong><p>'+safeHtml(slot.desc)+'</p><div class="video-buttons"><span class="video-status">'+(info.kind==='external'?'SharePoint video':'Video linked')+'</span><div style="display:flex;gap:7px;align-items:center">'+(info.kind==='external'?'<a class="video-external" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer">Open video ↗</a>':'')+'<button class="video-edit" type="button" data-edit-video="'+safeHtml(slot.id)+'">Edit link</button></div></div></div></article>';
  }).join('');
  const unlinkedNote=unlinked.length?'<div class="video-unlinked-note"><div><strong>Additional videos not linked</strong><p>These resources do not have a video URL yet. Add an approved link to make them available in the library.</p></div><div class="video-unlinked-actions">'+unlinked.map(slot=>'<button type="button" class="video-edit" data-edit-video="'+safeHtml(slot.id)+'">Add '+safeHtml(slot.name)+' link</button>').join('')+'</div></div>':'';
  return '<div class="tab-header"><div><h2 class="tab-heading">PATHFAST video library</h2><p class="tab-description">Training videos for patient testing, calibration and quality control.</p></div></div>'+
