@@ -2990,3 +2990,12 @@
 @media(prefers-reduced-motion:reduce){
  .workflow-main .fd-requisition-intake .fd-intake-toggle-chevron{transition:none}
 }
+
+/* Unnumbered optional intake marker preceding the numbered scheduled workflow. */
+.workflow-main .external-workflow-timeline .fd-requisition-intake .fd-intake-optional-symbol{
+ display:grid;place-items:center;
+ background:#eaf3fb!important;border-color:#b8d4e9!important;color:#346d94!important;
+}
+.workflow-main .external-workflow-timeline .fd-intake-optional-symbol svg{
+ display:block;width:18px;height:18px;stroke-width:1.8;
+}
