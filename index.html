@@ -2146,11 +2146,14 @@ function orderWorkflowControls(tab,selectMarket=false){
 }
 function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
- <header class="requisition-intake-header">
+ <details class="fd-intake-details">
+ <summary class="requisition-intake-header fd-intake-summary">
   <span class="req-intake-number">01</span>
   <div><div class="fd-intake-title-row"><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><span class="fd-intake-conditional-tag">WHEN APPLICABLE</span></div><p>Use this step when a member calls before their outside lab requisition has been received.</p></div>
   ${workflowOwnerTag('Front Desk Coordinator')}
- </header>
+  <span class="fd-intake-summary-control"><span class="fd-intake-expand-label">Show details</span><span class="fd-intake-collapse-label">Hide details</span><span class="fd-intake-toggle-chevron" aria-hidden="true"></span></span>
+ </summary>
+ <div class="fd-intake-details-body">
  <div class="fd-intake-skip-notice" role="note"><span class="fd-intake-skip-label">ALREADY RECEIVED THE REQUISITION?</span><p><strong>Skip Step 01.</strong> If orders arrived directly by email, text, or fax, start at <b>Step 02: Receive, classify and route the requisition.</b></p></div>
  <div class="fd-intake-question"><strong>Does the member already have lab orders from their doctor?</strong><span>SELECT THE APPLICABLE PATH</span></div>
  <div class="fd-intake-options">
@@ -2166,6 +2169,8 @@ function frontDeskRequisitionIntake(){
    <p class="fd-intake-next">If Sollis places the orders, follow the <b>Ordered at Sollis</b> workflow rather than the external requisition intake process.</p>
   </article>
  </div>
+ </div>
+ </details>
  </section>`;
 }
 function externalFlow(){
