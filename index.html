@@ -2056,7 +2056,7 @@ function calculatorVolumeRoutingStep(){
   <div class="calculator-volume-paths">
    <div class="calculator-volume-path calculator-volume-standard">
     <span>15 OR FEWER</span><strong>Return to Front Desk for scheduling</strong>
-    <p>Include any fasting, dietary, timed-draw or other preparation instructions.</p>
+    <p><strong>Whoever uploaded the Lab Calculator</strong> must tell Front Desk about any fasting, dietary, timed-draw or other preparation restrictions.</p>
    </div>
    <div class="calculator-volume-path calculator-volume-triage">
     <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
@@ -2064,7 +2064,7 @@ function calculatorVolumeRoutingStep(){
   </div>
   <div class="calculator-volume-script">
    <div class="calculator-volume-script-head"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span>${workflowOwnerTag('Triage Provider')}</div>
-   <p class="calculator-volume-script-guidance"><strong>Before scheduling:</strong> Explain the increased risk of errors from the high number of tests. Once the patient conversation is complete, return the request to Front Desk with any preparation instructions.</p>
+   <p class="calculator-volume-script-guidance"><strong>Before scheduling:</strong> The person who uploaded the Lab Calculator provides any preparation restrictions to Triage. Triage explains the increased risk of errors to the patient, then returns the request and preparation instructions to Front Desk.</p>
    <p class="calculator-volume-script-quote">“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing.”</p>
   </div>
  </div>`;
@@ -2224,7 +2224,7 @@ function externalFlow(){
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
  ['Prepare and upload the Lab Calculator','Verify specimen requirements, save and upload the calculator PDF. Then count the tests to determine the handoff.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
- ['Schedule the patient','Front Desk schedules after receiving the completed request from the lab team (15 or fewer tests), or after Clinical Triage has spoken with the patient (16 or more). Communicate all fasting, dietary, timed-draw and other preparation instructions.','','','Front Desk Coordinator'],
+ ['Schedule the patient','Front Desk schedules after receiving the completed request from the Lab Calculator uploader (15 or fewer tests), or after Clinical Triage has spoken with the patient (16 or more). Front Desk communicates the preparation restrictions provided by the uploader, directly or through Triage, to the patient.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
  ],3)}</div>`;
  h+='</div>';
