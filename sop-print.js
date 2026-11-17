@@ -79,13 +79,13 @@ function scheduled(){
    '<b>If obtained:</b> get the corrected requisition and upload it as Clinical Document · LAB REQUISITION. Reconcile any replaced document and verify the Internal Note count before continuing.',
    '<b>If unavailable:</b> ask the <b>Sollis provider on duty</b> to place the required orders in Athena before collection. Confirm the receiving lab and orders, then continue to the Lab Calculator.')]
  ]);
- h+=note('After requisition approval: Check total ordered tests','<b>Only after</b> confirming the tests can be performed and the current requisition is uploaded to Athena, lab personnel count individual tests across all current requisitions (not files). <b>15 or fewer:</b> continue to the Lab Calculator. <b>16 or more:</b> assign the existing Navigator task to <b>Clinical Triage</b>, who must speak with the patient about the increased risk of errors before scheduling or collection. <b>Suggested wording:</b> “Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”',true);
  h+=section('2. Prepare and schedule','Complete order review and required documentation first.');
  h+=step('Prepare and upload the Lab Calculator',bullet(
   'Choose the correct receiving lab and confirm test codes, tubes, volumes, processing, transport temperature and priority.',
   'Generate the final calculator printout and upload the PDF in Athena as <b>Clinical Document · LAB FLOWSHEET</b>.'),'RN / Lab personnel',4);
+ h+=note('After LAB FLOWSHEET upload: Count tests and route','<b>Lab personnel:</b> After the Lab Calculator has been uploaded to Athena and labeled LAB FLOWSHEET, count individual ordered tests across all current requisitions (not requisition files). <b>15 or fewer:</b> Return the completed request to Front Desk for scheduling, including fasting, dietary, timed-draw or other preparation restrictions. <b>16 or more:</b> Assign the existing Navigator task to Clinical Triage. Triage must speak with the patient about the increased risk of errors due to the high test volume before scheduling. After that conversation, return the request to Front Desk with preparation instructions. <b>Suggested triage wording:</b> “Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”',true);
  h+=step('Schedule the patient',bullet(
-  'Front Desk Coordinator schedules after receiving the completed request.',
+  'For 15 or fewer tests, schedule after the lab team returns the completed request. For 16 or more tests, schedule only after Clinical Triage has spoken with the patient and returned the request.',
   'Communicate fasting, dietary, timed-draw and other preparation instructions provided by the clinical team.'),'Front Desk Coordinator',5);
  h+=step('Print both documents on appointment day',bullet(
   'Before collection, print <b>every current LAB REQUISITION</b> and the <b>LAB FLOWSHEET</b> from the chart.',
