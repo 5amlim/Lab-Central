@@ -3198,3 +3198,72 @@
 @media(prefers-reduced-motion:reduce){
  .workflow-main .calculator-upload-help-toggle .calculator-help-chevron{transition:none}
 }
+
+
+/* Prominent, aligned test-count thresholds for the two scheduling routes. */
+.workflow-main .calculator-chart-upload .calculator-volume-paths{
+ align-items:stretch;
+ gap:12px;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-path{
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ justify-content:flex-start;
+ gap:0;
+ min-width:0;
+ padding:16px 18px;
+ border-radius:11px;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-standard{
+ background:#eef8f4;
+ border-color:#cfe5dc;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-triage{
+ background:#fff5e8;
+ border-color:#f0d7aa;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-threshold{
+ display:flex;
+ align-items:baseline;
+ gap:8px;
+ margin:0 0 11px;
+ line-height:1;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-threshold-value{
+ font-size:30px;
+ font-weight:850;
+ letter-spacing:-.045em;
+ font-variant-numeric:tabular-nums;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-threshold-unit{
+ font-size:10px;
+ font-weight:850;
+ letter-spacing:.09em;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-standard .calculator-volume-threshold{
+ color:#197767;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-triage .calculator-volume-threshold{
+ color:#a56b20;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-path>strong{
+ font-size:13.5px;
+ line-height:1.4;
+ margin:0;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-path>p{
+ margin:9px 0 0!important;
+ max-width:58ch;
+ font-size:11.75px!important;
+ line-height:1.55!important;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-path>p strong{
+ font-weight:800;
+ color:inherit;
+}
+@media(max-width:520px){
+ .workflow-main .calculator-chart-upload .calculator-volume-threshold-value{
+  font-size:27px;
+ }
+}
