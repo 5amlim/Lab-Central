@@ -60,6 +60,7 @@ const configs={
 function getConfig(id){return configs[id]||configs.generic;}
 function isQcGroup(sec,group){
  if(!sec||!group||sec.archived||!["Analyzers","Point of care"].includes(sec.category))return false;
+ if(sec.id==="sysmex"&&/insight/i.test(group.title))return false;
  return /\bqc\b|\bquality control\b/i.test(group.title) && !/\bnotes\b|reference/i.test(group.title);
 }
 function screenPanel(item,brand,number){
