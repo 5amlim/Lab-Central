@@ -2999,3 +2999,61 @@
 .workflow-main .external-workflow-timeline .fd-intake-optional-symbol svg{
  display:block;width:18px;height:18px;stroke-width:1.8;
 }
+
+/* Compact, separate optional intake above the numbered scheduled workflow. */
+.workflow-main .fd-requisition-intake{
+ margin:0 0 13px!important;padding:0!important;
+ border:1px solid #d8e3e9!important;border-left:1px solid #d8e3e9!important;
+ border-radius:12px;background:#f8fbfc;box-shadow:none;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary{
+ display:flex;align-items:center;gap:11px;
+ width:100%;min-height:58px;
+ padding:11px 14px;margin:0!important;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary:hover{background:#f1f8fb;border-radius:12px}
+.workflow-main .fd-requisition-intake .fd-intake-details[open] .fd-intake-summary{
+ border-bottom:1px solid #e3eaef;border-radius:12px 12px 0 0;
+}
+.workflow-main .fd-requisition-intake .fd-intake-inline-icon{
+ display:grid;place-items:center;flex:0 0 29px;
+ width:29px;height:29px;border-radius:8px;
+ background:#e8f1f7;color:#5b819a;
+}
+.workflow-main .fd-requisition-intake .fd-intake-inline-icon svg{
+ width:16px;height:16px;display:block;stroke-width:1.8;
+}
+.workflow-main .fd-requisition-intake .fd-intake-compact-title{
+ display:flex;align-items:center;flex-wrap:wrap;gap:9px;flex:1;min-width:0;
+}
+.workflow-main .fd-requisition-intake .fd-intake-compact-title h3{
+ margin:0;font-size:13px;line-height:1.4;font-weight:800;color:#45647c;
+}
+.workflow-main .fd-requisition-intake .fd-intake-conditional-tag{
+ background:#eef3f6;border-color:#dce6eb;color:#668296;
+ padding:3px 7px;font-size:9px;letter-spacing:.04em;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary-control{
+ background:transparent;border:none;box-shadow:none;
+ color:#477998;padding:6px 4px;margin-left:auto;gap:8px;font-size:11px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary:hover .fd-intake-summary-control{
+ background:transparent;border:none;color:#286b92;
+}
+.workflow-main .fd-requisition-intake .fd-intake-details-body{
+ padding:13px 15px 15px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-expanded-intro{
+ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+ gap:8px;margin:0 0 12px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-expanded-intro p{
+ margin:0;color:#627b8b;font-size:12px;line-height:1.5;
+}
+@media(max-width:600px){
+ .workflow-main .fd-requisition-intake .fd-intake-summary{gap:8px;padding:10px 12px}
+ .workflow-main .fd-requisition-intake .fd-intake-compact-title{gap:5px}
+ .workflow-main .fd-requisition-intake .fd-intake-compact-title h3{font-size:12px}
+ .workflow-main .fd-requisition-intake .fd-intake-summary-control{font-size:10px}
+ .workflow-main .fd-requisition-intake .fd-intake-details-body{padding:12px}
+}
