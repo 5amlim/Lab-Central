@@ -261,7 +261,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="step-illustrations.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261104">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261104-no-outer">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261105-guided-nav">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261117-sysmex-insight-static">
 <link rel="stylesheet" href="assay-catalog.css?v=20261112-hiv-clia-context" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="egfr-calculator.css?v=20261104" media="all">
@@ -1734,6 +1734,24 @@ function renderClinitekReferenceCards(group){
    return '<article class="clinitek-reference-card"><span class="clinitek-reference-number">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safeHtml(item.title)+'</h3>'+item.details.map(function(note){return '<p>'+safeHtml(note)+'</p>';}).join('')+'</div></article>';
   }).join('')+'</div></section>';
 }
+function renderSysmexInsightReference(group){
+ const items=[];
+ (group?.blocks||[]).forEach(function(block){
+  if(block.type!=='list')return;
+  if(block.level===1)items.push({title:block.text,details:[]});
+  else if(block.level>=2&&items.length)items[items.length-1].details.push(block.text);
+ });
+ return '<section class="sx-insight-reference" aria-label="Sysmex Insight QC analyte entry">'+
+  '<header class="sx-insight-intro"><div class="sx-insight-intro-copy"><span class="sx-insight-eyebrow">SYSMEX pocH-100i / AFTER DAILY QC</span><h2>Enter QC analytes in Sysmex Insight</h2>'+
+  '<p>Record the actual QC analyte results from the accepted reports for all three levels. This is a documentation task after daily QC, not another analyzer run.</p></div>'+
+  '<a class="sx-insight-link" href="https://www.sysmex.com/insight/" target="_blank" rel="noopener noreferrer">Open Sysmex Insight <span aria-hidden="true">↗</span></a></header>'+
+  '<div class="sx-insight-levels" aria-label="Required quality control levels"><span>QC1 <b>Low</b></span><span>QC2 <b>Normal</b></span><span>QC3 <b>High</b></span></div>'+
+  '<div class="sx-insight-items">'+items.map((item,i)=>
+   '<article class="sx-insight-item"><span class="sx-insight-item-number">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safeHtml(item.title)+'</h3>'+
+   item.details.map(detail=>'<p>'+markText(detail)+'</p>').join('')+'</div></article>'
+  ).join('')+'</div>'+
+  '</section>';
+}
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
  if(state.guideRoute!==key){state.guideRoute=key;state.guideStep=0;state.guideMode='guided';state.guideDetailsExpanded=true;}
@@ -2969,7 +2987,7 @@ function sectionRender(sec,tab){
  else if(sec.id==='febridx'&&tab==='reference-notes')h+=renderFebridxReferences();
  else{
   const group=groups.find(g=>g.id===tab);
-  if(group)h+=sec.id==='poc'?renderPocStaticReference(group):renderGuidedProcedure(group,sec);
+  if(group)h+=sec.id==='sysmex'&&group.id==='enter-qc-analytes-in-sysmex-insight'?renderSysmexInsightReference(group):sec.id==='poc'?renderPocStaticReference(group):renderGuidedProcedure(group,sec);
  }
  // A contextual shortcut on routine patient testing pages leads to the PT differences.
  if(window.LAB_PT_TESTING?.supports(sec)&&tab!=='pt-testing'&&/^(patient|patient-testing|ua-strip|hcg-cassette|running-(?:patient-)?samples?(?:-|$)|running-tests(?:-|$))/.test(tab)){
