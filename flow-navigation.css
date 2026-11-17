@@ -3267,3 +3267,80 @@
   font-size:27px;
  }
 }
+
+
+/* Outside requisition intake: align walkthrough dropdowns beside their step copy. */
+.workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide),
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(310px,430px);
+ grid-template-areas:
+  "title guide"
+  "description guide";
+ column-gap:24px;
+ row-gap:4px;
+ align-items:start;
+}
+.workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide) > strong,
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > strong{
+ grid-area:title;
+ min-width:0;
+ margin:0;
+}
+.workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide) > p,
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > p{
+ grid-area:description;
+ min-width:0;
+}
+.workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide,
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide{
+ grid-area:guide;
+ width:100%;
+ min-width:0;
+ margin:0;
+ align-self:center;
+}
+.workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide > .ad-guide > summary,
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide > .ad-guide > summary{
+ width:100%;
+ max-width:none;
+ margin-left:auto;
+}
+/* Let the open illustrations use the full card width rather than a narrow side column. */
+.workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide > .ad-guide[open]),
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content:has(> .req-intake-note-guide > .ad-guide[open]){
+ grid-template-areas:
+  "title title"
+  "description description"
+  "guide guide";
+}
+.workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide:has(> .ad-guide[open]),
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide:has(> .ad-guide[open]){
+ margin-top:10px;
+}
+.workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide > .ad-guide[open] > summary,
+.workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide > .ad-guide[open] > summary{
+ max-width:430px;
+}
+@media(max-width:900px){
+ .workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide),
+ .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content,
+ .workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide > .ad-guide[open]),
+ .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content:has(> .req-intake-note-guide > .ad-guide[open]){
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:
+   "title"
+   "description"
+   "guide";
+ }
+ .workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide,
+ .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide{
+  margin-top:10px;
+ }
+}
+@media(max-width:500px){
+ .workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide > .ad-guide > summary,
+ .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide > .ad-guide > summary{
+  max-width:none;
+ }
+}
