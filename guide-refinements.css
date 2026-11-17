@@ -1297,3 +1297,51 @@
 .video-unlinked-actions .video-edit{white-space:normal;text-align:center}
 .video-unlinked-empty{color:#738a99;font-size:13px;padding:20px 0}
 @media(max-width:700px){.video-unlinked-note{display:block}.video-unlinked-actions{justify-content:flex-start;margin-top:12px}}
+
+
+/* PATHFAST linked SharePoint videos use a designed poster rather than an empty-player placeholder. */
+.video-card .video-stage:has(.video-stage-link-external){background:#1c405b;}
+.video-stage-link-external{
+  position:relative;isolation:isolate;overflow:hidden;width:100%;height:100%;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;
+  padding:15px 18px 14px;gap:0;text-decoration:none;color:#fff!important;
+  background:linear-gradient(127deg,#153951 0%,#27677b 58%,#45899a 100%);
+}
+.video-stage-link-external.video-stage-patient{background:linear-gradient(125deg,#184a60 0%,#247c89 57%,#60a7a8 100%);}
+.video-stage-link-external.video-stage-qc{background:linear-gradient(125deg,#243d64 0%,#426e96 57%,#7a9db4 100%);}
+.video-stage-link-external.video-stage-general{background:linear-gradient(125deg,#284660 0%,#447788 57%,#83a5ad 100%);}
+.video-stage-link-external::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 22px,rgba(255,255,255,.045) 23px 24px),
+             repeating-linear-gradient(90deg,transparent 0 29px,rgba(255,255,255,.045) 30px 31px);
+}
+.video-stage-link-external::after{
+  content:"";position:absolute;width:190px;height:190px;right:-60px;top:-95px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.20);box-shadow:0 0 0 31px rgba(255,255,255,.045),0 0 0 66px rgba(255,255,255,.035);
+  pointer-events:none;
+}
+.video-poster-top{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1;width:100%}
+.video-poster-brand{font-size:13px;letter-spacing:.075em;font-weight:900;color:#fff}
+.video-poster-brand small{margin-left:5px;font-size:9px;font-weight:650;letter-spacing:.12em;color:#c5e5ed}
+.video-poster-source{border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.15);border-radius:999px;padding:5px 8px;color:#eff9fc;font-size:8px;font-weight:800;letter-spacing:.07em;white-space:nowrap}
+.video-stage-play{
+  position:absolute;z-index:1;top:48%;left:50%;transform:translate(-50%,-50%);
+  width:62px;height:62px;display:grid;place-items:center;border-radius:18px;
+  color:#25627d;background:rgba(255,255,255,.97);
+  box-shadow:0 10px 29px rgba(4,30,45,.26);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+.video-stage-play span{font-size:23px;margin-left:4px}
+.video-stage-link-external:hover .video-stage-play,
+.video-stage-link-external:focus-visible .video-stage-play{
+ transform:translate(-50%,-50%) scale(1.06);box-shadow:0 14px 35px rgba(4,30,45,.3)
+}
+.video-poster-bottom{z-index:1;position:relative;display:flex;flex-direction:column;gap:3px;width:100%;align-items:flex-start}
+.video-poster-bottom strong{color:#fff;font-size:12px;font-weight:800;line-height:1.3;text-align:left}
+.video-poster-bottom small{color:#d8edf2;font-size:10px;font-weight:600;line-height:1.3}
+.video-stage-link-external:focus-visible{outline:3px solid #c6eefa;outline-offset:-4px}
+@media(max-width:600px){
+  .video-stage-link-external{padding:13px 14px 12px}
+  .video-poster-source{font-size:7.5px}
+}
+@media(prefers-reduced-motion:reduce){.video-stage-play{transition:none}}
