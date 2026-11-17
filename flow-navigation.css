@@ -3059,3 +3059,17 @@
 .workflow-main .calculator-volume-script>.calculator-volume-script-quote{
  margin:0!important;padding-left:12px;border-left:2px solid #ead5b5;color:#745737!important;
 }
+
+/* Scheduled requisition: tighter upload sequence and clear volume-based handoff. */
+.workflow-main .calculator-chart-upload .sollis-upload-steps>li{
+ min-height:106px;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-path{
+ display:flex;flex-direction:column;justify-content:center;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-triage{
+ align-items:flex-start;
+}
+.workflow-main .calculator-chart-upload .calculator-volume-script-guidance strong{
+ color:#845b2b;font-weight:850;
+}
