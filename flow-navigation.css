@@ -3086,3 +3086,50 @@
 .workflow-main .calculator-chart-upload .calculator-volume-script-guidance strong{
  color:#845b2b;font-weight:850;
 }
+
+
+/* The optional Front Desk intake uses a plain details toggle below its ownership tag. */
+.workflow-main .fd-requisition-intake .fd-intake-summary-actions{
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ gap:7px;
+ flex:0 0 auto;
+ margin-left:auto;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary-actions .fd-intake-summary-control{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:7px;
+ min-height:0;
+ margin:0;
+ padding:0;
+ border:0;
+ border-radius:0;
+ background:transparent;
+ box-shadow:none;
+ color:#376f94;
+ font-size:12px;
+ font-weight:700;
+ line-height:1.3;
+ cursor:pointer;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary:hover .fd-intake-summary-control{
+ background:transparent;
+ border-color:transparent;
+ text-decoration:underline;
+ text-underline-offset:3px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary-actions .fd-intake-toggle-chevron{
+ width:7px;
+ height:7px;
+}
+@media(max-width:720px){
+ .workflow-main .fd-requisition-intake .fd-intake-summary-actions{
+  flex-wrap:nowrap;
+  align-items:center;
+  justify-content:center;
+ }
+}
