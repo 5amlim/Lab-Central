@@ -3057,3 +3057,22 @@
  .workflow-main .fd-requisition-intake .fd-intake-summary-control{font-size:10px}
  .workflow-main .fd-requisition-intake .fd-intake-details-body{padding:12px}
 }
+
+/* Hierarchical numbering for sendout workflows.
+   Main timeline steps: 01, 02, 03...
+   Nested actions: i, ii, iii, iv...
+   Alternative paths: I, II. */
+.workflow-main .req-intake-action-num,
+.workflow-main .req-version-step-num,
+.workflow-main .sollis-upload-step-num,
+.workflow-main .walkin-upload-number,
+.workflow-main .ad-guide-card-head>b{
+ font-variant-numeric:normal;
+ font-family:inherit;
+ font-size:11px;
+ letter-spacing:0;
+ text-transform:none;
+}
+.workflow-main .fd-intake-option-mark{
+ font-size:11px;letter-spacing:0;
+}
