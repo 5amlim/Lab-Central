@@ -2050,17 +2050,17 @@ function calculatorVolumeRoutingStep(){
  return `<div class="sollis-upload-handoff calculator-volume-routing" role="note">
   <div class="calculator-volume-head">
    <span class="sollis-upload-step-num" aria-hidden="true">iv</span>
-   <div class="calculator-volume-heading"><strong>Count the tests to determine the handoff</strong><small>Count every ordered test across all current requisitions. Do not count the number of files.</small></div>
+   <div class="calculator-volume-heading"><strong>Count the tests to determine the handoff</strong><small>Count every ordered test across all current requisitions, not the number of files.</small></div>
    <span class="calculator-volume-badge">AFTER UPLOAD</span>
   </div>
+  <p class="calculator-volume-reviewer-note"><strong>Reviewer handoff:</strong> Whoever reviewed the Lab Calculator must tell <strong>both Front Desk and Clinical Triage</strong> about any fasting, dietary, timed-draw, or other preparation restrictions.</p>
   <div class="calculator-volume-paths">
    <div class="calculator-volume-path calculator-volume-standard">
     <span>15 OR FEWER</span><strong>Send to Front Desk for scheduling</strong>
-    <p>The <strong>person who uploaded the Lab Calculator</strong> gives Front Desk any fasting, dietary, timed-draw, or other preparation instructions to share with the patient.</p>
+    <p>Front Desk shares any preparation instructions with the patient when scheduling.</p>
    </div>
    <div class="calculator-volume-path calculator-volume-triage">
     <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
-    <p>The <strong>person who uploaded the Lab Calculator</strong> sends any preparation restrictions to Triage.</p>
    </div>
   </div>
   <div class="calculator-volume-script">
@@ -2074,15 +2074,16 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Review and save the Lab Calculator</strong><small>Confirm the receiving lab, review the tests and specimen requirements, then save as a PDF.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Upload as a Clinical Document.</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Review and save the Lab Calculator</strong><small>Confirm the receiving lab, tests, specimen needs, and preparation restrictions. Then save as a PDF.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Upload as a Clinical Document.</small><button type="button" class="sollis-upload-inline-link calculator-upload-help-toggle" data-calculator-upload-guide-toggle aria-expanded="false"><span class="calc-help-show">How to upload in Athena</span><span class="calc-help-hide">Hide upload instructions</span><span class="calculator-help-chevron" aria-hidden="true"></span></button></span></li>'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Apply the LAB FLOWSHEET label</strong><small>Save and confirm the PDF appears in the correct patient chart.</small></span></li>'+
    '</ol>'+
+   '<div class="calculator-upload-help-panel" hidden>'+athenaUploadGuide('calculator',false,false,true).replace('<details class="ad-guide sollis-upload-guide"','<details open class="ad-guide sollis-upload-guide"')+'</div>'+
    (includeCalculatorLink
     ?calculatorVolumeRoutingStep()
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
-  (includeCalculatorLink?'<div class="calculator-chart-actions">'+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
+  '</div>';
 }
 function athenaSendoutWorkflowLink(){
  return '<button type="button" class="athena-sendout-workflow-link" data-go="order-sets" data-target-tab="sendout"><span class="athena-sendout-link-symbol" aria-hidden="true">'+navIconSvg('order-sets','file-text')+'</span><span>How to order sendout labs in Athena</span><span class="athena-sendout-link-arrow" aria-hidden="true">→</span></button>';
@@ -2224,8 +2225,8 @@ function externalFlow(){
  }else if(complete){h+=`<div class="branch-result"><div class="resolution-note">The requisition is complete. <strong>Move to Step 3 to prepare and upload the Lab Calculator.</strong></div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Confirm the receiving lab, review specimen requirements, and upload the PDF to Athena. Then count the tests to determine the scheduling handoff.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
- ['Schedule the patient','For 15 or fewer tests, Front Desk schedules after the uploader sends the completed request and preparation instructions. For 16 or more, Front Desk schedules after Clinical Triage speaks with the patient and returns the request. Front Desk communicates the preparation instructions to the patient.','','','Front Desk Coordinator'],
+ ['Prepare and upload the Lab Calculator','Review specimen requirements, save and upload the PDF to Athena, then count the tests to determine the scheduling handoff.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
+ ['Schedule the patient','The Lab Calculator reviewer sends preparation restrictions to both Front Desk and Clinical Triage. For 15 or fewer tests, Front Desk schedules directly. For 16 or more, Front Desk schedules after Clinical Triage speaks with the patient and returns the request. Front Desk communicates preparation instructions to the patient.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
  ],3)}</div>`;
  h+='</div>';
@@ -3029,6 +3030,15 @@ function saveEditor(clear=false){
  localVideos[id]=url;try{localStorage.setItem('labGuideVideoOverrides',JSON.stringify(localVideos))}catch(_){}
  closeEditor();render();
 }
+document.addEventListener('click',e=>{
+ const toggle=e.target.closest('[data-calculator-upload-guide-toggle]');
+ if(!toggle)return;
+ const wrapper=toggle.closest('.calculator-chart-upload');
+ const panel=wrapper&&wrapper.querySelector('.calculator-upload-help-panel');
+ if(!panel)return;
+ panel.hidden=!panel.hidden;
+ toggle.setAttribute('aria-expanded',String(!panel.hidden));
+});
 document.addEventListener('click',e=>{
  const walkinGuide=e.target.closest('[data-walkin-guide]');
  if(walkinGuide){
