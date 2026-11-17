@@ -46,22 +46,19 @@ function scheduled(){
    'Explain that a Sollis provider can assess the member and order labs when clinically appropriate.',
    'If Sollis places the orders, follow the <b>Ordered at Sollis</b> sendout workflow instead of the outside-requisition pathway.')]
  ]);
- h+=section('2. Receive, classify and route the requisition','Complete all five actions for the appropriate arrival method.');
+ h+=section('2. Receive, classify and route the requisition','Complete the four actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
   ['Faxed to Sollis',bullet(
    '<b>1. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
    '<b>2. Reclassify and save.</b> Change the document to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.',
    '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Front Desk counts ordered lab tests.</b> Count individual tests across all active requisitions, not requisition files. If 16 or more, <b>Front Desk must assign the Navigator task to the clinical triage team</b>. The triage team, not Front Desk, discusses increased error risks with the patient before scheduling or collection.',
-   '<b>5. Route the Navigator task.</b> For 16 or more tests, Front Desk routes the task to <b>clinical triage</b> for patient discussion and review. Otherwise, route to lab personnel or RN per the market workflow. Create a task only if none exists; do not duplicate.')],
+   '<b>4. Route the Navigator task.</b> Send to lab personnel or RN for review before scheduling. Create a task only if none exists; do not duplicate.')],
   ['Email or text',bullet(
    '<b>1. Upload manually.</b> Open the existing Navigator task and upload the requisition into the correct Athena chart.',
    '<b>2. Classify and save.</b> Set <b>Clinical Document · LAB REQUISITION</b>, then save and verify.',
    '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Front Desk counts ordered lab tests.</b> Count individual tests across all active requisitions, not requisition files. If 16 or more, <b>Front Desk must assign the Navigator task to the clinical triage team</b>. The triage team, not Front Desk, discusses increased error risks with the patient before scheduling or collection.',
-   '<b>5. Route the Navigator task.</b> For 16 or more tests, Front Desk assigns the existing task to <b>clinical triage</b> for patient discussion and review. Otherwise, route to lab personnel or RN per the market workflow. Do not duplicate.')]
+   '<b>4. Route the Navigator task.</b> Assign the existing task to lab personnel or RN for review before scheduling. Do not duplicate.')]
  ]);
- h+=note('High-volume requisition triage (more than 15 tests)','<b>Front Desk responsibility:</b> Count individual lab tests (not requisition files). If there are 16 or more, <b>assign the Navigator task to clinical triage</b> before scheduling or collection. <b>Triage team responsibility:</b> Review the order and speak with the patient about the increased risk of errors. Front Desk does not deliver this counseling. <b>Suggested triage-team wording:</b> “Since your order includes more than 15 lab tests, there is an increased risk of errors during ordering, collection, or processing. Our clinical team will review the order carefully before we proceed.”',true);
  h+=note('Required even for one document','Every current LAB REQUISITION needs an Athena Internal Note. One file: <b>(1 of 1)</b>. Three files: <b>(1 of 3)</b>, <b>(2 of 3)</b>, <b>(3 of 3)</b>.',true);
  h+=section('Additional or updated requisitions','Reconcile the current set whenever more documents arrive.');
  h+=bullet(
@@ -75,6 +72,7 @@ function scheduled(){
  h+=step('Review the outside requisition',bullet(
   'Verify patient name and date of birth against the chart, receiving lab, ordered tests, exact <b>test codes</b>, <b>account number</b> and preparation requirements.',
   'Check that each active requisition is the correct, current version before proceeding.'),'RN / Lab personnel',3);
+ h+=note('Lab tech review: More than 15 ordered tests','<b>Lab tech:</b> Review all current requisitions and count the individual ordered tests, not requisition files. <b>15 or fewer:</b> continue the usual review. <b>16 or more:</b> assign the existing Navigator task to <b>Clinical Triage</b>. <b>Triage:</b> Speak with the patient about the increased risk of errors from high test volume before scheduling or collection. <b>Suggested wording:</b> “Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”',true);
  h+=fork('Are the account number and test codes available?',[
   ['Yes',bullet('Continue to prepare the Lab Calculator and collection plan.')],
   ['No, information is missing',bullet(
