@@ -2054,14 +2054,16 @@ function calculatorVolumeRoutingStep(){
    <div class="calculator-volume-heading"><strong>Count the tests to determine the handoff</strong><small>Count every ordered test across all current requisitions, not the number of files.</small></div>
    <span class="calculator-volume-badge">AFTER UPLOAD</span>
   </div>
-  <p class="calculator-volume-reviewer-note"><strong>Reviewer handoff:</strong> Lab Personnel / RN must tell <strong>both Front Desk and Clinical Triage</strong> about any fasting, dietary, timed-draw, or other preparation restrictions.</p>
   <div class="calculator-volume-paths">
    <div class="calculator-volume-path calculator-volume-standard">
-    <span>15 OR FEWER</span><strong>Send to Front Desk for scheduling</strong>
-    <p>Front Desk shares any preparation instructions with the patient when scheduling.</p>
+    <div class="calculator-volume-threshold" aria-label="15 or fewer tests"><span class="calculator-volume-threshold-value">≤ 15</span><span class="calculator-volume-threshold-unit">TESTS</span></div>
+    <strong>Send to Front Desk for scheduling</strong>
+    <p><strong>Lab Personnel / RN</strong> informs <strong>Front Desk and Clinical Triage</strong> of any fasting, dietary, timed-draw, or other preparation restrictions.</p>
    </div>
    <div class="calculator-volume-path calculator-volume-triage">
-    <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
+    <div class="calculator-volume-threshold" aria-label="16 or more tests"><span class="calculator-volume-threshold-value">≥ 16</span><span class="calculator-volume-threshold-unit">TESTS</span></div>
+    <strong>Assign the Navigator task to Clinical Triage</strong>
+    <p><strong>Lab Personnel / RN</strong> informs <strong>Front Desk and Clinical Triage</strong> of any fasting, dietary, timed-draw, or other preparation restrictions.</p>
    </div>
   </div>
   <div class="calculator-volume-script">
