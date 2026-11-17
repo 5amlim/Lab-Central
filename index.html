@@ -1544,6 +1544,7 @@ function instrumentTabTitle(title){
  if(/^running (?:patient )?samples?\b|^running tests\b/i.test(t))return 'Patient testing';
  if(/^ordering tests\b/i.test(t))return 'Provider ordering';
  if(/^QC Test\b/i.test(t))return 'QC testing';
+ if(/^enter QC analytes in Sysmex Insight\b/i.test(t))return 'Sysmex Insight';
  if(/^register a new QC lot\b/i.test(t))return 'New QC lot';
  if(/\bparallel QC\b/i.test(t)&&t.length>35)return 'Parallel QC';
  if(/^cleaning and maintenance\b/i.test(t))return 'Cleaning & maintenance';
@@ -1643,6 +1644,7 @@ function guideStepTitle(parts){
 function qcStepTemplateFooter(sec,groupId){
  if(!sec)return '';
  const id=sec.id,g=String(groupId||'').toLowerCase();
+ if(id==='sysmex'&&g.includes('insight'))return '';
  let name='',note='',url='';
  if(id==='sysmex'&&(/qc|blank-check/.test(g))){
   name='Pochi Daily Blank Check and Control Log';note='Document the blank check and three QC levels on the approved combined log.';url='assets/lab-templates/Pochi_Daily_Blank_Check_and_Control_Log.pdf?v=20261107-headerfix';
