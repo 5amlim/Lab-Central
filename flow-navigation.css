@@ -3273,7 +3273,7 @@
 .workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide),
 .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content{
  display:grid;
- grid-template-columns:minmax(0,1fr) minmax(310px,430px);
+ grid-template-columns:minmax(0,1fr) minmax(0,320px);
  grid-template-areas:
   "title guide"
   "description guide";
@@ -3320,7 +3320,7 @@
 }
 .workflow-main .req-intake-actions > .req-intake-action > div > .req-intake-upload-guide > .ad-guide[open] > summary,
 .workflow-main .req-intake-actions > .req-intake-note > .req-intake-note-content > .req-intake-note-guide > .ad-guide[open] > summary{
- max-width:430px;
+ max-width:320px;
 }
 @media(max-width:900px){
  .workflow-main .req-intake-actions > .req-intake-action > div:has(> .req-intake-upload-guide),
