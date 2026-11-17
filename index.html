@@ -1961,7 +1961,7 @@ function workflowSubstepRoman(n){
  const numerals=['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
  return numerals[n-1]||String(n);
 }
-function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false,classifyOnly=false){
+function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false,classifyOnly=false,uploadOnly=false){
  const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB FLOWSHEET';
  const file=requisition?'Outside requisition.pdf':'Lab Calculator.pdf';
  const steps=faxOnly?[
@@ -1978,10 +1978,11 @@ function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false,cl
  ];
  if(requisition)steps.splice(steps.length-1,0,['Add the Internal Note','Enter (1 of 1) even for one requisition. Use the correct number out of the total when there are multiple.','req-note']);
  if(classifyOnly)steps.splice(0,2); // The PDF has already been uploaded in step ii.
+ if(uploadOnly)steps.splice(2); // Show the two upload actions in step ii.
  return '<details class="ad-guide'+(buttonStyle?' sollis-upload-guide':'')+'" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(updated&&requisition?'How to upload the updated requisition':faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
  steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+workflowSubstepRoman(i+1)+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+(x[2]==='req-note'?athenaInternalNoteMock('field'):athenaMock(x[2],label,file))+'</article>';}).join('')+
- '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Every LAB REQUISITION also needs an Internal Note, starting with (1 of 1).':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
+ '</div>'+(uploadOnly?'<p class="ad-guide-confirm">After uploading, continue to step iii to classify and label the PDF.</p>':'<p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Every LAB REQUISITION also needs an Internal Note, starting with (1 of 1).':'This is the Lab Calculator label, not the requisition label.')+'</p>')+'</div></details>';
 }
 
 function athenaInternalNoteMock(type){
@@ -2078,10 +2079,11 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
   '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
     '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Review and save the Lab Calculator</strong><small>Confirm the receiving lab, tests, specimen needs, and preparation restrictions. Then save as a PDF.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Upload the saved PDF to the patient’s chart.</small></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Classify and label the PDF</strong><small>Classify as a Clinical Document and label as LAB FLOWSHEET. Save and confirm it appears in the correct patient chart.</small><button type="button" class="sollis-upload-inline-link calculator-upload-help-toggle" data-calculator-upload-guide-toggle aria-expanded="false"><span class="calc-help-show">How to do that</span><span class="calc-help-hide">Hide instructions</span><span class="calculator-help-chevron" aria-hidden="true"></span></button></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Upload the saved PDF to the patient’s chart.</small><button type="button" class="sollis-upload-inline-link calculator-upload-help-toggle" data-calculator-upload-guide-toggle="upload" aria-expanded="false"><span class="calc-help-show">How to upload PDF to Athena</span><span class="calc-help-hide">Hide upload instructions</span><span class="calculator-help-chevron" aria-hidden="true"></span></button></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Classify and label the PDF</strong><small>Classify as a Clinical Document and label as LAB FLOWSHEET. Save and confirm it appears in the correct patient chart.</small><button type="button" class="sollis-upload-inline-link calculator-upload-help-toggle" data-calculator-upload-guide-toggle="classify" aria-expanded="false"><span class="calc-help-show">How to do that</span><span class="calc-help-hide">Hide instructions</span><span class="calculator-help-chevron" aria-hidden="true"></span></button></span></li>'+
    '</ol>'+
-   '<div class="calculator-upload-help-panel" hidden>'+athenaUploadGuide('calculator',false,false,true,true).replace('<details class="ad-guide sollis-upload-guide"','<details open class="ad-guide sollis-upload-guide"')+'</div>'+
+   '<div class="calculator-upload-help-panel" data-calculator-upload-guide-panel="upload" hidden>'+athenaUploadGuide('calculator',false,false,true,false,true).replace('<details class="ad-guide sollis-upload-guide"','<details open class="ad-guide sollis-upload-guide"')+'</div>'+
+   '<div class="calculator-upload-help-panel" data-calculator-upload-guide-panel="classify" hidden>'+athenaUploadGuide('calculator',false,false,true,true).replace('<details class="ad-guide sollis-upload-guide"','<details open class="ad-guide sollis-upload-guide"')+'</div>'+
    (includeCalculatorLink
     ?calculatorVolumeRoutingStep()
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
@@ -3037,10 +3039,13 @@ document.addEventListener('click',e=>{
  const toggle=e.target.closest('[data-calculator-upload-guide-toggle]');
  if(!toggle)return;
  const wrapper=toggle.closest('.calculator-chart-upload');
- const panel=wrapper&&wrapper.querySelector('.calculator-upload-help-panel');
+ const type=toggle.getAttribute('data-calculator-upload-guide-toggle');
+ const panel=wrapper&&wrapper.querySelector('[data-calculator-upload-guide-panel="'+type+'"]');
  if(!panel)return;
- panel.hidden=!panel.hidden;
- toggle.setAttribute('aria-expanded',String(!panel.hidden));
+ const opening=panel.hidden;
+ wrapper.querySelectorAll('[data-calculator-upload-guide-panel]').forEach(item=>{item.hidden=true});
+ wrapper.querySelectorAll('[data-calculator-upload-guide-toggle]').forEach(button=>{button.setAttribute('aria-expanded','false')});
+ if(opening){panel.hidden=false;toggle.setAttribute('aria-expanded','true')}
 });
 document.addEventListener('click',e=>{
  const walkinGuide=e.target.closest('[data-walkin-guide]');
