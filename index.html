@@ -261,7 +261,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="step-illustrations.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261104">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261104-no-outer">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261117-sysmex-insight-static">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261117-pathfast-video-links">
 <link rel="stylesheet" href="assay-catalog.css?v=20261112-hiv-clia-context" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="egfr-calculator.css?v=20261104" media="all">
@@ -1826,6 +1826,7 @@ const pathfastTrainingVideos={
  'cal-qc':{title:'How to perform calibration + QC',description:'Watch the PATHFAST calibration and quality-control demonstration alongside the 28-day workflow.',url:'https://ppcny.sharepoint.com/:v:/r/sites/LAClinicalDocuments2/_layouts/15/stream.aspx?id=%2Fsites%2FLAClinicalDocuments2%2FLab%20Resources%2FInstruments%2FPATHFAST%2FEducation%2FPathFast%20%2D%20Cal%20and%20QC%201%2Emp4&share=cQpLNLMxwppTSIi0YPJIfBAMEgUCMYKtgNJJvAt13zs6MD03bg'}
 };
 // Share the original CAL + QC SharePoint video across the bottom button and video library.
+window.LAB_GUIDE_VIDEOS.patient = pathfastTrainingVideos.patient.url;
 window.LAB_GUIDE_VIDEOS.calibration = pathfastTrainingVideos['cal-qc'].url;
 function pathfastTrainingVideoLink(tab){
  const video=pathfastTrainingVideos[tab];
@@ -2537,7 +2538,12 @@ function renderOrderSetDirectory(tab){
  }
  el('mainContent').innerHTML=h;
 }
-function videoURL(slot){if(Object.prototype.hasOwnProperty.call(localVideos,slot.id))return localVideos[slot.id];if(slot.id==='calibration'&&Object.prototype.hasOwnProperty.call(localVideos,'qc'))return localVideos.qc;return window.LAB_GUIDE_VIDEOS?.[slot.id]||(slot.id==='calibration'?window.LAB_GUIDE_VIDEOS?.qc:'')||slot.url||''}
+function videoURL(slot){
+ const saved=typeof localVideos?.[slot.id]==='string'?localVideos[slot.id].trim():'';
+ if(saved)return saved;
+ const legacy=slot.id==='calibration'?(localVideos?.qc||window.LAB_GUIDE_VIDEOS?.qc):'';
+ return window.LAB_GUIDE_VIDEOS?.[slot.id]||legacy||slot.url||'';
+}
 function mediaSource(url){
  if(!url)return {kind:'empty'};
  const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
@@ -2568,11 +2574,21 @@ function openCalibrationVideo(){
  if(!dlg.open)dlg.showModal();
 }
 function videoLibrary(){
- return `<div class="tab-header"><div><h2 class="tab-heading">PATHFAST video library</h2><p class="tab-description">Instrument orientation, patient testing, calibration and quality control.</p></div></div><div class="video-intro"><span style="font-size:20px;line-height:1">◉</span><div><strong>PATHFAST training resources.</strong> Select a video to review the procedure.</div></div><div class="video-grid">${DATA.videoSlots.map(slot=>{
- const url=videoURL(slot);const info=mediaSource(url);let stage='<span class="video-placeholder" aria-label="Video placeholder">▶</span>';
- if(info.kind==='youtube')stage=`<iframe src="${safeHtml(info.url)}" title="${safeHtml(slot.name)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
- if(info.kind==='video')stage=`<video controls playsinline preload="metadata" src="${safeHtml(info.url)}"></video>`;
- return `<article class="video-card ${url?'has-video':''}"><div class="video-stage">${stage}</div><div class="video-content"><strong>${safeHtml(slot.name)}</strong><p>${safeHtml(slot.desc)}</p><div class="video-buttons"><span class="video-status">${url?'Video added':'Video unavailable'}</span><div style="display:flex;gap:7px;align-items:center">${info.kind==='external'?`<a class="video-external" href="${safeHtml(info.url)}" target="_blank" rel="noopener noreferrer">Open video ↗</a>`:''}<button class="video-edit" type="button" data-edit-video="${safeHtml(slot.id)}">${url?'Edit link':'Set video link'}</button></div></div></div></article>`}).join('')}</div><p class="source-footnote">Video links entered here are stored on this device only.</p>`;
+ const available=DATA.videoSlots.filter(slot=>Boolean(videoURL(slot)));
+ const unlinked=DATA.videoSlots.filter(slot=>!videoURL(slot));
+ const cards=available.map(slot=>{
+  const url=videoURL(slot),info=mediaSource(url);
+  let stage='<span class="video-placeholder" aria-hidden="true">▶</span>';
+  if(info.kind==='youtube')stage='<iframe src="'+safeHtml(info.url)+'" title="'+safeHtml(slot.name)+'" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+  else if(info.kind==='video')stage='<video controls playsinline preload="metadata" src="'+safeHtml(info.url)+'"></video>';
+  else if(info.kind==='external')stage='<a class="video-stage-link" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer" aria-label="Open '+safeHtml(slot.name)+' video in a new tab"><span class="video-placeholder" aria-hidden="true">▶</span><span class="video-stage-hint">Open training video</span></a>';
+  return '<article class="video-card has-video"><div class="video-stage">'+stage+'</div><div class="video-content"><strong>'+safeHtml(slot.name)+'</strong><p>'+safeHtml(slot.desc)+'</p><div class="video-buttons"><span class="video-status">'+(info.kind==='external'?'Opens in new tab':'Video linked')+'</span><div style="display:flex;gap:7px;align-items:center">'+(info.kind==='external'?'<a class="video-external" href="'+safeHtml(info.url)+'" target="_blank" rel="noopener noreferrer">Open video ↗</a>':'')+'<button class="video-edit" type="button" data-edit-video="'+safeHtml(slot.id)+'">Edit link</button></div></div></div></article>';
+ }).join('');
+ const unlinkedNote=unlinked.length?'<div class="video-unlinked-note"><div><strong>Additional videos not linked</strong><p>These resources do not have a video URL yet. Add an approved link to make them available in the library.</p></div><div class="video-unlinked-actions">'+unlinked.map(slot=>'<button type="button" class="video-edit" data-edit-video="'+safeHtml(slot.id)+'">Add '+safeHtml(slot.name)+' link</button>').join('')+'</div></div>':'';
+ return '<div class="tab-header"><div><h2 class="tab-heading">PATHFAST video library</h2><p class="tab-description">Training videos for patient testing, calibration and quality control.</p></div></div>'+
+  '<div class="video-intro"><span style="font-size:20px;line-height:1" aria-hidden="true">◉</span><div><strong>PATHFAST training resources.</strong> Sollis SharePoint videos open in a new tab and may require your organization sign-in.</div></div>'+
+  (available.length?'<div class="video-grid">'+cards+'</div>':'<p class="video-unlinked-empty">No training videos have been linked yet.</p>')+
+  unlinkedNote+'<p class="source-footnote">Custom video links saved here apply to this device only.</p>';
 }
 function sectionOverview(sec,groups){
  if(sec.id==='pathfast')return window.LAB_EQUIPMENT_ART.render(sec)+window.LAB_EQUIPMENT_ART.specimenGuide(sec)+window.LAB_ASSAY_CATALOG.render(sec)+`<section class="pfux-overview">
