@@ -47,15 +47,15 @@ function scheduled(){
  h+=section('1. Receive, classify and route the requisition','Complete the four actions for the appropriate arrival method.');
  h+=fork('How was the requisition received?',[
   ['Faxed to Sollis',bullet(
-   '<b>1. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
-   '<b>2. Reclassify and save.</b> Change the document to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.',
-   '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Route the Navigator task.</b> Send to lab personnel or RN for review before scheduling. Create a task only if none exists; do not duplicate.')],
+   '<b>i. Verify the auto-uploaded fax.</b> Find the requisition in the correct Athena patient chart and confirm patient identifiers.',
+   '<b>ii. Reclassify and save.</b> Change the document to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.',
+   '<b>iii. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
+   '<b>iv. Route the Navigator task.</b> Send to lab personnel or RN for review before scheduling. Create a task only if none exists; do not duplicate.')],
   ['Email or text',bullet(
-   '<b>1. Upload manually.</b> Open the existing Navigator task and upload the requisition into the correct Athena chart.',
-   '<b>2. Classify and save.</b> Set <b>Clinical Document · LAB REQUISITION</b>, then save and verify.',
-   '<b>3. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
-   '<b>4. Route the Navigator task.</b> Assign the existing task to lab personnel or RN for review before scheduling. Do not duplicate.')]
+   '<b>i. Upload manually.</b> Open the existing Navigator task and upload the requisition into the correct Athena chart.',
+   '<b>ii. Classify and save.</b> Set <b>Clinical Document · LAB REQUISITION</b>, then save and verify.',
+   '<b>iii. Add the Internal Note (required).</b> Open the saved document, enter <b>(1 of 1)</b> even when there is just one requisition, then save. For multiple requisitions, use (1 of N), (2 of N), etc.',
+   '<b>iv. Route the Navigator task.</b> Assign the existing task to lab personnel or RN for review before scheduling. Do not duplicate.')]
  ]);
  h+=note('Required even for one document','Every current LAB REQUISITION needs an Athena Internal Note. One file: <b>(1 of 1)</b>. Three files: <b>(1 of 3)</b>, <b>(2 of 3)</b>, <b>(3 of 3)</b>.',true);
  h+=section('Additional or updated requisitions','Reconcile the current set whenever more documents arrive.');
