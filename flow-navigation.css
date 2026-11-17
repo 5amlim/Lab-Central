@@ -2957,3 +2957,36 @@
  .workflow-main .calculator-volume-path{break-inside:avoid}
  .workflow-main .calculator-volume-routing{box-shadow:none}
 }
+
+
+/* Step 01 is optional. Keep it closed until Front Desk needs its intake instructions. */
+.workflow-main .fd-requisition-intake .fd-intake-details>summary{
+ list-style:none;cursor:pointer;user-select:none;
+}
+.workflow-main .fd-requisition-intake .fd-intake-details>summary::-webkit-details-marker{display:none}
+.workflow-main .fd-requisition-intake .fd-intake-summary{margin-bottom:0;align-items:center}
+.workflow-main .fd-requisition-intake .fd-intake-details[open] .fd-intake-summary{margin-bottom:15px}
+.workflow-main .fd-requisition-intake .fd-intake-summary:focus-visible{
+ outline:3px solid #75b7da;outline-offset:4px;border-radius:8px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary-control{
+ display:inline-flex;align-items:center;gap:9px;flex:none;
+ border:1px solid #c8ddec;border-radius:9px;background:#eff6fb;
+ padding:8px 10px;color:#336d96;font-size:11px;font-weight:800;
+ margin-left:auto;white-space:nowrap;
+}
+.workflow-main .fd-requisition-intake .fd-intake-summary:hover .fd-intake-summary-control{background:#e5f2fa;border-color:#99c9df}
+.workflow-main .fd-requisition-intake .fd-intake-collapse-label{display:none}
+.workflow-main .fd-requisition-intake .fd-intake-details[open] .fd-intake-expand-label{display:none}
+.workflow-main .fd-requisition-intake .fd-intake-details[open] .fd-intake-collapse-label{display:inline}
+.workflow-main .fd-requisition-intake .fd-intake-toggle-chevron{
+ width:8px;height:8px;flex:none;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+ transform:rotate(45deg);transition:transform .16s ease;margin-top:-4px;
+}
+.workflow-main .fd-requisition-intake .fd-intake-details[open] .fd-intake-toggle-chevron{transform:rotate(225deg);margin-top:4px}
+@media(max-width:760px){
+ .workflow-main .fd-requisition-intake .fd-intake-summary-control{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+ .workflow-main .fd-requisition-intake .fd-intake-toggle-chevron{transition:none}
+}
