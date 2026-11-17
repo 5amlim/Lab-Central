@@ -2148,12 +2148,12 @@ function frontDeskRequisitionIntake(){
  return `<section class="requisition-intake fd-requisition-intake" aria-labelledby="fd-requisition-intake-title">
  <details class="fd-intake-details">
  <summary class="requisition-intake-header fd-intake-summary">
-  <span class="req-intake-number fd-intake-optional-symbol" aria-label="Optional intake">${svg("file-text")}</span>
-  <div><div class="fd-intake-title-row"><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><span class="fd-intake-conditional-tag">WHEN APPLICABLE</span></div><p>Optional intake for members who call before their outside requisition arrives.</p></div>
-  ${workflowOwnerTag('Front Desk Coordinator')}
+  <span class="fd-intake-inline-icon" aria-hidden="true">${svg("file-text")}</span>
+  <div class="fd-intake-compact-title"><h3 id="fd-requisition-intake-title">Obtain the requisition</h3><span class="fd-intake-conditional-tag">OPTIONAL</span></div>
   <span class="fd-intake-summary-control"><span class="fd-intake-expand-label">Show details</span><span class="fd-intake-collapse-label">Hide details</span><span class="fd-intake-toggle-chevron" aria-hidden="true"></span></span>
  </summary>
  <div class="fd-intake-details-body">
+ <div class="fd-intake-expanded-intro"><p>For members who call before submitting an outside requisition.</p>${workflowOwnerTag('Front Desk Coordinator')}</div>
  <div class="fd-intake-skip-notice" role="note"><span class="fd-intake-skip-label">ALREADY RECEIVED THE REQUISITION?</span><p><strong>Skip this optional intake.</strong> If orders arrived by email, text, or fax, begin at <b>Step 01: Receive, classify and route the requisition.</b></p></div>
  <div class="fd-intake-question"><strong>Does the member already have lab orders from their doctor?</strong><span>SELECT THE APPLICABLE PATH</span></div>
  <div class="fd-intake-options">
@@ -2179,8 +2179,8 @@ function externalFlow(){
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const complete=state.reqBranch==='complete';const unresolved=state.reqResolution==='unresolved';
  let h=selection+`<div class="workflow-head orders-selected-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start by confirming whether the member has outside lab orders. After review, upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
- h+='<div class="external-workflow-timeline">';
  h+=frontDeskRequisitionIntake();
+ h+='<div class="external-workflow-timeline">';
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
  <header class="requisition-intake-header"><span class="req-intake-number">01</span><div><h3 id="req-intake-title">Receive, classify and route the requisition</h3><p>Select how it arrived, then complete the four actions below.</p></div>${workflowOwnerTag('Front Desk Coordinator')}</header>
  <div class="workflow-choice-caption">CHOOSE ONE</div><div class="requisition-source-options" role="group" aria-label="How the lab requisition was received">
