@@ -72,7 +72,6 @@ function scheduled(){
  h+=step('Review the outside requisition',bullet(
   'Verify patient name and date of birth against the chart, receiving lab, ordered tests, exact <b>test codes</b>, <b>account number</b> and preparation requirements.',
   'Check that each active requisition is the correct, current version before proceeding.'),'RN / Lab personnel',3);
- h+=note('Lab tech review: More than 15 ordered tests','<b>Lab tech:</b> Review all current requisitions and count the individual ordered tests, not requisition files. <b>15 or fewer:</b> continue the usual review. <b>16 or more:</b> assign the existing Navigator task to <b>Clinical Triage</b>. <b>Triage:</b> Speak with the patient about the increased risk of errors from high test volume before scheduling or collection. <b>Suggested wording:</b> “Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”',true);
  h+=fork('Are the account number and test codes available?',[
   ['Yes',bullet('Continue to prepare the Lab Calculator and collection plan.')],
   ['No, information is missing',bullet(
@@ -80,6 +79,7 @@ function scheduled(){
    '<b>If obtained:</b> get the corrected requisition and upload it as Clinical Document · LAB REQUISITION. Reconcile any replaced document and verify the Internal Note count before continuing.',
    '<b>If unavailable:</b> ask the <b>Sollis provider on duty</b> to place the required orders in Athena before collection. Confirm the receiving lab and orders, then continue to the Lab Calculator.')]
  ]);
+ h+=note('After requisition approval: Check total ordered tests','<b>Only after</b> confirming the tests can be performed and the current requisition is uploaded to Athena, lab personnel count individual tests across all current requisitions (not files). <b>15 or fewer:</b> continue to the Lab Calculator. <b>16 or more:</b> assign the existing Navigator task to <b>Clinical Triage</b>, who must speak with the patient about the increased risk of errors before scheduling or collection. <b>Suggested wording:</b> “Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”',true);
  h+=section('2. Prepare and schedule','Complete order review and required documentation first.');
  h+=step('Prepare and upload the Lab Calculator',bullet(
   'Choose the correct receiving lab and confirm test codes, tubes, volumes, processing, transport temperature and priority.',
