@@ -3042,3 +3042,20 @@
   margin-left:0;flex-wrap:wrap;justify-content:flex-start;
  }
 }
+
+/* Put the triage responsibilities and ownership beside the suggested patient wording. */
+.workflow-main .calculator-volume-script-head{
+ display:flex;align-items:center;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-bottom:9px;
+}
+.workflow-main .calculator-volume-script-head>span:first-child{
+ color:#996923;font-size:10px;font-weight:850;letter-spacing:.045em;
+}
+.workflow-main .calculator-volume-script-head .workflow-owner-tag{
+ flex:none;margin:0;white-space:nowrap;
+}
+.workflow-main .calculator-volume-script>.calculator-volume-script-guidance{
+ margin:0 0 9px!important;color:#796344!important;
+}
+.workflow-main .calculator-volume-script>.calculator-volume-script-quote{
+ margin:0!important;padding-left:12px;border-left:2px solid #ead5b5;color:#745737!important;
+}
