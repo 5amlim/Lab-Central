@@ -2911,31 +2911,47 @@
 @media(max-width:860px){#mainContent.sendout-wide{max-width:100%}}
 
 
-/* Scheduled external requisitions: high-volume lab-order triage between note and handoff. */
-.workflow-main .req-intake-actions>.req-intake-test-count{
- grid-column:1/-1;min-height:0;background:#fffcf7;border-color:#efdcb8;
+/* Scheduled external requisitions: lab review before volume-based triage. */
+.workflow-main .branch-volume-check{
+ margin:15px 0 2px;padding:14px 15px;
+ border:1px solid #e5dbbd;border-radius:12px;background:#fffdfa;
 }
-.workflow-main .req-intake-test-count>.req-intake-action-num{
- background:#f7e8cf;color:#93641f;
+.workflow-main .branch-volume-head{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.workflow-main .branch-volume-icon{
+ display:grid;place-items:center;flex:none;width:35px;height:35px;
+ border-radius:10px;background:#f9edd4;color:#906322;font-size:12px;font-weight:850;
 }
-.workflow-main .req-intake-test-count-content{flex:1;min-width:0}
-.workflow-main .req-intake-test-count-head{
- display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin-bottom:6px;
+.workflow-main .branch-volume-heading{flex:1;min-width:170px}
+.workflow-main .branch-volume-heading strong{display:block;margin:0 0 3px;color:#795827;font-size:13px;line-height:1.45}
+.workflow-main .branch-volume-heading p{margin:0;color:#756d5d;font-size:11.5px;line-height:1.5}
+.workflow-main .branch-volume-badge{
+ display:inline-flex;align-items:center;white-space:nowrap;border:1px solid #e7d5af;
+ border-radius:999px;background:#fff5df;color:#906321;padding:5px 9px;
+ font-size:9.5px;font-weight:850;letter-spacing:.045em;
 }
-.workflow-main .req-intake-test-count-head strong{color:#80602a;margin:0}
-.workflow-main .req-intake-test-count-badge{
- display:inline-flex;align-items:center;background:#fae8ca;color:#8a5a16;
- border-radius:999px;padding:4px 9px;font-size:10px;font-weight:850;letter-spacing:.04em;
+.workflow-main .branch-volume-outcomes{
+ display:grid;grid-template-columns:1fr 1.5fr;gap:9px;margin-top:13px;
 }
-.workflow-main .req-intake-test-count-script{
- margin-top:12px;padding:11px 13px;border-left:3px solid #d9ae6a;
- border-radius:7px;background:#fff5e6;
+.workflow-main .branch-volume-outcome{padding:11px 12px;border-radius:9px;border:1px solid #d7e8e1;background:#f5faf8}
+.workflow-main .branch-volume-outcome>span{
+ display:block;font-size:10px;letter-spacing:.06em;font-weight:850;color:#36816f;margin-bottom:5px;
 }
-.workflow-main .req-intake-test-count-script>span{
- display:block;color:#916320;font-size:10px;font-weight:850;letter-spacing:.06em;margin-bottom:4px;
+.workflow-main .branch-volume-outcome>strong{display:block;font-size:12.5px;line-height:1.45;color:#2e6c5d}
+.workflow-main .branch-volume-escalate{border-color:#ead2a6;background:#fff5e7}
+.workflow-main .branch-volume-escalate>span{color:#99671e}
+.workflow-main .branch-volume-escalate>strong{color:#845a22}
+.workflow-main .branch-volume-escalate>p{margin:5px 0 0;color:#765f43;font-size:11.5px;line-height:1.55}
+.workflow-main .branch-volume-script{
+ margin-top:11px;border-left:3px solid #d6a55b;padding:8px 11px;
+ background:#fff8ed;border-radius:7px;
 }
-.workflow-main .req-intake-test-count-script p{color:#735838!important}
-
-/* Highlight the receiving clinical team for orders with more than 15 tests. */
-.workflow-main .req-intake-test-count-tags{display:inline-flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}
-.workflow-main .req-intake-triage-provider-tag{display:inline-flex;align-items:center;border:1px solid #b7dcd3;background:#e0f2ed;color:#246e61;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:850;letter-spacing:.04em;white-space:nowrap}
+.workflow-main .branch-volume-script>span{display:block;color:#966727;font-size:10px;font-weight:850;letter-spacing:.045em;margin-bottom:4px}
+.workflow-main .branch-volume-script>p{margin:0;color:#745c3e;font-size:11.5px;line-height:1.6}
+@media(max-width:680px){
+ .workflow-main .branch-volume-check{padding:12px}
+ .workflow-main .branch-volume-badge{margin-left:46px}
+ .workflow-main .branch-volume-outcomes{grid-template-columns:minmax(0,1fr)}
+}
+@media print{
+ .workflow-main .branch-volume-check{break-inside:avoid;box-shadow:none}
+}
