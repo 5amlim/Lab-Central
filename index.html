@@ -2050,23 +2050,23 @@ function calculatorVolumeRoutingStep(){
  return `<div class="sollis-upload-handoff calculator-volume-routing" role="note">
   <div class="calculator-volume-head">
    <span class="sollis-upload-step-num" aria-hidden="true">iv</span>
-   <div class="calculator-volume-heading"><strong>Count the tests and choose the next step</strong><small>Count individual ordered tests across all current requisitions, not the number of requisition files.</small></div>
+   <div class="calculator-volume-heading"><strong>Count the tests to determine the handoff</strong><small>Count every ordered test across all current requisitions. Do not count the number of files.</small></div>
    <span class="calculator-volume-badge">AFTER UPLOAD</span>
   </div>
   <div class="calculator-volume-paths">
    <div class="calculator-volume-path calculator-volume-standard">
-    <span>15 OR FEWER</span><strong>Return to Front Desk for scheduling</strong>
-    <p><strong>Whoever uploaded the Lab Calculator</strong> must tell Front Desk about any fasting, dietary, timed-draw or other preparation restrictions.</p>
+    <span>15 OR FEWER</span><strong>Send to Front Desk for scheduling</strong>
+    <p>The <strong>person who uploaded the Lab Calculator</strong> gives Front Desk any fasting, dietary, timed-draw, or other preparation instructions to share with the patient.</p>
    </div>
    <div class="calculator-volume-path calculator-volume-triage">
     <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
-    <p>The person who uploaded the Lab Calculator provides any preparation restrictions to Triage.</p>
+    <p>The <strong>person who uploaded the Lab Calculator</strong> sends any preparation restrictions to Triage.</p>
    </div>
   </div>
   <div class="calculator-volume-script">
    <div class="calculator-volume-script-head"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span>${workflowOwnerTag('Triage Provider')}</div>
-   <p class="calculator-volume-script-guidance"><strong>Before scheduling:</strong> Triage discusses the increased risk of errors with the patient, then returns the request and preparation instructions to Front Desk.</p>
-   <p class="calculator-volume-script-quote">“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing.”</p>
+   <p class="calculator-volume-script-guidance"><strong>Before scheduling:</strong> Triage explains the higher risk of errors to the patient. After that discussion, Triage sends the request and preparation instructions to Front Desk for scheduling.</p>
+   <p class="calculator-volume-script-quote">“Your order includes more than 15 lab tests, which increases the chance of an error during ordering, collection, or processing. We would like to review this with you before scheduling.”</p>
   </div>
  </div>`;
 }
@@ -2074,9 +2074,9 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Prepare and save the Lab Calculator</strong><small>Verify tests and specimen requirements, then save as PDF.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Document type: Clinical Document</small></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Label it LAB FLOWSHEET</strong><small>Confirm the PDF is saved in the correct chart.</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Review and save the Lab Calculator</strong><small>Confirm the receiving lab, review the tests and specimen requirements, then save as a PDF.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload the PDF to Athena</strong><small>Upload as a Clinical Document.</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Apply the LAB FLOWSHEET label</strong><small>Save and confirm the PDF appears in the correct patient chart.</small></span></li>'+
    '</ol>'+
    (includeCalculatorLink
     ?calculatorVolumeRoutingStep()
@@ -2224,8 +2224,8 @@ function externalFlow(){
  }else if(complete){h+=`<div class="branch-result"><div class="resolution-note">The requisition is complete. <strong>Move to Step 3 to prepare and upload the Lab Calculator.</strong></div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Verify specimen requirements, save and upload the calculator PDF. Then count the tests to determine the handoff.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
- ['Schedule the patient','Front Desk schedules after receiving the completed request from the Lab Calculator uploader (15 or fewer tests), or after Clinical Triage has spoken with the patient (16 or more). Front Desk communicates the preparation restrictions provided by the uploader, directly or through Triage, to the patient.','','','Front Desk Coordinator'],
+ ['Prepare and upload the Lab Calculator','Confirm the receiving lab, review specimen requirements, and upload the PDF to Athena. Then count the tests to determine the scheduling handoff.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
+ ['Schedule the patient','For 15 or fewer tests, Front Desk schedules after the uploader sends the completed request and preparation instructions. For 16 or more, Front Desk schedules after Clinical Triage speaks with the patient and returns the request. Front Desk communicates the preparation instructions to the patient.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
  ],3)}</div>`;
  h+='</div>';
