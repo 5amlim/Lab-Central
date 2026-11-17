@@ -1957,6 +1957,10 @@ function athenaMock(type,label,file){
  if(type==='save')return '<div class="ad-mock">'+top+'<div class="ad-mock-data"><header>Clinical Document · '+safeHtml(label)+'</header><div class="ad-preview">Document preview</div><strong>Actions</strong><div class="ad-row">◯ Data Entry Completed</div><div class="ad-target ad-row">✓ Save <em>FINAL STEP</em></div><p>Confirm the document label is saved in the correct patient chart.</p></div></div>';
  return '';
 }
+function workflowSubstepRoman(n){
+ const numerals=['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
+ return numerals[n-1]||String(n);
+}
 function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false){
  const requisition=kind==='requisition', label=requisition?'LAB REQUISITION':'LAB FLOWSHEET';
  const file=requisition?'Outside requisition.pdf':'Lab Calculator.pdf';
@@ -1975,7 +1979,7 @@ function athenaUploadGuide(kind,faxOnly=false,updated=false,buttonStyle=false){
  if(requisition)steps.splice(steps.length-1,0,['Add the Internal Note','Enter (1 of 1) even for one requisition. Use the correct number out of the total when there are multiple.','req-note']);
  return '<details class="ad-guide'+(buttonStyle?' sollis-upload-guide':'')+'" data-guide-kind="'+(requisition?'requisition':'calculator')+'"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>'+(updated&&requisition?'How to upload the updated requisition':faxOnly?'How to classify the received fax':'How to upload '+(requisition?'the lab requisition':'the Lab Calculator'))+'</strong><small>View '+steps.length+' illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Green outlines show the Athena options to select. Illustrations are simplified and contain no patient information.</p><div class="ad-guide-grid">'+
- steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+(x[2]==='req-note'?athenaInternalNoteMock('field'):athenaMock(x[2],label,file))+'</article>';}).join('')+
+ steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+workflowSubstepRoman(i+1)+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+(x[2]==='req-note'?athenaInternalNoteMock('field'):athenaMock(x[2],label,file))+'</article>';}).join('')+
  '</div><p class="ad-guide-confirm">Document label: <strong>'+safeHtml(label)+'</strong>. '+(requisition?'Every LAB REQUISITION also needs an Internal Note, starting with (1 of 1).':'This is the Lab Calculator label, not the requisition label.')+'</p></div></details>';
 }
 
@@ -2002,7 +2006,7 @@ function athenaInternalNoteGuide(){
  ];
  return '<details class="ad-guide req-note-guide"><summary><span class="ad-guide-icon">'+svg('file-text')+'</span><span class="ad-guide-label"><strong>How to add the Internal Note</strong><small>View 3 illustrated Athena steps</small></span><span class="ad-chevron" aria-hidden="true"></span></summary>'+
  '<div class="ad-guide-body"><p class="ad-guide-intro">Illustrations follow the Athena document screen. Green outlines mark where to click. No patient information is shown.</p><div class="ad-guide-grid">'+
- steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+String(i+1).padStart(2,'0')+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaInternalNoteMock(x[2])+'</article>';}).join('')+
+ steps.map(function(x,i){return '<article class="ad-guide-card"><div class="ad-guide-card-head"><b>'+workflowSubstepRoman(i+1)+'</b><div><strong>'+safeHtml(x[0])+'</strong><p>'+safeHtml(x[1])+'</p></div></div>'+athenaInternalNoteMock(x[2])+'</article>';}).join('')+
  '</div><p class="ad-guide-confirm"><strong>Required even for one:</strong> enter (1 of 1). If additional documents arrive, update the total on all current requisitions.</p></div></details>';
 }
 
@@ -2013,10 +2017,10 @@ function requisitionVersionNotice(){
    <p class="req-version-intro">Every <b>LAB REQUISITION</b> gets an <b>Internal Note</b>, including a single requisition <code>(1 of 1)</code>. If several requisitions arrive together, or more arrive later, number each current, unique requisition so the lab team knows exactly how many to send.</p>
    <div class="req-version-update-warning" role="note"><span class="req-version-warning-icon" aria-hidden="true">!</span><div><strong>IMPORTANT: UPDATE ALL EXISTING NOTES WHEN MORE REQUISITIONS ARRIVE</strong><p>If more documents arrive later, revisit <b>every previously saved LAB REQUISITION</b> and update the total in each Internal Note. For example, change <b>(1 of 1)</b> to <b>(1 of 2)</b>, then label the new document <b>(2 of 2)</b>.</p></div></div>
    <ol class="req-version-steps">
-    <li><span class="req-version-step-num">1</span><div><strong>Confirm how many current requisitions there are</strong><p>Review everything received, including documents already in Athena. Count only the current requisitions that need to be sent to the receiving lab. Do not count exact duplicates or older versions that have been replaced.</p></div></li>
-    <li><span class="req-version-step-num">2</span><div><strong>Set the Internal Note on the first requisition, even if alone</strong><p>In the patient's Athena chart, select the lab requisition document that was already created. Set its <b>Internal Note</b> to <code>(1 of 1)</code> when alone or <code>(1 of N)</code> when there are multiple, where <b>N</b> is the total number of current requisitions. Select <b>Save</b>. This is required even if there is only one requisition.</p><div class="req-version-inline-guide">${athenaInternalNoteGuide()}</div></div></li>
-    <li><span class="req-version-step-num">3</span><div><strong>Upload and number each additional requisition</strong><p>Upload each new requisition as its <b>own document</b> in the correct chart. Classify it as <b>Clinical Document</b>, label it <b>LAB REQUISITION</b>, and enter <code>(2 of N)</code>, <code>(3 of N)</code>, and so on in <b>Internal Note</b>. Save each one. If received by fax, open the automatically uploaded document, verify the chart and classification, then update its note instead of uploading a duplicate.</p></div></li>
-    <li><span class="req-version-step-num">4</span><div><strong>Remove old duplicates and verify the final set</strong><p>Delete duplicate or superseded requisitions from the active Athena workflow using the approved document correction/deletion process. Do not delete records that must be retained. Confirm each current requisition appears once, its numbering is sequential, and the total matches the number of documents to send. Notify the lab team when the set changes.</p></div></li>
+    <li><span class="req-version-step-num">i</span><div><strong>Confirm how many current requisitions there are</strong><p>Review everything received, including documents already in Athena. Count only the current requisitions that need to be sent to the receiving lab. Do not count exact duplicates or older versions that have been replaced.</p></div></li>
+    <li><span class="req-version-step-num">ii</span><div><strong>Set the Internal Note on the first requisition, even if alone</strong><p>In the patient's Athena chart, select the lab requisition document that was already created. Set its <b>Internal Note</b> to <code>(1 of 1)</code> when alone or <code>(1 of N)</code> when there are multiple, where <b>N</b> is the total number of current requisitions. Select <b>Save</b>. This is required even if there is only one requisition.</p><div class="req-version-inline-guide">${athenaInternalNoteGuide()}</div></div></li>
+    <li><span class="req-version-step-num">iii</span><div><strong>Upload and number each additional requisition</strong><p>Upload each new requisition as its <b>own document</b> in the correct chart. Classify it as <b>Clinical Document</b>, label it <b>LAB REQUISITION</b>, and enter <code>(2 of N)</code>, <code>(3 of N)</code>, and so on in <b>Internal Note</b>. Save each one. If received by fax, open the automatically uploaded document, verify the chart and classification, then update its note instead of uploading a duplicate.</p></div></li>
+    <li><span class="req-version-step-num">iv</span><div><strong>Remove old duplicates and verify the final set</strong><p>Delete duplicate or superseded requisitions from the active Athena workflow using the approved document correction/deletion process. Do not delete records that must be retained. Confirm each current requisition appears once, its numbering is sequential, and the total matches the number of documents to send. Notify the lab team when the set changes.</p></div></li>
    </ol>
    <div class="req-version-example" role="note"><div class="req-version-example-heading"><strong>Example: 3 requisitions to send</strong><span>INTERNAL NOTE</span></div><div class="req-version-note-set"><span>(1 of 3)</span><span>(2 of 3)</span><span>(3 of 3)</span></div><p>If the third requisition arrives later, change the earlier notes from <b>(1 of 2)</b> and <b>(2 of 2)</b> to <b>(1 of 3)</b> and <b>(2 of 3)</b>, then upload the new document as <b>(3 of 3)</b>.</p></div>
    <p class="req-version-reminder"><strong>Replacement vs. additional order:</strong> If a newly received requisition replaces an older one rather than adds a new order, remove the superseded copy from the active workflow. Do not increase the count for a replacement.</p>
@@ -2045,7 +2049,7 @@ function sollisPatientChoices(){
 function calculatorVolumeRoutingStep(){
  return `<div class="sollis-upload-handoff calculator-volume-routing" role="note">
   <div class="calculator-volume-head">
-   <span class="sollis-upload-step-num" aria-hidden="true">4</span>
+   <span class="sollis-upload-step-num" aria-hidden="true">iv</span>
    <div class="calculator-volume-heading"><strong>Count ordered tests and route the request</strong><small>After uploading the Lab Calculator to Athena as <b>LAB FLOWSHEET</b>, count individual tests across all current requisitions, not the number of files.</small></div>
    <span class="calculator-volume-badge">AFTER UPLOAD</span>
   </div>
@@ -2066,9 +2070,9 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
    '<ol class="sollis-upload-steps">'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">1</span><span class="sollis-upload-step-copy"><strong>Prepare Lab Calculator and save as PDF</strong><small>Verify test codes and specimen requirements.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">2</span><span class="sollis-upload-step-copy"><strong>Upload to Athena</strong><small>Clinical Document</small></span></li>'+
-    '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">i</span><span class="sollis-upload-step-copy"><strong>Prepare Lab Calculator and save as PDF</strong><small>Verify test codes and specimen requirements.</small><a class="sollis-upload-inline-link" href="#calculators">Open lab calculators <span aria-hidden="true">↗</span></a></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">ii</span><span class="sollis-upload-step-copy"><strong>Upload to Athena</strong><small>Clinical Document</small></span></li>'+
+    '<li><span class="sollis-upload-step-num" aria-hidden="true">iii</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
    (includeCalculatorLink
     ?calculatorVolumeRoutingStep()
@@ -2158,13 +2162,13 @@ function frontDeskRequisitionIntake(){
  <div class="fd-intake-question"><strong>Does the member already have lab orders from their doctor?</strong><span>SELECT THE APPLICABLE PATH</span></div>
  <div class="fd-intake-options">
   <article class="fd-intake-option fd-intake-has">
-   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">01</span><strong>They have orders</strong><span class="fd-intake-option-status">CLINICAL REVIEW FIRST</span></div>
+   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">I</span><strong>They have orders</strong><span class="fd-intake-option-status">CLINICAL REVIEW FIRST</span></div>
    <p>Ask the member to email the requisition to their <b>region's approved intake email</b> so the clinical team can review it.</p>
    <div class="fd-intake-script"><span>WHAT TO SAY</span><p>“Please email your lab orders to <span class="fd-intake-email-badge" aria-label="Regional email address placeholder">REGIONAL EMAIL</span> provided by our team. Our clinical team needs to review them before we can confirm an appointment. We’ll contact you about scheduling once the review is complete.”</p></div>
    <div class="fd-intake-rule"><strong>Do not offer or confirm an appointment time until clinical review is complete.</strong></div>
   </article>
   <article class="fd-intake-option fd-intake-no">
-   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">02</span><strong>They do not have orders</strong><span class="fd-intake-option-status">SOLLIS PROVIDER</span></div>
+   <div class="fd-intake-option-top"><span class="fd-intake-option-mark">II</span><strong>They do not have orders</strong><span class="fd-intake-option-status">SOLLIS PROVIDER</span></div>
    <p>Explain that a Sollis provider can assess the member and order laboratory testing when clinically appropriate.</p>
    <p class="fd-intake-next">If Sollis places the orders, follow the <b>Ordered at Sollis</b> workflow rather than the external requisition intake process.</p>
   </article>
@@ -2191,14 +2195,14 @@ function externalFlow(){
  <div class="workflow-steps-caption">STEPS</div>
  <div class="req-intake-actions">
  ${fax?`
- <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Verify the auto-uploaded fax</strong><p>Faxed requisitions are automatically uploaded to Athena and initially auto-classified. Confirm the fax is in the correct patient chart and review its document classification.</p></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Reclassify and save</strong><p>Change the automatically assigned classification to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">i</span><div><strong>Verify the auto-uploaded fax</strong><p>Faxed requisitions are automatically uploaded to Athena and initially auto-classified. Confirm the fax is in the correct patient chart and review its document classification.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">ii</span><div><strong>Reclassify and save</strong><p>Change the automatically assigned classification to <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
  `:`
- <div class="req-intake-action"><span class="req-intake-action-num">1</span><div><strong>Manually upload the requisition</strong><p>Open the existing Navigator task, then manually upload the emailed or texted requisition to the correct Athena patient chart. It is not automatically uploaded.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
- <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">i</span><div><strong>Manually upload the requisition</strong><p>Open the existing Navigator task, then manually upload the emailed or texted requisition to the correct Athena patient chart. It is not automatically uploaded.</p><div class="req-intake-upload-guide">${athenaUploadGuide("requisition",fax)}</div></div></div>
+ <div class="req-intake-action"><span class="req-intake-action-num">ii</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
  `}
- <div class="req-intake-action req-intake-note"><span class="req-intake-action-num">3</span><div class="req-intake-note-content"><strong>Add the Internal Note (required even for just 1 file)</strong><p>Open the saved <b>LAB REQUISITION</b>, enter <b>(1 of 1)</b> in <b>Internal Note</b>, and save. If there are multiple, use <b>(1 of N)</b>, <b>(2 of N)</b>, etc., with the same total.</p><div class="req-intake-note-guide">${athenaInternalNoteGuide()}</div></div></div>
- <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">4</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Send the Navigator task to the lab team</strong><span class="req-intake-route-badge">LAB REVIEW FIRST</span></div><p>${fax?'Use the existing Navigator task, or create one if needed. Do not create a duplicate.':'Use the existing Navigator task. Do not create a duplicate.'} Assign it to <b>lab personnel or the RN</b> for requisition review <b>before scheduling</b>. The lab team reviews the requisition before preparing and uploading the Lab Calculator.</p></div></div>
+ <div class="req-intake-action req-intake-note"><span class="req-intake-action-num">iii</span><div class="req-intake-note-content"><strong>Add the Internal Note (required even for just 1 file)</strong><p>Open the saved <b>LAB REQUISITION</b>, enter <b>(1 of 1)</b> in <b>Internal Note</b>, and save. If there are multiple, use <b>(1 of N)</b>, <b>(2 of N)</b>, etc., with the same total.</p><div class="req-intake-note-guide">${athenaInternalNoteGuide()}</div></div></div>
+ <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">iv</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Send the Navigator task to the lab team</strong><span class="req-intake-route-badge">LAB REVIEW FIRST</span></div><p>${fax?'Use the existing Navigator task, or create one if needed. Do not create a duplicate.':'Use the existing Navigator task. Do not create a duplicate.'} Assign it to <b>lab personnel or the RN</b> for requisition review <b>before scheduling</b>. The lab team reviews the requisition before preparing and uploading the Lab Calculator.</p></div></div>
  </div>
  </div>
  ${requisitionVersionNotice()}
@@ -2277,10 +2281,10 @@ function walkinAthenaGuideTabs(){
 function walkinDocumentPanel(){
  return '<div class="walkin-document-panel">'+
   '<div class="walkin-upload-grid" aria-label="Required documents for walk-in patients">'+
-   '<div class="walkin-upload-action"><span class="walkin-upload-number">1</span><div><strong>Prepare the Lab Calculator</strong><p>Select the receiving lab, enter the ordered test codes and review tubes, processing and transport. Save the finalized printout as a PDF.</p><a href="#calculators" class="walkin-calculator-link">Open lab calculators <span aria-hidden="true">↗</span></a></div></div>'+
-   '<div class="walkin-upload-action"><span class="walkin-upload-number">2</span><div><strong>Upload the requisition</strong><p>Save to the correct patient chart in Athena as a <b>Clinical Document</b> labeled <b>LAB REQUISITION</b>.</p></div></div>'+
-   '<div class="walkin-upload-action"><span class="walkin-upload-number">3</span><div><strong>Add the Internal Note</strong><p>Open the saved <b>LAB REQUISITION</b> and enter <b>(1 of 1)</b>, even if there is only one. Save, and number additional requisitions sequentially.</p></div></div>'+ 
-   '<div class="walkin-upload-action"><span class="walkin-upload-number">4</span><div><strong>Upload the calculator PDF</strong><p>Save to the same chart as a <b>Clinical Document</b> labeled <b>LAB FLOWSHEET</b>.</p></div></div>'+
+   '<div class="walkin-upload-action"><span class="walkin-upload-number">i</span><div><strong>Prepare the Lab Calculator</strong><p>Select the receiving lab, enter the ordered test codes and review tubes, processing and transport. Save the finalized printout as a PDF.</p><a href="#calculators" class="walkin-calculator-link">Open lab calculators <span aria-hidden="true">↗</span></a></div></div>'+
+   '<div class="walkin-upload-action"><span class="walkin-upload-number">ii</span><div><strong>Upload the requisition</strong><p>Save to the correct patient chart in Athena as a <b>Clinical Document</b> labeled <b>LAB REQUISITION</b>.</p></div></div>'+
+   '<div class="walkin-upload-action"><span class="walkin-upload-number">iii</span><div><strong>Add the Internal Note</strong><p>Open the saved <b>LAB REQUISITION</b> and enter <b>(1 of 1)</b>, even if there is only one. Save, and number additional requisitions sequentially.</p></div></div>'+ 
+   '<div class="walkin-upload-action"><span class="walkin-upload-number">iv</span><div><strong>Upload the calculator PDF</strong><p>Save to the same chart as a <b>Clinical Document</b> labeled <b>LAB FLOWSHEET</b>.</p></div></div>'+
   '</div>'+
   '<div class="walkin-document-reminder" role="note"><span aria-hidden="true">✓</span><span>Confirm both documents are saved in the correct patient chart before collection. Print the requisition and Lab Calculator for collection and lab handoff as needed.</span></div>'+
   '<div class="walkin-internal-note-guide">'+athenaInternalNoteGuide()+'</div>'+ '<div class="walkin-athena-guides">'+walkinAthenaGuideTabs()+'</div>'+
