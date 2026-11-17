@@ -2060,10 +2060,13 @@ function calculatorVolumeRoutingStep(){
    </div>
    <div class="calculator-volume-path calculator-volume-triage">
     <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
-    <p>Triage speaks with the patient about the increased risk of errors due to the high test volume before scheduling. After the conversation, send the request to Front Desk with preparation instructions.</p>
    </div>
   </div>
-  <div class="calculator-volume-script"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span><p>“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing.”</p></div>
+  <div class="calculator-volume-script">
+   <div class="calculator-volume-script-head"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span>${workflowOwnerTag('Triage Provider')}</div>
+   <p class="calculator-volume-script-guidance">Triage speaks with the patient about the increased risk of errors due to the high test volume before scheduling. After the conversation, return the request to Front Desk with preparation instructions.</p>
+   <p class="calculator-volume-script-quote">“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing.”</p>
+  </div>
  </div>`;
 }
 function calculatorChartUploadPanel(includeCalculatorLink=false){
@@ -2113,8 +2116,8 @@ function workflowStepExtras(kind){
  return '';
 }
 function workflowOwnerTag(role){
- if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN'&&role!=='RN / Lab Personnel'&&role!=='RN'&&role!=='Provider')return '';
- const ownerClass=role==='Front Desk Coordinator'?'workflow-owner-tag--front':role==='Provider'?'workflow-owner-tag--provider':'workflow-owner-tag--lab';
+ if(role!=='Front Desk Coordinator'&&role!=='Lab Personnel / RN'&&role!=='RN / Lab Personnel'&&role!=='RN'&&role!=='Provider'&&role!=='Triage Provider')return '';
+ const ownerClass=role==='Front Desk Coordinator'?'workflow-owner-tag--front':(role==='Provider'||role==='Triage Provider')?'workflow-owner-tag--provider':'workflow-owner-tag--lab';
  return '<span class="workflow-owner-tag '+ownerClass+'" aria-label="Responsible: '+safeHtml(role)+'">'+safeHtml(role)+'</span>';
 }
 function workflowSteps(steps,start=1){
