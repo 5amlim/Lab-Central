@@ -2042,6 +2042,26 @@ function sollisPatientChoices(){
      :'Lab personnel or the RN asks the Front Desk Coordinator to schedule a collection appointment as needed and provides the reviewed order and LAB FLOWSHEET. Front desk handles scheduling and any outstanding Navigator tasks. When the patient returns, the RN collects using the calculator and documents the collection in Athena.')+
    '</p></div>';
 }
+function calculatorVolumeRoutingStep(){
+ return `<div class="sollis-upload-handoff calculator-volume-routing" role="note">
+  <div class="calculator-volume-head">
+   <span class="sollis-upload-step-num" aria-hidden="true">4</span>
+   <div class="calculator-volume-heading"><strong>Count ordered tests and route the request</strong><small>After uploading the Lab Calculator to Athena as <b>LAB FLOWSHEET</b>, count individual tests across all current requisitions, not the number of files.</small></div>
+   <span class="calculator-volume-badge">AFTER UPLOAD</span>
+  </div>
+  <div class="calculator-volume-paths">
+   <div class="calculator-volume-path calculator-volume-standard">
+    <span>15 OR FEWER</span><strong>Return to Front Desk for scheduling</strong>
+    <p>Send the completed request with any fasting, dietary, timed-draw or other patient preparation restrictions.</p>
+   </div>
+   <div class="calculator-volume-path calculator-volume-triage">
+    <span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong>
+    <p>Triage speaks with the patient about the increased risk of errors due to the high test volume before scheduling. After the conversation, send the request to Front Desk with preparation instructions.</p>
+   </div>
+  </div>
+  <div class="calculator-volume-script"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span><p>“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”</p></div>
+ </div>`;
+}
 function calculatorChartUploadPanel(includeCalculatorLink=false){
  return '<div class="workflow-step-extra sollis-step-upload calculator-chart-upload">'+
   '<div class="workflow-steps-caption">STEPS</div><div class="sollis-upload-panel" aria-label="Lab Calculator upload requirements">'+
@@ -2051,7 +2071,7 @@ function calculatorChartUploadPanel(includeCalculatorLink=false){
     '<li><span class="sollis-upload-step-num" aria-hidden="true">3</span><span class="sollis-upload-step-copy"><strong>Set document label</strong><small>LAB FLOWSHEET</small></span></li>'+
    '</ol>'+
    (includeCalculatorLink
-    ?'<div class="sollis-upload-handoff"><span class="sollis-upload-step-num" aria-hidden="true">4</span><span class="sollis-upload-step-copy"><strong>Return to front desk for scheduling</strong><small>After uploading the Lab Calculator to Athena with the correct LAB FLOWSHEET label, return the completed request to the Front Desk Coordinator for scheduling. Include any fasting, dietary or other patient preparation requirements.</small></span><span class="sollis-upload-handoff-badge">REQUIRED HANDOFF</span></div>'
+    ?calculatorVolumeRoutingStep()
     :'<div class="sollis-upload-required" role="note"><span class="sollis-upload-required-icon" aria-hidden="true">!</span><span><strong>Required for every patient</strong>, including those already in clinic. Complete before specimen collection.</span></div>')+
   '</div>'+
   (includeCalculatorLink?'<div class="calculator-chart-actions">'+athenaUploadGuide('calculator',false,false,true)+'</div>':athenaUploadGuide('calculator',false,false,true))+'</div>';
@@ -2148,16 +2168,6 @@ function frontDeskRequisitionIntake(){
  </div>
  </section>`;
 }
-function approvedRequisitionVolumeCheck(){
- return `<div class="branch-volume-check" role="note">
- <div class="branch-volume-head"><span class="branch-volume-icon" aria-hidden="true">16+</span><div class="branch-volume-heading"><strong>Lab tech: Check the total test count</strong><p>After confirming the tests can be performed and the current requisition has been uploaded to Athena, count individual ordered tests across all requisitions, not files.</p></div><span class="branch-volume-badge">AFTER REQUISITION REVIEW</span></div>
- <div class="branch-volume-outcomes">
-  <div class="branch-volume-outcome branch-volume-standard"><span>15 OR FEWER</span><strong>Continue to the Lab Calculator</strong></div>
-  <div class="branch-volume-outcome branch-volume-escalate"><span>16 OR MORE</span><strong>Assign the Navigator task to Clinical Triage</strong><p>Triage must speak with the patient about the increased risk of errors from the high test volume before scheduling or collection.</p></div>
- </div>
- <div class="branch-volume-script"><span>TRIAGE TEAM · SUGGESTED PATIENT WORDING</span><p>“Because your order includes more than 15 lab tests, there is a greater risk of errors during ordering, collection, or processing. Our team will review the order with you before we proceed.”</p></div>
-</div>`;
-}
 function externalFlow(){
  const selection=orderWorkflowControls('external',true);
  if(state.ordersRegion==='ny')return selection+window.LAB_NY_SCHEDULED.render();
@@ -2183,7 +2193,7 @@ function externalFlow(){
  <div class="req-intake-action"><span class="req-intake-action-num">2</span><div><strong>Manually classify and save</strong><p>Classify the uploaded file as <b>Clinical Document</b>, label <b>LAB REQUISITION</b>, then save and verify.</p></div></div>
  `}
  <div class="req-intake-action req-intake-note"><span class="req-intake-action-num">3</span><div class="req-intake-note-content"><strong>Add the Internal Note (required even for just 1 file)</strong><p>Open the saved <b>LAB REQUISITION</b>, enter <b>(1 of 1)</b> in <b>Internal Note</b>, and save. If there are multiple, use <b>(1 of N)</b>, <b>(2 of N)</b>, etc., with the same total.</p><div class="req-intake-note-guide">${athenaInternalNoteGuide()}</div></div></div>
- <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">4</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Send the Navigator task to the lab team</strong><span class="req-intake-route-badge">LAB REVIEW FIRST</span></div><p>${fax?'Use the existing Navigator task, or create one if needed. Do not create a duplicate.':'Use the existing Navigator task. Do not create a duplicate.'} Assign it to <b>lab personnel or the RN</b> for requisition review <b>before scheduling</b>. The lab tech checks the test count after confirming the requisition can be performed.</p></div></div>
+ <div class="req-intake-action req-intake-route"><span class="req-intake-action-num">4</span><div class="req-intake-route-content"><div class="req-intake-route-header"><strong>Send the Navigator task to the lab team</strong><span class="req-intake-route-badge">LAB REVIEW FIRST</span></div><p>${fax?'Use the existing Navigator task, or create one if needed. Do not create a duplicate.':'Use the existing Navigator task. Do not create a duplicate.'} Assign it to <b>lab personnel or the RN</b> for requisition review <b>before scheduling</b>. The lab team reviews the requisition before preparing and uploading the Lab Calculator.</p></div></div>
  </div>
  </div>
  ${requisitionVersionNotice()}
@@ -2197,11 +2207,10 @@ function externalFlow(){
  }else if(state.reqResolution==='provided'){h+=`<div class="resolution-note resolution-note-upload" role="note"><div class="resolution-note-upload-head"><span class="resolution-note-upload-icon" aria-hidden="true">${svg('file-text')}</span><strong class="resolution-note-upload-title">Upload the updated requisition to Athena</strong><span class="resolution-note-upload-required">REQUIRED BEFORE STEP 4</span></div><p>Obtain the corrected requisition with the account number and test codes. Upload it to the correct patient chart as a <strong>Clinical Document</strong> labeled <strong>LAB REQUISITION</strong>.</p><p class="resolution-note-upload-next">Once the updated requisition is uploaded and confirmed as current, <strong>move to Step 4 to prepare and upload the Lab Calculator.</strong></p><div class="updated-req-guide">${athenaUploadGuide("requisition",false,true)}</div></div>`;}
  h+=`</div>`;
  }else if(complete){h+=`<div class="branch-result"><div class="resolution-note">The requisition is complete. <strong>Move to Step 4 to prepare and upload the Lab Calculator.</strong></div></div>`;}
- if(complete || (missing && state.reqResolution==='provided')) h+=approvedRequisitionVolumeCheck();
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Use the appropriate Lab Calculator to verify the test codes, specimen requirements and collection instructions, then generate the printout.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
- ['Schedule the patient','The Front Desk Coordinator schedules the patient after receiving the completed request and communicates any fasting, dietary or other preparation instructions provided by lab personnel or the RN.','','','Front Desk Coordinator'],
+ ['Prepare and upload the Lab Calculator','Verify specimen requirements, prepare the printout and upload it to Athena. After upload, count tests and route the completed request.','calculator-upload','Confirm the receiving lab.','Lab Personnel / RN'],
+ ['Schedule the patient','Front Desk schedules after receiving the completed request from the lab team (15 or fewer tests), or after Clinical Triage has spoken with the patient (16 or more). Communicate all fasting, dietary, timed-draw and other preparation instructions.','','','Front Desk Coordinator'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN']
  ],4)}</div>`;
  h+='</div>';
