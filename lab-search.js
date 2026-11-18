@@ -506,6 +506,11 @@ function suggestions(query,ctx){
  const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(q);
  const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
  const results=[],seen=new Set();
+ const grouped=new Map(['quest','labcorp'].map(lab=>[lab,[]]));
+ for(const item of records){
+  if(item.kind==='sendout-test'&&grouped.has(item.lab))grouped.get(item.lab).push(item);
+ }
+ const isGrouped= item=>item?.kind==='sendout-test'&&grouped.has(item.lab);
  const add=(item)=>{
   if(!item||!item.title||results.length>=SUGGESTION_LIMIT)return;
   const key=[item.action||'open',item.href||item.query||'',item.title].join('|');
@@ -519,9 +524,9 @@ function suggestions(query,ctx){
    item.category==='Tools'?'Tool or calculator':
    item.category==='Quality & compliance'?'Quality reference':'Open reference',
   action:'open',
-  href:item.href,approximate:Boolean(item.approximate)
+  href:item.href,lab:item.lab,code:item.code,approximate:Boolean(item.approximate)
  });
- if(featured)add(resource(featured));
+ if(featured&&!isGrouped(featured))add(resource(featured));
  // A bare receiving-lab name means navigation, not a flood of test names.
  // Preserve the direct destination, then offer only concise related workflows.
  const labAlias={quest:'quest', 'quest diagnostics':'quest',labcorp:'labcorp','lab corp':'labcorp',
@@ -558,13 +563,25 @@ function suggestions(query,ctx){
     action:'sendout-panel',lab:match.lab,panelId:match.id||'',query:match.name,
     approximate:Boolean(match.approximate)});
   }
-  for(const item of records.filter(item=>item.kind==='sendout-test'))add(resource(item));
+  for(const item of records.filter(item=>item.kind==='sendout-test'&&!isGrouped(item)))add(resource(item));
  }
  for(const item of records){
-  if(item===featured||testFirst&&item.kind==='sendout-test')continue;
+  if(item===featured||isGrouped(item)||testFirst&&item.kind==='sendout-test')continue;
   add(resource(item));
  }
- return results.slice(0,SUGGESTION_LIMIT);
+ const groups=[...grouped].filter(([,items])=>items.length).map(([lab,items])=>({
+  action:'lab-group',lab,title:lab==='quest'?'Quest':'LabCorp',category:'Sendout testing',
+  detail:items.length+' matching '+(items.length===1?'test':'tests'),
+  children:items.map(resource)
+ }));
+ // Reserve a slot for each matching vendor, rather than letting a long Quest
+ // list crowd out LabCorp or other quick destinations.
+ const regular=results.slice(0,SUGGESTION_LIMIT-groups.length);
+ if(!groups.length)return regular;
+ const first=regular.findIndex(item=>item.category!=='In-house testing'&&item.action!=='sendout-panel');
+ const at=testFirst?(first<0?regular.length:first):regular.length;
+ regular.splice(at,0,...groups);
+ return regular;
 }
 window.LAB_SITE_SEARCH={render,find,suggestions,categories:CATEGORIES,resourceCount:templates.length+checklists.length+referenceDocs.length,ensureExternalCatalog};
 })();
