@@ -234,3 +234,47 @@
  .search-suggestion{border-left-color:var(--suggestion-accent)}
  .search-suggestion-kind{border-color:var(--suggestion-accent)}
 }
+
+/* One compact vendor row per matching lab, with a scrollable flyout. */
+.search-suggestion.search-lab-group[data-lab="quest"]{
+ --suggestion-accent:#57906e;--suggestion-soft:#eef7f0;--suggestion-text:#36734f
+}
+.search-suggestion.search-lab-group[data-lab="labcorp"]{
+ --suggestion-accent:#507eb3;--suggestion-soft:#edf4fc;--suggestion-text:#365f91
+}
+.search-lab-group{
+ min-height:50px;border-left-color:var(--suggestion-accent);
+ background:var(--suggestion-soft);margin:2px 0;
+}
+.search-lab-group[aria-expanded="true"]{background:var(--suggestion-soft);border-left-color:var(--suggestion-accent);}
+.search-lab-group .search-suggestion-body strong{color:var(--suggestion-text);font-size:13px}
+.search-lab-chevron{color:var(--suggestion-accent);font-size:23px;line-height:1;flex:none;padding:0 2px}
+.search-lab-submenu{
+ position:fixed;z-index:1000;width:350px;max-width:calc(100vw - 24px);
+ box-sizing:border-box;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+ touch-action:pan-y;background:#fff;border:1px solid #d5e3e9;border-radius:13px;
+ box-shadow:0 15px 40px rgba(26,57,76,.17);padding:5px;
+ --lab-accent:#57906e;--lab-tint:#eef7f0;
+}
+.search-lab-submenu[data-lab="labcorp"]{--lab-accent:#507eb3;--lab-tint:#edf4fc}
+.search-lab-submenu-heading{
+ position:sticky;top:-5px;z-index:1;background:#fff;display:flex;
+ justify-content:space-between;align-items:center;gap:8px;padding:10px 9px;
+ border-bottom:1px solid #e9eef1;color:var(--lab-accent)
+}
+.search-lab-submenu-heading strong{font-size:13px;font-weight:800}
+.search-lab-submenu-heading span{font-size:10px;color:#7b8e9d}
+.search-lab-submenu .search-suggestion[data-kind="sendout"]{
+ --suggestion-accent:var(--lab-accent);--suggestion-soft:var(--lab-tint);--suggestion-text:var(--lab-accent);
+}
+.search-lab-submenu.is-inline{
+ position:static;width:auto;max-width:100%;max-height:min(300px,42dvh);
+ margin:2px 1px 6px 5px;border-radius:9px;box-shadow:none;
+ border-left:3px solid var(--lab-accent);
+}
+.search-lab-submenu.is-inline .search-suggestion{min-height:44px}
+@media (hover:none),(pointer:coarse),(max-width:719px){
+ .search-lab-chevron{transform:rotate(90deg)}
+ .search-lab-group[aria-expanded="true"] .search-lab-chevron{transform:rotate(-90deg)}
+}
+@media print{.search-lab-submenu{display:none!important}}
