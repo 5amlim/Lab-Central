@@ -195,7 +195,7 @@ assert.ok(index.includes('lab-search.css?v='),'Main page does not load search st
 assert.ok(index.includes('LAB_SITE_SEARCH.render'),'Main search is not connected');
 assert.ok(index.includes("sec.id==='pathfast'&&tab==='chest-pain'"),'Troponin deep link route missing');
 assert.ok(index.includes("sec.id==='piccolo'&&tab==='egfr-calculator'"),'eGFR deep link route missing');
-// The full Quest/Labcorp catalogs load only on demand, from compact local data.
+// Generated Quest/Labcorp catalogs load only on demand. Historical local JSON files are offline fixtures.
 const questIndex=JSON.parse(readFileSync(resolve(root,'assets/search/quest-tests.json'),'utf8'));
 const labcorpIndex=JSON.parse(readFileSync(resolve(root,'assets/search/labcorp-tests.json'),'utf8'));
 assert.ok(questIndex.tests.length>=2600,'Quest test code search coverage unexpectedly reduced');
@@ -216,8 +216,14 @@ runInNewContext(source,{
  Event:class Event{constructor(type){this.type=type}},
  fetch:async path=>{
   loadedPaths.push(path);
-  const data=JSON.parse(readFileSync(resolve(root,path),'utf8'));
-  return {ok:true,json:async()=>data};
+  const match=path.match(/\/assets\/search\/(quest|labcorp)-tests\.json$/);
+  assert.ok(match,'Search must request the generated catalog JSON, not a calculator page: '+path);
+  const lab=match[1];
+  const data=lab==='quest'?questIndex:labcorpIndex;
+  // Historical local indexes are offline test fixtures only, never production fallbacks.
+  const tests=data.tests.map(row=>row.slice());
+  if(lab==='quest')tests.push(['99999999','Synthetic catalog alias probe','Serum',['testprobealias','syntheticclinicalgroup']]);
+  return {ok:true,json:async()=>({schema:1,lab,tests})};
  }
 });
 const smart=catalogWindow.LAB_SMART_SEARCH;
@@ -246,6 +252,10 @@ const externalSearch=catalogWindow.LAB_SITE_SEARCH;
 assert.equal(loadedPaths.length,0,'External indexes must not load before the user searches');
 await externalSearch.ensureExternalCatalog('procalcitonin');
 assert.equal(loadedPaths.length,2,'External catalogs should require only two lazy requests');
+assert.ok(loadedPaths.every(path=>path.startsWith('https://raw.githubusercontent.com/5amlim/Lab-Calculator/main/assets/search/')),'Indexes must use portable static endpoints');
+for(const q of ['99999999','testprobealias','syntheticclinicalgroup']){
+ assert.ok(externalSearch.find(q,ctx).some(x=>x.lab==='quest'&&x.code==='99999999'),'Generated index record not searchable by '+q);
+}
 
 const troponinOptions=externalSearch.render({...renderArgs,query:'troponin',panelResults:samplePanels});
 const inHouseOptionAt=troponinOptions.indexOf('mock-flu-panel');
