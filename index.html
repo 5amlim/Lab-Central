@@ -302,7 +302,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 }
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
-<link rel="stylesheet" href="lab-search.css?v=20261110-categorized-suggestions" media="all">
+<link rel="stylesheet" href="lab-search.css?v=20261117-lab-suggestion-groups" media="all">
 <script src="market-context.js?v=20261107-optional-v2"></script>
 <link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-dymo-print" media="all">
 <link rel="stylesheet" href="guide-howto-navigation.css?v=20261112-athena-inline-tabs-v2" media="all">
@@ -521,7 +521,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261117-portable-json"></script>
+<script src="lab-search.js?v=20261117-lab-suggestion-groups"></script>
 <script>
 (()=>{
 'use strict';
@@ -3294,10 +3294,86 @@ document.addEventListener('labcentral:marketchange',e=>{
 // Keyboard focus stays on the search field while Arrow keys select suggestions.
 let searchSuggestions=[];
 let searchSuggestionIndex=-1;
+let searchLabGroupIndex=-1;
+let searchLabChildIndex=-1;
+let searchLabMenu=null;
+function closeSearchLabMenu(){
+ if(searchLabGroupIndex>=0){
+  el('searchSuggestionOptions').querySelector('[data-search-suggestion="'+searchLabGroupIndex+'"]')?.setAttribute('aria-expanded','false');
+ }
+ searchLabMenu?.remove();
+ searchLabMenu=null;searchLabGroupIndex=-1;searchLabChildIndex=-1;
+}
+function positionSearchLabMenu(){
+ if(!searchLabMenu)return;
+ const trigger=el('searchSuggestionOptions').querySelector('[data-search-suggestion="'+searchLabGroupIndex+'"]');
+ if(!trigger){closeSearchLabMenu();return;}
+ const popup=el('searchSuggestions'),p=popup.getBoundingClientRect(),r=trigger.getBoundingClientRect();
+ const viewport=document.documentElement.clientWidth;
+ const desktop=matchMedia('(hover: hover) and (pointer: fine) and (min-width: 720px)').matches;
+ const gap=6,margin=12,right=viewport-p.right-gap-margin,left=p.left-gap-margin;
+ const side=desktop&&Math.max(right,left)>=250;
+ if(!side){
+  searchLabMenu.classList.add('is-inline');
+  searchLabMenu.style.cssText='';
+  if(searchLabMenu.previousElementSibling!==trigger)trigger.after(searchLabMenu);
+  return;
+ }
+ searchLabMenu.classList.remove('is-inline');
+ if(searchLabMenu.parentElement!==document.body)document.body.appendChild(searchLabMenu);
+ const useRight=right>=250||right>=left,width=Math.min(365,useRight?right:left);
+ const height=Math.min(460,window.innerHeight-2*margin);
+ const top=Math.max(margin,Math.min(r.top,window.innerHeight-Math.min(searchLabMenu.scrollHeight+2,height)-margin));
+ searchLabMenu.style.width=width+'px';
+ searchLabMenu.style.left=(useRight?p.right+gap:p.left-gap-width)+'px';
+ searchLabMenu.style.top=top+'px';
+ searchLabMenu.style.maxHeight=height+'px';
+}
+function openSearchLabMenu(index,{toggle=false,keyboard=false}={}){
+ const entry=searchSuggestions[index];
+ if(entry?.action!=='lab-group')return;
+ if(searchLabGroupIndex===index&&searchLabMenu){
+  if(toggle)closeSearchLabMenu();
+  else if(keyboard)highlightSearchLabChild(0);
+  return;
+ }
+ closeSearchLabMenu();
+ const trigger=el('searchSuggestionOptions').querySelector('[data-search-suggestion="'+index+'"]');
+ if(!trigger)return;
+ searchLabGroupIndex=index;
+ trigger.setAttribute('aria-expanded','true');
+ searchLabMenu=document.createElement('div');
+ searchLabMenu.className='search-lab-submenu';
+ searchLabMenu.id='search-lab-submenu';
+ searchLabMenu.dataset.lab=entry.lab;
+ searchLabMenu.setAttribute('role','listbox');
+ searchLabMenu.setAttribute('aria-label',entry.title+' matching tests');
+ searchLabMenu.innerHTML='<div class="search-lab-submenu-heading"><strong>'+safeHtml(entry.title)+'</strong><span>'+safeHtml(entry.detail)+'</span></div>'+
+  entry.children.map((child,i)=>renderSearchSuggestion(child,i,true)).join('');
+ searchLabMenu.addEventListener('click',e=>{
+  const child=e.target.closest('[data-search-child]');
+  if(!child)return;
+  // Let the real external anchor navigate before removing the menu.
+  setTimeout(closeSearchSuggestions,0);
+ });
+ document.body.appendChild(searchLabMenu);
+ positionSearchLabMenu();
+ if(keyboard)highlightSearchLabChild(0);
+}
+function highlightSearchLabChild(index){
+ if(!searchLabMenu)return;
+ const options=[...searchLabMenu.querySelectorAll('[data-search-child]')];
+ if(!options.length)return;
+ searchLabChildIndex=(index+options.length)%options.length;
+ options.forEach((option,i)=>option.setAttribute('aria-selected',String(i===searchLabChildIndex)));
+ el('search').setAttribute('aria-activedescendant',options[searchLabChildIndex].id);
+ options[searchLabChildIndex].scrollIntoView({block:'nearest',inline:'nearest'});
+}
 function syncSearchClear(){
  el('clearSearch').hidden=!el('search').value.length;
 }
 function closeSearchSuggestions(){
+ closeSearchLabMenu();
  el('searchSuggestions').hidden=true;
  el('search').setAttribute('aria-expanded','false');
  el('search').removeAttribute('aria-activedescendant');
@@ -3307,9 +3383,38 @@ function highlightSearchSuggestion(index){
  const options=[...el('searchSuggestionOptions').querySelectorAll('[data-search-suggestion]')];
  if(!options.length)return;
  searchSuggestionIndex=(index+options.length)%options.length;
+ closeSearchLabMenu();
  options.forEach((option,i)=>option.setAttribute('aria-selected',String(i===searchSuggestionIndex)));
  el('search').setAttribute('aria-activedescendant',options[searchSuggestionIndex].id);
- options[searchSuggestionIndex].scrollIntoView({block:'nearest'});
+ options[searchSuggestionIndex].scrollIntoView({block:'nearest',inline:'nearest'});
+}
+function renderSearchSuggestion(entry,i,child=false){
+ if(entry.action==='lab-group'){
+  return '<button type="button" class="search-suggestion search-lab-group" data-kind="sendout" data-lab="'+safeHtml(entry.lab)+'" role="option" aria-selected="false" aria-haspopup="listbox" aria-expanded="false" aria-controls="search-lab-submenu" id="search-suggestion-'+i+'" data-search-suggestion="'+i+'">'+
+   '<span class="search-suggestion-body"><strong>'+safeHtml(entry.title)+'</strong><span class="search-suggestion-meta"><small>'+safeHtml(entry.detail)+'</small></span></span>'+
+   '<span class="search-lab-chevron" aria-hidden="true">›</span></button>';
+ }
+ const linked=entry.action==='open'&&Boolean(entry.href)&&!entry.href.startsWith('#');
+ const external=linked&&/^https?:\/\//i.test(entry.href);
+ const tag=linked?'a':'button';
+ const attrs=linked?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
+ const description=entry.detail||entry.category||'Reference';
+ const kind=entry.category==='In-house testing'
+  ?(entry.detail==='Equipment guide'?'equipment':'inhouse'):
+  entry.category==='Sendout testing'?'sendout':
+  entry.category==='Tools'?'tool':
+  entry.category==='Documents'?'document':
+  entry.category==='Quality & compliance'?'quality':'workflow';
+ const kindLabel={equipment:'Equipment',inhouse:'In-house test',sendout:'Sendout test',
+  tool:'Tool',document:'Document',quality:'Quality',workflow:'Workflow'}[kind];
+ const title=child?entry.title.replace(/^[^·]+·\s*/,''):entry.title;
+ const optionId=child?'search-lab-child-':'search-suggestion-';
+ const optionAttr=child?'data-search-child':'data-search-suggestion';
+ return '<'+tag+attrs+' class="search-suggestion" data-kind="'+kind+'" role="option" aria-selected="false" id="'+optionId+i+'" '+optionAttr+'="'+i+'">'+
+  '<span class="search-suggestion-body"><strong>'+safeHtml(title)+'</strong>'+
+  '<span class="search-suggestion-meta"><span class="search-suggestion-kind">'+kindLabel+'</span>'+
+  '<small>'+safeHtml(description)+(entry.approximate?' · Possible spelling match':'')+'</small></span></span>'+
+  '<span class="search-suggestion-arrow" aria-hidden="true">'+(external?'↗':'→')+'</span></'+tag+'>';
 }
 function refreshSearchSuggestions(){
  const input=el('search'),query=input.value.trim(),popup=el('searchSuggestions');
@@ -3321,26 +3426,8 @@ function refreshSearchSuggestions(){
   sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(query)||[]
  };
  searchSuggestions=window.LAB_SITE_SEARCH?.suggestions?.(query,context)||[];
- const html=searchSuggestions.map((entry,i)=>{
-  const linked=entry.action==='open'&&Boolean(entry.href)&&!entry.href.startsWith('#');
-  const external=linked&&/^https?:\/\//i.test(entry.href);
-  const tag=linked?'a':'button';
-  const attrs=linked?' href="'+safeHtml(entry.href)+'" target="_blank" rel="noopener noreferrer"':' type="button"';
-  const description=entry.detail||entry.category||'Reference';
-  const kind=entry.category==='In-house testing'
-   ?(entry.detail==='Equipment guide'?'equipment':'inhouse'):
-   entry.category==='Sendout testing'?'sendout':
-   entry.category==='Tools'?'tool':
-   entry.category==='Documents'?'document':
-   entry.category==='Quality & compliance'?'quality':'workflow';
-  const kindLabel={equipment:'Equipment',inhouse:'In-house test',sendout:'Sendout test',
-   tool:'Tool',document:'Document',quality:'Quality',workflow:'Workflow'}[kind];
-  return '<'+tag+attrs+' class="search-suggestion" data-kind="'+kind+'" role="option" aria-selected="false" id="search-suggestion-'+i+'" data-search-suggestion="'+i+'">'+
-   '<span class="search-suggestion-body"><strong>'+safeHtml(entry.title)+'</strong>'+
-   '<span class="search-suggestion-meta"><span class="search-suggestion-kind">'+kindLabel+'</span>'+
-   '<small>'+safeHtml(description)+(entry.approximate?' · Possible spelling match':'')+'</small></span></span>'+
-   '<span class="search-suggestion-arrow" aria-hidden="true">'+(external?'↗':'→')+'</span></'+tag+'>';
- }).join('');
+ closeSearchLabMenu();
+ const html=searchSuggestions.map((entry,i)=>renderSearchSuggestion(entry,i)).join('');
  el('searchSuggestionOptions').innerHTML=html||
   '<p class="search-suggestion-empty">No quick matches. See the full results for more options.</p>';
  searchSuggestionIndex=-1;
@@ -3371,11 +3458,21 @@ el('search').addEventListener('keydown',e=>{
  const popup=el('searchSuggestions'),visible=!popup.hidden;
  if(e.key==='Escape'){
   e.preventDefault();e.stopPropagation();
+  if(searchLabMenu){closeSearchLabMenu();el('search').removeAttribute('aria-activedescendant');return;}
   if(visible){closeSearchSuggestions();return;}
   e.target.value='';state.search='';state.filter='All';state.searchVisibleByLab={};
   syncSearchClear();render();e.target.blur();return;
  }
+ if(e.key==='ArrowRight'&&visible&&searchSuggestions[searchSuggestionIndex]?.action==='lab-group'){
+  e.preventDefault();openSearchLabMenu(searchSuggestionIndex,{keyboard:true});return;
+ }
+ if(e.key==='ArrowLeft'&&searchLabMenu){
+  e.preventDefault();const group=searchLabGroupIndex;closeSearchLabMenu();highlightSearchSuggestion(group);return;
+ }
  if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+  if(searchLabMenu&&searchLabChildIndex>=0){
+   e.preventDefault();highlightSearchLabChild(searchLabChildIndex+(e.key==='ArrowDown'?1:-1));return;
+  }
   if(!visible)refreshSearchSuggestions();
   const total=el('searchSuggestionOptions').querySelectorAll('[data-search-suggestion]').length;
   if(total){e.preventDefault();highlightSearchSuggestion(
@@ -3384,6 +3481,10 @@ el('search').addEventListener('keydown',e=>{
  }
  if(e.key==='Enter'){
   e.preventDefault();
+  if(searchLabMenu&&searchLabChildIndex>=0){
+   const link=searchLabMenu.querySelector('[data-search-child="'+searchLabChildIndex+'"]');
+   if(link){link.click();return;}
+  }
   const query=e.target.value.trim();
   if(query){
    state.search=query;state.filter='All';state.searchVisibleByLab={};
@@ -3400,9 +3501,24 @@ el('searchSuggestionOptions').addEventListener('click',e=>{
  const index=Number(target.dataset.searchSuggestion);
  const item=searchSuggestions[index];
  if(!item)return;
+ if(item.action==='lab-group'){
+  e.preventDefault();
+  const touch=!matchMedia('(hover: hover) and (pointer: fine)').matches||e.pointerType==='touch';
+  openSearchLabMenu(index,{toggle:touch});return;
+ }
  if(item.action==='open'&&item.href&&!item.href.startsWith('#')){closeSearchSuggestions();return;}
  e.preventDefault();selectSearchSuggestion(index);
 });
+el('searchSuggestionOptions').addEventListener('pointerover',e=>{
+ if(e.pointerType!=='mouse'||!matchMedia('(hover: hover) and (pointer: fine)').matches)return;
+ const trigger=e.target.closest('[data-search-suggestion]');
+ if(!trigger)return;
+ const index=Number(trigger.dataset.searchSuggestion);
+ if(searchSuggestions[index]?.action==='lab-group')openSearchLabMenu(index);
+ else if(searchLabMenu)closeSearchLabMenu();
+});
+window.addEventListener('resize',positionSearchLabMenu);
+el('searchSuggestions').addEventListener('scroll',positionSearchLabMenu,{passive:true});
 el('searchViewAll').addEventListener('click',()=>{
  closeSearchSuggestions();el('search').blur();el('mainContent')?.scrollIntoView({block:'start',behavior:'smooth'});
 });
@@ -3410,8 +3526,8 @@ el('clearSearch').addEventListener('click',()=>{
  el('search').value='';state.search='';state.filter='All';state.searchVisibleByLab={};
  closeSearchSuggestions();syncSearchClear();render();el('search').focus({preventScroll:true});
 });
-document.addEventListener('pointerdown',e=>{if(!el('sidebarSearch').contains(e.target))closeSearchSuggestions();});
-document.addEventListener('focusin',e=>{if(!el('sidebarSearch').contains(e.target))closeSearchSuggestions();});
+document.addEventListener('pointerdown',e=>{if(!el('sidebarSearch').contains(e.target)&&!searchLabMenu?.contains(e.target))closeSearchSuggestions();});
+document.addEventListener('focusin',e=>{if(!el('sidebarSearch').contains(e.target)&&!searchLabMenu?.contains(e.target))closeSearchSuggestions();});
 document.addEventListener('keydown',e=>{if((e.key==='/'||((e.ctrlKey||e.metaKey)&&e.key==='k'))&&!/input|textarea/i.test(e.target.tagName)){e.preventDefault();el('search').focus();el('search').select()}if(e.key==='Escape'){el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show')}});
 el('homeCrumb').addEventListener('click',()=>navigate('home'));
 el('openSidebar').addEventListener('click',()=>{el('sidebar').classList.add('open');el('sidebarScrim').classList.add('show')});
