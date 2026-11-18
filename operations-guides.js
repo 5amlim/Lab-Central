@@ -3,6 +3,7 @@
 "use strict";
 var formURL=String(window.LAB_SENDOUT_FORM_URL||"").trim();
 var formReady=/^https:\/\/[^\s<>"']+$/i.test(formURL)&&!/^https:\/\/(?:forms\.office\.com|forms\.microsoft\.com)\/?$/i.test(formURL);
+function isNY(){return window.LAB_MARKET?.get()==='ny';}
 function heading(k,t,d){return '<section class="ops-page"><div class="ops-kicker">'+k+'</div><h1>'+t+'</h1><p class="ops-lead">'+d+'</p>';}
 function notice(t,type){return '<div class="ops-info '+(type||'')+'"><span class="ops-info-icon" aria-hidden="true">'+(type==="amber"?"!":"i")+'</span><div>'+t+'</div></div>';}
 function steps(items,start=1){return '<div class="ops-flow">'+items.map(function(s,i){return '<div class="ops-step"><span class="ops-step-index">'+String(i+start).padStart(2,"0")+'</span><div class="ops-step-body">'+(s[0]?'<span class="ops-role">'+s[0]+'</span>':'')+'<strong>'+s[1]+'</strong><p>'+s[2]+'</p></div></div>';}).join("")+'</div>';}
@@ -10,8 +11,8 @@ function list(items,ordered){var tag=ordered?"ol":"ul";return '<'+tag+'>'+items.
 function card(title,body,color,tag){return '<article class="ops-card '+(color||"teal")+'">'+(tag?'<div class="ops-card-label">'+tag+'</div>':'')+'<h3>'+title+'</h3>'+body+'</article>';}
 function accordion(title,body,opened){return '<details class="ops-accordion" '+(opened?"open":"")+'><summary>'+title+'</summary><div class="ops-accordion-content">'+body+'</div></details>';}
 function action(route,label,color){return '<button type="button" class="ops-action '+(color||"")+'" data-go="'+route+'">'+label+' <span aria-hidden="true">→</span></button>';}
-function handout(id,label){return '<a class="ops-print-link" href="collection-handouts.html?guide='+id+'&v=20261113-urine-kit" target="_blank" rel="noopener noreferrer">'+(label||'Open illustrated patient guide')+' ↗</a>';}
-function printHandoutPanel(){return '<div class="ops-print-panel"><strong>Print an illustrated patient handout</strong><p>Each lab-specific guide covers collection, labels, return bags and clinic drop-off.</p><div class="ops-print-links">'+handout('biofire-stool','BioFire stool')+handout('pathmd-stool','PathMD stool')+handout('cedars-stool','Cedars stool')+handout('pathmd-urine','PathMD urine')+handout('cedars-urine-culture','Cedars urine culture')+handout('cedars-urine-ua','Cedars urinalysis')+handout('dropoff','Specimen drop-off')+'</div></div>';}
+function handout(id,label){return '<a class="ops-print-link" href="collection-handouts.html?guide='+id+(isNY()?'&market=ny':'')+'&v=20261113-urine-kit" target="_blank" rel="noopener noreferrer">'+(label||'Open illustrated patient guide')+' ↗</a>';}
+function printHandoutPanel(){return '<div class="ops-print-panel"><strong>Print an illustrated patient handout</strong><p>Each lab-specific guide covers collection, labels, return bags and clinic drop-off.</p><div class="ops-print-links">'+handout('biofire-stool','BioFire stool')+(isNY()?'':handout('pathmd-stool','PathMD stool'))+handout('cedars-stool','Cedars stool')+(isNY()?'':handout('pathmd-urine','PathMD urine'))+handout('cedars-urine-culture','Cedars urine culture')+handout('cedars-urine-ua','Cedars urinalysis')+handout('dropoff','Specimen drop-off')+'</div></div>';}
 function tabs(active){return '<div class="ops-tabs" role="group" aria-label="Home collection topics">'+[
 ['staff','Preparing take-home kits'],['stool','Stool instructions'],['urine','Urine instructions']
 ].map(function(x){return '<button type="button" data-ops-tab="'+x[0]+'" class="'+(active===x[0]?'active':'')+'" aria-pressed="'+(active===x[0])+'">'+x[1]+'</button>';}).join("")+'<button type="button" data-go="specimen-dropoff">Specimen drop-off ↗</button></div>';}
@@ -20,7 +21,7 @@ var h=notice('<strong>Before discharge:</strong> Give the patient the instructio
 h+='<h2 class="ops-section-heading">Prepare the take-home kit</h2>';
 h+=steps([
 ['Tech / RN','Verify the requested test','Identify stool versus urine, the receiving lab and the exact ordered test. Do not substitute collection media.'],
-['Tech / RN','Select the proper devices','Match the kit to in-house GI BioFire, PathMD or Cedars. Never substitute collection media or a different laboratory kit.'],
+['Tech / RN','Select the proper devices',(isNY()?'Match the kit to the ordered in-house GI BioFire test or approved receiving laboratory. Never substitute collection media or a different laboratory kit.':'Match the kit to in-house GI BioFire, PathMD or Cedars. Never substitute collection media or a different laboratory kit.')],
 ['Tech / RN','Pack and label the kit','Label all containers with the specimen type. Pack the collection tools, a biohazard bag, and the external bag provided.'],
 ['Tech / RN','Explain and highlight instructions','Print the illustrated handout for the exact lab and collection kit. Explain how to collect, label and return the specimen.'],
 ['Tech / RN','Explain specimen return','Advise prompt return per the specific test; patient returns will follow the new Athena specimen drop-off appointment workflow.']
@@ -29,16 +30,16 @@ h+='<h2 class="ops-section-heading">Supplies for all tests</h2>';
 h+=card('Include with every kit',list(['Patient instructions, with applicable collection section highlighted','Collection hat for stool and urine as needed','Standard urine cup when applicable','Patient labels, including specimen type, on every container','Gloves and tongue depressor','Biohazard bag and the external bag provided']),"blue","KIT CHECKLIST");
 h+='<h2 class="ops-section-heading">Match the container to the test</h2><div class="ops-grid">';
 h+=card('GI BioFire stool','<span class="ops-tag">In-house</span><p>Para-Pak C&amp;S vial with orange lid and red liquid. Add stool to the marked line with lid scoop or tongue depressor and seal.</p>','teal','STOOL');
-h+=card('PathMD stool','<span class="ops-tag">Send-out</span><p>PathMD white-top tube and thick swab. Collect visible stool on the swab, place the swab in the white-top tube and seal. No BioFire vial.</p>','purple','STOOL');
+if(!isNY())h+=card('PathMD stool','<span class="ops-tag">Send-out</span><p>PathMD white-top tube and thick swab. Collect visible stool on the swab, place the swab in the white-top tube and seal. No BioFire vial.</p>','purple','STOOL');
 h+=card('Cedars stool','<span class="ops-tag">Send-out</span><p>Use the exact Cedars stool vial(s) required by the order. Some tests require multiple vials. Do not mix preservatives or assume all tests use three.</p>','amber','STOOL');
-h+=card('PathMD urine','<span class="ops-tag">Send-out</span><p>Collect urine in a sterile cup, stir the thick swab in urine <strong>10 times</strong>, then place the swab into the PathMD white-top tube. No pipette.</p>','purple','URINE');
+if(!isNY())h+=card('PathMD urine','<span class="ops-tag">Send-out</span><p>Collect urine in a sterile cup, stir the thick swab in urine <strong>10 times</strong>, then place the swab into the PathMD white-top tube. No pipette.</p>','purple','URINE');
 h+=card('Cedars urine','<span class="ops-tag">Send-out</span><p>For urine culture, use the gray-top C&S tube; for urinalysis, use the red/yellow swirl-top UA tube. Do not substitute one for the other. Some transfer devices contain concealed needles and require instruction.</p>','amber','URINE');
 h+=card('Urine dip at home','<span class="ops-tag">In-house</span><p>Home collection for an in-house dipstick is not recommended. Use preservative tube and send out. An exception with a standard cup requires immediate refrigeration and same-day return.</p>','blue','URINE');
 h+='</div><h2 class="ops-section-heading">Frequently asked questions</h2>';
 
 h+=accordion('May a patient return a standard specimen cup?','A plain cup has limited stability and might not be accepted. Contact the clinic for the exact test-specific transfer, temperature and timing requirements. Do not assume delayed transfer is acceptable.',true);
 h+=accordion('Can the patient return a specimen the next day?','Same-day return is preferred. Next-day stability and storage temperature depend on the exact specimen, assay and transport medium. Confirm with the current receiving lab directory.');
-h+=accordion('What if staff do not yet know which stool test is needed?','Verify the order before issuing the final kit. BioFire, PathMD and Cedars use different collection media. Do not substitute a container or process an unconfirmed order.');
+h+=accordion('What if staff do not yet know which stool test is needed?',(isNY()?'Verify the order before issuing the final kit. Different tests use different collection media. Do not substitute a container or process an unconfirmed order.':'Verify the order before issuing the final kit. BioFire, PathMD and Cedars use different collection media. Do not substitute a container or process an unconfirmed order.'));
 h+=notice('<strong>Specimen handling:</strong> Confirm collection media, refrigeration and specimen stability in the current receiving laboratory directory.','amber');
 return h;
 }
@@ -62,15 +63,15 @@ var urineSteps=[
 function patient(type){
 var stool=type==="stool";
 var h=notice('<strong>Patient reference:</strong> Highlight the correct test and container on the handout. The handout recommends same-day specimen return. For questions, call the clinic and ask for a nurse.','green');
-h+='<h2 class="ops-section-heading">'+(stool?'Stool':'Urine')+' collection steps</h2>'+steps(stool?stoolSteps:urineSteps);
+h+='<h2 class="ops-section-heading">'+(stool?'Stool':'Urine')+' collection steps</h2>'+steps(stool?stoolSteps:urineSteps.map((step,i)=>isNY()&&i===4?[step[0],step[1],'Use the order-specific collection container and follow the receiving laboratory instructions.']:step));
 h+='<h2 class="ops-section-heading">By test and collection device</h2>';
 
 if(stool){
 h+=accordion('GI BioFire: orange-lid Para-Pak C&S vial',list(['The vial contains liquid; avoid spilling it.','Use the lid scoop or tongue depressor to add stool to the line.','Seal tightly.'],true),true);
-h+=accordion('PathMD: stool thick swab and white-top tube',list(['Collect stool in the hat, avoiding urine and toilet water.','Open the thick swab without touching its tip. Pick up visible stool on the tip.','Place the stool-coated swab into the white-top PathMD tube and close securely. Do not pour out the medium.'],true),true);
+if(!isNY())h+=accordion('PathMD: stool thick swab and white-top tube',list(['Collect stool in the hat, avoiding urine and toilet water.','Open the thick swab without touching its tip. Pick up visible stool on the tip.','Place the stool-coated swab into the white-top PathMD tube and close securely. Do not pour out the medium.'],true),true);
 h+=accordion('Cedars: order-specific stool kit',list(['Use only the Cedars vials provided for the ordered test.','Follow each assigned vial fill line. Do not mix preservatives.','Seal and label every required container. Not every test needs three vials.'],true));
 }else{
-h+=accordion('PathMD: urine thick swab and white-top tube',list(['Collect urine into a sterile cup using the ordered collection method.','Place the thick swab in the urine and stir 10 times.','Place the swab into the white-top PathMD tube and seal. No pipette.'],true),true);
+if(!isNY())h+=accordion('PathMD: urine thick swab and white-top tube',list(['Collect urine into a sterile cup using the ordered collection method.','Place the thick swab in the urine and stir 10 times.','Place the swab into the white-top PathMD tube and seal. No pipette.'],true),true);
 h+=accordion('Cedars: blue-lid specimen cup transfer',list(['<strong>Needle hazard:</strong> the transfer device uses a needle.','Remove the yellow label from the blue lid.','Holding the rubber-top tube downward, insert it into the opening and wait until filling stops.','Repeat only if the order requires another tube.'],true));
 h+=accordion('Cedars: transfer straw alternative',list(['<strong>Needle hazard:</strong> the device uses a needle.','Unpack the transfer straw and put its white tip in urine.','Insert the stopper end of the tube into the cup end of the device; allow it to fill until it stops.','Repeat with the other tube.'],true));
 h+=accordion('Cedars gray-top: urine culture (C&S)',list(['Use the short gray-top C&S preservative tube only when urine culture is ordered.','After the protected transfer, check the indicated fill line and shake the gray tube vigorously.','Use the illustrated Cedars urine-culture patient handout, not the UA handout.'],true));
@@ -134,7 +135,7 @@ function sendout(){
  h+=accordion('How do I group and store multiple bags?', 'Follow the Lab Calculator printout: separate specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT or special handling when required. Use the designated secure pickup, storage or temperature-controlled area and follow the receiving lab directory.');
  h+=accordion('Does the log include special courier pickups and shipped kits?', 'Yes. Complete the regional Sendout Log for routine send-outs, STAT or special pickups, and special test kits shipped using UPS or FedEx. Enter pickup confirmation or reference information when applicable, or carrier and tracking number for shipped kits. Use the approved handoff process and secure documentation.');
  h+=notice('<strong>Before submitting:</strong> Match every bag to the requisition and Lab Calculator. Include photos of each bag (up to 10 total) and any applicable pickup confirmation or UPS/FedEx tracking information.','amber');
- h+='<div class="ops-link-card"><div><strong>Need specific receiving-lab or courier instructions?</strong><p>Open Lab send-outs for Quest, Cedars, PathMD, Labcorp and HealthTrackRx in markets where still active.</p></div><button type="button" data-go="sendout">Receiving lab guidance →</button></div>';
+ h+='<div class="ops-link-card"><div><strong>Need specific receiving-lab or courier instructions?</strong><p>'+(isNY()?'Open Lab send-outs for Quest and Labcorp.':'Open Lab send-outs for Quest, Cedars, PathMD, Labcorp and HealthTrackRx in markets where still active.')+'</p></div><button type="button" data-go="sendout">Receiving lab guidance →</button></div>';
  return h+'</section>';
 }
 

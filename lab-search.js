@@ -133,7 +133,7 @@ const referenceDocs=[
  ['pathmd-order-shipping-reference.pdf','PathMD Ordering and Shipping Reference','pathmd courier pickup instructions specimen'],
  ['pathmd-test-menu-index.pdf','PathMD Test Menu Index','pathmd pathogens limited respiratory molecular tests']
 ];
-let cached=null;
+let cached=null, cachedNY=null;
 let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
 // Public, generated data only. A configurable base permits independent hosting
 // or an organization-owned mirror without embedding either calculator.
@@ -170,7 +170,7 @@ function ensureExternalCatalog(query){
   });
   externalCatalog=[...rows.values()];
   catalogFailed=results.some(result=>result.status!=='fulfilled');
-  cached=null;
+  cached=null;cachedNY=null;
   window.dispatchEvent(new Event('labcentral:searchindexready'));
  }).catch(()=>{
   catalogFailed=true;
@@ -272,13 +272,34 @@ function relevance(item,q,terms,smartQuery,allowFuzzy=false){
  if(item.archived)score-=22;
  return score;
 }
+function nyIndex(ctx){
+ const all=baseIndex(ctx);
+ if(cachedNY)return cachedNY;
+ const vendor=/path[\s-]?md|health[\s-]?track[\s-]?rx|\bhtrx\b/i;
+ const out=[];
+ all.forEach(item=>{
+  if(vendor.test(item.title)||vendor.test(item.href)||vendor.test(item.lab||''))return;
+  const copy={...item};
+  if(copy.href==='#outside/stool')copy.description='BioFire GI and approved receiving-laboratory collection';
+  if(copy.href==='#outside/urine')copy.description='Order-specific urine collection';
+  if(copy.href.startsWith('collection-handouts.html?'))copy.href+='&market=ny';
+  if(copy.href==='#sendout'||copy.href==='#supplies'||copy.href.startsWith('#supplies/')){
+   copy.keywords=[copy.title,copy.description,copy.category].join(' ');
+  }
+  copy.description=String(copy.description||'').replace(/path[\s-]?md|health[\s-]?track[\s-]?rx|\bhtrx\b/ig,'');
+  copy.keywords=String(copy.keywords||'').replace(/path[\s-]?md|health[\s-]?track[\s-]?rx|\bhtrx\b/ig,'');
+  add(out,copy);
+ });
+ cachedNY=out;
+ return out;
+}
 function find(q,ctx){
  const term=norm(q),words=term.split(' ').filter(x=>x&&!['and','or','the','for','of','to','with','in','at','a','an'].includes(x));
  if(!words.length)return [];
  const smart=window.LAB_SMART_SEARCH,smartQuery=smart?smart.queryWords(q):words;
  if(!smartQuery.length)return [];
  const market=ctx.market||null;
- const scoped=baseIndex(ctx).filter(x=>(!x.requireMarket||Boolean(market))&&(!x.markets||!market||x.markets.includes(market))&&
+ const scoped=(market==='ny'?nyIndex(ctx):baseIndex(ctx)).filter(x=>(!x.requireMarket||Boolean(market))&&(!x.markets||!market||x.markets.includes(market))&&
   !(x.kind==='sendout-test'&&term===x.lab));
  const exact=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,false),i}))
   .filter(x=>x.score>=0)
@@ -416,7 +437,7 @@ function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
  ensureExternalCatalog(q);
  const records=find(q,arg);
- const panels=arg.panelResults||[],sendouts=arg.sendoutResults||[];
+ const panels=arg.panelResults||[],sendouts=(arg.sendoutResults||[]).filter(x=>arg.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
  const directSendoutTests=records.filter(x=>x.kind==='sendout-test');
  const groups=CATEGORIES.map(category=>{
   const rows=records.filter(x=>x.category===category);
@@ -502,7 +523,7 @@ function suggestions(query,ctx){
  ensureExternalCatalog(query);
  const records=find(query,ctx);
  const featured=directDestination(query,records,ctx);
- const panels=ctx.panelResults||[],sendouts=ctx.sendoutResults||[];
+ const panels=ctx.panelResults||[],sendouts=(ctx.sendoutResults||[]).filter(x=>ctx.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
  const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(q);
  const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
  const results=[],seen=new Set();

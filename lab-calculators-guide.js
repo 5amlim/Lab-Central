@@ -184,7 +184,7 @@ function htrxMenu(){
 let molecularQuery="";
 function molecularMatches(query=molecularQuery){
  const raw=String(query||"").trim(),q=normHTRX(raw);
- if(q.length<2||(window.LAB_MARKET?.get()&&!availableLabs().some(id=>id==="htrx"||id==="pathmd")))return [];
+ if(q.length<2||activeMarket==="ny"||(window.LAB_MARKET?.get()&&!availableLabs().some(id=>id==="htrx"||id==="pathmd")))return [];
  const smart=window.LAB_SMART_SEARCH;
  const matches=(text,fuzzy=false)=>normHTRX(text).includes(q)||Boolean(smart?.matches(text,raw,{fuzzy}));
  const htrxTextFor=p=>htrxText(p);

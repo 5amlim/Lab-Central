@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const E=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-const labList='Quest Diagnostics, LabCorp, Cedars, HealthTrackRx or PathMD';
+function labList(useOrdersMarket=false){const market=window.LAB_MARKET?.get()||(useOrdersMarket?document.querySelector('[data-orders-market-value]')?.dataset.ordersMarketValue:null);return market==='ny'?'Quest Diagnostics or LabCorp':'Quest Diagnostics, LabCorp, Cedars, HealthTrackRx or PathMD';}
 function section(title,subtitle){return '<div class="lc-sop-section"><h2>'+E(title)+'</h2>'+(subtitle?'<p>'+E(subtitle)+'</p>':'')+'</div>';}
 function step(title,body,role,num){
  return '<article class="lc-sop-step"><div class="lc-sop-step-top"><span class="lc-sop-index">'+String(num||'').padStart(2,'0')+'</span><h3>'+E(title)+'</h3>'+(role?'<span class="lc-sop-owner">'+E(role)+'</span>':'')+'</div><div class="lc-sop-step-body">'+body+'</div></article>';
@@ -170,7 +170,7 @@ function walkin(){
 }
 function sollis(){
  let h=header('Sendout orders placed by Sollis','Provider order through collection, processing, transport and logging.','Orders entered by the Sollis clinical team','Provider · RN · Lab personnel · Front Desk');
- h+=step('Provider places the order',bullet('The Sollis provider places the external laboratory order in Athena.','Confirm the receiving laboratory: '+E(labList)+'.','Use exact laboratory test codes where available to avoid incorrect panels or reflex algorithms.'),'Provider',1);
+ h+=step('Provider places the order',bullet('The Sollis provider places the external laboratory order in Athena.','Confirm the receiving laboratory: '+E(labList(true))+'.','Use exact laboratory test codes where available to avoid incorrect panels or reflex algorithms.'),'Provider',1);
  h+=step('Review the order',bullet('RN or lab personnel verifies ordered tests, specimen requirements and the correct receiving laboratory.'),'RN / Lab personnel',2);
  h+=step('Prepare collection instructions',bullet('Use the appropriate receiving-lab calculator, checking test codes, tube/container, volume, processing, transport temperatures and priority against the current directory.'),'RN / Lab personnel',3);
  h+=step('Upload the finalized Lab Calculator',bullet('Save as a PDF and upload to the patient chart as <b>Clinical Document · LAB FLOWSHEET</b>.','Complete the upload even when the patient is already in clinic and before collection.'),'RN / Lab personnel',4);
@@ -214,7 +214,7 @@ function calculators(root){
  return h+finish();
 }
 function athena(root){
- let h=header('Athena · External laboratory ordering','Reference sequence for selecting the correct receiver and entering the ordered test.','Receiving labs: '+labList,'Ordering staff · Provider');
+ let h=header('Athena · External laboratory ordering','Reference sequence for selecting the correct receiver and entering the ordered test.','Receiving labs: '+labList(),'Ordering staff · Provider');
  const selected=nodeText(root.querySelector('.ao-guide-selection strong'));
  if(selected)h+=note('Receiving laboratory',E(selected)+(root.querySelector('.ao-guide-selection p')?' · '+htmlText(root.querySelector('.ao-guide-selection p')):''));
  const cards=Array.from(root.querySelectorAll('.ao-guide-card'));if(cards.length!==9)return null;

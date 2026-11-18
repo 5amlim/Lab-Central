@@ -275,14 +275,16 @@ case 'handoff':art='<path d="M13 87q25-11 39 0l21 4 6 13-24 7-43-5z" fill="#cce6
 return '<svg viewBox="0 0 145 135" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+art+'</svg>';
 }
 const params=new URLSearchParams(location.search);
-let chosen=guides.find(g=>g.id===params.get("guide"))||guides[0];
+const availableGuides=params.get("market")==="ny"?guides.filter(g=>!g.id.startsWith("pathmd-")):guides;
+ let chosen=availableGuides.find(g=>g.id===params.get("guide"))||availableGuides[0];
+ function setGuideURL(id){const url=new URL(location.href);url.searchParams.set("guide",id);history.replaceState(null,"",url.pathname+url.search+url.hash);}
 const choice=document.getElementById("chooser"),content=document.getElementById("content");
 function draw(){
  const isDrop=chosen.id==='dropoff';
  const isCedarsChooser=chosen.id==='cedars-urine';
  const isCedarsType=!!chosen.subguide;
  const topChoice=isCedarsChooser||isCedarsType?'cedars-urine':chosen.id;
- choice.innerHTML=guides.filter(g=>!g.subguide).map(g=>
+ choice.innerHTML=availableGuides.filter(g=>!g.subguide).map(g=>
   '<button type="button" data-guide="'+g.id+'" aria-pressed="'+(g.id===topChoice)+'">'+g.short+'</button>'
  ).join('');
  const printButton=document.getElementById('print');
@@ -333,16 +335,16 @@ function draw(){
   '<span class="footer-meta">Follow the instructions for your exact kit.<br>Do not leave specimens unattended.</span></footer></article>';
  document.title='Sollis Patient Instructions | '+chosen.short;
 }
-choice.addEventListener('click',function(e){const button=e.target.closest('[data-guide]');if(!button)return;const selected=guides.find(g=>g.id===button.dataset.guide);if(!selected)return;chosen=selected;history.replaceState(null,'','?guide='+encodeURIComponent(chosen.id));draw();});
+choice.addEventListener('click',function(e){const button=e.target.closest('[data-guide]');if(!button)return;const selected=availableGuides.find(g=>g.id===button.dataset.guide);if(!selected)return;chosen=selected;setGuideURL(chosen.id);draw();});
 content.addEventListener('click',function(event){
  const guideChoice=event.target.closest('[data-cedars-choice]');
  const goBack=event.target.closest('[data-cedars-back]');
  if(!guideChoice&&!goBack)return;
  const id=guideChoice?guideChoice.dataset.cedarsChoice:'cedars-urine';
- const next=guides.find(g=>g.id===id);
+ const next=availableGuides.find(g=>g.id===id);
  if(!next)return;
  chosen=next;
- history.replaceState(null,'','?guide='+encodeURIComponent(id));
+ setGuideURL(id);
  draw();
  window.scrollTo({top:0,behavior:'smooth'});
 });

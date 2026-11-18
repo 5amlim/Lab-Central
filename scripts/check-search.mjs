@@ -356,6 +356,15 @@ const molecularGroup=externalSearch.render({...renderArgs,query:'flu',panelResul
  ],searchSendoutPanelCard:x=>'<article class="mock-molecular">'+x.name+'</article>'});
 assert.ok(molecularGroup.includes('lab-search-source-htrx'),'HealthTrackRx must have its own header');
 assert.ok(molecularGroup.includes('lab-search-source-pathmd'),'PathMD must have its own header');
+for(const term of ['PathMD','HealthTrackRx','HTRX','home stool','home urine','sendout','supply']){
+ const nyCtx={...ctx,market:'ny'};
+ const rows=externalSearch.find(term,nyCtx);
+ assert.ok(rows.every(x=>!/(?:path[ -]?md|health[ -]?track[ -]?rx|\bhtrx\b)/i.test([x.title,x.description,x.href].join(' '))),term+' leaked NY vendor references');
+ const suggestions=externalSearch.suggestions(term,nyCtx);
+ assert.ok(suggestions.every(x=>!/(?:path[ -]?md|health[ -]?track[ -]?rx|\bhtrx\b)/i.test([x.title,x.detail,x.href].join(' '))),term+' leaked NY suggestions');
+}
+const nyMolecular=externalSearch.render({...renderArgs,market:'ny',query:'flu',panelResults:[],sendoutResults:[{lab:'htrx',name:'Flu HTRX'},{lab:'pathmd',name:'Flu PathMD'}]});
+assert.ok(!/lab-search-source-(?:htrx|pathmd)/.test(nyMolecular),'NY molecular results must be excluded');
 assert.ok(index.includes('visibleByLab:state.searchVisibleByLab'),'Search must pass independent per-lab pagination state');
 assert.ok(index.includes('data-search-more'),'Show-more clicks must be handled by Lab Central');
 assert.ok(index.includes('labcentral:searchindexready'),'External index loading should refresh open search results');

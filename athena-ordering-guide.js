@@ -9,10 +9,16 @@ const labs={
  pathmd:{name:'PathMD',search:'PathMD',note:'Verify the intended PathMD receiver.'}
 };
 let selectedLab=null;
-function chosen(){return selectedLab?labs[selectedLab]:null;}
+function isNY(){return window.LAB_MARKET?.get()==='ny';}
+function availableLabs(){return Object.keys(labs).filter(id=>!isNY()||id==='quest'||id==='labcorp');}
+function chosen(){return availableLabs().includes(selectedLab)?labs[selectedLab]:null;}
 function selectedName(){return chosen()?chosen().name:'No lab selected';}
 function stepDetail(step,i){
- if(!chosen())return step.text;
+ if(!chosen()){
+  if(isNY()&&i===6)return 'Check the <strong>location ZIP code</strong>, correcting it if needed. Search for <strong>Quest or LabCorp</strong>; choose the correct facility/address.';
+  if(isNY()&&i===7)return 'Use the <strong>Lab Calculator</strong> to find the test code and enter it in Athena. Verify test details before selecting.';
+  return step.text;
+ }
  if(i===6)return 'Confirm the clinic <strong>location ZIP code</strong> and correct if needed. Search for <strong>'+chosen().search+'</strong> and select the correct facility/address. '+chosen().note;
  if(i===7)return (selectedLab==='quest'||selectedLab==='labcorp'?'Use the <strong>Lab Calculator</strong> to find the correct <strong>'+chosen().name+' test code</strong>, then search by that code in Athena.':'Search by the <strong>test name</strong> in Athena for <strong>'+chosen().name+'</strong>.')+' Verify the correct test, panel, reflex algorithm, specimen requirements and performing laboratory before selecting.';
  if(i===8)return 'Confirm the <strong>'+chosen().name+'</strong> order in <strong>Outstanding Orders</strong>. If <strong>unsigned</strong>, follow the provider-signature process.';
@@ -87,13 +93,14 @@ function printSheet(){
  '<footer>Training reference · Select the receiver and test in Athena. This printed guide does not place orders or contain patient identifiers.</footer></section>';
 }
 function render(){
+ if(!availableLabs().includes(selectedLab))selectedLab=null;
  return '<section id="athena-external-ordering" class="ao-guide" aria-labelledby="ao-guide-heading">'+
  '<header class="ao-guide-intro"><div><span class="ao-guide-eyebrow">ATHENA / SENDOUT LAB WORKFLOW</span><h2 id="ao-guide-heading">Order an external laboratory test</h2><p>Choose a receiving lab to customize the ordering guide and printouts.</p></div><div class="ao-guide-header-actions"><span class="ao-guide-role">Ordering staff / provider</span><div class="ao-print-actions"><button type="button" data-ao-print="checklist">▤ Print checklist</button><button type="button" data-ao-print="illustrated">▤ Print illustrated guide</button></div></div></header>'+
- '<div class="ao-guide-labs" role="group" aria-label="Choose receiving laboratory"><span class="ao-guide-labs-label">RECEIVING LAB</span>'+Object.keys(labs).map(function(id){return '<button type="button" class="ao-lab-chip'+(selectedLab===id?' is-selected':'')+'" data-ao-lab="'+id+'" aria-pressed="'+(selectedLab===id)+'">'+labs[id].name+'</button>';}).join('')+'</div>'+
+ '<div class="ao-guide-labs" role="group" aria-label="Choose receiving laboratory"><span class="ao-guide-labs-label">RECEIVING LAB</span>'+availableLabs().map(function(id){return '<button type="button" class="ao-lab-chip'+(selectedLab===id?' is-selected':'')+'" data-ao-lab="'+id+'" aria-pressed="'+(selectedLab===id)+'">'+labs[id].name+'</button>';}).join('')+'</div>'+
  '<div class="ao-guide-selection" role="status"><span class="ao-guide-selection-icon">'+(chosen()?'✓':'i')+'</span><div><strong>'+(chosen()?'Selected lab: '+chosen().name:'Choose a receiving lab above')+'</strong><p>'+(chosen()?'In Athena, search receivers for <b>'+chosen().search+'</b>. '+chosen().note+' Use the correct test code or name.':'Selecting a lab customizes the illustrated ordering steps and printouts. It does not place an order in Athena.')+'</p></div></div>'+
  '<div class="ao-guide-progress" aria-label="Sendout workflow overview"><span>Chart &amp; provider</span><b>›</b><span>Diagnosis</span><b>›</b><span>Receiving lab</span><b>›</b><span>Find test</span><b>›</b><span>Confirm</span></div>'+
  '<div class="ao-guide-grid">'+steps.map(function(s,i){return '<article class="ao-guide-card"><div class="ao-guide-card-header"><span class="ao-guide-index">'+String(i+1).padStart(2,'0')+'</span><div class="ao-guide-card-heading"><span class="ao-guide-step-type">'+s.label+'</span><h3>'+s.title+'</h3></div><span class="ao-guide-next" aria-hidden="true">'+(i===steps.length-1?'✓':'→')+'</span></div><div class="ao-guide-sketch" aria-hidden="true">'+scene(i+1)+'</div><p class="ao-guide-detail">'+stepDetail(s,i)+'</p></article>';}).join('')+'</div>'+
- '<div class="ao-guide-tips"><div class="ao-guide-tip ao-guide-tip-teal"><span class="ao-guide-tip-icon" aria-hidden="true">✓</span><div><strong>Search by code or name as appropriate</strong><p>For Quest and LabCorp, use the Lab Calculator to find the test code. For Cedars, HealthTrackRx and PathMD, search by test name. Always check the panel, reflex testing, specimen requirements and performing laboratory.</p></div></div><div class="ao-guide-tip ao-guide-tip-amber"><span class="ao-guide-tip-icon" aria-hidden="true">!</span><div><strong>Outstanding does not mean signed</strong><p>Verify the receiving lab and test. An unsigned order still needs to follow the authorized provider-signing workflow.</p></div></div></div>'+
+ '<div class="ao-guide-tips"><div class="ao-guide-tip ao-guide-tip-teal"><span class="ao-guide-tip-icon" aria-hidden="true">✓</span><div><strong>Search by code or name as appropriate</strong><p>For Quest and LabCorp, use the Lab Calculator to find the test code.'+(isNY()?'':' For Cedars, HealthTrackRx and PathMD, search by test name.')+' Always check the panel, reflex testing, specimen requirements and performing laboratory.</p></div></div><div class="ao-guide-tip ao-guide-tip-amber"><span class="ao-guide-tip-icon" aria-hidden="true">!</span><div><strong>Outstanding does not mean signed</strong><p>Verify the receiving lab and test. An unsigned order still needs to follow the authorized provider-signing workflow.</p></div></div></div>'+
  '<p class="ao-guide-footnote">Illustrations are training references, not live Athena screens. Selecting a lab here does not change an Athena order. Facility locations and menu wording vary by clinic. Follow current Sollis ordering requirements.</p>'+printSheet()+'</section>';
 }
 function startPrint(mode){
@@ -110,7 +117,7 @@ function onGuideClick(e){
  if(!e.target.closest('#athena-external-ordering'))return;
  if(print){startPrint(print.getAttribute('data-ao-print'));return;}
  const id=chip.getAttribute('data-ao-lab');
- if(!Object.prototype.hasOwnProperty.call(labs,id))return;
+ if(!availableLabs().includes(id))return;
  selectedLab=selectedLab===id?null:id;
  const root=document.getElementById('athena-external-ordering');
  if(root)root.outerHTML=render();

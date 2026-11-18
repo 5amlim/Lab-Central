@@ -270,14 +270,14 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="home-device-cards.css?v=20261104" media="all">
 <link rel="stylesheet" href="triage-meterpro-visual.css?v=20261104" media="all">
 <link rel="stylesheet" href="athena-ordering-guide.css?v=20261113-purple-green-availability" media="all">
-<script src="athena-ordering-guide.js?v=20261104"></script>
+<script src="athena-ordering-guide.js?v=20261118-ny-market"></script>
 <link rel="stylesheet" href="envi-ordering-guide.css?v=20261104" media="all">
 <link rel="stylesheet" href="tube-reference.css?v=20261104" media="all">
 <link rel="stylesheet" href="lab-container-reference.css?v=20261104" media="all">
 <link rel="stylesheet" href="supply-vendor-reference.css?v=20261104" media="all">
 <script src="envi-ordering-guide.js?v=20261104"></script>
 <link rel="stylesheet" href="sop-print.css?v=20261104" media="all">
-<script src="sop-print.js?v=20261113-triage-assignment"></script>
+<script src="sop-print.js?v=20261118-ny-market"></script>
 <script src="ny-scheduled-workflow.js?v=20261106-market-layout"></script>
 <style id="lab-central-athena-icon-theme">
 /* Athena monogram uses the same tile and glyph dimensions as other sidebar icons. */
@@ -477,9 +477,9 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="api-submission.js?v=20261107-optional-v2"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
-  <script src="lab-calculators-guide.js?v=20261113-cedars-urine-gallery-link"></script>
+  <script src="lab-calculators-guide.js?v=20261118-ny-market"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
-<script src="operations-guides.js?v=20261112-patient-guides"></script>
+<script src="operations-guides.js?v=20261118-ny-market"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
 <script src="training-competency.js?v=20261107-optional-v2"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
@@ -521,7 +521,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261117-lab-suggestion-groups"></script>
+<script src="lab-search.js?v=20261118-ny-market"></script>
 <script>
 (()=>{
 'use strict';
@@ -2658,11 +2658,12 @@ const operationalGuideMeta={
  ]
 };
 function metaForGuide(sec){
- const pairs=sec.archived
+ let pairs=sec.archived
   ?[['Status','Archived · not for active testing'],['Original use',sec.subtitle],['Reference','Historical only']]
   :instrumentCategories.includes(sec.category)
    ?[['Specimen / panel',sec.sample||'Confirm test-specific requirements'],['QC / calibration',window.LAB_QC_OVERVIEW?.cfg?.[sec.id]?.label||sec.qc||'Use current approved QC procedure'],['Reference','Current approved SOP and manufacturer IFU']]
    :(operationalGuideMeta[sec.id]||[['Scope',sec.subtitle],['Workflow','See instructions and resources'],['Reference','Current approved local policy']]);
+ if(window.LAB_MARKET?.get()==='ny'&&['supplies','sendout'].includes(sec.id))pairs=pairs.map((pair,i)=>i===0?[pair[0],sec.id==='supplies'?'McKesson · Quest (Quanum) · Labcorp Link':'Quest · Labcorp']:pair);
  return '<div class="meta-bar'+(instrumentCategories.includes(sec.category)?'':' meta-bar-operations')+(['api','calver'].includes(sec.id)?' api-meta-bar':'')+'">'+pairs.map(function(p){return '<div class="meta-chip"><small>'+safeHtml(p[0])+'</small><span>'+safeHtml(p[1])+'</span></div>'}).join('')+'</div>';
 }
 function guideHeaderType(sec){
