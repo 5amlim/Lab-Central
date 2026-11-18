@@ -148,7 +148,7 @@ assert.equal(nearPiccoloSuggestions[0]?.title,'Piccolo Xpress',
  'Nearly complete Piccolo searches should prioritize the analyzer');
 assert.notEqual(quickSuggest('pathfas troponin',{panelResults:[]})[0]?.title,'PATHFAST',
  'Specific multiword assay searches should not be replaced by a generic analyzer guide');
-const labelMarkup=index.slice(index.indexOf('const html=searchSuggestions.map('));
+const labelMarkup=index.slice(index.indexOf('function renderSearchSuggestion('),index.indexOf('function refreshSearchSuggestions('));
 assert.ok(labelMarkup.includes("data-kind=")&&labelMarkup.includes("search-suggestion-kind")&&
  labelMarkup.includes("Equipment")&&labelMarkup.includes("Document"),
  'Search dropdown must render category labels for informative colors');
@@ -308,6 +308,28 @@ for(const [query,category,fragment] of [
  assert.ok(hits.some(x=>x.category===category&&x.title.toLowerCase().includes(fragment.toLowerCase())),
   query+' did not find '+category+' / '+fragment);
 }
+// Vendor test suggestions occupy one expandable row per lab, with every
+// matched active test reachable inside the appropriate submenu.
+for(const query of ['serum','201','001453','99999999']){
+ const found=externalSearch.find(query,ctx);
+ const quick=externalSearch.suggestions(query,{...ctx,panelResults:[],sendoutResults:[]});
+ assert.ok(quick.length<=6,'Grouped suggestions must stay compact');
+ assert.ok(!quick.some(x=>x.action==='open'&&['quest','labcorp'].includes(x.lab)&&x.code),'Vendor test escaped its group');
+ for(const lab of ['quest','labcorp']){
+  const expected=found.filter(x=>x.kind==='sendout-test'&&x.lab===lab);
+  const groups=quick.filter(x=>x.action==='lab-group'&&x.lab===lab);
+  assert.equal(groups.length,expected.length?1:0,query+' '+lab+' group presence');
+  if(expected.length){
+   assert.deepEqual(Array.from(groups[0].children,x=>x.code),Array.from(expected,x=>x.code),query+' '+lab+' missing or reordered tests');
+   assert.ok(groups[0].children.every(x=>x.action==='open'&&x.href),'Submenu items must remain clickable');
+  }
+ }
+}
+assert.ok(index.includes('function openSearchLabMenu(')&&index.includes("addEventListener('pointerover'")&&
+ index.includes('matchMedia')&&index.includes('data-search-child')&&index.includes('aria-expanded'),
+ 'Grouped suggestion hover, tap and keyboard UI must remain wired');
+assert.ok(searchCss.includes('.search-lab-submenu.is-inline')&&searchCss.includes('overflow-y:auto'),
+ 'Lab submenus must scroll and fit touch displays');
 assert.ok(!externalSearch.find('quest 594',ctx).some(x=>x.code==='593'),'Wrong Quest numeric code matched');
 assert.ok(!externalSearch.find('labcorp 001454',ctx).some(x=>x.code==='001453'),'Wrong Labcorp numeric code matched');
 const labcorpResult=externalSearch.render({...renderArgs,query:'322000',panelResults:[],sendoutResults:[]});
