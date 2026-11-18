@@ -365,6 +365,23 @@ for(const term of ['PathMD','HealthTrackRx','HTRX','home stool','home urine','se
 }
 const nyMolecular=externalSearch.render({...renderArgs,market:'ny',query:'flu',panelResults:[],sendoutResults:[{lab:'htrx',name:'Flu HTRX'},{lab:'pathmd',name:'Flu PathMD'}]});
 assert.ok(!/lab-search-source-(?:htrx|pathmd)/.test(nyMolecular),'NY molecular results must be excluded');
+// Abbott rapid HIV availability is independent of send-out HIV tests.
+const hivBrowser={};
+runInNewContext(source,{window:hivBrowser});
+const hivSearch=hivBrowser.LAB_SITE_SEARCH;
+const hivSection={id:'hiv',title:'Abbott Determine HIV-1/2 Ag/Ab Combo',category:'Point of care',subtitle:'HIV p24 antigen',blocks:[]};
+const hivCtx={...ctx,sections:[...ctx.sections,hivSection]};
+for(const market of ['ny','fl']){
+ const scope={...hivCtx,market};
+ for(const term of ['HIV','Abbott Determine','HIV training','p24']){
+  assert.ok(!hivSearch.find(term,scope).some(x=>/^#hiv(?:\/|$)/.test(x.href)||/Abbott_HIV_Combo_Training/.test(x.href)),market+' exposed Abbott HIV reference');
+  assert.ok(!hivSearch.suggestions(term,scope).some(x=>/^#hiv(?:\/|$)/.test(x.href||'')||/Abbott_HIV_Combo_Training/.test(x.href||'')),market+' exposed Abbott HIV suggestion');
+ }
+}
+for(const market of ['socal','norcal']){
+ assert.ok(hivSearch.find('HIV',{...hivCtx,market}).some(x=>x.href==='#hiv'),market+' lost Abbott HIV guide');
+ assert.ok(hivSearch.find('HIV training',{...hivCtx,market}).some(x=>/Abbott_HIV_Combo_Training/.test(x.href)),market+' lost Abbott HIV training checklist');
+}
 assert.ok(index.includes('visibleByLab:state.searchVisibleByLab'),'Search must pass independent per-lab pagination state');
 assert.ok(index.includes('data-search-more'),'Show-more clicks must be handled by Lab Central');
 assert.ok(index.includes('labcentral:searchindexready'),'External index loading should refresh open search results');

@@ -83,7 +83,9 @@
    }
   });
  }
- window.LAB_MARKET={get,set,label,markets};
+ const allowsHiv=(market=get())=>!['ny','fl'].includes(market);
+ const allowsSection=(id,market=get())=>id!=='hiv'||allowsHiv(market);
+ window.LAB_MARKET={get,set,label,markets,allowsHiv,allowsSection};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});
  else mount();
 })();

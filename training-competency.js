@@ -133,12 +133,13 @@ function trainingTemplateCards(items){
  }).join('');
 }
 function renderTrainingTemplates(market,clinic){
+ const documents=trainingDocuments.filter(t=>!['ny','fl'].includes(market.id)||t.file!=='Abbott_HIV_Combo_Training.pdf');
  const groups=['Analyzer training','Rapid POC training','General lab training'];
  return '<section class="tc-route-panel tc-templates-panel" role="tabpanel" id="tc-panel-templates" aria-labelledby="tc-tab-templates">'+
- '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+trainingDocuments.length+' documents</span></div>'+
+ '<div class="tc-section-top tc-route-head"><span class="tc-section-icon tc-section-icon-blue">'+ico('file')+'</span><div><h2>Training Templates</h2><p>Source training checklists for '+esc(clinic[1])+' · '+esc(market.name)+'. Open only the forms for equipment and tests available at this clinic.</p></div><span class="tc-page-count">'+documents.length+' documents</span></div>'+
  '<div class="tc-information-accent tc-information-accent-blue"><strong>Training record, not competency sign-off.</strong> Document trainer and trainee review before independent patient testing. These checklists are provided versions and may reference different QC cadences. Use the active market SOP and current manufacturer IFU for actual testing and QC.'+(market.id==='socal'?' <strong>SoCal:</strong> Follow the local monthly and event-triggered Clinitek external QC schedule.':' <strong>'+esc(market.short)+':</strong> Follow the local daily Clinitek external QC schedule.')+'</div>'+
  groups.map((g,i)=>{
-  const items=trainingDocuments.filter(t=>t.group===g);
+  const items=documents.filter(t=>t.group===g);
   const tone=i===0?'teal':i===1?'blue':'amber';
   return '<section class="tc-template-group" aria-label="'+esc(g)+'"><header class="tc-template-group-title" data-tone="'+tone+'"><h3>'+esc(g)+'</h3><span>'+items.length+' documents</span></header><div class="tc-document-grid">'+trainingTemplateCards(items)+'</div></section>';
  }).join('')+

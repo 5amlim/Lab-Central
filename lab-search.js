@@ -134,6 +134,9 @@ const referenceDocs=[
  ['pathmd-test-menu-index.pdf','PathMD Test Menu Index','pathmd pathogens limited respiratory molecular tests']
 ];
 let cached=null, cachedNY=null;
+ const allowsHiv=market=>!['ny','fl'].includes(market);
+ const isHivReference=item=>/^#hiv(?:\/|$)/i.test(item.href||'')||/Abbott_HIV_Combo_Training\.pdf$/i.test(item.href||'');
+ const allowsReference=(item,market)=>allowsHiv(market)||!isHivReference(item);
 let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
 // Public, generated data only. A configurable base permits independent hosting
 // or an organization-owned mirror without embedding either calculator.
@@ -299,7 +302,7 @@ function find(q,ctx){
  const smart=window.LAB_SMART_SEARCH,smartQuery=smart?smart.queryWords(q):words;
  if(!smartQuery.length)return [];
  const market=ctx.market||null;
- const scoped=(market==='ny'?nyIndex(ctx):baseIndex(ctx)).filter(x=>(!x.requireMarket||Boolean(market))&&(!x.markets||!market||x.markets.includes(market))&&
+ const scoped=(market==='ny'?nyIndex(ctx):baseIndex(ctx)).filter(x=>allowsReference(x,market)&&(!x.requireMarket||Boolean(market))&&(!x.markets||!market||x.markets.includes(market))&&
   !(x.kind==='sendout-test'&&term===x.lab));
  const exact=scoped.map((item,i)=>({item,score:relevance(item,term,words,smartQuery,false),i}))
   .filter(x=>x.score>=0)
@@ -348,7 +351,7 @@ function directDestination(q,records,ctx){
  }
  const sections=(ctx.sections||[]).concat(ctx.extras||[]);
  for(const sec of sections){
-  if(categoryFor(sec)!=='In-house testing'||sec.archived||sec.category==='Archived')continue;
+  if((sec.id==='hiv'&&!allowsHiv(ctx.market))||categoryFor(sec)!=='In-house testing'||sec.archived||sec.category==='Archived')continue;
   const aliases=[sec.id,sec.title,...(EQUIPMENT_ALIASES[sec.id]||[])];
   const named=aliases.some(alias=>{
    const name=norm(alias);
@@ -437,7 +440,7 @@ function render(arg){
  const q=arg.query||'',filter=CATEGORIES.includes(arg.filter)?arg.filter:'All';
  ensureExternalCatalog(q);
  const records=find(q,arg);
- const panels=arg.panelResults||[],sendouts=(arg.sendoutResults||[]).filter(x=>arg.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
+ const panels=(arg.panelResults||[]).filter(x=>allowsHiv(arg.market)||x.section?.id!=='hiv'),sendouts=(arg.sendoutResults||[]).filter(x=>arg.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
  const directSendoutTests=records.filter(x=>x.kind==='sendout-test');
  const groups=CATEGORIES.map(category=>{
   const rows=records.filter(x=>x.category===category);
@@ -523,7 +526,7 @@ function suggestions(query,ctx){
  ensureExternalCatalog(query);
  const records=find(query,ctx);
  const featured=directDestination(query,records,ctx);
- const panels=ctx.panelResults||[],sendouts=(ctx.sendoutResults||[]).filter(x=>ctx.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
+ const panels=(ctx.panelResults||[]).filter(x=>allowsHiv(ctx.market)||x.section?.id!=='hiv'),sendouts=(ctx.sendoutResults||[]).filter(x=>ctx.market!=='ny'||!['htrx','pathmd'].includes(x.lab));
  const resourceIntent=/\b(?:template|templates|log|logs|form|forms|document|documents|pdf|checklist|checklists|training|competency|calibration|maintenance|qc|quality|workflow|workflows|calculator|pathway|order|orders|ordering|shipping|courier)\b/.test(q);
  const testFirst=Boolean((panels.length||sendouts.length||records.some(item=>item.kind==='sendout-test'))&&!resourceIntent);
  const results=[],seen=new Set();

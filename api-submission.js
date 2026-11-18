@@ -49,6 +49,8 @@ function rerenderPtSite(returnFocus=false){
  const root=document.querySelector('.api2-site-selector');
  if(!root)return;
  root.outerHTML=marketSelector();
+ window.LAB_QUALITY_GUIDE?.refreshMarket?.();
+ const units=document.querySelector('.api2-page .api2-instrument-notes')?.closest('.api2-page');if(units)units.outerHTML=unitsPage();
  if(returnFocus)document.querySelector('.api2-site-selector [data-api2-location-toggle]')?.focus();
 }
 function setPtSiteMenu(open,focusSelected=false,returnFocus=false){
@@ -255,7 +257,7 @@ function unitsPage(){
  ["Sysmex pocH-100i","Match CBC field abbreviations and verify the WBC/RBC/platelet unit scaling and differential reporting."],
  ["BioFire TORCH","Report the enrolled pathogen target with the event’s requested qualitative category; do not report unrequested targets."],
  ["Rapid HIV / POC","Choose the correct test system and result category on the event worksheet; follow the enrollment and CLIA requirements."]
- ].map(v=>'<article><strong>'+x(v[0])+'</strong><p>'+x(v[1])+'</p></article>').join('')+'</div></section>'+
+ ].filter(v=>!['ny','fl'].includes(window.LAB_MARKET?.get()||selectedPtMarket)||v[0]!=='Rapid HIV / POC').map(v=>'<article><strong>'+x(v[0])+'</strong><p>'+x(v[1])+'</p></article>').join('')+'</div></section>'+
  '<section class="api2-sources"><strong>Sources and verification</strong><div>'+link(url.unit,"Labcorp SI conversion table")+link(url.limits,"API out-of-range reporting")+link(url.guide,"API entry guide")+'</div></section></section>';
 }
 const exceptions=[
@@ -294,5 +296,5 @@ document.addEventListener('labcentral:marketchange',event=>{
  selectedPtMarket=next;
  selectedCalverMarket=next;
 });
-window.LAB_API_SUBMISSION={submission,unitsPage,exceptionsPage,marketSelector,calverMarketSelector};
+window.LAB_API_SUBMISSION={market:()=>selectedPtMarket,submission,unitsPage,exceptionsPage,marketSelector,calverMarketSelector};
 })();

@@ -23,6 +23,10 @@ const map=[
   {code:"CRP",title:"C-reactive protein",catalogNumber:"CRP #431",samplesPerShipment:2,instrument:"Piccolo Xpress",route:"piccolo",description:"Use the MetLyte Plus CRP disc for the separately assigned CRP sample and confirm the actual reporting units and program on the event sheet.",tests:["MetLyte + CRP"]}
  ]}
 ];
+function activeMap(){
+ const market=window.LAB_MARKET?.get()||window.LAB_API_SUBMISSION?.market?.();
+ return ['ny','fl'].includes(market)?map.map(category=>category.id==='immunology'?{...category,badge:'CRP',machines:category.machines.filter(m=>m[1]!=='hiv'),items:category.items.filter(item=>item.code!=='HV')}:category):map;
+}
 function apiInstrumentLink(name,route){
  return '<a class="quality-api-instrument-link" href="#'+esc(route)+'/pt-testing" title="Open '+esc(name)+' PT testing instructions" aria-label="Open '+esc(name)+' PT testing instructions">'+esc(name)+' <span aria-hidden="true">↗</span></a>';
 }
@@ -132,7 +136,7 @@ function apiOverview(){
  return '<section class="quality-summary quality-api-overview"><div class="quality-kicker">API · PROFICIENCY TESTING</div>'+
  '<h2>Assessment types and assigned analyzers</h2>'+
  '<p>Match the current API shipment sheet to the enrolled program. Test and panel badges below identify the expected assay menu, not a substitute for the event-specific instructions.</p>'+
- '<div class="quality-map-grid">'+map.map((x,index)=>apiOverviewCard(x,index)).join('')+'</div>'+
+ '<div class="quality-map-grid">'+activeMap().map((x,index)=>apiOverviewCard(x,index)).join('')+'</div>'+
  '</section>';
 }
 function levelsVisual(){
@@ -159,7 +163,8 @@ function setPtCategory(id){
  if(map.some(category=>category.id===id))selectedPtCategory=id;
 }
 function ptCategoriesContent(){
- const category=map.find(item=>item.id===selectedPtCategory)||map[0];
+ const scoped=activeMap();
+ const category=scoped.find(item=>item.id===selectedPtCategory)||scoped[0];
  return '<section class="quality-pt-category-detail" data-pt-category="'+esc(category.id)+'" aria-label="'+esc(category.title)+' PT reference">'+
  '<header class="quality-pt-category-head"><div><span class="quality-pt-eyebrow">SELECTED PT CATEGORY</span>'+
  '<div class="quality-api-heading"><h3>'+esc(category.title)+'</h3></div><p>Check the shipment instructions before running or reporting these enrolled assays.</p></div>'+
@@ -170,8 +175,9 @@ function ptCategoriesContent(){
  '<button type="button" data-gotab="units-reporting">Reporting units →</button></div></div></section>';
 }
 function ptCategoriesReference(){
- const selected=map.find(item=>item.id===selectedPtCategory)||map[0];
- const options=map.map(item=>
+ const scoped=activeMap();
+ const selected=scoped.find(item=>item.id===selectedPtCategory)||scoped[0];
+ const options=scoped.map(item=>
   '<button type="button" class="quality-pt-option'+(item.id===selected.id?' is-selected':'')+'" data-api-pt-category="'+esc(item.id)+'" aria-current="'+(item.id===selected.id?'true':'false')+'">'+
    '<span>'+esc(item.title)+'</span>'+apiProgramBadges(item)+
   '</button>'
@@ -201,6 +207,10 @@ document.addEventListener('click',function(event){
 
 /* API PT sample handling is a reference checklist, not a guided procedure.
    Show all five topics together without the stepper, toggle or progress controls. */
+function refreshMarket(){
+ const overview=document.querySelector('.quality-api-overview');if(overview)overview.outerHTML=apiOverview();
+ const categories=document.querySelector('.quality-pt-categories');if(categories)categories.outerHTML=ptCategoriesReference();
+}
 function ptHandlingReference(group){
  const topics=[];
  for(const b of group.blocks||[]){
@@ -264,5 +274,5 @@ function visual(id,title){
  if(/print|file in calibration/.test(lower))return '<section class="quality-step-visual quality-report"><div class="quality-step-visual-head">VERIFICATION REPORT</div><div class="quality-report-sheet"><strong>CALIBRATION VERIFICATION</strong><div>Analyzer · Lot · Date · Operator</div><div>Low &nbsp; ✓ &nbsp; Midpoint &nbsp; ✓ &nbsp; High &nbsp; ✓</div><div>Assigned value · Observed value · Limits</div><span>Reviewer approval → Calibration Verification Binder</span></div></section>';
  return "";
 }
-window.LAB_QUALITY_GUIDE={groups,apiOverview,calverOverview,calverReference,ptHandlingReference,ptCategoriesReference,setPtCategory,visual};
+window.LAB_QUALITY_GUIDE={refreshMarket,groups,apiOverview,calverOverview,calverReference,ptHandlingReference,ptCategoriesReference,setPtCategory,visual};
 })();

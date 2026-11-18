@@ -41,7 +41,7 @@ const ptAnalyzers=new Set(["sysmex","triage","piccolo","torch","pathfast"]);
 function supports(sec){
  return !!sec&&!sec.archived&&(
   (sec.category==="Analyzers"&&ptAnalyzers.has(sec.id))||
-  (sec.category==="Point of care"&&sec.id==="hiv")
+  (sec.category==="Point of care"&&sec.id==="hiv"&&window.LAB_MARKET?.allowsHiv?.()!==false)
  );
 }
 function patientGroup(sec,groups){
@@ -58,7 +58,7 @@ function fileSteps(id){
   ["Capture original PT results",id==="hiv"?
    "Photograph the actual Abbott strip at the 20–30 minute read time. Show the HV sample ID and Control, Ag and Ab areas. Record both Ag and Ab separately, including any invalid result.":
    "Keep the original analyzer printout for every assigned test. Confirm specimen ID, all analyte values, units, flags and testing date. Do not use a patient MRN or replace source data with only transcribed values."],
-  ["Notify, file and verify API submission","Attach original printouts or labeled HIV photographs to blank paper with double-sided tape where needed, keeping IDs and results visible. Send a legible image to the Lab Supervisor, then file the original under the matching year, API event, kit/shipment and test code. Filing is separate from formal transmission to API."]
+  ["Notify, file and verify API submission",(id==="hiv"?"Attach labeled result photographs":"Attach original analyzer printouts")+" to blank paper with double-sided tape where needed, keeping IDs and results visible. Send a legible image to the Lab Supervisor, then file the original under the matching year, API event, kit/shipment and test code. Filing is separate from formal transmission to API."]
  ];
 }
 function vialSvg(label,code,color){

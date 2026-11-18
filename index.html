@@ -303,7 +303,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 </style>
 <link rel="stylesheet" href="market-context.css?v=20261107-market-spacing" media="all">
 <link rel="stylesheet" href="lab-search.css?v=20261117-lab-suggestion-groups" media="all">
-<script src="market-context.js?v=20261107-optional-v2"></script>
+<script src="market-context.js?v=20261118-market-hiv"></script>
 <link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-dymo-print" media="all">
 <link rel="stylesheet" href="guide-howto-navigation.css?v=20261112-athena-inline-tabs-v2" media="all">
 </head>
@@ -472,16 +472,16 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 </script>
 <script src="sendout-form-config.js?v=20261104"></script>
 <script src="sendout-visual.js?v=20261104"></script>
-<script src="quality-reference.js?v=20261104"></script>
-<script src="pt-testing-guide.js?v=20261108-api-labels"></script>
-<script src="api-submission.js?v=20261107-optional-v2"></script>
+<script src="quality-reference.js?v=20261118-market-hiv"></script>
+<script src="pt-testing-guide.js?v=20261118-market-hiv"></script>
+<script src="api-submission.js?v=20261118-market-hiv"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
   <script src="lab-calculators-guide.js?v=20261118-ny-market"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261118-ny-market"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
-<script src="training-competency.js?v=20261107-optional-v2"></script>
+<script src="training-competency.js?v=20261118-market-hiv"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
 <script src="pathfast-calibration.js?v=20261112-cardiac-qc-1b-lanes"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
@@ -511,7 +511,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-reference-polish.js?v=20261104""></script>
 <script src="sendout-market-guide.js?v=20261112-socal-htrx-hide"></script>
 <script src="assay-catalog.js?v=20261113-mono-whole-blood"></script>
-<script src="instrument-troubleshooting.js?v=20261109-support-contacts-v2"></script>
+<script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
 <script src="lab-container-photos.js?v=20261104"></script>
@@ -521,7 +521,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="analyzer-icons.js?v=20261104"></script>
 <script src="sidebar-icons.js?v=20261104"></script>
 <script src="lab-smart-search.js?v=20261110-smart-verified"></script>
-<script src="lab-search.js?v=20261118-ny-market"></script>
+<script src="lab-search.js?v=20261118-market-hiv"></script>
 <script>
 (()=>{
 'use strict';
@@ -637,6 +637,7 @@ function sectionSvg(s){return navIconSvg(s.id,s.icon)}
 const titleCount=(x)=>x.length;
 const urlFor=(id,tab='overview')=>id==='home'?'#home':'#'+id+(tab&&tab!=='overview'?'/'+encodeURIComponent(tab):'');
 function navigate(id,tab='overview'){
+ if(window.LAB_MARKET?.allowsSection?.(id)===false){id='home';tab='overview';}
  el('sidebar').classList.remove('open');el('sidebarScrim').classList.remove('show');
  state.search='';el('search').value='';
  closeSearchSuggestions();syncSearchClear();
@@ -644,10 +645,12 @@ function navigate(id,tab='overview'){
  if(location.hash!==url) location.hash=url; else render();
  window.scrollTo({top:0,behavior:'instant'});
 }
+function availableSections(){return all.filter(s=>window.LAB_MARKET?.allowsSection?.(s.id)!==false);}
 function sectionFromHash(){
  const hash=decodeURIComponent(location.hash.replace(/^#/,''))||'home';
  const [id,...rest]=hash.split('/');
  const tab=rest.join('/')||'overview';
+ if(window.LAB_MARKET?.allowsSection?.(id)===false)return {id:'home',tab:'overview'};
  // Preserve previous Lab Container Reference bookmarks and direct links.
  if(id==='tubes'){
   if(tab==='overview'||tab==='gallery')return {id:'lab-container-gallery',tab:'overview'};
@@ -661,11 +664,12 @@ function showNav(){
  const nav=el('sidebarNav');const r=sectionFromHash();
  const search=state.search.toLowerCase().trim();
  let out=`<div class="nav-section"><button class="nav-link ${r.id==='home'?'active':''}" data-go="home"><span class="nav-icon">${navIconSvg('home','book')}</span>Overview</button>`;
- if(favs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${favs.length}</span></button>`;
+ const visibleFavs=favs.filter(id=>window.LAB_MARKET?.allowsSection?.(id)!==false);
+ if(visibleFavs.length)out+=`<button class="nav-link" data-go="favorites"><span class="nav-icon">${navIconSvg('favorites','heart')}</span>Favorites <span class="nav-end">${visibleFavs.length}</span></button>`;
  out+='</div>';
  out+=`<div class="nav-section tool-navigation"><div class="nav-label"><span>TOOLS &amp; WORKFLOWS</span></div><button type="button" class="nav-link ${r.id==='calculators'?'active':''}" data-go="calculators"><span class="nav-icon calc-nav-icon">${calculatorLogo()}</span>Lab calculators/guides <span class="nav-end" id="calc2-nav-count">${window.LAB_CALCULATORS_GUIDE?.count()||3}</span></button><button type="button" class="nav-link ${r.id==='orders'?'active':''}" data-go="orders"><span class="nav-icon">${navIconSvg('orders','clipboard-check')}</span>Sendout lab workflows</button><button type="button" class="nav-link ${r.id==='order-sets'?'active':''}" data-go="order-sets"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena Order Sets</button><button type="button" class="nav-link ${r.id==='athena-ehr'?'active':''}" data-go="athena-ehr" data-target-tab="labels"><span class="nav-icon athena-nav-icon">${navIconSvg('order-sets','file-text')}</span>Athena EHR Guides</button></div>`;
  for(const cat of categories){
-  const list=all.filter(s=>s.category===cat&&(!search||isMatch(s,search)));
+  const list=availableSections().filter(s=>s.category===cat&&(!search||isMatch(s,search)));
   // Keep Other POC tests last in its sidebar category without reordering guides elsewhere.
   if(cat==='Point of care'){
    const otherIndex=list.findIndex(s=>s.id==='poc');
@@ -702,7 +706,7 @@ const guideSearchTags={
  febridx:'inflammation inflammatory host response infection viral bacterial crp c-reactive protein mxa',
  coagsense:'coagulation clotting prothrombin time pt inr warfarin',
  mono:'mononucleosis mono monospot mckesson consult 5012 heterophile epstein barr ebv',
- poc:'rapid point of care flu covid rsv strep hiv pregnancy',
+ poc:'rapid point of care flu covid rsv strep pregnancy',
  sofia:'respiratory infectious infection influenza flu covid sars-cov-2 rsv strep',
  hemocue:'hematology anemia hemoglobin haemoglobin hgb hb',
  'drug-screen':'toxicology drug screen urine drugs'
@@ -873,6 +877,7 @@ function searchPanelMatches(query,sections=all){
  const smart=window.LAB_SMART_SEARCH;
  const strict=[],near=[];
  for(const section of sections){
+  if(window.LAB_MARKET?.allowsSection?.(section.id)===false)continue;
   for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
    if(window.LAB_MARKET?.get()&&/(?:\bNY\b|New York)/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
@@ -1133,7 +1138,7 @@ const extraHomeGuides=[
  {id:'envi-ordering',title:'Envi Ordering',subtitle:'Supply ordering, vendors and tracking',category:'Operations',icon:'package',blocks:[]}
 ];
 function homeBrowseSections(){
- const standard=all.filter(s=>s.category!=='Archived');
+ const standard=availableSections().filter(s=>s.category!=='Archived');
  const extras=new Map(extraHomeGuides.map(s=>[s.category,extraHomeGuides.filter(e=>e.category===s.category)]));
  const output=[];
  for(let i=0;i<standard.length;i++){
@@ -1174,7 +1179,7 @@ function renderHome(mode='home'){
  }
  const isFav=mode==='favorites';
  const directory=homeBrowseSections();
- const matches=(isFav?all.filter(s=>favs.includes(s.id)):directory);
+ const matches=(isFav?availableSections().filter(s=>favs.includes(s.id)):directory);
  let filtered=matches.filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));
  if(search){filtered=[...directory,...all.filter(s=>s.category==='Archived')].filter(s=>isMatch(s,search.toLowerCase())&&(state.filter==='All'||s.category===state.filter));}
  const panelResults=search?searchPanelMatches(search,all.filter(s=>state.filter==='All'||s.category===state.filter)):[];
@@ -2356,6 +2361,7 @@ function renderOrders(tab='external'){
  el('mainContent').innerHTML=h;
 }
 function orderSetsFor(sec){
+ if(window.LAB_MARKET?.allowsSection?.(sec.id)===false)return [];
  const sets=window.LAB_ORDER_SETS?.[sec.id];
  const market=window.LAB_MARKET?.get()||null;
  return Array.isArray(sets)?sets.filter(x=>{
@@ -2519,7 +2525,7 @@ function renderAthenaEhrGuides(tab){
 function renderOrderSetDirectory(tab){
  el('currentCrumb').textContent='Athena orders';
  const active=tab==='sendout'?'sendout':'in-house';
- const inst=all.filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
+ const inst=availableSections().filter(x=>instrumentCategories.includes(x.category)&&!x.archived);
  let h=toolHeader('ATHENA / ORDERING REFERENCE','Athena orders & order sets','In-house order sets and external laboratory ordering workflows.');
  h+='<nav class="ao-directory-tabs" aria-label="Athena ordering sections">'+
  '<button type="button" class="ao-directory-tab '+(active==='in-house'?'active':'')+'" data-go="order-sets" data-target-tab="in-house" '+(active==='in-house'?'aria-current="page"':'')+'><span class="ao-tab-symbol" aria-hidden="true">⌂</span>In-house</button>'+
@@ -3289,7 +3295,8 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('labcentral:marketchange',e=>{
  const next=e.detail?.market;
  if(orderMarkets.some(m=>m.id===next))state.ordersRegion=next;
- render();
+ if(window.LAB_MARKET?.allowsSection?.(decodeURIComponent(location.hash.replace(/^#/,'' )).split('/')[0])===false){navigate('home');return;}
+ render();refreshSearchSuggestions();
 });
 // Search autocomplete shares the same market-aware index as full results.
 // Keyboard focus stays on the search field while Arrow keys select suggestions.
