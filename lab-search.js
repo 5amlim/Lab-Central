@@ -135,27 +135,59 @@ const referenceDocs=[
 ];
 let cached=null;
 let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
-const EXTERNAL_SEARCH_FILES=[
- 'assets/search/quest-tests.json',
- 'assets/search/labcorp-tests.json'
+const LIVE_CATALOGS=[
+ {lab:'quest',url:'https://5amlim.github.io/Lab-Calculator/?labcentral-index=1'},
+ {lab:'labcorp',url:'https://5amlim.github.io/Lab-Calculator/labcorp.html?labcentral-index=1'}
 ];
-// Only download the compact external test names and codes after a search starts.
-// The full Quest/Labcorp specimen calculators remain separate applications.
+// Read current published active rows from the same calculator applications.
+// Never merge outdated snapshots, which can contain retired or blocked codes.
+function loadLiveCatalog(source){
+ return new Promise((resolve,reject)=>{
+  const frame=document.createElement('iframe');
+  const origin=new URL(source.url).origin;
+  let timer;
+  let finished=false;
+  frame.hidden=true;
+  frame.tabIndex=-1;
+  frame.title='Load '+source.lab+' active test catalog';
+  frame.setAttribute('aria-hidden','true');
+  frame.style.display='none';
+  const finish=(error,tests)=>{
+   if(finished)return;
+   finished=true;
+   clearTimeout(timer);
+   window.removeEventListener('message',receive);
+   frame.remove();
+   if(error)reject(error);else resolve(tests);
+  };
+  function receive(event){
+   const data=event.data;
+   if(event.origin!==origin||event.source!==frame.contentWindow||
+      !data||data.type!=='labcentral:published-tests'||data.lab!==source.lab||
+      data.schema!==1||!Array.isArray(data.tests))return;
+   finish(null,data.tests);
+  }
+  window.addEventListener('message',receive);
+  frame.onerror=()=>finish(Error('Catalog failed to load'));
+  timer=setTimeout(()=>finish(Error('Catalog response timed out')),30000);
+  frame.src=source.url;
+  document.body.appendChild(frame);
+ });
+}
 function ensureExternalCatalog(query){
- if(externalCatalog||catalogFailed||norm(query).length<2||typeof fetch!=='function')return;
+ if(externalCatalog||catalogFailed||norm(query).length<2||typeof document==='undefined')return;
  if(pendingCatalog)return pendingCatalog;
- pendingCatalog=Promise.allSettled(EXTERNAL_SEARCH_FILES.map(path=>
-  fetch(path).then(response=>{if(!response.ok)throw Error('Catalog unavailable');return response.json();})
- )).then(results=>{
+ pendingCatalog=Promise.allSettled(LIVE_CATALOGS.map(loadLiveCatalog)).then(results=>{
   const rows=new Map();
   results.forEach((result,i)=>{
    if(result.status!=='fulfilled')return;
-   const lab=i===0?'quest':'labcorp';
-   for(const entry of result.value.tests||[]){
-    const [code,name,specimen]=entry;
+   const lab=LIVE_CATALOGS[i].lab;
+   for(const entry of result.value){
+    if(!Array.isArray(entry))continue;
+    const [code,name,specimen,aliases]=entry;
     if(!/^\d{2,8}$/.test(String(code||''))||!String(name||'').trim())continue;
     const key=lab+':'+code;
-    if(!rows.has(key))rows.set(key,{lab,code:String(code),name:String(name),specimen:String(specimen||'')});
+    if(!rows.has(key))rows.set(key,{lab,code:String(code),name:String(name),specimen:String(specimen||''),aliases:Array.isArray(aliases)?aliases.filter(x=>typeof x==='string'):[]});
    }
   });
   externalCatalog=[...rows.values()];
@@ -205,7 +237,7 @@ function baseIndex(ctx){
  (externalCatalog||[]).forEach(t=>add(out,{
   category:'Sendout testing',title:(t.lab==='quest'?'Quest':'Labcorp')+' · '+t.name,
   description:(t.code?'Test code '+t.code:'')+(t.specimen?' · '+t.specimen:''),
-  keywords:[t.name,t.code,t.specimen].join(' '),kind:'sendout-test',lab:t.lab,
+  keywords:[t.name,t.code,t.specimen,...(t.aliases||[])].join(' '),kind:'sendout-test',lab:t.lab,
   testName:t.name,code:t.code,specimen:t.specimen,
   href:t.lab==='quest'?'https://5amlim.github.io/Lab-Calculator/':'https://5amlim.github.io/Lab-Calculator/labcorp.html'
  }));
@@ -489,6 +521,7 @@ function suggestions(query,ctx){
  const SUGGESTION_LIMIT=6;
  const q=norm(query);
  if(!q)return [];
+ ensureExternalCatalog(query);
  const records=find(query,ctx);
  const featured=directDestination(query,records,ctx);
  const panels=ctx.panelResults||[],sendouts=ctx.sendoutResults||[];
