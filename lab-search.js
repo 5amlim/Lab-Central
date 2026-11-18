@@ -135,47 +135,25 @@ const referenceDocs=[
 ];
 let cached=null;
 let externalCatalog=null, pendingCatalog=null, catalogFailed=false;
+// Public, generated data only. A configurable base permits independent hosting
+// or an organization-owned mirror without embedding either calculator.
+const CATALOG_INDEX_BASE=String(window.LAB_CATALOG_INDEX_BASE||
+ 'https://raw.githubusercontent.com/5amlim/Lab-Calculator/main/assets/search/').replace(/\/?$/,'/');
 const LIVE_CATALOGS=[
- {lab:'quest',url:'https://5amlim.github.io/Lab-Calculator/?labcentral-index=1'},
- {lab:'labcorp',url:'https://5amlim.github.io/Lab-Calculator/labcorp.html?labcentral-index=1'}
+ {lab:'quest',url:CATALOG_INDEX_BASE+'quest-tests.json'},
+ {lab:'labcorp',url:CATALOG_INDEX_BASE+'labcorp-tests.json'}
 ];
-// Read current published active rows from the same calculator applications.
-// Never merge outdated snapshots, which can contain retired or blocked codes.
-function loadLiveCatalog(source){
- return new Promise((resolve,reject)=>{
-  const frame=document.createElement('iframe');
-  const origin=new URL(source.url).origin;
-  let timer;
-  let finished=false;
-  frame.hidden=true;
-  frame.tabIndex=-1;
-  frame.title='Load '+source.lab+' active test catalog';
-  frame.setAttribute('aria-hidden','true');
-  frame.style.display='none';
-  const finish=(error,tests)=>{
-   if(finished)return;
-   finished=true;
-   clearTimeout(timer);
-   window.removeEventListener('message',receive);
-   frame.remove();
-   if(error)reject(error);else resolve(tests);
-  };
-  function receive(event){
-   const data=event.data;
-   if(event.origin!==origin||event.source!==frame.contentWindow||
-      !data||data.type!=='labcentral:published-tests'||data.lab!==source.lab||
-      data.schema!==1||!Array.isArray(data.tests))return;
-   finish(null,data.tests);
-  }
-  window.addEventListener('message',receive);
-  frame.onerror=()=>finish(Error('Catalog failed to load'));
-  timer=setTimeout(()=>finish(Error('Catalog response timed out')),30000);
-  frame.src=source.url;
-  document.body.appendChild(frame);
- });
+async function loadLiveCatalog(source){
+ const response=await fetch(source.url,{cache:'no-cache',credentials:'omit'});
+ if(!response.ok)throw Error(source.lab+' catalog unavailable');
+ const data=await response.json();
+ if(!data||data.schema!==1||data.lab!==source.lab||
+    !Array.isArray(data.tests)||!data.tests.length)
+   throw Error(source.lab+' catalog schema mismatch');
+ return data.tests;
 }
 function ensureExternalCatalog(query){
- if(externalCatalog||catalogFailed||norm(query).length<2||typeof document==='undefined')return;
+ if(externalCatalog||catalogFailed||norm(query).length<2||typeof fetch!=='function')return;
  if(pendingCatalog)return pendingCatalog;
  pendingCatalog=Promise.allSettled(LIVE_CATALOGS.map(loadLiveCatalog)).then(results=>{
   const rows=new Map();
