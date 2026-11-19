@@ -2217,9 +2217,41 @@ function socalScheduledQuickNav(){
   ['scheduled-appointment','Schedule and give prep instructions','Front Desk'],
   ['scheduled-print','Print before collection','Lab Personnel / RN']
  ];
- return '<nav class="socal-scheduled-nav" aria-label="Jump to a scheduled requisition step"><h3>Scheduled requisition at a glance</h3><ol>'+
-  actions.map(([id,label,role],i)=>'<li><button type="button" data-scheduled-jump="'+id+'"><span class="socal-scheduled-number">'+(i+1)+'</span><span><strong>'+label+'</strong><small>'+role+'</small></span></button></li>').join('')+
-  '</ol><p>Schedule after clinical review. For <strong>16 or more tests</strong>, Clinical Triage completes its handoff before Front Desk schedules.</p></nav>';
+ return requisitionQuickNav('Scheduled requisition',actions,'Schedule after clinical review. For <strong>16 or more tests</strong>, Clinical Triage completes its handoff before Front Desk schedules.');
+}
+function requisitionQuickNav(title,actions,note){
+ return '<nav class="socal-scheduled-nav" aria-label="'+safeHtml(title)+' quick navigation"><h3>'+safeHtml(title)+' at a glance</h3><ol>'+
+  actions.map(([id,label,role],i)=>'<li><button type="button" data-scheduled-jump="'+safeHtml(id)+'"><span class="socal-scheduled-number">'+(i+1)+'</span><span><strong>'+safeHtml(label)+'</strong><small>'+safeHtml(role)+'</small></span></button></li>').join('')+
+  '</ol><p>'+note+'</p></nav>';
+}
+function sendoutHandoffQuickActions(){
+ const actions=[
+  ['sendout-handoff-collect','Collect and document','RN / Collector'],
+  ['sendout-handoff-process','Process, pack and verify paperwork','Lab Personnel'],
+  ['sendout-handoff-log','Log and stage for pickup','Lab Personnel']
+ ];
+ if((window.LAB_MARKET?.get()||state.ordersRegion)==='norcal')actions.push(['sendout-handoff-pickup','Confirm specimen pickup','Front Desk Coordinator']);
+ return actions;
+}
+function sharedRequisitionQuickNavEnabled(){
+ return ['socal','norcal','fl'].includes(window.LAB_MARKET?.get()||state.ordersRegion);
+}
+function walkinQuickNav(){
+ return requisitionQuickNav('Walk-in requisition',[
+  ['walkin-review-step','Review the requisition','RN / Lab Personnel'],
+  ['walkin-upload-step','Prepare and upload both documents','RN / Lab Personnel'],
+  ...sendoutHandoffQuickActions()
+ ],'Complete review and document upload before collecting specimens. Walk-in patients proceed directly to collection when ready.');
+}
+function inhouseQuickNav(){
+ return requisitionQuickNav('Ordered at Sollis',[
+  ['inhouse-order-step','Place the order','Provider'],
+  ['inhouse-review-step','Review the order','Lab Personnel / RN'],
+  ['inhouse-prepare-step','Prepare collection instructions','Lab Personnel / RN'],
+  ['inhouse-upload-step','Upload the flowsheet','Lab Personnel / RN'],
+  ['inhouse-route-step','Collect now or request scheduling','RN / Front Desk as needed'],
+  ...sendoutHandoffQuickActions()
+ ],'Upload the Lab Calculator before collection. If the patient is not in clinic, request scheduling and collect when they return.');
 }
 function externalFlow(){
  const selection=orderWorkflowControls('external',true);
@@ -2316,7 +2348,7 @@ function collectionProcessingHandoff(immediate=false,startNumber=1){
  return '<section class="collection-handoff" aria-label="RN collection and lab personnel specimen handoff">'+
  '<div class="collection-handoff-heading"><span>'+(immediate?'IN CLINIC NOW · SENDOUT HANDOFF':'APPOINTMENT DAY · SENDOUT HANDOFF')+'</span><h2>RN collection → Lab personnel processing → Electronic log</h2><p>'+(immediate?'Patient already in clinic: continue with collection, processing, packing, billing paperwork and the Sendout Log now.':'Follow the role-based checklist after the chart and collection plan are ready.')+'</p></div>'+
  '<div class="collection-handoff-grid">'+items.map((x,i)=>
-  '<article class="collection-handoff-card'+(i>=6?' collection-handoff-card--full':'')+'"'+(i===7?' data-norcal-pickup="true"':'')+'><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+startNumber).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
+  '<article class="collection-handoff-card'+(i>=6?' collection-handoff-card--full':'')+'"'+({0:' id="sendout-handoff-collect" tabindex="-1"',2:' id="sendout-handoff-process" tabindex="-1"',5:' id="sendout-handoff-log" tabindex="-1"',7:' id="sendout-handoff-pickup" tabindex="-1"'}[i]||'')+(i===7?' data-norcal-pickup="true"':'')+'><span class="collection-handoff-icon">'+svg(x[1])+'</span><div class="collection-handoff-copy"><small>'+safeHtml(x[0])+'</small><h3><span>'+String(i+startNumber).padStart(2,'0')+'</span> '+safeHtml(x[2])+'</h3><ul class="collection-handoff-list">'+
   x[3].map((point,j)=>'<li><strong>'+safeHtml(point[0])+'</strong> '+(i===7?safeHtml(point[1]).replace('NoCal Sendout Log','<strong>NoCal Sendout Log</strong>'):safeHtml(point[1]))+(i===5&&j===1?' <a class="collection-handoff-inline-guide" href="#sendout-log">See Sendout Log instructions <span aria-hidden="true">↗</span></a>':'')+'</li>').join('')+
   '</ul>'+([0,2,3].includes(i)?'<span class="collection-handoff-tag collection-handoff-required-badge" role="note" aria-label="Required: use Lab Calculator printout"><span class="collection-handoff-required-kicker">REQUIRED</span><span>Use Lab Calculator printout</span></span>':'')+'</div></article>').join('')+'</div>'+
  '</section>';
@@ -2345,9 +2377,10 @@ function walkinDocumentPanel(){
 }
 function walkinFlow(){
  let h=orderWorkflowControls('walk-in')+'<div class="workflow-head walkin-workflow-head orders-selected-head"><div><span class="eyebrow">EXTERNAL REQUISITION · WALK IN</span><h2>External requisition (walk in)</h2><p><strong>Patients should be encouraged to schedule external lab visits in advance.</strong> For walk-ins already in clinic, the RN or lab personnel reviews the outside requisition, prepares the collection plan and uploads both documents before specimen collection. Lab personnel then process and log the sendout.</p><div class="workflow-doc-labels" aria-label="Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">RN · Lab personnel</span></div>';
+ if(sharedRequisitionQuickNavEnabled())h+=walkinQuickNav();
  h+=workflowSteps([
-  ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab Personnel'],
-  ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab Personnel']
+  ['Review the outside requisition','Check patient identifiers against the chart, ordered test codes, receiving lab, account information and any preparation requirements. Confirm the collection can proceed.','walkin-review','','RN / Lab Personnel','walkin-review-step'],
+  ['Prepare the Lab Calculator and upload both documents','Use the appropriate Quest, Cedars or Labcorp calculator. Upload the requisition and finalized calculator PDF to Athena under the correct document labels.','walkin-upload','','RN / Lab Personnel','walkin-upload-step']
  ],1);
  h+=requisitionVersionNotice();
  h+=collectionProcessingHandoff(true,3);
@@ -2356,12 +2389,13 @@ function walkinFlow(){
 }
 function inhouseFlow(){
  let h=orderWorkflowControls('in-house')+`<div class="workflow-head orders-selected-head"><div><span class="eyebrow">SOLLIS-PLACED SENDOUT ORDERS</span><h2>Sendout orders placed by Sollis</h2><p>For tests ordered in Athena by the Sollis clinical team and sent to an outside laboratory.</p></div><span class="workflow-role-pill">Provider · Lab personnel / RN</span></div>`;
+ if(sharedRequisitionQuickNavEnabled())h+=inhouseQuickNav();
  h+=workflowSteps([
- ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','athena-sendout-order','','Provider'],
- ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN'],
- ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory as needed.','','','Lab Personnel / RN'],
- ['Upload the Lab Calculator','File the finalized Lab Calculator in Athena before specimen collection.','sollis-calculator-upload','','Lab Personnel / RN'],
- ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','RN']
+ ['Provider places the order','The Sollis provider orders the sendout tests in Athena. Confirm the intended receiving laboratory.','athena-sendout-order','','Provider','inhouse-order-step'],
+ ['Lab personnel or RN reviews the order','Check the ordered tests and specimen requirements, then select the receiving laboratory in the Lab Calculator.','','','Lab Personnel / RN','inhouse-review-step'],
+ ['Prepare the collection instructions','Use the Quest, Cedars or Labcorp calculator as applicable. Verify test codes, tubes, processing, transport temperature and priority against the official test directory as needed.','','','Lab Personnel / RN','inhouse-prepare-step'],
+ ['Upload the Lab Calculator','File the finalized Lab Calculator in Athena before specimen collection.','sollis-calculator-upload','','Lab Personnel / RN','inhouse-upload-step'],
+ ['Is the patient currently in clinic?','Choose the appropriate route after reviewing the order and uploading the Lab Calculator.','sollis-patient','','RN','inhouse-route-step']
  ]);
  h+=`<div class="workflow-callouts"><button type="button" class="workflow-resource" data-go="calculators"><span class="home-tool-icon teal calc-logo-holder">${calculatorLogo()}</span><span><strong>Lab calculators</strong><small>Quest, Cedars, Labcorp</small></span><span>→</span></button><button type="button" class="workflow-resource" data-go="order-sets" data-target-tab="sendout"><span class="home-tool-icon athena">${navIconSvg('order-sets','file-text')}</span><span><strong>Athena Sendout Orders</strong><small>Illustrated external lab ordering guide</small></span><span>→</span></button></div>`;
  h+=collectionProcessingHandoff(state.sollisPatientPath==='clinic');
