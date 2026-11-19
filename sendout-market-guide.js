@@ -55,8 +55,9 @@ function labInfo(l){
 function pickupConfirmation(){
  if(market!=="norcal")return "";
  return '<div class="lc-site-note lc-norcal-pickup"><strong>Front Desk · Pickup confirmation (NorCal only)</strong>'+
- '<p>After the Sendout Log is submitted and specimens have actually been picked up:</p>'+
- '<ol><li>React with a ✅ to each corresponding entry in the <strong>NoCal Sendout Log</strong> group chat for the specimens that were picked up.</li>'+
+ '<p>After the Sendout Log is submitted, update each entry as pickup progresses:</p>'+
+ '<ol><li>React with a ⏰ to each corresponding entry in the <strong>NoCal Sendout Log</strong> group chat once pickup has been scheduled.</li>'+
+ '<li>React with a ✅ to each corresponding entry in the <strong>NoCal Sendout Log</strong> group chat for the specimens that were picked up.</li>'+
  '<li>Post a separate message in the same group chat confirming which receiving lab or courier picked up the specimens (e.g., “Quest has been picked up.” or “Labcorp has been picked up.”).</li></ol>'+
  '<p>Do not mark entries as picked up until pickup is confirmed.</p></div>';
 }
