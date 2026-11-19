@@ -363,3 +363,65 @@
 
 /* Keep the Sysmex missing-QC reminder visually distinct from explanatory text. */
 .qc-screen-instruction strong{font-weight:850;color:#315b70}
+
+.qc-poch-qc-main {
+ display:grid;
+ align-items:center;
+ min-height:180px;
+ background:#edf6f9;
+ border:1px solid #b9ced8;
+ border-radius:8px;
+}
+.qc-poch-qc-main svg {display:block;width:100%;height:auto}
+.qc-poch-file-table {
+ width:calc(100% - 16px);
+ margin:8px;
+ border-collapse:collapse;
+ color:#284957;
+ font-size:12px;
+ text-align:left;
+}
+.qc-poch-file-table th,.qc-poch-file-table td {
+ border:1px solid #a9c4d2;
+ padding:3px 7px;
+}
+.qc-poch-file-table thead {background:#c8dfec}
+.qc-poch-file-table tbody {background:#f7fbfd}
+.qc-poch-file-table tr.is-highlighted,.qc-poch-key.is-highlighted {
+ background:#dcf1e7;
+ outline:2px solid #1f786d;
+ outline-offset:-2px;
+}
+.qc-poch-file-details,.qc-poch-run-area,.qc-poch-result-keys {
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:5px;
+ padding:7px 8px;
+ color:#294c61;
+ font-size:11px;
+}
+.qc-poch-run-area {justify-content:space-between;min-height:110px}
+.qc-poch-result-keys {justify-content:space-between}
+.qc-poch-key {
+ border:1px solid #97b7c9;
+ border-radius:3px;
+ background:#d8eaf4;
+ padding:5px 6px;
+ font-weight:700;
+}
+.qc-poch-analytes {
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:1px;
+ padding:0 8px;
+}
+.qc-poch-analytes > div {
+ display:flex;
+ justify-content:space-between;
+ padding:4px 7px;
+ background:#f9fcfd;
+ color:#315469;
+ font-size:11px;
+}
+.qc-poch-reference {margin:6px 2px 12px;font-size:12px}

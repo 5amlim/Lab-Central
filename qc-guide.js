@@ -63,15 +63,38 @@ function isQcGroup(sec,group){
  if(sec.id==="sysmex"&&/insight/i.test(group.title))return false;
  return /\bqc\b|\bquality control\b/i.test(group.title) && !/\bnotes\b|reference/i.test(group.title);
 }
+// Sysmex pocH-100i IFU, chapter 3, section 3.2.3(a), closed-piercer L-J example.
+const sysmexQcIfu="https://s-a-le.nl/wp-content/uploads/2020/01/pocH-100i_IFU_1504_en.pdf";
+function sysmexAnalyzeScreen(kind){
+ const file=kind==="pochAnalyzeFiles",run=kind==="pochAnalyzeRun",running=kind==="pochAnalyzeRunning";
+ const control=(text,focus=false)=>'<span class="qc-poch-key'+(focus?' is-highlighted':'')+'">'+esc(text)+'</span>';
+ const analytes=["WBC","RBC","HGB","HCT","MCV","MCH","MCHC","PLT"];
+ const fileDetails='<div class="qc-poch-file-details"><strong>File [2]</strong><span>Lot ID [ — ]</span><span>Expire [ — ]</span></div>';
+ if(file)return '<table class="qc-poch-file-table"><thead><tr><th>File</th><th>Lot ID</th><th>Expire</th></tr></thead><tbody>'+
+  Array.from({length:6},(_,i)=>'<tr'+(i===1?' class="is-highlighted"':'')+'><th scope="row">'+(i+1)+'</th><td>—</td><td>—</td></tr>').join("")+
+  '</tbody></table>';
+ if(run)return fileDetails+
+  '<div class="qc-poch-run-area"><span>Operator [ — ]</span>'+control("Run",true)+'</div>';
+ return fileDetails+'<div class="qc-poch-analytes">'+
+  analytes.map(name=>'<div><strong>'+name+'</strong><span>'+(running?'›':'—')+'</span></div>').join("")+
+  '</div>'+(running?'':'<div class="qc-poch-result-keys">'+[control("Print"),control("Back"),control("←"),control("→"),control("Quit",true)].join("")+'</div>');
+}
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
  const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const isPoch=brand==="Sysmex pocH-100i";
+ const isPochAnalyze=/^pochAnalyze/.test(item.kind||"");
  const header=isPiccoloScene
   ?'<div class="qc-device-screen-top qc-px-screen-top"><strong>'+esc(item.screen)+'</strong></div>'
+  :isPochAnalyze?'<div class="qc-device-screen-top qc-poch-top"><strong>sysmex</strong><small>'+esc(item.screen)+'</small></div>'
   :isPoch?'<div class="qc-device-screen-top qc-poch-top"><strong>sysmex</strong><small>Ready · Top</small></div>':'<div class="qc-device-screen-top"><strong>'+esc(brand)+'</strong><small>MENU REFERENCE</small></div>';
  let body="";
- if(item.kind==="piccoloHome"){
+ if(isPochAnalyze){
+  body=sysmexAnalyzeScreen(item.kind);
+ }else if(item.kind==="pochQcMain"){
+  return '<div class="qc-screen-reference" role="group" aria-label="Sysmex Main screen, QC selected">'+top+
+   '<div class="qc-poch-qc-main">'+window.LAB_SYSMEX_FOCUSED.screen("qc")+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }else if(item.kind==="piccoloHome"){
   // Match the actual Piccolo Home screen: one yellow Analyze action with small utility icons.
   body='<div class="qc-px-home-body"><div class="qc-px-yellow-button">Analyze</div>'+
    '<div class="qc-px-home-tools"><span aria-hidden="true">▣</span><span aria-hidden="true">☞</span></div></div>'+
@@ -315,11 +338,14 @@ function sysmexStep(sec,group,title){
  ],"Sysmex pocH-100i",{scroll:true})+
  '<p class="lc-poc-lot-caution">Only compare the old and new lots when both materials are within their labeled stability and expiration. Follow the approved lot-to-lot acceptance criteria before switching.</p></div>';
  if(/^run (the )?qc/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {heading:"Open QC and check the lot",screen:"MAIN",items:["QC","Result","Shutdown"],focus:"QC",tip:"Select QC, choose the correct Low / Normal / High file and verify the control lot."},
-  {kind:"qcFiles",heading:"Select QC1, QC2 or QC3",tip:"Choose the correct active QC file: QC1 Low, QC2 Normal or QC3 High. Verify lot and expiration."},
-  {heading:"Run the selected QC level",screen:"QC FILE",items:["Run","Back"],focus:"Run",tip:"Mix material per approved EIGHTCHECK instructions, load it using the green QC adapter and select Run."},
-  {heading:"Accept and print result",screen:"QC RESULT",items:["Quit","Print (if needed)","Back"],focus:"Quit",tip:"Review the result, then select Quit. An automatic printout is generated only when the printer setting is enabled. Otherwise follow the reprint route below."}
- ],"Sysmex pocH-100i",{scroll:true})+sysmexPrintFallback()+'</div>'; 
+  {kind:"pochQcMain",heading:"Open QC from Main",tip:"Verify the operator ID, then select QC on Main to open the analysis file list."},
+  {kind:"pochAnalyzeFiles",screen:"QC Analyze",heading:"Select the matching file",tip:"The analyzer lists six numbered files. Match the file, lot ID and expiration to the control vial. File 2 is highlighted for illustration only."},
+  {kind:"pochAnalyzeRun",screen:"QC Analyze",heading:"Run the selected control",tip:"Verify the selected file and lot. Load the prepared control in the green QC adapter, close the sample door and select Run."},
+  {kind:"pochAnalyzeRunning",screen:"Running · QC Analyze",heading:"Wait for analysis",tip:"Leave the sample door closed during aspiration. Wait for the result display."},
+  {kind:"pochAnalyzeResults",screen:"QC Analyze",heading:"Review results, then select Quit",tip:"Use the arrow keys to review the result pages. Check the flags and acceptance criteria before selecting Quit. Select Print if needed."}
+ ],"Sysmex pocH-100i",{scroll:true,disclaimer:"Training schematics. File selection and values are examples. The screen controls follow the closed-piercer L-J workflow in the Sysmex IFU."})+
+ '<p class="qc-poch-reference"><a href="'+sysmexQcIfu+'" target="_blank" rel="noopener noreferrer">Sysmex pocH-100i instructions for use, section 3.2.3(a)</a></p>'+sysmexPrintFallback()+'</div>';
+
  return "";
 }
 function qcClickStep(sec,groupId,title){
