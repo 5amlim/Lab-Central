@@ -58,12 +58,21 @@ function labInfo(l){
  (m.href?'<a class="lc-lab-resource" target="_blank" rel="noopener noreferrer" href="'+m.href+'">Open receiving lab directory ↗</a>':'')+
  '</div></details>';
 }
+function pickupConfirmation(){
+ if(market!=="norcal")return "";
+ return '<div class="lc-site-note lc-norcal-pickup"><strong>Front Desk · Pickup confirmation (NorCal only)</strong>'+
+ '<p>After the Sendout Log is submitted and specimens have actually been picked up:</p>'+
+ '<ol><li>React with a ✅ to each corresponding entry in the <strong>NoCal Sendout Log</strong> group chat for the specimens that were picked up.</li>'+
+ '<li>Post a separate message in the same group chat confirming which receiving lab or courier picked up the specimens (e.g., “Quest has been picked up.” or “Labcorp has been picked up.”).</li></ol>'+
+ '<p>Do not mark entries as picked up until pickup is confirmed.</p></div>';
+}
 function guide(){
  const f=form(),l=markets[market].labs;
  return '<div class="lc-sendout" id="lcSendoutGuide">'+selection()+
  '<div class="lc-guide-intro"><span class="lc-guide-eyebrow">SELECTED SITE · '+E(markets[market].name)+'</span><h2>'+E(selectedSite())+' sendouts</h2>'+
  '<p>Begin with the Lab Calculator, verify the receiving laboratory and test-specific instructions, then use the relevant lab section below. These sections are independent, not one combined sendout procedure.</p></div>'+
  '<div class="lc-sendout-actions"><button type="button" data-go="calculators">Open Lab Calculators ↗</button><button type="button" data-go="sendout-log">Open Lab Sendout Log ↗</button></div>'+
+ pickupConfirmation()+
  '<div class="lc-lab-accordions"><div class="lc-guide-eyebrow">RECEIVING LABS · SELECT ONE</div>'+l.map(labInfo).join("")+'</div>'+
  '<p class="lc-guide-warning">Not every receiving lab is activated at every clinic. Verify current site approval, collection requirements and pickup arrangements before processing.</p></div>';
 }
@@ -73,7 +82,7 @@ function log(){
  '<div class="lc-log-outcome"><span class="lc-guide-eyebrow">LAB SENDOUT LOG</span>'+
  '<h2>'+E(markets[market].name)+'</h2><p>Use the <strong>'+E(markets[market].name)+'</strong> Sendout Log for routine specimens, STAT or special pickups, and special test kits shipped by UPS or FedEx. Choose the clinic within the form. Enter any pickup confirmation, carrier and shipment tracking details under <strong>Confirmation Number</strong>.</p>'+
  (valid?'<a class="lc-open-form" href="'+E(f.url)+'" target="_blank" rel="noopener noreferrer">Open '+E(markets[market].name)+' Sendout Log ↗</a>':'<p>Approved form link is not configured for this market.</p>')+
- '</div></div>';
+ '</div>'+pickupConfirmation()+'</div>';
 }
 function render(mode){if(!validSite())site=markets[market].sites[0][0];return mode==="log"?log():guide();}
 function refresh(){
