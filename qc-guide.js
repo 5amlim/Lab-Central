@@ -60,7 +60,7 @@ const configs={
 function getConfig(id){return configs[id]||configs.generic;}
 function isQcGroup(sec,group){
  if(!sec||!group||sec.archived||!["Analyzers","Point of care"].includes(sec.category))return false;
- if(sec.id==="sysmex"&&/insight/i.test(group.title))return false;
+ if(sec.id==="sysmex"&&/insight|register a new qc lot/i.test(group.title))return false;
  return /\bqc\b|\bquality control\b/i.test(group.title) && !/\bnotes\b|reference/i.test(group.title);
 }
 // Sysmex pocH-100i IFU, chapter 3, section 3.2.3(a), closed-piercer L-J example.
@@ -156,15 +156,15 @@ function screenPanel(item,brand,number){
  }else if(item.kind==="qcLot"){
   body='<div class="qc-device-screen-label">SET QC · SELECT FILE / LOT</div>'+
    '<div class="qc-device-qcfile-label">QC1 / Low <span>File [1] · repeat for QC2 and QC3</span></div>'+
-   '<div class="qc-device-scan-form"><div><strong>Lot ID</strong><span class="qc-device-barcode" aria-hidden="true"></span><em>Scan lot barcode</em></div>'+
-   '<div><strong>Expire</strong><span class="qc-device-barcode" aria-hidden="true"></span><em>Scan / enter expiry</em></div></div>'+
-   '<div class="qc-device-screen-bottom"><span>Verify package insert</span><span>NEXT →</span></div>';
+   '<div class="qc-device-scan-form"><div><strong>Lot ID</strong><span class="qc-lot-empty-field">—</span><em>Scan or enter lot ID</em></div>'+
+   '<div><strong>Expire</strong><span class="qc-lot-empty-field">—</span><em>Scan / enter expiry</em></div></div>'+
+   '<div class="qc-device-screen-bottom"><span>Verify both fields</span><span>→</span></div>';
  }else if(item.kind==="qcAnalytes"){
   const rows=["WBC","RBC","HGB","HCT","MCV"];
   body='<div class="qc-device-screen-label">SET QC · FILE [1] · TARGET / LIMIT</div>'+
    '<div class="qc-device-parameter-table"><div class="qc-device-param-heading"><b>PARAMETER</b><b>TARGET</b><b>LIMIT</b></div>'+
-   rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-device-barcode" aria-label="Scan target barcode"></span><span class="qc-device-barcode" aria-label="Scan limit barcode"></span></div>').join("")+'</div>'+
-   '<div class="qc-device-screen-bottom"><span>Use the matching lot assay sheet</span><span>NEXT → MORE ANALYTES</span></div>';
+   rows.map(x=>'<div class="qc-device-param-row"><strong>'+x+'</strong><span class="qc-lot-empty-field" aria-label="Target field">—</span><span class="qc-lot-empty-field" aria-label="Limit field">—</span></div>').join("")+'</div>'+
+   '<div class="qc-device-screen-bottom"><span>←</span><span>→</span></div>';
  }else if(item.kind==="piccoloClose"){
   // Closing the drawer is the final manual action and immediately starts QC analysis.
   body='<div class="qc-device-screen-label">CONTROL · READY</div>'+
@@ -184,11 +184,6 @@ function screenPanel(item,brand,number){
    '<p class="qc-piccolo-entry-help"><b>1</b> = Low control <span>·</span> <b>2</b> = High control</p>'+
    '<div class="qc-piccolo-entry-confirm">Enter <b>CONFIRM</b></div></div>'+
    '<div class="qc-device-screen-bottom"><span>Type 1 or 2</span><span>Then press Enter</span></div>';
- }else if(item.kind==="qcSave"){
-  body='<div class="qc-device-screen-label">SET QC · CHECK ALL PARAMETERS</div>'+
-   '<div class="qc-device-save-summary"><strong>Review all target and limit entries</strong><p>Use the arrows to review the remaining parameter pages. Do not enter sample values as QC targets.</p>'+
-   '<span class="qc-device-save-highlight">SAVE <b>SELECT</b></span><span>Confirm the save message with OK</span></div>'+
-   '<div class="qc-device-screen-bottom"><span>Then repeat for each active QC file</span><span>TOP</span></div>';
  }else if(item.kind==="mainMenu"){
   // Illustrate the Main screen and its actual navigation target before Str. Data.
   body='<div class="qc-device-mainbar"><span>MAIN · WB</span><strong class="qc-device-menu-highlight">MENU <b>SELECT</b></strong></div>'+
@@ -328,15 +323,6 @@ function sysmexStep(sec,group,title){
   {heading:"Choose today's blank",screen:"STORED DATA",items:["__BLANK CHECK__","Other stored result","Back"],focus:"__BLANK CHECK__",tip:"Select the blank-check record bearing today’s date."},
   {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name with the Pochi Daily Blank Check and Control Log."}
  ],"Sysmex pocH-100i",{scroll:true})+'</div>'; 
- if(/new qc lot|register a new qc lot|parallel qc|lot-to-lot comparison|lot is expired/.test(t))return '<div class="qc-instrument-walkthrough lc-poc-lot-setup">'+
- '<div class="lc-poc-lot-intro"><strong>Enter the new QC lot and control ranges</strong><span>Menu → QC → select file → Setup. This illustrates the analyzer workflow, not a working barcode input.</span></div>'+
- screenGallery([
-  {kind:"qcFiles",heading:"Open QC setup and select file",tip:"Open Menu → QC, choose the correct QC file, then select Setup. Keep the old valid lot records available during the approved comparison."},
-  {kind:"qcLot",heading:"Scan lot ID and expiration",tip:"Scan the lot barcode and enter/verify the expiration date for the selected control level. Confirm both against the manufacturer sheet."},
-  {kind:"qcAnalytes",heading:"Scan each analyte target and limit",tip:"For WBC, RBC, HGB, HCT, MCV and every parameter on the subsequent pages, scan each TARGET and LIMIT barcode on the matching control lot assay sheet. No sample result or made-up range belongs here."},
-  {kind:"qcSave",heading:"Save and repeat for all three levels",tip:"Use the arrows to review the remaining parameter screens, select Save and confirm OK. Repeat the same setup for QC1, QC2 and QC3. Use nonexpired lots for any parallel comparison."}
- ],"Sysmex pocH-100i",{scroll:true})+
- '<p class="lc-poc-lot-caution">Only compare the old and new lots when both materials are within their labeled stability and expiration. Follow the approved lot-to-lot acceptance criteria before switching.</p></div>';
  if(/^run (the )?qc/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"pochQcMain",heading:"Open QC from Main",tip:"Verify the operator ID, then select QC on Main to open the analysis file list."},
   {kind:"pochAnalyzeFiles",screen:"QC Analyze",heading:"Select the matching file",tip:"The analyzer lists six numbered files. Match the file, lot ID and expiration to the control vial. File 2 is highlighted for illustration only."},
@@ -348,7 +334,43 @@ function sysmexStep(sec,group,title){
 
  return "";
 }
+function sysmexNewLotStep(title){
+ const brand="Sysmex pocH-100i";
+ const procedureNote="Training schematics. File 1 is an example. Verify the level, lot and file assignments on the analyzer.";
+ const checklist=(label,items)=>'<div class="qc-lot-checklist" aria-label="'+esc(label)+'">'+
+  items.map(([heading,detail])=>'<div><strong>'+esc(heading)+'</strong><span>'+esc(detail)+'</span></div>').join("")+'</div>';
+ const gallery=items=>screenGallery(items,brand,{scroll:items.length>1,disclaimer:procedureNote});
+ if(/^match the vials/i.test(title))return '<figure class="qc-lot-control-figure">'+
+  (window.LAB_EQUIPMENT_ART?.kitShape?.("sysmex",false,"qc")||"")+
+  '<figcaption>Match each control vial to its assay sheet and assigned QC file.</figcaption></figure>'+checklist("Match before editing",[
+  ["1 · Control vials","Low, Normal and High. Confirm labeled expiry and in-use stability."],
+  ["2 · Assay sheet","Match the lot and level before using any barcode or value."],
+  ["3 · Analyzer files","Verify the assigned file for each level and preserve the old lot’s records."]
+ ]);
+ if(/^open set qc/i.test(title))return gallery([
+  {kind:"mainMenu",heading:"Main → Menu",tip:"Open Menu from Main. This is the path to QC setup."},
+  {heading:"Menu → QC",screen:"MENU",items:["Str. Data","Chrg. Reag.","Maint.","Calib.","Settings","QC"],focus:"QC",tip:"Select QC from Menu to open the QC chart."},
+  {heading:"QC chart → File → Setup",screen:"QC CHART",items:["Print","HC","Delete","File","Setup"],focus:"Setup",tip:"Verify the assigned QC file using File, then open Setup for that file."}
+ ])+'<p class="qc-poch-reference"><a href="'+sysmexQcIfu+'" target="_blank" rel="noopener noreferrer">Sysmex instructions for use · section 3.2.1(a)</a></p>';
+ if(/^enter the lot id/i.test(title))return gallery([
+  {kind:"qcLot",heading:"Set QC · Lot ID and Expire",tip:"Select each field before scanning or typing. Check the displayed ID and expiration against the vial and assay sheet before pressing the right arrow."}
+ ]);
+ if(/^enter targets and limits/i.test(title))return gallery([
+  {kind:"qcAnalytes",heading:"Set QC · TARGET and LIMIT",tip:"Enter the two values for the same analyte and control level, then move through every parameter page. The first page is shown with blank fields."}
+ ]);
+ if(/^save and verify/i.test(title))return gallery([
+  {heading:"Save the file settings",screen:"SET QC",items:["←","→","Save"],focus:"Save",tip:"Save only after checking all parameter pages against the lot-specific sheet."},
+  {heading:"Confirm with OK",screen:"SAVE CONFIRMATION",items:["OK"],focus:"OK",tip:"After saving, return to the file and verify the stored information. Repeat for Low, Normal and High."}
+ ]);
+ if(/^run the comparison/i.test(title))return checklist("Lot comparison record",[
+  ["Old lot","Retain results by level for the valid old lot as required by the SOP."],
+  ["New lot","Record Low, Normal and High results and compare using the approved criteria."],
+  ["Review and approval","Document findings and acceptance before releasing the new lot for routine QC."]
+ ]);
+ return "";
+}
 function qcClickStep(sec,groupId,title){
+ if(sec?.id==="sysmex"&&groupId.startsWith("register-a-new-qc-lot"))return sysmexNewLotStep(title);
  const base=sysmexStep(sec,groupId,title);
  if(base)return base;
  if(!sec||!title)return "";

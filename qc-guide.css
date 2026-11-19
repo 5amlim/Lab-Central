@@ -425,3 +425,34 @@
  font-size:11px;
 }
 .qc-poch-reference {margin:6px 2px 12px;font-size:12px}
+
+.qc-lot-checklist {
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));
+ gap:8px;
+ margin:4px 14px 16px;
+}
+.qc-lot-checklist > div {
+ display:grid;
+ gap:6px;
+ padding:12px;
+ border:1px solid #c8dfe6;
+ border-radius:8px;
+ background:#eff7f9;
+ color:#2d5369;
+ font-size:13px;
+}
+.qc-lot-checklist > div span {line-height:1.5}
+.qc-lot-empty-field {
+ padding:3px;
+ border:1px solid #aac5d2;
+ border-radius:3px;
+ background:#fff;
+ text-align:center;
+}
+.qc-lot-control-figure {
+ margin:4px 14px 12px;
+ text-align:center;
+}
+.qc-lot-control-figure > svg {display:block;width:min(100%,420px);height:auto;margin:auto}
+.qc-lot-control-figure figcaption {font-size:12px;color:#2d5369}
