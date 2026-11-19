@@ -2224,11 +2224,11 @@ function socalScheduledQuickNav(){
 function externalFlow(){
  const selection=orderWorkflowControls('external',true);
  if(state.ordersRegion==='ny')return selection+window.LAB_NY_SCHEDULED.render();
- const socal=state.ordersRegion==='socal';
+ const compactScheduled=['socal','norcal','fl'].includes(state.ordersRegion);
  const fax=state.reqSource!=='message';
  const missing=state.reqBranch==='missing';const complete=state.reqBranch==='complete';const unresolved=state.reqResolution==='unresolved';
  let h=selection+`<div class="workflow-head orders-selected-head"><div><span class="eyebrow">SCHEDULED EXTERNAL REQUISITION</span><h2>External sendout requests (scheduled)</h2><p>Start by confirming whether the member has outside lab orders. After review, upload and classify both documents in the correct patient chart using these Athena labels:</p><div class="workflow-doc-labels" aria-label="Required Athena document labels"><span class="workflow-doc-label">Lab requisition <strong>LAB REQUISITION</strong></span><span class="workflow-doc-label">Lab Calculator <strong>LAB FLOWSHEET</strong></span></div></div><span class="workflow-role-pill">Front desk · Lab personnel / RN · Provider</span></div>`;
- if(socal)h+=socalScheduledQuickNav();
+ if(compactScheduled)h+=socalScheduledQuickNav();
  h+='<div class="external-workflow-timeline">';
  h+=frontDeskRequisitionIntake();
  h+=`<section class="requisition-intake" aria-labelledby="req-intake-title">
@@ -2264,7 +2264,7 @@ function externalFlow(){
  }else if(complete){h+=`<div class="branch-result"><div class="resolution-note">The requisition is complete. <strong>Move to Step 3 to prepare and upload the Lab Calculator.</strong></div></div>`;}
  h+=`</div>`;
  h+=`<div class="completion-steps">${workflowSteps([
- ['Prepare and upload the Lab Calculator','Review specimen requirements, save and upload the PDF to Athena, then count the tests to determine the scheduling handoff.',socal?'socal-calculator-upload':'calculator-upload','','Lab Personnel / RN','scheduled-calculator'],
+ ['Prepare and upload the Lab Calculator','Review specimen requirements, save and upload the PDF to Athena, then count the tests to determine the scheduling handoff.',compactScheduled?'socal-calculator-upload':'calculator-upload','','Lab Personnel / RN','scheduled-calculator'],
  ['Schedule the patient','Once the required handoff is complete, Front Desk schedules the appointment and communicates any fasting, dietary, timed-draw, or other preparation restrictions.','','','Front Desk Coordinator','scheduled-appointment'],
  ['On the appointment day, print both documents','Before collection, print the lab requisition and the Lab Calculator from the chart. Open the calculator using View Original Image to preserve color-coded tube and bag instructions.','appointment-print','','Lab Personnel / RN','scheduled-print']
  ],3)}</div>`;
