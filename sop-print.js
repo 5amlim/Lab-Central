@@ -28,6 +28,12 @@ function handoff(start){
  ['Complete the Sendout Log','Lab personnel',bullet('Photograph labeled specimens, requisition and each transport bag as required.','Scan the QR code for the correct regional Microsoft Form and complete the Sendout Log, including pickup confirmation or UPS/FedEx tracking when applicable.')],
  ['Place bags for pickup','Lab personnel',bullet('Use the appropriate cold or frozen sleeve as needed, following the Lab Calculator printout and receiving-lab requirements.','For lockbox pickup, place sealed bags in the designated lockbox.','For pickup inside the lab, place sealed bags in the correct receiving-lab collection bin. Place refrigerated bags in the refrigerator and frozen bags in the freezer as needed.','For special courier pickups and UPS/FedEx kits, follow the site-specific approved handoff procedure.')]
  ];
+ const market=window.LAB_MARKET?.get()||document.querySelector('[data-orders-market-value]')?.dataset.ordersMarketValue||(document.querySelector('[data-norcal-pickup]')?'norcal':null);
+ if(market==='norcal')steps.push(['Confirm specimen pickup','Front Desk Coordinator',bullet(
+  'Once specimens have been picked up, react with a ✅ to each corresponding entry in the <b>NoCal Sendout Log</b> group chat.',
+  'Post a separate message in the same group chat confirming the receiving lab or courier pickup, e.g., “Quest has been picked up.” or “Labcorp has been picked up.”',
+  'Do not mark any entry as picked up until pickup is confirmed.'
+ )]);
  return section('Specimen collection, processing and handoff','Required after the order and collection plan are ready.')+steps.map((v,i)=>step(v[0],v[2],v[1],i+(start||1))).join('');
 }
 function scheduled(){
