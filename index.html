@@ -3285,8 +3285,11 @@ function updateGuidedProcedureInPlace(button){
  const scheduledJump=e.target.closest('[data-scheduled-jump]');
  if(scheduledJump){
   const target=document.getElementById(scheduledJump.dataset.scheduledJump);
-  target?.focus({preventScroll:true});
-  target?.scrollIntoView({block:'start'});
+  if(target){
+   target.style.scrollMarginTop='85px';
+   target.focus({preventScroll:true});
+   target.scrollIntoView({block:'start'});
+  }
   return;
  }
  const reqSource=e.target.closest('[data-reqsource]');if(reqSource){if(state.reqSource!==reqSource.dataset.reqsource){state.reqSource=reqSource.dataset.reqsource;state.reqBranch=null;state.reqResolution=null;}render();return}
