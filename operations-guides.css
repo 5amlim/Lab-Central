@@ -542,6 +542,9 @@
 @media(max-width:600px){.ops-print-panel{padding:13px}.ops-print-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ops-print-link{text-align:center;font-size:11px;padding:9px 7px}}
 
 .socal-scheduled-nav {
+ min-width:0;
+ max-width:100%;
+ box-sizing:border-box;
  margin:0 0 18px;
  padding:16px;
  border:1px solid #cadee5;
@@ -550,11 +553,30 @@
 }
 .socal-scheduled-nav h3 {margin:0 0 10px;color:#24475d;font-size:16px}
 .socal-scheduled-nav ol {
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(min(100%,155px),1fr));
+ display:flex;
+ flex-wrap:nowrap;
+ align-items:stretch;
  gap:7px;
- padding:0;
+ width:100%;
+ min-width:0;
+ max-width:100%;
+ overflow-x:auto;
+ overflow-y:hidden;
+ overscroll-behavior-x:contain;
+ scroll-snap-type:x proximity;
+ scrollbar-width:thin;
+ scrollbar-color:#9bbdbb #e5eff0;
+ padding:4px 3px 10px;
  margin:0;
+ box-sizing:border-box;
+ list-style:none;
+ -webkit-overflow-scrolling:touch;
+}
+.socal-scheduled-nav ol > li {
+ flex:1 0 165px;
+ min-width:0;
+ max-width:240px;
+ scroll-snap-align:start;
  list-style:none;
 }
 .socal-scheduled-nav button {
