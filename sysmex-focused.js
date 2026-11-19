@@ -122,9 +122,9 @@ function shutdown(){
 function patient(title){
  const t=String(title||"").toLowerCase();
  if(/8 hours|refrigerat|stored at room/.test(t))return figure('Sample timing · EDTA whole blood',timing(),'Room temperature: within 8 hours. Refrigerated: within 24 hours, then allow to return to room temperature.');
- if(/invert/.test(t))return figure('Gently invert the lavender tube',invert(),'Invert the capped tube a few times to mix EDTA whole blood. Do not substitute a static tube picture.');
+ if(/invert|gently mix the edta tube/.test(t))return figure('Gently invert the lavender tube',invert(),'Gently invert the capped tube to mix the EDTA whole blood before analysis.');
  if(/patient mrn|enter.*mrn|sample id/.test(t))return figure('Enter patient MRN on the analyzer',screen('mrn'),'Choose Sample ID, enter the correct MRN and confirm with Ent. Verify it matches the patient tube.');
- if(/load the sample|gray base/.test(t))return figure('Place patient tube in gray sample base',analyzer(),'Keep tube cap closed. Use the gray patient adapter, not the green QC adapter.');
+ if(/place the capped patient tube|load the sample|gray base/.test(t))return figure('Place patient tube in gray sample base',analyzer(),'Keep the cap on. Use the gray patient adapter and close the sample door before pressing Run.');
  if(/confirm analysis|analysis started|run in progress|verify run/.test(t))
   return figure('Analysis started · pocH-100i',completedAnalyzer(),'Confirm the analyzer has entered its running state with the correct patient ID. The check indicates the run started, not that results or QC were accepted.');
   if(/click run|start run/.test(t))return figure('Press Run on the analyzer',screen('run'),'Confirm the patient identity and select Run. The highlighted control is illustrative.');

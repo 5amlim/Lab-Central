@@ -28,9 +28,6 @@ const link=(url,title)=>'<a href="'+esc(url)+'" target="_blank" rel="noopener no
 const instruction=lines=>'<div class="bf-polished-points">'+lines.map(t=>'<div class="bf-polished-point"><i class="bf-polished-point-dot" aria-hidden="true"></i><span>'+esc(t)+'</span></div>').join("")+'</div>';
 function manufacturer(id,figure,page){
  const isHandling=figure&&figure>0;
- if(id==="torch"&&figure===1&&page===13){
-  return '<p class="bf-source-hardware-note">The kit packaging illustration is from a SPOTFIRE kit reference. For TORCH GI, confirm the actual GI-specific packaging and approved reagents. '+link(docLibrary,"GI panel resources")+'.</p>';
- }
  if(id==="torch"&&isHandling){
   return '<p class="bf-source-hardware-note">The handling image is from the <a target="_blank" rel="noopener noreferrer" href="'+esc(legacyGuide)+'">FilmArray RP2 manufacturer manual</a>. Use the GI panel IFU for all GI volumes, buffer opening and specimen preparation.</p>';
  }
@@ -51,7 +48,7 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?(opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure===1?link(sourcePouchGuide,"SPOTFIRE kit packaging reference"):link(legacyGuide,"FilmArray RP2 handling figure source")))+' · '+link(docLibrary,"Current GI panel resources"):
+ const source=id==="torch"?(opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources"):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
@@ -148,13 +145,13 @@ function render(id,title){
  const c=opts=>card(id,opts);
  if(/gather.*(kit|specimen)|kit and specimen/.test(t))return c({
   title:"Check pouch, vials and specimen",tag:"Preparation",
-  visual:direct("08","kit-packaging","BioFire kit packaging reference image showing pouch and sample-preparation materials; verify the specific TORCH GI or SPOTFIRE kit"),figure:1,page:13,
+  visual:gi?B.kit():direct("08","kit-packaging","SPOTFIRE kit packaging and sample-preparation materials"),figure:gi?0:1,page:13,
   lines:[gi?"Confirm the ordered GI pouch and its expiration date.":"Confirm the ordered R/ST Regular or Mini pouch and its expiration date.",
   "Check the red sample vial, blue hydration vial, buffer and transfer pipette.",
   gi?"Verify the stool specimen is in the approved Cary Blair transport medium.":"Confirm specimen type and transport medium for the selected Respiratory or Sore Throat menu."],
-  note:gi?"SPOTFIRE packaging is shown as a kit reference. Verify the actual TORCH GI kit, GI pouch, components and expiration before use.":"Verify the SPOTFIRE kit identifier matches the pouch and expiration. R/ST Regular and Mini instructions are not interchangeable."
+  note:gi?"Verify the GI pouch and kit against their labels. The diagram shows the shared loading station and the two injection vials.":"Verify the SPOTFIRE kit identifier matches the pouch and expiration. R/ST Regular and Mini instructions are not interchangeable."
  });
- if(/seat pouch|insert pouch|set up vials|loading station/.test(t))return c({
+ if(/seat pouch|set up vials|prepare (?:the )?loading station/.test(t))return c({
   title:"Seat pouch and place both vials",tag:"Loading station",
   visual:direct("01","seat-pouch","Insert the BioFire pouch into the loading station, align the red and blue markings"),figure:2,page:14,
   lines:["Place the pouch flat in the black loading station.","Seat the RED sample vial in the left red well.","Seat the BLUE hydration vial in the right blue well."],

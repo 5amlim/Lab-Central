@@ -262,7 +262,7 @@ function selectedMaterial(type,filled){
 }
 function renderStep(title,group){
  const t=String(title||"").toLowerCase(),g=String(group||"").toLowerCase();
- const daily=/daily/.test(g),monthly=/monthly/.test(g),newBox=/new.box/.test(g);
+ const daily=/daily/.test(g),monthly=/monthly|liquid.qc/.test(g),newBox=/new.box/.test(g);
  const qc=monthly||newBox,source=qc?"qc":"patient",level=/level 2|control level 2/.test(t)?2:1;
  // Physical preparation has no new LCD navigation. Do not show a fictional
  // PATIENT SAMPLE / Enter MRN menu while staff handle the specimen.
@@ -364,7 +364,7 @@ function renderStep(title,group){
      "Return to Main Menu, press Exit to eject, and store the dry QC Device in its black case.","main");
  }
  if(qc){
-  if(/select run test and enter user id|select run test, enter user id/.test(t))
+  if(/select run test and enter user id/.test(t))
    return show(title,actionPanel("Open QC testing",
      ["Choose RUN TEST from the Main Menu with the arrow keys and Enter.","Enter your User ID if prompted."],
      "The next menu choice for liquid controls is QC SAMPLE, not QC DEVICE."),

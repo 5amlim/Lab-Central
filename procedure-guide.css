@@ -388,3 +388,19 @@
  .febridx-collection-panel,.febridx-collection-reminder{break-inside:avoid}
  .febridx-collection-figure{min-height:160px}
 }
+
+/* Keep action text easy to read ahead of the supporting illustration. */
+.guide-step-instruction {
+ margin:0;
+ color:#294b61;
+ font-size:14px;
+ line-height:1.6;
+}
+.instrument-procedure-heading ~ .guide-stage .guide-card-body .guide-line,
+.pfux-patient .guide-card-body .guide-line {
+ font-size:14px;
+ line-height:1.6;
+}
+.instrument-procedure-heading ~ .guide-stage .guide-card-body .guide-note {
+ font-size:13px;
+}

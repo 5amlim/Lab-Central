@@ -181,9 +181,9 @@ function focused(sec,heading,group){
   if(t.includes("dispense")||t.includes("sample well"))return figure("Add prepared extract to test cassette","entry","Dispense the assay-specified volume using the supplied transfer device. Never pour directly from the extraction tube.","cassette");
   if(t.includes("select run test")||t.includes("tap run test"))return figure("Select Run Test on the Sofia 2 touchscreen","menu-test","From the instrument menu, select Run Test. This starts the patient-testing workflow; it is not a provider-ordering screen.");
   if(t.includes("enter user id")||t.includes("patient id")||t.includes("mrn"))return figure("Enter User ID and patient identifiers","entry","On the Sofia 2 patient-testing screen, scan or enter User ID, the patient's MRN and Order Number when applicable. Match the patient chart before continuing.");
-  if(t.includes("development mode")||t.includes("walk away"))return figure("Select WALK AWAY or READ NOW","mode","WALK AWAY: insert the newly inoculated cassette immediately. READ NOW: develop on bench for the assay-specific time before insertion.");
+  if(t.includes("choose run mode")||t.includes("development mode")||t.includes("walk away"))return figure("Select WALK AWAY or READ NOW","mode","WALK AWAY: insert the newly inoculated cassette immediately. READ NOW: develop on bench for the assay-specific time before insertion.");
   if(t.includes("insert")||t.includes("drawer"))return figure("Insert cassette into lower-right blue drawer","load","Pull open the blue drawer, place the prepared cassette flat as directed, and gently close it. Never open the drawer during analysis.");
-  if(t.includes("result")||t.includes("control"))return figure("Review test and procedural-control result","result","The Sofia 2 result screen reports analytes and the internal procedural control. A failed control means the test is invalid.");
+  if(t.startsWith("review"))return figure("Review test and procedural-control result","result","The Sofia 2 result screen reports analytes and the internal procedural control. A failed control means the test is invalid.");
   if(t.includes("relaymed")||t.includes("document"))return figure("Verify and document the patient result","result","Confirm MRN, assay, procedural-control validity, result and any required repeat or confirmatory testing before release.");
  }
  if(g.includes("qc-test")){
@@ -198,10 +198,10 @@ function focused(sec,heading,group){
  if(g.includes("calibration")){
   if(t.includes("due")||t.includes("30 day"))return figure("Check calibration due status","menu-cal","Perform a Sofia 2 optical calibration check at intervals of 30 days or less, before patient testing.");
   if(t.includes("run calibration")||t.includes("menu"))return figure("Menu → Run Calibration","menu-cal","Use the Sofia 2 calibration function, not Run QC and not the ordinary test workflow.");
-  if(t.includes("cassette")||t.includes("drawer"))return figure("Insert the dedicated calibration cassette","cal-load","Remove the optics calibration cassette from its opaque sleeve, insert into the blue drawer and close gently.","cal");
   if(t.includes("pass")||t.includes("record")||t.includes("sleeve"))return figure("Confirm pass and protect calibration cassette","cal-pass","Confirm successful calibration, document per site policy, and return the cassette to its light-protective sleeve.","cal");
+  if(t.includes("cassette")||t.includes("drawer"))return figure("Insert the dedicated calibration cassette","cal-load","Remove the optics calibration cassette from its opaque sleeve, insert into the blue drawer and close gently.","cal");
  }
- return figure("Sofia 2 instrument and assay-specific supplies","entry","Follow the live on-screen prompts and the current assay-specific package insert.");
+ return "";
 }
 const oldRender=A.render.bind(A);
 A.render=sec=>{
