@@ -1345,3 +1345,33 @@
   .video-poster-source{font-size:7.5px}
 }
 @media(prefers-reduced-motion:reduce){.video-stage-play{transition:none}}
+
+.hiv-workflow-summary {
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:1px;
+ margin:18px 0;
+ overflow:hidden;
+ border:1px solid #cfe3e5;
+ border-radius:14px;
+ background:#cfe3e5;
+}
+.hiv-workflow-summary > div {
+ padding:14px 16px;
+ background:#f1faf8;
+}
+.hiv-workflow-summary dt {
+ color:#28666d;
+ font-size:12px;
+ font-weight:700;
+}
+.hiv-workflow-summary dd {
+ margin:4px 0 0;
+ color:#23475a;
+ font-size:14px;
+ font-weight:750;
+}
+@media (max-width:600px) {
+ .hiv-workflow-summary {grid-template-columns:1fr}
+ .hiv-workflow-summary > div {padding:10px 14px}
+}
