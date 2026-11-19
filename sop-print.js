@@ -30,6 +30,7 @@ function handoff(start){
  ];
  const market=window.LAB_MARKET?.get()||document.querySelector('[data-orders-market-value]')?.dataset.ordersMarketValue||(document.querySelector('[data-norcal-pickup]')?'norcal':null);
  if(market==='norcal')steps.push(['Confirm specimen pickup','Front Desk Coordinator',bullet(
+  'Once pickup has been scheduled, react with a ⏰ to each corresponding entry in the <b>NoCal Sendout Log</b> group chat.',
   'Once specimens have been picked up, react with a ✅ to each corresponding entry in the <b>NoCal Sendout Log</b> group chat.',
   'Post a separate message in the same group chat confirming the receiving lab or courier pickup, e.g., “Quest has been picked up.” or “Labcorp has been picked up.”',
   'Do not mark any entry as picked up until pickup is confirmed.'
