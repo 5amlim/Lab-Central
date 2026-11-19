@@ -49,11 +49,11 @@ function home(analyte,mode,focus){
   back?"ASSAY/HOME":"REAGENT STATUS")+note;
 }
 function menu(mode){
- const cal=mode!=="patient",options=["SAMPLE","QC/SAMPLE","CAL/QC/SAMPLE"];
- const rows=options.map(function(x){const selected=x===(cal?"CAL/QC/SAMPLE":"SAMPLE");return '<div class="pfs-assay-option '+(selected?'target pfs-click-target':'')+'"><span>'+x+'</span>'+(selected?cue("TAP THIS OPTION"):'')+'</div>';}).join('');
+ const cal=mode!=="patient",options=["SAMPLE","QC","CAL/QC","MC ENTRY"];
+ const rows=options.map(function(x){const selected=x===(cal?"CAL/QC":"SAMPLE");return '<div class="pfs-assay-option '+(selected?'target pfs-click-target':'')+'"><span>'+x+'</span>'+(selected?cue("TAP THIS OPTION"):'')+'</div>';}).join('');
  return frame("ASSAY",cal?"Step 9 · Select CAL/QC":"Step 10 · Choose SAMPLE",nav()+
- '<div class="pfs-menu-caption">SELECT OPERATION</div><div class="pfs-assay-options">'+rows+'</div>'+
- '<div class="pfs-screen-alert">'+(cal?'Choose CAL/QC/SAMPLE, or CAL/QC if shown on the analyzer with QC Lockout ON.':'Choose SAMPLE to enter patient information.')+'</div>'+foot("ASSAY / SELECT OPERATION"));
+ '<div class="pfs-menu-caption">SELECT OPERATION · QC LOCKOUT ON</div><div class="pfs-assay-options">'+rows+'</div>'+
+ '<div class="pfs-screen-alert">'+(cal?'Select CAL/QC. With QC Lockout OFF, the button is CAL/QC/SAMPLE.':'Select SAMPLE for patient testing. With QC Lockout OFF, the two QC buttons read QC/SAMPLE and CAL/QC/SAMPLE.')+'</div>'+foot("ASSAY / SELECT OPERATION"));
 }
 
 function item(analyte){
@@ -68,7 +68,7 @@ function lanes(mode,analyte){
  return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 10 · Review CAL/QC lanes":"Step 11 · Tap the occupied lane directly",
  nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active">SAMPLE INFO.</span></div>'+
  '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane '+(!cal&&i===0?'pfs-lane-tap-example':'')+'"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("TAP LANE"):'')+'</span>'+
- '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):"PATIENT")+'</span><strong>'+(cal?e(x):"SID: —")+'</strong></div>';}).join('')+'</div>'+
+ '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):(i===0?"PATIENT EXAMPLE":"UNOCCUPIED"))+'</span><strong>'+(cal?e(x):(i===0?"SID: —":"—"))+'</strong></div>';}).join('')+'</div>'+
  (!cal?'<div class="pfs-screen-alert">Tap the occupied lane number directly. Lane 1 is a training example only. Do not tap SAMPLE INFO.; verify the selected lane matches the patient cartridge before entering SID.</div>':'')+
  foot(cal?"CAL/QC → START":"TAP LANE → SID → OK"));
 }

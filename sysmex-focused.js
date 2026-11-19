@@ -70,16 +70,16 @@ function screen(mode){
  tx(100,187,"Analysis Mode",14,"#53778c",750,"start")+
  '<rect x="103" y="193" width="96" height="42" rx="6" fill="#f6dce1" stroke="#b57c8e" stroke-width="2"/>'+tx(152,220,"WB",19,"#8d4f60",850)+
  '<rect x="208" y="193" width="96" height="42" rx="6" fill="#f8fbfc" stroke="#aac4d0" stroke-width="2"/>'+tx(255,220,"PD",19,"#54758a",850);
- const right=tx(339,124,"Set a mixed sample",16,"#4b6c7d",700,"start")+
- tx(339,146,"and press [RUN].",16,"#4b6c7d",700,"start")+
+ const right=tx(339,119,"Operator",16,"#4b6c7d",700,"start")+
+ '<rect x="339" y="127" width="205" height="31" rx="4" fill="#fdfefe" stroke="#8baabb" stroke-width="2"/>'+
  '<rect x="372" y="165" width="173" height="77" rx="13" fill="'+(start?"#168e83":"#c0f0ef")+'" stroke="'+(start?"#097c72":"#56aeb4")+'" stroke-width="'+(start?5:3)+'"/>'+
  tx(457,214,"RUN",27,start?"#fff":"#326d75",900);
  const bottom='<rect x="94" y="254" width="112" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(150,274,"QC",14,"#365b70",850)+
  '<rect x="215" y="254" width="119" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(274,274,"Result",14,"#365b70",850)+
  '<rect x="465" y="254" width="126" height="30" rx="6" fill="#b6d5ed" stroke="#9ab4c6"/>'+tx(528,274,"Shutdown",13,"#365b70",850);
- const callout=(mrn||start)?'<path d="M290 169L324 304L410 327" stroke="#178a83" stroke-width="3.5" fill="none" stroke-linejoin="round"/>'+
- '<circle cx="290" cy="169" r="6" fill="#188e84"/>'+
- tx(415,339,"Verify MRN matches tube",15,"#187f77",850,"start"):'';
+ const callout=(mrn||start)?'<path d="M'+(start?'454 242':'290 169')+'L324 304L410 327" stroke="#178a83" stroke-width="3.5" fill="none" stroke-linejoin="round"/>'+
+ '<circle cx="'+(start?454:290)+'" cy="'+(start?242:169)+'" r="6" fill="#188e84"/>'+
+ tx(415,339,start?"Select RUN":"Verify MRN matches tube",15,"#187f77",850,"start"):'';
  return svg(border+top+left+right+bottom+callout,
  "Sysmex pocH-100i main screen with Sample ID entered as number signs, WB whole-blood mode, and "+(start?"the RUN control highlighted":"Sample ID entry highlighted")+"; verify patient identity outside the screen");
 

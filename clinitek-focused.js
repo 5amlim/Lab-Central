@@ -109,7 +109,7 @@ function screenCloseup(mode,kind){
  }else if(mode==="color"||mode==="clarity"){
   const isColor=mode==="color";
   body=tx(495,128,isColor?"Select Color":"Select Clarity",14,"#304c5a",true,"start");
-  const labels=isColor?["Yellow","Orange","Red","Green","Blue","Brown","Other"]:["Clear","Cloudy","Slightly Cloudy","Turbid","Other"];
+  const labels=isColor?["Light yellow","Yellow","Dark yellow","Amber","Brown","Red"]:["Clear","Cloudy","Slightly Cloudy","Turbid","Other"];
   body+=labels.map((label,i)=>{
    const col=i%2,row=Math.floor(i/2),x=497+col*111,y=138+row*34;
    return '<rect x="'+x+'" y="'+y+'" width="106" height="31" rx="3" fill="#fff" stroke="#b0c6d0" stroke-width="1.5"/>'+
@@ -205,8 +205,8 @@ function render(title,group){
  if(/place.*test table|place.*strip|place cassette/.test(t))
   return fig("Place "+(kind==="hcg"?"cassette":"strip")+" on analyzer test table",scene(kind,"table"),
     "Use the reversible test-table insert with the correct face upward: strip-side for urinalysis (pads up), flipped cassette-side for CLINITEST hCG. Keep the urine cup off the table.");
- if(kind==="ua"&&!qc&&/select urine color/i.test(t))return fig("Select Appearance · urine color",scene("ua","color"),
-   "If the specimen is Yellow and Clear, choose that shortcut on the first screen. Otherwise choose Other, select the observed urine color, and tap Next. The example screen shows available color options.");
+ if(kind==="ua"&&!qc&&/select urine color/i.test(t))return fig("Select Appearance · urine color",scene("ua","appearance"),
+   "If the specimen is Yellow and Clear, choose that shortcut on the first screen. Otherwise choose Other, select the observed urine color, and tap Next. Color options can vary with analyzer setup.");
  if(kind==="ua"&&!qc&&/select urine clarity/i.test(t))return fig("Select Appearance · urine clarity",scene("ua","clarity"),
    "If Other was selected, choose Clear, Cloudy, Slightly Cloudy, Turbid, or Other, then tap Next. This separate screen is skipped when Yellow and Clear is selected at the first prompt.");
  if(kind==="ua"&&!qc&&/wait for analyzer to finish/i.test(t))return fig("CLINITEK Status+ · running the test",scene("ua","running"),

@@ -514,7 +514,7 @@ function render(){
    '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Select any step below, like the patient testing workflow</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
    '<nav class="pfux-stage-nav pfux-cal-stage-nav" aria-label="PATHFAST calibration and quality control steps"><div class="pfux-stage-track" role="group" aria-label="Select a calibration step">'+[
     'Gather kits and QC','Prepare CAL + QC','Load six cartridges','Dispense materials','Rack, tips and waste box',
-    'Close analyzer hood','Log in and check status','Tap BACK','Select CAL/QC/SAMPLE then assay','Verify six lanes',
+    'Close analyzer hood','Log in and check status','Tap BACK','Select CAL/QC, then assay','Verify six lanes',
     'Press START','Confirm 17-min run','Review CAL and QC','Print, file and freeze'
    ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="pfux-stage-button'+(currentStep===i+1?' is-current':i+1<currentStep?' is-previous':'')+'" aria-label="Step '+(i+1)+' of '+total+': '+esc(label)+'" '+(currentStep===i+1?'aria-current="step"':'')+'><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+esc(label)+'</span></button>').join('')+'</div></nav>'+
    '<p class="pfux-cal-scroll-hint">Scroll horizontally to view all 14 steps →</p>'+
@@ -548,11 +548,11 @@ function render(){
       '<p class="pf-workflow-note">Verify the actual assay readiness on the analyzer. A locked or unavailable assay must not be used for patient testing until required calibration and QC are accepted.</p>');
   h+=step(8,'Tap BACK to leave reagent status','Return from the reagent / calibration / QC status screen to the assay operations',
       window.LAB_PATHFAST_SCREEN.home(group.label,"cal","back")+
-      '<p class="pf-workflow-note">Tap BACK to return to the ASSAY operation choices. The next step shows the CAL/QC/SAMPLE selection.</p>');
-  h+=step(9,'Select CAL/QC/SAMPLE, then '+x,'Choose the calibration/QC operation first, then select the analyte and verify its reagent lot',
+      '<p class="pf-workflow-note">Tap BACK to return to the ASSAY operation choices. The next step shows the CAL/QC selection with QC Lockout ON.</p>');
+  h+=step(9,'Select CAL/QC, then '+x,'Choose the calibration/QC operation first, then select the analyte and verify its reagent lot',
       window.LAB_PATHFAST_SCREEN.menu("cal")+
       window.LAB_PATHFAST_SCREEN.item(group.label)+
-      '<p class="pf-workflow-note">Select CAL/QC/SAMPLE, or the equivalent CAL/QC option with QC Lockout ON, before selecting the assay. If the reagent lot is not registered, use the approved MC ENTRY procedure; do not bypass lot checks.</p>');
+      '<p class="pf-workflow-note">Select CAL/QC with QC Lockout ON, or CAL/QC/SAMPLE with QC Lockout OFF, before selecting the assay. If the reagent lot is not registered, use the approved MC ENTRY procedure; do not bypass lot checks.</p>');
   h+=step(10,'Verify actual CAL/QC lane assignments','Match the instrument’s six-lane screen to each prepared cartridge',
       window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+laneMap(true,false)+
       '<p class="pf-workflow-note">Instrument-assigned lanes take precedence over an illustrated example. If the displayed configuration differs, confirm the applicable calibration-replicate and QC-lockout procedure before starting.</p>');

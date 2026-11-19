@@ -37,17 +37,19 @@ function meterBody(mode="home"){
  // Illustrated from Quidel MeterPro UM v5.04.021, pp. 46-49.
  // No synthetic patient values or laboratory results are displayed.
  const screens={
-  main:{rows:["RUN TEST","RECALL RESULTS","INSTALL NEW CODE CHIP"],selected:0,footer:["SELECT WITH v OR ^ AND PRESS ENTER","PRESS EXIT TO EJECT DEVICE"]},
-  "testmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:0,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
-  "qcmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:1,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
-  "qcsamplemenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:2,footer:["SELECT WITH v OR ^ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  main:{rows:["RUN TEST","RECALL RESULTS","INSTALL NEW CODE CHIP"],selected:0,footer:["SELECT WITH ▼ OR ▲ AND PRESS ENTER","PRESS EXIT TO EJECT DEVICE"]},
+  "chip-menu":{rows:["RUN TEST","RECALL RESULTS","INSTALL NEW CODE CHIP"],selected:2,footer:["SELECT WITH ▼ OR ▲ AND PRESS ENTER","PRESS EXIT TO EJECT DEVICE"]},
+  "testmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:0,footer:["SELECT WITH ▼ OR ▲ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  "qcmenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:1,footer:["SELECT WITH ▼ OR ▲ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
+  "qcsamplemenu":{rows:["PATIENT SAMPLE","QC DEVICE","QC SAMPLE","MISC. TEST"],selected:2,footer:["SELECT WITH ▼ OR ▲ AND PRESS ENTER","OR PRESS EXIT TO EJECT DEVICE"]},
   "userid":{heading:"USER ID",rows:["ENTER / SCAN USER ID","____________"],footer:["PRESS ENTER TO CONTINUE","IF PROMPTED BY THE METER"]},
   "patientid":{heading:"PATIENT ID",rows:["ENTER / SCAN PATIENT ID","____________"],footer:["CHECK AGAINST PATIENT CHART","PRESS ENTER TO CONTINUE"]},
   "confirmid":{heading:"CONFIRM PATIENT ID",rows:["PATIENT ID: ########","CORRECT PATIENT ID"],footer:["PRESS ENTER TO CONFIRM","OR SELECT CORRECT PATIENT ID"]},
   "qc-lot":{heading:"QC SAMPLE LOT",rows:["ENTER 4-DIGIT LOT","____"],footer:["MATCH NUMBER ON CONTROL VIAL","PRESS ENTER TO CONTINUE"]},
   "insert":{heading:"PATIENT SAMPLE",rows:["INSERT PREPARED","TEST DEVICE"],footer:["WAIT FOR DEVICE TO ENGAGE","PRESS ENTER TO START"]},
+  "insert-qc-device":{heading:"QC DEVICE",rows:["INSERT QC DEVICE"],footer:["PRESS ENTER TO START"]},
   "insert-qc":{heading:"QC SAMPLE",rows:["INSERT PREPARED","QC TEST DEVICE"],footer:["USE CORRECT CONTROL LEVEL","PRESS ENTER TO START"]},
-  "sampletype":{heading:"SELECT SAMPLE TYPE",rows:["BLOOD SAMPLE","PLASMA SAMPLE"],selected:0,footer:["SELECT WITH v OR ^","PRESS ENTER TO CONTINUE"]},
+  "sampletype":{heading:"SELECT SAMPLE TYPE",rows:["BLOOD SAMPLE","PLASMA SAMPLE"],selected:0,footer:["SELECT WITH ▼ OR ▲","PRESS ENTER TO CONTINUE"]},
   "analytes":{heading:"SELECT TESTS",rows:["CARDIAC","1  CKMB  |  2  MYO","3  TNI"],footer:["0-9 TO SELECT/DESELECT","PRESS ENTER TO CONTINUE"]},
   "reading":{heading:"TEST IN PROGRESS",rows:["SCANNING TEST DEVICE","PLEASE WAIT"],footer:["DO NOT PUSH OR PULL DEVICE","WAIT FOR METER RESULTS"]},
   "result":{heading:"RESULTS",rows:["PATIENT ID: ########","RESULT: SEE METER","QC: VERIFY BEFORE REPORT"],footer:["PRESS PRINT FOR PAPER COPY","RETURN TO MAIN TO EJECT"]},
@@ -348,7 +350,7 @@ function renderStep(title,group){
      "QC DEVICE menu selection is highlighted.","qcmenu");
   if(/insert the reusable qc device/.test(t))
    return show(title,qcElectronicSvg(),
-     "Insert the clean, dry reusable electronic QC Device until it catches. No specimen is added. Do not force or pull the device.","insert-qc");
+     "Insert the clean, dry reusable electronic QC Device until it catches. No specimen is added. Do not force or pull the device.","insert-qc-device");
   if(/press enter to run the electronic qc/.test(t))
    return show(title,actionPanel("Run the electronic QC",
      ["Press Enter to start after insertion.","Keep the device in place until the meter finishes reading."],
@@ -383,7 +385,7 @@ function renderStep(title,group){
    return show(title,actionPanel("Install the reagent CODE CHIP",
      ["Highlight INSTALL NEW CODE CHIP on the main menu.","Press Enter, insert the matching reagent CODE CHIP when directed."],
      "Use the chip supplied with the reagent box, not a different assay or lot."),
-     "The manufacturer's Main Menu has INSTALL NEW CODE CHIP as an option.","main");
+     "INSTALL NEW CODE CHIP is highlighted on the Main Menu.","chip-menu");
   if(/insert the matching reagent code chip/.test(t))
    return show(title,chipSvg(),
      "Fit the matching lot CODE CHIP only as directed by the meter. Follow the on-screen installation sequence.","chip");

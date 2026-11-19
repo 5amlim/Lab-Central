@@ -17,7 +17,7 @@ const boxText=(x,y,w,headline,secondary)=>rect(x,y,w,54,10,"#f3f9fc","#cbdfe8",1
 const statusBar=rect(0,0,340,24,0,"#0a1014")+txt(12,16,"▣  ◇",12,"#ebf4f6")+txt(329,16,"9:30AM  |  08/04/15",11,"#c1cbd0",500,"end");
 function screen(mode){
  let s=rect(0,0,340,230,4,"#252b2e")+statusBar;
- const nav=rect(0,198,340,32,0,"#202629")+rect(13,201,28,25,3,"#14191c")+txt(27,218,"⌂",19,"#fff",800,"middle")+rect(272,201,30,25,3,"#087d9c")+txt(287,218,"▣",15,"#fff",800,"middle")+rect(307,201,29,25,3,"#087d9c")+txt(321,218,"⬆",15,"#fff",800,"middle");
+ const nav=rect(0,198,340,32,0,"#202629")+rect(13,201,28,25,3,"#14191c")+txt(27,218,"☰",19,"#fff",800,"middle")+rect(272,201,30,25,3,"#087d9c")+txt(287,218,"▣",15,"#fff",800,"middle")+rect(307,201,29,25,3,"#087d9c")+txt(321,218,"⬆",15,"#fff",800,"middle");
  if(mode==="result"||mode==="qc-result"||mode==="progress"||mode==="cal-pass"){
   s+=txt(20,48,mode==="qc-result"?"QC Results":mode==="cal-pass"?"Calibration Results":"Flu A+B",19,"#e9f1f2",650);
   if(mode==="result"){
@@ -28,11 +28,9 @@ function screen(mode){
   } else if(mode==="progress"){
    s+=txt(20,76,"WALK AWAY",13,"#e9f1f2",600)+txt(170,132,"12:34",43,"#eb932a",800,"middle")+txt(170,155,"remaining",12,"#cad4d7",500,"middle");
   } else if(mode==="qc-result"){
-   s+=txt(23,78,"Positive Control",14,"#e2ecee")+txt(23,121,"Negative Control",14,"#e2ecee");
-   [81,124].forEach(y=>{s+=circ(277,y-6,15,"#68a94c")+txt(277,y, "✓",20,"#fff",800,"middle");});
-   s+=txt(23,176,"QC PASS",17,"#a9e3be");
+   s+=circ(170,112,31,"#68a94c")+txt(170,125,"✓",34,"#fff",800,"middle");
   } else {
-   s+=txt(22,90,"Calibration check",16,"#dce5ea")+circ(285,91,18,"#67a758")+txt(285,98,"✓",24,"#fff",800,"middle")+txt(23,145,"PASS",24,"#a2e1b6",800);
+   s+=txt(22,90,"Calibration check",16,"#dce5ea")+circ(285,91,18,"#67a758")+txt(285,98,"✓",24,"#fff",800,"middle");
   }
   return s+nav;
  }
@@ -59,9 +57,9 @@ function screen(mode){
   return s+nav;
  }
  // True Sofia 2 Run Test display: ID fields on the right, development options beneath.
- s+=txt(16,47,mode==="mode"?"Choose Run Mode":"Run Test",18,"#eef4f7");
+ s+=txt(16,47,"Run Test",18,"#eef4f7");
  s+=rect(17,59,127,112,8,"#142a34","#284958",1.2)+txt(80,99,"▤",31,"#51a0b1",800,"middle")+txt(80,125,"BARCODE",12,"#bdd9df",700,"middle");
- [["User ID","Operator"],["Patient ID","MRN ######"],["Order Number","Optional"]].forEach((a,i)=>{
+ [["User ID","Operator"],["Patient ID",""],["Order Number",""]].forEach((a,i)=>{
   const y=51+i*36;s+=txt(159,y+9,a[0],10,"#dbe2e5")+rect(229,y-7,103,26,2,mode==="entry"&&i===1?"#cde9e8":"#dadfe2",mode==="entry"&&i===1?"#37b1ac":"#7d8a90",1)+txt(235,y+10,a[1],11,"#3e4c54",600);
  });
  s+=circ(170,160,8,mode==="mode"?"#e58b23":"#e58b23","#e9eef0",1)+txt(185,164,"WALK AWAY",11,"#fff",650)+circ(170,181,8,"none","#e7eef2",1.6)+txt(185,185,"READ NOW",11,"#fff",600);
@@ -169,7 +167,7 @@ function frontArtwork(){
  return '<svg class="equipment-svg sofia-device-art" viewBox="66 23 306 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sofia 2 analyzer front view with teal upper housing, black touchscreen, barcode scanner and blue lower-right cassette drawer">'+housing("result")+'</svg>';
 }
 function figure(title,mode,note,scene){
- return '<figure class="lc-focus-figure sofia-focus-figure"><header>'+esc(title)+'</header><div class="lc-focus-art">'+art(mode,scene)+'</div><figcaption>'+esc(note)+'</figcaption></figure>';
+ return '<figure class="lc-focus-figure sofia-focus-figure"><header>'+esc(title)+'</header><div class="lc-focus-art">'+art(mode,scene)+'</div><figcaption>'+esc(note)+' <a href="https://connectme.quidel.com/files/EF1317804EN00_%2801_19%29_Sofia2_User_Manual.pdf" target="_blank" rel="noopener noreferrer">Sofia 2 operator manual</a> · Training illustration.</figcaption></figure>';
 }
 function focused(sec,heading,group){
  if(sec?.id!=="sofia")return originalFocus?originalFocus(sec,heading,group):"";
@@ -192,7 +190,7 @@ function focused(sec,heading,group){
   if(t.includes("positive")&&t.includes("prepare"))return figure("Prepare positive QC first","qc-load","Use the positive swab with extraction reagents and a fresh cassette following the assay IFU.","qc");
   if(t.includes("positive")&&t.includes("insert"))return figure("Read the positive control cassette","qc-load","Insert the prepared positive QC cassette in the blue drawer using the selected development mode.");
   if(t.includes("negative")&&!t.includes("result"))return figure("Next arrow → prepare and read negative QC","qc-load","After positive QC, select the forward arrow rather than the skip icon. Use a fresh negative swab and cassette.","qc");
-  if(t.includes("result"))return figure("Check positive and negative QC results","qc-result","Both controls must pass before patient testing. Record results and follow the site's failed-QC procedure.");
+  if(t.includes("result"))return figure("Check positive and negative QC results","qc-result","The illustrated check mark is an example of a valid control run. Verify and record the positive and negative controls separately before patient testing.");
   if(t.includes("document")||t.includes("record")||t.includes("box")||t.includes("lot"))return figure("Record QC and label the assay kit","qc-result","Record receipt date, QC date, lot and operator according to the approved site policy.","record");
  }
  if(g.includes("calibration")){
