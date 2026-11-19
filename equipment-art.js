@@ -840,19 +840,20 @@ const collectionStabilityLabels={
  poc:["Test promptly."],
  hemocue:["Hb 201 microcuvette:"]
 };
-function collectionStabilityBullets(id){
+function collectionStabilityBullets(id,showThroat){
  const original=collectionTestWindows[id];
  const labels=collectionStabilityLabels[id]||[];
  if(!original||!labels.length)return '<p>'+visualEsc(original||"")+'</p>';
  const starts=labels.map(label=>original.indexOf(label));
  if(starts[0]!==0||starts.some((start,i)=>start<0||(i>0&&start<=starts[i-1])))
   return '<p>'+visualEsc(original)+'</p>';
- return '<ul class="device-collection-stability-list">'+labels.map((label,i)=>{
+ const visibleLabels=id==='spotfire'&&!showThroat?labels.slice(0,1):labels;
+ return '<ul class="device-collection-stability-list">'+visibleLabels.map((label,i)=>{
   const part=original.slice(starts[i],i+1<labels.length?starts[i+1]:original.length).trim();
   return '<li><b>'+visualEsc(label)+'</b>'+visualEsc(part.slice(label.length))+'</li>';
  }).join('')+'</ul>';
 }
-function collectionTestWindow(sec){
+function collectionTestWindow(sec,showThroat=true){
  if(sec.archived||!collectionTestWindows[sec.id])return "";
  const refs=(collectionStabilitySources[sec.id]||[]).map(x=>
   '<a href="'+visualEsc(x[1])+'" target="_blank" rel="noopener noreferrer">'+visualEsc(x[0])+' ↗</a>').join('');
@@ -862,7 +863,7 @@ function collectionTestWindow(sec){
    '<li><b>RSV:</b> ≤24 h in validated transport medium.</li>'+
    '<li><b>Strep A+:</b> Dry throat swabs, ≤24 h at room temperature or ≤48 h refrigerated.</li>'+
    '</ul><p class="device-collection-stability-note">Check the current kit IFU.</p>'
-  :collectionStabilityBullets(sec.id);
+  :collectionStabilityBullets(sec.id,showThroat);
  return '<aside class="device-collection-stability" aria-label="Specimen stability"><strong>Specimen stability</strong>'+details+
   (refs?'<div class="device-collection-stability-sources">'+refs+'</div>':'')+'</aside>';
 }
@@ -880,7 +881,10 @@ function collectionPhotoMarkup(sec,kind,title){
 function specimenGuide(sec){
  if(!sec||!collection[sec.id])return "";
  if(sec.id==="febridx")return febridxCollectionGuide().replace(/<\/section>$/,""+collectionTestWindow(sec)+"</div></section>");
- const items=collection[sec.id],arch=!!sec.archived;
+ const market=window.LAB_MARKET?.get();
+ const showThroat=!market||market==='ny';
+ const items=sec.id==='spotfire'&&!showThroat?collection.spotfire.filter(item=>item[0]==='utm'):collection[sec.id];
+ const arch=!!sec.archived;
  return '<section class="device-collection-guide" aria-label="Collection container reference">'+
  '<div class="device-collection-heading"><div><span class="device-collection-kicker">SPECIMEN & COLLECTION</span><h3>What to collect</h3><p>'+(sec.id==='pathfast'?'Use lithium-heparin whole blood or prepared plasma as permitted by the assay IFU.':'Use the assay-specific container and approved collection volume.')+'</p></div>'+
  (arch?'<span class="device-historical-mark">ARCHIVED</span>':'')+'</div>'+
@@ -888,10 +892,10 @@ function specimenGuide(sec){
  (sec.id==='pathfast'?'<p class="device-collection-label-warning"><b>IMPORTANT:</b> Collection Date and Time</p>':'')+
  (sec.id==='spotfire'?'<div class="device-collection-panels" aria-label="Compatible SPOTFIRE panel options">'+
   (x[0]==='utm'?'<span class="device-collection-panel">Respiratory panel</span><span class="device-collection-panel">Respiratory mini panel</span>':
-   '<span class="device-collection-panel">Sore throat panel <b>NY only</b></span><span class="device-collection-panel">Sore throat mini panel</span>')+
+   '<span class="device-collection-panel">Sore throat panel <b>NY only</b></span><span class="device-collection-panel">Sore throat mini panel <b>NY only</b></span>')+
  '</div>':'')+'</div></article>').join('')+'</div>'+
  (sec.id==='triage'||sec.id==='spotfire'||sec.id==='poc'||sec.id==='sofia'?'<p class="device-collection-caveat">Specimen and kit depend on the selected assay. Confirm the current assay IFU and approved site SOP.</p>':'')+
- '</div>'+collectionTestWindow(sec)+'</div></section>';
+ '</div>'+collectionTestWindow(sec,showThroat)+'</div></section>';
 }
 
 

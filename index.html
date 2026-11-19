@@ -433,7 +433,7 @@ window.LAB_ORDER_SETS = {
   ],
   spotfire: [
     {name:'Spotfire FULL Respiratory Panel ($500) (2)',kind:'set',emphasis:'Spotfire'},
-    {name:'Spotfire Mini Pharyngitis Panel ($190) (2)',kind:'set',emphasis:'Spotfire'},
+    {name:'Spotfire Mini Pharyngitis Panel ($190) (2)',kind:'set',emphasis:'Spotfire',note:'New York only'},
     {name:'Spotfire MINI Respiratory Panel ($190) (2)',kind:'set',emphasis:'Spotfire'},
     {name:'Spotfire Full Sore Throat Panel (NY ONLY $500) (2)',kind:'set',emphasis:'Spotfire',note:'New York only'}
   ],
@@ -489,7 +489,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-screen-guide.js?v=20261104"></script>
 <script src="pathfast-interactive.js?v=20261104"></script>
 <script src="pathfast-clinical.js?v=20261105-guided-nav"></script>
-<script src="equipment-art.js?v=20261112-febridx-pad-location"></script>
+<script src="equipment-art.js?v=20261119-panel-audit"></script>
 <script src="step-illustrations.js?v=20261107-black-case"></script>
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
@@ -509,8 +509,8 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
 <script src="biofire-reference-polish.js?v=20261104""></script>
-<script src="sendout-market-guide.js?v=20261118-norcal-pickup"></script>
-<script src="assay-catalog.js?v=20261119-hiv-fingerstick"></script>
+<script src="sendout-market-guide.js?v=20261119-panel-audit"></script>
+<script src="assay-catalog.js?v=20261119-panel-audit"></script>
 <script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
 <script src="triage-meterpro-visual.js?v=20261107-black-case"></script>
 <script src="lab-container-art.js?v=20261104"></script>
@@ -704,9 +704,10 @@ const guideSearchIndex=new Map();
 function isMatch(s,q){
  const terms=normalizeLabQuery(q).split(/\s+/).filter(Boolean);
  if(!terms.length)return true;
- let index=guideSearchIndex.get(s.id);
+ const cacheKey=s.id+'|'+(window.LAB_MARKET?.get()||'');
+ let index=guideSearchIndex.get(cacheKey);
  if(!index){
-  const assays=window.LAB_ASSAY_CATALOG?.tests?.[s.id]||[];
+  const assays=window.LAB_ASSAY_CATALOG?.availableTests?.(s.id)||[];
   const assayFields=assays.flatMap(test=>[
    test.title,test.short,
    ...Object.entries(test.groups||{}).flatMap(([category,names])=>[category,...names,...names.map(name=>window.LAB_ASSAY_CATALOG?.shortLabel?.(s.id,name)||'')])
@@ -716,7 +717,7 @@ function isMatch(s,q){
    ...s.blocks.map(b=>b.text),...assayFields,guideSearchTags[s.id]||''
   ].filter(Boolean).join(' '));
   index={value,words:new Set(value.split(/\s+/))};
-  guideSearchIndex.set(s.id,index);
+  guideSearchIndex.set(cacheKey,index);
  }
  // Require all query words, but don't allow short test codes (e.g. PT, CK)
  // to match letters inside unrelated words.
@@ -849,8 +850,7 @@ function searchPanelMatches(query,sections=all){
  const strict=[],near=[];
  for(const section of sections){
   if(window.LAB_MARKET?.allowsSection?.(section.id)===false)continue;
-  for(const panel of window.LAB_ASSAY_CATALOG?.tests?.[section.id]||[]){
-   if(window.LAB_MARKET?.get()&&/(?:\bNY\b|New York)/i.test(panel.marketNote||'')&&window.LAB_MARKET?.get()!=='ny')continue;
+  for(const panel of window.LAB_ASSAY_CATALOG?.availableTests?.(section.id)||[]){
    const targets=Object.entries(panel.groups||{}).flatMap(([group,names])=>
     (Array.isArray(names)?names:[]).map(name=>({group,name})));
    const clinicalCategory=section.category==='Point of care'?'in-house testing point of care':'in-house testing analyzer';
@@ -972,16 +972,20 @@ const labPanelAthenaNames={
     ],
     "Rapid group A Streptococcus test": [
       "Strep Throat screen (IH) (1)"
-    ],
-    "Human immunodeficiency virus antigen / antibody test": [
+    ]
+  },
+  "hiv": {
+    "Abbott Determine HIV-1/2 Ag/Ab Combo": [
       "HIV (1+2) Ab, rapid, unspecified specimen"
-    ],
-    "Infectious mononucleosis rapid test": [
+    ]
+  },
+  "mono": {
+    "McKesson Consult Mononucleosis Cassette #5012": [
       "mononucleosis, heterophile Ab, blood"
     ]
   },
   "drug-screen": {
-    "McKesson 14-panel urine drug screen (current guide)": [
+    "McKesson 14-panel urine drug screen": [
       "Drug Screen Urine (IH) (2)"
     ]
   },

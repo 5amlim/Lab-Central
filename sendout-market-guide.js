@@ -15,11 +15,6 @@ const labs={
  htrx:{title:"HealthTrackRx (HTRX)",eyebrow:"HTRX / UPS",desc:"Sollis collection uses white-top molecular transport tubes and green-top tubes for oral / throat CG testing.",steps:["Use the white-top tube for approved molecular menus, or the green-top tube for oral / throat Chlamydia-Gonorrhea (CGGY) testing. Yellow and gray tube types are excluded from this clinic workflow.","Match specimen source to the correct approved menu; label with patient name, DOB and collection site without covering the tube barcode.","Complete the manifest and shipping label; seal the bag for the clinic-approved pickup. Front desk photographs the manifest for Lab Pickup and Tracking."]},
  pathmd:{title:"PathMD",eyebrow:"TRIAL WORKFLOW",desc:"One white-top PathMD tube per ordered panel, plus Athena aftercare order and paper requisition.",steps:["In Athena, submit an Aftercare order to follow up on the exact PathMD panel name.","Complete the paper requisition: full patient name and DOB (Dymo label), provider name and signature (Dr. B by default), one panel name, ICD-10 code(s), collection date and specimen source.","Use a PathMD white-top tube. For urine, mix the thick swab in a sterile urine cup 10 times and place the swab in the tube, no transfer pipette. For GI, collect a good amount of stool on the thick swab from a sterile cup and put the swab with stool into the tube.","Label the tube with patient name, DOB, collection date and time, specimen source, and collector initials. Follow the approved clinic courier workflow and document handoff. Results are faxed through Athena and matched by name and DOB."]}
 };
-const htrxTimes={
- bh:"Monday to Friday: UPS 2–3 PM. Saturday: blue HTRX bag at front desk by 8 PM for the Sunday-morning handoff. Sunday: no pickup; send Monday.",
- sm:"Monday to Friday: UPS 3–4 PM. Saturday: UPS 3–4 PM. Sunday: no pickup; send Monday.",
- mb:"Monday to Friday: UPS 4–5 PM. Saturday: UPS 4–5 PM. Sunday: no pickup; send Monday."
-};
 let market=window.LAB_MARKET?.get()||"socal",site="bh",open="",focusedLab=null;
 const validSite=()=>markets[market].sites.some(x=>x[0]===site);
 const selectedSite=()=>markets[market].sites.find(x=>x[0]===site)?.[1]||"Select location";
@@ -44,7 +39,6 @@ function selection(mode="guide"){
 function labInfo(l){
  const m=labs[l],regional=market==="socal";
  let extra="";
- if(regional&&l==="htrx")extra='<div class="lc-site-note"><strong>HTRX pickup for '+E(selectedSite())+'</strong><p>'+E(htrxTimes[site]||"Annex routing is not active until launch and courier confirmation. Do not ship until the site is approved.")+'</p></div>';
  if(regional&&l==="cedars")extra='<div class="lc-site-note"><strong>Cedars timing</strong><p>Follow the site courier schedule and aim for weekday pickup before noon; confirm weekend Apollo cutoff (before 4 PM) through the site procedure.</p></div>';
  if(regional&&l==="pathmd"){
   const timing=site==="sm"?"Santa Monica: Monday through Friday, 11:00-11:30 PM. Leave specimens in the lockbox.":"Local courier pickup is arranged daily. Confirm site-specific handoff time and location.";
