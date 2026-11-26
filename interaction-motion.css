@@ -1,0 +1,46 @@
+/* Lab Central: restrained, screen-only interaction motion.
+   No animation changes clinical state, timing, focus or print output. */
+@keyframes lc-menu-enter {
+  from { opacity: .35; translate: 0 5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes lc-dialog-enter {
+  from { opacity: .55; scale: .98; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes lc-backdrop-enter { from { opacity: 0; } to { opacity: 1; } }
+@media screen and (prefers-reduced-motion: no-preference) {
+  :is(#labCentralMarketOptions, #printOptions, #searchSuggestions, .lc-orders-market-options):not([hidden]) {
+    animation: lc-menu-enter 220ms cubic-bezier(.2,.75,.3,1);
+  }
+  dialog[open] { animation: lc-dialog-enter 240ms cubic-bezier(.2,.75,.3,1); }
+  dialog[open]::backdrop { animation: lc-backdrop-enter 180ms ease-out; }
+  :is(.nav-link, .tab, .ao-directory-tab, .guide-step-pill, .pfux-stage-button,
+      .guide-button, .back-link, .lc-global-market-trigger, .lc-print-trigger,
+      .primary-button, .soft-button):not(:disabled):not([aria-disabled="true"]):active {
+    scale: .98;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :is(.nav-link, .tab, .ao-directory-tab, .guide-step-pill, .pfux-stage-button,
+        .guide-button, .back-link, .primary-button, .soft-button) {
+      transition: background-color 160ms ease, border-color 160ms ease,
+                  color 160ms ease, box-shadow 160ms ease;
+    }
+  }
+  .guide-progress > span { transition: width 240ms cubic-bezier(.2,.75,.3,1); }
+}
+@media screen {
+  .lc-motion-segmented { position: relative; isolation: isolate; }
+  .lc-motion-segmented > .lc-motion-indicator {
+    position: absolute; top: 0; left: 0; pointer-events: none;
+    z-index: 0; border-radius: 7px; background: #fff;
+    box-shadow: 0 1px 4px #3a63702a;
+  }
+  .lc-motion-segmented > button { position: relative; z-index: 1; }
+  .lc-motion-segmented > button:is(.active,[aria-pressed="true"]) {
+    background: transparent !important; box-shadow: none !important;
+  }
+}
+@media print {
+  .lc-motion-indicator { display: none !important; }
+}
