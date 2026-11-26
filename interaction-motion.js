@@ -120,6 +120,92 @@
   const mainObserver = new MutationObserver(() => initSegments());
   mainObserver.observe(main, { childList: true });
 
+
+  // Feedback for tool tabs, local filters, favorites and site selection.
+  // Read the post-action state; never infer a successful clinical operation.
+  const toolTabs = '[data-dqc-view],[data-tc-view],[data-calc2-lab]';
+  const toolFilters = '[data-dqc-market],[data-dqc-clinic-option],[data-tc-market],[data-tc-clinic-option],[data-calc2-market],[data-calc2-clinic]';
+  const galleryFilters = '[data-lcr-lab],[data-lcr-cat]';
+  const selected = button => button?.getAttribute('aria-pressed') === 'true' ||
+    button?.getAttribute('aria-selected') === 'true' || button?.classList.contains('active');
+  const positive = element => animate(element, [
+    { scale: '1' }, { scale: '1.10', offset: .44 }, { scale: '1' }
+  ], 300);
+  function matchingControl(button, attributes) {
+    const key = attributes.find(name => button.hasAttribute(name));
+    if (!key) return null;
+    return [...main.querySelectorAll('[' + key + ']')]
+      .find(el => el.getAttribute(key) === button.getAttribute(key));
+  }
+  const localAttributes = ['data-dqc-market','data-dqc-clinic-option','data-tc-market',
+    'data-tc-clinic-option','data-calc2-market','data-calc2-clinic','data-lcr-lab','data-lcr-cat'];
+  function handleToolAction(button) {
+    if (button.matches(toolTabs)) {
+      const panelId = button.getAttribute('aria-controls');
+      const wasSelected = selected(button);
+      requestAnimationFrame(() => {
+        const panel = panelId && document.getElementById(panelId);
+        if (!wasSelected && panel && !panel.hidden) reveal(panel);
+      });
+    } else if (button.matches(toolFilters + ',' + galleryFilters)) {
+      const wasSelected = selected(button);
+      const root = button.closest('.dqc-page,.tc-portal');
+      const rootClass = root?.classList.contains('dqc-page') ? '.dqc-page' :
+        root?.classList.contains('tc-portal') ? '.tc-portal' : null;
+      requestAnimationFrame(() => {
+        const current = matchingControl(button, localAttributes);
+        if (wasSelected) return;
+        if (button.matches(galleryFilters)) {
+          if (!selected(current)) return;
+          const cards = [...main.querySelectorAll('#lcrGrid .lcr-card')].slice(0, 8);
+          cards.forEach((card, i) => {
+            // A very small stagger, only on an explicit filter click.
+            setTimeout(() => reveal(card), i * 18);
+          });
+          if (!cards.length) fade(document.getElementById('lcrGrid'));
+          positive(current);
+        } else {
+          const surface = rootClass ? main.querySelector(rootClass + ' [role="tabpanel"]:not([hidden])') :
+            document.getElementById('calc2-lab-panel');
+          if (surface && (!current || selected(current))) fade(surface);
+          if (selected(current)) positive(current);
+        }
+      });
+    } else if (button.matches('[data-favorite]')) {
+      const id = button.getAttribute('data-favorite');
+      requestAnimationFrame(() => {
+        const replacement = [...main.querySelectorAll('[data-favorite]')]
+          .find(el => el.getAttribute('data-favorite') === id);
+        if (replacement) positive(replacement.querySelector('svg') || replacement);
+      });
+    }
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest?.('button:not(:disabled):not([aria-disabled="true"])');
+    if (button) handleToolAction(button);
+  }, true);
+  document.addEventListener('keydown', event => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    const tab = event.target.closest?.(toolTabs);
+    if (!tab) return;
+    const group = tab.closest('[role="tablist"]');
+    const before = group?.querySelector('[aria-selected="true"]')?.id;
+    requestAnimationFrame(() => {
+      const current = document.activeElement?.closest?.(toolTabs);
+      if (!current || current.id === before || !selected(current)) return;
+      const panel = document.getElementById(current.getAttribute('aria-controls'));
+      if (panel && !panel.hidden) reveal(panel);
+    });
+  }, true);
+
+  // Planner dates update only on committed input, not on each typed digit.
+  document.addEventListener('change', event => {
+    if (!event.target.matches?.('[data-tc-start]')) return;
+    requestAnimationFrame(() => {
+      for (const due of main.querySelectorAll('[data-tc-due]')) reveal(due);
+    });
+  }, true);
+
   // Target intentional actions rather than every DOM mutation.
   document.addEventListener('click', event => {
     const button = event.target.closest?.('button:not(:disabled):not([aria-disabled="true"])');
