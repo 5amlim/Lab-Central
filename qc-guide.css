@@ -456,3 +456,18 @@
 }
 .qc-lot-control-figure > svg {display:block;width:min(100%,420px);height:auto;margin:auto}
 .qc-lot-control-figure figcaption {font-size:12px;color:#2d5369}
+
+/* EIGHTCHECK barcode-entry training sheet: no scannable example codes. */
+.qc-lot-assay-example{margin:14px 0;padding:16px;border:1px solid #cfdee6;border-radius:12px;background:#f7fafb;color:#36566b}
+.qc-lot-assay-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.qc-lot-assay-heading strong{font-size:14px}.qc-lot-assay-heading p{margin:4px 0;font-size:12px}
+.qc-lot-assay-heading a{display:inline-block;border:1px solid #a6c6d4;border-radius:7px;padding:8px 12px;font-size:12px;font-weight:750;background:#fff;color:#286787}
+.qc-lot-assay-demo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:center}
+.qc-lot-assay-paper{background:white;padding:14px;border:1px solid #c6cdd1;box-shadow:0 2px 7px #1c3c4912;font:11px/1.45 Arial,sans-serif;color:#263642}
+.qc-lot-assay-paper header{display:grid;gap:3px}.qc-lot-assay-paper header strong{font-size:18px;color:#2b81ae}.qc-lot-assay-paper header b{font-size:13px}
+.qc-lot-assay-warning{background:#fff4df;color:#80531e;padding:5px;margin:8px 0;text-align:center;font-weight:bold;font-size:10px}
+.qc-lot-assay-meta{display:grid;grid-template-columns:1fr 1.3fr;gap:5px;margin:10px 0;align-items:center}.qc-lot-assay-meta>b:first-child{grid-column:1/-1;background:#edf2f5;padding:4px}
+.qc-lot-assay-code{display:block;border:1px dashed #aebbc4;padding:3px;font:9px/1.4 Arial,sans-serif;text-align:center;color:#52636b;white-space:nowrap}.qc-lot-assay-code.focus{outline:2px solid #bf7c32;background:#fff4df;color:#80531e}
+.qc-lot-assay-paper table{width:100%;border-collapse:collapse;font-size:10px}.qc-lot-assay-paper td,.qc-lot-assay-paper th{border:1px solid #b6c2c8;padding:5px;text-align:left}.qc-lot-assay-paper thead{background:#e9eef1}
+.qc-lot-assay-small{display:block;margin-top:8px;color:#657785}.qc-lot-assay-actions svg{width:100%;max-width:240px;display:block;margin:0 auto 8px}.qc-lot-assay-actions strong{font-size:14px}.qc-lot-assay-actions p{font-size:12px;line-height:1.6;margin-top:6px}
+@media(max-width:640px){.qc-lot-assay-demo{grid-template-columns:1fr}.qc-lot-assay-example{padding:12px}}@media print{.qc-lot-assay-paper{box-shadow:none}.qc-lot-assay-example{break-inside:avoid}}
