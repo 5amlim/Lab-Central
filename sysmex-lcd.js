@@ -26,10 +26,21 @@ function lcd(mode,focus='',item={}){
  (keypad?['7','8','9','4','5','6','1','2','3','0','-','C'].map((v,i)=>key(210+(i%3)*56,55+Math.floor(i/3)*39,51,34,v,false,v==='C'?orange:blue)).join('')+key(210,211,80,34,'ALPH',false,green)+key(299,211,74,34,'Ent.',true):
  text(208,75,'Set a mixed sample,',13)+text(208,93,'and press [RUN].',13)+k(211,166,151,80,'RUN',green))+
  k(8,266,92,24,'QC')+k(104,266,94,24,'Result')+k(302,266,88,24,'Shutdown');
- const menu=()=>top('Menu')+['Str.Data','Chg.Reag','Maint.','Calib.','Settings','QC Chart'].map((v,i)=>{
- const x=42+(i%3)*115,y=53+Math.floor(i/3)*112;
- const icons=['▤','▣','⚒','▥','▧','∿'];
- return key(x,y,82,73,icons[i],focus===v,'#f1f3f5')+text(x+41,y+91,v,13,'#374553','middle');
+ // Manufacturer brochure p.2 and IFU 3.1/3.2: six large colored
+ // pictograms in beveled square keys. QC Chart replaces Service in the IFU.
+ const menu=()=>rect(0,43,400,257,'#fff','none',0)+top('Menu')+
+ ['Str.Data','Chg.Reag','Maint.','Calib.','Settings','QC Chart'].map((v,i)=>{
+ const x=40+(i%3)*120,y=62+Math.floor(i/3)*118;
+ const icon=[
+ '<path d="M12 9h37l-5 41H9z" fill="#ffd277" stroke="#b48332" stroke-width="2"/><path d="M18 17h24l-3 27H15z" fill="#fff5d4"/><circle cx="24" cy="29" r="12" fill="#91c0ec" stroke="#275d9b" stroke-width="3"/><path d="M33 38l16 12" stroke="#24578c" stroke-width="6" stroke-linecap="round"/>',
+ '<rect x="8" y="18" width="23" height="35" rx="3" fill="#d7e7f2" stroke="#567ea4" stroke-width="2"/><rect x="13" y="10" width="13" height="10" rx="2" fill="#92badc"/><rect x="35" y="16" width="20" height="37" rx="3" fill="#669ad0" stroke="#315b8e" stroke-width="2"/><rect x="39" y="9" width="12" height="9" fill="#e6edf2"/><path d="M15 41h29m-7-6 7 6-7 6" fill="none" stroke="#ef9734" stroke-width="3"/>',
+ '<rect x="9" y="11" width="33" height="43" rx="3" fill="#e4c46b" stroke="#928455" stroke-width="2"/><rect x="13" y="15" width="25" height="17" fill="#4a86b7"/><path d="M38 42L52 23" stroke="#658899" stroke-width="8" stroke-linecap="round"/><path d="M47 16l10 7-3 9-9-3-4-8z" fill="#c6d5da" stroke="#607e92"/><path d="M20 40h8m-8 6h8" stroke="#7c6a42" stroke-width="3"/>',
+ '<rect x="10" y="9" width="45" height="47" rx="3" fill="#6594c5" stroke="#355e90" stroke-width="2"/><rect x="15" y="14" width="29" height="23" fill="#e6edf2"/><path d="M18 28l5-5 4 7 5-12 6 10" stroke="#2664a0" stroke-width="2" fill="none"/><path d="M17 43h7m4 0h7m-18 6h7m4 0h7" stroke="#f0c44e" stroke-width="4"/><circle cx="48" cy="18" r="4" fill="#d54a39"/>',
+ '<rect x="9" y="10" width="46" height="46" rx="3" fill="#6c9ccc" stroke="#365f8e" stroke-width="2"/><path d="M15 22h34M15 34h34M15 46h34" stroke="#e9eff5" stroke-width="3"/><circle cx="37" cy="22" r="4" fill="#e45d43"/><circle cx="24" cy="34" r="4" fill="#e45d43"/><circle cx="43" cy="46" r="4" fill="#e45d43"/>',
+ '<rect x="9" y="10" width="46" height="46" rx="3" fill="#f7fbff" stroke="#527fa9" stroke-width="2"/><path d="M15 20h34M15 33h34M15 46h34" stroke="#b49cbb" stroke-dasharray="3 2"/><path d="M15 48V15M15 48h36" stroke="#4d7499" stroke-width="1.5"/><path d="M17 35l7-7 7 9 7-12 10 7" stroke="#276fba" stroke-width="2.6" fill="none"/><g fill="#276fba"><circle cx="24" cy="28" r="2"/><circle cx="31" cy="37" r="2"/><circle cx="38" cy="25" r="2"/></g>'
+ ][i];
+ return rect(x,y,80,76,blue,'#637d97',5)+rect(x+3,y+3,74,70,'none','#dceaf6',4)+'<g transform="translate('+(x+8)+' '+(y+5)+')">'+icon+'</g>'+text(x+40,y+94,v,14,'#30383d','middle')+
+ (focus===v?'<rect x="'+(x-3)+'" y="'+(y-3)+'" width="86" height="82" rx="6" fill="none" stroke="#bc6c20" stroke-width="3"/>':'');
  }).join('');
  const files=(chart=false)=>top(chart?'Set QC':'QC Analy')+text(48,60,'File')+text(153,60,'Lot ID')+text(302,60,'Expire')+
  Array.from({length:6},(_,i)=>{const y=68+i*36;return rect(18,y,364,31,blue,'#8293a6',4)+text(45,y+20,i+1,14)+text(91,y+20,'[               ]',14)+text(270,y+20,'[            ]',14)+(i===1?'<rect x="16" y="'+(y-2)+'" width="368" height="35" rx="5" fill="none" stroke="#bc6c20" stroke-width="2"/>':'');}).join('');
@@ -102,7 +113,7 @@ function fromItem(item){
  if(/set qc/.test(s))return lcd('targets',f);
  if(/barcode/.test(s))return lcd('barcode',f);
  if(/chg\. reag|chg\.reag/.test(s)&&/choose/.test(h))return lcd('reagent',f);
- if(/menu/.test(s))return lcd('menu',/^(QC|QC Chart)$/.test(f)?'QC Chart':f==='Str. Data'?'Str.Data':f==='Chg. Reag.'?'Chg.Reag':f);
+ if(/menu/.test(s))return lcd('menu',/^(QC|QC Chart)$/.test(f)?'QC Chart':f==='Str. Data'?'Str.Data':/^(Chg|Chrg)\. Reag\.$/.test(f)?'Chg.Reag':f);
  if(/maintenance/.test(s))return lcd('maintenance',f);
  if(/execute/i.test(f))return lcd('execute','Execute',item);
  if(k==='pochStatus')return /rinse|background/i.test(item.title||'')?lcd('background'):'';
