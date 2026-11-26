@@ -546,3 +546,25 @@
  .qc-assay-revised .qc-lot-assay-code{font-size:7px}
  .qc-assay-revised .qc-assay-table th,.qc-assay-revised .qc-assay-table td{padding:3px}
 }
+
+
+/* Mock barcode visuals and compact scan guidance. Keep the sheet full width. */
+.qc-assay-revised .qc-assay-instruction{display:grid;grid-template-columns:minmax(0,1fr) minmax(155px,250px);align-items:center;gap:16px 24px}
+.qc-assay-instruction-copy{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.qc-assay-scan-figure{margin:0;padding:0;text-align:center;min-width:0}
+.qc-assay-scan-figure svg{width:100%;max-width:230px;height:auto;display:block;margin:0 auto}
+.qc-assay-scan-figure figcaption{font-size:10px;line-height:1.4;color:#647e8c;margin:4px 0 0}
+.qc-assay-revised .qc-assay-mockcode{box-sizing:border-box;display:block;background:#fff;border:1px solid transparent;padding:2px 4px;line-height:0;min-width:0}
+.qc-assay-mockcode svg{display:block;width:100%;max-width:122px;height:23px;margin:auto}
+.qc-assay-revised .qc-assay-mockcode.focus{outline:1px solid #be7931;outline-offset:0;border-color:#be7931;background:#fff2db}
+.qc-assay-lot-cell .qc-assay-mockcode{width:min(80%,155px);min-width:75px}
+.qc-assay-revised .qc-assay-table td:has(.qc-assay-mockcode){padding:2px 4px}
+@media(max-width:650px){
+ .qc-assay-revised .qc-assay-instruction{grid-template-columns:1fr;gap:10px}
+ .qc-assay-scan-figure svg{max-width:180px}
+ .qc-assay-scan-figure{margin-top:4px}
+}
+@media print{
+ .qc-assay-revised .qc-assay-instruction{grid-template-columns:1fr 125px;gap:8px;padding:8px}
+ .qc-assay-mockcode svg{height:15px}
+}
