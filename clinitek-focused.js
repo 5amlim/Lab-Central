@@ -164,12 +164,12 @@ function render(title,group){
   if(!qc&&/wait for analyzer to finish/.test(t))return lcdSequence(kind,false,[['Calibrating','calibrating',{},'The analyzer calibrates automatically.'],['Analyzing','analyzing',{},'Wait for the measurement to finish.']]);
   if(qc&&/verify, document|review qc|record the printout/.test(t))return lcdSequence(kind,true,[
    ['Review QC results','results',{},'Compare actual results with approved criteria. When configured, the instrument displays PASS or FAIL.'],
-   ['Operator determination (if enabled)','passfail',{},'Only choose QC PASS or QC FAIL after evaluating actual results. This screen depends on configuration.'],
-   ['QC results summary','summary',{},'Repeat a failed QC test as directed by the approved SOP; complete all required levels before patient testing.']
+   ['Operator determination (if enabled)','passfail',{},'Only choose QC PASS or QC FAIL after evaluating actual results. Repeat failed QC as directed by the approved SOP; complete all required levels before patient testing. This screen depends on configuration.']
   ]);
   if(!qc&&/review and document/.test(t))return lcdSequence(kind,false,[
    ...(kind==='hcg'?[['Calibrating','calibrating',{},'Wait for automatic calibration.'],['Analyzing','analyzing',{},'Wait for the result.']]:[]),
-   ['Review results','results',{},'Verify the actual patient result, print if needed, and select Done. Example fields are blank.']
+   ['Review results','results',{},'Verify the actual patient result, print if needed, and select Done. Example fields are blank.'],
+   ...(kind==='ua'?[['Additional result details','results-more',{},'Select More to view the remaining result details.']]:[])
   ]);
  }
 
