@@ -43,13 +43,28 @@ function lcd(mode,focus='',item={}){
  (focus===v?'<rect x="'+(x-3)+'" y="'+(y-3)+'" width="86" height="82" rx="6" fill="none" stroke="#bc6c20" stroke-width="3"/>':'');
  }).join('');
  const files=(chart=false)=>top(chart?'Set QC':'QC Analy')+text(48,60,'File')+text(153,60,'Lot ID')+text(302,60,'Expire')+
- Array.from({length:6},(_,i)=>{const y=68+i*36;return rect(18,y,364,31,blue,'#8293a6',4)+text(45,y+20,i+1,14)+text(91,y+20,'[               ]',14)+text(270,y+20,'[            ]',14)+(i===1?'<rect x="16" y="'+(y-2)+'" width="368" height="35" rx="5" fill="none" stroke="#bc6c20" stroke-width="2"/>':'');}).join('');
- const qcHead=()=>text(12,60,'File [2]')+text(12,79,'Lot ID  [             ]')+text(12,98,'Expire  [             ]');
+ Array.from({length:6},(_,i)=>{const y=68+i*36;return rect(18,y,364,31,blue,'#8293a6',4)+text(45,y+20,i+1,14)+text(91,y+20,i===0?'[1234567890]':'[               ]',14)+text(270,y+20,i===0?'[02/04/2006]':'[            ]',14)+(i===0?'<rect x="16" y="'+(y-2)+'" width="368" height="35" rx="5" fill="none" stroke="#bc6c20" stroke-width="2"/>':'');}).join('');
+ const qcHead=()=>text(50,72,'File       [1]')+text(50,99,'Lot ID    [1234567890]')+text(50,126,'Expire    [2006/04/02]');
  const resultRows=(qc=false)=>text(14,83,qc?'Parameter':'Parameter',12)+text(148,83,'Data',12)+text(260,83,qc?'Judgment':'Unit',12)+
  ['WBC','RBC','HGB','HCT','MCV'].map((v,i)=>{const y=108+i*28;return text(15,y,v)+text(179,y,'—',14,'#35434f','end')+text(278,y,qc?'—':['10³/µL','10⁶/µL','g/dL','%','fL'][i],12)+ '<path d="M12 '+(y+6)+'H383" stroke="#bbc5ce" stroke-width=".7"/>';}).join('');
- const setup=()=>top('Set QC')+text(12,63,'File [1]')+text(12,100,'Lot ID')+field(111,83,265,'[                 ]',true)+text(12,145,'Expire')+field(111,128,265,'[                 ]',true)+text(15,190,'Select Input parameters.',13)+bottom(['Clear','→','Print','Setup']);
+ const setup=()=>top('Set QC')+text(12,63,'File[1]')+text(12,100,'Lot ID')+field(111,83,265,'[                 ]',true)+text(12,145,'Expire')+field(111,128,265,'[                 ]')+text(15,190,'Select Input parameters.',13)+bottom(['Clear','Print','→','Setup']);
  const targets=()=>top('Set QC')+text(12,61,'File [1]')+text(140,84,'TARGET',12)+text(238,84,'LIMIT',12)+['WBC','RBC','HGB','HCT','MCV'].map((v,i)=>{let y=92+i*30;return text(12,y+16,v)+field(109,y,82,'—')+field(205,y,82,'—')+text(300,y+16,['10³/µL','10⁶/µL','g/dL','%','fL'][i],11);}).join('')+bottom(['A.tgt','A.lmt','←','→','Save']);
- const chart=()=>top('Set QC')+text(10,59,'File [1]  [            ]  [            ]',13)+text(24,78,'[ selected date / time ]',12)+text(294,99,'LIMIT',12)+['WBC','RBC'].map((v,i)=>{const y=118+i*68;return text(8,y+22,v,12)+text(44,y,'UL',10)+text(44,y+40,'LL',10)+'<path d="M65 '+y+'H290M65 '+(y+20)+'H290M65 '+(y+40)+'H290" stroke="#bb85ad" stroke-width=".9" stroke-dasharray="3 2"/>'+text(315,y+8,'—',12)+text(315,y+26,'—',12)+text(315,y+44,'—',12);}).join('')+bottom(['Print','HC','Delete','File','Setup']);
+ // IFU 3.1.1: WBC/RBC chart, lot/expiry, sample date/time, cursor and chart-page navigation.
+ // Example historical values are illustrative only, never current control targets.
+ const chart=()=>top('Set QC')+
+ text(10,58,'File[1]   [1234567890]   [02/04/2006]',12)+
+ text(12,76,'02/03/2006 12:01',12)+k(218,63,33,23,'←')+k(255,63,33,23,'→')+
+ k(322,63,30,23,'↑')+k(358,63,30,23,'↓')+text(321,103,'LIMIT',11)+
+ [{name:'WBC',scale:['9.3','8.9','8.5'],limit:'0.4',points:[22,19,25,21,17,20,22]},
+ {name:'RBC',scale:['5.11','5.05','4.99'],limit:'0.06',points:[23,18,21,20,26,22,20]}].map((v,i)=>{
+ const y=111+i*73, xs=[70,101,132,163,194,225,256];
+ return text(8,y+25,v.name,12)+text(43,y+4,'UL',10)+text(43,y+44,'LL',10)+
+ '<path d="M65 '+y+'H263M65 '+(y+21)+'H263M65 '+(y+42)+'H263" stroke="#bb85ad" stroke-width=".9" stroke-dasharray="3 2"/>'+
+ '<path d="M'+xs.map((x,j)=>x+' '+(y+v.points[j])).join('L')+'" stroke="#3269a1" stroke-width="1.3" fill="none"/>'+
+ xs.map((x,j)=>'<circle cx="'+x+'" cy="'+(y+v.points[j])+'" r="2" fill="#3269a1"/>').join('')+
+ '<path d="M256 '+(y-3)+'V'+(y+45)+'" stroke="#506d89" stroke-width=".8"/>'+
+ v.scale.map((n,j)=>text(305,y+4+j*21,n,11,'#35434f','end')).join('')+text(351,y+25,v.limit,11,'#35434f','end');
+ }).join('')+bottom(['Print','HC','Delete','File','Setup']);
  const stored=()=>top('Str.Data')+text(13,57,'Sample ID',12)+text(230,57,'Date / Time',12)+Array.from({length:6},(_,i)=>{let y=66+i*29;return rect(10,y,366,25,i===0?'#b9d6f0':'#eef0f3','#a2aeb8',1)+text(15,y+17,i===0?'BLANK CHECK':'—',12)+text(226,y+17,i===0?'[ actual date ]':'—',11);}).join('')+bottom(['Print','←','→','Detail']);
  const prompt=(title,lines,buttons)=>top(title)+rect(35,83,330,135,'#e5e9ee','#7c8e9f',3)+lines.map((v,i)=>text(200,110+i*22,v,13,'#344450','middle')).join('')+buttons.map((v,i)=>k(53+i*101,177,94,30,v)).join('');
  // The startup sequence uses [Start up], Running, Menu, and the
@@ -66,7 +81,7 @@ function lcd(mode,focus='',item={}){
  case 'menu':body=menu();break;
  case 'files':body=files();break;
  case 'chartfiles':body=files(true);break;
- case 'qcrun':body=top('QC Analy','Ready')+qcHead()+text(211,66,'Place control blood',12)+text(211,82,'in tube adapter and',12)+text(211,98,'close sample position.',12)+text(211,114,'Press [Run].',12)+k(226,158,143,74,'Run',green)+bottom(['Print','Settings']);break;
+ case 'qcrun':body=top('QC Analy','Ready')+qcHead()+text(20,150,'Place control blood in tube adapter',13)+text(20,168,'and place it in the sample position.',13)+text(20,186,'Press [Run].',13)+k(8,266,92,24,'Print')+k(104,266,94,24,'Settings')+k(302,266,88,24,'Run',green);break;
  case 'qcrunning':body=progress('QC Analy');break;
  case 'running':body=progress('Main');break;
  case 'qcresult':body=top('QC Analy','Ready')+text(12,60,'File [2]   Lot [             ]',12)+resultRows(true)+bottom(['Print','Back','←','→','Quit']);break;
@@ -95,7 +110,7 @@ function fromItem(item){
  const s=String(item.screen||'').toLowerCase(),h=String(item.heading||'').toLowerCase(),f=item.focus||'',k=item.kind||'';
  if(k==='pochPhysical')return '';
  const kinds={pochQcMain:['main','QC'],pochAnalyzeFiles:['files',''],pochAnalyzeRun:['qcrun','Run'],pochAnalyzeRunning:['qcrunning',''],pochAnalyzeResults:['qcresult','Quit'],qcFiles:['chartfiles',''],qcLot:['lot',''],qcAnalytes:['targets','']};
- if(kinds[k])return lcd(...kinds[k]);
+ if(kinds[k])return lcd(kinds[k][0],f||kinds[k][1]);
  if(k==='mainMenu')return lcd('main','Menu');
  if(k==='status'){
   if(/ready for qc|ready screen|confirm ready/.test(s+' '+h))return lcd('ready');
