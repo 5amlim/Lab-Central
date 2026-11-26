@@ -13,7 +13,7 @@ function lcd(mode,focus='',item={}){
  const k=(x,y,w,h,v,fill)=>key(x,y,w,h,v,focus===v,fill);
  const field=(x,y,w,v,f=false)=>rect(x,y,w,23,'#f8fafc',f?'#b86d25':'#758698',2)+text(x+w-6,y+16,v,14,'#3a4956','end');
  const top=(name,status='Not Ready',right='Top')=>text(10,24,'sysmex',15,'#438fbd')+
- rect(83,8,110,18,status==='Ready'?'#61c77b':status==='Running'||status==='Aspirating'?'#e4d16d':'#e49bd2','none',0)+text(138,21,status,13,'#283b3a','middle')+
+ rect(83,8,110,18,status==='Ready'?'#49e64c':status==='Running'||status==='Aspirating'?'#e4d16d':'#e49bd2','none',0)+text(138,21,status,13,'#283b3a','middle')+
  text(138,40,'[ '+name+' ]',12,'#465360','middle')+
  rect(206,8,10,25,'#dae8f3','#a1aab5',1)+rect(208,17,6,14,'#588bbb','none',0)+
  key(224,8,34,25,'▤')+k(322,8,68,27,right);
@@ -84,7 +84,7 @@ function lcd(mode,focus='',item={}){
  case 'qcrun':body=top('QC Analy','Ready')+qcHead()+text(20,150,'Place control blood in tube adapter',13)+text(20,168,'and place it in the sample position.',13)+text(20,186,'Press [Run].',13)+k(8,266,92,24,'Print')+k(104,266,94,24,'Settings')+k(302,266,88,24,'Run',green);break;
  case 'qcrunning':body=progress('QC Analy');break;
  case 'running':body=progress('Main');break;
- case 'qcresult':body=top('QC Analy','Ready')+text(12,60,'File [2]   Lot [             ]',12)+resultRows(true)+bottom(['Print','Back','←','→','Quit']);break;
+ case 'qcresult':body=top('QC Analy','Ready')+text(12,60,'File [1]   Lot [1234567890]',12)+resultRows(true)+bottom(['Print','Back','←','→','Quit']);break;
  case 'result':body=top('Result','Ready')+text(12,60,'Sample ID [#####]',12)+resultRows()+bottom(['Print','←','→','Back']);break;
  case 'blankresult':body=top('Str.Data')+text(12,60,'BLANK CHECK  [ actual date ]',12)+resultRows()+bottom(['Print','←','→','Back']);break;
  case 'chart':body=chart();break;
