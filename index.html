@@ -508,7 +508,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
 <script src="qc-guide.js?v=20261125-sysmex-lot-layout"></script>
-<script src="biofire-visual.js?v=20261125-torch-screens"></script>
+<script src="biofire-visual.js?v=20261125-torch-single"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
 <script src="lab-guide-polish.js?v=20261104"></script>
 <script src="piccolo-results.js?v=20261104"></script>
@@ -523,7 +523,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sofia-visual-guide.js?v=20261119-screen-review"></script>
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
-<script src="biofire-reference-polish.js?v=20261125-torch-screens"></script>
+<script src="biofire-reference-polish.js?v=20261125-torch-single"></script>
 <script src="sendout-market-guide.js?v=20261119-norcal-pickup-status"></script>
 <script src="assay-catalog.js?v=20261119-panel-audit"></script>
 <script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
@@ -1389,8 +1389,7 @@ function buildGroups(section){
     ...step('Enter TORCH Sample ID (patient identification)','Before inserting the pouch, scan or enter the approved sample identifier in Sample ID. Match the patient MRN and order in Athena. The original Sollis guide specifies MRN entry; confirm direct MRN use is authorized by the current U.S. IFU and local SOP.'),
     ...step('Insert TORCH pouch into module','Verify the Sample ID first. Insert the prepared pouch into the available module with the fitment label flat. Blinking blue changes to blinking green when seated.'),
     ...step('Select TORCH protocol if prompted','Select the correct GI protocol if multiple options are displayed. A single available protocol is automatically selected.'),
-    ...step('Enter TORCH operator information','Enter your own user name and password and tap Next when enabled.'),
-    ...step('Review TORCH information and Start Run','Verify Sample ID, pouch lot, serial number, pouch type, protocol and operator; tap Start Run.'),
+    ...step('Review TORCH information and Start Run','Verify Sample ID, pouch lot, serial number, pouch type and protocol; tap Start Run. Operator entry is not required on the Sollis configuration.'),
     ...step('Confirm TORCH run in progress','Confirm the module LED is solid green and the remaining time is displayed.'),
     ...step('Select TORCH Finished module','Select Finished on the Dashboard to open the report. The pouch is partially ejected.'),
     ...step('Review TORCH report and remove pouch','Verify the sample identification, completed status, internal controls and all targets; remove and discard the pouch appropriately. Print/save and document the results under the approved workflow.'),
