@@ -29,3 +29,10 @@
 .biofire-training-image{min-width:0;max-width:100%;overflow:hidden}
 .biofire-training-image svg{max-width:100%;height:auto;overflow:visible}
 @media(max-width:700px){.biofire-action-type{font-size:8px}.biofire-training-title strong{font-size:11px}}
+
+/* SPOTFIRE uses a portrait display, never stretch it to a TORCH landscape aspect. */
+.bf-spotfire-portrait-screen{width:100%;max-width:390px;margin:0 auto;padding:8px;box-sizing:border-box;background:#34383a;border:1px solid #515657;border-radius:12px;box-shadow:0 2px 6px #20303824}
+.bf-polished .bf-spotfire-portrait-screen svg,.qc-screen-reference .bf-spotfire-portrait-screen svg,.bf-spotfire-portrait-screen>svg{display:block;width:100%;height:auto;max-width:100%;max-height:none;aspect-ratio:500/666;border-radius:4px;background:#fff}
+.qc-screen-reference .bf-spotfire-portrait-screen{max-width:320px}
+@media(max-width:650px){.bf-spotfire-portrait-screen{max-width:320px;padding:6px}}
+@media print{.bf-spotfire-portrait-screen{max-width:245px;box-shadow:none}}
