@@ -48,13 +48,13 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources"):
+ const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources")+(opts.torchManual?' · '+link("https://www.youtube.com/watch?v=Oc3ALCcGuHs","Official TORCH software training video"):""):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
  '<span class="bf-polished-chip '+(hue==="red"?"":"system")+'">'+esc(opts.tag||"Action")+'</span></div>'+
  '<div class="bf-polished-inner"><div class="bf-polished-media"><div class="bf-polished-svg">'+visual+'</div>'+
- '<span class="bf-polished-credit">Illustration/reference only · current clinical assay instructions govern</span></div>'+
+ '<span class="bf-polished-credit">'+(opts.torchManual?'Reconstructed training visual · exact installed software layout not verified':'Illustration/reference only · current clinical assay instructions govern')+'</span></div>'+
  '<div class="bf-polished-instruction"><h4>'+esc(opts.title)+'</h4>'+instruction(lines)+details+reference+
  '<p class="bf-ref-small">Reference: '+source+'</p></div></div></section>';
 }
