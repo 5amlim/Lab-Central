@@ -48,7 +48,7 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?(opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources"):
+ const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources"):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
@@ -143,6 +143,28 @@ function render(id,title){
  if(id!=="torch"&&id!=="spotfire")return previous?previous(id,title):"";
  const gi=id==="torch",t=String(title||"").trim().toLowerCase();
  const c=opts=>card(id,opts);
+ const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode),lines,note,torchManual:true});
+ if(gi&&B.torchScreen){
+  if(/select.*module|available module/.test(t))return tc("dashboard","Select an Available module",["Choose a blue Available tile, or initiate by scanning the pouch directly from Dashboard."]);
+  if(/scan.*barcode|confirm.*(sample|specimen|patient).*id|verify.*(sample|specimen|patient).*id|enter.*(mrn|sample id|patient id)/.test(t))return [
+   tc("scan","1. Scan pouch barcode",["Scan the fitment barcode. Verify the automatically populated lot, serial number and GI pouch type."]),
+   tc("sample","2. Enter Sample ID before loading",["Scan or enter the approved sample/accession ID in the Sample ID field. Match it to the correct patient and order in Athena before insertion.","For external QC use the assigned control ID, not a patient identifier."],"The CE-IVD manual advises against direct MRN entry. Use the locally authorized identifier under the current U.S. IFU and Sollis SOP. No real MRN is shown.")
+  ].join("");
+  if(/load pouch and start run|start assay|start run|load.*module|insert.*pouch.*module/.test(t))return [
+   tc("insert","1. Insert prepared pouch",["Confirm the pouch and Sample ID have already been entered. The selected or available module LED blinks blue.","Insert the prepared pouch with fitment label flat; the module pulls it in. Blinking green indicates it is seated, not yet running."]),
+   tc("protocol","2. Select protocol if prompted",["If multiple protocols are available, select the appropriate GI sample protocol and tap Next. If only one is available, it is selected automatically."],"The protocol name/version is an example. Follow the installed GI pouch module."),
+   tc("operator","3. Enter operator information",["Enter your own user name and password, then select Next. The button becomes available when credentials are accepted."]),
+   tc("review","4. Review and Start Run",["Verify Sample ID, lot, serial number, pouch type, protocol and operator. Select the green Start Run button."]),
+   tc("running","5. Confirm Run In Progress",["A solid green module LED confirms processing has started. The screen displays remaining time and current stage."])
+  ].join("");
+  if(/run in progress|analysis started|confirm analysis|analyzing|running/.test(t))return tc("running","Confirm Run In Progress",["Verify the module LED is solid green and the run is processing. Do not disturb the module."]);
+  if(/review.*result|document.*result|print.*result|review.*report|remove.*pouch|complete.*run/.test(t))return [
+   tc("finished","1. Select Finished module",["The pouch is partially ejected and the Dashboard changes to Finished. Select the module to view its report."]),
+   tc("report","2. Review report and remove pouch",["Verify Sample ID, run completion, internal control acceptance and all reported targets. Remove the pouch and discard it as biohazardous waste.","Print or save the report and document results according to the approved SOP."]),
+   tc("browse","3. Retrieve a previous report",["After pouch removal, select Browse Runs. Select the matching run and tap View Report to access the saved report."],"Invalid, incomplete or failed runs require the assay-specific follow-up process.")
+  ].join("");
+ }
+
  if(/gather.*(kit|specimen)|kit and specimen/.test(t))return c({
   title:"Check pouch, vials and specimen",tag:"Preparation",
   visual:gi?B.kit():direct("08","kit-packaging","SPOTFIRE kit packaging and sample-preparation materials"),figure:gi?0:1,page:13,
