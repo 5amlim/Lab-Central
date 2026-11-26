@@ -143,7 +143,7 @@ function render(id,title){
  if(id!=="torch"&&id!=="spotfire")return previous?previous(id,title):"";
  const gi=id==="torch",t=String(title||"").trim().toLowerCase();
  const c=opts=>card(id,opts);
- const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode),lines,note,torchManual:true});
+ const qcExample=/confirm qc sample name|put printouts in the monthly qc log binder/.test(t); const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode,qcExample?"QC-GI-Neg":"GI-DEMO-001"),lines,note,torchManual:true});
  if(gi&&B.torchScreen){
   const exact={
    "scan torch pouch barcode":["scan","Scan pouch barcode",["Scan the fitment label; verify the lot, serial and GI pouch type."]],
