@@ -137,7 +137,9 @@ function sysmexDeviceMarkup(mode,showAccessory=true){
  '<path d="M112 32Q124 23 155 24H366" fill="none" stroke="#fff" stroke-width="7" opacity=".76"/>'+
  // Angular recessed display bezel and the screen mounted in upper LEFT.
  '<path d="M133 79L146 67H356L367 81V252L350 264H135L124 251V94Z" fill="#bac4c5" stroke="#a0adaf" stroke-width="3"/>'+
- '<rect x="139" y="89" width="213" height="164" rx="3" fill="#e7f1f4" stroke="#526b7d" stroke-width="4"/>'+
+ (window.LAB_SYSMEX_LCD ? '<svg x="139" y="89" width="213" height="164" viewBox="0 0 424 324">'+window.LAB_SYSMEX_LCD.lcd(
+  ({ready:'main',patient:'main',qc:'files',running:'running',shutdown:'complete',switch:'complete',waste:'maintenance',transducer:'maintenance',reagent:'reagent',other:'maintenance'})[m]||'main'
+ ).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg>' : '<rect x="139" y="89" width="213" height="164" rx="3" fill="#e7f1f4" stroke="#526b7d" stroke-width="4"/>'+
  '<rect x="146" y="96" width="199" height="24" rx="2" fill="#b9dfe0"/>'+
  '<rect x="149" y="124" width="195" height="122" rx="2" fill="#d5e7f2"/>'+
  t(154,113,"sysmex",11,"#2f8198",900,"start")+
@@ -150,7 +152,7 @@ function sysmexDeviceMarkup(mode,showAccessory=true){
  '<rect x="280" y="198" width="51" height="31" rx="5" fill="#a6dedc" stroke="#83b6b4"/>'+
  t(194,218,m==="qc"?"QC":"ID",11,"#4c6982",850)+
  t(250,218,"WB",11,"#4c6982",850)+
- t(306,218,m==="running"?"Run":"OK",11,"#2e797b",850)+
+ t(306,218,m==="running"?"Run":"OK",11,"#2e797b",850))+
  // Manufacturer wordmark below screen, NOT a fictional upper body logo.
  t(137,296,"pocH-100i",23,"#596164",780,"start")+
  '<path d="M160 306q25 13 53 1" fill="none" stroke="#707b7d" stroke-width="5"/>'+
@@ -167,7 +169,7 @@ function sysmexDeviceMarkup(mode,showAccessory=true){
  // Capped tube enters the protected front sample chamber, not the outer bottle.
  if(m==="patient")h+='<rect x="337" y="372" width="21" height="48" rx="5" fill="#e9f1f4" fill-opacity=".9" stroke="#b6cbd2" stroke-width="1.7"/>'+
  '<rect x="334" y="364" width="27" height="11" rx="4" fill="#ae86c4"/>';
- if(m==="running")h+='<rect x="176" y="239" width="128" height="5" rx="2" fill="#c2dce3"/>'+
+ if(m==="running"&&!window.LAB_SYSMEX_LCD)h+='<rect x="176" y="239" width="128" height="5" rx="2" fill="#c2dce3"/>'+
  '<rect x="176" y="239" width="76" height="5" rx="2" fill="#2c9a8f"/>';
  // Right-side power switch sits alongside the upper display, near the Not Ready indicator.
  if(off)h+='<rect x="416" y="135" width="24" height="53" rx="5" fill="#242c36" stroke="#101820" stroke-width="3"/>'+
