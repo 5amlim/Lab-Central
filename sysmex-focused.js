@@ -76,8 +76,8 @@ function screen(mode){
  tx(100,187,"Analysis Mode",14,"#53778c",750,"start")+
  '<rect x="103" y="193" width="96" height="42" rx="6" fill="#f6dce1" stroke="#b57c8e" stroke-width="2"/>'+tx(152,220,"WB",19,"#8d4f60",850)+
  '<rect x="208" y="193" width="96" height="42" rx="6" fill="#f8fbfc" stroke="#aac4d0" stroke-width="2"/>'+tx(255,220,"PD",19,"#54758a",850);
- const right=tx(339,119,"Operator",16,"#4b6c7d",700,"start")+
- '<rect x="339" y="127" width="205" height="31" rx="4" fill="#fdfefe" stroke="#8baabb" stroke-width="2"/>'+
+ // Operator ID is disabled on the Sollis analyzer.
+ const right=
  '<rect x="372" y="165" width="173" height="77" rx="13" fill="'+(start?"#168e83":"#c0f0ef")+'" stroke="'+(start?"#097c72":"#56aeb4")+'" stroke-width="'+(start?5:3)+'"/>'+
  tx(457,214,"RUN",27,start?"#fff":"#326d75",900);
  const bottom='<rect x="94" y="254" width="112" height="30" rx="6" fill="'+(qc?"#d0f2e9":"#b6d5ed")+'" stroke="'+(qc?"#178a83":"#9ab4c6")+'" stroke-width="'+(qc?4:1)+'"/>'+tx(150,274,"QC",14,"#365b70",850)+
