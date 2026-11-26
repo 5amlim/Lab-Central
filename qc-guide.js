@@ -7,9 +7,11 @@
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 const configs={
  sysmex:{brand:"SYSMEX pocH-100i",binder:"Pochi Daily Blank Check and Control Log · Daily QC binder",steps:[
-  {kind:"mainMenu",heading:"Open QC from Menu",tip:"From the Main screen select Menu, then QC."},
+  {kind:"mainMenu",heading:"Open Menu",tip:"From the Main screen select Menu."},
+  {heading:"Open QC chart",screen:"MENU",items:["Str. Data","QC","Maint."],focus:"QC",tip:"Select QC or QC Chart on the Menu screen."},
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
-  {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print, then choose Current on the confirmation prompt (not Chart). Repeat separately for any missing QC1, QC2 or QC3 records."}
+  {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print."},
+  {heading:"Choose Current",screen:"QC PRINT CONFIRMATION",items:["Current","Chart"],focus:"Current",tip:"Select Current, not Chart. Repeat separately for missing QC levels."}
  ],note:"Print and file the accepted QC1 (Low), QC2 (Normal) and QC3 (High) records with the Pochi Daily Blank Check and Control Log. File the accepted blank-check printout with the same form. Retain new-lot comparison records in the approved validation log."},
  piccolo:{brand:"Piccolo Xpress",binder:"Piccolo Monthly QC Log · Monthly QC binder",steps:[
   {kind:"piccoloRecall",heading:"Open Recall",screen:"Recall",tip:"From Home, tap Recall. Select Last Disc for the latest run, or Browse to locate an earlier QC run."},
@@ -81,6 +83,11 @@ function sysmexAnalyzeScreen(kind){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
+ if(/sysmex poch-100i/i.test(brand)){
+  const realistic=window.LAB_SYSMEX_LCD?.fromItem(item);
+  if(realistic)return '<div class="qc-screen-reference sx-realistic-screen" role="group" aria-label="'+esc(item.heading)+'">'+top+
+    '<div class="qc-poch-qc-main">'+realistic+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }
  const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const isPoch=brand==="Sysmex pocH-100i";
  const isPochAnalyze=/^pochAnalyze/.test(item.kind||"");
