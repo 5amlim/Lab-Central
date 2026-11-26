@@ -475,14 +475,77 @@ function spotfireReviewScreenSvg(){
  return markup.join("");
 }
 
-function spotfireScreenWithZoom(mode){
- const full=analyzer("spotfire",mode);
- if(mode==="insert")return '<div class="bf-spotfire-insert-reference"><div class="bf-spotfire-insert-device">'+full+'</div><div class="bf-spotfire-insert-screen">'+spotfireReviewScreenSvg()+'</div></div>';
- const zoom=full.replace('viewBox="145 40 430 420"','viewBox="322 64 186 232"');
- return '<div class="bf-spotfire-screen-sequence">'+full+
-  '<details class="bf-spotfire-display-zoom"><summary>Zoom in on analyzer screen</summary>'+
-  '<div class="bf-spotfire-display-crop">'+zoom+'</div>'+
-  '<p>Illustrative display. Confirm the actual module, pouch, sample ID and prompts.</p></details></div>';
+/* Portrait UI based on actual BFR0001-1641-01 screenshots, pp. 4-2–4-5,
+ 5-4, 5-9 and 5-10. R/ST menu terminology follows BFR0001-7220.
+ Entry screen geometry is illustrative where screenshots were not published. */
+function spotfireScreen(mode,opts={}){
+ const m=({ready:"home",selected:"home",review:"insert",start:"insert",results:"report"})[mode]||mode;
+ const qc=opts.qc||/^qc/.test(m),st=opts.menu==="ST",id=opts.id||"SAMPLE-001";
+ const sample=st?"Throat Swab":"Nasopharyngeal Swab",test=st?"Sore Throat Menu":"Respiratory Menu",badge=st?"ST":"R";
+ const blue="#00a9e7",green="#40b549",dark="#3b3b3b",gray="#929292",ink="#111";
+ const t=(x,y,v,s=18,color=ink,anchor="start",weight=400)=>text(x,y,v,s,color,anchor,String(weight));
+ const r=(x,y,w,h,fill="#fff",stroke="none",rx=0)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'"/>';
+ const btn=(x,y,w,h,label,fill=gray)=>r(x,y,w,h,fill,"none",3)+t(x+w/2,y+h/2+6,label,17,"#fff","middle",600);
+ const badgeArt=(x,y)=>r(x,y,st?35:26,27,"#2db7d0","none",5)+t(x+(st?17.5:13),y+19,badge,16,"#fff","middle",700);
+ const title=(label,back=true)=> (back?'<circle cx="26" cy="54" r="20" fill="#3b3b3b"/><path d="M31 44l-11 10 11 10" stroke="#fff" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>':"")+t(250,61,label,label.length>30?18:22,ink,"middle",700);
+ const withToolbar=["home","homeRunning","complete","running","report","history","qcMenu","qcHistory","qcReport"].includes(m);
+ const header=()=>{let h=r(0,0,500,666)+r(0,0,500,19,dark)+t(12,13,"Wednesday, November 25, 2026 10:50 AM",9,"#fff")+t(488,13,"SpotFire Administrator",9,"#fff","end");if(!withToolbar)return h;
+ const active=/^qc/.test(m)?2:m==="history"?1:0;
+ const icons=['<path d="M-14 0 0-12 14 0H9V13H2V5H-3V13H-10V0Z" fill="currentColor"/>','<rect x="-11" y="-12" width="21" height="27" rx="3" fill="currentColor"/><path d="m-6 0 4 5 8-10" stroke="VAR" stroke-width="2.5" fill="none"/>','<rect x="-17" y="-13" width="34" height="27" rx="2" fill="currentColor"/><text x="0" y="7" font-size="18" font-family="Arial" font-weight="700" fill="VAR" text-anchor="middle">QC</text>','<path d="m-4-14 8 0 1 6 4 2 5-3 4 7-5 4v4l5 4-4 7-5-3-4 2-1 6h-8l-1-6-4-2-5 3-4-7 5-4V2l-5-4 4-7 5 3 4-2z" fill="currentColor"/><circle r="6" fill="VAR"/>','<path d="M-6 9c-7-2-8-7-8-14 0-10 17-10 17 0 0 6-1 11-6 14M-6 9l-9 5M3 9l5 3" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="10" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="m6 13 3 3 5-6" fill="none" stroke="currentColor" stroke-width="2"/>'];
+ for(let i=0;i<5;i++){const on=i===active,fg=i===4?"#59b7df":on?"#fff":dark;h+=r(i*100,19,100,47,on?dark:"#fafafa","#bababa")+ '<g transform="translate('+(50+i*100)+' 42)" color="'+fg+'">'+icons[i].replaceAll("VAR",on?dark:"#fff")+'</g>'}return h};
+ const pageTitle=(s)=>'<circle cx="26" cy="92" r="19" fill="#3b3b3b"/><path d="M31 82l-11 10 11 10" stroke="#fff" fill="none" stroke-width="4" stroke-linecap="round"/>'+t(250,99,s,21,ink,"middle",700);
+ const pouchArt=(x,y,k=1)=>'<g transform="translate('+x+' '+y+') scale('+k+')"><rect x="0" y="0" width="250" height="156" rx="6" fill="#f7faf8" stroke="#596163" stroke-width="1.5"/><rect x="3" y="3" width="244" height="36" rx="5" fill="#fff" stroke="#999"/><rect x="12" y="24" width="65" height="7" fill="#b92329"/><rect x="176" y="24" width="64" height="7" fill="#2446a1"/><rect x="147" y="5" width="85" height="13" fill="#fff" stroke="#999"/>'+Array.from({length:12},(_,i)=>'<circle cx="'+(10+i*20)+'" cy="48" r="6.5" fill="#e9f2fb" stroke="#879db4"/>').join("")+'<rect x="8" y="62" width="34" height="84" rx="13" fill="#b8df9f" stroke="#90bda4"/><path d="M52 65h98M52 80l20 20 25-24 23 28 27-20M55 119h85" stroke="#d9e2dc" fill="none" stroke-width="3"/><rect x="169" y="62" width="72" height="85" rx="6" fill="#777e7c"/><circle cx="205" cy="103" r="26" fill="#303637"/>'+Array.from({length:31},(_,i)=>'<circle cx="'+(188+(i%6)*6.8)+'" cy="'+(87+Math.floor(i/6)*6.8)+'" r="1.6" fill="#d6dfd8"/>').join("")+'</g>';
+ const insertArt=()=>'<g transform="translate(155 285)"><path d="M0 8L90 0l105 20v225l-92 30L5 222Z" fill="#e3e4e3" stroke="#aaa"/><path d="M0 8l103 20 92-8-105-20Z" fill="#f7f7f7" stroke="#aaa"/><path d="M103 28v247" stroke="#999"/><path d="M5 117l98 28 92-26v72l-92 25L5 187Z" fill="#15baf1" stroke="#2495bb"/>'+Array.from({length:4},(_,i)=>{let y=37+i*55;return r(109,y,78,49,i===2?"#26c5f3":"#f4f4f4","#777",6)+'<path d="M137 '+(y+10)+'h19v32h-5v-26h-14Z" fill="#be3039" stroke="#343b3b" stroke-width="1.5"/>'}).join("")+'<g transform="translate(137 159) skewY(17)"><rect width="40" height="30" rx="2" fill="#ddd" stroke="#888"/><rect x="6" y="5" width="24" height="18" fill="#f4f4f4" stroke="#aaa"/></g></g>';
+ const scannerArt=(kind)=>'<defs><linearGradient id="sfScanBeam" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ff261c" stop-opacity=".9"/><stop offset="1" stop-color="#ff261c" stop-opacity="0"/></linearGradient></defs><g transform="translate(87 208)"><path d="M0 0H326V46Q326 68 303 68H23Q0 68 0 46Z" fill="#f7f7f7" stroke="#999" stroke-width="1.5"/>'+r(32,0,262,25,"#fff","#aaa")+r(138,68,51,12,"#b8b8b8","#888")+'<path d="M138 80h51l50 94H88Z" fill="url(#sfScanBeam)"/>'+r(100,164,126,34,"#fff","#999")+t(108,177,kind==="qc"?"Negative Control":kind==="sample"?"Sample ID":"BIOFIRE pouch",11,kind==="qc"?"#238d40":"#222","start",700)+Array.from({length:23},(_,i)=>r(112+i*4,181,i%3===0?2.4:1,10,"#444")).join("")+'<path d="M76 185H251" stroke="#35ad55" stroke-width="2"/></g>';
+ const details=(y=128)=>t(200,y,"Sample ID:",16,"#757575","end")+t(214,y,id,17,ink,"start",700)+t(200,y+34,"Sample Type:",16,"#757575","end")+t(214,y+34,sample,17,ink,"start",700)+t(200,y+68,"Test:",16,"#757575","end")+t(214,y+68,test,17,ink,"start",700)+badgeArt(st?370:362,y+48);
+ let h=header();
+ if(["home","homeRunning","complete"].includes(m)){
+  h+=r(0,66,500,600,"#d5d5d5");
+  for(let row=0;row<12;row++)for(let col=0;col<8;col++){let x=30+col*57+(row%2?28:0),y=84+row*53;if((x-360)**2+(y-370)**2<270**2)h+='<circle cx="'+x+'" cy="'+y+'" r="26" fill="#e3e3e3" opacity=".67"/>'}
+  const run=m==="homeRunning",done=m==="complete",col=run||done?"#00c82e":blue;
+  h+=r(11,280,478,175,"#bcbcbc","none",14)+r(10,275,480,175,"#fff","none",14)+ '<path d="M28 275H30V450H28Q10 450 10 432V293Q10 275 28 275Z" fill="'+col+'"/>'+
+   t(44,371,run?"14:32":done?"Complete":"Available",run?43:39,ink,"start",700);
+  if(run||done)h+=t(246,343,"SpotFire Administrator",16,ink,"start",700)+badgeArt(246,354)+t(282,373,qc?"QC Test":test,13,ink,"start",700)+t(282,392,qc?"Control":id,13,ink,"start",700);
+  h+='<circle cx="450" cy="362" r="22" stroke="'+col+'" fill="#fff" stroke-width="2"/>'+(m==="home"?'<path d="m443 350 19 12-19 12z" fill="'+col+'"/>':'<path d="m443 351 12 11-12 11" fill="none" stroke="'+col+'" stroke-width="2.5"/>');
+ }else if(["scan","sample","qcScan"].includes(m)){
+  h+=title(m==="scan"?"Scan Pouch Barcode":m==="sample"?"Scan Sample ID":"Scan QC Material Barcode");
+  if(qc)h+=t(487,61,"QC",25,blue,"end",700);
+  h+=scannerArt(m==="qcScan"?"qc":m==="sample"?"sample":"pouch")+btn(143,616,214,32,"Enter Manually");
+  if(m==="scan"||m==="sample")h+=t(250,583,"Illustrative scan prompt",12,"#777","middle");
+ }else if(["manual","sampleManual","qcManual"].includes(m)){
+  h+=title(m==="sampleManual"?"Enter Sample ID":m==="qcManual"?"Enter QC Material Information":"Enter Pouch Information");
+  const fields=m==="sampleManual"?["Sample ID"]:m==="qcManual"?["QC Material Type","Lot","Vendor Name","Expiration Date","QC Compatibility"]:["Lot Number","Serial Number","Expiration Date","Pouch Type"];
+  fields.forEach((v,i)=>{let y=105+i*74;h+=t(35,y,v,16)+r(35,y+9,430,36,"#fff","#aaa",3)+t(46,y+33,m==="sampleManual"?id:"",17)});
+  h+=btn(315,614,150,35,"Done",blue)+t(250,581,"Illustrative entry layout",12,"#777","middle");
+ }else if(m==="type"){
+  h+=title("Select Sample Type");
+  [["Nasopharyngeal Swab","Respiratory Menu"],["Throat Swab","Sore Throat Menu"]].forEach(([v,sub],i)=>{let y=165+i*105;h+=r(24,y,452,86,"#fff","#bbb",5)+t(40,y+34,v,21,ink,"start",700)+t(40,y+62,sub,16,"#666")+t(450,y+49,"›",30,blue,"middle")});
+  h+=t(250,586,"Illustrative R/ST selection layout",12,"#777","middle");
+ }else if(m==="insert"||m==="qcInsert"){
+  h+=title("Review Information, Then Insert Pouch")+t(250,90,"The test will start automatically when the pouch is inserted.",15,ink,"middle");
+  if(qc)h+=t(480,60,"QC",21,blue,"end",700)+t(200,128,"QC Material:",16,"#777","end")+t(214,128,"Negative Control (example)",16,ink,"start",700)+t(200,162,"Lot:",16,"#777","end")+t(214,162,"—",16,ink,"start",700)+t(200,196,"Test:",16,"#777","end")+t(214,196,"R/ST Panel",17,ink,"start",700);
+  else h+=details(125);
+  h+=insertArt();
+ }else if(m==="running"){
+  h+=pageTitle("Test In Progress")+r(82,147,336,108,green)+t(250,232,"14:32",87,"#fff","middle",700)+details(286)+pouchArt(125,386)+r(129,601,242,52,"#fff","#15558b")+btn(150,614,200,29,"Abort","#bc2a19");
+ }else if(m==="qcMenu"){
+  h+=t(250,96,"QC Tests",22,ink,"middle",700);
+  ["Negative QC","Positive QC","QC Test Results"].forEach((v,i)=>{let y=112+i*58;h+='<path d="M12 '+y+'h476" stroke="#c9c9c9"/>'+t(20,y+36,v,18,ink,"start",700)+t(475,y+36,"›",26,"#555","middle")});
+  h+='<path d="M12 286h476" stroke="#ccc"/>'+r(35,301,430,67,"#fff","#185e9b")+t(44,325,"Initial Lot Lockout",18,ink,"start",700)+r(402,308,48,19,"#eee","#bbb",10)+'<circle cx="413" cy="317" r="10" fill="#fff" stroke="#aaa"/>'+t(44,344,"New lots require passing negative and positive QC if enabled.",12)+t(44,359,"Administrator setting shown for reference.",11,"#777");
+ }else if(m==="history"||m==="qcHistory"){
+  h+=t(250,96,m==="qcHistory"?"QC Test Results":"Patient Test Results",21,ink,"middle",700)+'<circle cx="475" cy="92" r="13" fill="#444"/><circle cx="472" cy="89" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="m475 92 5 5" stroke="#fff" stroke-width="1.5"/>';
+  h+=r(12,116,476,35,"#eee")+t(42,138,"Date",13,ink,"start",700)+t(132,138,m==="qcHistory"?"Pouch Lot":"Operator",13,ink,"start",700)+t(250,138,"Test",13,ink,"start",700)+t(306,138,m==="qcHistory"?"QC Type":"Sample ID",13,ink,"start",700);
+  for(let i=0;i<8;i++){let y=151+i*54;h+=r(17,y+19,12,12,"#fff","#aaa",2)+t(45,y+22,"11/25/2026",12,ink,"start",700)+t(45,y+37,"10:"+String(50-i*3).padStart(2,"0")+" AM",11)+t(132,y+31,m==="qcHistory"?"123456":"SpotFire Administrator",10)+badgeArt(250,y+13)+t(306,y+31,m==="qcHistory"?(i%2?"Positive":"Negative"):(i===0?id:"SAMPLE-00"+(i+1)),12)+t(474,y+32,"›",22,"#555","middle")+'<path d="M12 '+(y+54)+'h476" stroke="#ccc"/>'}
+  h+=t(18,642,"Selected Count: 0",12,ink,"start",700)+t(250,642,"1 - 8 of 8",12,ink,"middle",700)+btn(386,621,95,30,"Options","#dedede");
+ }else if(m==="report"||m==="qcReport"){
+  h+=pageTitle(m==="qcReport"?"QC Test Report":test)+badgeArt(130,78)+t(250,117,"PCR Test",9,"#555","middle")+
+  t(12,144,"Run Date:",11,"#888")+t(112,144,"Sample ID:",11,"#888")+t(276,144,"Operator:",11,"#888")+t(12,161,"2026-11-25 10:50",12)+t(112,161,qc?"QC Control":id,12)+t(276,161,"SpotFire Administrator",12)+t(12,184,"Results:",12,"#888")+
+  r(12,191,476,100,"#fff","#8e999a")+t(250,244,"TRAINING REPORT",19,ink,"middle",700)+t(250,266,"No actual results",13,"#777","middle")+r(12,302,476,155,"#eee")+t(20,324,st?"Sore throat targets":"Bacteria",13,ink,"start",700)+t(258,324,"Viruses",13,ink,"start",700)+t(20,352,"Review the complete target list",12)+t(258,352,"Review each reported result",12)+t(20,380,"Confirm validity and controls",12)+btn(66,624,85,33,"Print",blue)+btn(196,624,124,33,"Show Details")+btn(372,624,85,33,"Options");
+ }
+ return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc("SPOTFIRE "+m+" reconstructed training screen")+'" viewBox="0 0 500 666">'+h+'</svg>';
+}
+function spotfireScreenWithZoom(mode,opts={}){
+ return '<div class="bf-spotfire-screen-sequence bf-spotfire-portrait-screen">'+spotfireScreen(mode,opts)+'</div>';
 }
 function ui(id,index){
  const torch=id==="torch";
@@ -595,5 +658,5 @@ function stageVisual(id,title){
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
-window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,spotfireScreenWithZoom,ui,torchScreen,pipette,invert};
+window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,spotfireScreenWithZoom,spotfireScreen,ui,torchScreen,pipette,invert};
 })();
