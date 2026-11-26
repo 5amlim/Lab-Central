@@ -412,31 +412,31 @@ function sysmexNewLotStep(title){
    '<div class="qc-assay-footer"><span>Never scan training illustrations or use expired lot data.</span><span><a href="'+assayUrl+'" target="_blank" rel="noopener noreferrer">Archived source (availability may vary) ↗</a> · <a href="https://www.inofficelab.com/v/vspfiles/assets/images/package_inserts_eightcheck-3wpx-tra.pdf" target="_blank" rel="noopener noreferrer">Package insert ↗</a></span></div></section>';
  };
 
- if(/^match the vials/i.test(title))return '<figure class="qc-lot-control-figure">'+
+ if(/^(match the vials|match vials and files)/i.test(title))return '<figure class="qc-lot-control-figure">'+
   (window.LAB_EQUIPMENT_ART?.kitShape?.("sysmex",false,"qc")||"")+
   '<figcaption>Match each control vial to its assay sheet and assigned QC file.</figcaption></figure>'+checklist("Match before editing",[
   ["1 · Control vials","Low, Normal and High. Confirm labeled expiry and in-use stability."],
   ["2 · Assay sheet","Match the lot and level before using any barcode or value."],
   ["3 · Analyzer files","Verify the assigned file for each level and preserve the old lot’s records."]
  ]);
- if(/^open set qc/i.test(title))return gallery([
+ if(/^(open set qc|select qc file)/i.test(title))return gallery([
   {kind:"mainMenu",heading:"Main → Menu",tip:"Open Menu from Main. This is the path to QC setup."},
   {heading:"Menu → QC Chart",screen:"MENU",items:["Str. Data","Chg.Reag","Maint.","Calib.","Settings","QC Chart"],focus:"QC Chart",tip:"Tap QC Chart to open the chart and access file setup. For daily control runs use QC on the Ready Main screen instead."},
   {heading:"QC chart → File",screen:"QC CHART",items:["Print","HC","Delete","File","Setup"],focus:"File",tip:"Open File if the displayed file is not the assigned control file. Do not use Delete to change lots."},
   {kind:"qcFiles",heading:"Select the assigned QC file",tip:"Choose the file assigned to the correct control level. File 1 is an illustration only. Verify the existing lot and preserve records according to the approved SOP."},
   {heading:"QC chart → Setup",screen:"QC CHART",items:["Print","HC","Delete","File","Setup"],focus:"Setup",tip:"Once the intended file is displayed, tap Setup to enter the new lot information."}
  ])+'<p class="qc-poch-reference qc-poch-reference--lot"><a href="'+sysmexQcIfu+'" target="_blank" rel="noopener noreferrer">Sysmex instructions for use · section 3.2.1(a)</a></p>';
- if(/^enter the lot id/i.test(title))return gallery([
+ if(/^(enter the lot id|scan lot and enter expiry)/i.test(title))return gallery([
   {kind:"qcLot",heading:"Set QC · Scan Lot ID and verify Expire",focus:"→",tip:"Scan the matching lot barcode from the current EIGHTCHECK assay sheet. Verify Lot ID and enter the printed expiration date, then press the right arrow."}
  ])+assayExample();
- if(/^enter targets and limits/i.test(title))return gallery([
+ if(/^(enter|scan) targets and limits/i.test(title))return gallery([
   {kind:"qcAnalytes",heading:"Set QC · Scan TARGET and LIMIT",tip:"Scan the matching analyte barcode to load both fields, verify the values, and advance with the right arrow through all six parameter-setting pages. Blank fields are training examples."}
  ])+assayExample(true);
  if(/^save and verify/i.test(title))return gallery([
   {heading:"Save the file settings",screen:"SET QC",items:["←","→","Save"],focus:"Save",tip:"Save only after checking all parameter pages against the lot-specific sheet."},
   {heading:"Confirm with OK",screen:"SAVE CONFIRMATION",items:["OK"],focus:"OK",tip:"After saving, return to the file and verify the stored information. Repeat for Low, Normal and High."}
  ]);
- if(/^run the comparison/i.test(title))return checklist("Lot comparison record",[
+ if(/^(run the comparison|compare qc lots)/i.test(title))return checklist("Lot comparison record",[
   ["Old lot","Retain results by level for the valid old lot as required by the SOP."],
   ["New lot","Record Low, Normal and High results and compare using the approved criteria."],
   ["Review and approval","Document findings and acceptance before releasing the new lot for routine QC."]
