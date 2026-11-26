@@ -76,7 +76,7 @@ function sysmexAnalyzeScreen(kind){
   Array.from({length:6},(_,i)=>'<tr'+(i===1?' class="is-highlighted"':'')+'><th scope="row">'+(i+1)+'</th><td>—</td><td>—</td></tr>').join("")+
   '</tbody></table>';
  if(run)return fileDetails+
-  '<div class="qc-poch-run-area"><span>Operator [ — ]</span>'+control("Run",true)+'</div>';
+  '<div class="qc-poch-run-area">'+control("Run",true)+'</div>';
  return fileDetails+'<div class="qc-poch-analytes">'+
   analytes.map(name=>'<div><strong>'+name+'</strong><span>'+(running?'›':'—')+'</span></div>').join("")+
   '</div>'+(running?'':'<div class="qc-poch-result-keys">'+[control("Print"),control("Back"),control("←"),control("→"),control("Quit",true)].join("")+'</div>');
@@ -273,7 +273,7 @@ function sysmexBinderChecklist(){
    '<section class="lc-poc-report-group"><div class="lc-poc-report-group-head"><strong>1 blank-check printout</strong><small>Pochi Daily Blank Check and Control Log</small></div>'+
     '<div class="lc-poc-print-checklist"><div class="lc-poc-check-item lc-poc-blank-check"><span aria-hidden="true">□</span>Today’s startup blank check</div></div></section>'+
   '</div>'+
-  '<ol class="lc-poc-binder-filing-steps"><li><b>Review:</b> Match date, control level, lot, operator and accepted results. Check that the blank check is acceptable.</li>'+
+  '<ol class="lc-poc-binder-filing-steps"><li><b>Review:</b> Match date, control level, lot and accepted results. Check that the blank check is acceptable and document operator initials in the approved QC log.</li>'+
    '<li><b>File:</b> Keep all three QC reports and the blank-check printout with the Pochi Daily Blank Check and Control Log.</li>'+
    '<li><b>Document:</b> Enter the measured analytes from QC1, QC2 and QC3 in Sysmex Insight (see the dedicated Insight section), complete the Daily Maintenance Log with date and initials, and escalate missing or unacceptable results.</li></ol>'+
   '</div>';
@@ -332,7 +332,7 @@ function sysmexStep(sec,group,title){
   {heading:"Print the report",screen:"BLANK CHECK RESULT",items:["Print","Back"],focus:"Print",tip:"Press Print and file with the date/name with the Pochi Daily Blank Check and Control Log."}
  ],"Sysmex pocH-100i",{scroll:true})+'</div>'; 
  if(/^run (the )?qc/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {kind:"pochQcMain",heading:"Open QC from Main",tip:"Verify the operator ID, then select QC on Main to open the analysis file list."},
+  {kind:"pochQcMain",heading:"Open QC from Main",tip:"Select QC on the Ready Main screen to open the analysis file list. Operator ID entry is disabled on the Sollis analyzer."},
   {kind:"pochAnalyzeFiles",screen:"QC Analyze",heading:"Select the matching file",tip:"The analyzer lists six numbered files. Match the file, lot ID and expiration to the control vial. File 2 is highlighted for illustration only."},
   {kind:"pochAnalyzeRun",screen:"QC Analyze",heading:"Run the selected control",tip:"Verify the selected file and lot. Load the prepared control in the green QC adapter, close the sample door and select Run."},
   {kind:"pochAnalyzeRunning",screen:"Running · QC Analyze",heading:"Wait for analysis",tip:"Leave the sample door closed during aspiration. Wait for the result display."},
