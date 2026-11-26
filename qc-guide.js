@@ -8,7 +8,7 @@ function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").
 const configs={
  sysmex:{brand:"SYSMEX pocH-100i",binder:"Pochi Daily Blank Check and Control Log · Daily QC binder",steps:[
   {kind:"mainMenu",heading:"Open Menu",tip:"From the Main screen select Menu."},
-  {heading:"Open QC chart",screen:"MENU",items:["Str. Data","QC","Maint."],focus:"QC",tip:"Select QC or QC Chart on the Menu screen."},
+  {heading:"Open QC Chart from Menu",screen:"MENU",items:["Str. Data","QC Chart","Maint."],focus:"QC Chart",tip:"Select the QC Chart tile on Menu. This is for stored QC records, not running controls."},
   {kind:"qcFiles",heading:"Choose the QC level",tip:"Select QC1 / Low, QC2 / Normal, or QC3 / High. Verify the correct file, lot and control level before printing."},
   {heading:"Print the current QC result",screen:"QUALITY CONTROL CHART",items:["Print","File","Setup"],focus:"Print",tip:"With the correct QC level and dated result selected, tap Print."},
   {heading:"Choose Current",screen:"QC PRINT CONFIRMATION",items:["Current","Chart"],focus:"Current",tip:"Select Current, not Chart. Repeat separately for missing QC levels."}
@@ -227,32 +227,50 @@ function screenPanel(item,brand,number){
 }
 function screenGallery(list,brand,options={}){
  const scroll=options.scroll===true;
- const scrollCueOnly=scroll&&options.scrollCueOnly===true;
- const cards=list.map((x,i)=>{
-  const html=screenPanel(x,brand,i+1);
-  if(!scroll||i===list.length-1||scrollCueOnly)return html;
-  const closing=html.lastIndexOf('</p></div>');
-  return closing<0?html:html.slice(0,closing)+'</p><button class="qc-gallery-more" type="button" aria-label="Show screen '+String(i+2)+'">More <span aria-hidden="true">→</span></button></div>'+html.slice(closing+10);
- }).join("");
- return '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll':'')+(scrollCueOnly?' qc-screen-gallery--cue-only':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
-  (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+
-  cards+'</div>'+
-  (scrollCueOnly&&list.length>2?'<div class="qc-gallery-scroll-hint" aria-hidden="true"><span class="qc-gallery-scroll-hint-line"></span><span>Scroll horizontally to see the next screens</span><span class="qc-gallery-scroll-hint-arrow">→</span></div>':'')+
-  '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p>';
+ const cards=list.map((x,i)=>screenPanel(x,brand,i+1)).join("");
+ return '<div class="qc-gallery-wrap">'+
+ '<div class="qc-screen-gallery'+(scroll?' qc-screen-gallery--scroll qc-screen-gallery--cue-only':'')+(options.piccolo?' qc-screen-gallery--piccolo':'')+'"'+
+  (scroll?' role="region" aria-label="Scrollable '+esc(brand)+' screen sequence" tabindex="0"':'')+'>'+cards+'</div>'+
+  (scroll&&list.length>1?'<div class="qc-gallery-nav" hidden><button type="button" data-qc-gallery-dir="-1" aria-label="Show earlier screens">← Previous screens</button><span class="qc-gallery-position" aria-live="polite"></span><button type="button" data-qc-gallery-dir="1" aria-label="Show next screens">Next screens →</button></div>':'')+
+  '<p class="qc-illustration-disclaimer">'+esc(options.disclaimer||"Confirm the correct menu, assay, lot and QC level on the analyzer before printing.")+'</p></div>';
 }
 if(!window.__labQcGalleryMoreBound){
  window.__labQcGalleryMoreBound=true;
- document.addEventListener('click',function(event){
-  const button=event.target.closest?.('.qc-gallery-more');
-  if(!button)return;
-  const card=button.closest('.qc-screen-reference'),next=card?.nextElementSibling;
-  if(next?.classList?.contains('qc-screen-reference')){
-   const gallery=card.parentElement;
-   gallery.scrollBy({left:next.getBoundingClientRect().left-card.getBoundingClientRect().left,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"});
-   next.setAttribute('tabindex','-1');
-   next.focus({preventScroll:true});
-  }
+ const initialized=new WeakSet();
+ const trackFor=wrap=>wrap?.querySelector('.qc-screen-gallery--scroll');
+ function update(wrap){
+  const gallery=trackFor(wrap),nav=wrap.querySelector('.qc-gallery-nav');
+  if(!gallery||!nav)return;
+  const max=Math.max(0,gallery.scrollWidth-gallery.clientWidth);
+  nav.hidden=max<=3||gallery.clientWidth===0;
+  nav.querySelector('[data-qc-gallery-dir="-1"]').disabled=gallery.scrollLeft<=3;
+  nav.querySelector('[data-qc-gallery-dir="1"]').disabled=gallery.scrollLeft>=max-3;
+  const bounds=gallery.getBoundingClientRect(),cards=[...gallery.querySelectorAll(':scope > .qc-screen-reference')];
+  const visible=cards.map((card,i)=>({i:i+1,r:card.getBoundingClientRect()})).filter(({r})=>r.right>bounds.left+8&&r.left<bounds.right-8);
+  const label=visible.length?'Screens '+visible[0].i+(visible.length>1?'–'+visible.at(-1).i:'')+' of '+cards.length:'';const position=nav.querySelector('.qc-gallery-position');if(position.textContent!==label)position.textContent=label;
+ }
+ document.addEventListener('click',event=>{
+  const button=event.target.closest?.('[data-qc-gallery-dir]');
+  if(!button||button.disabled)return;
+  const wrap=button.closest('.qc-gallery-wrap'),gallery=trackFor(wrap);if(!gallery)return;
+  const max=Math.max(0,gallery.scrollWidth-gallery.clientWidth),dir=Number(button.dataset.qcGalleryDir);
+  const left=gallery.getBoundingClientRect().left;
+  const offsets=[...gallery.querySelectorAll(':scope > .qc-screen-reference')].map(card=>Math.max(0,Math.min(max,gallery.scrollLeft+card.getBoundingClientRect().left-left-3)));
+  const target=dir>0?(offsets.find(x=>x>gallery.scrollLeft+4)??max):([0,...offsets].reverse().find(x=>x<gallery.scrollLeft-4)??0);
+  gallery.scrollTo({left:target,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
  });
+ const scan=()=>document.querySelectorAll('.qc-gallery-wrap').forEach(wrap=>{
+  if(initialized.has(wrap)){update(wrap);return;}
+  const gallery=trackFor(wrap);if(!gallery)return;
+  initialized.add(wrap);
+  gallery.addEventListener('scroll',()=>update(wrap),{passive:true});
+  if(typeof ResizeObserver==='function'){const ro=new ResizeObserver(()=>update(wrap));ro.observe(gallery);ro.observe(wrap);}
+  requestAnimationFrame(()=>update(wrap));
+ });
+ const root=document.getElementById('mainContent');
+ if(root&&typeof MutationObserver==='function')new MutationObserver(()=>requestAnimationFrame(scan)).observe(root,{childList:true,subtree:true});
+ window.addEventListener('resize',scan,{passive:true});window.addEventListener('load',scan,{once:true});
+ requestAnimationFrame(scan);
 }
 function piccoloPatientLoadStep(){
  const scenes=[
@@ -262,7 +280,7 @@ function piccoloPatientLoadStep(){
   {kind:"piccoloPatientId",heading:"Enter patient ID",screen:"Enter Sample ID",tip:"Enter and verify the patient's MRN or approved sample ID. Select Done."}
  ];
  return '<section class="qc-patient-load-sequence" aria-label="Piccolo patient sample touchscreen sequence">'+
-  '<div class="qc-patient-sequence-head"><strong>Follow the analyzer screens</strong><span>Select More or swipe right to continue</span></div>'+
+  '<div class="qc-patient-sequence-head"><strong>Follow the analyzer screens</strong><span>Use the gallery arrows or swipe to see additional screens</span></div>'+
   screenGallery(scenes,"Piccolo Xpress",{scroll:true,piccolo:true,disclaimer:"Screens are manufacturer-informed illustrations. Confirm prompts on your analyzer."})+
   '</section>';
 }
@@ -298,7 +316,7 @@ function sysmexPrintFallback(){
   '<button type="button" data-poc-print-choice="no" aria-pressed="false">No, missing reports</button></div></div>'+
   '<div class="lc-poc-print-response" data-poc-print-panel="yes" hidden><p class="lc-poc-print-instruction"><strong>Review before filing.</strong> Verify all three QC levels and today’s startup blank check. If one is missing, select “No, missing reports” to retrieve it.</p>'+sysmexBinderChecklist()+'</div>'+
   '<div class="lc-poc-print-response" data-poc-print-panel="no" hidden>'+
-  '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint only the missing QC level(s)</strong><p>Menu → QC → choose the correct QC file (Low, Normal or High) → Print → Current. Repeat for each missing level. Chart prints the full chart, not the selected record.</p></div></div>'+
+  '<div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>01</span><div><strong>Reprint only the missing QC level(s)</strong><p>Menu → QC Chart → choose the correct QC file (Low, Normal or High) → Print → Current. Repeat for each missing level. Chart prints the full chart, not the selected record.</p></div></div>'+
   screenGallery(qcScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"These are illustrative pocH screens. Verify the correct file, level, lot and date on the actual analyzer."})+
   '</div><div class="lc-poc-print-section"><div class="lc-poc-print-section-head"><span>02</span><div><strong>Reprint today’s blank check, if missing</strong><p>Menu → Str. Data → dated BLANK CHECK record → Print.</p></div></div>'+
   screenGallery(blankScreens,"Sysmex pocH-100i",{scroll:true,disclaimer:"Select the current dated blank-check record. Verify the printed values and file the accepted record."})+
@@ -374,7 +392,7 @@ function sysmexNewLotStep(title){
  ]);
  if(/^open set qc/i.test(title))return gallery([
   {kind:"mainMenu",heading:"Main → Menu",tip:"Open Menu from Main. This is the path to QC setup."},
-  {heading:"Menu → QC",screen:"MENU",items:["Str. Data","Chrg. Reag.","Maint.","Calib.","Settings","QC"],focus:"QC",tip:"Select QC from Menu to open the QC chart."},
+  {heading:"Menu → QC Chart",screen:"MENU",items:["Str. Data","Chg.Reag","Maint.","Calib.","Settings","QC Chart"],focus:"QC Chart",tip:"Tap QC Chart to open the chart and access file setup. For daily control runs use QC on the Ready Main screen instead."},
   {heading:"QC chart → File → Setup",screen:"QC CHART",items:["Print","HC","Delete","File","Setup"],focus:"Setup",tip:"Verify the assigned QC file using File, then open Setup for that file."}
  ])+'<p class="qc-poch-reference"><a href="'+sysmexQcIfu+'" target="_blank" rel="noopener noreferrer">Sysmex instructions for use · section 3.2.1(a)</a></p>';
  if(/^enter the lot id/i.test(title))return gallery([
