@@ -49,12 +49,12 @@ function card(id,opts){
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
  const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources")+(opts.torchManual?' · '+link("https://www.youtube.com/watch?v=Oc3ALCcGuHs","Official TORCH software training video")+' · '+link("https://www.dotmed.com/listing/lab-general/biofire/filmarray-torch/2-module-pcr-molecular-testing-system/5540587","Actual barcode prompt photograph")+' · '+link("https://www.dotmed.com/listing/lab-general/biofire/filmarray-torch-infectious-disease-poc-analyzer/biofire-torch/3716873","Actual insertion screen photograph"):""):
-  link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
+  (opts.spotManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/BFR0001-1641-BIOFIRE-SPOTFIRE-System-Operator-Manual-IVD-EN.pdf#page=36","SPOTFIRE operator manual · Chapters 4–5")+' · '+link("https://www.youtube.com/watch?v=9ESWXL7LX3o","SPOTFIRE patient testing video")+' · ':"")+link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
  '<span class="bf-polished-chip '+(hue==="red"?"":"system")+'">'+esc(opts.tag||"Action")+'</span></div>'+
  '<div class="bf-polished-inner"><div class="bf-polished-media"><div class="bf-polished-svg">'+visual+'</div>'+
- '<span class="bf-polished-credit">'+(opts.torchManual?'Reconstructed training visual · exact installed software layout not verified':'Illustration/reference only · current clinical assay instructions govern')+'</span></div>'+
+ '<span class="bf-polished-credit">'+((opts.torchManual||opts.spotManual)?'Reconstructed training visual · exact installed software layout not verified':'Illustration/reference only · current clinical assay instructions govern')+'</span></div>'+
  '<div class="bf-polished-instruction"><h4>'+esc(opts.title)+'</h4>'+instruction(lines)+details+reference+
  '<p class="bf-ref-small">Reference: '+source+'</p></div></div></section>';
 }
@@ -143,6 +143,31 @@ function render(id,title){
  if(id!=="torch"&&id!=="spotfire")return previous?previous(id,title):"";
  const gi=id==="torch",t=String(title||"").trim().toLowerCase();
  const c=opts=>card(id,opts);
+ const sf=(mode,title,lines,note="",opts={})=>c({title,tag:"SPOTFIRE screen",visual:B.spotfireScreenWithZoom?.(mode,opts),lines,note,spotManual:true});
+ if(!gi&&B.spotfireScreen){
+  const exact={
+   "select an available analyzer module":["home","Select Available",["Select an available module from Home. Sign in only if prompted."]],
+   "scan spotfire pouch barcode":["scan","Scan Pouch Barcode",["Scan the pouch label. If unreadable, use Enter Manually and enter lot, serial number, expiration and pouch type."]],
+   "enter spotfire sample id":["sample","Scan or enter Sample ID",["Use the approved accession identifier before inserting the pouch. Verify the patient and order in Athena."],"The published operator manual specifies a non-PHI accession number rather than direct MRN entry."],
+   "select spotfire sample type":["type","Select Sample Type",["Match the actual specimen to the ordered Respiratory or Sore Throat menu. Verify the selected R/ST or Mini pouch is authorized for that menu."]],
+   "review spotfire information and insert pouch":["insert","Review Information, Then Insert Pouch",["Check the sample ID, sample type and test. Insert the prepared pouch into the module blinking blue; the test starts automatically."]],
+   "confirm spotfire test in progress":["homeRunning","Monitor test in progress",["Check the green running status and countdown. Select the active module if you need to view additional run information."]],
+   "select spotfire complete module":["complete","Select Complete",["Select the completed module from Home to view its report before removing the pouch."]],
+   "review spotfire report and remove pouch":["report","Review and print report",["Verify the correct sample and menu, valid test status, and all reported targets. Print if required. Remove and discard the pouch according to SOP."]],
+   "retrieve spotfire patient report":["history","Patient Test Results",["After removing the pouch, select the patient results icon, then select the matching test to reopen the report."]]
+  };
+  if(t==="scan spotfire pouch barcode")return sf(...exact[t])+sf("manual","Manual pouch entry (if needed)",["Enter the four fields printed on the pouch if barcode scanning fails."],"The manual entry layout is illustrative.");
+  if(t==="enter spotfire sample id")return sf(...exact[t])+sf("sampleManual","Manual Sample ID entry",["Enter the approved accession ID if scanning is not used."],"Exact keyboard and manual entry layout not verified.");
+  if(t==="review spotfire information and insert pouch")return sf(...exact[t])+sf("insert","Sore Throat menu example",["For a compatible throat specimen and ordered Sore Throat menu, verify both fields before inserting."],"Menu labels can vary by installed software.",{menu:"ST"});
+  if(t==="confirm spotfire test in progress")return sf(...exact[t])+sf("running","Test In Progress",["The detailed run view shows time remaining, sample information and Abort. Do not abort a normal test."]);
+  if(exact[t])return sf(...exact[t]);
+  if(t==="open spotfire qc menu")return sf("qcMenu","QC Tests",["Select QC in the top toolbar, then choose Negative QC or Positive QC. Do not use the patient-test Home workflow."],"Initial Lot Lockout is an administrator setting; the illustration does not indicate the site setting.");
+  if(t==="scan spotfire qc pouch and material")return sf("scan","Scan QC pouch barcode",["Select an available module and scan the prepared pouch."],"",{qc:true})+sf("qcScan","Scan QC Material Barcode",["Scan the matching control barcode. If unreadable, enter the control type, lot, vendor, expiration and compatibility manually."],"",{qc:true})+sf("qcManual","Manual QC information (if needed)",["Match the entries to the actual control label and kit instructions."],"Illustrative entry layout.",{qc:true});
+  if(t==="review spotfire qc and insert pouch")return sf("qcInsert","Review QC information and insert pouch",["Verify negative or positive control selection, pouch and QC details. Insert the pouch when the module LED blinks blue; analysis starts automatically."],"",{qc:true});
+  if(t==="review spotfire qc results")return sf("complete","Select Complete",["Open the completed control run and review its expected results before releasing QC."],"",{qc:true})+sf("qcReport","Review QC report",["Verify control identity, expected results and acceptance. Print if required, remove and dispose of the pouch. Repeat for the remaining control."],"Report layout is illustrative.",{qc:true});
+  if(t==="print and file the qc records"||t==="put printouts in the monthly qc log binder")return sf("qcMenu","Open QC Test Results",["Select the QC icon, then QC Test Results."],"",{qc:true})+sf("qcHistory","Retrieve control report",["Select the matching QC test, print the accepted report and file it in the monthly molecular QC log."],"QC table layout is illustrative.",{qc:true});
+ }
+
  const qcExample=/confirm qc sample name|put printouts in the monthly qc log binder/.test(t); const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode,qcExample?"QC-GI-Neg":"GI-DEMO-001"),lines,note,torchManual:true});
  if(gi&&B.torchScreen){
   const exact={
