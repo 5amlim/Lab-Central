@@ -44,3 +44,33 @@
 @media print {
   .lc-motion-indicator { display: none !important; }
 }
+
+/* Additional feedback for local tools, gallery cards and page-specific controls. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  :is(.dqc-location-options,.tc-location-options,.egfr-picker-list):not([hidden]) {
+    animation: lc-menu-enter 220ms cubic-bezier(.2,.75,.3,1);
+  }
+  :is(.dqc-view-button,.tc-view-button,.calc2-tab,.dqc-market-choice,
+      .tc-market-choice,.lcr-filter-buttons button,.lcr-categories button,
+      .egfr-picker-trigger,.dqc-location-trigger,.tc-location-trigger) {
+    transition: background-color 180ms ease, border-color 180ms ease,
+                color 180ms ease, box-shadow 180ms ease;
+  }
+  :is(.dqc-view-button,.tc-view-button,.calc2-tab,.dqc-market-choice,
+      .tc-market-choice,.lcr-filter-buttons button,.lcr-categories button,
+      .egfr-picker-trigger,.dqc-location-trigger,.tc-location-trigger):not(:disabled):active {
+    scale: .975;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    :is(button.item-card,.tc-record-grid > a,.lcr-art-trigger) {
+      transition: translate 200ms cubic-bezier(.2,.75,.3,1),
+                  box-shadow 200ms ease, border-color 180ms ease;
+    }
+    :is(button.item-card,.tc-record-grid > a,.lcr-art-trigger):hover {
+      translate: 0 -2px;
+    }
+    :is(button.item-card,.tc-record-grid > a,.lcr-art-trigger):active {
+      translate: 0 0;
+    }
+  }
+}
