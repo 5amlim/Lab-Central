@@ -381,22 +381,34 @@ function sysmexNewLotStep(title){
  const supportUrl="https://www.sysmex.com/en-us/customer-support/support-hub/product-support-library";
  const assayExample=(parameters=false)=>{
   const levels=["Low Abnormal","Normal","High Abnormal"], rows=["WBC (10³/µL)","RBC (10⁶/µL)","HGB (g/dL)","HCT (%)","MCV (fL)","MCH (pg)","MCHC (g/dL)","PLT (10³/µL)","Lymph (W-SCR) (%)","Mixed (W-MCR) (%)","Neut (W-LCR) (%)","Lymph (W-SCC) (10³/µL)","Mixed (W-MCC) (10³/µL)","Neut (W-LCC) (10³/µL)","W-SMV (fL)","W-LMV (fL)","RDW-SD (fL)","RDW-CV (%)","MPV (fL)"];
-  // Deliberately non-scannable text placeholders, not genuine barcodes or active lot values.
-  const code=(focus,label="BCR")=>'<span class="qc-lot-assay-code'+(focus?' focus':'')+'">'+esc(label)+'</span>';
+  // Decorative bars only: no encoded payload, no valid start/stop/checksum,
+  // and a full-width interruption with DEMO so no scan line is continuous.
+  const mockBars=(seed=0)=>Array.from({length:35},(_,j)=>{
+   const x=4+j*3,w=[1,2.2,1.5,2.6][(j*7+seed*3+j*j)%4];
+   return '<rect x="'+x+'" y="2" width="'+w+'" height="7" fill="#26343c"/><rect x="'+x+'" y="17" width="'+w+'" height="7" fill="#26343c"/>';
+  }).join("");
+  const code=(focus,label="BCR",seed=0)=>'<span class="qc-lot-assay-code qc-assay-mockcode'+(focus?' focus':'')+'" title="Illustrative '+esc(label)+'; not a valid barcode" aria-label="Non-scannable mock '+esc(label)+' barcode"><svg viewBox="0 0 112 26" aria-hidden="true" focusable="false">'+mockBars(seed)+'<rect x="0" y="8" width="112" height="10" fill="#fff"/><text x="56" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" font-weight="700" letter-spacing="2" fill="#6b7479">DEMO</text></svg></span>';
+  const scannerIllustration=()=>'<figure class="qc-assay-scan-figure"><svg viewBox="0 0 320 146" role="img" aria-label="Handheld barcode scanner directed at the highlighted example barcode on an assay sheet"><defs><linearGradient id="qcScanBody" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#64717a"/><stop offset="1" stop-color="#26333c"/></linearGradient></defs>'+
+   '<ellipse cx="75" cy="131" rx="44" ry="5" fill="#dce5e9"/><path d="M57 88Q45 113 49 131" fill="none" stroke="#414e56" stroke-width="4" stroke-linecap="round"/>'+
+   '<path d="M24 26Q24 18 33 16L88 12Q97 12 104 20L128 46Q134 54 125 61L97 79 77 122Q74 128 66 124L43 113Q38 110 41 102L56 76 27 52Q23 48 24 26Z" fill="url(#qcScanBody)" stroke="#25343e" stroke-width="2"/>'+
+   '<path d="M92 23L120 50 100 65 74 40Z" fill="#7a939e" stroke="#b4c9d1" stroke-width="1.5"/><path d="M62 77l15 7-8 18-11-5z" fill="#a4b7bf"/><path d="M36 25l44-4" stroke="#9caab1" stroke-width="2" stroke-linecap="round"/>'+
+   '<rect x="185" y="21" width="120" height="108" rx="3" fill="#fff" stroke="#aabdc8" stroke-width="1.4"/><path d="M195 34h95M195 43h95M195 50h75" stroke="#ccd7de" stroke-width="2"/><rect x="196" y="60" width="99" height="36" rx="3" fill="#fff2db" stroke="#bd7c32" stroke-width="1.5"/>'+
+   '<g transform="translate(201 64) scale(.78 1)">'+mockBars(parameters?3:1)+'<rect x="0" y="8" width="112" height="10" fill="#fff2db"/><text x="56" y="15.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#83571f">DEMO</text></g>'+
+   '<path d="M125 54L246 78" fill="none" stroke="#d64b51" stroke-width="2" stroke-dasharray="5 4"/><path d="M195 107h95M195 115h66" stroke="#ccd7de" stroke-width="2"/></svg><figcaption>'+(parameters?'Aim at the matching parameter BCR':'Aim at the matching lot barcode')+'</figcaption></figure>';
   const cells=(label,fn)=>'<tr><th scope="row">'+label+'</th>'+levels.map((v,i)=>'<td colspan="3" class="qc-assay-level-start">'+fn(i)+'</td>').join("")+'</tr>';
   return '<section class="qc-lot-assay-example qc-assay-revised" aria-label="EIGHTCHECK assay sheet scanning reference">'+
    '<div class="qc-lot-assay-heading"><div><strong>EIGHTCHECK-3WP X-TRA assay sheet</strong><p>Use the barcode sheet supplied with the active control lot.</p></div><a href="'+supportUrl+'" target="_blank" rel="noopener noreferrer">Sysmex support library ↗</a></div>'+
-   '<div class="qc-assay-instruction"><span class="qc-assay-step-icon" aria-hidden="true">'+(parameters?'02':'01')+'</span><div><strong>'+(parameters?'Scan each parameter BCR':'Scan the correct level’s lot barcode')+'</strong><p>'+(parameters?'Use the BCR in the matching control-level column. Verify the target and limit on the analyzer after each scan, then move through all parameter pages.':'Match the vial’s lot number to the Low Abnormal, Normal or High Abnormal column. Scan its lot barcode, verify Lot ID, and enter the printed expiration date manually as directed by the package insert.')+'</p></div></div>'+
+   '<div class="qc-assay-instruction"><div class="qc-assay-instruction-copy"><span class="qc-assay-step-icon" aria-hidden="true">'+(parameters?'02':'01')+'</span><div><strong>'+(parameters?'Scan each parameter BCR':'Scan the correct level’s lot barcode')+'</strong><p>'+(parameters?'Use the BCR in the matching control-level column. Verify the target and limit on the analyzer after each scan, then move through all parameter pages.':'Match the vial’s lot number to the Low Abnormal, Normal or High Abnormal column. Scan its lot barcode, verify Lot ID, and enter the printed expiration date manually as directed by the package insert.')+'</p></div></div>'+scannerIllustration()+'</div>'+
    '<div class="qc-assay-sheet-scroll" role="region" tabindex="0" aria-label="Three-level assay sheet layout; horizontally scrollable on small screens">'+
    '<div class="qc-lot-assay-paper"><header><div><b>EIGHTCHECK™-3WP X-TRA</b><small>HEMATOLOGY CONTROL</small></div><strong>pocH-100i™</strong></header>'+
-   '<div class="qc-lot-assay-warning">LAYOUT REFERENCE ONLY · VALUES AND BARCODES OMITTED</div>'+
+   '<div class="qc-lot-assay-warning">TRAINING EXAMPLE · MOCK BARCODES · DO NOT SCAN</div>'+
    '<table class="qc-assay-table"><colgroup><col class="qc-assay-param">'+levels.map(()=>'<col class="qc-assay-value"><col class="qc-assay-value"><col class="qc-assay-bcr">').join("")+'</colgroup><thead>'+
    '<tr><th scope="col">Control</th>'+levels.map(v=>'<th colspan="3" scope="colgroup" class="qc-assay-level-start">'+v+'</th>').join("")+'</tr>'+
    cells("Insight due date",()=> '—')+cells("Expiration date",()=> '—')+
-   cells("Lot number",i=>'<div class="qc-assay-lot-cell"><span>—</span>'+code(!parameters&&i===0,"LOT BCR")+'</div>')+
+   cells("Lot number",i=>'<div class="qc-assay-lot-cell"><span>—</span>'+code(!parameters&&i===0,"LOT BCR",i+31)+'</div>')+
    '<tr><th scope="col">Parameters</th>'+levels.map(()=>'<th class="qc-assay-level-start" scope="col">Mean</th><th scope="col">Limit</th><th scope="col">BCR</th>').join("")+'</tr></thead><tbody>'+
-   rows.map((v,j)=>'<tr><th scope="row">'+esc(v)+'</th>'+levels.map((l,i)=>'<td class="qc-assay-level-start">—</td><td>—</td><td>'+code(parameters&&i===0&&j===0)+'</td>').join("")+'</tr>').join("")+'</tbody></table>'+
-   '<small class="qc-lot-assay-small">Reconstructed from the manufacturer’s three-level barcode sheet structure. Highlighted Low Abnormal is an example only. This is not a usable assay sheet.</small></div></div>'+
+   rows.map((v,j)=>'<tr><th scope="row">'+esc(v)+'</th>'+levels.map((l,i)=>'<td class="qc-assay-level-start">—</td><td>—</td><td>'+code(parameters&&i===0&&j===0,'BCR',j*3+i)+'</td>').join("")+'</tr>').join("")+'</tbody></table>'+
+   '<small class="qc-lot-assay-small">Reconstructed from the manufacturer’s three-level barcode sheet structure. Highlighted Low Abnormal is an example only. Mock barcodes contain no encoded lot or QC values and must not be scanned.</small></div></div>'+
    '<div class="qc-assay-footer"><span>Never scan training illustrations or use expired lot data.</span><span><a href="'+assayUrl+'" target="_blank" rel="noopener noreferrer">Archived source (availability may vary) ↗</a> · <a href="https://www.inofficelab.com/v/vspfiles/assets/images/package_inserts_eightcheck-3wpx-tra.pdf" target="_blank" rel="noopener noreferrer">Package insert ↗</a></span></div></section>';
  };
 
