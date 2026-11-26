@@ -519,9 +519,9 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
 <script src="qc-guide.js?v=20261125-spotfire-manual-ui"></script>
-<script src="biofire-visual.js?v=20261125-loading-station-redraw"></script>
+<script src="biofire-visual.js?v=20261125-biofire-qc-audit"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
-<script src="lab-guide-polish.js?v=20261104"></script>
+<script src="lab-guide-polish.js?v=20261125-biofire-qc-audit"></script>
 <script src="piccolo-results.js?v=20261104"></script>
 <script src="egfr-calculator.js?v=20261104"></script>
 <script src="result-interpretation-guides.js?v=20261104"></script>
@@ -534,7 +534,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sofia-visual-guide.js?v=20261119-screen-review"></script>
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
-<script src="biofire-reference-polish.js?v=20261125-loading-station-redraw"></script>
+<script src="biofire-reference-polish.js?v=20261125-biofire-qc-audit"></script>
 <script src="sendout-market-guide.js?v=20261119-norcal-pickup-status"></script>
 <script src="assay-catalog.js?v=20261119-panel-audit"></script>
 <script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
@@ -1425,17 +1425,28 @@ function buildGroups(section){
     else active=null;
    }else if(active)active.blocks.push(b);
   }
-  if(!torch){
+  {
    const qc=groups.find(g=>g.id==='qc-new-shipment-lot');
    if(qc){
-    const original=qc.blocks.filter(b=>!(b.type==='list'&&b.level===1&&/^Put printouts/i.test(b.text)));
-    qc.blocks=[...original,
-     ...step('Open SPOTFIRE QC menu','Select the QC toolbar icon, choose Negative QC or Positive QC, then choose an available module. Use the correct control and preparation instructions for the panel and menu.'),
-     ...step('Scan SPOTFIRE QC pouch and material','Scan the pouch barcode and then the matching QC material barcode. If unreadable, enter the control type, lot, vendor, expiration and QC compatibility manually.'),
-     ...step('Review SPOTFIRE QC and insert pouch','Review the QC details and insert the pouch into the module blinking blue. Analysis begins automatically.'),
-     ...step('Review SPOTFIRE QC results','Select Complete, review expected control results and validity, print as required, then remove the pouch. Repeat for the other control as required.'),
-     ...step('Retrieve SPOTFIRE QC report','Select QC, then QC Test Results, and open the matching run. File accepted results in the monthly molecular QC log.')
+    const notes=qc.blocks.filter(b=>b.type==='text');
+    const prep= [
+     ...step('Gather '+(torch?'TORCH':'SPOTFIRE')+' QC materials',torch?'Match the GI control, pouch and preparation kit; follow the current control insert. Use a fresh pouch for each control.':'Match the R/ST or R/ST Mini control, pouch and preparation kit. Use a fresh pouch and kit for each control. Apply the matching QC barcode label; run positive QC before negative QC per the panel quick guide.'),
+     ...step('Set up '+(torch?'TORCH':'SPOTFIRE')+' QC pouch','Seat the pouch in the clean loading station. Place the red sample vial in the red well and the blue hydration vial in the blue well.'),
+     ...step('Hydrate '+(torch?'TORCH':'SPOTFIRE')+' QC pouch','Unscrew the blue hydration vial and leave its cover in the station. Load through the blue hydration port and verify hydration according to the applicable IFU.'),
+     ...step('Prepare '+(torch?'TORCH':'SPOTFIRE')+' QC mixture',torch?'Use the control material and buffer as specified in the current GI control insert.':'Transfer the control with the kit transfer pipette into the red vial, then add the full sample buffer as directed by the R/ST quick guide.'),
+     ...step('Mix '+(torch?'TORCH':'SPOTFIRE')+' QC vial','Close securely and gently invert the red vial three times. Return it to the red well.'),
+     ...step('Load '+(torch?'TORCH':'SPOTFIRE')+' QC mixture','Unscrew the red vial and pause five seconds before lifting it, leaving its cover in the red well. Load through the red sample port and verify transfer. Remove both vials and dispose of them per the applicable IFU.')
     ];
+    qc.blocks=[...prep,...(torch?[
+     ...step('Confirm QC Sample Name and start the control','Enter QC-GI-Neg or QC-GI-Pos as applicable. Verify identifiers, insert the prepared pouch, and follow the TORCH prompts to Start Run.'),
+     ...step('Put printouts in the monthly QC log binder','Verify control acceptance and file the report.')
+    ]:[
+     ...step('Open SPOTFIRE QC menu','Select the QC toolbar icon, choose the appropriate positive or negative QC test, then choose an available module.'),
+     ...step('Scan SPOTFIRE QC pouch and material','Scan the pouch barcode and matching QC material barcode. If unreadable, follow the instrument manual-entry prompts.'),
+     ...step('Review SPOTFIRE QC and insert pouch','Review the QC details and insert the pouch into the module blinking blue. Analysis begins automatically.'),
+     ...step('Review SPOTFIRE QC results','Select Complete, verify expected control results and validity, print as required, then remove the pouch. Repeat for the other control as required.'),
+     ...step('Retrieve SPOTFIRE QC report','Select QC, then QC Test Results, and open the matching run. File accepted results in the monthly molecular QC log.')
+    ]),...notes];
    }
   }
   return groups;
@@ -1858,6 +1869,12 @@ const instrumentStepNavLabels={
   "Enter the results manually in Relaymed": "Log results"
  },
  "torch": {
+  "Gather TORCH QC materials": "Gather QC materials",
+  "Set up TORCH QC pouch": "Set up QC pouch",
+  "Hydrate TORCH QC pouch": "Hydrate QC pouch",
+  "Prepare TORCH QC mixture": "Prepare QC mixture",
+  "Mix TORCH QC vial": "Mix QC vial",
+  "Load TORCH QC mixture": "Load QC mixture",
   "Load the controls into the red vial and process like a sample": "Prepare QC pouch",
   "Confirm QC Sample Name and start the control": "Enter QC ID and run",
   "Put printouts in the monthly QC log binder": "File QC reports",
@@ -1883,6 +1900,12 @@ const instrumentStepNavLabels={
   "Retrieve TORCH report from Browse Runs": "Retrieve report"
  },
  "spotfire": {
+  "Gather SPOTFIRE QC materials": "Gather QC materials",
+  "Set up SPOTFIRE QC pouch": "Set up QC pouch",
+  "Hydrate SPOTFIRE QC pouch": "Hydrate QC pouch",
+  "Prepare SPOTFIRE QC mixture": "Prepare QC mixture",
+  "Mix SPOTFIRE QC vial": "Mix QC vial",
+  "Load SPOTFIRE QC mixture": "Load QC mixture",
   "Scan SPOTFIRE pouch barcode": "Scan pouch barcode",
   "Enter SPOTFIRE Sample ID": "Enter Sample ID",
   "Select SPOTFIRE sample type": "Select sample type",
