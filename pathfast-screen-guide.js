@@ -4,92 +4,69 @@
 (function(){
 "use strict";
 function e(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");}
+// Portrait LCD reconstruction based on PHC manual v4.70EN, chapters 5–9.
 const assays=["hs-Troponin I","NT-proBNP","D-dimer"];
-function frame(name,label,body,msg){
- const targets=body.includes("pfs-click-target");
- return '<section class="pfs-reference pfs-rebuilt" aria-label="'+e(label)+' touchscreen reference">'+
- '<div class="pfs-heading"><strong>PATHFAST · SCREEN REFERENCE</strong><span>'+e(label)+'</span></div>'+
- '<div class="pfs-shell"><div class="pfs-blue-bar">'+e(name)+'</div><div class="pfs-status"><span>'+e(msg||"PUSH START BUTTON TO ASSAY.")+'</span><span>ILLUSTRATION</span></div>'+body+'</div>'+
- (targets?'<div class="pfs-target-legend"><i></i> Green outline: select this control on the actual analyzer.</div>':'')+
- '<p class="pfs-note">Training illustration only. Follow the actual analyzer display and approved SOP; labels may vary by software version.</p></section>';
+const short=a=>({"hs-Troponin I":"cTnI","NT-proBNP":"NTproBNP","D-dimer":"D-Dimer"})[a]||a||"cTnI";
+let n=0;
+function lcd(mode,options={}){
+ const id="pfLCD"+(++n),blue="url(#"+id+"b)",dark="url(#"+id+"d)",gray="url(#"+id+"g)",footbg="url(#"+id+"f)";
+ const rect=(x,y,w,h,fill,stroke="none",r=0)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+r+'" fill="'+fill+'" stroke="'+stroke+'"/>';
+ const t=(x,y,v,size=12,color="#555",weight=400,anchor="start")=>'<text x="'+x+'" y="'+y+'" fill="'+color+'" font-family="Arial,sans-serif" font-size="'+size+'" font-weight="'+weight+'" text-anchor="'+anchor+'">'+e(v)+'</text>';
+ const focus=options.focus||"";
+ const mark=(x,y,w,h)=>'<rect x="'+(x+1)+'" y="'+(y+1)+'" width="'+(w-2)+'" height="'+(h-2)+'" rx="3" fill="none" stroke="#d17a20" stroke-width="2"/>';
+ const key=(x,y,w,h,label,fill=blue,color="#fff",selected=false)=>rect(x,y,w,h,fill,"#b5e8ff",5)+t(x+w/2,y+h/2+4,label,11,color,700,"middle")+(selected?mark(x,y,w,h):"");
+ const title=(label,msg="")=>rect(0,0,240,20,dark)+t(120,14,label,14,"#fff",700,"middle")+rect(0,20,240,50,"#dcdadc")+t(9,31,msg,7.8,"#444")+t(236,67,"[ date / time ]",9,"#008aff",700,"end");
+ const nav=(kind="menu",active="ASSAY")=>rect(0,70,240,25,blue)+(kind==="running"?
+ key(3,73,54,22,"ASSAY",gray,"#007bff")+key(60,73,55,22,"CHECK")+key(121,73,116,22,"■","#f8bcd5","#ec569c"):
+ [kind==="ready"?"▶": "ASSAY","CHECK","SETUP","ADMIN"].map((v,i)=>key(3+i*59,73,55,22,v,v===active||v==="▶"?gray:blue,v===active||v==="▶"?"#008bf2":"#fff",focus===v||focus==="START"&&v==="▶")).join(""));
+ const tabs=(selected="SAMPLE INFO.")=>["REAGENT STATUS","SAMPLE INFO."].map((v,i)=>key(1+i*120,96,118,24,v,v===selected?"#fff":"#e1e1e1","#007bff",false)).join("");
+ const footer=(labels)=>rect(0,290,240,30,footbg)+labels.map((v,i)=>key(v==="BACK"||v==="HOME"?5:240-75*(labels.length-i),294,70,22,v,v==="OK"?"#35cc25":v==="CANCEL"?"#ff7836":"#505050","#fff",focus===v)).join("");
+ const sub=(label)=>rect(0,70,240,25,blue)+t(120,86,label,13,"#fff",700,"middle");
+ const field=(x,y,w,value,label="")=>rect(x,y,w,20,gray,"#999",5)+t(x+4,y+14,value,11,"#444",600)+(focus===label?mark(x,y,w,20):"");
+ const rowList=(values,icons=false)=>values.map((v,i)=>{let y=98+i*38;return (icons?rect(10,y+4,28,28,blue,"#aad9e8",4)+t(24,y+22,["▤","QC","∿","▣","▥"][i%5],12,"#fff",700,"middle"):"")+t(icons?48:12,y+22,v,13,"#505653",700)+ '<path d="M'+(icons?48:8)+' '+(y+35)+'H226" stroke="#b6b6b6"/>'+(focus===v?mark(icons?43:3,y,icons?190:234,35):"");}).join("");
+ const cal=options.cal===true, qc=options.qc===true, name=cal?"CAL/QC":qc?"QC":"ASSAY/HOME";
+ const laneRows=(running=false)=>Array.from({length:6},(_,i)=>{const y=120+i*33.2, role=cal?["CAL1","CAL1","CAL2","CAL2","QC1","QC2"][i]:qc?["QC1","QC2","QC3","QC1","QC2","QC3"][i]:"";
+ const assay=cal?(i<4||running?short(options.analyte):""):qc?"":i===0?short(options.analyte):"";
+ return rect(0,y,240,33.2,"#fff","#b7b7b7")+rect(1,y+2,28,29,blue)+t(15,y+10,"LANE",7,"#fff",700,"middle")+t(15,y+25,i+1,15,"#fff",700,"middle")+t(35,y+15,assay,11,"#555",600)+t(108,y+15,role,11,"#555")+(!cal&&!qc&&i===0&&options.sid?t(35,y+28,"SID: [MRN]",10):"")+(focus==="LANE"&&i===0?mark(1,y+1,28,31):"");}).join("");
+ const ready=(running=false)=>title(name,running?"ASSAYING...": "PUSH START BUTTON TO ASSAY.")+nav(running?"running":"ready")+tabs()+laneRows(running);
+ let body="";
+ if(mode==="menu")body=title("ASSAY")+nav("menu")+rowList(["SAMPLE","QC","CAL/QC","MC ENTRY"],true)+footer(["HOME"]);
+ else if(mode==="check")body=title("CHECK")+nav("menu","CHECK")+rowList(["RESULT CHECK","QC CHECK","CAL CHECK","Hct% CORRECTION","TEMP CHECK"],true)+footer(["HOME"]);
+ else if(mode==="admin")body=title("ADMIN")+nav("menu","ADMIN")+rowList(["SHUT DOWN","USER SWITCH","SYSTEM","FILE UTILITY","MAINTENANCE"],true)+footer(["HOME"]);
+ else if(mode==="item")body=title("CAL/QC")+sub("SELECT ITEM.")+["cTnI","D-Dimer","NTproBNP"].map((v,i)=>{const y=95+i*34;return rect(0,y,240,34,"#fff","#b7b7b7")+t(12,y+21,v,13,"#555",700)+(v===short(options.analyte)?mark(1,y+1,238,32):"");}).join("")+footer(["OK","CANCEL"]);
+ else if(mode==="home")body=title("ASSAY/HOME","PUSH START BUTTON TO ASSAY.")+nav("ready")+tabs("REAGENT STATUS")+[0,1,2].map(i=>{const x=7+i*78;return key(x,133,72,30,short(assays[i]),options.locked&&i===0?"#f2accd":gray,"#444");}).join("")+footer(["BACK"]);
+ else if(mode==="lanes"||mode==="start")body=ready();
+ else if(mode==="running")body=ready(true);
+ else if(mode==="sid")body=title("SAMPLE INFO.")+sub("EDIT INFORMATION")+t(10,112,"LANE 1",12,"#555",700)+t(10,145,"SID",11)+field(72,130,162,"[ MRN ]","SID")+t(10,180,"Hct%",11)+field(72,165,162,"[ configured value ]")+footer(["OK","CANCEL"]);
+ else if(mode==="login")body=title("LOG-IN")+sub("LOG-IN")+t(10,126,"USER ID",11)+field(81,112,152,"[ select user ]","USER")+t(10,167,"PASSWORD",11)+field(81,153,152,"••••••","PASSWORD")+footer(["OK","CANCEL"]);
+ else if(mode==="mc")body=title("MC ENTRY")+sub("MC ENTRY")+t(120,141,"Read MC ENTRY CARD",14,"#555",700,"middle")+t(120,173,"[ Assay / Lot / Expiry ]",11,"#555",400,"middle")+footer(["BACK"]);
+ else if(mode==="status")body=title("CAL/QC STATUS")+sub("CAL/QC STATUS")+["ITEM","LOT","CAL","QC"].map((v,i)=>t(8,119+i*36,v,12)+field(70,104+i*36,164,i===0?short(options.analyte):"—")).join("")+footer(["BACK"]);
+ else if(mode==="results")body=title(options.resultTitle||"RESULT CHECK")+rect(0,70,240,25,blue)+["ITEM","LOT","SAMPLE","RANGE"].map((v,i)=>t(8,111+i*26,v,12)+field(83,97+i*26,153,[short(options.analyte),"[ lot ]",options.sample||"PATIENT","LAST 10 TESTS"][i])).join("")+t(8,216,"LIST",11)+rect(83,200,153,83,"#fff","#aaa",4)+[0,1,2,3].map(i=>t(89,213+i*17,"[ run date / time ]",10)).join("")+footer(["BACK"]);
+ else if(mode==="record")body=title(options.resultTitle||"RESULT CHECK")+sub("RESULT")+["ITEM","LOT","SID","RESULT","REMARK"].map((v,i)=>t(8,117+i*30,v,11)+field(83,103+i*30,153,[short(options.analyte),"[ lot ]","[ sample ID ]","—","—"][i])).join("")+footer(["BACK","PRINT"]);
+ else if(mode==="shutdown")body=title("ADMIN")+sub("SHUT DOWN")+t(120,154,"SHUT DOWN?",14,"#444",700,"middle")+footer(["OK","CANCEL"]);
+ else return "";
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="PATHFAST '+e(mode)+' training illustration"><defs>'+[["b","#0062d9","#00cbef"],["d","#07104d","#00bdf3"],["g","#d9d9d9","#fff"],["f","#f7f7f7","#c4c4c4"]].map(([k,a,b])=>'<linearGradient id="'+id+k+'" x1="0" y1="0" x2="'+(k==="d"?"1":"0")+'" y2="1"><stop stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>').join("")+'</defs>'+rect(0,0,240,320,"#fff")+body+rect(.5,.5,239,319,"none","#314b9a")+'</svg>';
 }
-function cue(t){return '<b class="pfs-target-cue">'+e(t||"TAP")+'</b>';}
-
-function nav(focus){
- return '<div class="pfs-toolbar"><span class="pfs-navbtn primary '+(focus==="start"?"pfs-click-target":"")+'">▶ START'+(focus==="start"?cue("TAP"):"")+'</span><span class="pfs-navbtn">CHECK</span><span class="pfs-navbtn">SETUP</span><span class="pfs-navbtn">ADMIN</span></div>';
+function frame(label,mode,options={},note=""){
+ return '<section class="pfs-reference pfs-lcd-reference" aria-label="'+e(label)+'"><div class="pfs-heading"><strong>PATHFAST · SCREEN REFERENCE</strong><span>'+e(label)+'</span></div><div class="pfs-lcd-portrait">'+lcd(mode,options)+'</div><p class="pfs-note">'+e(note||"Training reconstruction. Confirm actual instrument display and approved SOP.")+'</p></section>';
 }
-
-function foot(text){return '<div class="pfs-footer"><span>◀ BACK</span><span>'+e(text||"ASSAY")+'</span></div>';}
-function pills(mode){
- const example=mode==="patient";
- return '<div class="pfs-screen-meta">REAGENT / CALIBRATION / QC STATUS</div>'+
- '<div class="pfs-status-pills">'+assays.map(function(a,i){
-  const notReady=example&&i===0;
-  return '<span class="pfs-real-pill '+(notReady?'locked':'available')+'"'+(notReady?' aria-label="'+e(a)+': pink, calibration and quality control required"':'')+'>'+e(a)+'</span>';
- }).join('')+'</div>'+
- (example?'<div class="pfs-pink-status-caption"><span class="pfs-pink-status-mark" aria-hidden="true"></span><strong>Example: pink hs-Troponin I = NOT READY</strong><span>Run calibration and quality control before patient testing. Do not test patients using a pink / locked assay.</span></div>':'');
+function login(){return frame("Operator access","login",{focus:"USER"},"Select user ID, enter the assigned password, and confirm OK. Credentials are never shown.");}
+function home(analyte,mode,focus){return frame(focus==="back"?"Select BACK":"Check assay status","home",{analyte,locked:mode==="patient",focus:focus==="back"?"BACK":""},mode==="patient"?"Pink assay status is an illustrative lockout example, not the current instrument status. Verify calibration and QC before testing.":"Check the selected assay and reagent status on the instrument.");}
+function menu(mode){return frame(mode==="patient"?"Select SAMPLE":"Select CAL/QC","menu",{focus:mode==="patient"?"SAMPLE":mode==="qc"?"QC":"CAL/QC"},"QC lockout ON. Actual options depend on permissions and configuration.");}
+function item(analyte){return frame("Select assay","item",{analyte},"Select the intended assay and follow the on-screen confirmation. Assay names may vary with the installed master data.");}
+function lanes(mode,analyte){return frame(mode==="patient"?"Select occupied lane":"Review lane assignments","lanes",{cal:mode==="cal",qc:mode==="qc",analyte,focus:mode==="patient"?"LANE":""},mode==="patient"?"Tap the occupied lane number, then verify SID. Unoccupied lanes are blank.":"Verify the assigned lanes against the loaded cartridges and control levels.");}
+function sid(){return frame("Enter patient SID","sid",{focus:"SID"},"Scan or enter the MRN, verify the lane and confirm. Follow configured Hct% workflow.");}
+function start(mode,analyte){return frame("Start assay","start",{cal:mode==="cal",qc:mode==="qc",analyte,sid:mode==="patient",focus:"START"},"Check lane assignments and consumables before pressing the triangular start control.");}
+function running(mode,analyte){return frame("Assay in progress","running",{cal:mode==="cal",qc:mode==="qc",analyte,sid:mode==="patient"},"Pink stop button is for cancellation only. Allow the assay to finish and review results.");}
+function results(mode,analyte){return frame("Review stored results","results",{analyte,resultTitle:mode==="cal"?"CAL CHECK":mode==="qc"?"QC CHECK":"RESULT CHECK",sample:mode==="patient"?"PATIENT":"QC1"},"Select the actual assay, lot and run. Review the printed report and any flags; blank fields are training placeholders.");}
+function fromItem(item){
+ const s=String(item.screen||"").toUpperCase(),h=String(item.heading||"").toLowerCase();
+ if(s==="CHECK")return lcd("check",{focus:item.focus||"QC CHECK"});
+ if(/RECORD/.test(s))return lcd("record",{resultTitle:"QC CHECK",focus:"PRINT"});
+ if(/ASSAY.*HOME/.test(s))return lcd("home",{focus:item.focus==="CHECK"?"CHECK":""});
+ if(/SHUT DOWN/.test(s))return lcd("shutdown");
+ return "";
 }
-function login(mode){
- return frame("LOG-IN",mode==="patient"?"Step 7 · Operator access":"Step 7 · Operator access",
- '<div class="pfs-login"><div class="pfs-login-mark"><b>PATHFAST</b><span>OPERATOR ACCESS</span></div>'+
- '<div class="pfs-form-row"><label>USER</label><div class="pfs-form-box pfs-click-target">Select User ID'+cue("1 · SELECT")+'</div></div>'+
- '<div class="pfs-form-row"><label>PASSWORD</label><div class="pfs-form-box pfs-click-target">••••••••'+cue("2 · ENTER")+'</div></div>'+
- '<div class="pfs-login-actions"><span class="pfs-click-target">OK'+cue("3 · TAP")+'</span><span>CANCEL</span></div></div>',
- 'SELECT USER ID, ENTER PASSWORD AND CONFIRM OK.');
-}
-
-function home(analyte,mode,focus){
- const back=focus==="back";
- const body=nav()+'<div class="pfs-home-heading">ASSAY/HOME · REAGENT STATUS</div>'+pills(mode)+
- '<div class="pfs-home-footer"><span class="pfs-back-highlight '+(back?'pfs-click-target':'')+'">◀ BACK'+(back?cue("TAP BACK"):'')+'</span><span>SAMPLE INFO.</span></div>';
- const note=mode==="patient"?'<div class="pfs-external-readiness-note"><div><strong>Verify assay readiness on the actual analyzer.</strong>'+
- '<span><b>Pink = NOT READY.</b> Required calibration and QC must be run and accepted before patient testing. Pink hs-Troponin I is a training example, not the current status of the actual analyzer. Check the selected assay on the instrument.</span></div>'+
- '<button type="button" class="pfs-qc-route" data-gotab="cal-qc">Calibration + QC →</button></div>':'';
- return frame("ASSAY/HOME",back?"Step 9 · Select BACK":"Step 8 · Check assay status",body,
-  back?"ASSAY/HOME":"REAGENT STATUS")+note;
-}
-function menu(mode){
- const cal=mode!=="patient",options=["SAMPLE","QC","CAL/QC","MC ENTRY"];
- const rows=options.map(function(x){const selected=x===(cal?"CAL/QC":"SAMPLE");return '<div class="pfs-assay-option '+(selected?'target pfs-click-target':'')+'"><span>'+x+'</span>'+(selected?cue("TAP THIS OPTION"):'')+'</div>';}).join('');
- return frame("ASSAY",cal?"Step 9 · Select CAL/QC":"Step 10 · Choose SAMPLE",nav()+
- '<div class="pfs-menu-caption">SELECT OPERATION · QC LOCKOUT ON</div><div class="pfs-assay-options">'+rows+'</div>'+
- '<div class="pfs-screen-alert">'+(cal?'Select CAL/QC. With QC Lockout OFF, the button is CAL/QC/SAMPLE.':'Select SAMPLE for patient testing. With QC Lockout OFF, the two QC buttons read QC/SAMPLE and CAL/QC/SAMPLE.')+'</div>'+foot("ASSAY / SELECT OPERATION"));
-}
-
-function item(analyte){
- return frame("CAL/QC","Step 9 · Select assay",'<div class="pfs-item-caption">SELECT ITEM.</div><div class="pfs-item-list">'+
- assays.map(function(a){const selected=a===analyte;return '<div class="pfs-item-option '+(selected?'target pfs-click-target':'')+'">'+e(a)+(selected?cue("1 · SELECT"):'')+'</div>';}).join('')+
- '</div><div class="pfs-item-actions"><span class="pfs-click-target">OK'+cue("2 · TAP")+'</span><span>CANCEL</span></div>',
- "SELECT ASSAY AND CONFIRM OK.");
-}
-
-function lanes(mode,analyte){
- const cal=mode!=="patient",a=analyte||"hs-Troponin I",labs=cal?["CAL 1","CAL 1","CAL 2","CAL 2","QC 1","QC 2"]:Array(6).fill("SAMPLE");
- return frame(cal?"CAL/QC INFORMATION":"ASSAY/HOME",cal?"Step 10 · Review CAL/QC lanes":"Step 11 · Tap the occupied lane directly",
- nav()+'<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active">SAMPLE INFO.</span></div>'+
- '<div class="pfs-lanes">'+labs.map(function(x,i){return '<div class="pfs-lane '+(!cal&&i===0?'pfs-lane-tap-example':'')+'"><span class="pfs-lane-number '+(!cal&&i===0?'pfs-click-target':'')+'"><small>LANE</small>'+(i+1)+(!cal&&i===0?cue("TAP LANE"):'')+'</span>'+
- '<span class="pfs-lane-assay">'+(cal?(i<4?e(a):"CONTROL"):(i===0?"PATIENT EXAMPLE":"UNOCCUPIED"))+'</span><strong>'+(cal?e(x):(i===0?"SID: —":"—"))+'</strong></div>';}).join('')+'</div>'+
- (!cal?'<div class="pfs-screen-alert">Tap the occupied lane number directly. Lane 1 is a training example only. Do not tap SAMPLE INFO.; verify the selected lane matches the patient cartridge before entering SID.</div>':'')+
- foot(cal?"CAL/QC → START":"TAP LANE → SID → OK"));
-}
-function sid(){
- return frame("SAMPLE INFO.","Step 12 · Enter and confirm SID",nav()+
- '<div class="pfs-tabs"><span>REAGENT STATUS</span><span class="active">SAMPLE INFO.</span></div>'+
- '<div class="pfs-sid-selection"><span>SELECTED LANE</span><strong>Example: lane 1</strong></div>'+
- '<div class="pfs-sid-panel"><strong>PATIENT IDENTIFICATION</strong><div class="pfs-sid-entry"><span>SID</span><div class="pfs-click-target">Enter / scan MRN'+cue("1 · SELECT SID")+'</div></div>'+
- '<div class="pfs-sid-actions"><span class="pfs-click-target">OK'+cue("2 · CONFIRM")+'</span><span>CANCEL</span></div></div>'+
- '<div class="pfs-screen-alert">Verify patient SID and occupied lane on the actual instrument before confirming. The illustrated lane is an example.</div>',
- "ENTER OR SCAN SID, VERIFY AND CONFIRM.");
-}
-function start(mode){
- const cal=mode==="cal";
- return frame("ASSAY/HOME",cal?"Step 11 · Start CAL/QC":"Step 13 · Start patient assay",
- nav("start")+'<div class="pfs-home-heading">'+(cal?"CAL/QC":"PATIENT SAMPLE")+' · READY TO RUN</div>'+
- '<div class="pfs-start-check"><strong>Check before START</strong><span>Verify assay, specimen IDs, lane assignments and loaded tips on the actual screen.</span></div>'+
- '<div class="pfs-screen-alert">Tap the highlighted START control, then review and confirm the analyzer prompt.</div>',
- "VERIFY ASSIGNMENTS, THEN SELECT START.");
-}
-
 
 /* First patient-testing action: identify the correctly timed physical tube.
    Example times only, never a substitute for the actual collection label. */
@@ -157,10 +134,10 @@ function patientStep(i){
  if(i===10)return lanes("patient");
  if(i===11)return sid();
  if(i===12)return start("patient");
- if(i===13)return window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual("running","patient"):"";
+ if(i===13)return running("patient")+(window.LAB_EQUIPMENT_ART?.pathfastActionVisual?.("running","patient")||"");
  if(i===14){
   const review=window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual("results","patient"):"";
-  return review+'<aside class="pf-review-interference" aria-label="Possible microclot or fibrin interference">'+
+  return results('patient')+review+'<aside class="pf-review-interference" aria-label="Possible microclot or fibrin interference">'+
    '<div class="pf-review-interference-head"><span class="pf-review-interference-mark" aria-hidden="true">!</span><div><strong>Suspected clot / fibrin interference?</strong><span>Use the original specimen for a plasma retest if permitted by the approved SOP.</span></div></div>'+
    '<ol>'+
     '<li><b>Hold and assess.</b> If the result is unexpectedly elevated or discordant, inspect the original lithium-heparin tube and notify the provider. Do not assume the first result is false.</li>'+
@@ -173,5 +150,5 @@ function patientStep(i){
  return "";
 }
 
-window.LAB_PATHFAST_SCREEN={login:login,home:home,menu:menu,item:item,lanes:lanes,sid:sid,start:start,patient:function(){return lanes("patient");},cal:function(a){return lanes("cal",a);},patientStep:patientStep};
+window.LAB_PATHFAST_SCREEN={login:login,home:home,menu:menu,item:item,lanes:lanes,sid:sid,start:start,running:running,results:results,lcd:lcd,fromItem:fromItem,patient:function(){return lanes("patient");},cal:function(a){return lanes("cal",a);},patientStep:patientStep};
 })();
