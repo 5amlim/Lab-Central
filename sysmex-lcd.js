@@ -41,6 +41,12 @@ function lcd(mode,focus='',item={}){
  const chart=()=>top('Set QC')+text(10,59,'File [1]  [            ]  [            ]',13)+text(24,78,'[ selected date / time ]',12)+text(294,99,'LIMIT',12)+['WBC','RBC'].map((v,i)=>{const y=118+i*68;return text(8,y+22,v,12)+text(44,y,'UL',10)+text(44,y+40,'LL',10)+'<path d="M65 '+y+'H290M65 '+(y+20)+'H290M65 '+(y+40)+'H290" stroke="#bb85ad" stroke-width=".9" stroke-dasharray="3 2"/>'+text(315,y+8,'—',12)+text(315,y+26,'—',12)+text(315,y+44,'—',12);}).join('')+bottom(['Print','HC','Delete','File','Setup']);
  const stored=()=>top('Str.Data')+text(13,57,'Sample ID',12)+text(230,57,'Date / Time',12)+Array.from({length:6},(_,i)=>{let y=66+i*29;return rect(10,y,366,25,i===0?'#b9d6f0':'#eef0f3','#a2aeb8',1)+text(15,y+17,i===0?'BLANK CHECK':'—',12)+text(226,y+17,i===0?'[ actual date ]':'—',11);}).join('')+bottom(['Print','←','→','Detail']);
  const prompt=(title,lines,buttons)=>top(title)+rect(35,83,330,135,'#e5e9ee','#7c8e9f',3)+lines.map((v,i)=>text(200,110+i*22,v,13,'#344450','middle')).join('')+buttons.map((v,i)=>k(53+i*101,177,94,30,v)).join('');
+ // The startup sequence uses [Start up], Running, Menu, and the
+ // named rinse/background messages (Sysmex Basic User Training, slide 28).
+ const startupPhase=(label,step)=>top('Start up','Running','Menu')+
+ text(200,112,'<  '+label+'  >',16,'#35434f','middle')+
+ text(200,149,'Please wait.',15,'#35434f','middle')+
+ Array.from({length:8},(_,i)=>'<path d="M'+(51+i*40)+' 245l13 11-13 11z" stroke="#647b90" stroke-width="1.2" fill="'+(i<step?'#6a8397':'none')+'"/>').join('');
  const progress=(title,status='Running')=>top(title,status)+text(200,127,status==='Running'?'Analysis in progress':'Please wait',16,'#35434f','middle')+Array.from({length:9},(_,i)=>text(42+i*37,233,'▶',20,i<5?'#418fc1':'#a9b7c3','middle')).join('');
  let body='';
  switch(mode){
@@ -63,7 +69,9 @@ function lcd(mode,focus='',item={}){
  case 'save':body=prompt('Set QC',['Quit QC Setting?'],['OK','Cancel']);break;
  case 'shutdown':body=prompt('Shutdown',['Shutdown'],['Execute','Cancel']);break;
  case 'complete':body=prompt('Shutdown',['Shutdown complete.','Follow the completion prompt.'],[]);break;
- case 'startup':body=progress('Main','Not Ready');break;
+ case 'startup':case 'autorinse':body=startupPhase('Auto Rinse',3);break;
+ case 'background':body=startupPhase('Background check',5);break;
+ case 'ready':body=main('Ready');break;
  case 'maintenance':body=top('Maint.')+['Clean Transducer','Auto Rinse','Clean Waste Chamber','Clog Removal'].map((v,i)=>k(32,58+i*50,336,40,v)).join('');break;
  case 'reagent':body=top('Chg.Reag')+k(24,68,168,116,'pocH-pack D')+k(208,68,168,116,'pocH-pack L')+bottom(['Back','Top']);break;
  case 'barcode':body=prompt('Chg.Reag',['Reagent barcode','[                         ]'],['Manual','OK','Cancel']);break;
@@ -78,7 +86,12 @@ function fromItem(item){
  const kinds={pochQcMain:['main','QC'],pochAnalyzeFiles:['files',''],pochAnalyzeRun:['qcrun','Run'],pochAnalyzeRunning:['qcrunning',''],pochAnalyzeResults:['qcresult','Quit'],qcFiles:['chartfiles',''],qcLot:['lot',''],qcAnalytes:['targets','']};
  if(kinds[k])return lcd(...kinds[k]);
  if(k==='mainMenu')return lcd('main','Menu');
- if(k==='status')return lcd('startup');
+ if(k==='status'){
+  if(/ready for qc|ready screen|confirm ready/.test(s+' '+h))return lcd('ready');
+  if(/blank|background/.test(s+' '+h))return lcd('background');
+  if(/rinse|initializ|power on/.test(s+' '+h))return lcd('autorinse');
+  return '';
+ }
  if(/shutdown complete/.test(s+h))return lcd('complete');
  if(/shutdown/.test(s+h))return lcd(s==='main'?'main':'shutdown',s==='main'?'Shutdown':'Execute');
  if(/blank check result|blank-check result/.test(s+h))return lcd('blankresult','Print');
@@ -92,7 +105,7 @@ function fromItem(item){
  if(/menu/.test(s))return lcd('menu',/^(QC|QC Chart)$/.test(f)?'QC Chart':f==='Str. Data'?'Str.Data':f==='Chg. Reag.'?'Chg.Reag':f);
  if(/maintenance/.test(s))return lcd('maintenance',f);
  if(/execute/i.test(f))return lcd('execute','Execute',item);
- if(k==='pochStatus')return lcd('startup');
+ if(k==='pochStatus')return /rinse|background/i.test(item.title||'')?lcd('background'):'';
  return '';
 }
 window.LAB_SYSMEX_LCD={lcd,fromItem};
