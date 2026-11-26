@@ -42,9 +42,9 @@ const configs={
   {heading:"Print the report",screen:"RUN REPORT",items:["Print","Print All","Save"],focus:"Print",tip:"Print or save the required complete run report per approved QC practice."}
  ],note:"File the positive/negative run report in the molecular QC section. Keep control identity and result associated with the right pouch lot."},
  spotfire:{brand:"BioFire SPOTFIRE",binder:"Monthly Molecular QC Log binder",steps:[
-  {heading:"Open the control library",screen:"HOME",items:["Patient Test Results","Quality Control","Settings"],focus:"Quality Control",tip:"Select the finished QC run in the Quality Control section."},
-  {heading:"Open the result report",screen:"QUALITY CONTROL",items:["Completed QC","Details","Home"],focus:"Completed QC",tip:"Review the correct control and panel."},
-  {heading:"Print the report",screen:"QC RESULT",items:["Print","Show Details","Options"],focus:"Print",tip:"Use the Print control shown in the report action bar."}
+  {kind:"sfQcMenu",heading:"Open QC Test Results",tip:"Select the QC icon and then QC Test Results."},
+  {kind:"sfQcHistory",heading:"Select the control run",tip:"Match the control, panel, date and pouch lot."},
+  {kind:"sfQcReport",heading:"Review and print",tip:"Confirm acceptable results and select Print if required."}
  ],note:"File the positive and negative control records under the appropriate respiratory/sore-throat QC section."},
  coagsense:{brand:"Coag-Sense PT/INR",binder:"Coag-Sense QC binder",steps:[
   {heading:"Review the control run",screen:"QC RESULT",items:["Review","History","Printer icon"],focus:"Printer icon",tip:"Open the individual QC result using the instrument's approved result-history workflow."},
@@ -85,6 +85,10 @@ function sysmexAnalyzeScreen(kind){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
+ if(brand==="BioFire SPOTFIRE"&&window.LAB_BIOFIRE_ART?.spotfireScreen){
+  const mode={sfQcMenu:"qcMenu",sfQcHistory:"qcHistory",sfQcReport:"qcReport"}[item.kind];
+  if(mode)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+'<div class="bf-spotfire-portrait-screen">'+window.LAB_BIOFIRE_ART.spotfireScreen(mode,{qc:true})+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }
  if(/sysmex poch-100i/i.test(brand)){
   const realistic=window.LAB_SYSMEX_LCD?.fromItem(item);
   if(realistic)return '<div class="qc-screen-reference sx-realistic-screen" role="group" aria-label="'+esc(item.heading)+'">'+top+
@@ -463,9 +467,6 @@ function qcClickStep(sec,groupId,title){
  else if(sec.id==="sofia"&&/run the controls|run qc|log the qc/.test(t))scenes=[
   {heading:"Start external controls",screen:"MAIN MENU",items:["Run Test","Run QC","Review Data"],focus:"Run QC",tip:"Select Run QC and scan the assay-specific QC barcode."},
   {heading:"Follow QC prompts",screen:"RUN QC",items:["Positive control","Next","Negative control"],focus:"Positive control",tip:"Run the positive control, then follow the on-screen Next control to complete the negative control; do not skip it."}];
- else if(sec.id==="spotfire"&&/grab the controls|select the qc tab/.test(t))scenes=[
-  {heading:"Open the QC section",screen:"HOME",items:["Patient Test Results","Quality Control","Settings"],focus:"Quality Control",tip:"Select Quality Control at the top or side of the workstation screen."},
-  {heading:"Choose the required control",screen:"QUALITY CONTROL",items:["Positive","Negative","View Results"],focus:"Positive",tip:"Complete the correct positive and negative control runs using the displayed instructions."}];
  else if(sec.id==="torch"&&/confirm qc sample name|enter qc sample name|start the control/.test(t))scenes=[
   {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
   {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
