@@ -144,6 +144,18 @@ function render(id,title){
  if(id!=="torch"&&id!=="spotfire")return previous?previous(id,title):"";
  const gi=id==="torch",t=String(title||"").trim().toLowerCase();
  const c=opts=>card(id,opts);
+ // QC preparation is not a generic two-card duplicate of the ready station.
+ // Use distinct stages, and keep SPOTFIRE and GI preparation order separate.
+ const prep=(title,mode,lines,note="")=>c({title,tag:"QC preparation",visual:B.station?.(mode),lines,note,page:4});
+ if(/^note: the qc covers both/i.test(t))return c({title:"R/ST QC coverage",tag:"QC reference",visual:B.kit?.(),lines:["Match the controls to the exact R/ST or R/ST Mini pouch and its current instructions.","Use a separate pouch and preparation kit for each control."],note:"Run and document required controls according to the current panel-specific instructions and approved SOP."});
+ if(/^gather (spotfire|torch) qc materials|^grab the controls \(biofire spotfire/i.test(t))return prep("Gather QC materials","ready",["Match the control, pouch, preparation kit and expiration. Use a new pouch and kit for each control."],gi?"Follow the approved GI control insert.":"For R/ST, apply the matching positive or negative QC barcode without covering the pouch barcode.");
+ if(/^set up (spotfire|torch) qc pouch/.test(t))return prep("Set up the QC pouch","ready",["Seat the pouch in the loading station. Place the sample vial in the red well and hydration vial in the blue well."]);
+ if(/^hydrate (spotfire|torch) qc pouch/.test(t))return prep("Hydrate the QC pouch","hydrate",["Unscrew the blue hydration vial, leaving the cover in its well. Insert the blunt needle into the blue hydration port and verify hydration per the IFU."]);
+ if(/^prepare (spotfire|torch) qc mixture/.test(t))return c({title:"Prepare the QC mixture",tag:"QC preparation",visual:B.pipette?.(id,true),lines:[gi?"Prepare the approved GI control and buffer using the GI control insert.":"Transfer the approved QC material with the kit pipette, then add the full sample buffer.", "Use the control-specific instructions and avoid contamination."],note:"Illustration shows transfer equipment, not an active control lot."});
+ if(/^mix (spotfire|torch) qc vial/.test(t))return c({title:"Mix the QC vial",tag:"QC preparation",visual:B.invert?.(),lines:["Close the red vial securely, gently invert three times, then return it to the red well."]});
+ if(/^load (spotfire|torch) qc mixture/.test(t))return prep("Load the QC mixture","sample",["Unscrew the red vial, pause as instructed, and insert its blunt needle into the red sample port. Verify transfer; remove and dispose of the vials per the applicable IFU."]);
+ if(/^load the controls into the red vial/.test(t))return prep("Load the prepared GI control","sample",["Prepare and hydrate a fresh GI pouch using the approved GI control instructions. Mix the control and buffer in the red vial and load through the red sample port."]);
+
  const sf=(mode,title,lines,note="",opts={})=>c({title,tag:"SPOTFIRE screen",visual:B.spotfireScreenWithZoom?.(mode,opts),lines,note,spotManual:true});
  if(!gi&&B.spotfireScreen){
   const exact={
