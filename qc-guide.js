@@ -37,10 +37,10 @@ const configs={
   {heading:"Document the QC result",screen:"QC RESULTS",items:["Details","Result status","Home"],focus:"Result status",tip:"Record the result, lot, date, operator, and any corrective action in the approved QC log. No printout is required."}
  ],note:"Document positive and negative controls and calibration checks in the approved signed log. Sofia 2 does not produce a printout for this workflow."},
  torch:{brand:"BioFire TORCH",binder:"Monthly Molecular QC Log binder",steps:[
-  {heading:"Open completed run",screen:"DASHBOARD",items:["Dashboard","Browse Runs","Settings"],focus:"Browse Runs",tip:"Choose the QC control run by assay and date."},
-  {heading:"Review the QC report",screen:"COMPLETED RUN",items:["Summary","Details","Print"],focus:"Print",tip:"A completed run report can be opened from the Finished module or Browse Runs."},
-  {heading:"Print the report",screen:"RUN REPORT",items:["Print","Print All","Save"],focus:"Print",tip:"Print or save the required complete run report per approved QC practice."}
- ],note:"File the positive/negative run report in the molecular QC section. Keep control identity and result associated with the right pouch lot."},
+  {kind:"torchFinished",heading:"Open completed run",tip:"Select Finished on the single-module Dashboard."},
+  {kind:"torchBrowse",heading:"Retrieve the control report if needed",tip:"Use Browse Runs and select the correct QC identifier and pouch lot."},
+  {kind:"torchReport",heading:"Review and print",tip:"Verify accepted control results and print or save the required report."}
+ ],note:"File the positive and negative control reports in the molecular QC section."},
  spotfire:{brand:"BioFire SPOTFIRE",binder:"Monthly Molecular QC Log binder",steps:[
   {kind:"sfQcMenu",heading:"Open QC Test Results",tip:"Select the QC icon and then QC Test Results."},
   {kind:"sfQcHistory",heading:"Select the control run",tip:"Match the control, panel, date and pouch lot."},
@@ -85,6 +85,10 @@ function sysmexAnalyzeScreen(kind){
 }
 function screenPanel(item,brand,number){
  const top='<div class="qc-visual-top"><span>SCREEN '+String(number).padStart(2,"0")+'</span><strong>'+esc(item.heading)+'</strong></div>';
+ if(brand==="BioFire TORCH"&&window.LAB_BIOFIRE_ART?.torchScreen){
+  const mode={torchFinished:"finished",torchBrowse:"browse",torchReport:"report"}[item.kind];
+  if(mode)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+'<div class="bf-torch-qc-screen">'+window.LAB_BIOFIRE_ART.torchScreen(mode,"QC-GI-Neg")+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }
  if(brand==="BioFire SPOTFIRE"&&window.LAB_BIOFIRE_ART?.spotfireScreen){
   const mode={sfQcMenu:"qcMenu",sfQcHistory:"qcHistory",sfQcReport:"qcReport"}[item.kind];
   if(mode)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+'<div class="bf-spotfire-portrait-screen">'+window.LAB_BIOFIRE_ART.spotfireScreen(mode,{qc:true})+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
@@ -467,9 +471,6 @@ function qcClickStep(sec,groupId,title){
  else if(sec.id==="sofia"&&/run the controls|run qc|log the qc/.test(t))scenes=[
   {heading:"Start external controls",screen:"MAIN MENU",items:["Run Test","Run QC","Review Data"],focus:"Run QC",tip:"Select Run QC and scan the assay-specific QC barcode."},
   {heading:"Follow QC prompts",screen:"RUN QC",items:["Positive control","Next","Negative control"],focus:"Positive control",tip:"Run the positive control, then follow the on-screen Next control to complete the negative control; do not skip it."}];
- else if(sec.id==="torch"&&/confirm qc sample name|enter qc sample name|start the control/.test(t))scenes=[
-  {heading:"Identify the QC sample",screen:"RUN SETUP",items:["Sample Name","Pouch barcode","Start Run"],focus:"Sample Name",tip:"Identify the run using the approved QC Sample Name, rather than a patient MRN."},
-  {heading:"Start the control",screen:"RUN CONFIRMATION",items:["Review QC name","Confirm pouch","Start Run"],focus:"Start Run",tip:"Verify pouch/control identity before selecting Start Run."}];
  if(!scenes)return "";
  return '<div class="qc-instrument-walkthrough">'+
  (sec.id==="piccolo"?'<p class="qc-px-scroll-cue">Scroll right to see every screen <span aria-hidden="true">→</span></p>':'')+
