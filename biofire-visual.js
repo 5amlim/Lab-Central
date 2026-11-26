@@ -492,7 +492,7 @@ function ui(id,index){
  }
  return torchScreen(index);
 }
-function torchScreen(index){
+function torchScreen(index,sampleId='GI-DEMO-001'){
  const mode=typeof index==="number"?["dashboard","scan","sample","review"][index]||"dashboard":index;
  const ink="#333",blue="#267dab",green="#79b82a",gray="#e6e6e6";
  const t=(x,y,v,s=19,color=ink,anchor="start",w="400")=>text(x,y,v,s,color,anchor,w);
@@ -504,23 +504,23 @@ function torchScreen(index){
  ["Dashboard","Browse Runs","Settings"].forEach((v,i)=>{const x=24+i*151;body+=rect(x,19,145,44,selected===v?"#d4e9f1":"#f5f5f5","#c4c4c4",2)+t(x+72,47,v,19,selected===v?blue:ink,"middle","700");});
  body+=t(887,47,"FilmArray® Torch",24,"#424242","end","700");
  const title=v=>t(35,99,v,24,ink,"start","700");
- const rows=(x,y)=>[["Sample ID:","GI-DEMO-001"],["Lot:","123456"],["Serial Number:","12345678"],["Pouch Type:","GI Panel v2.1"],["Protocol:","Stool FA v3.3"],["User Name:","DemoOperator"]].map(([k,v],i)=>t(x,y+i*34,k,19,ink,"start","700")+t(x+205,y+i*34,v,19)).join("");
+ const rows=(x,y)=>[["Sample ID:",sampleId],["Lot:","123456"],["Serial Number:","12345678"],["Pouch Type:","GI Panel v2.1"],["Protocol:","Stool FA v3.3"],["User Name:","DemoOperator"]].map(([k,v],i)=>t(x,y+i*34,k,19,ink,"start","700")+t(x+205,y+i*34,v,19)).join("");
  const keyboard=(y,small=false)=>["1234567890","QWERTYUIOP","ASDFGHJKL","ZXCVBNM"].map((row,i)=>[...row].map((v,j)=>btn(142+i*15+j*58,y+i*36,54,32,v)).join("")).join("")+btn(734,y+108,128,32,"Next",green);
  if(mode==="dashboard"||mode==="finished"){
   const states=mode==="finished"?["Finished","Available","Available","Available"]:["Available","Available","Available","Available"];
   states.forEach((v,i)=>{const x=36+(i%2)*432,y=85+Math.floor(i/2)*145;body+=rect(x,y,415,126,"#f7f7f7","#b7b7b7",6)+
   '<circle cx="'+(x+50)+'" cy="'+(y+51)+'" r="28" fill="'+(v==="Finished"?green:blue)+'"/>'+
   (v==="Finished"?t(x+50,y+60,"✓",28,"#fff","middle","700"):'<path d="M'+(x+43)+' '+(y+36)+'l22 15-22 15z" fill="#fff"/>')+
-  t(x+96,y+51,v,25,ink,"start","700")+(v==="Finished"?t(x+96,y+82,"GI-DEMO-001  ·  GI Panel v2.1",16):"");});
+  t(x+96,y+51,v,25,ink,"start","700")+(v==="Finished"?t(x+96,y+82,sampleId+"  ·  GI Panel v2.1",16):"");});
  }else if(mode==="scan"||mode==="sample"||mode==="insert"){
   body+=title(mode==="scan"?"Pouch information":mode==="sample"?"Sample ID":"Insert Pouch");
-  body+=t(48,137,"Lot:",18)+field(196,114,350,mode==="scan"?"":"123456",mode==="scan")+t(48,177,"Serial Number:",18)+field(196,154,350,mode==="scan"?"":"12345678")+t(48,217,"Pouch Type:",18)+field(196,194,350,mode==="scan"?"":"GI Panel v2.1")+t(48,257,"Sample ID:",18)+field(196,234,350,mode==="insert"?"GI-DEMO-001":"",mode==="sample");
+  body+=t(48,137,"Lot:",18)+field(196,114,350,mode==="scan"?"":"123456",mode==="scan")+t(48,177,"Serial Number:",18)+field(196,154,350,mode==="scan"?"":"12345678")+t(48,217,"Pouch Type:",18)+field(196,194,350,mode==="scan"?"":"GI Panel v2.1")+t(48,257,"Sample ID:",18)+field(196,234,350,mode==="insert"||mode==="sample"?sampleId:"",mode==="sample");
   if(mode==="scan")body+=t(580,145,"Scan pouch barcode",20,blue,"start","700");
-  if(mode==="sample")body+=t(580,145,"Scan or enter Sample ID",19,blue,"start","700")+t(580,175,"Before inserting pouch",17);
+  if(mode==="sample")body+=t(580,145,"Scan or enter Sample ID",19,blue,"start","700")+t(580,175,"Before inserting pouch",17)+["1234567890","QWERTYUIOP"].map((row,i)=>[...row].map((v,j)=>btn(52+j*57,278+i*35,52,31,v)).join("")).join("");
   if(mode==="insert")body+=t(580,145,"Available module LED",19,blue,"start","700")+t(580,176,"Blinking blue",19,blue)+t(580,207,"Insert prepared pouch",19)+t(580,238,"Keep fitment label flat",16);
   body+=btn(746,340,132,36,"Cancel");
  }else if(mode==="protocol"){
-  body+=title("Select Protocol")+btn(730,79,148,38,"Eject Pouch")+t(35,140,"Sample ID: GI-DEMO-001",20)+btn(140,188,300,74,"Stool FA v3.3",green)+t(35,320,"Protocol: Stool FA v3.3",18)+btn(746,340,132,36,"Next",green);
+  body+=title("Select Protocol")+btn(730,79,148,38,"Eject Pouch")+t(35,140,"Sample ID: "+sampleId,20)+btn(140,188,300,74,"Stool FA v3.3",green)+t(35,320,"Protocol: Stool FA v3.3",18)+btn(746,340,132,36,"Next",green);
  }else if(mode==="operator"){
   body+=title("Enter Operator Information")+btn(730,79,148,36,"Eject Pouch")+t(35,141,"User Name:",18)+field(185,119,410,"DemoOperator",true)+t(35,180,"Password:",18)+field(185,158,410,"••••••••")+btn(650,119,228,38,"Add/Edit Operator")+keyboard(204);
  }else if(mode==="review"){
@@ -530,7 +530,7 @@ function torchScreen(index){
  }else if(mode==="browse"){
   const widths=[115,140,125,120,80,115,90,85],heads=["Date","Sample ID","Pouch Type","Protocol","Lot","Operator","Module","Pouch Status"];let x=23;
   heads.forEach((v,i)=>{body+=rect(x,84,widths[i],42,"#e7e7e7","#aaa",0)+t(x+4,110,v,15,ink,"start","700");x+=widths[i];});
-  for(let j=0;j<4;j++){let x=23;const vs=["11/25/26","GI-DEMO-00"+(j+1),"GI Panel v2.1","Stool FA v3.3","123456","DemoOperator","Module "+(j+1),"Pass"];vs.forEach((v,i)=>{body+=rect(x,126+j*45,widths[i],45,j===0?"#d5ebbc":"#fff","#d0d0d0",0)+t(x+4,154+j*45,v,14);x+=widths[i];});}
+  for(let j=0;j<4;j++){let x=23;const vs=["11/25/26",j===0?sampleId:"GI-DEMO-00"+(j+1),"GI Panel v2.1","Stool FA v3.3","123456","DemoOperator","Module "+(j+1),"Pass"];vs.forEach((v,i)=>{body+=rect(x,126+j*45,widths[i],45,j===0?"#d5ebbc":"#fff","#d0d0d0",0)+t(x+4,154+j*45,v,14);x+=widths[i];});}
   body+=btn(35,340,70,36,"⌕")+t(432,364,"1 - 4 of 4",17,ink,"middle")+btn(600,340,128,36,"Options")+btn(741,340,137,36,"View Report",green);
  }else if(mode==="report"){
   ["Print","Print All","Save","Actions","Summary","Details"].forEach((v,i)=>body+=btn(30,85+i*43,156,38,v,v==="Summary"?green:gray));
