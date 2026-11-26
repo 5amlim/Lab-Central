@@ -253,6 +253,10 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 .instrument-procedure-heading h2{margin:6px 0 7px;color:#253f53;font-size:clamp(20px,3vw,27px);letter-spacing:-.025em}
 .instrument-procedure-heading p{margin:0;font-size:12px;line-height:1.6;color:#688394}
 .instrument-procedure-heading .pcr-role-label{flex:none}
+/* All instrument step labels must wrap as complete phrases. */
+.procedure-flow .guide-step-pill .guide-pill-label,.pfux-stage-nav .pfux-stage-name{display:block;white-space:normal;overflow:visible;text-overflow:clip;-webkit-line-clamp:unset;overflow-wrap:normal;word-break:normal}
+.procedure-flow .guide-step-pill,.pfux-stage-nav .pfux-stage-button{height:auto;align-self:stretch}
+
 .instrument-procedure-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;flex:none}
 .torch-header-video{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:9px 13px;box-sizing:border-box;border:1px solid #abd5cf;border-radius:10px;background:#fff;color:#176d68;text-decoration:none;font-size:12px;font-weight:750;white-space:nowrap;transition:background .18s,border-color .18s,transform .18s}
 .torch-header-video svg{width:18px;height:18px;flex:none}.torch-header-video-arrow{font-size:13px;opacity:.75}
@@ -1636,31 +1640,289 @@ function sysmexPatientStepNavLabel(full){
 }
 // Short navigation labels describe the action. Full instructions stay in
 // the large step header and full text remains in the button title.
-function instrumentStepNavLabel(full){
- const value=String(full||'').replace(/\s+/g,' ').trim();
- const known=[
-  [/^Grab the QC controls/i,'Warm QC controls'],
-  [/^Perform daily shutdown/i,'Daily shutdown'],
-  [/^Turn on the Sysmex/i,'Power on analyzer'],
-  [/^Go to Menu.*BLANK/i,"Print blank check"],
-  [/^(Each new vial is to be replaced|Replace QC vials)/i,'Replace QC vials'],
-  [/^If we run out of a certain lot|^Register a new QC lot/i,'Register QC lot'],
-  [/^Print and file the QC records|^Review and file QC results/i,'File QC results'],
-  [/^Run the QC/i,'Run QC'],
-  [/^Confirm urine specimen/i,'Confirm urine'],
-  [/^Verify, document and repeat/i,'Verify and document']
- ];
- for(const [pattern,label] of known)if(pattern.test(value))return label;
- if(value.length<=34)return value;
- const short=value.split(/[,.;:(]/)[0].trim();
- if(short.length>0&&short.length<=34)return short;
- const words=value.split(/\s+/);
- let result='';
- for(const word of words){
-  if(result.length+word.length+1>33)break;
-  result+=(result?' ':'')+word;
+// Navigation titles are independent of detailed instructions and visual matchers.
+const instrumentStepNavLabels={
+ "sysmex": {
+  "Grab the QC controls (3 levels) from the fridge and allow to sit in room temperature for at least 15 minutes": "Warm QC controls",
+  "Perform daily shutdown before QC": "Daily shutdown",
+  "Turn on the Sysmex pocHi Analyzer.": "Power on analyzer",
+  "Go to Menu > Str. Data > __BLANK CHECK__ A [TODAY’S DATE]": "Print blank check",
+  "Run the QC": "Run QC",
+  "Open Sysmex Insight after completing Daily QC": "Open Sysmex Insight",
+  "Match the analyzer, date, QC lot, and control level": "Match QC details",
+  "Enter the reported analytes for all three QC levels": "Enter QC values",
+  "Verify the values and submit the QC data": "Verify and submit",
+  "Document discrepancies or unacceptable results": "Resolve QC issues",
+  "Match vials and files": "Match vials and files",
+  "Select QC file": "Select QC file",
+  "Scan lot and enter expiry": "Scan lot and enter expiry",
+  "Scan targets and limits": "Scan targets and limits",
+  "Save and verify": "Save and verify",
+  "Compare QC lots": "Compare QC lots",
+  "Samples must be run within 8 hours if stored at room temperature": "Check sample timing",
+  "Gently mix the EDTA tube before testing": "Mix EDTA tube",
+  "Enter the patient MRN": "Enter MRN",
+  "Place the capped patient tube in the gray adapter and close the sample door": "Load patient tube",
+  "Click Run": "Start analysis",
+  "Performing Daily Shutdown": "Daily shutdown",
+  "Transducer Cleaning (every 2 weeks / 150 samples)": "Clean transducer",
+  "Other Cleaning Prompts": "Other cleaning prompts",
+  "Waste Bottle Disposal": "Empty waste bottle",
+  "Reagent Change (Pack-D/Pack-L)": "Change reagents",
+  "Confirm analysis started": "Confirm analysis",
+  "Replace QC vials at in-use expiry or sooner if needed": "Replace QC vials"
+ },
+ "piccolo": {
+  "Samples must be used within 60 minutes": "Check sample timing",
+  "Grab the correct Piccolo reagent disc (one at a time) and inspect it for damage": "Inspect reagent disc",
+  "Load blood into the disc sample port": "Load blood into disc",
+  "Load the disc and start patient testing": "Load disc and start",
+  "Grab the correct Piccolo QC disc and inspect it for damage": "Inspect QC disc",
+  "Thaw the approved BRT or NOD QC set (both Level 1 and Level 2 vials; freezer-stored)": "Thaw both QC levels",
+  "Load QC into the disc sample port": "Load QC into disc",
+  "Run QC": "Run QC",
+  "Review automatically printed QC results and file them in the monthly QC log; reprint only if needed.": "File QC results",
+  "Load the disc into Piccolo Xpress": "Load disc",
+  "Select Patient and enter MRN": "Enter patient MRN",
+  "Confirm analysis is running": "Monitor analysis"
+ },
+ "triage": {
+  "Power on MeterPro and confirm the QC Device is due": "Power on meter",
+  "Remove the reusable QC Device from its black case": "Retrieve QC Device",
+  "Select RUN TEST from the Main Menu": "Select RUN TEST",
+  "Enter or scan User ID and confirm": "Enter User ID",
+  "Select QC DEVICE (not QC SAMPLE)": "Select QC DEVICE",
+  "Inspect the QC Device; never add liquid": "Inspect QC Device",
+  "Insert the reusable QC Device in the lower test port": "Insert QC Device",
+  "Press Enter to run the electronic QC Device check": "Run device check",
+  "Verify QC DEVICE PASS, then print and document": "Verify PASS and print",
+  "Eject and return the reusable QC Device to its black case": "Eject and store device",
+  "Confirm order, assay, meter QC status and patient identifiers": "Verify order and QC",
+  "Collect EDTA whole blood in a lavender-top tube": "Collect EDTA blood",
+  "Match the assay cartridge, box lot and expiration": "Check assay cartridge",
+  "Bring kit to required temperature and prepare a level work area": "Prepare kit and area",
+  "Power on the MeterPro and select RUN TEST": "Select RUN TEST",
+  "Enter or scan your User ID": "Enter User ID",
+  "Select PATIENT SAMPLE from the test menu": "Select PATIENT SAMPLE",
+  "Enter or scan the Patient ID / MRN and confirm": "Enter patient ID",
+  "Open and label one fresh assay cartridge": "Open and label cartridge",
+  "Pick up the kit transfer pipette and squeeze the large upper bulb": "Squeeze pipette bulb",
+  "Place the pipette tip into the mixed blood sample": "Place tip in blood",
+  "Slowly release the upper bulb to aspirate specimen": "Aspirate blood",
+  "Check the filled barrel and overflow chamber": "Check pipette fill",
+  "Position the pipette tip over the cartridge sample well": "Position over sample well",
+  "Squeeze the large bulb to dispense the barrel volume into the well": "Dispense specimen",
+  "Remove and discard the pipette; wait for full absorption": "Wait for absorption",
+  "Insert the prepared cartridge into the MeterPro until it clicks": "Insert cartridge",
+  "Press Enter to start the analysis": "Start analysis",
+  "Verify specimen type or selected analytes if prompted": "Verify assay prompts",
+  "Review the measured result and internal procedural QC": "Review results and QC",
+  "Print, document the result and eject the used cartridge": "Print and eject",
+  "Confirm which assay reagent lot requires liquid QC": "Identify QC lot",
+  "Retrieve Triage Total 5 controls 1 and 2 from the freezer": "Retrieve both controls",
+  "Thaw and gently invert each control vial": "Thaw and mix controls",
+  "Gather two fresh assay cartridges and kit-supplied transfer pipettes": "Gather QC materials",
+  "Check whether the QC control lot CODE CHIP must be installed": "Check QC CODE CHIP",
+  "Select RUN TEST and enter User ID": "Enter User ID",
+  "Select QC SAMPLE and enter the 4-digit control lot": "Select QC SAMPLE",
+  "Open a fresh cartridge for QC Level 1": "Open Level 1 cartridge",
+  "Squeeze the upper bulb on a fresh pipette for QC Level 1": "Prepare Level 1 pipette",
+  "Aspirate Level 1 control; check the pipette overflow": "Aspirate Level 1",
+  "Dispense Level 1 barrel volume into the cartridge well": "Dispense Level 1",
+  "Wait until Level 1 liquid is fully absorbed into the cassette": "Wait for absorption",
+  "Insert the Level 1 cartridge until it clicks; press Enter": "Insert and run Level 1",
+  "Review and print the QC Level 1 result": "Review Level 1",
+  "Prepare a NEW cassette and pipette for QC Level 2": "Prepare Level 2 materials",
+  "Aspirate Level 2 control using the large upper bulb": "Aspirate Level 2",
+  "Dispense Level 2 into the NEW cartridge sample well": "Dispense Level 2",
+  "Insert the Level 2 cartridge until it clicks; press Enter": "Insert and run Level 2",
+  "Review and print the QC Level 2 result": "Review Level 2",
+  "Confirm both QC levels pass; print and file the records": "Verify both levels",
+  "Return or discard QC materials per approved storage and disposal rules": "Store or discard QC",
+  "Identify the new assay box, device lot and expiration": "Check new assay box",
+  "Locate the reagent CODE CHIP supplied with the new box": "Find reagent CODE CHIP",
+  "Select INSTALL NEW CODE CHIP on the MeterPro": "Install new CODE CHIP",
+  "Insert the matching reagent CODE CHIP into the designated port": "Insert reagent CODE CHIP",
+  "Prepare two fresh assay cartridges and transfer pipettes": "Gather QC materials",
+  "Retrieve and thaw Triage Total 5 Controls 1 and 2": "Thaw both controls",
+  "Select RUN TEST, enter User ID, then select QC SAMPLE": "Select QC SAMPLE",
+  "Enter or scan the QC control lot number": "Enter QC lot",
+  "Open the first cartridge and squeeze a fresh pipette upper bulb": "Prepare Level 1 materials",
+  "Aspirate Control Level 1 into the transfer pipette": "Aspirate Level 1",
+  "Dispense Control Level 1 into its cartridge sample well": "Dispense Level 1",
+  "Wait for full absorption, then insert the Level 1 cassette": "Insert Level 1",
+  "Press Enter and verify the Level 1 QC result": "Run and verify Level 1",
+  "Open a NEW cassette and use a NEW pipette for Level 2": "Prepare Level 2 materials",
+  "Aspirate Control Level 2 and verify the overflow chamber": "Aspirate Level 2",
+  "Dispense Control Level 2 into the new sample well": "Dispense Level 2",
+  "Wait for absorption; insert the Level 2 cassette and press Enter": "Insert and run Level 2",
+  "Review both Level 1 and Level 2 QC results": "Verify both levels",
+  "Print, log new-box QC and label the reagent box": "Print and label box",
+  "Store the CODE CHIP and approved materials; release box for use": "Store materials"
+ },
+ "clinitek": {
+  "Confirm urine specimen and strip": "Check urine and strip",
+  "Select Strip Test": "Select Strip Test",
+  "Prepare the UA dipstick": "Prepare UA strip",
+  "Press START, then dip and blot the strip": "Start, dip and blot",
+  "Place the strip onto the test table": "Load strip",
+  "Review and document results": "Review UA results",
+  "Confirm urine specimen and hCG test kit": "Check urine and kit",
+  "Select Cassette Test": "Select Cassette Test",
+  "Flip the test-table insert for hCG": "Flip test-table insert",
+  "Prepare and place the unused hCG cassette": "Load hCG cassette",
+  "Press START before applying the sample": "Press START",
+  "Dispense urine using the included pipette": "Dispense urine",
+  "Review and document the pregnancy test": "Review hCG results",
+  "Prepare urinalysis controls": "Prepare UA controls",
+  "Open the UA QC test": "Open UA QC",
+  "Run each control using the strip method": "Run UA controls",
+  "Verify, document and repeat as required": "Verify and document",
+  "Prepare hCG quality control": "Prepare hCG controls",
+  "Open the hCG cassette QC test": "Open hCG QC",
+  "Flip the test-table insert for hCG QC": "Flip test-table insert",
+  "Place cassette and select START": "Load cassette and start",
+  "Dispense QC material into the cassette well": "Dispense QC material",
+  "Review QC and record the printout": "Review and log QC",
+  "Approved Siemens operator instructions": "Siemens instructions",
+  "Local laboratory training": "Local training"
+ },
+ "coagsense": {
+  "Turn on the machine by pressing and holding the power button": "Power on analyzer",
+  "Press Test on the display screen": "Select Test",
+  "Confirm strip lot information": "Verify strip lot",
+  "Grab a test strip from the test box": "Retrieve test strip",
+  "Collect the sample": "Collect fingerstick",
+  "Immediately after collecting the blood, place the tip of the sample transfer tube into the sample well where you see the green light": "Position transfer tube",
+  "Gently push down the plunger to dispense the blood sample": "Dispense blood",
+  "When the sample is detected, the machine will display “Testing Please Wait”": "Confirm analysis",
+  "Log results in RelayMed": "Log results",
+  "Perform the QC the same way we perform a patient test": "Run QC controls",
+  "Record the QC in the QC binder": "Record QC",
+  "On the box, write:": "Label reagent box"
+ },
+ "poc": {
+  "Check expiration": "Check expiration",
+  "Run tests according to the official manual/package insert": "Run test per IFU",
+  "Log results in Relaymed": "Log results",
+  "Run the controls as needed or when receiving a new lot according to the manufacturer’s guidelines": "Run QC controls",
+  "Log the QC in the waived tests QC log": "Record QC",
+  "On the box, write:": "Label reagent box"
+ },
+ "sofia": {
+  "Verify order, kit and readiness": "Verify order and kit",
+  "Collect the assay-specific swab": "Collect swab",
+  "Select Run Test on Sofia 2": "Select Run Test",
+  "Enter User ID and Patient ID / MRN": "Enter patient and user ID",
+  "Choose run mode": "Choose run mode",
+  "Extract the swab in the kit reagent tube": "Extract swab",
+  "Dispense prepared extract into the cassette sample well": "Dispense extract",
+  "Insert the cassette into the blue drawer": "Insert cassette",
+  "Review the results and procedural control": "Review results and QC",
+  "Document and verify results in Relaymed": "Log results",
+  "Gather positive and negative QC materials": "Gather QC materials",
+  "Tap Run QC and scan the assay-specific QC card": "Scan QC card",
+  "Prepare the positive control and cassette": "Prepare positive QC",
+  "Insert the positive QC cassette": "Insert positive cassette",
+  "Continue to the negative control with a separate cassette": "Run negative QC",
+  "Review positive and negative QC results": "Review both controls",
+  "Document QC and mark the reagent box": "Record QC and label box",
+  "Check the 30-day calibration due date": "Check calibration due",
+  "Open the menu and select Run Calibration": "Select Run Calibration",
+  "Insert the dedicated calibration cassette into the blue drawer": "Insert calibration cassette",
+  "Confirm PASS, record and return cassette to opaque sleeve": "Verify PASS and record"
+ },
+ "hemocue": {
+  "Turn on the machine": "Power on analyzer",
+  "Follow the quick tip guide": "Follow testing guide",
+  "Microcuvette": "Microcuvette",
+  "Lancet": "Lancet",
+  "1 second": "Read time: 1 second",
+  "Santa Monica": "Santa Monica",
+  "Manhattan Beach": "Manhattan Beach",
+  "Enter the results manually in Relaymed": "Log results"
+ },
+ "torch": {
+  "Load the controls into the red vial and process like a sample": "Prepare QC pouch",
+  "Confirm QC Sample Name and start the control": "Enter QC ID and run",
+  "Put printouts in the monthly QC log binder": "File QC reports",
+  "Gather pouch kit and specimen": "Gather kit and specimen",
+  "Seat pouch and place injection vials": "Set up loading station",
+  "Hydrate pouch through blue port": "Hydrate pouch",
+  "Cap red vial and gently invert 3 times": "Mix red vial",
+  "Load prepared sample through red port": "Load sample into pouch",
+  "Select an available analyzer module": "Select Available module",
+  "Scan pouch barcode and confirm sample ID": "Scan pouch and enter ID",
+  "Load pouch and start run": "Insert pouch to start",
+  "Review and document results": "Review and log results",
+  "Add GI sample buffer to red vial": "Add sample buffer",
+  "Transfer GI specimen to red vial": "Transfer stool specimen",
+  "Scan TORCH pouch barcode": "Scan pouch barcode",
+  "Enter TORCH Sample ID (patient identification)": "Enter Sample ID",
+  "Insert TORCH pouch into module": "Insert pouch",
+  "Select TORCH protocol if prompted": "Select protocol if prompted",
+  "Review TORCH information and Start Run": "Review and Start Run",
+  "Confirm TORCH run in progress": "Monitor run",
+  "Select TORCH Finished module": "Select Finished",
+  "Review TORCH report and remove pouch": "Review report and eject",
+  "Retrieve TORCH report from Browse Runs": "Retrieve report"
+ },
+ "spotfire": {
+  "Note: The QC covers both Respiratory AND Sore Throat": "QC covers both menus",
+  "Grab the controls (BioFire Spotfire R/ST for Respiratory AND Sore Throat)": "Gather R/ST controls",
+  "Put printouts in the monthly QC log binder": "File QC reports",
+  "Gather pouch kit and specimen": "Gather kit and specimen",
+  "Seat pouch and place injection vials": "Set up loading station",
+  "Hydrate pouch through blue port": "Hydrate pouch",
+  "Cap red vial and gently invert 3 times": "Mix red vial",
+  "Load prepared sample through red port": "Load sample into pouch",
+  "Select an available analyzer module": "Select Available module",
+  "Scan pouch barcode and confirm sample ID": "Scan pouch and enter ID",
+  "Load pouch and start run": "Insert pouch to start",
+  "Review and document results": "Review and log results",
+  "Transfer SPOTFIRE specimen to red vial": "Transfer specimen",
+  "Add SPOTFIRE buffer to red vial": "Add sample buffer"
+ },
+ "febridx": {
+  "Confirm patient eligibility, order and single-use test": "Verify eligibility and kit",
+  "Prepare the finger and lancet": "Prepare finger and lancet",
+  "Lance finger and wipe away first drop": "Lance and wipe first drop",
+  "Fill the integrated blood collection tube completely": "Fill collection tube",
+  "Rotate tube to transfer blood to the test strip": "Transfer blood to strip",
+  "Press buffer release button and confirm flow": "Release buffer",
+  "Time the test and verify both windows": "Time and check windows",
+  "Read control and interpret CRP / MxA pattern": "Read CRP and MxA",
+  "Record, notify and dispose safely": "Record and dispose"
+ },
+ "drug-screen": {
+  "Verify the order and specimen": "Verify order and urine",
+  "Collect specimen and run test": "Collect and run test",
+  "Review and interpret every panel": "Interpret all panels",
+  "Enter and verify results in Relaymed": "Log results"
+ },
+ "hiv": {
+  "Verify order, patient, kit, and controls": "Verify order and kit",
+  "Prepare the strip and workstation": "Prepare test strip",
+  "Collect fingerstick whole blood": "Collect fingerstick",
+  "Apply 50 µL to the sample pad": "Apply 50 µL blood",
+  "Add chase buffer after one minute": "Add chase buffer",
+  "Read between 20 and 30 minutes": "Read at 20–30 min",
+  "Interpret, record and notify": "Interpret and record",
+  "Check external QC triggers": "Check QC requirements",
+  "Prepare four Abbott control vials and strips": "Prepare four controls",
+  "Apply 50 µL control to each strip": "Apply 50 µL control",
+  "Read controls between 20 and 30 minutes": "Read QC at 20–30 min",
+  "Document QC and resolve failures": "Record and resolve QC"
  }
- return result||value;
+};
+function instrumentStepNavLabel(full,instrumentId=''){
+ const value=String(full||'').replace(/\s+/g,' ').trim();
+ const explicit=instrumentStepNavLabels[instrumentId]?.[value];
+ if(explicit)return explicit;
+ const common=[[/^Print and file the QC records$|^Review and file QC results$/i,'File QC results'],[/^Replace QC vials/i,'Replace QC vials'],[/^Register a new QC lot/i,'Register QC lot'],[/^Reference notes$/i,'Reference notes']];
+ for(const [pattern,label] of common)if(pattern.test(value))return label;
+ // Never cut a phrase at an arbitrary character limit. New labels wrap.
+ return value;
 }
 function guideStepTitle(parts){
  return (parts.badge?'<span class="guide-topic-badge">'+safeHtml(parts.badge)+'</span>':'')+markText(parts.title);
@@ -1815,7 +2077,7 @@ function renderGuidedProcedure(group,sec){
  if(!isPathfastPatient)h+='<div class="guide-toolbar-actions"><div class="guide-mode-switch" role="group" aria-label="Procedure display mode"><button type="button" data-guide-mode="guided" aria-pressed="'+(state.guideMode==='guided')+'">Guided view</button><button type="button" data-guide-mode="all" aria-pressed="'+(state.guideMode==='all')+'">All steps</button></div></div></div>';
  if(total>1){
   if(isPathfastPatient){
-   const shortNames=['Verify tube + draw time','Retrieve cartridges','Prepare sample rack','Dispense specimen','Load rack + tips','Close hood','Sign in','Check assay status','Back to menu','Select SAMPLE','Choose lane','Enter patient SID','Start analysis','Running · 17 min','Review results'];
+   const shortNames=['Verify tube and draw time','Retrieve cartridges','Prepare sample rack','Dispense specimen','Load rack and tips','Close hood','Sign in if required','Check assay status','Return to ASSAY menu','Select SAMPLE','Select occupied lane','Enter patient SID','Start analysis','Monitor run','Review results'];
    h+='<nav class="pfux-stage-nav" aria-label="PATHFAST patient testing stages"><div class="pfux-stage-track" role="group" aria-label="Select any patient testing stage">'+steps.map(function(entry,i){
      const name=shortNames[i]||entry.root.text;
      return '<button type="button" class="pfux-stage-button'+(i===current?' is-current':i<current?' is-previous':'')+'" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(entry.root.text)+'" aria-label="Step '+(i+1)+' of '+total+': '+safeHtml(entry.root.text)+'"><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+safeHtml(name)+'</span></button>';
@@ -1826,7 +2088,7 @@ function renderGuidedProcedure(group,sec){
     const parts=guideStepParts(entry,sec);
     const name=entry.root.text;
     const monoShort=['Verify order + kit','Whole blood · 25 µL','Prepare cassette','Blood → upper S','Developer → lower S','Read at 8 min'];
-    const navLabel=sec.id==='mono'&&group.id==='patient-testing'?monoShort[i]:isInstrumentProcedure?(sec.id==='sysmex'&&/^running (patient )?samples?/i.test(group.title)?sysmexPatientStepNavLabel(name):instrumentStepNavLabel(parts.title)):name;
+    const navLabel=sec.id==='mono'&&group.id==='patient-testing'?(monoShort[i]||name):isInstrumentProcedure?instrumentStepNavLabel(name,sec.id):name;
      const vialFrequency=sec.id==='sysmex'&&group.id==='daily-qc'&&/^Replace QC vials/i.test(name)?'<small class="guide-pill-frequency">14 DAYS / AS NEEDED</small>':'';
     return '<button type="button" class="guide-step-pill" data-guide-step="'+i+'" '+(i===current?'aria-current="step"':'')+' title="'+safeHtml(name)+'" aria-label="Step '+(i+1)+': '+safeHtml(name)+'"><span class="guide-pill-number">'+String(i+1).padStart(2,'0')+'</span><span class="guide-pill-label">'+(isInstrumentProcedure?safeHtml(navLabel):guideStepTitle(parts))+vialFrequency+'</span></button>';
   }).join('');
