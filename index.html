@@ -508,7 +508,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
 <script src="qc-guide.js?v=20261125-clinitek-lcd"></script>
-<script src="biofire-visual.js?v=20261104"></script>
+<script src="biofire-visual.js?v=20261125-torch-screens"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
 <script src="lab-guide-polish.js?v=20261104"></script>
 <script src="piccolo-results.js?v=20261104"></script>
@@ -523,7 +523,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sofia-visual-guide.js?v=20261119-screen-review"></script>
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
-<script src="biofire-reference-polish.js?v=20261119-instrument-steps"></script>
+<script src="biofire-reference-polish.js?v=20261125-torch-screens"></script>
 <script src="sendout-market-guide.js?v=20261119-norcal-pickup-status"></script>
 <script src="assay-catalog.js?v=20261119-panel-audit"></script>
 <script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
@@ -1384,13 +1384,25 @@ function buildGroups(section){
      'Unscrew the RED vial and pause 5 seconds with the blunt needle in the cap. Lift the vial, leaving its red plastic cover in the station; press the needle into the RED pouch port, then verify sample transfer.'),
    ...step('Select an available analyzer module',
      'Choose an available module on the selected analyzer. Keep the prepared pouch with its sample identification.'),
+   ...(torch?[
+    ...step('Scan TORCH pouch barcode','Scan the pouch fitment label and verify the automatically entered lot, serial number and GI pouch type.'),
+    ...step('Enter TORCH Sample ID (patient identification)','Before inserting the pouch, scan or enter the approved sample identifier in Sample ID. Match the patient MRN and order in Athena. The original Sollis guide specifies MRN entry; confirm direct MRN use is authorized by the current U.S. IFU and local SOP.'),
+    ...step('Insert TORCH pouch into module','Verify the Sample ID first. Insert the prepared pouch into the available module with the fitment label flat. Blinking blue changes to blinking green when seated.'),
+    ...step('Select TORCH protocol if prompted','Select the correct GI protocol if multiple options are displayed. A single available protocol is automatically selected.'),
+    ...step('Enter TORCH operator information','Enter your own user name and password and tap Next when enabled.'),
+    ...step('Review TORCH information and Start Run','Verify Sample ID, pouch lot, serial number, pouch type, protocol and operator; tap Start Run.'),
+    ...step('Confirm TORCH run in progress','Confirm the module LED is solid green and the remaining time is displayed.'),
+    ...step('Select TORCH Finished module','Select Finished on the Dashboard to open the report. The pouch is partially ejected.'),
+    ...step('Review TORCH report and remove pouch','Verify the sample identification, completed status, internal controls and all targets; remove and discard the pouch appropriately. Print/save and document the results under the approved workflow.'),
+    ...step('Retrieve TORCH report from Browse Runs','Once the pouch is removed, open Browse Runs, select the matching run, and tap View Report.')
+   ]:[
    ...step('Scan pouch barcode and confirm sample ID',
      'Scan the prepared pouch barcode. Confirm the panel, patient or QC identifier, and specimen type on the analyzer before starting.'),
-   ...step('Load pouch and start run',torch
-     ?'Insert the prepared pouch into the selected TORCH module and follow the analyzer start prompts.'
-     :'Review the SPOTFIRE Review Information, Then Insert Pouch screen for correct sample ID, sample type and panel. Once the selected module LED blinks blue, insert the prepared pouch. The module pulls in the pouch and begins the run automatically; its LED becomes solid green. No separate Start tap is required.'),
+   ...step('Load pouch and start run',
+     'Review the SPOTFIRE Review Information, Then Insert Pouch screen for correct sample ID, sample type and panel. Once the selected module LED blinks blue, insert the prepared pouch. The module pulls in the pouch and begins the run automatically; its LED becomes solid green. No separate Start tap is required.'),
    ...step('Review and document results',
      'Verify that the run is complete, internal controls are acceptable and identifiers match before releasing results. Handle invalid or incomplete runs according to the approved assay IFU.')
+   ])
   ];
   const patient={id:'patient-testing',title:'Patient testing',blocks};
   const groups=[patient];
