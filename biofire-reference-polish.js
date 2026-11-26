@@ -48,7 +48,7 @@ function card(id,opts){
  const hue=opts.hue||"green",visual=opts.visual||"",lines=opts.lines||[];
  const reference=manufacturer(id,opts.figure,opts.page);
  const details=opts.note?'<div class="bf-polished-alert"><strong>'+esc(opts.noteTitle||"Verify")+'</strong> '+esc(opts.note)+'</div>':"";
- const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources")+(opts.torchManual?' · '+link("https://www.youtube.com/watch?v=Oc3ALCcGuHs","Official TORCH software training video"):""):
+ const source=id==="torch"?(opts.torchManual?link("https://www.biomerieux.com/content/dam/biomerieux-com/service-support/support-documents/instructions-for-use-and-manuals/HTFA-PRT-0001-FilmArray-Torch-Operators-Manual-IVD-EN.pdf#page=27","TORCH operator manual · Chapter 5"):opts.originalDiagram?link("https://www.biomerieux.com/corp/en/our-offer/clinical-products/biofire-filmarray-gastrointestinal-panel.html","BIOFIRE GI specimen requirements"):(opts.figure?link(legacyGuide,"FilmArray RP2 handling figure source"):link(docLibrary,"FilmArray GI reference")))+' · '+link(docLibrary,"Current GI panel resources")+(opts.torchManual?' · '+link("https://www.youtube.com/watch?v=Oc3ALCcGuHs","Official TORCH software training video")+' · '+link("https://www.dotmed.com/listing/lab-general/biofire/filmarray-torch/2-module-pcr-molecular-testing-system/5540587","Actual barcode prompt photograph")+' · '+link("https://www.dotmed.com/listing/lab-general/biofire/filmarray-torch-infectious-disease-poc-analyzer/biofire-torch/3716873","Actual insertion screen photograph"):""):
   link(spotGuide+"#page="+(opts.page||14),"SPOTFIRE R/ST illustrated IFU")+' · '+link(miniGuide,"Find current R/ST Mini guide");
  return '<section class="bf-polished bf-polished-'+hue+'" aria-label="'+esc(id==="torch"?"TORCH GI":"SPOTFIRE R/ST")+' '+esc(opts.title)+'">'+
  '<div class="bf-polished-top"><span class="bf-polished-chip">'+esc(id==="torch"?"TORCH · GI":"SPOTFIRE · R/ST")+'</span>'+
@@ -146,7 +146,7 @@ function render(id,title){
  const qcExample=/confirm qc sample name|put printouts in the monthly qc log binder/.test(t); const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode,qcExample?"QC-GI-Neg":"GI-DEMO-001"),lines,note,torchManual:true});
  if(gi&&B.torchScreen){
   const exact={
-   "scan torch pouch barcode":["scan","Scan pouch barcode",["Scan the fitment label; verify the lot, serial and GI pouch type."]],
+   "scan torch pouch barcode":["scan","Scan pouch barcode",["Hold the pouch fitment barcode under the integrated scanner until it is read. Verify the pouch details. If the scanner is unavailable or cannot read the label, select Enter Manually and enter the printed pouch information."]],
    "enter torch sample id (patient identification)":["sample","Enter Sample ID",["Enter the authorized specimen ID before inserting the pouch. Match the MRN and order in Athena."],"The original Sollis guide specifies MRN entry. The CE-IVD manual advises against entering MRNs directly; verify authorization under the current U.S. IFU and Sollis SOP."],
    "insert torch pouch into module":["insert","Insert the prepared pouch",["With the Sample ID verified, insert the pouch into a module blinking blue. Keep the fitment label flat; blinking green means seated."]],
    "select torch protocol if prompted":["protocol","Select Protocol (if displayed)",["Select the correct installed GI sample protocol and tap Next. The screen is skipped if only one protocol is available."],"Example protocol and software version only."],
@@ -156,6 +156,7 @@ function render(id,title){
    "review torch report and remove pouch":["report","Review report and remove pouch",["Verify patient identification, controls and results. Remove and discard the pouch; print/save per SOP."]],
    "retrieve torch report from browse runs":["browse","Browse Runs",["Select the matching run and tap View Report."]]
   };
+  if(t==="scan torch pouch barcode")return tc(...exact[t])+tc("manual","Manual pouch entry (only if needed)",["Use Enter Manually only if scanning is unavailable or unsuccessful. Match the printed lot and serial number and pouch type."],"The manual entry field arrangement is partially confirmed from a photograph; exact software layout may vary.");
   if(exact[t])return tc(...exact[t]);
   if(/confirm qc sample name and start the control/.test(t))return [
    tc("dashboard","Select Available",["Select the single Available tile or scan the prepared control pouch from Dashboard."]),
