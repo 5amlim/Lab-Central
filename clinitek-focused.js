@@ -34,7 +34,7 @@ function machine(mode="home",kind="ua"){
   mode==="dip"?"empty":mode==="qc-dip"?"qc":"empty";
  // Original photographed instrument, scaled to leave space for consumable
  // and table-insert closeups on the right. Screens are simplified diagrams.
- return '<g transform="translate(31 -2) scale(.80)">'+equipment.clinitekDeviceMarkup(shapeMode)+'</g>';
+ return '<g transform="translate(31 -2) scale(.80)">'+equipment.clinitekDeviceMarkup(shapeMode,{kind,qc:mode==="qc"||mode==="qc-dip"})+'</g>';
 }
 function tableCloseup(kind,dispense=false){
  const hcg=kind==="hcg";
