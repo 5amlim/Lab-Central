@@ -557,13 +557,13 @@ function render(){
       window.LAB_PATHFAST_SCREEN.lanes("cal",group.label)+laneMap(true,false)+
       '<p class="pf-workflow-note">Instrument-assigned lanes take precedence over an illustrated example. If the displayed configuration differs, confirm the applicable calibration-replicate and QC-lockout procedure before starting.</p>');
   h+=step(11,'Press START to begin calibration and QC','Verify prepared lanes and confirm the analyzer START prompt',
-      window.LAB_PATHFAST_SCREEN.start("cal")+
+      window.LAB_PATHFAST_SCREEN.start("cal",group.label)+
       '<p class="pf-workflow-note">Confirm that all six prepared lanes match the displayed assay and that the hood is fully closed before pressing START.</p>');
   h+=step(12,'Confirm the analyzer is running · approx. 17 minutes','Do not open the hood during processing',
-      (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('running','cal'):'')+
+      window.LAB_PATHFAST_SCREEN.running('cal',group.label)+(window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('running','cal'):'')+
       '<p class="pf-workflow-note">After START is accepted, allow the analyzer to finish the approximately 17-minute assay. Keep the hood closed and do not interrupt processing.</p>');
   h+=step(13,'Review calibration and QC results','Only accept the run after reviewing all calibrators and control levels',
-      (window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('results','cal'):'')+
+      window.LAB_PATHFAST_SCREEN.results('cal',group.label)+(window.LAB_EQUIPMENT_ART?.pathfastActionVisual?window.LAB_EQUIPMENT_ART.pathfastActionVisual('results','cal'):'')+
       status(group)+
       '<p class="pf-workflow-note">Review CAL 1, CAL 2 and both Bio-Rad controls against lot-specific criteria; confirm results are acceptable before patient testing. Failed controls require resolution.</p>');
   h+=step(14,'Print, file and return CAL/QC materials to storage','Document both control levels and return each material to the correct temperature',
