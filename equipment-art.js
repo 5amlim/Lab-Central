@@ -255,8 +255,8 @@ function clinitekDeviceMarkup(mode="empty"){
  '<path d="M152 89L162 80H421L432 91V205L424 216H149L141 208V104Z" fill="#c1c9c8" stroke="#aab7b8" stroke-width="3"/>'+
  '<path d="M156 96L167 91H411L419 101V201H157Z" fill="url(#cl-status-glass)" stroke="#8a9da2" stroke-width="2.5"/>'+
  '<path d="M162 98H404L412 124L404 187H161Z" fill="#e6eae7" opacity=".3"/>'+ ((m==="empty")?'<path d="M157 97L167 92H409L418 101V199H157Z" fill="#303b42" stroke="#596e79" stroke-width="2"/>' : '')+
- // Keep real physical interface silhouette. The menu remains schematic.
- ((m==="empty"||m==="ready")?'':(
+ // Shared 4:3 LCD reference, inset in the existing display recess.
+ (m!=="empty"&&window.LAB_CLINITEK_LCD?.lcd?'<svg x="214" y="94" width="148" height="111" viewBox="0 0 320 240">'+window.LAB_CLINITEK_LCD.lcd(/result|reading/.test(m)?"results":m==="analyzing"?"analyzing":/start/.test(m)?"prepare":m==="qc"?"qctype":"ready",{kind:/cassette/.test(m)?"hcg":"ua",qc:m==="qc"}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg>':(((m==="empty"||m==="ready")?'':(
  '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
  T(287,137,(/cassette/.test(m))?"Cassette Test":(/strip/.test(m))?"Strip Test":m==="qc"?"QC Test":/start/.test(m)?"READY / START":/result|reading/.test(m)?"Results":m==="analyzing"?"Analyzing":"CLINITEK Status+",13,"#426679",850)+
  '<rect x="199" y="147" width="172" height="23" rx="4" fill="#c9e8e7" stroke="#b1cdd2"/>'+
@@ -264,7 +264,7 @@ function clinitekDeviceMarkup(mode="empty"){
  ))+
  (m==="analyzing"?
   '<rect x="211" y="176" width="144" height="5" rx="2.5" fill="#c1d3d7"/>'+
-  '<rect x="211" y="176" width="75" height="5" rx="2.5" fill="#2c9890"/>':"")+
+  '<rect x="211" y="176" width="75" height="5" rx="2.5" fill="#2c9890"/>':"")))+
  // Correct CLINITEK Status+ / Siemens branding and power button.
  T(162,244,"CLINITEK Status+",19,"#273944",820,"start")+
  T(255,260,"Analyzer",9,"#647681",620)+
