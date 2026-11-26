@@ -272,7 +272,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="step-illustrations.css?v=20261104" media="all">
 <link rel="stylesheet" href="instrument-accuracy.css?v=20261104">
   <link rel="stylesheet" href="lab-guide-polish.css?v=20261104-no-outer">
-  <link rel="stylesheet" href="guide-refinements.css?v=20261119-hiv-fingerstick">
+  <link rel="stylesheet" href="guide-refinements.css?v=20261125-step-label-audit">
 <link rel="stylesheet" href="assay-catalog.css?v=20261112-hiv-clia-context" media="all">
 <link rel="stylesheet" href="result-interpretation-guides.css?v=20261104" media="all">
 <link rel="stylesheet" href="egfr-calculator.css?v=20261104" media="all">
@@ -506,7 +506,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
 <script src="training-competency.js?v=20261118-market-hiv"></script>
 <script src="instrument-qc-overview.js?v=20261104"></script>
-<script src="pathfast-calibration.js?v=20261125-portrait-lcd"></script>
+<script src="pathfast-calibration.js?v=20261125-step-label-audit"></script>
 <script src="pathfast-maintenance.js?v=20261106"></script>
 <script src="pathfast-linearity.js?v=20261113-auditor-illustrations"></script>
 <script src="pathfast-screen-guide.js?v=20261125-portrait-lcd"></script>
@@ -1636,7 +1636,7 @@ function sysmexPatientStepNavLabel(full){
   [/^Confirm analysis started/i,'Confirm run']
  ];
  for(const [pattern,short] of shortcuts)if(pattern.test(label))return short;
- return instrumentStepNavLabel(label);
+ return instrumentStepNavLabel(label,'sysmex');
 }
 // Short navigation labels describe the action. Full instructions stay in
 // the large step header and full text remains in the button title.
