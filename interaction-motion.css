@@ -29,22 +29,6 @@
   }
   .guide-progress > span { transition: width 240ms cubic-bezier(.2,.75,.3,1); }
 }
-@media screen {
-  .lc-motion-segmented { position: relative; isolation: isolate; }
-  .lc-motion-segmented > .lc-motion-indicator {
-    position: absolute; top: 0; left: 0; pointer-events: none;
-    z-index: 0; border-radius: 7px; background: #fff;
-    box-shadow: 0 1px 4px #3a63702a;
-  }
-  .lc-motion-segmented > button { position: relative; z-index: 1; }
-  .lc-motion-segmented > button:is(.active,[aria-pressed="true"]) {
-    background: transparent !important; box-shadow: none !important;
-  }
-}
-@media print {
-  .lc-motion-indicator { display: none !important; }
-}
-
 /* Additional feedback for local tools, gallery cards and page-specific controls. */
 @media screen and (prefers-reduced-motion: no-preference) {
   :is(.dqc-location-options,.tc-location-options,.egfr-picker-list):not([hidden]) {
@@ -75,29 +59,9 @@
   }
 }
 
-/* Keep the non-PATHFAST guided switch's instrument-specific active color. */
-@media screen {
-  .guide-mode-switch.lc-motion-segmented > .lc-motion-indicator {
-    background: var(--lc-instrument-accent, #1b6c88);
-    border: 1px solid #0d7e76;
-    border-radius: 8px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 6px rgba(24,79,103,.22);
-  }
-  .guide-mode-switch.lc-motion-segmented > button[aria-pressed="true"] {
-    border-color: transparent !important;
-  }
-  .lc-moving-selection {
-    position: fixed;
-    z-index: 40;
-    pointer-events: none;
-    box-sizing: border-box;
-    border: 2px solid currentColor;
-  }
-}
 @media screen and (prefers-reduced-motion: no-preference) {
   :is(.guide-mode-switch,.pfux-view-toggle) > button {
-    transition: color 180ms ease;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
   }
   :is(.branch-choice,.sollis-route-choice,.api-guide-tab,.pfux-support-link) {
     transition: background-color 180ms ease, border-color 180ms ease,
@@ -107,6 +71,17 @@
     scale: .98;
   }
 }
-@media print {
-  .lc-moving-selection { display: none !important; }
+
+
+/* Keep selection controls still; use color and surface changes for feedback. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  :is(.tab-strip,.api-guide-tabs,.ao-directory-tabs,.pfux-primary-nav,
+      .pfux-supporting,.dqc-view-switch,.tc-view-switch,.calc2-tabs,
+      .dqc-market-buttons,.tc-market-buttons,.lcr-filter-buttons,
+      .lcr-categories,.branch-options,.pfux-view-toggle,.guide-mode-switch) button:active {
+    scale: 1;
+  }
+  :is(.step-toggle,.walkin-guide-trigger,.calculator-upload-help-toggle,.ae-doc-trigger) {
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  }
 }
