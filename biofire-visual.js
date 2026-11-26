@@ -492,50 +492,82 @@ function ui(id,index){
  }
  return torchScreen(index);
 }
+/* TORCH screen reconstruction: visual references include photographs of the
+ actual Dashboard, Scan Pouch Barcode, Insert Pouch and Browse Runs interfaces.
+ Manual HTFA-PRT-0001-08, chapters 5–6. Single configured module; operator entry
+ omitted per site. Exact Sample ID screen still requires local verification. */
 function torchScreen(index,sampleId='GI-DEMO-001'){
  const mode=typeof index==="number"?["dashboard","scan","sample","review"][index]||"dashboard":index;
- const ink="#333",blue="#267dab",green="#79b82a",gray="#e6e6e6";
- const t=(x,y,v,s=19,color=ink,anchor="start",w="400")=>text(x,y,v,s,color,anchor,w);
- const rect=(x,y,w,h,fill="#fff",stroke="#b9b9b9",rx=3)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'"/>';
- const btn=(x,y,w,h,v,fill=gray)=>rect(x,y,w,h,fill,fill===green?"#659e23":"#aaa",5)+t(x+w/2,y+h/2+7,v,18,fill===green?"#fff":ink,"middle","700");
- const field=(x,y,w,v,focus=false)=>rect(x,y,w,32,"#fff",focus?"#367da6":"#a9a9a9",1)+t(x+8,y+22,v,17);
- const selected=mode==="browse"?"Browse Runs":"Dashboard";
- let body=rect(0,0,920,400,"#d4d5d5","#979797",12)+rect(9,9,902,382,"#fff","#4d4e4f",6)+rect(15,15,890,53,"#f0f0f0","#b8b8b8",0);
- ["Dashboard","Browse Runs","Settings"].forEach((v,i)=>{const x=24+i*151;body+=rect(x,19,145,44,selected===v?"#d4e9f1":"#f5f5f5","#c4c4c4",2)+t(x+72,47,v,19,selected===v?blue:ink,"middle","700");});
- body+=t(887,47,"FilmArray® Torch",24,"#424242","end","700");
- const title=v=>t(35,99,v,24,ink,"start","700");
- const rows=(x,y,step=34)=>[["Sample ID:",sampleId],["Lot:","123456"],["Serial Number:","12345678"],["Pouch Type:","GI Panel v2.1"],["Protocol:","Stool FA v3.0"]].map(([k,v],i)=>t(x,y+i*step,k,18,ink,"start","700")+t(x+174,y+i*step,v,18)).join("");
+ const ink="#44494b",blue="#287fc1",green="#72b83b",gray="#838b8c",bg="#f8f9f9";
+ const t=(x,y,v,s=18,color=ink,anchor="start",w="400")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Segoe UI,Arial,sans-serif" font-size="'+s+'" font-weight="'+w+'" fill="'+color+'">'+esc(v)+'</text>';
+ const rect=(x,y,w,h,fill="#fff",stroke="none",rx=0)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'"/>';
+ const btn=(x,y,w,h,v,fill=gray)=>rect(x,y,w,h,fill,"none",h/2)+t(x+w/2,y+h/2+6,v,17,"#fff","middle","500");
+ const field=(x,y,w,v,active=false)=>rect(x,y,w,40,"#fff",active?"#74ad43":"#aeb8b9",19)+t(x+14,y+26,v,18);
+ const icon=(kind,x,y,fill="#747d7f")=>{
+  const shapes={home:'<path d="M1 10 12 1 23 10v2h-3v10h-6v-7h-4v7H4V12H1z"/>',list:'<rect x="3" y="2" width="18" height="20" rx="2"/><path d="M7 7h10M7 12h10M7 17h10" stroke="#fff" stroke-width="1.5"/>',gear:'<path d="m10 1 4 0 1 4 3 1 3-2 3 4-3 3v3l3 3-3 4-3-2-3 1-1 4h-4l-1-4-3-1-3 2-3-4 3-3v-3L0 8l3-4 3 2 3-1z"/><circle cx="12" cy="12" r="4" fill="#f0f2f2"/>',back:'<circle cx="12" cy="12" r="11"/><path d="m14 6-6 6 6 6" fill="none" stroke="#fff" stroke-width="2"/>',eject:'<path d="M3 14 12 4l9 10zM3 17h18v4H3z"/>',search:'<circle cx="10" cy="10" r="6" fill="none" stroke="'+fill+'" stroke-width="3"/><path d="m15 15 7 7" stroke="'+fill+'" stroke-width="3"/>'};
+  return '<g transform="translate('+x+' '+y+')" fill="'+fill+'">'+(shapes[kind]||"")+'</g>';
+ };
+ const screenTitle=(v,x=460)=>t(x,92,v,22,"#40484a","middle","600");
+ const back=()=>icon("back",27,67,"#829da9");
+ const eject=()=>icon("eject",754,65)+t(785,83,"Eject Pouch",16);
+ const panelName="GI Panel v2.1",protocol="Stool FA";
+ const rows=(x,y,step=35,bold=true)=>[["Sample ID:",sampleId],["Lot:","123456"],["Serial Number:","12345678"],["Pouch Type:",panelName],["Protocol:",protocol]].map(([k,v],i)=>t(x,y+i*step,k,17,"#626a6c")+t(x+150,y+i*step,v,19,"#41494c","start",bold?"600":"400")).join("");
+ const pouch=(x,y,scale=1)=>'<g transform="translate('+x+' '+y+') scale('+scale+')"><rect width="210" height="114" rx="4" fill="#e0e9eb" stroke="#91a4ad"/><rect x="1" y="1" width="208" height="29" rx="2" fill="#edf0ef" stroke="#9da9ac"/><rect x="8" y="7" width="91" height="14" fill="#fff"/><text x="12" y="18" font-size="9" fill="#5b676b">FilmArray GI Panel</text><path d="M132 7v15m4-15v15m3-15v15m5-15v15m3-15v15m5-15v15m3-15v15m5-15v15m3-15v15m4-15v15m6-15v15" stroke="#333" stroke-width="1.4"/><path d="M14 39h112v66H14z" fill="#e9efec" stroke="#b4c2c3"/><path d="M24 49h28v19H24zM62 49h28v19H62zM24 78h28v18H24zM62 78h28v18H62z" fill="#cfdfde" stroke="#bacbcb"/><rect x="140" y="45" width="57" height="57" rx="3" fill="#384347"/><circle cx="168.5" cy="73.5" r="23" fill="#dfe4e2"/>'+Array.from({length:7},(_,i)=>Array.from({length:7},(_,j)=>((i-3)**2+(j-3)**2<13?'<circle cx="'+(151+j*5.8)+'" cy="'+(56+i*5.8)+'" r="1.9" fill="#707d80"/>':'')).join("")).join("")+'</g>';
+ const loadingArt=(scan=false)=>{
+  if(scan)return '<g transform="translate(46 127)"><rect width="386" height="225" fill="#e8eff1" stroke="#c2cfd2"/><path d="M133 3H386V156L250 198 105 67Z" fill="#a9b8bd" stroke="#778b92" stroke-width="2"/><path d="M152 10H258L212 82 122 62Z" fill="#e7e7e3" stroke="#9ba6a9" stroke-width="2"/><path d="M137 8 106 68 221 111" fill="none" stroke="#bc3b42" stroke-width="6"/><path d="M271 15 381 40 343 124 245 93Z" fill="#40565f"/><path d="M275 22 375 46 340 116 252 89Z" fill="#e2e9e9"/><path d="M264 46 357 68M259 57 352 79" stroke="#a3b5ba" stroke-width="2"/><g transform="translate(75 119) rotate(12)">'+pouch(0,0,.78)+'</g><path d="M1 151 45 121 84 125 98 143 82 159 48 156 17 185 1 179Z" fill="#397cc0"/><path d="M101 105 161 142" stroke="#d54549" stroke-width="3" stroke-dasharray="5 4"/></g>';
+  return '<g transform="translate(46 127)"><rect width="386" height="225" fill="#e8eff1" stroke="#c2cfd2"/><path d="M136 0H386V225H136Z" fill="#a8b6bd"/><path d="M152 19H363V198H152Z" fill="#e0e4e4" stroke="#a7b4b7" stroke-width="2"/><path d="M152 19H363" stroke="#c5323a" stroke-width="8"/><path d="M230 64h64v15h-46v83h-18z" fill="#b83037"/><path d="M238 72h45v8h-36v73h-9z" fill="#313e44"/><rect x="304" y="63" width="7" height="101" rx="3" fill="#2c9dd6"/><g transform="translate(8 126) rotate(-9)">'+pouch(0,0,1.02)+'</g></g>';
+ };
+ const toolbar=()=>{
+  let h='<defs><linearGradient id="torchToolbar" x2="0" y2="1"><stop stop-color="#fbfbfb"/><stop offset="1" stop-color="#dce1e1"/></linearGradient></defs>'+rect(0,0,920,520,bg)+rect(0,0,920,48,"url(#torchToolbar)")+'<path d="M0 48h920" stroke="#c4cdce"/>';
+  [["Dashboard","home",24],["Browse Runs","list",193],["Settings","gear",362]].forEach(([v,k,x])=>{if((mode==="browse"?v==="Browse Runs":v==="Dashboard"))h+=rect(x-9,8,157,32,"#f8f9f9","#d8dddd",16);h+=icon(k,x,12)+t(x+30,30,v,15,"#70797b");});
+  h+='<g transform="translate(718 8)" fill="#bc303b"><path d="M12 0 23 7 12 14 1 7zm0 8 11 7-11 7-11-7zm0 8 11 7-11 7-11-7z"/></g>'+t(748,30,"FilmArray® Torch",21,"#b43a42","start","400");
+  return h;
+ };
+ let body=toolbar();
  if(mode==="dashboard"||mode==="finished"){
-  // One configured module. FDA K160068, Fig. 10-4: run details below status for <=6 modules.
-  const finished=mode==="finished", cx=460, cy=190;
-  body+=rect(34,84,852,290,"#f7f7f7","#b7b7b7",5)+
-   '<circle cx="'+(cx-106)+'" cy="'+cy+'" r="38" fill="'+(finished?green:blue)+'"/>'+
-   (finished?'<g fill="none" stroke="#fff" stroke-width="4"><rect x="339" y="169" width="30" height="41" rx="2"/><path d="M345 180h18M345 189h18M345 198h18"/></g>':'<path d="M344 169l30 21-30 21z" fill="#fff"/>')+
-   t(cx-50,cy+11,finished?"Finished":"Available",35,ink,"start","700")+
-   (finished?t(cx,270,sampleId,23,ink,"middle")+t(cx,301,"GI Panel v2.1",20,ink,"middle"):"");
- }else if(mode==="scan"||mode==="sample"||mode==="insert"){
-  body+=title(mode==="scan"?"Scan pouch barcode":mode==="sample"?"Enter Sample ID":"Insert Pouch")+t(880,99,"Illustrative prompt",13,"#667781","end");
-  body+=t(48,137,"Lot:",18)+field(196,114,350,mode==="scan"?"":"123456",mode==="scan")+t(48,177,"Serial Number:",18)+field(196,154,350,mode==="scan"?"":"12345678")+t(48,217,"Pouch Type:",18)+field(196,194,350,mode==="scan"?"":"GI Panel v2.1")+t(48,257,"Sample ID:",18)+field(196,234,350,mode==="insert"||mode==="sample"?sampleId:"",mode==="sample");
-  if(mode==="scan")body+=t(580,145,"Scan pouch barcode",20,blue,"start","700");
-  if(mode==="sample")body+=t(580,145,"Scan or enter Sample ID",19,blue,"start","700")+t(580,175,"Before inserting pouch",17)+t(48,302,"Follow the actual on-screen entry controls.",16,"#667781");
-  if(mode==="insert")body+=t(580,145,"Available module LED",19,blue,"start","700")+t(580,176,"Blinking blue",19,blue)+t(580,207,"Insert prepared pouch",19)+t(580,238,"Keep fitment label flat",16);
-  body+=btn(746,340,132,36,"Cancel");
+  const finished=mode==="finished";
+  body+=rect(5,51,910,464,"#f8fafa","#bfc9cc",2);
+  const x=finished?323:322,y=250;
+  body+='<circle cx="'+x+'" cy="'+y+'" r="29" fill="none" stroke="'+(finished?green:blue)+'" stroke-width="6"/>';
+  body+=finished?'<g stroke="'+green+'" fill="none" stroke-width="3"><rect x="311" y="234" width="24" height="31" rx="1"/><path d="M316 243h14m-14 7h14m-14 7h14"/></g>':'<path d="M313 235l24 15-24 15z" fill="'+blue+'"/>';
+  body+=t(x+46,y+13,finished?"Finished":"Available",42,"#4c5457","start","300");
+  if(finished)body+=t(460,312,sampleId,24,"#4c5457","middle")+t(460,346,panelName,21,"#4c5457","middle");
+ }else if(mode==="scan"){
+  body+=back()+screenTitle("Scan Pouch Barcode",240)+loadingArt(true)+
+   t(240,378,"Align the pouch barcode with the scanner light.",14,ink,"middle")+t(240,400,"Hold until the barcode is read.",14,ink,"middle")+t(240,426,"If needed, enter pouch information manually.",14,ink,"middle")+
+   '<path d="M460 67v420" stroke="#d8dfdf"/>'+btn(542,259,310,40,"Enter Manually");
+ }else if(mode==="manual"){
+  body+=back()+screenTitle("Enter Pouch Data")+t(64,151,"Lot Number",17)+field(64,164,355,"123456",true)+t(460,151,"Serial Number",17)+field(460,164,393,"12345678")+t(64,242,"Pouch Type",17)+field(64,254,355,panelName)+btn(701,451,154,42,"Next",green);
+ }else if(mode==="sample"){
+  body+=back()+screenTitle("Enter Sample ID")+t(87,139,"Sample ID",18)+field(87,151,746,sampleId,true);
+  // Exact keyboard layout for this screen not verified. Show only the supported action.
+  body+=t(460,239,"Scan or manually enter the Sample ID.",19,"#56666b","middle")+btn(693,452,154,42,"Next",green)+t(460,501,"Illustrative entry layout",12,"#758386","middle");
+ }else if(mode==="insert"){
+  body+=back()+screenTitle("Insert Pouch",240)+loadingArt(false)+'<path d="M460 67v420" stroke="#d8dfdf"/>'+
+   t(240,377,"Keep the fitment label flat.",15,ink,"middle")+t(240,401,"Insert into the module with the blinking blue LED.",14,ink,"middle")+
+   rows(495,211,38).replace(/<text[^>]*>Protocol:<\/text><text[^>]*>Stool FA<\/text>/,"");
  }else if(mode==="protocol"){
-  body+=title("Select Protocol")+btn(730,79,148,38,"Eject Pouch")+t(35,140,"Sample ID: "+sampleId,20)+btn(140,188,300,74,"Stool",green)+t(35,320,"Protocol: Stool FA v3.0",18)+btn(746,340,132,36,"Next",green);
+  body+=back()+eject()+screenTitle("Select Protocol")+t(460,137,"Sample ID: "+sampleId,20,ink,"middle")+btn(200,214,520,64,protocol)+t(575,447,"Protocol: "+protocol,17)+btn(700,461,154,40,"Next",green);
  }else if(mode==="review"){
-  body+=btn(29,79,49,40,"←")+t(92,107,"Review and Start Run",24,ink,"start","700")+btn(724,79,154,40,"Eject Pouch")+rows(58,159,40)+btn(649,192,219,81,"Start Run",green);
+  body+=back()+eject()+screenTitle("Review and Start Run")+rows(70,160,47)+btn(598,239,253,52,"Start Run",green);
  }else if(mode==="running"){
-  body+=title("Run In Progress")+'<path d="M382 119V374" stroke="#c1c1c1" stroke-width="1"/>'+rect(45,123,290,198,"#f1f1f1","#c1c1c1",6)+'<g transform="translate(103 137)"><rect x="0" y="0" width="173" height="134" rx="5" fill="#e4e8e9" stroke="#79868d"/><rect x="3" y="3" width="167" height="30" rx="3" fill="#c4cbd0" stroke="#87949b"/><rect x="13" y="10" width="76" height="14" fill="#fff" stroke="#b7bfc2"/><path d="M104 9h50v17h-50z" fill="#f7f7f7"/><path d="M107 10v14m3-14v14m5-14v14m4-14v14m2-14v14m5-14v14m3-14v14m6-14v14m4-14v14m3-14v14" stroke="#333" stroke-width="1"/><rect x="10" y="42" width="153" height="81" rx="3" fill="#f4f6f4" stroke="#a8b4ba"/><path d="M19 55h33v24H19zM57 55h33v24H57zM95 55h33v24H95zM19 84h33v26H19zM57 84h33v26H57zM95 84h33v26H95z" fill="#d4e6e7" stroke="#a9b9be"/><rect x="134" y="55" width="20" height="55" fill="#e2e7e9" stroke="#aab5ba"/></g>'+t(190,296,"Calibration",22,ink,"middle","700")+'<circle cx="425" cy="143" r="19" stroke="#c6c6c6" stroke-width="7" fill="none"/><path d="M425 124a19 19 0 0 1 19 19" fill="none" stroke="#7dbb33" stroke-width="7"/>'+t(460,154,"00:58:42",35,ink,"start","700")+rows(405,198,29)+rect(744,340,133,36,"#bf3631","#a72823",5)+t(810,365,"Abort",18,"#fff","middle","700");
+  body+=screenTitle("Run In Progress",240)+'<path d="M460 66v428" stroke="#d8dfdf"/>'+pouch(84,153,1.45)+t(240,360,"Calibration",22,ink,"middle")+
+   t(497,132,"00:58:42",41,ink,"start","300")+rows(500,190,42)+btn(713,456,141,40,"Abort","#c54342");
  }else if(mode==="browse"){
-  const widths=[92,125,136,117,77,105,101,104],heads=["Date","Sample ID","Pouch Type","Protocol","Lot","Operator","Module","Pouch Status"];let x=23;
-  heads.forEach((v,i)=>{body+=rect(x,84,widths[i],42,"#e7e7e7","#aaa",0)+t(x+4,110,v,15,ink,"start","700");x+=widths[i];});
-  for(let j=0;j<4;j++){let x=23;const vs=["11/25/26",j===0?sampleId:"GI-DEMO-00"+(j+1),"GI Panel v2.1","Stool FA v3.0","123456","—","Module 1","Pass"];vs.forEach((v,i)=>{body+=rect(x,126+j*45,widths[i],45,j===0?"#d5ebbc":"#fff","#d0d0d0",0)+t(x+4,154+j*45,v,14);x+=widths[i];});}
-  body+=btn(35,340,70,36,"⌕")+btn(312,340,46,36,"‹")+t(432,364,"1 - 4 of 4",17,ink,"middle")+btn(504,340,46,36,"›")+btn(600,340,128,36,"Options")+btn(741,340,137,36,"View Report",green);
+  const widths=[115,126,148,113,91,94,91,110],heads=["Date","Sample ID","Pouch Type","Protocol","Lot","Operator","Module","Pouch Status"];let x=10;
+  heads.forEach((v,i)=>{body+=rect(x,53,widths[i],34,"#f3f4f4")+t(x+5,76,v,14,ink,"start","600");x+=widths[i];});
+  for(let j=0;j<8;j++){let x=10;const vals=["11/25/26",j===0?sampleId:"GI-DEMO-00"+(j+1),panelName,protocol,"123456","—","Module 1","Pass"];vals.forEach((v,i)=>{body+=rect(x,87+j*40,widths[i],40,j===0?"#78b94a":j%2?"#f4f5f5":"#fff")+t(x+5,112+j*40,v,13,j===0?"#fff":ink);x+=widths[i];});body+='<path d="M10 '+(127+j*40)+'h898" stroke="#dfe4e4"/>';}
+  body+=icon("search",23,452)+t(54,469,"Search",14)+btn(272,447,38,38,"«")+btn(316,447,38,38,"‹")+t(395,470,"Page 1",15,ink,"middle")+btn(435,447,38,38,"›")+btn(479,447,38,38,"»")+btn(569,446,145,40,"Options")+btn(730,446,170,40,"View Report",green);
  }else if(mode==="report"){
-  ["Print","Print All","Save","Actions","Summary","Details"].forEach((v,i)=>body+=btn(30,85+i*43,156,38,v,v==="Summary"?green:gray));
-  body+=t(30,364,"Remove Pouch",18,blue,"start","700")+rect(205,80,678,296,"#fff","#aaa",0)+t(222,109,"BIOFIRE® FILMARRAY® GI Panel",24,ink,"start","700")+t(222,137,"Run Summary",18,ink,"start","700")+t(222,164,"Sample ID: "+sampleId,18)+t(222,189,"Controls: Passed (illustrative)",18)+t(222,214,"Run Status: Completed (illustrative)",18)+t(222,242,"Result Summary",19,ink,"start","700")+rect(222,255,640,26,"#e7e7e7","#aaa",0)+t(230,274,"Bacteria / Viruses / Parasites",16,ink,"start","700")+t(230,309,"Review all reported targets and controls",17)+t(230,337,"Training example – not a patient result",16,"#666");
+  ["Print","Print All","Save","Actions","Summary","Details"].forEach((v,i)=>body+=btn(19,76+i*56,148,39,v,i===4?green:gray));
+  body+=rect(181,62,720,439,"#eceeee")+rect(205,76,673,411,"#fff","#ccd2d2")+
+   t(225,110,"FilmArray Gastrointestinal Panel",22,"#343b3d","start","600")+t(225,142,"Run Summary",18,"#343b3d","start","600")+
+   t(225,169,"Sample ID: "+sampleId,16)+t(225,193,"Pouch Type: "+panelName,16)+t(225,217,"Controls: —",16)+t(225,241,"Run Status: —",16)+
+   t(225,276,"Result Summary",19,"#343b3d","start","600")+rect(225,291,625,29,"#e5e7e7")+t(237,311,"Target",15,ink,"start","600")+t(808,311,"Result",15,ink,"end","600")+
+   ["Bacteria","Parasites","Viruses"].map((v,i)=>rect(225,320+i*37,625,37,i%2?"#f4f5f5":"#fff","#e0e3e3")+t(237,344+i*37,v,15)+t(808,344+i*37,"—",15,ink,"end")).join("")+
+   t(225,463,"Training report layout only; no actual results.",14,"#747d7f");
  }
- return svg(body,"TORCH "+mode+" single-module training schematic; illustrative layout and identifiers");
+ return '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+esc("TORCH "+mode+" single-module reconstructed training screen")+'" viewBox="0 0 920 520">'+body+'</svg>';
 }
 function figure(title,desc,picture){
  const type=/blue|hydrat/i.test(title)?'blue':/red|sample|specimen/i.test(title)?'red':/scan|panel|start|module/i.test(title)?'screen':'ready';
