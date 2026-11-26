@@ -26,8 +26,10 @@ const configs={
  ],note:"Daily QC Device and monthly QC Sample printouts go in their respective log sections. Do not substitute patient-test printouts."},
  clinitek:{brand:"Siemens CLINITEK Status+",binder:"Monthly UA or hCG QC Log binder",steps:[
   {heading:"Open saved results",screen:"SELECT READY",items:["Strip Test","Cassette Test","Recall Results"],focus:"Recall Results",tip:"If configured, the built-in printer may already have printed the QC result."},
-  {heading:"Find the control record",screen:"RECALL OPTIONS",items:["Recall Results","Select","Back"],focus:"Recall Results",tip:"Select the correct QC run. Some configurations store QC as a patient-type record."},
-  {heading:"Print the selected record",screen:"STORED RESULT",items:["Print","Done","More"],focus:"Print",tip:"Check QC identification and lot before filing."}
+  {heading:"Recall patient or QC tests",screen:"RECALL OPTIONS",items:["Recall Patient Tests or QC Tests","Select","Done"],focus:"Select",tip:"Select Recall Patient Tests or QC Tests, then Select."},
+  {heading:"Choose QC tests",screen:"RECALL RESULTS",items:["Patient tests","QC tests","Next"],focus:"QC tests",tip:"Choose QC tests and select Next."},
+  {heading:"Locate the control run",screen:"SEARCH RESULTS",items:["Search by date","View all results"],focus:"Search by date",tip:"Locate the actual QC record by date and verify the assay and level."},
+  {heading:"Print the selected record",screen:"STORED RESULT",items:["Print","Done"],focus:"Print",tip:"Check QC identification and lot before filing. Confirm the correct strip or cassette control record."}
  ],note:"File UA strip and hCG cassette controls in the correct monthly section. Verify that the record is labeled as QC, not a patient report."},
  sofia:{brand:"Quidel Sofia 2",binder:"Waived Tests QC Log binder",steps:[
   {heading:"Open stored control results",screen:"MAIN MENU",items:["Run QC","Review Data","Run Calibration"],focus:"Review Data",tip:"Review the completed Sofia 2 QC or calibration record on the analyzer."},
@@ -92,6 +94,10 @@ function screenPanel(item,brand,number){
   const visual=window.LAB_PATHFAST_SCREEN?.fromItem(item);
   if(visual)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+
    '<div class="pfs-lcd-portrait">'+visual+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }
+ if(brand==="Siemens CLINITEK Status+"){
+  const visual=window.LAB_CLINITEK_LCD?.fromItem(item);
+  if(visual)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+'<div class="cl-lcd-bezel">'+visual+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
  }
  const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const isPoch=brand==="Sysmex pocH-100i";
@@ -429,10 +435,6 @@ function qcClickStep(sec,groupId,title){
   {heading:"Open QC testing",screen:"MAIN MENU",items:["RUN TEST","RECALL RESULTS","OPTIONS"],focus:"RUN TEST",tip:"Choose RUN TEST."},
   {heading:"Choose the QC mode",screen:"RUN TEST",items:["QC DEVICE","QC SAMPLE","PATIENT"],focus:/device/.test(t)?"QC DEVICE":"QC SAMPLE",tip:"Use QC DEVICE for daily electronic control or QC SAMPLE for external control levels."},
   {heading:"Confirm and run",screen:"QC",items:["Lot / ID","Enter","Run"],focus:"Run",tip:"Verify prompted identifiers or lot codes, insert the correct test device, and proceed as directed."}];
- else if(sec.id==="clinitek"&&/open the (ua|hcg)|qc test|place cassette and select start/.test(t))scenes=[
-  {heading:"Enter the QC workflow",screen:"SELECT READY",items:["QC Test","Strip Test","Cassette Test"],focus:"QC Test",tip:"Select QC Test if shown, or the authorized QC workflow on your analyzer."},
-  {heading:"Choose assay format",screen:"QC TEST",items:["UA strip","hCG cassette","Back"],focus:groupId==="hcg-qc"?"hCG cassette":"UA strip",tip:"Match the QC material to the correct strip or cassette format."},
-  {heading:"Start the QC run",screen:"QC READY",items:["Lot / Level","Start","Back"],focus:"Start",tip:"Confirm identifiers and select START before applying material within the allowed timing window."}];
  else if(sec.id==="sofia"&&/run the controls|run qc|log the qc/.test(t))scenes=[
   {heading:"Start external controls",screen:"MAIN MENU",items:["Run Test","Run QC","Review Data"],focus:"Run QC",tip:"Select Run QC and scan the assay-specific QC barcode."},
   {heading:"Follow QC prompts",screen:"RUN QC",items:["Positive control","Next","Negative control"],focus:"Positive control",tip:"Run the positive control, then follow the on-screen Next control to complete the negative control; do not skip it."}];
