@@ -43,6 +43,12 @@ function invert(){
  'EDTA lavender top tube gently turned upside-down and upright using curved arrows; blood at the lowest end in both positions');
 }
 function screen(mode){
+ const realistic=window.LAB_SYSMEX_LCD;
+ if(realistic){
+  const modes={shutdown:['main','Shutdown'],execute:['shutdown','Execute'],mrn:['mrn','Sample ID'],run:['main','RUN'],qc:['main','QC'],running:['running',''],result:['result','']};
+  if(modes[mode])return realistic.lcd(...modes[mode]);
+ }
+
  if(mode==="shutdown"||mode==="execute"){
   const first=mode==="shutdown";
   const row=(y,label,active)=>'<rect x="111" y="'+y+'" width="453" height="45" rx="7" fill="'+(active?"#dff3ed":"#ffffff")+'" stroke="'+(active?"#19917e":"#c7dce4")+'" stroke-width="'+(active?3:1.5)+'"/>'+tx(130,y+28,label,17,active?"#197e73":"#58798b",active?900:700,"start");
@@ -127,7 +133,7 @@ function patient(title){
  if(/place the capped patient tube|load the sample|gray base/.test(t))return figure('Place patient tube in gray sample base',analyzer(),'Keep the cap on. Use the gray patient adapter and close the sample door before pressing Run.');
  if(/confirm analysis|analysis started|run in progress|verify run/.test(t))
   return figure('Analysis started · pocH-100i',completedAnalyzer(),'Confirm the analyzer has entered its running state with the correct patient ID. The check indicates the run started, not that results or QC were accepted.');
-  if(/click run|start run/.test(t))return figure('Press Run on the analyzer',screen('run'),'Confirm the patient identity and select Run. The highlighted control is illustrative.');
+  if(/click run|start run/.test(t))return figure('Press Run on the analyzer',screen('run'),'Confirm the patient identity and select Run. The highlighted control is illustrative.')+figure('Analysis in progress',screen('running'),'Wait for aspiration and analysis to complete. Do not open the sample position during aspiration.')+figure('Review CBC results',screen('result'),'Review the completed result pages and flags against the approved SOP before reporting. The displayed values are blank examples.');
  return "";
 }
 function render(title,group){
