@@ -20,7 +20,7 @@ function lcd(mode,focus='',item={}){
  const bottom=(labels)=>labels.map((v,i)=>k(8+i*(384/labels.length),266,384/labels.length-5,24,v)).join('');
  const main=(status='Ready',keypad=false)=>top('Main',status,'Menu')+
  text(15,69,'Sample ID')+field(15,75,167,'#####',focus==='Sample ID')+
- text(15,116,'Operator')+field(15,122,136,'—')+key(155,122,27,23,'→',false,green)+
+ // Operator identification disabled at Sollis: leave the original field area empty.
  text(15,164,'Analysis Mode',13)+rect(15,171,168,79,'#b8bdc6','#88929d',1)+
  k(24,178,67,40,'WB',orange)+k(103,178,67,40,'PD','#f8fafc')+text(98,239,'Whole Blood',12,'#f9fafb','middle')+
  (keypad?['7','8','9','4','5','6','1','2','3','0','-','C'].map((v,i)=>key(210+(i%3)*56,55+Math.floor(i/3)*39,51,34,v,false,v==='C'?orange:blue)).join('')+key(210,211,80,34,'ALPH',false,green)+key(299,211,74,34,'Ent.',true):
