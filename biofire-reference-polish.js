@@ -150,8 +150,7 @@ function render(id,title){
    "enter torch sample id (patient identification)":["sample","Enter Sample ID",["Enter the authorized specimen ID before inserting the pouch. Match the MRN and order in Athena."],"The original Sollis guide specifies MRN entry. The CE-IVD manual advises against entering MRNs directly; verify authorization under the current U.S. IFU and Sollis SOP."],
    "insert torch pouch into module":["insert","Insert the prepared pouch",["With the Sample ID verified, insert the pouch into a module blinking blue. Keep the fitment label flat; blinking green means seated."]],
    "select torch protocol if prompted":["protocol","Select Protocol (if displayed)",["Select the correct installed GI sample protocol and tap Next. The screen is skipped if only one protocol is available."],"Example protocol and software version only."],
-   "enter torch operator information":["operator","Enter Operator Information",["Enter your username and password and select Next when enabled."]],
-   "review torch information and start run":["review","Review and Start Run",["Check all six displayed identifiers, then select Start Run."]],
+   "review torch information and start run":["review","Review and Start Run",["Check the displayed sample and pouch identifiers, then select Start Run. Operator entry is not required on the Sollis configuration."]],
    "confirm torch run in progress":["running","Run In Progress",["Verify solid green module LED, stage and time remaining."]],
    "select torch finished module":["finished","Select Finished",["Select the Finished tile to view the report."]],
    "review torch report and remove pouch":["report","Review report and remove pouch",["Verify patient identification, controls and results. Remove and discard the pouch; print/save per SOP."]],
@@ -159,11 +158,10 @@ function render(id,title){
   };
   if(exact[t])return tc(...exact[t]);
   if(/confirm qc sample name and start the control/.test(t))return [
-   tc("dashboard","Select Available",["Choose an available module or scan the prepared control pouch from Dashboard."]),
+   tc("dashboard","Select Available",["Select the single Available tile or scan the prepared control pouch from Dashboard."]),
    tc("scan","Scan control pouch barcode",["Verify GI pouch type, lot and serial."]),
    tc("sample","Enter QC Sample ID",["Enter QC-GI-Neg for the negative or QC-GI-Pos for the positive control before inserting the pouch. Do not enter a patient MRN."]),
    tc("insert","Insert control pouch",["Insert into the selected module when its LED blinks blue. Blinking green indicates the pouch is seated."]),
-   tc("operator","Enter operator credentials",["Select the applicable protocol if prompted; enter your credentials and select Next."]),
    tc("review","Review and Start Run",["Verify the assigned QC identifier and pouch information; select Start Run."]),
    tc("running","Confirm the control is running",["Verify the module LED turns solid green."])
   ].join("");
@@ -173,7 +171,7 @@ function render(id,title){
    tc("browse","Retrieve QC report if needed",["Select Browse Runs, choose the QC run, and tap View Report."])
   ].join("");
 
-  if(/select.*module|available module/.test(t))return tc("dashboard","Select an Available module",["Choose a blue Available tile, or initiate by scanning the pouch directly from Dashboard."]);
+  if(/select.*module|available module/.test(t))return tc("dashboard","Select an Available module",["Select the single Available tile, or scan the pouch directly from Dashboard."]);
   if(/scan.*barcode|confirm.*(sample|specimen|patient).*id|verify.*(sample|specimen|patient).*id|enter.*(mrn|sample id|patient id)/.test(t))return [
    tc("scan","1. Scan pouch barcode",["Scan the fitment barcode. Verify the automatically populated lot, serial number and GI pouch type."]),
    tc("sample","2. Enter Sample ID before loading",["Scan or enter the approved sample/accession ID in the Sample ID field. Match it to the correct patient and order in Athena before insertion.","For external QC use the assigned control ID, not a patient identifier."],"The CE-IVD manual advises against direct MRN entry. Use the locally authorized identifier under the current U.S. IFU and Sollis SOP. No real MRN is shown.")
@@ -181,9 +179,8 @@ function render(id,title){
   if(/load pouch and start run|start assay|start run|load.*module|insert.*pouch.*module/.test(t))return [
    tc("insert","1. Insert prepared pouch",["Confirm the pouch and Sample ID have already been entered. The selected or available module LED blinks blue.","Insert the prepared pouch with fitment label flat; the module pulls it in. Blinking green indicates it is seated, not yet running."]),
    tc("protocol","2. Select protocol if prompted",["If multiple protocols are available, select the appropriate GI sample protocol and tap Next. If only one is available, it is selected automatically."],"The protocol name/version is an example. Follow the installed GI pouch module."),
-   tc("operator","3. Enter operator information",["Enter your own user name and password, then select Next. The button becomes available when credentials are accepted."]),
-   tc("review","4. Review and Start Run",["Verify Sample ID, lot, serial number, pouch type, protocol and operator. Select the green Start Run button."]),
-   tc("running","5. Confirm Run In Progress",["A solid green module LED confirms processing has started. The screen displays remaining time and current stage."])
+   tc("review","3. Review and Start Run",["Verify Sample ID, lot, serial number, pouch type and protocol. Select the green Start Run button."]),
+   tc("running","4. Confirm Run In Progress",["A solid green module LED confirms processing has started. The screen displays remaining time and current stage."])
   ].join("");
   if(/run in progress|analysis started|confirm analysis|analyzing|running/.test(t))return tc("running","Confirm Run In Progress",["Verify the module LED is solid green and the run is processing. Do not disturb the module."]);
   if(/review.*result|document.*result|print.*result|review.*report|remove.*pouch|complete.*run/.test(t))return [
