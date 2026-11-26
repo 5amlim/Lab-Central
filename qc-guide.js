@@ -88,6 +88,11 @@ function screenPanel(item,brand,number){
   if(realistic)return '<div class="qc-screen-reference sx-realistic-screen" role="group" aria-label="'+esc(item.heading)+'">'+top+
     '<div class="qc-poch-qc-main">'+realistic+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
  }
+ if(brand==="PATHFAST"){
+  const visual=window.LAB_PATHFAST_SCREEN?.fromItem(item);
+  if(visual)return '<div class="qc-screen-reference" role="group" aria-label="'+esc(item.heading)+'">'+top+
+   '<div class="pfs-lcd-portrait">'+visual+'</div><p class="qc-screen-instruction">'+esc(item.tip)+'</p></div>';
+ }
  const isPiccoloScene=/^piccolo(?:Home|Load|Type|Level|PatientId|Running|Recall|ResultsList|ViewResult|SelectReport)$/.test(item.kind||"");
  const isPoch=brand==="Sysmex pocH-100i";
  const isPochAnalyze=/^pochAnalyze/.test(item.kind||"");
