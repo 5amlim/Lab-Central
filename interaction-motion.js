@@ -80,10 +80,10 @@
   // when the guide is rebuilt and the original buttons are replaced.
   const segmentState = new WeakMap();
   function initSegments(previous = null) {
-    for (const group of main.querySelectorAll('.pfux-view-toggle')) {
+    for (const group of main.querySelectorAll('.pfux-view-toggle,.guide-mode-switch')) {
       const buttons = [...group.querySelectorAll(':scope > button[data-guide-mode]')];
       if (buttons.length !== 2) continue;
-      const selected = buttons.find(button => button.classList.contains('active'));
+      const selected = buttons.find(button => button.classList.contains('active') || button.getAttribute('aria-pressed') === 'true');
       if (!selected || !selected.offsetWidth) continue;
       let indicator = group.querySelector(':scope > .lc-motion-indicator');
       if (!indicator) {
@@ -206,6 +206,101 @@
     });
   }, true);
 
+
+  // Move an outline between selected options rather than repainting complex
+  // cards. Their existing selected colors, text and accessibility stay intact.
+  const movingGroups = [
+    '.tab-strip', '.api-guide-tabs', '.ao-directory-tabs', '.pfux-primary-nav',
+    '.pfux-supporting', '.dqc-view-switch', '.tc-view-switch', '.calc2-tabs',
+    '.dqc-market-buttons', '.tc-market-buttons', '.lcr-filter-buttons',
+    '.lcr-categories', '.branch-options'
+  ];
+  const groupSelector = movingGroups.join(',');
+  const currentSelector = 'button[aria-selected="true"],button[aria-pressed="true"],button[aria-current="page"],button.active,button.is-selected,button.selected';
+  const shown = rect => rect.width > 0 && rect.height > 0 && rect.top < innerHeight &&
+    rect.bottom > 0 && rect.left < innerWidth && rect.right > 0;
+  let movingOutline = null;
+  let pendingSelection = 0;
+  function captureSelection(button) {
+    const group = button.closest(groupSelector);
+    if (!group || group.closest('.pfux-view-toggle,.guide-mode-switch')) return;
+    const selector = movingGroups.find(value => group.matches(value));
+    const old = group.querySelector(currentSelector);
+    if (!old || old === button) return;
+    const from = old.getBoundingClientRect();
+    if (!shown(from)) return;
+    const groupIndex = [...main.querySelectorAll(selector)].indexOf(group);
+    const label = group.getAttribute('aria-label');
+    const oldLabel = old.textContent.trim();
+    const token = ++pendingSelection;
+    const finish = () => {
+      if (token !== pendingSelection || reduced.matches || printing.matches) return;
+      const candidates = [...main.querySelectorAll(selector)];
+      const nextGroup = group.isConnected ? group :
+        (label && candidates.find(item => item.getAttribute('aria-label') === label)) || candidates[groupIndex];
+      const next = nextGroup?.querySelector(currentSelector);
+      if (!next || next.textContent.trim() === oldLabel) return;
+      const to = next.getBoundingClientRect();
+      if (!shown(to)) return;
+      const dx = from.left - to.left, dy = from.top - to.top;
+      // Don't fly across the screen if navigation changed layout or scroll.
+      if (Math.abs(dy) > 180 || Math.abs(dx) > innerWidth * .85) return;
+      movingOutline?.remove();
+      const style = getComputedStyle(next);
+      const ring = document.createElement('span');
+      ring.className = 'lc-moving-selection';
+      ring.setAttribute('aria-hidden','true');
+      Object.assign(ring.style, {
+        left: to.left + 'px', top: to.top + 'px', width: to.width + 'px',
+        height: to.height + 'px', borderRadius: style.borderRadius,
+        color: style.color
+      });
+      document.body.appendChild(ring);
+      movingOutline = ring;
+      const flight = ring.animate([
+        { transform: 'translate(' + dx + 'px,' + dy + 'px)', width: from.width + 'px', height: from.height + 'px', opacity: .60 },
+        { transform: 'translate(0,0)', width: to.width + 'px', height: to.height + 'px', opacity: .65, offset: .72 },
+        { transform: 'translate(0,0)', width: to.width + 'px', height: to.height + 'px', opacity: 0 }
+      ], { duration: 330, easing: 'cubic-bezier(.25,.75,.25,1)' });
+      const clear = () => { ring.remove(); if (movingOutline === ring) movingOutline = null; };
+      flight.addEventListener('finish', clear, { once:true });
+      flight.addEventListener('cancel', clear, { once:true });
+      setTimeout(clear, 400);
+    };
+    // Hash routes are rendered in a separate event. Give both in-place and
+    // route-based controls one frame to commit their selected state.
+    requestAnimationFrame(() => requestAnimationFrame(finish));
+  }
+  document.addEventListener('click', event => {
+    const button = event.target.closest?.('button:not(:disabled)');
+    if (button) captureSelection(button);
+  }, true);
+  document.addEventListener('keydown', event => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    const group = event.target.closest?.(groupSelector);
+    if (!group) return;
+    const buttons = [...group.querySelectorAll('button:not(:disabled)')];
+    const index = buttons.indexOf(event.target);
+    if (index < 0) return;
+    const next = event.key === 'Home' ? buttons[0] : event.key === 'End' ? buttons.at(-1) :
+      buttons[(index + (event.key === 'ArrowLeft' ? -1 : 1) + buttons.length) % buttons.length];
+    if (next) captureSelection(next);
+  }, true);
+  window.addEventListener('scroll', () => movingOutline?.remove(), { passive:true });
+  window.addEventListener('beforeprint', () => movingOutline?.remove());
+  reduced.addEventListener?.('change', event => { if (event.matches) movingOutline?.remove(); });
+
+  // Workflow decisions remain immediately readable; animate only their
+  // selected control after the existing handler has committed its state.
+  document.addEventListener('click', event => {
+    const button = event.target.closest?.('[data-reqbranch],[data-reqresolution],[data-sollis-patient]');
+    if (!button || selected(button)) return;
+    requestAnimationFrame(() => {
+      const current = matchingControl(button, ['data-reqbranch','data-reqresolution','data-sollis-patient']);
+      if (selected(current)) pulse(current);
+    });
+  }, true);
+
   // Target intentional actions rather than every DOM mutation.
   document.addEventListener('click', event => {
     const button = event.target.closest?.('button:not(:disabled):not([aria-disabled="true"])');
@@ -213,8 +308,8 @@
     const isStep = button.matches('[data-guide-step]');
     const isMode = button.matches('[data-guide-mode]');
     const isBranch = button.matches('[data-sollis-patient], [data-orders-market-option]');
-    const segment = button.closest('.pfux-view-toggle');
-    const previous = segment?.querySelector('button.active')?.dataset.guideMode;
+    const segment = button.closest('.pfux-view-toggle,.guide-mode-switch');
+    const previous = segment?.querySelector('button.active,button[aria-pressed="true"]')?.dataset.guideMode;
     const oldStep = main.querySelector('#guideStageDetails .guide-card-index')?.textContent;
     const controls = (button.getAttribute('aria-controls') || '').split(/\s+/).filter(Boolean);
     const opening = button.getAttribute('aria-expanded') === 'false';
