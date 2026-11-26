@@ -235,7 +235,7 @@ function sysmexDeviceSvg(mode,showAccessory=true){
    power button on screen-right, branding beneath and an actual pull-out
    black test table under the right-front face.
    The strip and CLINITEST hCG cassette use DISTINCT removable table inserts. */
-function clinitekDeviceMarkup(mode="empty"){
+function clinitekDeviceMarkup(mode="empty",screenOptions={}){
  const m=String(mode||"empty").toLowerCase();
  const stripMode=/^(strip|start-strip|qc-strip)$/.test(m),cassetteMode=/^(cassette|start-cassette|qc-cassette)$/.test(m),trayOut=!/reading|result|closed|analyzing/.test(m);
  const T=(x,y,t,size=13,color="#425b69",weight=750,anchor="middle")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-size="'+size+'" font-family="Arial,sans-serif" font-weight="'+weight+'" fill="'+color+'">'+t+'</text>';
@@ -256,7 +256,7 @@ function clinitekDeviceMarkup(mode="empty"){
  '<path d="M156 96L167 91H411L419 101V201H157Z" fill="url(#cl-status-glass)" stroke="#8a9da2" stroke-width="2.5"/>'+
  '<path d="M162 98H404L412 124L404 187H161Z" fill="#e6eae7" opacity=".3"/>'+ ((m==="empty")?'<path d="M157 97L167 92H409L418 101V199H157Z" fill="#303b42" stroke="#596e79" stroke-width="2"/>' : '')+
  // Shared 4:3 LCD reference, inset in the existing display recess.
- (m!=="empty"&&window.LAB_CLINITEK_LCD?.lcd?'<svg x="214" y="94" width="148" height="111" viewBox="0 0 320 240">'+window.LAB_CLINITEK_LCD.lcd(/result|reading/.test(m)?"results":m==="analyzing"?"analyzing":/start/.test(m)?"prepare":m==="qc"?"qctype":"ready",{kind:/cassette/.test(m)?"hcg":"ua",qc:m==="qc"}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg>':(((m==="empty"||m==="ready")?'':(
+ (m!=="empty"&&window.LAB_CLINITEK_LCD?.lcd?'<svg x="214" y="94" width="148" height="111" viewBox="0 0 320 240">'+window.LAB_CLINITEK_LCD.lcd(/result|reading/.test(m)?"results":m==="analyzing"?"analyzing":/start/.test(m)?"prepare":m==="qc"?"qctype":"ready",{kind:/cassette/.test(m)?"hcg":"ua",qc:m==="qc",...screenOptions}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg>':(((m==="empty"||m==="ready")?'':(
  '<rect x="185" y="117" width="204" height="67" rx="4" fill="#dfe9ec" opacity=".92"/>'+
  T(287,137,(/cassette/.test(m))?"Cassette Test":(/strip/.test(m))?"Strip Test":m==="qc"?"QC Test":/start/.test(m)?"READY / START":/result|reading/.test(m)?"Results":m==="analyzing"?"Analyzing":"CLINITEK Status+",13,"#426679",850)+
  '<rect x="199" y="147" width="172" height="23" rx="4" fill="#c9e8e7" stroke="#b1cdd2"/>'+
