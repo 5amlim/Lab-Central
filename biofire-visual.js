@@ -157,7 +157,7 @@ function pouchCartridge(mode="pouch"){
  '<rect x="623" y="231" width="88" height="9" rx="3" fill="#3289bc"/>'+
  font(325,256,"SAMPLE PORT",12,"#a63746",850)+
  font(665,256,"HYDRATION PORT",12,"#267ab0",850)+'</g>';
- const station='<path d="M91 93L125 63H764L817 99L839 271L784 312H101L65 270Z" fill="#25292d" stroke="#535e64" stroke-width="5"/>'+
+ const legacyStation='<path d="M91 93L125 63H764L817 99L839 271L784 312H101L65 270Z" fill="#25292d" stroke="#535e64" stroke-width="5"/>'+
  '<path d="M116 94H770L802 259H97Z" fill="#3e4448" stroke="#747d82" stroke-width="3"/>'+
  '<path d="M86 258H814L785 316H108Z" fill="#1d252a" stroke="#6d777d" stroke-width="3"/>'+
  '<ellipse cx="242" cy="125" rx="35" ry="17" fill="#ba3b4a" stroke="#de737a" stroke-width="4"/>'+
@@ -177,7 +177,7 @@ function pouchCartridge(mode="pouch"){
  red?'<path d="M293 60q48 35 0 95l-18 -7m18 7l-2 -22" stroke="#c54c60" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':'';
  const step=assembled?'<g transform="translate(0 48) scale(1 .8)">'+pouch+'</g>':pouch;
  return svg('<ellipse cx="450" cy="341" rx="375" ry="12" fill="#e4ecef"/>'+
-  (assembled?station:'')+step+markers+vialArt+action+
+  (assembled?legacyStation:'')+step+markers+vialArt+action+
   (blue||red?font(465,375,blue?"BLUE HYDRATION PORT":"RED SAMPLE PORT",17,blue?"#267eaa":"#ac4557",850):
   font(465,375,loaded?"PREPARED POUCH":"SEALED POUCH · RIGID REAGENT CASSETTE",15,"#486b79",850)),
   "Original schematic of BioFire pouch cartridge, barcode label, reagent wells and red sample/blue hydration ports"+
