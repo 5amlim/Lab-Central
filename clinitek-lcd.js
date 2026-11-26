@@ -51,7 +51,7 @@ function lcd(mode,opts={}){
  let b='';
  switch(mode){
  case 'ready':b=ready();break;
- case 'qctype':b=title('QC Test','','','qc')+text(7,56,'Select type of test',13)+button(160,83,158,75,'QC Strip Test'+(opts.due&&!h?' Required':''),'strip',{size:12,arrow:'right'})+button(160,161,158,77,['QC Cassette Test',...(opts.due&&h?['Required']:[])],'cassette',{size:13,arrow:'right'})+back();break;
+ case 'qctype':b=title('QC Test','','','qc')+text(7,56,'Select type of test',13)+button(160,83,158,75,['QC Strip Test',...(opts.due&&!h?['Required']:[])],'strip',{size:12,arrow:'right'})+button(160,161,158,77,['QC Cassette Test',...(opts.due&&h?['Required']:[])],'cassette',{size:13,arrow:'right'})+back();break;
  case 'type':b=title('Test Type','','','cassette')+text(7,57,'Select type of cassette',13)+button(158,160,160,78,['Clinitest® hCG','cassette'],'cassette',{arrow:'right'})+back();break;
  case 'lot':b=title(qc?'QC '+(opts.control?'Control':h?'Cassette':'Strip')+' Lot':h?'Cassette Lot':'Strip Lot')+(!opts.control?text(8,57,assay,14):'')+button(160,43,158,93,'Use Last Lot','last',{arrow:'right'})+button(160,139,158,99,['Enter new lot','and expiration'],'new',{arrow:'right'})+back();break;
  case 'entry':{
@@ -80,14 +80,13 @@ function lcd(mode,opts={}){
   const more=mode==='results-more';
   const list=more?['Test','Test date','Time','Test sequence number']:h?[assay,'Test date','Time','Test sequence number']:['Glucose','Bilirubin','Ketone','Specific Gravity','Blood','pH','Protein','Urobilinogen','Nitrite','Leukocytes'];
   b=title(qc?'QC Results':'Results',qc?'QC Test: [status]':opts.quick?'Test Sequence Number: 0000':'Patient: MRN #######',h?'':more?'2 of 2':'1 of 2')+
-   list.map((v,i)=>text(7,58+i*14,v,11,'start',ink,false)+text(220,58+i*14,'·············   —',11,'end',ink,false)).join('')+
+   list.map((v,i)=>text(7,58+i*14,v,11,'start',ink,false)+'<path d="M'+Math.min(190,11+v.length*5.8)+' '+(58+i*14)+'H205" stroke="'+ink+'" stroke-dasharray="1 2" stroke-width="1"/>'+text(220,58+i*14,'—',11,'end',ink,false)).join('')+
    (!h?button(241,42,77,39,more?'Back':'More',more?'Back':'More',{size:13,arrow:more?'left':'right'}):'')+
    (qc?button(241,84,77,41,['Add QC','notes'],'notes',{size:12}):'')+
    button(241,128,77,37,'Print','Print',{size:13,icon:'print'})+
    button(241,169,77,69,'Done','Done',{size:13,arrow:'right'});break;
  }
  case 'passfail':b=title('QC Test','Select PASS or FAIL','','qc')+button(160,42,158,96,'QC PASS','PASS',{arrow:'right'})+button(160,141,158,97,'QC FAIL','FAIL',{arrow:'right'})+back();break;
- case 'summary':b=title('QC Test','Select PASS or FAIL','','qc')+button(160,42,158,96,'QC PASS','PASS',{arrow:'right'})+button(160,141,158,97,'QC FAIL','FAIL',{arrow:'right'})+back();break;
  case 'recall':b=title('Recall Options','','','recall')+radio(13,59,'Recall Patient Tests or QC Tests',true)+radio(13,91,'Delete Records')+button(2,199,100,39,'Done','Done',{arrow:'left'})+next('Select');break;
  case 'recalltype':b=title('Recall Results','','','recall')+lines(8,57,['Choose which','results to search'],13,16)+radio(174,59,'Patient tests')+radio(174,90,'QC tests',true)+back('Previous')+next();break;
  case 'search':b=title('Recall Results','','','recall')+button(160,42,158,62,['Search by name','or ID'],'name',{arrow:'right'})+button(160,108,158,62,'Search by date','date',{arrow:'right'})+button(160,174,158,64,'View all results','all',{arrow:'right'})+back('Previous');break;
