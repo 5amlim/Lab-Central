@@ -321,9 +321,10 @@ function sysmexStep(sec,group,title){
   {heading:"Shutdown complete",screen:"SHUTDOWN COMPLETE",items:["Remove tube from sample position","Switch OFF main power","Restart (if selected)"],focus:"",tip:"Follow the completion message and use the physical main power switch, not a touchscreen button. Restart for daily QC."}
  ],"Sysmex pocH-100i")+'</div>';
  if(/turn on the sysmex|start.*analyzer|startup blank check/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
-  {kind:"status",heading:"Power on the analyzer",screen:"INITIALIZING",status:"System starting",detail:"Please wait",tip:"Turn on the physical power switch after the completed shutdown. The analyzer initializes automatically."},
-  {kind:"status",heading:"Wait for blank check",screen:"STARTUP BLANK CHECK",status:"Blank check in progress",detail:"Wait for the ready indication",tip:"No touchscreen action is needed. Wait for completion and confirm readiness before QC."}
- ],"Sysmex pocH-100i")+'</div>'; 
+  {kind:"status",heading:"Power on · Auto Rinse",screen:"STARTUP AUTO RINSE",status:"Auto Rinse",detail:"Please wait",tip:"Turn on the physical power switch after shutdown. Following the self-check, the analyzer automatically rinses."},
+  {kind:"status",heading:"Wait for background check",screen:"STARTUP BACKGROUND CHECK",status:"Background check",detail:"Please wait",tip:"The analyzer checks the background automatically. No touchscreen action is needed."},
+  {kind:"status",heading:"Confirm Ready",screen:"READY FOR QC",status:"Ready",detail:"Main screen",tip:"Confirm the green Ready indication before starting QC. Review any background-check error according to the approved SOP."}
+ ],"Sysmex pocH-100i",{scroll:true,disclaimer:"Startup screen reconstructions based on Sysmex Basic User Training, slides 28–29. Verify the actual prompts on your analyzer."})+'</div>'; 
  if(/go to menu|blank check.*today/.test(t))return '<div class="qc-instrument-walkthrough">'+screenGallery([
   {kind:"mainMenu",heading:"Open the Main screen",screen:"MAIN",tip:"On the ready Main screen, select the highlighted Menu button."},
   {heading:"Open stored data",screen:"MAIN / MENU",items:["QC","Str. Data","Maintenance"],focus:"Str. Data",tip:"In Menu, select Str. Data."},
