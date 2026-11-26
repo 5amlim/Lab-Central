@@ -706,3 +706,8 @@
 
 /* Abbott HIV CLIA designation: note the FDA fingerstick specimen exception. */
 .hiv-clia-context{display:block;margin:6px 0 0;max-width:780px;color:#6a8493;font-size:11px;line-height:1.55;font-weight:500}
+
+/* TORCH GIP shares SPOTFIRE's two-layer pouch mark, with a muted green palette. */
+.assay-catalog .ac-gip-mark{background:#b5d6c1;border-color:#a5c7b1}
+.assay-catalog .ac-gip-mark .ac-spotfire-mark-face{background:#f2f8f4;border-color:#d8e9de;color:#447b5d}
+.assay-catalog .ac-gip-mark b{font-size:17px;letter-spacing:-.025em}
