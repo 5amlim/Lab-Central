@@ -513,9 +513,9 @@ function render(){
   h+='<div class="pf-selected-panel"><span class="pf-selected-dot"></span><strong>'+x+'</strong><span>CAL + QC · REVIEW 6 LANES</span></div>'+
    '<div class="pfux-cal-toolbar"><div><strong>Step '+currentStep+' of '+total+'</strong><span>Select any step below, like the patient testing workflow</span></div><div class="pfux-cal-toolbar-actions"><button type="button" data-pf-toggle-all>'+(showAllSteps?'Focused view':'View all steps')+'</button></div></div>'+
    '<nav class="pfux-stage-nav pfux-cal-stage-nav" aria-label="PATHFAST calibration and quality control steps"><div class="pfux-stage-track" role="group" aria-label="Select a calibration step">'+[
-    'Gather kits and QC','Prepare CAL + QC','Load six cartridges','Dispense materials','Rack, tips and waste box',
-    'Close analyzer hood','Log in and check status','Tap BACK','Select CAL/QC, then assay','Verify six lanes',
-    'Press START','Confirm 17-min run','Review CAL and QC','Print, file and freeze'
+    'Gather kits and QC','Prepare CAL and QC','Load six cartridges','Dispense CAL and QC','Load rack and tips',
+    'Close analyzer hood','Check assay status','Return to ASSAY menu','Select CAL/QC and assay','Verify six lanes',
+    'Start CAL and QC','Monitor run','Review CAL and QC','File and store materials'
    ].map((label,i)=>'<button type="button" data-pf-jump="'+(i+1)+'" class="pfux-stage-button'+(currentStep===i+1?' is-current':i+1<currentStep?' is-previous':'')+'" aria-label="Step '+(i+1)+' of '+total+': '+esc(label)+'" '+(currentStep===i+1?'aria-current="step"':'')+'><span class="pfux-stage-number">'+String(i+1).padStart(2,'0')+'</span><span class="pfux-stage-name">'+esc(label)+'</span></button>').join('')+'</div></nav>'+
    '<p class="pfux-cal-scroll-hint">Scroll horizontally to view all 14 steps →</p>'+
    '<div class="pfux-cal-meter" role="progressbar" aria-label="Calibration procedure progress" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+currentStep+'"><span style="width:'+(currentStep/total*100)+'%"></span></div>';
