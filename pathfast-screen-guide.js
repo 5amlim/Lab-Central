@@ -15,9 +15,16 @@ function lcd(mode,options={}){
  const focus=options.focus||"";
  const mark=(x,y,w,h)=>'<rect x="'+(x+1)+'" y="'+(y+1)+'" width="'+(w-2)+'" height="'+(h-2)+'" rx="3" fill="none" stroke="#d17a20" stroke-width="2"/>';
  const key=(x,y,w,h,label,fill=blue,color="#fff",selected=false)=>rect(x,y,w,h,fill,"#b5e8ff",5)+t(x+w/2,y+h/2+4,label,11,color,700,"middle")+(selected?mark(x,y,w,h):"");
+ // Shared cancellation control for all running patient, QC and CAL/QC screens.
+ // A solid square is drawn as geometry, not a font glyph, for consistent centering.
+ const stopKey=(x,y,w,h)=>'<g data-pf-control="stop" aria-label="Stop assay (cancel only)">'+
+ rect(x,y,w,h,"url(#"+id+"s)","#fff",5)+
+ '<rect x="'+(x+.6)+'" y="'+(y+.6)+'" width="'+(w-1.2)+'" height="'+(h-1.2)+'" rx="4.5" fill="none" stroke="#a91f43" stroke-opacity=".6" stroke-width=".65"/>'+
+ rect(x+1.5,y+1.5,w-3,8,"url(#"+id+"h)","none",3.5)+
+ rect(x+w/2-4,y+h/2-4,8,8,"#fff","none",.4)+'</g>';
  const title=(label,msg="")=>rect(0,0,240,20,dark)+t(120,14,label,14,"#fff",700,"middle")+rect(0,20,240,50,"#dcdadc")+t(9,31,msg,7.8,"#444")+t(236,67,"[ date / time ]",9,"#008aff",700,"end");
  const nav=(kind="menu",active="ASSAY")=>rect(0,70,240,25,blue)+(kind==="running"?
- key(3,73,54,22,"ASSAY",gray,"#007bff")+key(60,73,55,22,"CHECK")+key(121,73,116,22,"■","#f8bcd5","#ec569c"):
+ key(3,73,54,22,"ASSAY",gray,"#007bff")+key(60,73,55,22,"CHECK")+stopKey(121,73,116,22):
  [kind==="ready"?"▶": "ASSAY","CHECK","SETUP","ADMIN"].map((v,i)=>key(3+i*59,73,55,22,v,v===active||v==="▶"?gray:blue,v===active||v==="▶"?"#008bf2":"#fff",focus===v||focus==="START"&&v==="▶")).join(""));
  const tabs=(selected="SAMPLE INFO.")=>["REAGENT STATUS","SAMPLE INFO."].map((v,i)=>key(1+i*120,96,118,24,v,v===selected?"#fff":"#e1e1e1","#007bff",false)).join("");
  const footer=(labels)=>rect(0,290,240,30,footbg)+labels.map((v,i)=>key(v==="BACK"||v==="HOME"?5:240-75*(labels.length-i),294,70,22,v,v==="OK"?"#35cc25":v==="CANCEL"?"#ff7836":"#505050","#fff",focus===v)).join("");
@@ -50,7 +57,7 @@ function lcd(mode,options={}){
  else if(mode==="record")body=title(options.resultTitle||"RESULT CHECK")+rect(0,70,240,25,blue)+["REPRINT DATE: [ date / time ]","------------------------------","DATE: [ run date ]","SAMPLE ID: [ sample ID ]","LANE: [ lane ]","",short(options.analyte),"     —","", "REMARK: —","SAMPLE: "+(options.sample||"PATIENT")].map((v,i)=>t(3,108+i*15,v,10,"#222",700)).join("")+rect(205,96,34,192,gray,"#aaa")+["≪","⌃","⌄","≫"].map((v,i)=>t(222,126+i*45,v,17,"#61a6df",700,"middle")).join("")+rect(0,290,240,30,footbg)+key(5,294,68,22,"BACK","#505050")+key(165,294,70,22,"PRINT","#fff","#28c427",true);
  else if(mode==="shutdown")body=title("ADMIN")+sub("SHUT DOWN")+t(120,154,"SHUT DOWN?",14,"#444",700,"middle")+footer(["OK","CANCEL"]);
  else return "";
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="PATHFAST '+e(mode)+' training illustration"><defs>'+[["b","#0062d9","#00cbef"],["d","#07104d","#00bdf3"],["g","#d9d9d9","#fff"],["f","#f7f7f7","#c4c4c4"]].map(([k,a,b])=>'<linearGradient id="'+id+k+'" x1="0" y1="0" x2="'+(k==="d"?"1":"0")+'" y2="1"><stop stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>').join("")+'</defs>'+rect(0,0,240,320,"#fff")+body+rect(.5,.5,239,319,"none","#314b9a")+'</svg>';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="PATHFAST '+e(mode)+' training illustration"><defs>'+[["b","#0062d9","#00cbef"],["d","#07104d","#00bdf3"],["g","#d9d9d9","#fff"],["f","#f7f7f7","#c4c4c4"]].map(([k,a,b])=>'<linearGradient id="'+id+k+'" x1="0" y1="0" x2="'+(k==="d"?"1":"0")+'" y2="1"><stop stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>').join("")+'<linearGradient id="'+id+'s" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0" stop-color="#f55a84"/><stop offset=".48" stop-color="#e73360"/><stop offset="1" stop-color="#b91c43"/></linearGradient><linearGradient id="'+id+'h" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0" stop-color="#fff" stop-opacity=".43"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient></defs>'+rect(0,0,240,320,"#fff")+body+rect(.5,.5,239,319,"none","#314b9a")+'</svg>';
 }
 function frame(label,mode,options={},note=""){
  return '<section class="pfs-reference pfs-lcd-reference" aria-label="'+e(label)+'"><div class="pfs-heading"><strong>PATHFAST · SCREEN REFERENCE</strong><span>'+e(label)+'</span></div><div class="pfs-lcd-portrait">'+lcd(mode,options)+'</div><p class="pfs-note">'+e(note||"Training reconstruction. Confirm actual instrument display and approved SOP.")+'</p></section>';
@@ -62,7 +69,7 @@ function item(analyte){return frame("Select assay","item",{analyte},"Select the 
 function lanes(mode,analyte){return frame(mode==="patient"?"Select occupied lane":"Review lane assignments","lanes",{cal:mode==="cal",qc:mode==="qc",analyte,focus:mode==="patient"?"LANE":""},mode==="patient"?"Tap the occupied lane number, then verify SID. Unoccupied lanes are blank.":"Verify the assigned lanes against the loaded cartridges and control levels.");}
 function sid(){return frame("Enter patient SID","sid",{focus:"SID"},"Scan or enter the MRN, verify the lane and confirm. Follow configured Hct% workflow.");}
 function start(mode,analyte){return frame("Start assay","start",{cal:mode==="cal",qc:mode==="qc",analyte,sid:mode==="patient",focus:"START"},"Check lane assignments and consumables before pressing the triangular start control.");}
-function running(mode,analyte){return frame("Assay in progress","running",{cal:mode==="cal",qc:mode==="qc",analyte,sid:mode==="patient"},"Pink stop button is for cancellation only. Allow the assay to finish and review results.");}
+function running(mode,analyte){return frame("Assay in progress","running",{cal:mode==="cal",qc:mode==="qc",analyte,sid:mode==="patient"},"Red/pink stop button is for cancellation only. Allow the assay to finish and review results.");}
 function results(mode,analyte){return frame("Review stored results","results",{analyte,resultTitle:mode==="cal"?"CAL CHECK":mode==="qc"?"QC CHECK":"RESULT CHECK",sample:mode==="patient"?"PATIENT":"QC1"},"Select the actual assay, lot and run. Review the printed report and any flags; blank fields are training placeholders.");}
 function fromItem(item){
  const s=String(item.screen||"").toUpperCase(),h=String(item.heading||"").toLowerCase();
