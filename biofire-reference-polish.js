@@ -145,6 +145,34 @@ function render(id,title){
  const c=opts=>card(id,opts);
  const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode),lines,note,torchManual:true});
  if(gi&&B.torchScreen){
+  const exact={
+   "scan torch pouch barcode":["scan","Scan pouch barcode",["Scan the fitment label; verify the lot, serial and GI pouch type."]],
+   "enter torch sample id (patient identification)":["sample","Enter Sample ID",["Enter the authorized specimen ID before inserting the pouch. Match the MRN and order in Athena."],"The original Sollis guide specifies MRN entry. The CE-IVD manual advises against entering MRNs directly; verify authorization under the current U.S. IFU and Sollis SOP."],
+   "insert torch pouch into module":["insert","Insert the prepared pouch",["With the Sample ID verified, insert the pouch into a module blinking blue. Keep the fitment label flat; blinking green means seated."]],
+   "select torch protocol if prompted":["protocol","Select Protocol (if displayed)",["Select the correct installed GI sample protocol and tap Next. The screen is skipped if only one protocol is available."],"Example protocol and software version only."],
+   "enter torch operator information":["operator","Enter Operator Information",["Enter your username and password and select Next when enabled."]],
+   "review torch information and start run":["review","Review and Start Run",["Check all six displayed identifiers, then select Start Run."]],
+   "confirm torch run in progress":["running","Run In Progress",["Verify solid green module LED, stage and time remaining."]],
+   "select torch finished module":["finished","Select Finished",["Select the Finished tile to view the report."]],
+   "review torch report and remove pouch":["report","Review report and remove pouch",["Verify patient identification, controls and results. Remove and discard the pouch; print/save per SOP."]],
+   "retrieve torch report from browse runs":["browse","Browse Runs",["Select the matching run and tap View Report."]]
+  };
+  if(exact[t])return tc(...exact[t]);
+  if(/confirm qc sample name and start the control/.test(t))return [
+   tc("dashboard","Select Available",["Choose an available module or scan the prepared control pouch from Dashboard."]),
+   tc("scan","Scan control pouch barcode",["Verify GI pouch type, lot and serial."]),
+   tc("sample","Enter QC Sample ID",["Enter QC-GI-Neg for the negative or QC-GI-Pos for the positive control before inserting the pouch. Do not enter a patient MRN."]),
+   tc("insert","Insert control pouch",["Insert into the selected module when its LED blinks blue. Blinking green indicates the pouch is seated."]),
+   tc("operator","Enter operator credentials",["Select the applicable protocol if prompted; enter your credentials and select Next."]),
+   tc("review","Review and Start Run",["Verify the assigned QC identifier and pouch information; select Start Run."]),
+   tc("running","Confirm the control is running",["Verify the module LED turns solid green."])
+  ].join("");
+  if(/put printouts in the monthly qc log binder/.test(t))return [
+   tc("finished","Select Finished",["Open the completed QC report."]),
+   tc("report","Review and print QC report",["Verify the assigned QC ID, internal controls and expected QC results. Print the report, remove and discard the pouch, and file the accepted QC record."]),
+   tc("browse","Retrieve QC report if needed",["Select Browse Runs, choose the QC run, and tap View Report."])
+  ].join("");
+
   if(/select.*module|available module/.test(t))return tc("dashboard","Select an Available module",["Choose a blue Available tile, or initiate by scanning the pouch directly from Dashboard."]);
   if(/scan.*barcode|confirm.*(sample|specimen|patient).*id|verify.*(sample|specimen|patient).*id|enter.*(mrn|sample id|patient id)/.test(t))return [
    tc("scan","1. Scan pouch barcode",["Scan the fitment barcode. Verify the automatically populated lot, serial number and GI pouch type."]),
