@@ -87,59 +87,15 @@ function flipInsertCloseup(){
 
 /* Screen enlargements follow Siemens' documented menu labels and layout.
    They are redrawings rather than manufacturer screenshots. */
-function screenCloseup(mode,kind){
- const h=kind==="hcg", cassetteLabel=h?"Cassette Test":"Strip Test";
- const bg='<rect x="468" y="44" width="275" height="328" rx="18" fill="#eaf2f4" stroke="#bfd3dc" stroke-width="3"/>'+
- '<rect x="483" y="64" width="245" height="255" rx="7" fill="#f9fbfb" stroke="#809ca8" stroke-width="3"/>';
- const top='<rect x="483" y="64" width="245" height="42" fill="#24282c"/>'+tx(498,82,mode==="results"?"Results":mode==="analyzing"?"Analyzing":mode==="start"?"Prepare Test":/^(appearance|color|clarity)$/.test(mode)?"Select Appearance":mode==="qc"?"Select QC Test":"Select",15,"#fff",true,"start")+tx(499,99,/^(appearance|color|clarity)$/.test(mode)?"Test in progress":mode==="analyzing"?"In progress":"Ready",11,"#e3ecf0",false,"start")+((mode==="color"||mode==="clarity")?tx(710,98,mode==="color"?"2 of 3":"3 of 3",10,"#e3ecf0",true,"end"):"");
- let body="";
- if(mode==="select"||mode==="qc"){
-   const entries=mode==="qc"?["QC Strip Test","QC Cassette Test"]:["Instrument Set Up","Recall Results","Cassette Test","Strip Test"];
-   body=entries.map((a,i)=>{
-     const col=i%2,row=Math.floor(i/2),x=493+col*116,y=118+row*89;
-     const active=mode==="qc"?(h?i===1:i===0):(h?i===2:i===3);
-     return '<rect x="'+x+'" y="'+y+'" width="108" height="77" rx="5" fill="'+(active?"#e5eee9":"#fff")+'" stroke="'+(active?"#278d83":"#abb9c0")+'" stroke-width="'+(active?3:1.6)+'"/>'+tx(x+54,y+32,a.split(" ")[0],11,"#2c3d43")+tx(x+54,y+48,a.split(" ").slice(1).join(" "),11,"#2c3d43");
-   }).join("");
- }else if(mode==="start"){
-  body=tx(499,133,h?"Clinitest hCG":"Urinalysis strip",16,"#222",true,"start")+
-       tx(499,165,h?"Adjust test table insert":"Dip and blot strip",13,"#283b42",false,"start")+
-       tx(499,186,h?"for cassette tests":"then place on test table",13,"#283b42",false,"start")+
-       tx(499,216,h?"Place cassette on table":"Test pads facing up",13,"#283b42",false,"start")+
-       '<rect x="615" y="259" width="104" height="51" rx="8" fill="#f0c1aa" stroke="#ba6348" stroke-width="2"/>'+tx(666,292,"START",19,"#382d2a");
- }else if(mode==="color"||mode==="clarity"){
-  const isColor=mode==="color";
-  body=tx(495,128,isColor?"Select Color":"Select Clarity",14,"#304c5a",true,"start");
-  const labels=isColor?["Light yellow","Yellow","Dark yellow","Amber","Brown","Red"]:["Clear","Cloudy","Slightly Cloudy","Turbid","Other"];
-  body+=labels.map((label,i)=>{
-   const col=i%2,row=Math.floor(i/2),x=497+col*111,y=138+row*34;
-   return '<rect x="'+x+'" y="'+y+'" width="106" height="31" rx="3" fill="#fff" stroke="#b0c6d0" stroke-width="1.5"/>'+
-     '<circle cx="'+(x+14)+'" cy="'+(y+16)+'" r="8" stroke="#8ca6b1" stroke-width="1.6" fill="#fff"/>'+
-     (label==="Slightly Cloudy"?tx(x+61,y+13,"Slightly",10,"#355260")+tx(x+61,y+25,"Cloudy",10,"#355260"):tx(x+58,y+21,label,12,"#355260"));
-  }).join("");
-  body+='<rect x="497" y="284" width="99" height="29" rx="5" fill="#edf2f3" stroke="#b8cbd3"/>'+tx(547,303,"Back  ◀",12,"#426777")+
-   '<rect x="607" y="284" width="107" height="29" rx="5" fill="#e3f1ed" stroke="#83b6ae" stroke-width="2"/>'+tx(660,303,"Next  ▶",12,"#216b65");
- }else if(mode==="appearance"){
-  body=tx(605,139,"Select Color and Clarity",15,"#2c4955")+
-       tx(605,159,"of urine sample",14,"#2c4955",false)+
-       '<rect x="498" y="184" width="215" height="51" rx="7" fill="#e8f3f1" stroke="#88bdb9" stroke-width="2.5"/>'+
-       tx(592,215,"Yellow and Clear",16,"#236f6c")+
-       '<path d="M690 204l11 7-11 7" fill="none" stroke="#267d77" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+
-       '<rect x="498" y="242" width="215" height="48" rx="7" fill="#f6f9f9" stroke="#adc5ce" stroke-width="2"/>'+
-       tx(600,272,"Other",17,"#345865")+
-       '<path d="M690 258l11 7-11 7" fill="none" stroke="#537d89" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+
-       tx(605,307,"Color → Clarity → Next",12,"#507682",false);
- }else if(mode==="analyzing"){
-  body=tx(605,150,"Analyzing",20,"#263940")+
-      '<rect x="504" y="188" width="200" height="20" rx="10" fill="#e5eaed" stroke="#a4b8c2"/>'+
-      '<rect x="505" y="189" width="113" height="18" rx="9" fill="#63a6a1"/>'+
-      tx(605,243,"Do not move test table",13,"#4c6770",false);
- }else if(mode==="results"){
-  body=tx(605,137,h?"Clinitest hCG":"Urinalysis",18,"#263940")+
-       tx(605,178,h?"Result: see analyzer":"Result: see analyzer",13,"#365462")+
-       tx(605,201,"Verify ID and printout",12,"#365462",false)+
-       '<rect x="557" y="258" width="102" height="48" rx="7" fill="#e8eff0" stroke="#a2b9c2"/>'+tx(608,289,"Done",17,"#2f4c57");
- }
- return bg+top+body+tx(605,350,"SCREEN DETAIL · REDRAWN",11,"#527482");
+function screenCloseup(mode,kind,qc=false){
+ const map={select:'ready',qc:'qctype',start:'prepare',running:'analyzing'};
+ const screen=window.LAB_CLINITEK_LCD?.lcd(map[mode]||mode,{kind,qc:qc||mode==='qc',focus:mode==='select'?(kind==='hcg'?'cassette':'strip'):mode==='qc'?(kind==='hcg'?'cassette':'strip'):mode==='start'?'START':''});
+ return screen?'<rect x="452" y="65" width="300" height="239" rx="12" fill="#d0d8d9" stroke="#879da1" stroke-width="3"/><svg x="462" y="76" width="280" height="210" viewBox="0 0 320 240">'+screen.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg>'+tx(602,329,"SCREEN DETAIL · TRAINING RECONSTRUCTION",10,"#527482"):'';
+}
+function lcdSequence(kind,qc,items){
+ const lcd=window.LAB_CLINITEK_LCD?.lcd;
+ if(!lcd)return '';
+ return '<div class="cl-lcd-sequence">'+items.map(([heading,mode,opts,note])=>'<figure class="cl-lcd-card"><strong>'+E(heading)+'</strong><div class="cl-lcd-bezel">'+lcd(mode,{kind,qc,...opts})+'</div><figcaption>'+E(note)+'</figcaption></figure>').join('')+'</div>';
 }
 
 function scene(kind,mode){
@@ -173,6 +129,50 @@ function render(title,group){
  const kind=/hcg|cassette/.test(g)?"hcg":"ua";
  const qc=/qc/.test(g);
  if(!/ua-strip|hcg-cassette|ua-qc|hcg-qc/.test(g))return "";
+ // Clinical instructions remain in the original guide. These are separate
+ // visual sequences for actual device states, not generic patient menus.
+ if(window.LAB_CLINITEK_LCD){
+  const test=kind==='hcg'?'cassette':'strip';
+  if(qc&&/open.*qc|open the (ua|hcg)/.test(t))return lcdSequence(kind,true,[
+   ['Select Ready','ready',{focus:'QC',due:true},'Select QC Test (or the QC due button when lockout is active).'],
+   ['Select the required QC type','qctype',{focus:test,due:true},'Select the required '+test+' QC test. Do not select the patient test.'],
+   ['Control lot','lot',{control:true},'Use the current control lot or enter the new lot and expiration if prompted.'],
+   ['Enter control lot','entry',{title:'QC Control Lot'},'Enter the actual control lot if a new lot is required.'],
+   ['Control expiration','expiry',{title:'QC Control Expiration'},'Enter the actual control expiration, if prompted.'],
+   ['Reagent lot','lot',{},'Verify the '+test+' lot and expiration when prompted. Actual prompts depend on instrument configuration.']
+  ]);
+  if(!qc&&/select strip test|select cassette test/.test(t))return lcdSequence(kind,false,[
+   ['Select Ready','ready',{focus:test},'Choose '+(kind==='hcg'?'Cassette Test':'Strip Test')+'. Complete operator, patient and lot prompts only if enabled.'],
+   ...(kind==='hcg'?[['Choose hCG','type',{focus:'cassette'},'Select Clinitest hCG cassette.']]:[]),
+   ['Prepare Test','prepare',{},'Confirm the correct test and prepare the table and consumables before START.']
+  ]);
+  if(qc&&/run each control|place cassette and select start/.test(t))return lcdSequence(kind,true,[
+   ['Prepare QC test','prepare',{},'Verify the control and its selected level. Select START when ready.'],
+   ['Sample application','timer',{},'Complete the '+(kind==='hcg'?'control transfer into the cassette':'strip preparation and placement')+' within the displayed window.'],
+   ['Automatic calibration','calibrating',{},'Do not move the table.'],
+   ['Analysis','analyzing',{},'Wait for measurement to complete.']
+  ])+(kind==='ua'?quantimetrixQCFigure('Run each Quantimetrix Dipper control separately','qc-dip','Use the approved control material and strip technique. Verify each level before testing patients.'):fig('Cassette-side test table',scene('hcg','table'),'Seat a fresh cassette before START.'));
+  if(!qc&&/press start/.test(t))return lcdSequence(kind,false,[
+   ['Prepare Test','prepare',{},'Select START only when the sample and test device are ready.'],
+   ['8-second countdown','timer',{},'Complete the required sample application within the timer window.']
+  ])+(kind==='ua'?fig('Dip and blot the strip',scene(kind,'dip'),'Dip, remove excess and blot the strip edge as directed.'):fig('Cassette on test table',scene(kind,'table'),'Place the unused cassette in the correct recess before START.'));
+  if(!qc&&kind==='ua'&&/select urine color/.test(t))return lcdSequence(kind,false,[
+   ['Select Appearance','appearance',{},'Select Yellow and Clear if both apply, otherwise choose Other.'],
+   ['Select Color','color',{},'Select the observed color if Other was selected.']
+  ]);
+  if(!qc&&kind==='ua'&&/select urine clarity/.test(t))return lcdSequence(kind,false,[['Select Clarity','clarity',{},'Select the observed clarity, then Next. Skip if Yellow and Clear was selected.']]);
+  if(!qc&&/wait for analyzer to finish/.test(t))return lcdSequence(kind,false,[['Calibrating','calibrating',{},'The analyzer calibrates automatically.'],['Analyzing','analyzing',{},'Wait for the measurement to finish.']]);
+  if(qc&&/verify, document|review qc|record the printout/.test(t))return lcdSequence(kind,true,[
+   ['Review QC results','results',{},'Compare actual results with approved criteria. When configured, the instrument displays PASS or FAIL.'],
+   ['Operator determination (if enabled)','passfail',{},'Only choose QC PASS or QC FAIL after evaluating actual results. This screen depends on configuration.'],
+   ['QC results summary','summary',{},'Repeat a failed QC test as directed by the approved SOP; complete all required levels before patient testing.']
+  ]);
+  if(!qc&&/review and document/.test(t))return lcdSequence(kind,false,[
+   ...(kind==='hcg'?[['Calibrating','calibrating',{},'Wait for automatic calibration.'],['Analyzing','analyzing',{},'Wait for the result.']]:[]),
+   ['Review results','results',{},'Verify the actual patient result, print if needed, and select Done. Example fields are blank.']
+  ]);
+ }
+
  if(/confirm urine|verify urine|confirm specimen|check specimen/.test(t))
   return fig(qc?"Confirm urine control and test materials":"CLINITEK + urine cup + "+(kind==="hcg"?"hCG cassette":"UA strip"),scene(kind,"specimen"),
      qc?"Verify the correct QC material, lot and expiration before testing.":"Verify fresh urine in a clean cup, patient ID and correct test strip or cassette.");
