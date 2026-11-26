@@ -84,6 +84,7 @@ function fromItem(item){
  if(/blank check result|blank-check result/.test(s+h))return lcd('blankresult','Print');
  if(/stored data|today.s blank/.test(s))return lcd('stored');
  if(/quality control chart|qc chart/.test(s))return lcd('chart',f);
+ if(/print confirmation/.test(s))return lcd('print','Current');
  if(/save confirmation/.test(s))return lcd('save','OK');
  if(/set qc/.test(s))return lcd('targets',f);
  if(/barcode/.test(s))return lcd('barcode',f);
@@ -91,6 +92,7 @@ function fromItem(item){
  if(/menu/.test(s))return lcd('menu',/^(QC|QC Chart)$/.test(f)?'QC Chart':f==='Str. Data'?'Str.Data':f==='Chg. Reag.'?'Chg.Reag':f);
  if(/maintenance/.test(s))return lcd('maintenance',f);
  if(/execute/i.test(f))return lcd('execute','Execute',item);
+ if(k==='pochStatus')return lcd('startup');
  return '';
 }
 window.LAB_SYSMEX_LCD={lcd,fromItem};
