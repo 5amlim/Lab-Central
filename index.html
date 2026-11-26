@@ -307,6 +307,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
 <link rel="stylesheet" href="athena-ehr-guides.css?v=20261112-dymo-print" media="all">
 <link rel="stylesheet" href="guide-howto-navigation.css?v=20261112-athena-inline-tabs-v2" media="all">
   <link rel="stylesheet" href="interaction-motion.css?v=20261125-4" media="screen">
+  <link rel="stylesheet" href="sysmex-insight-visual.css?v=20261125-1">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -502,6 +503,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="egfr-calculator.js?v=20261104"></script>
 <script src="result-interpretation-guides.js?v=20261104"></script>
 <script src="sysmex-focused.js?v=20261119-sysmex-qc-screen"></script>
+<script src="sysmex-insight-visual.js?v=20261125-1"></script>
 <script src="clinitek-focused.js?v=20261119-screen-review"></script>
 <script src="instrument-focused.js?v=20261104"></script>
 <script src="hemocue-guide.js?v=20261104"></script>
@@ -1744,9 +1746,9 @@ function renderSysmexInsightReference(group){
   '<div class="sx-insight-levels" aria-label="Required quality control levels"><span>QC1 <b>Low</b></span><span>QC2 <b>Normal</b></span><span>QC3 <b>High</b></span></div>'+
   '<div class="sx-insight-items">'+items.map((item,i)=>
    '<article class="sx-insight-item"><span class="sx-insight-item-number">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safeHtml(item.title)+'</h3>'+
-   item.details.map(detail=>'<p>'+markText(detail)+'</p>').join('')+'</div></article>'
+   item.details.map(detail=>'<p>'+markText(detail)+'</p>').join('')+(window.LAB_SYSMEX_INSIGHT_VISUAL?.render(i)||'')+'</div></article>'
   ).join('')+'</div>'+
-  '</section>';
+  (window.LAB_SYSMEX_INSIGHT_VISUAL?.source()||'')+'</section>';
 }
 function renderGuidedProcedure(group,sec){
  const key=sec.id+'/'+group.id;
