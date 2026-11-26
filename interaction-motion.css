@@ -74,3 +74,39 @@
     }
   }
 }
+
+/* Keep the non-PATHFAST guided switch's instrument-specific active color. */
+@media screen {
+  .guide-mode-switch.lc-motion-segmented > .lc-motion-indicator {
+    background: var(--lc-instrument-accent, #1b6c88);
+    border: 1px solid #0d7e76;
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(24,79,103,.22);
+  }
+  .guide-mode-switch.lc-motion-segmented > button[aria-pressed="true"] {
+    border-color: transparent !important;
+  }
+  .lc-moving-selection {
+    position: fixed;
+    z-index: 40;
+    pointer-events: none;
+    box-sizing: border-box;
+    border: 2px solid currentColor;
+  }
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  :is(.guide-mode-switch,.pfux-view-toggle) > button {
+    transition: color 180ms ease;
+  }
+  :is(.branch-choice,.sollis-route-choice,.api-guide-tab,.pfux-support-link) {
+    transition: background-color 180ms ease, border-color 180ms ease,
+                color 180ms ease, box-shadow 180ms ease;
+  }
+  :is(.branch-choice,.sollis-route-choice,.api-guide-tab,.pfux-support-link):not(:disabled):active {
+    scale: .98;
+  }
+}
+@media print {
+  .lc-moving-selection { display: none !important; }
+}
