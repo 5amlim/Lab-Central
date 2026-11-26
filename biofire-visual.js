@@ -490,57 +490,53 @@ function ui(id,index){
   const modes=["selected","scan","review","start"],mode=modes[index]||"ready";
   return spotfireScreenWithZoom(mode);
  }
- const stages=[
-  {heading:"DASHBOARD",title:"Select an available module",focus:"module"},
-  {heading:"NEW RUN",title:"Scan pouch barcode · enter Sample ID",focus:"fields"},
-  {heading:"REVIEW RUN",title:"Confirm pouch type and specimen ID",focus:"review"},
-  {heading:"START RUN",title:"Verify and start the run",focus:"start"}
- ];
- const stage=stages[index]||stages[0];
- const toolbar='<rect x="172" y="20" width="583" height="360" rx="14" fill="#e9eef2" stroke="#9eb7c3" stroke-width="5"/>'+
- '<rect x="192" y="40" width="543" height="318" rx="8" fill="#fff" stroke="#b8cbd5" stroke-width="2"/>'+
- '<rect x="193" y="40" width="542" height="48" fill="#263f51"/>'+
- text(287,69,"Dashboard",15,stage.focus==="module"?"#fff":"#d1e5ea")+
- text(448,69,"Browse Runs",15,"#c5dbe4")+
- text(576,69,"Settings",15,"#c5dbe4")+
- text(679,69,"TORCH",19,"#f7fcfd")+
- '<rect x="206" y="97" width="516" height="36" rx="4" fill="#eaf2f7"/>'+
- text(464,120,stage.heading,17,"#33687f");
- let content="";
- if(stage.focus==="module"){
-   content=Array.from({length:6},(_,i)=>{
-    const x=223+i%3*164,y=150+Math.floor(i/3)*78;
-    return '<rect x="'+x+'" y="'+y+'" width="147" height="63" rx="8" fill="'+(i===0?"#e6f5ec":"#f3f7f9")+'" stroke="'+(i===0?"#238f79":"#ccdee5")+'" stroke-width="'+(i===0?"3":"2")+'"/>'+
-     text(x+73,y+27,"MODULE "+(i+1),12,"#325c73")+
-     text(x+73,y+48,"Available",11,i===0?"#1a866d":"#5e8193");
-   }).join("")+
-   text(459,333,"Select an available module or scan the pouch barcode",13,"#5e7f8e");
- }else if(stage.focus==="fields"){
-   content='<rect x="246" y="153" width="440" height="54" rx="8" fill="#f8fbfc" stroke="#bed5df" stroke-width="2"/>'+
-    text(274,176,"POUCH BARCODE / LOT / SERIAL",12,"#4c7588","start")+
-    text(275,197,"Scan the fitment label",13,"#2c6881","start")+
-    '<rect x="246" y="224" width="440" height="54" rx="8" fill="#f8fbfc" stroke="#bed5df" stroke-width="2"/>'+
-    text(274,247,"SAMPLE ID",12,"#4c7588","start")+
-    text(275,268,"Scan or enter approved accession ID",13,"#2c6881","start")+
-    '<rect x="560" y="303" width="126" height="35" rx="7" fill="#268f81"/>'+text(623,325,"NEXT",13,"#fff");
- }else if(stage.focus==="review"){
-   content='<rect x="246" y="153" width="440" height="145" rx="9" fill="#f7fafb" stroke="#c0d7e0"/>'+
-   text(274,179,"Pouch Type",12,"#688294","start")+text(620,179,"GI PANEL",13,"#346d84","end")+
-   '<path d="M262 192H670" stroke="#e0eaf0" stroke-width="2"/>'+
-   text(274,218,"Sample ID",12,"#688294","start")+text(620,218,"VERIFY MATCH",13,"#347588","end")+
-   '<path d="M262 233H670" stroke="#e0eaf0" stroke-width="2"/>'+
-   text(274,260,"Protocol",12,"#688294","start")+text(620,260,"IF PROMPTED",13,"#347588","end")+
-   '<rect x="568" y="311" width="116" height="34" rx="7" fill="#248e81"/>'+text(626,333,"NEXT",13,"#fff");
- }else{
-   content='<rect x="245" y="151" width="440" height="145" rx="8" fill="#f7fafc" stroke="#c6dbe3"/>'+
-    text(464,182,"REVIEW POUCH + SAMPLE ID",15,"#376d85")+
-    text(464,211,"Confirm the correct module is loaded",13,"#6b8495")+
-    text(464,237,"Confirm operator access on the analyzer",13,"#6b8495")+
-    '<rect x="375" y="260" width="178" height="47" rx="8" fill="#278f80"/>'+
-    text(464,289,"START RUN",18,"#fff");
+ return torchScreen(index);
+}
+function torchScreen(index){
+ const mode=typeof index==="number"?["dashboard","scan","sample","review"][index]||"dashboard":index;
+ const ink="#333",blue="#267dab",green="#79b82a",gray="#e6e6e6";
+ const t=(x,y,v,s=19,color=ink,anchor="start",w="400")=>text(x,y,v,s,color,anchor,w);
+ const rect=(x,y,w,h,fill="#fff",stroke="#b9b9b9",rx=3)=>'<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+rx+'" fill="'+fill+'" stroke="'+stroke+'"/>';
+ const btn=(x,y,w,h,v,fill=gray)=>rect(x,y,w,h,fill,fill===green?"#659e23":"#aaa",5)+t(x+w/2,y+h/2+7,v,18,fill===green?"#fff":ink,"middle","700");
+ const field=(x,y,w,v,focus=false)=>rect(x,y,w,32,"#fff",focus?"#367da6":"#a9a9a9",1)+t(x+8,y+22,v,17);
+ const selected=mode==="browse"?"Browse Runs":"Dashboard";
+ let body=rect(0,0,920,400,"#d4d5d5","#979797",12)+rect(9,9,902,382,"#fff","#4d4e4f",6)+rect(15,15,890,53,"#f0f0f0","#b8b8b8",0);
+ ["Dashboard","Browse Runs","Settings"].forEach((v,i)=>{const x=24+i*151;body+=rect(x,19,145,44,selected===v?"#d4e9f1":"#f5f5f5","#c4c4c4",2)+t(x+72,47,v,19,selected===v?blue:ink,"middle","700");});
+ body+=t(887,47,"FilmArray® Torch",24,"#424242","end","700");
+ const title=v=>t(35,99,v,24,ink,"start","700");
+ const rows=(x,y)=>[["Sample ID:","GI-DEMO-001"],["Lot:","123456"],["Serial Number:","12345678"],["Pouch Type:","GI Panel v2.1"],["Protocol:","Stool FA v3.3"],["User Name:","DemoOperator"]].map(([k,v],i)=>t(x,y+i*34,k,19,ink,"start","700")+t(x+205,y+i*34,v,19)).join("");
+ const keyboard=(y,small=false)=>["1234567890","QWERTYUIOP","ASDFGHJKL","ZXCVBNM"].map((row,i)=>[...row].map((v,j)=>btn(142+i*15+j*58,y+i*36,54,32,v)).join("")).join("")+btn(734,y+108,128,32,"Next",green);
+ if(mode==="dashboard"||mode==="finished"){
+  const states=mode==="finished"?["Finished","Available","Available","Available"]:["Available","Available","Available","Available"];
+  states.forEach((v,i)=>{const x=36+(i%2)*432,y=85+Math.floor(i/2)*145;body+=rect(x,y,415,126,"#f7f7f7","#b7b7b7",6)+
+  '<circle cx="'+(x+50)+'" cy="'+(y+51)+'" r="28" fill="'+(v==="Finished"?green:blue)+'"/>'+
+  (v==="Finished"?t(x+50,y+60,"✓",28,"#fff","middle","700"):'<path d="M'+(x+43)+' '+(y+36)+'l22 15-22 15z" fill="#fff"/>')+
+  t(x+96,y+51,v,25,ink,"start","700")+(v==="Finished"?t(x+96,y+82,"GI-DEMO-001  ·  GI Panel v2.1",16):"");});
+ }else if(mode==="scan"||mode==="sample"||mode==="insert"){
+  body+=title(mode==="scan"?"Pouch information":mode==="sample"?"Sample ID":"Insert Pouch");
+  body+=t(48,137,"Lot:",18)+field(196,114,350,mode==="scan"?"":"123456",mode==="scan")+t(48,177,"Serial Number:",18)+field(196,154,350,mode==="scan"?"":"12345678")+t(48,217,"Pouch Type:",18)+field(196,194,350,mode==="scan"?"":"GI Panel v2.1")+t(48,257,"Sample ID:",18)+field(196,234,350,mode==="insert"?"GI-DEMO-001":"",mode==="sample");
+  if(mode==="scan")body+=t(580,145,"Scan pouch barcode",20,blue,"start","700");
+  if(mode==="sample")body+=t(580,145,"Scan or enter Sample ID",19,blue,"start","700")+t(580,175,"Before inserting pouch",17);
+  if(mode==="insert")body+=t(580,145,"Available module LED",19,blue,"start","700")+t(580,176,"Blinking blue",19,blue)+t(580,207,"Insert prepared pouch",19)+t(580,238,"Keep fitment label flat",16);
+  body+=btn(746,340,132,36,"Cancel");
+ }else if(mode==="protocol"){
+  body+=title("Select Protocol")+btn(730,79,148,38,"Eject Pouch")+t(35,140,"Sample ID: GI-DEMO-001",20)+btn(140,188,300,74,"Stool FA v3.3",green)+t(35,320,"Protocol: Stool FA v3.3",18)+btn(746,340,132,36,"Next",green);
+ }else if(mode==="operator"){
+  body+=title("Enter Operator Information")+btn(730,79,148,36,"Eject Pouch")+t(35,141,"User Name:",18)+field(185,119,410,"DemoOperator",true)+t(35,180,"Password:",18)+field(185,158,410,"••••••••")+btn(650,119,228,38,"Add/Edit Operator")+keyboard(204);
+ }else if(mode==="review"){
+  body+=title("Review and Start Run")+rows(58,139)+btn(672,263,205,73,"Start Run",green);
+ }else if(mode==="running"){
+  body+=title("Run In Progress")+rect(45,123,290,198,"#f1f1f1","#c1c1c1",6)+rect(105,145,170,120,"#b6b9ba","#858585",4)+rect(125,176,130,48,"#444","#666",2)+t(190,296,"Calibration",22,ink,"middle","700")+t(400,127,"00:58:42",37,ink,"start","700")+rows(400,165)+btn(738,340,140,36,"Abort","#d6d6d6");
+ }else if(mode==="browse"){
+  const widths=[115,140,125,120,80,115,90,85],heads=["Date","Sample ID","Pouch Type","Protocol","Lot","Operator","Module","Pouch Status"];let x=23;
+  heads.forEach((v,i)=>{body+=rect(x,84,widths[i],42,"#e7e7e7","#aaa",0)+t(x+4,110,v,15,ink,"start","700");x+=widths[i];});
+  for(let j=0;j<4;j++){let x=23;const vs=["11/25/26","GI-DEMO-00"+(j+1),"GI Panel v2.1","Stool FA v3.3","123456","DemoOperator","Module "+(j+1),"Pass"];vs.forEach((v,i)=>{body+=rect(x,126+j*45,widths[i],45,j===0?"#d5ebbc":"#fff","#d0d0d0",0)+t(x+4,154+j*45,v,14);x+=widths[i];});}
+  body+=btn(35,340,70,36,"⌕")+t(432,364,"1 - 4 of 4",17,ink,"middle")+btn(600,340,128,36,"Options")+btn(741,340,137,36,"View Report",green);
+ }else if(mode==="report"){
+  ["Print","Print All","Save","Actions","Summary","Details"].forEach((v,i)=>body+=btn(30,85+i*43,156,38,v,v==="Summary"?green:gray));
+  body+=t(30,364,"Remove Pouch",18,blue,"start","700")+rect(205,80,678,296,"#fff","#aaa",0)+t(222,109,"BIOFIRE® FILMARRAY® GI Panel",24,ink,"start","700")+t(222,137,"Run Summary",18,ink,"start","700")+t(222,164,"Sample ID: GI-DEMO-001",18)+t(222,189,"Controls: Passed (illustrative)",18)+t(222,214,"Run Status: Completed (illustrative)",18)+t(222,242,"Result Summary",19,ink,"start","700")+rect(222,255,640,26,"#e7e7e7","#aaa",0)+t(230,274,"Bacteria / Viruses / Parasites",16,ink,"start","700")+t(230,309,"Review all reported targets and controls",17)+t(230,337,"Training example – not a patient result",16,"#666");
  }
- return svg(toolbar+content,
- "BioFire FilmArray Torch dashboard and run workflow using documented Dashboard, Browse Runs, Settings, pouch barcode, Sample ID and Start Run controls; schematic not an exact software screenshot");
+ return svg(body,"TORCH "+mode+" training schematic; example identifiers and values, layout may vary by software version");
 }
 function figure(title,desc,picture){
  const type=/blue|hydrat/i.test(title)?'blue':/red|sample|specimen/i.test(title)?'red':/scan|panel|start|module/i.test(title)?'screen':'ready';
@@ -568,5 +564,5 @@ function stageVisual(id,title){
  if(!figs.length)return "";
  return '<section class="biofire-training" aria-label="BioFire illustrated preparation"><div class="biofire-training-grid">'+figs.join("")+'</div></section>';
 }
-window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,spotfireScreenWithZoom,ui,pipette,invert};
+window.LAB_BIOFIRE_ART={stageVisual,station,kit,pouchCartridge,analyzer,spotfireScreenWithZoom,ui,torchScreen,pipette,invert};
 })();
