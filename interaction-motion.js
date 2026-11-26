@@ -41,7 +41,6 @@
     cancelAnimationFrame(routeFrame);
     routeFrame = requestAnimationFrame(() => {
       fade(main);
-      initSegments();
     });
   }
   window.addEventListener('hashchange', () => {
@@ -54,72 +53,76 @@
     reveal(document.getElementById('labCentralMarketLabel'));
   });
 
-  // Expand only a disclosure the user actually operated. Native details
-  // semantics, keyboard behavior and instant closing are preserved.
-  const openedByUser = new WeakSet();
+  // Animate actual layout size after the built-in action runs. Closed
+  // content stays hidden immediately; no cloned or stale clinical content.
+  function measuredHeight(element) {
+    return element.getBoundingClientRect().height;
+  }
+  const resizing = new WeakMap();
+  function resizeFrom(element, before) {
+    if (!element?.isConnected || reduced.matches || printing.matches) return;
+    resizing.get(element)?.cancel();
+    const after = measuredHeight(element);
+    if (!after || Math.abs(after - before) < 2) return;
+    const style = getComputedStyle(element);
+    if (style.display === 'contents' || style.display === 'inline') return;
+    const duration = Math.min(340, 220 + Math.abs(after - before) * .08);
+    const extras = style.boxSizing === 'border-box' ? 0 :
+      ['paddingTop','paddingBottom','borderTopWidth','borderBottomWidth']
+        .reduce((sum, key) => sum + (parseFloat(style[key]) || 0), 0);
+    const px = height => Math.max(0,height - extras) + 'px';
+    const motion = element.animate([
+      { height: px(before), overflow: 'clip' },
+      { height: px(after), overflow: 'clip' }
+    ], { duration, easing: 'cubic-bezier(.22,.72,.25,1)' });
+    resizing.set(element, motion);
+    running.add(motion);
+    const cleanup = () => {
+      running.delete(motion);
+      if (resizing.get(element) === motion) resizing.delete(element);
+    };
+    motion.addEventListener('finish',cleanup,{once:true});
+    motion.addEventListener('cancel',cleanup,{once:true});
+  }
+  // Native disclosures (including keyboard activation) retain their normal
+  // semantics. Measure the whole disclosure, including its summary.
   document.addEventListener('click', event => {
+    if (reduced.matches || printing.matches) return;
     const summary = event.target.closest?.('summary');
     if (summary && summary.parentElement?.matches('details')) {
       const detail = summary.parentElement;
-      if (!detail.open) {
-        openedByUser.add(detail);
-        setTimeout(() => openedByUser.delete(detail), 400);
-      }
-    }
-  }, true);
-  document.addEventListener('toggle', event => {
-    const detail = event.target;
-    if (!detail.matches?.('details[open]') || !openedByUser.has(detail)) return;
-    openedByUser.delete(detail);
-    for (const child of Array.from(detail.children).filter(el => !el.matches('summary')).slice(0, 6)) {
-      reveal(child);
-    }
-  }, true);
-
-  // Keep the actual selected procedure mode and slide its surface, including
-  // when the guide is rebuilt and the original buttons are replaced.
-  const segmentState = new WeakMap();
-  function initSegments(previous = null) {
-    for (const group of main.querySelectorAll('.pfux-view-toggle,.guide-mode-switch')) {
-      const buttons = [...group.querySelectorAll(':scope > button[data-guide-mode]')];
-      if (buttons.length !== 2) continue;
-      const selected = buttons.find(button => button.classList.contains('active') || button.getAttribute('aria-pressed') === 'true');
-      if (!selected || !selected.offsetWidth) continue;
-      let indicator = group.querySelector(':scope > .lc-motion-indicator');
-      if (!indicator) {
-        group.classList.add('lc-motion-segmented');
-        indicator = document.createElement('span');
-        indicator.className = 'lc-motion-indicator';
-        indicator.setAttribute('aria-hidden', 'true');
-        group.prepend(indicator);
-      }
-      const geom = [selected.offsetLeft, selected.offsetTop, selected.offsetWidth, selected.offsetHeight];
-      const from = previous && previous.mode !== selected.dataset.guideMode
-        ? buttons.find(button => button.dataset.guideMode === previous.mode) : null;
-      Object.assign(indicator.style, {
-        width: geom[2] + 'px', height: geom[3] + 'px',
-        transform: 'translate(' + geom[0] + 'px,' + geom[1] + 'px)'
+      const wasOpen = detail.open;
+      const before = measuredHeight(detail);
+      requestAnimationFrame(() => {
+        if (!detail.isConnected || detail.open === wasOpen) return;
+        resizeFrom(detail,before);
       });
-      if (from) {
-        animate(indicator, [
-          { transform: 'translate(' + from.offsetLeft + 'px,' + from.offsetTop + 'px)', width: from.offsetWidth + 'px' },
-          { transform: indicator.style.transform, width: geom[2] + 'px' }
-        ], 300);
-      }
-      if (!segmentState.has(group) && typeof ResizeObserver === 'function') {
-        const resize = new ResizeObserver(() => {
-          if (!group.isConnected) { resize.disconnect(); return; }
-          initSegments();
-        });
-        resize.observe(group);
-        segmentState.set(group, resize);
-      }
+      return;
     }
-  }
-  initSegments();
-  const mainObserver = new MutationObserver(() => initSegments());
-  mainObserver.observe(main, { childList: true });
-
+    const button = event.target.closest?.('button:not(:disabled)');
+    if (!button) return;
+    let wrapper = null;
+    if (button.matches('[data-expand]')) {
+      const first = main.querySelector('[data-toggle]');
+      wrapper = first?.closest('ol') || first?.closest('.step-row')?.parentElement;
+    } else if (button.matches('[data-toggle]')) {
+      wrapper = document.getElementById(button.dataset.toggle)?.parentElement;
+    } else if (button.matches('[data-calculator-upload-guide-toggle]')) {
+      wrapper = button.closest('.calculator-chart-upload');
+    } else if (button.matches('[data-walkin-guide]')) {
+      wrapper = button.closest('.walkin-athena-guides');
+    } else if (button.matches('[data-athena-doc-expand],[data-athena-doc-close]')) {
+      wrapper = document.getElementById('ae-document-expanded')?.parentElement;
+    } else if (button.hasAttribute('aria-expanded')) {
+      const panel = document.getElementById(button.getAttribute('aria-controls') || '');
+      if (panel && main.contains(panel) && !panel.matches('[role="listbox"],[role="menu"],dialog') &&
+          panel.parentElement?.contains(button) &&
+          !['absolute','fixed'].includes(getComputedStyle(panel).position)) wrapper = panel.parentElement;
+    }
+    if (!wrapper || wrapper === main || !main.contains(wrapper)) return;
+    const before = measuredHeight(wrapper);
+    requestAnimationFrame(() => resizeFrom(wrapper,before));
+  }, true);
 
   // Feedback for tool tabs, local filters, favorites and site selection.
   // Read the post-action state; never infer a successful clinical operation.
@@ -163,12 +166,12 @@
             setTimeout(() => reveal(card), i * 18);
           });
           if (!cards.length) fade(document.getElementById('lcrGrid'));
-          positive(current);
+
         } else {
           const surface = rootClass ? main.querySelector(rootClass + ' [role="tabpanel"]:not([hidden])') :
             document.getElementById('calc2-lab-panel');
           if (surface && (!current || selected(current))) fade(surface);
-          if (selected(current)) positive(current);
+
         }
       });
     } else if (button.matches('[data-favorite]')) {
@@ -207,75 +210,41 @@
   }, true);
 
 
-  // Move an outline between selected options rather than repainting complex
-  // cards. Their existing selected colors, text and accessibility stay intact.
-  const movingGroups = [
-    '.tab-strip', '.api-guide-tabs', '.ao-directory-tabs', '.pfux-primary-nav',
-    '.pfux-supporting', '.dqc-view-switch', '.tc-view-switch', '.calc2-tabs',
-    '.dqc-market-buttons', '.tc-market-buttons', '.lcr-filter-buttons',
-    '.lcr-categories', '.branch-options'
-  ];
-  const groupSelector = movingGroups.join(',');
+  // Selected states transition in place. No floating outlines, sliding
+  // overlays or changes to the portal's existing selection backgrounds.
+  const groupSelector = '.tab-strip,.api-guide-tabs,.ao-directory-tabs,.pfux-primary-nav,.pfux-supporting,.dqc-view-switch,.tc-view-switch,.calc2-tabs,.dqc-market-buttons,.tc-market-buttons,.lcr-filter-buttons,.lcr-categories,.branch-options,.pfux-view-toggle,.guide-mode-switch';
   const currentSelector = 'button[aria-selected="true"],button[aria-pressed="true"],button[aria-current="page"],button.active,button.is-selected,button.selected';
-  const shown = rect => rect.width > 0 && rect.height > 0 && rect.top < innerHeight &&
-    rect.bottom > 0 && rect.left < innerWidth && rect.right > 0;
-  let movingOutline = null;
-  let pendingSelection = 0;
+  let selectionToken = 0;
   function captureSelection(button) {
+    if (reduced.matches || printing.matches) return;
     const group = button.closest(groupSelector);
-    if (!group || group.closest('.pfux-view-toggle,.guide-mode-switch')) return;
-    const selector = movingGroups.find(value => group.matches(value));
-    const old = group.querySelector(currentSelector);
-    if (!old || old === button) return;
-    const from = old.getBoundingClientRect();
-    if (!shown(from)) return;
-    const groupIndex = [...main.querySelectorAll(selector)].indexOf(group);
+    if (!group || button.matches(currentSelector)) return;
+    const selector = groupSelector.split(',').find(value => group.matches(value));
+    const index = [...main.querySelectorAll(selector)].indexOf(group);
     const label = group.getAttribute('aria-label');
-    const oldLabel = old.textContent.trim();
-    const token = ++pendingSelection;
-    const finish = () => {
-      if (token !== pendingSelection || reduced.matches || printing.matches) return;
+    const identity = button.textContent.trim();
+    const style = getComputedStyle(button);
+    const before = { backgroundColor: style.backgroundColor, color: style.color,
+      borderColor: style.borderColor, boxShadow: style.boxShadow };
+    const token = ++selectionToken;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (token !== selectionToken) return;
       const candidates = [...main.querySelectorAll(selector)];
       const nextGroup = group.isConnected ? group :
-        (label && candidates.find(item => item.getAttribute('aria-label') === label)) || candidates[groupIndex];
-      const next = nextGroup?.querySelector(currentSelector);
-      if (!next || next.textContent.trim() === oldLabel) return;
-      const to = next.getBoundingClientRect();
-      if (!shown(to)) return;
-      const dx = from.left - to.left, dy = from.top - to.top;
-      // Don't fly across the screen if navigation changed layout or scroll.
-      if (Math.abs(dy) > 180 || Math.abs(dx) > innerWidth * .85) return;
-      movingOutline?.remove();
-      const style = getComputedStyle(next);
-      const ring = document.createElement('span');
-      ring.className = 'lc-moving-selection';
-      ring.setAttribute('aria-hidden','true');
-      Object.assign(ring.style, {
-        left: to.left + 'px', top: to.top + 'px', width: to.width + 'px',
-        height: to.height + 'px', borderRadius: style.borderRadius,
-        color: style.color
-      });
-      document.body.appendChild(ring);
-      movingOutline = ring;
-      const flight = ring.animate([
-        { transform: 'translate(' + dx + 'px,' + dy + 'px)', width: from.width + 'px', height: from.height + 'px', opacity: .60 },
-        { transform: 'translate(0,0)', width: to.width + 'px', height: to.height + 'px', opacity: .65, offset: .72 },
-        { transform: 'translate(0,0)', width: to.width + 'px', height: to.height + 'px', opacity: 0 }
-      ], { duration: 330, easing: 'cubic-bezier(.25,.75,.25,1)' });
-      const clear = () => { ring.remove(); if (movingOutline === ring) movingOutline = null; };
-      flight.addEventListener('finish', clear, { once:true });
-      flight.addEventListener('cancel', clear, { once:true });
-      setTimeout(clear, 400);
-    };
-    // Hash routes are rendered in a separate event. Give both in-place and
-    // route-based controls one frame to commit their selected state.
-    requestAnimationFrame(() => requestAnimationFrame(finish));
+        (label && candidates.find(item => item.getAttribute('aria-label') === label)) || candidates[index];
+      const next = [...(nextGroup?.querySelectorAll(currentSelector) || [])]
+        .find(item => item.textContent.trim() === identity);
+      if (!next) return;
+      const final = getComputedStyle(next);
+      animate(next,[before,{ backgroundColor:final.backgroundColor,color:final.color,
+        borderColor:final.borderColor,boxShadow:final.boxShadow }],220);
+    }));
   }
-  document.addEventListener('click', event => {
+  document.addEventListener('click',event => {
     const button = event.target.closest?.('button:not(:disabled)');
     if (button) captureSelection(button);
-  }, true);
-  document.addEventListener('keydown', event => {
+  },true);
+  document.addEventListener('keydown',event => {
     if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
     const group = event.target.closest?.(groupSelector);
     if (!group) return;
@@ -285,10 +254,7 @@
     const next = event.key === 'Home' ? buttons[0] : event.key === 'End' ? buttons.at(-1) :
       buttons[(index + (event.key === 'ArrowLeft' ? -1 : 1) + buttons.length) % buttons.length];
     if (next) captureSelection(next);
-  }, true);
-  window.addEventListener('scroll', () => movingOutline?.remove(), { passive:true });
-  window.addEventListener('beforeprint', () => movingOutline?.remove());
-  reduced.addEventListener?.('change', event => { if (event.matches) movingOutline?.remove(); });
+  },true);
 
   // Workflow decisions remain immediately readable; animate only their
   // selected control after the existing handler has committed its state.
@@ -297,7 +263,7 @@
     if (!button || selected(button)) return;
     requestAnimationFrame(() => {
       const current = matchingControl(button, ['data-reqbranch','data-reqresolution','data-sollis-patient']);
-      if (selected(current)) pulse(current);
+      if (selected(current) && !current.closest(groupSelector)) fade(current);
     });
   }, true);
 
@@ -309,7 +275,6 @@
     const isMode = button.matches('[data-guide-mode]');
     const isBranch = button.matches('[data-sollis-patient], [data-orders-market-option]');
     const segment = button.closest('.pfux-view-toggle,.guide-mode-switch');
-    const previous = segment?.querySelector('button.active,button[aria-pressed="true"]')?.dataset.guideMode;
     const oldStep = main.querySelector('#guideStageDetails .guide-card-index')?.textContent;
     const controls = (button.getAttribute('aria-controls') || '').split(/\s+/).filter(Boolean);
     const opening = button.getAttribute('aria-expanded') === 'false';
@@ -322,7 +287,6 @@
           for (const child of [...card.children].filter(el => !el.matches('.guide-card-head'))) reveal(child);
         }
       } else if (isMode) {
-        if (previous) initSegments({ mode: previous });
         fade(main.querySelector('#guideStageDetails') || main.querySelector('.procedure-flow'));
       } else if (isBranch) {
         fade(main.querySelector('.sollis-patient-branch') || main);
