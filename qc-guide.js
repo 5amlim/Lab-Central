@@ -348,6 +348,18 @@ function sysmexNewLotStep(title){
  const checklist=(label,items)=>'<div class="qc-lot-checklist" aria-label="'+esc(label)+'">'+
   items.map(([heading,detail])=>'<div><strong>'+esc(heading)+'</strong><span>'+esc(detail)+'</span></div>').join("")+'</div>';
  const gallery=items=>screenGallery(items,brand,{scroll:items.length>1,disclaimer:procedureNote});
+ const assayUrl="https://www.sysmex.com/-/media/project/sysmex/sysmex/documents/assay-sheets/eightcheck_5106.pdf?sc_lang=en";
+ const assayExample=(parameters=false)=>'<section class="qc-lot-assay-example" aria-label="EIGHTCHECK assay sheet scanning example">'+
+ '<div class="qc-lot-assay-heading"><div><strong>Scan from the EIGHTCHECK-3WP X-TRA assay sheet</strong><p>Use the sheet supplied with your current control lot.</p></div><a href="'+assayUrl+'" target="_blank" rel="noopener noreferrer">Open manufacturer example PDF ↗</a></div>'+
+ '<div class="qc-lot-assay-demo"><div class="qc-lot-assay-paper"><header><strong>sysmex</strong><b>EIGHTCHECK-3WP X-TRA</b><small>HEMATOLOGY CONTROL · pocH-100i</small></header>'+
+ '<div class="qc-lot-assay-warning">TRAINING EXAMPLE · DO NOT SCAN</div>'+
+ '<div class="qc-lot-assay-meta"><b>Low Abnormal</b><span>Lot Number</span><span class="qc-lot-assay-code'+(!parameters?' focus':'')+'">[ LOT BARCODE ]</span><span>Expiration Date</span><b>[ printed expiration date ]</b></div>'+
+ '<table><thead><tr><th>Parameter</th><th>Mean</th><th>Limit</th><th>BCR</th></tr></thead><tbody>'+["WBC","RBC","HGB","HCT","MCV"].map((v,i)=>'<tr><th>'+v+'</th><td>—</td><td>—</td><td><span class="qc-lot-assay-code'+(parameters&&i===0?' focus':'')+'">[ BARCODE ]</span></td></tr>').join("")+'</tbody></table>'+
+ '<small class="qc-lot-assay-small">Illustrated excerpt of one control-level block. No usable values or scannable barcodes.</small></div>'+
+ '<div class="qc-lot-assay-actions"><svg viewBox="0 0 240 120" role="img" aria-label="Handheld barcode reader aimed at a printed assay sheet"><path d="M21 18h67l23 32-34 21-16 36-28-12 14-34-25-20z" fill="#313d47" stroke="#7893a5" stroke-width="3"/><path d="M81 33l21 16-20 13-12-19z" fill="#a1bdc9"/><path d="M105 49L214 80" stroke="#d94d53" stroke-width="2.5" stroke-dasharray="7 4"/><rect x="156" y="64" width="76" height="42" rx="3" fill="#fff" stroke="#93a9b7"/><rect x="166" y="72" width="56" height="25" rx="2" fill="#f1e4d1" stroke="#bf8d50" stroke-dasharray="3 2"/><text x="194" y="88" font-size="9" text-anchor="middle" fill="#73552e">BCR</text></svg>'+
+ (parameters?'<strong>Scan the analyte BCR</strong><p>Start with WBC. The barcode loads the target and limit together. Verify both fields, then scan each remaining parameter. Advance with the right arrow.</p>':'<strong>Scan the matching lot barcode</strong><p>Choose the correct Low, Normal or High block and scan its lot barcode. Verify Lot ID. Enter the printed expiration date manually as directed by the U.S. package insert, unless the current sheet and analyzer support an expiration barcode.</p>')+
+ '</div></div><p class="qc-poch-reference">The linked PDF is an archived manufacturer sheet (expired July 23, 2025). Never use its barcodes or values to configure an active QC lot. <a href="https://www.inofficelab.com/v/vspfiles/assets/images/package_inserts_eightcheck-3wpx-tra.pdf" target="_blank" rel="noopener noreferrer">Barcode-entry package insert ↗</a></p></section>';
+
  if(/^match the vials/i.test(title))return '<figure class="qc-lot-control-figure">'+
   (window.LAB_EQUIPMENT_ART?.kitShape?.("sysmex",false,"qc")||"")+
   '<figcaption>Match each control vial to its assay sheet and assigned QC file.</figcaption></figure>'+checklist("Match before editing",[
@@ -361,11 +373,11 @@ function sysmexNewLotStep(title){
   {heading:"QC chart → File → Setup",screen:"QC CHART",items:["Print","HC","Delete","File","Setup"],focus:"Setup",tip:"Verify the assigned QC file using File, then open Setup for that file."}
  ])+'<p class="qc-poch-reference"><a href="'+sysmexQcIfu+'" target="_blank" rel="noopener noreferrer">Sysmex instructions for use · section 3.2.1(a)</a></p>';
  if(/^enter the lot id/i.test(title))return gallery([
-  {kind:"qcLot",heading:"Set QC · Lot ID and Expire",tip:"Select each field before scanning or typing. Check the displayed ID and expiration against the vial and assay sheet before pressing the right arrow."}
- ]);
+  {kind:"qcLot",heading:"Set QC · Scan Lot ID and verify Expire",tip:"Scan the matching lot barcode from the current EIGHTCHECK assay sheet. Verify Lot ID and enter the expiration date before pressing the right arrow."}
+ ])+assayExample();
  if(/^enter targets and limits/i.test(title))return gallery([
-  {kind:"qcAnalytes",heading:"Set QC · TARGET and LIMIT",tip:"Enter the two values for the same analyte and control level, then move through every parameter page. The first page is shown with blank fields."}
- ]);
+  {kind:"qcAnalytes",heading:"Set QC · Scan TARGET and LIMIT",tip:"Scan the matching analyte barcode to load both fields, verify the values, and advance through every parameter page. Blank fields are training examples."}
+ ])+assayExample(true);
  if(/^save and verify/i.test(title))return gallery([
   {heading:"Save the file settings",screen:"SET QC",items:["←","→","Save"],focus:"Save",tip:"Save only after checking all parameter pages against the lot-specific sheet."},
   {heading:"Confirm with OK",screen:"SAVE CONFIRMATION",items:["OK"],focus:"OK",tip:"After saving, return to the file and verify the stored information. Repeat for Low, Normal and High."}
