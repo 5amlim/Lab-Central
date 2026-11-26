@@ -38,11 +38,16 @@ function lcd(mode,options={}){
  else if(mode==="lanes"||mode==="start")body=ready();
  else if(mode==="running")body=ready(true);
  else if(mode==="sid")body=title("SAMPLE INFO.")+sub("EDIT INFORMATION")+t(10,112,"LANE 1",12,"#555",700)+t(10,145,"SID",11)+field(72,130,162,"[ MRN ]","SID")+t(10,180,"Hct%",11)+field(72,165,162,"[ configured value ]")+footer(["OK","CANCEL"]);
- else if(mode==="login")body=title("LOG-IN")+sub("LOG-IN")+t(10,126,"USER ID",11)+field(81,112,152,"[ select user ]","USER")+t(10,167,"PASSWORD",11)+field(81,153,152,"••••••","PASSWORD")+footer(["OK","CANCEL"]);
+ else if(mode==="login")body=title("LOG IN","SELECT USER AND ENTER PASSWORD.")+t(9,42,"HANDHELD BARCODE READER NOW OPERATABLE",7.5)+rect(0,70,240,220,dark)+rect(18,114,204,140,"#93bae3","none",10)+t(120,138,"USER",16,"#fff",400,"middle")+field(30,149,180,"","USER")+t(120,202,"PASSWORD",16,"#fff",400,"middle")+field(30,213,180,"","PASSWORD")+rect(0,290,240,30,footbg)+key(5,294,70,22,"SHUT DOWN","#ff7836");
  else if(mode==="mc")body=title("MC ENTRY")+sub("MC ENTRY")+t(120,141,"Read MC ENTRY CARD",14,"#555",700,"middle")+t(120,173,"[ Assay / Lot / Expiry ]",11,"#555",400,"middle")+footer(["BACK"]);
  else if(mode==="status")body=title("CAL/QC STATUS")+sub("CAL/QC STATUS")+["ITEM","LOT","CAL","QC"].map((v,i)=>t(8,119+i*36,v,12)+field(70,104+i*36,164,i===0?short(options.analyte):"—")).join("")+footer(["BACK"]);
- else if(mode==="results")body=title(options.resultTitle||"RESULT CHECK")+rect(0,70,240,25,blue)+["ITEM","LOT","SAMPLE","RANGE"].map((v,i)=>t(8,111+i*26,v,12)+field(83,97+i*26,153,[short(options.analyte),"[ lot ]",options.sample||"PATIENT","LAST 10 TESTS"][i])).join("")+t(8,216,"LIST",11)+rect(83,200,153,83,"#fff","#aaa",4)+[0,1,2,3].map(i=>t(89,213+i*17,"[ run date / time ]",10)).join("")+footer(["BACK"]);
- else if(mode==="record")body=title(options.resultTitle||"RESULT CHECK")+sub("RESULT")+["ITEM","LOT","SID","RESULT","REMARK"].map((v,i)=>t(8,117+i*30,v,11)+field(83,103+i*30,153,[short(options.analyte),"[ lot ]","[ sample ID ]","—","—"][i])).join("")+footer(["BACK","PRINT"]);
+ else if(mode==="results"){
+  const kind=options.resultTitle||"RESULT CHECK",isQC=kind==="QC CHECK",isCal=kind==="CAL CHECK";
+  const rows=isQC?[["ITEM",short(options.analyte)],["SAMPLE",options.sample||"QC1"],["RANGE","LAST 10 TESTS"]]:isCal?[["ITEM",short(options.analyte)],["LOT","[ lot ]"],["RANGE","[ select range ]"]]:[["ITEM",short(options.analyte)],["LOT","[ lot ]"],["SAMPLE",options.sample||"PATIENT"],["RANGE","LAST 10 TESTS"]];
+  const y=97+rows.length*26;
+  body=title(kind)+rect(0,70,240,25,blue)+rows.map(([v,value],i)=>t(8,111+i*26,v,12)+field(83,97+i*26,153,value)).join("")+t(8,y+12,"LIST",11)+rect(83,y,153,284-y,"#fff","#aaa",4)+[0,1].map(i=>(isQC?rect(84,y+1+i*15,151,15,"#222"):"")+t(89,y+12+i*15,"[ run date / time ]",9,isQC?"#fff":"#444")).join("")+rect(0,290,240,30,footbg)+key(5,294,68,22,"BACK","#505050")+(isQC?key(84,294,68,22,"GRAPH","#fff","#28c427"):"")+key(165,294,70,22,"DATA","#35cc25");
+ }
+ else if(mode==="record")body=title(options.resultTitle||"RESULT CHECK")+rect(0,70,240,25,blue)+["REPRINT DATE: [ date / time ]","------------------------------","DATE: [ run date ]","SAMPLE ID: [ sample ID ]","LANE: [ lane ]","",short(options.analyte),"     —","", "REMARK: —","SAMPLE: "+(options.sample||"PATIENT")].map((v,i)=>t(3,108+i*15,v,10,"#222",700)).join("")+rect(205,96,34,192,gray,"#aaa")+["≪","⌃","⌄","≫"].map((v,i)=>t(222,126+i*45,v,17,"#61a6df",700,"middle")).join("")+rect(0,290,240,30,footbg)+key(5,294,68,22,"BACK","#505050")+key(165,294,70,22,"PRINT","#fff","#28c427",true);
  else if(mode==="shutdown")body=title("ADMIN")+sub("SHUT DOWN")+t(120,154,"SHUT DOWN?",14,"#444",700,"middle")+footer(["OK","CANCEL"]);
  else return "";
  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="PATHFAST '+e(mode)+' training illustration"><defs>'+[["b","#0062d9","#00cbef"],["d","#07104d","#00bdf3"],["g","#d9d9d9","#fff"],["f","#f7f7f7","#c4c4c4"]].map(([k,a,b])=>'<linearGradient id="'+id+k+'" x1="0" y1="0" x2="'+(k==="d"?"1":"0")+'" y2="1"><stop stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>').join("")+'</defs>'+rect(0,0,240,320,"#fff")+body+rect(.5,.5,239,319,"none","#314b9a")+'</svg>';
@@ -62,7 +67,7 @@ function results(mode,analyte){return frame("Review stored results","results",{a
 function fromItem(item){
  const s=String(item.screen||"").toUpperCase(),h=String(item.heading||"").toLowerCase();
  if(s==="CHECK")return lcd("check",{focus:item.focus||"QC CHECK"});
- if(/RECORD/.test(s))return lcd("record",{resultTitle:"QC CHECK",focus:"PRINT"});
+ if(/RECORD/.test(s))return lcd("record",{resultTitle:"QC CHECK",sample:"QC1",focus:"PRINT"});
  if(/ASSAY.*HOME/.test(s))return lcd("home",{focus:item.focus==="CHECK"?"CHECK":""});
  if(/SHUT DOWN/.test(s))return lcd("shutdown");
  return "";
