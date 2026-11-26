@@ -131,6 +131,7 @@ function sendout(){
  '<span class="ops-sendout-arrow-end" aria-hidden="true">↓</span></a></div>';
  h+=window.LAB_SENDOUT_VISUAL.examples();
  h+='</div>';
+ h+='<div id="lcNorcalPickupWorkflow">'+(window.LAB_SENDOUT_MARKETS.pickupConfirmation?.()||'')+'</div>';
  h+=accordion('What needs to be photographed?', 'Photograph all labeled specimens, each separately sealed transport bag, and the matching requisition. You may attach up to 10 photos in the Sendout Log, including the Lab Calculator printout when requested. Separate temperature and STAT/special bags according to the Lab Calculator printout, and photograph each bag individually.',true);
  h+=accordion('How do I group and store multiple bags?', 'Follow the Lab Calculator printout: separate specimens by receiving lab, temperature (room temperature, refrigerated or frozen), and routine versus STAT or special handling when required. Use the designated secure pickup, storage or temperature-controlled area and follow the receiving lab directory.');
  h+=accordion('Does the log include special courier pickups and shipped kits?', 'Yes. Complete the regional Sendout Log for routine send-outs, STAT or special pickups, and special test kits shipped using UPS or FedEx. Enter pickup confirmation or reference information when applicable, or carrier and tracking number for shipped kits. Use the approved handoff process and secure documentation.');
