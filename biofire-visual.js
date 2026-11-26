@@ -204,21 +204,21 @@ function sampleBufferTube(x,y){
  '<path d="M44 147L45 165" stroke="#dbc09a" stroke-width="3"/>'+
  '</g>';
 }
-function pipette(id){
+function pipette(id,qc=false){
  const spotfire=id==="spotfire";
  const first='<rect x="26" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
- text(237,64,spotfire?"1 · ADD SPECIMEN":"1 · ADD SAMPLE BUFFER",18,"#286e85")+
+ text(237,64,spotfire?(qc?"1 · ADD CONTROL":"1 · ADD SPECIMEN"):"1 · ADD SAMPLE BUFFER",18,"#286e85")+
  vial(274,"red","Red injection vial","open",104)+
  (spotfire?pipetteShape(139,86):sampleBufferTube(123,83))+
  '<path d="M215 226L267 233" stroke="#3198a2" stroke-width="3" stroke-dasharray="7 4"/>'+
- text(235,343,spotfire?"Fixed-volume transfer pipette (R panel)":"Pinch the textured snap tab · squeeze twice",12,"#5e7d8d");
+ text(235,343,spotfire?"Kit fixed-volume transfer pipette":qc?"Follow GI control insert":"Pinch the textured snap tab · squeeze twice",12,"#5e7d8d");
  const second='<rect x="467" y="32" width="423" height="335" rx="17" fill="#f8fbfd" stroke="#dce8ef" stroke-width="2"/>'+
- text(679,64,spotfire?"2 · ADD SAMPLE BUFFER":"2 · ADD SPECIMEN",18,"#286e85")+
+ text(679,64,spotfire?"2 · ADD SAMPLE BUFFER":qc?"2 · ADD CONTROL":"2 · ADD SPECIMEN",18,"#286e85")+
  vial(595,"red","Red injection vial","open",104)+
  (spotfire?sampleBufferTube(757,83):pipetteShape(736,88))+
  '<path d="M732 232L656 250" stroke="#ba5664" stroke-width="3" stroke-dasharray="7 4"/>'+
- text(680,343,spotfire?"Open snap tab; squeeze entire buffer":"GI specimen in Cary Blair · 2nd mark (0.2 mL)",12,"#5e7d8d");
- return svg(first+second,spotfire?
+ text(680,343,spotfire?"Twist tab off; squeeze entire buffer":qc?"Use control-specific volume and instructions":"GI specimen in Cary Blair · 2nd mark (0.2 mL)",12,"#5e7d8d");
+ return svg(first+second,qc?"QC preparation equipment; follow the control-specific insert for sequence and volume.":spotfire?
  "SPOTFIRE R panel: transfer fixed volume of specimen into red vial first, then snap open sample buffer tube and squeeze full amount into same vial":
  "FilmArray GI: hold sample buffer tube tip up and snap textured plastic tab, dispense buffer first into red vial and add 0.2 mL well-mixed Cary Blair specimen");
 }
