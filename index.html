@@ -309,6 +309,15 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="interaction-motion.css?v=20261125-4" media="screen">
   <link rel="stylesheet" href="sysmex-insight-visual.css?v=20261125-1">
   <style>.sx-realistic-screen .qc-poch-qc-main svg{display:block;width:100%;height:auto;max-width:440px;margin:auto}.lc-poc-art svg[viewBox="0 0 424 324"]{max-width:470px;margin:auto;display:block;width:100%;height:auto}</style>
+<style>
+.cl-lcd-sequence{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px;margin:12px 0}
+.cl-lcd-card{margin:0;padding:13px;background:#fff;border:1px solid #d5e3eb;border-radius:12px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.cl-lcd-card>strong{font-size:13px;color:#26576d}
+.cl-lcd-bezel{background:#edf3f5;padding:14px;border:1px solid #c6d9e1;border-radius:8px}
+.cl-lcd-bezel svg{width:100%;height:auto;max-width:400px;display:block;margin:0 auto;border:6px solid #abb6b8;border-radius:6px;box-sizing:border-box}
+.cl-lcd-card figcaption{color:#507083;font-size:12px;line-height:1.5}
+@media print{.cl-lcd-card{break-inside:avoid}.cl-lcd-bezel svg{max-width:260px;print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -493,11 +502,12 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="pathfast-interactive.js?v=20261104"></script>
 <script src="pathfast-clinical.js?v=20261119-cutoff-4-1"></script>
 <script src="sysmex-lcd.js?v=20261125-menu-gallery"></script>
-<script src="equipment-art.js?v=20261125-poch-lcd"></script>
+<script src="clinitek-lcd.js?v=20261125-clinitek-lcd"></script>
+<script src="equipment-art.js?v=20261125-clinitek-lcd"></script>
 <script src="step-illustrations.js?v=20261107-black-case"></script>
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
-<script src="qc-guide.js?v=20261125-menu-gallery"></script>
+<script src="qc-guide.js?v=20261125-clinitek-lcd"></script>
 <script src="biofire-visual.js?v=20261104"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
 <script src="lab-guide-polish.js?v=20261104"></script>
@@ -506,7 +516,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="result-interpretation-guides.js?v=20261104"></script>
 <script src="sysmex-focused.js?v=20261125-no-operator"></script>
 <script src="sysmex-insight-visual.js?v=20261125-1"></script>
-<script src="clinitek-focused.js?v=20261119-screen-review"></script>
+<script src="clinitek-focused.js?v=20261125-clinitek-lcd"></script>
 <script src="instrument-focused.js?v=20261104"></script>
 <script src="hemocue-guide.js?v=20261104"></script>
 <script src="mono-visual.js?v=20261113-5012-accurate-v2"></script>
