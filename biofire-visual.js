@@ -413,7 +413,7 @@ function analyzer(id,state){
  '<text x="358" y="143" font-size="4.4" font-family="Arial,sans-serif" fill="#54626e">Run begins when pouch is inserted.</text>',
  '<path d="M355 149H475" stroke="#dce2e5" stroke-width=".8"/>',
  '<text x="358" y="161" font-size="5" font-family="Arial,sans-serif" fill="#687781">Sample ID:</text>',
- '<text x="398" y="161" font-size="5.6" font-weight="750" font-family="Arial,sans-serif" fill="#283747">SAMPLE-001</text>',
+ '<text x="398" y="161" font-size="5.6" font-weight="750" font-family="Arial,sans-serif" fill="#283747">MRN #######</text>',
  '<text x="358" y="174" font-size="5" font-family="Arial,sans-serif" fill="#687781">Sample Type:</text>',
  '<text x="400" y="174" font-size="5.1" font-weight="720" font-family="Arial,sans-serif" fill="#283747">NP swab</text>',
  '<text x="358" y="187" font-size="5" font-family="Arial,sans-serif" fill="#687781">Test:</text>',
@@ -447,7 +447,7 @@ function spotfireReviewScreenSvg(){
  '<text x="69" y="103" font-size="13.5" fill="#495965" font-family="Arial,sans-serif">The run will start automatically when the pouch is inserted.</text>',
  '<path d="M40 121H610" stroke="#e3e9ed" stroke-width="1.5"/>',
  '<text x="125" y="148" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Sample ID:</text>',
- '<text x="232" y="148" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">SAMPLE-001</text>',
+ '<text x="232" y="148" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">MRN #######</text>',
  '<text x="125" y="173" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Sample Type:</text>',
  '<text x="232" y="173" font-size="14" fill="#26333d" font-weight="800" font-family="Arial,sans-serif">Nasopharyngeal Swab</text>',
  '<text x="125" y="198" font-size="13" fill="#72818b" font-family="Arial,sans-serif">Test:</text>',
@@ -480,7 +480,7 @@ function spotfireReviewScreenSvg(){
  Entry screen geometry is illustrative where screenshots were not published. */
 function spotfireScreen(mode,opts={}){
  const m=({ready:"home",selected:"home",review:"insert",start:"insert",results:"report"})[mode]||mode;
- const qc=opts.qc||/^qc/.test(m),st=opts.menu==="ST",id=opts.id||"SAMPLE-001";
+ const qc=opts.qc||/^qc/.test(m),st=opts.menu==="ST",id=opts.id||(qc?"QC Control":"MRN #######");
  const sample=st?"Throat Swab":"Nasopharyngeal Swab",test=st?"Sore Throat Menu":"Respiratory Menu",badge=st?"ST":"R";
  const blue="#00a9e7",green="#40b549",dark="#3b3b3b",gray="#929292",ink="#111";
  const t=(x,y,v,s=18,color=ink,anchor="start",weight=400)=>text(x,y,v,s,color,anchor,String(weight));
@@ -535,7 +535,7 @@ function spotfireScreen(mode,opts={}){
  }else if(m==="history"||m==="qcHistory"){
   h+=t(250,96,m==="qcHistory"?"QC Test Results":"Patient Test Results",21,ink,"middle",700)+'<circle cx="475" cy="92" r="13" fill="#444"/><circle cx="472" cy="89" r="4" fill="none" stroke="#fff" stroke-width="1.5"/><path d="m475 92 5 5" stroke="#fff" stroke-width="1.5"/>';
   h+=r(12,116,476,35,"#eee")+t(42,138,"Date",13,ink,"start",700)+t(132,138,m==="qcHistory"?"Pouch Lot":"Operator",13,ink,"start",700)+t(250,138,"Test",13,ink,"start",700)+t(306,138,m==="qcHistory"?"QC Type":"Sample ID",13,ink,"start",700);
-  for(let i=0;i<8;i++){let y=151+i*54;h+=r(17,y+19,12,12,"#fff","#aaa",2)+t(45,y+22,"11/25/2026",12,ink,"start",700)+t(45,y+37,"10:"+String(50-i*3).padStart(2,"0")+" AM",11)+t(132,y+31,m==="qcHistory"?"123456":"SpotFire Administrator",10)+badgeArt(250,y+13)+t(306,y+31,m==="qcHistory"?(i%2?"Positive":"Negative"):(i===0?id:"SAMPLE-00"+(i+1)),12)+t(474,y+32,"›",22,"#555","middle")+'<path d="M12 '+(y+54)+'h476" stroke="#ccc"/>'}
+  for(let i=0;i<8;i++){let y=151+i*54;h+=r(17,y+19,12,12,"#fff","#aaa",2)+t(45,y+22,"11/25/2026",12,ink,"start",700)+t(45,y+37,"10:"+String(50-i*3).padStart(2,"0")+" AM",11)+t(132,y+31,m==="qcHistory"?"123456":"SpotFire Administrator",10)+badgeArt(250,y+13)+t(306,y+31,m==="qcHistory"?(i%2?"Positive":"Negative"):(i===0?id:"MRN #######"),12)+t(474,y+32,"›",22,"#555","middle")+'<path d="M12 '+(y+54)+'h476" stroke="#ccc"/>'}
   h+=t(18,642,"Selected Count: 0",12,ink,"start",700)+t(250,642,"1 - 8 of 8",12,ink,"middle",700)+btn(386,621,95,30,"Options","#dedede");
  }else if(m==="report"||m==="qcReport"){
   h+=pageTitle(m==="qcReport"?"QC Test Report":test)+badgeArt(130,78)+t(250,117,"PCR Test",9,"#555","middle")+
@@ -559,7 +559,7 @@ function ui(id,index){
  actual Dashboard, Scan Pouch Barcode, Insert Pouch and Browse Runs interfaces.
  Manual HTFA-PRT-0001-08, chapters 5–6. Single configured module; operator entry
  omitted per site. Exact Sample ID screen still requires local verification. */
-function torchScreen(index,sampleId='GI-DEMO-001'){
+function torchScreen(index,sampleId='MRN #######'){
  const mode=typeof index==="number"?["dashboard","scan","sample","review"][index]||"dashboard":index;
  const ink="#44494b",blue="#287fc1",green="#72b83b",gray="#838b8c",bg="#f8f9f9";
  const t=(x,y,v,s=18,color=ink,anchor="start",w="400")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" font-family="Segoe UI,Arial,sans-serif" font-size="'+s+'" font-weight="'+w+'" fill="'+color+'">'+esc(v)+'</text>';
@@ -619,7 +619,7 @@ function torchScreen(index,sampleId='GI-DEMO-001'){
  }else if(mode==="browse"){
   const widths=[115,126,148,113,91,94,91,110],heads=["Date","Sample ID","Pouch Type","Protocol","Lot","Operator","Module","Pouch Status"];let x=10;
   heads.forEach((v,i)=>{body+=rect(x,53,widths[i],34,"#f3f4f4")+t(x+5,76,v,14,ink,"start","600");x+=widths[i];});
-  for(let j=0;j<8;j++){let x=10;const vals=["11/25/26",j===0?sampleId:"GI-DEMO-00"+(j+1),panelName,protocol,"123456","—","Module 1","Pass"];vals.forEach((v,i)=>{body+=rect(x,87+j*40,widths[i],40,j===0?"#78b94a":j%2?"#f4f5f5":"#fff")+t(x+5,112+j*40,v,13,j===0?"#fff":ink);x+=widths[i];});body+='<path d="M10 '+(127+j*40)+'h898" stroke="#dfe4e4"/>';}
+  for(let j=0;j<8;j++){let x=10;const vals=["11/25/26",j===0?sampleId:"MRN #######",panelName,protocol,"123456","—","Module 1","Pass"];vals.forEach((v,i)=>{body+=rect(x,87+j*40,widths[i],40,j===0?"#78b94a":j%2?"#f4f5f5":"#fff")+t(x+5,112+j*40,v,13,j===0?"#fff":ink);x+=widths[i];});body+='<path d="M10 '+(127+j*40)+'h898" stroke="#dfe4e4"/>';}
   body+=icon("search",23,452)+t(54,469,"Search",14)+btn(272,447,38,38,"«")+btn(316,447,38,38,"‹")+t(395,470,"Page 1",15,ink,"middle")+btn(435,447,38,38,"›")+btn(479,447,38,38,"»")+btn(569,446,145,40,"Options")+btn(730,446,170,40,"View Report",green);
  }else if(mode==="report"){
   ["Print","Print All","Save","Actions","Summary","Details"].forEach((v,i)=>body+=btn(19,76+i*56,148,39,v,i===4?green:gray));
