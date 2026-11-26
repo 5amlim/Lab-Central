@@ -471,3 +471,16 @@
 .qc-lot-assay-paper table{width:100%;border-collapse:collapse;font-size:10px}.qc-lot-assay-paper td,.qc-lot-assay-paper th{border:1px solid #b6c2c8;padding:5px;text-align:left}.qc-lot-assay-paper thead{background:#e9eef1}
 .qc-lot-assay-small{display:block;margin-top:8px;color:#657785}.qc-lot-assay-actions svg{width:100%;max-width:240px;display:block;margin:0 auto 8px}.qc-lot-assay-actions strong{font-size:14px}.qc-lot-assay-actions p{font-size:12px;line-height:1.6;margin-top:6px}
 @media(max-width:640px){.qc-lot-assay-demo{grid-template-columns:1fr}.qc-lot-assay-example{padding:12px}}@media print{.qc-lot-assay-paper{box-shadow:none}.qc-lot-assay-example{break-inside:avoid}}
+
+/* Gallery navigation is external to the cards and only shown on actual overflow. */
+.qc-gallery-wrap{min-width:0;max-width:100%}
+.qc-gallery-wrap .qc-screen-gallery--scroll>.qc-screen-reference{padding-bottom:17px}
+.qc-gallery-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:5px 0 13px;flex-wrap:wrap}
+.qc-gallery-nav[hidden]{display:none!important}
+.qc-gallery-nav button{border:1px solid #a7d2d2;border-radius:999px;background:#f0faf9;color:#1d7480;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;transition:background-color .16s,border-color .16s}
+.qc-gallery-nav button:not(:disabled):hover{background:#dcf2ed;border-color:#399c96}
+.qc-gallery-nav button:disabled{opacity:.4;cursor:default}
+.qc-gallery-nav button:focus-visible{outline:2px solid #328c91;outline-offset:2px}
+.qc-gallery-position{font-size:11px;color:#638091;white-space:nowrap;text-align:center}
+@media(max-width:480px){.qc-gallery-nav button{font-size:11px;padding:7px 9px}}
+@media print{.qc-gallery-nav{display:none!important}}
