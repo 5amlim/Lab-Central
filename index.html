@@ -206,7 +206,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="cedars-test-directory.css?v=20261109-cedars-v1" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261125-sysmex-mock-barcodes" media="all">
-  <link rel="stylesheet" href="biofire-visual.css?v=20261104" media="all">
+  <link rel="stylesheet" href="biofire-visual.css?v=20261125-spotfire-manual-ui" media="all">
   <link rel="stylesheet" href="biofire-polished-steps.css?v=20261104" media="all">
   <link rel="stylesheet" href="reference-refresh.css?v=20261104" media="all">
   <link rel="stylesheet" href="pathfast-calibration.css?v=20261112-cardiac-qc-1b-lanes" media="all">
@@ -519,7 +519,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sysmex-maintenance-art.js?v=20261104"></script>
 <script src="pathfast-accurate-details.js?v=20261104"></script>
 <script src="qc-guide.js?v=20261125-sysmex-short-step-labels"></script>
-<script src="biofire-visual.js?v=20261125-torch-photo-reconstruction"></script>
+<script src="biofire-visual.js?v=20261125-spotfire-manual-ui"></script>
 <script src="instrument-art-overrides.js?v=20261104"></script>
 <script src="lab-guide-polish.js?v=20261104"></script>
 <script src="piccolo-results.js?v=20261104"></script>
@@ -534,7 +534,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="sofia-visual-guide.js?v=20261119-screen-review"></script>
 <script src="biofire-step-refinement.js?v=20261104"></script>
 <script src="biofire-polished-steps.js?v=20261104"></script>
-<script src="biofire-reference-polish.js?v=20261125-torch-photo-reconstruction"></script>
+<script src="biofire-reference-polish.js?v=20261125-spotfire-manual-ui"></script>
 <script src="sendout-market-guide.js?v=20261119-norcal-pickup-status"></script>
 <script src="assay-catalog.js?v=20261119-panel-audit"></script>
 <script src="instrument-troubleshooting.js?v=20261118-market-hiv"></script>
@@ -1406,12 +1406,14 @@ function buildGroups(section){
     ...step('Review TORCH report and remove pouch','Verify the sample identification, completed status, internal controls and all targets; remove and discard the pouch appropriately. Print/save and document the results under the approved workflow.'),
     ...step('Retrieve TORCH report from Browse Runs','Once the pouch is removed, open Browse Runs, select the matching run, and tap View Report.')
    ]:[
-   ...step('Scan pouch barcode and confirm sample ID',
-     'Scan the prepared pouch barcode. Confirm the panel, patient or QC identifier, and specimen type on the analyzer before starting.'),
-   ...step('Load pouch and start run',
-     'Review the SPOTFIRE Review Information, Then Insert Pouch screen for correct sample ID, sample type and panel. Once the selected module LED blinks blue, insert the prepared pouch. The module pulls in the pouch and begins the run automatically; its LED becomes solid green. No separate Start tap is required.'),
-   ...step('Review and document results',
-     'Verify that the run is complete, internal controls are acceptable and identifiers match before releasing results. Handle invalid or incomplete runs according to the approved assay IFU.')
+   ...step('Scan SPOTFIRE pouch barcode','Scan the pouch barcode. If unreadable, select Enter Manually and match lot, serial number, expiration and pouch type.'),
+   ...step('Enter SPOTFIRE Sample ID','Scan or enter the approved accession identifier; verify the patient and order in Athena. The published operator manual specifies a non-PHI accession ID rather than direct MRN entry.'),
+   ...step('Select SPOTFIRE sample type','Select the specimen type matching the ordered Respiratory or Sore Throat menu; verify the pouch and applicable IFU.'),
+   ...step('Review SPOTFIRE information and insert pouch','Verify sample ID, sample type and test. Insert the prepared pouch into the module with a blinking blue LED. The module pulls in the pouch and the test starts automatically.'),
+   ...step('Confirm SPOTFIRE test in progress','Verify the solid green module LED and countdown on Home. Select the active module to view detailed run information if needed.'),
+   ...step('Select SPOTFIRE Complete module','Select Complete on Home to open the report before removing the partially ejected pouch.'),
+   ...step('Review SPOTFIRE report and remove pouch','Verify patient identification, valid test status and all results. Print if required; remove and discard the pouch appropriately, then document the result.'),
+   ...step('Retrieve SPOTFIRE patient report','Once the pouch is removed, select Patient Test Results and open the matching test report.')
    ])
   ];
   const patient={id:'patient-testing',title:'Patient testing',blocks};
@@ -1422,6 +1424,19 @@ function buildGroups(section){
     if(/\bQC\b/i.test(b.text)){active={id:'qc-new-shipment-lot',title:'QC (new shipment/lot)',blocks:[]};groups.push(active);}
     else active=null;
    }else if(active)active.blocks.push(b);
+  }
+  if(!torch){
+   const qc=groups.find(g=>g.id==='qc-new-shipment-lot');
+   if(qc){
+    const original=qc.blocks.filter(b=>!(b.type==='list'&&b.level===1&&/^Put printouts/i.test(b.text)));
+    qc.blocks=[...original,
+     ...step('Open SPOTFIRE QC menu','Select the QC toolbar icon, choose Negative QC or Positive QC, then choose an available module. Use the correct control and preparation instructions for the panel and menu.'),
+     ...step('Scan SPOTFIRE QC pouch and material','Scan the pouch barcode and then the matching QC material barcode. If unreadable, enter the control type, lot, vendor, expiration and QC compatibility manually.'),
+     ...step('Review SPOTFIRE QC and insert pouch','Review the QC details and insert the pouch into the module blinking blue. Analysis begins automatically.'),
+     ...step('Review SPOTFIRE QC results','Select Complete, review expected control results and validity, print as required, then remove the pouch. Repeat for the other control as required.'),
+     ...step('Retrieve SPOTFIRE QC report','Select QC, then QC Test Results, and open the matching run. File accepted results in the monthly molecular QC log.')
+    ];
+   }
   }
   return groups;
  }
@@ -1868,6 +1883,19 @@ const instrumentStepNavLabels={
   "Retrieve TORCH report from Browse Runs": "Retrieve report"
  },
  "spotfire": {
+  "Scan SPOTFIRE pouch barcode": "Scan pouch barcode",
+  "Enter SPOTFIRE Sample ID": "Enter Sample ID",
+  "Select SPOTFIRE sample type": "Select sample type",
+  "Review SPOTFIRE information and insert pouch": "Review and insert pouch",
+  "Confirm SPOTFIRE test in progress": "Monitor test",
+  "Select SPOTFIRE Complete module": "Select Complete",
+  "Review SPOTFIRE report and remove pouch": "Review and remove pouch",
+  "Retrieve SPOTFIRE patient report": "Retrieve patient report",
+  "Open SPOTFIRE QC menu": "Open QC menu",
+  "Scan SPOTFIRE QC pouch and material": "Scan QC barcodes",
+  "Review SPOTFIRE QC and insert pouch": "Review and insert pouch",
+  "Review SPOTFIRE QC results": "Review QC results",
+  "Retrieve SPOTFIRE QC report": "Retrieve QC report",
   "Note: The QC covers both Respiratory AND Sore Throat": "QC covers both menus",
   "Grab the controls (BioFire Spotfire R/ST for Respiratory AND Sore Throat)": "Gather R/ST controls",
   "Put printouts in the monthly QC log binder": "File QC reports",
@@ -2064,7 +2092,7 @@ function renderGuidedProcedure(group,sec){
   const cleaning=/clean|maintenan|service|troubleshoot/i.test(group.title);
   const role=qc?'QC':cleaning?'Maintenance':'Patient test';
   const short=/running (patient )?samples?|running tests/i.test(group.title)?'Patient testing':title.short;
-  h+='<div class="pcr-heading instrument-procedure-heading"><div><span class="pcr-eyebrow">'+safeHtml(sec.title).toUpperCase()+' / '+(qc?'QUALITY CONTROL':cleaning?'MAINTENANCE':'TESTING WORKFLOW')+'</span><h2>'+safeHtml(short)+'</h2><p>'+(qc?'Follow the selected QC procedure and approved manufacturer instructions.':cleaning?'Complete the maintenance or cleaning steps in sequence.':'Follow the testing sequence and specimen requirements for this instrument.')+'</p></div><div class="instrument-procedure-actions">'+(sec.id==='torch'&&!qc&&!cleaning?'<a class="torch-header-video" href="https://www.youtube.com/watch?v=Oc3ALCcGuHs" target="_blank" rel="noopener noreferrer" aria-label="Watch official BioFire TORCH software training video (opens in new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>Watch training video</span><span aria-hidden="true" class="torch-header-video-arrow">↗</span></a>':'')+'<span class="pcr-role-label">'+role+'</span></div></div>';
+  h+='<div class="pcr-heading instrument-procedure-heading"><div><span class="pcr-eyebrow">'+safeHtml(sec.title).toUpperCase()+' / '+(qc?'QUALITY CONTROL':cleaning?'MAINTENANCE':'TESTING WORKFLOW')+'</span><h2>'+safeHtml(short)+'</h2><p>'+(qc?'Follow the selected QC procedure and approved manufacturer instructions.':cleaning?'Complete the maintenance or cleaning steps in sequence.':'Follow the testing sequence and specimen requirements for this instrument.')+'</p></div><div class="instrument-procedure-actions">'+(['torch','spotfire'].includes(sec.id)&&!qc&&!cleaning?'<a class="torch-header-video" href="'+(sec.id==='torch'?'https://www.youtube.com/watch?v=Oc3ALCcGuHs':'https://www.youtube.com/watch?v=9ESWXL7LX3o')+'" target="_blank" rel="noopener noreferrer" aria-label="Watch BioFire patient testing training video (opens in new tab)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/></svg><span>Watch training video</span><span aria-hidden="true" class="torch-header-video-arrow">↗</span></a>':'')+'<span class="pcr-role-label">'+role+'</span></div></div>';
  }
  else h+='<div class="guide-intro"><span class="guide-intro-icon" aria-hidden="true">'+svg('clipboard-check')+'</span><div><h2>'+safeHtml(title.short)+'</h2><p>'+(topicMode?'Review the reference information. Expand details as needed.':'Follow the procedure in order. Open details where needed.')+'</p></div></div>';
  if(title.detail&&!isInstrumentProcedure)h+='<div class="guide-specimen"><b>Specimen / testing</b><span>'+safeHtml(title.detail)+'</span></div>';
