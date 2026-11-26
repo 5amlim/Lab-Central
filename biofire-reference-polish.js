@@ -168,7 +168,7 @@ function render(id,title){
   if(t==="retrieve spotfire qc report"||t==="print and file the qc records"||t==="put printouts in the monthly qc log binder")return sf("qcMenu","Open QC Test Results",["Select the QC icon, then QC Test Results."],"",{qc:true})+sf("qcHistory","Retrieve control report",["Select the matching QC test, print the accepted report and file it in the monthly molecular QC log."],"QC table layout is illustrative.",{qc:true});
  }
 
- const qcExample=/confirm qc sample name|put printouts in the monthly qc log binder/.test(t); const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode,qcExample?"QC-GI-Neg":"GI-DEMO-001"),lines,note,torchManual:true});
+ const qcExample=/confirm qc sample name|put printouts in the monthly qc log binder/.test(t); const tc=(mode,title,lines,note="")=>c({title,tag:"TORCH screen",visual:B.torchScreen?.(mode,qcExample?"QC-GI-Neg":"MRN #######"),lines,note,torchManual:true});
  if(gi&&B.torchScreen){
   const exact={
    "scan torch pouch barcode":["scan","Scan pouch barcode",["Hold the pouch fitment barcode under the integrated scanner until it is read. Verify the pouch details. If the scanner is unavailable or cannot read the label, select Enter Manually and enter the printed pouch information."]],
