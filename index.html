@@ -1177,6 +1177,7 @@ function renderHome(mode='home'){
    sendoutResults:window.LAB_CALCULATORS_GUIDE?.searchSendouts?.(search)||[],
    searchPanelCard,searchSendoutPanelCard,labSearchResultGroup
   });
+  document.dispatchEvent(new Event('labcentral:search-rendered'));
   return;
  }
  const isFav=mode==='favorites';
@@ -1218,6 +1219,7 @@ function renderHome(mode='home'){
  h+=filtered.length?`<div class="grid-cards" style="margin-top:17px">${filtered.map(card).join('')}</div>`:(panelMatchCount?'':`<div class="empty-state" style="margin-top:17px">No matching guides or panels. Try a different term or choose another category.</div>`);
  if(!search&&!isFav)h+=`<div class="section-head" style="margin-top:32px"><h2 class="section-title">Also available</h2></div><p class="lede">Discontinued instruments are kept under <strong>Archived</strong> for historical reference and excluded from the routine browse list.</p>`;
  el('mainContent').innerHTML=h;
+ if(search)document.dispatchEvent(new Event('labcentral:search-rendered'));
 }
 
 /* Abbott Determine HIV-1/2 Ag/Ab Combo. Controlled instruction source:
@@ -3776,6 +3778,7 @@ function renderSearchSuggestion(entry,i,child=false){
 }
 function refreshSearchSuggestions(){
  const input=el('search'),query=input.value.trim(),popup=el('searchSuggestions');
+ const wasHidden=popup.hidden;
  syncSearchClear();
  if(!query||document.activeElement!==input){closeSearchSuggestions();return;}
  const context={
@@ -3792,6 +3795,7 @@ function refreshSearchSuggestions(){
  input.removeAttribute('aria-activedescendant');
  popup.hidden=false;
  input.setAttribute('aria-expanded','true');
+ document.dispatchEvent(new CustomEvent('labcentral:search-suggestions-rendered',{detail:{opened:wasHidden}}));
 }
 function selectSearchSuggestion(index){
  const entry=searchSuggestions[index];
@@ -4125,6 +4129,6 @@ render();
 
 </script>
 <script src="guide-scroll-cues.js?v=20261112-no-howto"></script>
-<script src="interaction-motion.js?v=20261126-page-enter"></script>
+<script src="interaction-motion.js?v=20261126-search-motion"></script>
 </body>
 </html>

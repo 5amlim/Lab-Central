@@ -58,6 +58,58 @@
     reveal(document.getElementById('labCentralMarketLabel'));
   });
 
+  // Results render immediately. Animate only newly visible result cards after
+  // typing settles, preserving the search field, focus and keyboard navigation.
+  const searchCardSelector = '.gs-result,.lab-panel-search-result,.grid-cards .card,.gs-empty,.empty-state';
+  let searchTimer = 0, previousResults = new Set();
+  function resultKey(card) {
+    const title = card.querySelector('h3,h2,strong')?.textContent?.trim() || card.textContent.trim();
+    const link = card.matches('a,button') ? card : card.querySelector('a,button[data-go]');
+    const source = card.closest('.lab-search-source,.gs-group')?.getAttribute('aria-label') || '';
+    return [source, title, link?.getAttribute('href'), link?.getAttribute('data-go'),
+      link?.getAttribute('data-target-tab'), card.querySelector('.gs-test-code')?.textContent].join('|');
+  }
+  function inViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0 && rect.bottom > 0 &&
+      rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
+  }
+  function resetSearchMotion() {
+    clearTimeout(searchTimer);
+    previousResults = new Set();
+  }
+  document.addEventListener('labcentral:search-rendered', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      if (document.getElementById('currentCrumb')?.textContent !== 'Search') {
+        resetSearchMotion(); return;
+      }
+      const cards = [...main.querySelectorAll(searchCardSelector)];
+      const next = new Set(cards.map(resultKey));
+      const fresh = cards.filter(card => !previousResults.has(resultKey(card)) && inViewport(card)).slice(0,10);
+      previousResults = next;
+      fresh.forEach((card,i) => {
+        // Keep staggering short and do not animate stale, disconnected cards.
+        setTimeout(() => {
+          if (card.isConnected && document.getElementById('currentCrumb')?.textContent === 'Search')
+            animate(card,[{opacity:.55,translate:'0 6px'},{opacity:1,translate:'0 0'}],210);
+        },i*15);
+      });
+    },90);
+  });
+  window.addEventListener('hashchange',resetSearchMotion);
+  document.addEventListener('labcentral:navigation-rendered',resetSearchMotion);
+  document.getElementById('search')?.addEventListener('input',event => {
+    if (!event.target.value.trim()) resetSearchMotion();
+  });
+  document.addEventListener('labcentral:search-suggestions-rendered',event => {
+    if (!event.detail?.opened) return;
+    const popup = document.getElementById('searchSuggestions');
+    if (popup && !popup.hidden) animate(popup,[
+      {opacity:.6,translate:'0 -4px'},{opacity:1,translate:'0 0'}
+    ],180);
+  });
+
   // Animate actual layout size after the built-in action runs. Closed
   // content stays hidden immediately; no cloned or stale clinical content.
   function measuredHeight(element) {
