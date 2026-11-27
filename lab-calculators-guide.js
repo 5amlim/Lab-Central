@@ -464,5 +464,95 @@ document.addEventListener('keydown',event=>{
 document.addEventListener('labcentral:marketchange',event=>{
  if(markets.some(m=>m.id===event.detail?.market))activeMarket=event.detail.market;
 });
-window.LAB_CALCULATORS_GUIDE={selector,tabs,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,selectLab,allows,market,count};
+
+/* Function-specific instructions for the two collection calculators. */
+const functionGuides=[
+ {id:"start",tab:"Quick start",title:"Build a collection plan",intro:"Start here for a routine sendout.",steps:[
+ ["Choose the receiving lab","Select your clinic and laboratory above, then open its calculator. Confirm the lab and exact ordered test codes before starting."],
+ ["Find and add tests","Use Find Tests to enter the ordered names or codes. Review the matches and add the correct tests."],
+ ["Check the collection plan","Review the cart, tube quantities, collection alerts, processing and transport requirements."],
+ ["Finalize the order","Verify STAT routing and regional turnaround time when relevant. Print or save the flowsheet, then follow your clinic’s sendout process."]],tip:"The calculator helps plan collection. It does not place orders in Athena or replace the official lab directory."},
+ {id:"find",tab:"Find tests",title:"Search and add ordered tests",intro:"Use Add Tests for a requisition or Browse tests for individual searches.",steps:[
+ ["Enter the orders","In Find Tests, type or paste one test code or name per line. Shorthand and common misspellings are supported; select autocomplete suggestions to confirm the intended test."],
+ ["Review matches","Select Review matches to preview results without adding them. Verify the exact code, name, panel and specimen. An exact match badge identifies the search match, not clinical appropriateness."],
+ ["Add tests","Select Add best matches or add individual results. Resolve ambiguous matches individually; review unmatched or restricted entries. A green cart animation confirms a successful addition."],
+ ["Browse and filter","Search by name, code or category. Filter by clinical category, specimen, temperature, transport container, fasting, pediatric tests or centrifugation. Use Clear filters or Show more tests as needed."],
+ ["Check the directory","Open the test’s directory link to verify instructions, especially for unusual specimens or collection requirements."]],tip:"Red suggestions indicate Do Not Perform entries; they are visible for identification but cannot be added. Search results are not authorization to order a test."},
+ {id:"convert",tab:"Convert tests",title:"Compare Quest and LabCorp test codes",intro:"Use Convert Tests when the order comes from the other laboratory.",steps:[
+ ["Choose the destination","Open the calculator for the receiving lab and switch from Find Tests to Convert Tests. The input is the other laboratory; output is the current receiving laboratory."],
+ ["Enter source tests","Enter codes or names one per line and use autocomplete to resolve exact source entries. Review the suggested destination codes."],
+ ["Verify every candidate","Check the official directories for analytes, panel composition, methodology where relevant, specimen and clinical intent. Use Browse matches to compare either direction and filter possible, related or unmatched records."],
+ ["Resolve incomplete results","Review alternate candidates where offered. No match means no verified candidate was identified. Manually entered text is not a verified match; confirm independently before using it."],
+ ["Copy or add","Copy destination codes when needed, or use the add-to-cart control for eligible destination tests. Return to Find Tests and review the cart."]],tip:"Candidate matches are not verified clinical equivalents. Do not substitute tests without confirming the order and appropriate receiving-lab requirements."},
+ {id:"cart",tab:"Cart",title:"Manage selected tests",intro:"The Collection summary is your working cart.",steps:[
+ ["Open the cart","Review selected tests and the count. On mobile, use View cart to jump to the summary."],
+ ["Review details","Select Show details for individual requirements and directory links. Check for missing tests, duplicates, alerts and STAT markings."],
+ ["Change the order","Remove incorrect tests individually. Add a missing test only if it is permitted and verified. Recheck the collection plan after every change."],
+ ["Clear the cart","Select Clear all, then confirm. Cancel to keep your selections. The empty cart animates after confirmation; a refresh restores saved selections without replaying the add animation."]],tip:"The cart is saved in the browser. Clear it before starting an unrelated patient’s collection plan; do not enter patient identifiers in the calculator."},
+ {id:"collection",tab:"Collect & process",title:"Understand the collection and processing plan",intro:"Use the calculated quantities as a planning aid and verify test-specific requirements.",steps:[
+ ["Choose available tubes","Set Gold / SST (5 mL) or Tiger SST (7.5 mL) to match actual stock. For Quest urine culture, choose Gray Top or UriSponge only when the receiving lab permits that device."],
+ ["Review what to collect","Check specimen type, original collection container, tube counts, volume and order of draw. Compatible specimens may be pooled by the calculator; dedicated specimens and special requirements must remain separate."],
+ ["Check alerts","Read fasting, light protection, trace metal, pediatric, special handling and other collection alerts. Confirm additives, fill requirements and minimum volumes; do not rely on cap color alone."],
+ ["Process specimens","Review centrifugation, separation, transfer and temperature instructions. Only separate or transfer when the specific test requires it. Do not centrifuge whole blood merely because it needs transfer."],
+ ["Review what to submit","Check the final transport containers, quantities, labeling, stability and any special requirements. Use the container reference to identify unfamiliar tubes or kits."]],tip:"If requirements conflict or a volume is unclear, verify with the receiving lab before collection. Do not override a dedicated tube or special handling instruction just to reduce tube counts."},
+ {id:"stat",tab:"STAT",title:"Check STAT availability and routing",intro:"STAT eligibility depends on the exact test and receiving laboratory.",steps:[
+ ["Select receiving location","Choose the actual STAT receiving lab in Quest or the receiving area in LabCorp. Unverified locations do not establish STAT eligibility."],
+ ["Check available tests","Open Show STAT tests (Quest) or STAT routing info (LabCorp). Search for the exact code and confirm local availability and courier arrangements."],
+ ["Set priority","Add eligible tests from the STAT menu or use the STAT control in the cart. Confirm the prompt and review any default STAT markings against the order."],
+ ["Separate the shipment","Verify that STAT specimens are separated from routine specimens in the collection and transport plan. Follow the clinic’s urgent handoff and notification process."]],tip:"A STAT marking is not a guarantee of turnaround time or acceptance. Confirm the receiving location can perform the requested test STAT."},
+ {id:"tat",tab:"TAT & setup",title:"Check turnaround time and test setup",intro:"Use regional directory estimates to plan follow-up.",steps:[
+ ["Open the turnaround section","In the Collection summary, expand View TAT & Test Set Up."],
+ ["Choose the region","Select the relevant region or general directory option. Check the estimate and setup schedule for each selected test where available."],
+ ["Interpret the estimate","Turnaround is based on the receiving laboratory’s published information, generally from receipt at the laboratory. Transport, weekends, holidays and testing schedules can affect actual result timing."],
+ ["Verify missing information","If a test has no estimate or setup schedule, consult the official directory or contact the receiving laboratory."]],tip:"Do not promise a specific result time based solely on the calculator. STAT routing is a separate check."},
+ {id:"missing",tab:"Missing / restricted",title:"Handle tests that cannot be found or added",intro:"Do not bypass restrictions by creating a manual record.",steps:[
+ ["Check the exact code","Search by test code, full name and alternate spelling. Open Do Not Perform to see restricted tests; red matches may appear in autocomplete."],
+ ["Verify the official directory","Confirm whether the test is supported by the clinic and receiving lab. If a test is restricted, blocked or requires review, contact the lab supervisor before proceeding."],
+ ["Request a permanent addition","Send the receiving lab, exact test name, code and official directory information to the lab supervisor."],
+ ["Add a missing test if authorized","Use Add a missing test for an appropriate verified test. Enter the exact code, name, initials, specimen, draw and submission containers, volumes, quantities, processing, temperature and applicable handling notes. Use additional container requirements for multi-specimen tests when needed."],
+ ["Review manual entries","Check the saved entry and cart output. Manual records are browser-local, not a shared catalog update. Clear manual entries removes browser-added records, not packaged tests."]],tip:"A missing or unmatched test is not evidence that it is safe to collect. Never use a manual entry to circumvent a Do Not Perform restriction."},
+ {id:"sendout",tab:"Print & send",title:"Finalize the LAB FLOWSHEET",intro:"Review the complete collection and shipping plan before handing off specimens.",steps:[
+ ["Check transport bags","Confirm the receiving lab, room-temperature, refrigerated and frozen groups. Separate STAT and routine shipments and check special transport instructions."],
+ ["Review the complete printout","Select Print and review test codes and names, collection containers, processing, submission containers, bag totals, alerts and TAT where available. Ensure the printout matches the actual order and specimens."],
+ ["Save or print","Use the print dialog to print or Save as PDF. Download spreadsheet is available for a spreadsheet copy of the summary; it does not replace the required flowsheet."],
+ ["Upload and hand off","Upload the PDF to Athena as a Clinical Document labeled LAB FLOWSHEET. For color printing from Athena, open View Original Image first. Follow local requisition, labeling, packaging, pickup and Sendout Log instructions."]],tip:"Use the final reviewed flowsheet for collection and handoff. Follow your clinic’s actual ordering and documentation workflow."}
+];
+const rememberedFunction={quest:"start",labcorp:"start"};
+function functionPanelContent(item){
+ return '<div class="calc-fn-intro"><h3>'+E(item.title)+'</h3><p>'+E(item.intro)+'</p></div>'+
+ '<ol class="calc-fn-steps">'+item.steps.map((s,i)=>'<li><span class="calc-fn-step-no" aria-hidden="true">'+String(i+1).padStart(2,"0")+'</span><div><h4>'+E(s[0])+'</h4><p>'+E(s[1])+'</p></div></li>').join("")+'</ol>'+
+ '<aside class="calc-fn-tip"><strong>Keep in mind</strong><p>'+E(item.tip)+'</p></aside>';
+}
+function functionGuide(){
+ const lab=selectedLab();if(!["quest","labcorp"].includes(lab))return "";
+ const active=rememberedFunction[lab]||"start",item=functionGuides.find(x=>x.id===active)||functionGuides[0];
+ return '<section class="calc-fn-guide" aria-labelledby="calculator-usage-heading" data-calc-fn-lab="'+E(lab)+'">'+
+ '<header class="calc-fn-heading"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · USER GUIDE</span><h2 id="calculator-usage-heading">How to use the '+E(names[lab])+' calculator</h2><p>Choose a function for step-by-step instructions.</p></div><span class="calc-fn-count">'+functionGuides.length+' topics</span></header>'+
+ '<div class="calc-fn-tabs" role="tablist" aria-label="Calculator functions">'+functionGuides.map((x,i)=>'<button type="button" role="tab" id="calc-fn-tab-'+x.id+'" data-calc-fn-tab="'+x.id+'" aria-controls="calc-fn-panel" aria-selected="'+(x.id===item.id)+'" tabindex="'+(x.id===item.id?"0":"-1")+'"><span class="calc-fn-tab-no" aria-hidden="true">'+String(i+1).padStart(2,"0")+'</span>'+E(x.tab)+'</button>').join("")+'</div>'+
+ '<div id="calc-fn-panel" class="calc-fn-panel" role="tabpanel" tabindex="0" aria-labelledby="calc-fn-tab-'+item.id+'">'+functionPanelContent(item)+'</div></section>';
+}
+function chooseFunction(tab){
+ const root=tab.closest(".calc-fn-guide"),id=tab.dataset.calcFnTab,item=functionGuides.find(x=>x.id===id);
+ if(!root||!item||tab.getAttribute("aria-selected")==="true")return;
+ rememberedFunction[root.dataset.calcFnLab]=id;
+ for(const b of root.querySelectorAll("[data-calc-fn-tab]")){const active=b===tab;b.setAttribute("aria-selected",String(active));b.tabIndex=active?0:-1;}
+ const panel=root.querySelector(".calc-fn-panel");
+ panel.setAttribute("aria-labelledby",tab.id);
+ panel.innerHTML=functionPanelContent(item);
+ tab.focus({preventScroll:true});
+ if(!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches){
+  panel.getAnimations?.().forEach(a=>a.cancel());
+  panel.animate?.([{opacity:.4,transform:"translateY(7px)"},{opacity:1,transform:"translateY(0)"}],{duration:220,easing:"ease-out"});
+ }
+}
+document.addEventListener("click",event=>{const tab=event.target.closest?.("[data-calc-fn-tab]");if(tab)chooseFunction(tab);});
+document.addEventListener("keydown",event=>{
+ const tab=event.target.closest?.("[data-calc-fn-tab]");
+ if(!tab||!["ArrowLeft","ArrowRight","Home","End"].includes(event.key))return;
+ const tabs=[...tab.closest('[role="tablist"]').querySelectorAll("[data-calc-fn-tab]")],i=tabs.indexOf(tab);
+ const next=event.key==="Home"?0:event.key==="End"?tabs.length-1:event.key==="ArrowRight"?(i+1)%tabs.length:(i-1+tabs.length)%tabs.length;
+ event.preventDefault();chooseFunction(tabs[next]);
+});
+
+window.LAB_CALCULATORS_GUIDE={selector,tabs,functionGuide,molecularFinder,searchSendouts:molecularMatches,selectSendoutSearchResult,scrollToSearchResult,panel,nextActions,isCalculator,selectedLab,selectLab,allows,market,count};
 })();

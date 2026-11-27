@@ -202,7 +202,7 @@ html[data-lc-print=compact] .lc-compact-note strong{font-weight:840}
   <link rel="stylesheet" href="quality-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="pt-testing-guide.css?v=20261108-api-labels" media="all">
 <link rel="stylesheet" href="api-submission.css?v=20261104" media="all">
-<link rel="stylesheet" href="lab-calculators-guide.css?v=20261104-badgeswap" media="all">
+<link rel="stylesheet" href="lab-calculators-guide.css?v=20261126-function-tabs" media="all">
   <link rel="stylesheet" href="cedars-test-directory.css?v=20261109-cedars-v1" media="all">
 <link rel="stylesheet" href="pathmd-reference.css?v=20261104" media="all">
   <link rel="stylesheet" href="qc-guide.css?v=20261125-sysmex-mock-barcodes" media="all">
@@ -500,7 +500,7 @@ window.LAB_TUBE_IMAGES={"image8.png":"data:image/png;base64,iVBORw0KGgoAAAANSUhE
 <script src="api-submission.js?v=20261118-market-hiv"></script>
 <script src="cedars-test-data.js?v=20261109-cedars-v1"></script>
   <script src="cedars-test-directory.js?v=20261109-cedars-v1"></script>
-  <script src="lab-calculators-guide.js?v=20261118-ny-market"></script>
+  <script src="lab-calculators-guide.js?v=20261126-function-tabs"></script>
 <script src="pathmd-reference.js?v=20261107-optional-v2"></script>
 <script src="operations-guides.js?v=20261125-norcal-clinitek-refresh"></script>
 <script src="socal-daily-checklist.js?v=20261107-optional-v2"></script>
@@ -2238,75 +2238,7 @@ function renderCalculators(){
  if(calcLab==='htrx'||calcLab==='pathmd')h+=window.LAB_CALCULATORS_GUIDE?.molecularFinder()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.panel(calculators,calculatorLogo())||'';
 
- if(window.LAB_CALCULATORS_GUIDE?.isCalculator() && calcLab!=='cedars'){
- h+='<details class="calc2-workflow-collapse"><summary><span><strong>Detailed collection workflow</strong><small>6 steps across 3 phases · Expand for instructions</small></span><span class="calc2-workflow-chevron" aria-hidden="true"></span></summary>';
- h+=`<section class="calc-overview-guide calc-overview-reworked" aria-labelledby="calculator-usage-heading">
-  <div class="section-head calc-overview-head"><div><span class="calc-guide-eyebrow">LAB CALCULATOR · WORKFLOW</span><h2 class="section-title" id="calculator-usage-heading">How to use the calculator</h2><p>Choose the receiving lab, build the order, and prepare the final LAB FLOWSHEET.</p></div><span class="calc-guide-count">6 steps · 3 phases</span></div>
-  <div class="calc-guide-roadmap" aria-label="Workflow overview"><span>Build the order</span><b aria-hidden="true">›</b><span>Verify requirements</span><b aria-hidden="true">›</b><span>Finalize sendout</span></div>
-  <div class="calc-guide-phases calc-guide-simplified">
-    <section class="calc-guide-phase" aria-label="Find and add tests">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 01</span><div><strong>Build the order</strong><span class="calc-guide-phase-descriptor">Choose the lab, then add the requested tests.</span></div><span class="calc-guide-phase-range">STEPS 01–02</span></div>
-      <div class="calc-guide-grid">
-        <article class="calc-guide-card">
-          <span class="calc-guide-step">01</span>
-          <div><h3>Select the receiving lab</h3>
-            <ul><li>Open <strong>${calcLabName}</strong> using the button above.</li><li>Confirm the lab first. Specimen requirements vary by laboratory.</li></ul>
-          </div>
-        </article>
-        <article class="calc-guide-card">
-          <span class="calc-guide-step">02</span>
-          <div><h3>Find and add the tests</h3>
-            <ul>${calcLabSearch}</ul>
-          </div>
-        </article>
-      </div>
-    </section>
-    <section class="calc-guide-phase" aria-label="Verify the collection plan">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 02</span><div><strong>Verify requirements</strong><span class="calc-guide-phase-descriptor">Check STAT routing and specimen handling before collection.</span></div><span class="calc-guide-phase-range">STEPS 03–04</span></div>
-      <div class="calc-guide-grid">
-        <article class="calc-guide-card calc-guide-card-stat">
-          <span class="calc-guide-step">03</span>
-          <div><h3>Check STAT eligibility <span class="calc-guide-optional">(if requested)</span></h3>
-            <ul>${calcLabStat}<li>Only select STAT when the <strong>test code and receiving location</strong> are eligible. Confirm current availability.</li></ul>
-          </div>
-        </article>
-        <article class="calc-guide-card">
-          <span class="calc-guide-step">04</span>
-          <div><h3>Review specimen requirements</h3>
-            <ul><li>Check <strong>tube/container, minimum volume, order of draw</strong>, centrifugation and handling.</li><li>Review fasting, light-protection and special-container warnings. Use the collection summary to plan tube quantities.</li></ul>
-          </div>
-        </article>
-      </div>
-    </section>
-    <section class="calc-guide-phase" aria-label="Prepare the flowsheet and send-out">
-      <div class="calc-guide-phase-head"><span class="calc-guide-phase-kicker">PHASE 03</span><div><strong>Finalize sendout</strong><span class="calc-guide-phase-descriptor">Confirm bag separation, then save the lab flowsheet.</span></div><span class="calc-guide-phase-range">STEPS 05–06</span></div>
-      <div class="calc-guide-grid">
-        <article class="calc-guide-card">
-          <span class="calc-guide-step">05</span>
-          <div><h3>Review transport bags</h3>
-            <ul><li>Review the <strong>Lab Calculator printout</strong> for separate bags by <strong>receiving lab</strong> and <strong>room temperature, refrigerated or frozen</strong> transport.</li><li>Confirm <strong>STAT and routine</strong> are kept in separate bags. Check special containers and handling instructions.</li></ul>
-          </div>
-        </article>
-        <article class="calc-guide-card">
-          <span class="calc-guide-step">06</span>
-          <div><h3>Save and upload the flowsheet</h3>
-            <ul><li>Select <strong>Print</strong> or <strong>Save as PDF</strong> after reviewing the final plan.</li><li>Upload to Athena as a <strong>Clinical Document</strong> labeled <strong>LAB FLOWSHEET</strong>. Print for collection and handoff.</li></ul>
-            <p class="calc-guide-tip">For color printing from Athena, open <strong>View Original Image</strong> first.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-  </div>
-  <div class="calc-extra-heading"><h3>Additional tools</h3><p>Use these when a test needs more review.</p></div>
-  <div class="calc-extra-grid">
-    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('scan')}</span><div><strong>Missing or restricted tests</strong><p>Check the <strong>Do not perform</strong> list before collection. Need a test added to the calculator? <strong>Contact Sam</strong> with the receiving lab, test name, and code. Confirm collection requirements before proceeding.</p></div></div>
-    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('settings')}</span><div><strong>Clinical and specimen filters</strong><p>Category browsing is a search aid, not a substitute for the correct order code. Some tests have multiple categories or additional collection restrictions.</p></div></div>
-    <div class="calc-extra-card"><span class="calc-extra-icon">${svg('file-text')}</span><div><strong>Lab-specific references</strong><p>${calcLab==='cedars'?'Open the illustrated Cedars container guide to verify specialized media and specimen kits.':calcLab==='labcorp'?'Labcorp offers Quest-to-Labcorp comparisons. Verify suggested matches and codes before ordering.':'Use Quest-specific test directory entries, STAT eligibility and processing instructions. Confirm all requirements before collection.'}</p></div></div>
-  </div>
-  <p class="calc-guide-safety"><strong>Before collection:</strong> Confirm current test-specific requirements and STAT acceptance with the receiving laboratory.</p>
-</section>`;
- h+='</details>';
- }
+ h+=window.LAB_CALCULATORS_GUIDE?.functionGuide?.()||'';
  h+=window.LAB_CALCULATORS_GUIDE?.nextActions()||'';
  el('mainContent').innerHTML=h;
  window.LAB_CALCULATORS_GUIDE?.scrollToSearchResult?.();
