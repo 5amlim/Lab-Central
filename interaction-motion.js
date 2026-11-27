@@ -34,15 +34,20 @@
   window.addEventListener('beforeprint', stop);
   reduced.addEventListener?.('change', event => { if (event.matches) stop(); });
 
-  // Page changes and market changes only, not search keystrokes or refreshes.
+  // Animate completed navigation (including same-route clicks), not search
+  // keystrokes, startup refreshes or unrelated DOM changes.
   let route = location.hash;
   let routeFrame = 0;
   function pageMotion() {
     cancelAnimationFrame(routeFrame);
     routeFrame = requestAnimationFrame(() => {
-      fade(main);
+      animate(main, [
+        { opacity: .28, translate: '0 10px' },
+        { opacity: 1, translate: '0 0' }
+      ], 300);
     });
   }
+  document.addEventListener('labcentral:navigation-rendered', pageMotion);
   window.addEventListener('hashchange', () => {
     if (route === location.hash) return;
     route = location.hash;

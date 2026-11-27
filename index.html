@@ -639,7 +639,8 @@ function navigate(id,tab='overview'){
  state.search='';el('search').value='';
  closeSearchSuggestions();syncSearchClear();
  const url=urlFor(id,tab);
- if(location.hash!==url) location.hash=url; else render();
+ if(location.hash!==url) location.hash=url;
+ else {render();document.dispatchEvent(new Event('labcentral:navigation-rendered'));}
  window.scrollTo({top:0,behavior:'instant'});
 }
 function availableSections(){return all.filter(s=>window.LAB_MARKET?.allowsSection?.(s.id)!==false);}
@@ -4124,6 +4125,6 @@ render();
 
 </script>
 <script src="guide-scroll-cues.js?v=20261112-no-howto"></script>
-<script src="interaction-motion.js?v=20261125-4"></script>
+<script src="interaction-motion.js?v=20261126-page-enter"></script>
 </body>
 </html>
